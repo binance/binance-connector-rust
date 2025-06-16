@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/github/actions/workflow/status/binance/binance-connector-rust/ci.yaml)](https://github.com/binance/binance-connector-rust/actions)
 [![Open Issues](https://img.shields.io/github/issues/binance/binance-connector-rust)](https://github.com/binance/binance-connector-rust/issues)
 [![Crates.io](https://img.shields.io/crates/v/binance-sdk)](https://crates.io/crates/binance-sdk)
-[![docs.rs](https://img.shields.io/docsrs/binance_sdk)](https://docs.rs/binance_sdk)
+[![docs.rs](https://img.shields.io/docsrs/binance-sdk)](https://docs.rs/binance-sdk)
 [![Known Vulnerabilities](https://snyk.io/test/github/binance/binance-connector-rust/badge.svg)](https://snyk.io/test/github/binance/binance-connector-rust)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -67,14 +67,14 @@ Add `binance-sdk` to your `Cargo.toml`, enabling only the features you need. For
 
 ```toml
 [dependencies]
-binance-sdk = { version = "0.1.0", features = ["derivatives_trading_usds_futures", "spot"] }
+binance-sdk = { version = "1.0.0", features = ["derivatives_trading_usds_futures", "spot"] }
 ```
 
 If you require all available connectors:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "0.1.0", features = ["all"] }
+binance-sdk = { version = "1.0.0", features = ["all"] }
 ```
 
 ## Contributing

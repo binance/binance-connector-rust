@@ -8,7 +8,7 @@ on:
 
 jobs:
   detect-targets:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       modified_targets: ${{ steps.filter.outputs.modified_targets }}
     steps:
@@ -48,7 +48,7 @@ jobs:
           echo "::set-output name=modified_targets::$MODIFIED_TARGETS_JSON"
 
   build-target:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: detect-targets
     if: ${{ needs.detect-targets.outputs.modified_targets != '[]' }}
     strategy:
