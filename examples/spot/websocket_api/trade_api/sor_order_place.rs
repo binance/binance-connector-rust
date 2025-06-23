@@ -32,8 +32,8 @@ async fn main() -> Result<()> {
     // Setup the WS API parameters
     let params = SorOrderPlaceParams::builder(
         "BNBUSDT".to_string(),
-        SorOrderPlaceSideEnum::BUY,
-        SorOrderPlaceTypeEnum::MARKET,
+        SorOrderPlaceSideEnum::Buy,
+        SorOrderPlaceTypeEnum::Market,
         1.0,
     )
     .build()?;

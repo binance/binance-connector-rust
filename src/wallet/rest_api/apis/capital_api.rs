@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -94,9 +95,6 @@ pub struct AllCoinsInformationParams {
 
 impl AllCoinsInformationParams {
     /// Create a builder for [`all_coins_information`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AllCoinsInformationParamsBuilder {
@@ -210,9 +208,6 @@ pub struct DepositHistoryParams {
 impl DepositHistoryParams {
     /// Create a builder for [`deposit_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> DepositHistoryParamsBuilder {
         DepositHistoryParamsBuilder::default()
@@ -283,9 +278,6 @@ pub struct OneClickArrivalDepositApplyParams {
 
 impl OneClickArrivalDepositApplyParams {
     /// Create a builder for [`one_click_arrival_deposit_apply`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> OneClickArrivalDepositApplyParamsBuilder {
@@ -434,9 +426,6 @@ pub struct WithdrawHistoryParams {
 impl WithdrawHistoryParams {
     /// Create a builder for [`withdraw_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> WithdrawHistoryParamsBuilder {
         WithdrawHistoryParamsBuilder::default()
@@ -454,7 +443,7 @@ impl CapitalApi for CapitalApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AllCoinsInformationResponseInner>>(
@@ -492,11 +481,12 @@ impl CapitalApi for CapitalApiClient {
         }
 
         if let Some(rw) = amount {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("amount".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DepositAddressResponse>(
@@ -533,7 +523,7 @@ impl CapitalApi for CapitalApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = include_source {
-            query_params.insert("include_source".to_string(), json!(rw));
+            query_params.insert("includeSource".to_string(), json!(rw));
         }
 
         if let Some(rw) = coin {
@@ -545,11 +535,11 @@ impl CapitalApi for CapitalApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = offset {
@@ -561,11 +551,11 @@ impl CapitalApi for CapitalApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::DepositHistoryResponseInner>>(
@@ -667,19 +657,19 @@ impl CapitalApi for CapitalApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = deposit_id {
-            query_params.insert("deposit_id".to_string(), json!(rw));
+            query_params.insert("depositId".to_string(), json!(rw));
         }
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         if let Some(rw) = sub_account_id {
-            query_params.insert("sub_account_id".to_string(), json!(rw));
+            query_params.insert("subAccountId".to_string(), json!(rw));
         }
 
         if let Some(rw) = sub_user_id {
-            query_params.insert("sub_user_id".to_string(), json!(rw));
+            query_params.insert("subUserId".to_string(), json!(rw));
         }
 
         send_request::<models::OneClickArrivalDepositApplyResponse>(
@@ -720,10 +710,11 @@ impl CapitalApi for CapitalApiClient {
 
         query_params.insert("address".to_string(), json!(address));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = withdraw_order_id {
-            query_params.insert("withdraw_order_id".to_string(), json!(rw));
+            query_params.insert("withdrawOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = network {
@@ -731,11 +722,11 @@ impl CapitalApi for CapitalApiClient {
         }
 
         if let Some(rw) = address_tag {
-            query_params.insert("address_tag".to_string(), json!(rw));
+            query_params.insert("addressTag".to_string(), json!(rw));
         }
 
         if let Some(rw) = transaction_fee_flag {
-            query_params.insert("transaction_fee_flag".to_string(), json!(rw));
+            query_params.insert("transactionFeeFlag".to_string(), json!(rw));
         }
 
         if let Some(rw) = name {
@@ -743,11 +734,11 @@ impl CapitalApi for CapitalApiClient {
         }
 
         if let Some(rw) = wallet_type {
-            query_params.insert("wallet_type".to_string(), json!(rw));
+            query_params.insert("walletType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::WithdrawResponse>(
@@ -788,7 +779,7 @@ impl CapitalApi for CapitalApiClient {
         }
 
         if let Some(rw) = withdraw_order_id {
-            query_params.insert("withdraw_order_id".to_string(), json!(rw));
+            query_params.insert("withdrawOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = status {
@@ -804,19 +795,19 @@ impl CapitalApi for CapitalApiClient {
         }
 
         if let Some(rw) = id_list {
-            query_params.insert("id_list".to_string(), json!(rw));
+            query_params.insert("idList".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::WithdrawHistoryResponseInner>>(

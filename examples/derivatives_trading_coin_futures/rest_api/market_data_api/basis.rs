@@ -26,8 +26,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = BasisParams::builder(
         "pair_example".to_string(),
-        BasisContractTypeEnum::PERPETUAL,
-        BasisPeriodEnum::PERIOD_5m,
+        BasisContractTypeEnum::Perpetual,
+        BasisPeriodEnum::Period5m,
     )
     .build()?;
 

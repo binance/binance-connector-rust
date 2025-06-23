@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -105,9 +106,6 @@ pub struct GetCrossMarginTransferHistoryParams {
 impl GetCrossMarginTransferHistoryParams {
     /// Create a builder for [`get_cross_margin_transfer_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetCrossMarginTransferHistoryParamsBuilder {
         GetCrossMarginTransferHistoryParamsBuilder::default()
@@ -175,15 +173,15 @@ impl TransferApi for TransferApiClient {
         }
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -195,11 +193,11 @@ impl TransferApi for TransferApiClient {
         }
 
         if let Some(rw) = isolated_symbol {
-            query_params.insert("isolated_symbol".to_string(), json!(rw));
+            query_params.insert("isolatedSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCrossMarginTransferHistoryResponse>(
@@ -232,11 +230,11 @@ impl TransferApi for TransferApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = isolated_symbol {
-            query_params.insert("isolated_symbol".to_string(), json!(rw));
+            query_params.insert("isolatedSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryMaxTransferOutAmountResponse>(

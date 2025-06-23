@@ -30,8 +30,8 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket API")?;
 
     // Setup the WS API parameters
-    let params = UiKlinesParams::builder("BNBUSDT".to_string(), UiKlinesIntervalEnum::INTERVAL_1s)
-        .build()?;
+    let params =
+        UiKlinesParams::builder("BNBUSDT".to_string(), UiKlinesIntervalEnum::Interval1s).build()?;
 
     // Make the WS API call
     let response = connection

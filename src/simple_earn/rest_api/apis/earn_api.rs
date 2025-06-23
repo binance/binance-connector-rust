@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -507,10 +508,11 @@ impl EarnApi for EarnApiClient {
 
         query_params.insert("productId".to_string(), json!(product_id));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleSubscriptionPreviewResponse>(
@@ -544,14 +546,15 @@ impl EarnApi for EarnApiClient {
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = auto_subscribe {
-            query_params.insert("auto_subscribe".to_string(), json!(rw));
+            query_params.insert("autoSubscribe".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetLockedSubscriptionPreviewResponseInner>>(
@@ -586,19 +589,20 @@ impl EarnApi for EarnApiClient {
         query_params.insert("productId".to_string(), json!(product_id));
 
         if let Some(rw) = redeem_all {
-            query_params.insert("redeem_all".to_string(), json!(rw));
+            query_params.insert("redeemAll".to_string(), json!(rw));
         }
 
         if let Some(rw) = amount {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("amount".to_string(), json!(rw));
         }
 
         if let Some(rw) = dest_account {
-            query_params.insert("dest_account".to_string(), json!(rw));
+            query_params.insert("destAccount".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RedeemFlexibleProductResponse>(
@@ -630,7 +634,7 @@ impl EarnApi for EarnApiClient {
         query_params.insert("positionId".to_string(), json!(position_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RedeemLockedProductResponse>(
@@ -665,7 +669,7 @@ impl EarnApi for EarnApiClient {
         query_params.insert("autoSubscribe".to_string(), json!(auto_subscribe));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SetFlexibleAutoSubscribeResponse>(
@@ -700,7 +704,7 @@ impl EarnApi for EarnApiClient {
         query_params.insert("autoSubscribe".to_string(), json!(auto_subscribe));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SetLockedAutoSubscribeResponse>(
@@ -735,7 +739,7 @@ impl EarnApi for EarnApiClient {
         query_params.insert("redeemTo".to_string(), json!(redeem_to));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SetLockedProductRedeemOptionResponse>(
@@ -769,18 +773,19 @@ impl EarnApi for EarnApiClient {
 
         query_params.insert("productId".to_string(), json!(product_id));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = auto_subscribe {
-            query_params.insert("auto_subscribe".to_string(), json!(rw));
+            query_params.insert("autoSubscribe".to_string(), json!(rw));
         }
 
         if let Some(rw) = source_account {
-            query_params.insert("source_account".to_string(), json!(rw));
+            query_params.insert("sourceAccount".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SubscribeFlexibleProductResponse>(
@@ -815,22 +820,23 @@ impl EarnApi for EarnApiClient {
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = auto_subscribe {
-            query_params.insert("auto_subscribe".to_string(), json!(rw));
+            query_params.insert("autoSubscribe".to_string(), json!(rw));
         }
 
         if let Some(rw) = source_account {
-            query_params.insert("source_account".to_string(), json!(rw));
+            query_params.insert("sourceAccount".to_string(), json!(rw));
         }
 
         if let Some(rw) = redeem_to {
-            query_params.insert("redeem_to".to_string(), json!(rw));
+            query_params.insert("redeemTo".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SubscribeLockedProductResponse>(

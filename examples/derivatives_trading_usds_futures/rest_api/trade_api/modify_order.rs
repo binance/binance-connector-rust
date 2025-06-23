@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = ModifyOrderParams::builder(
         "symbol_example".to_string(),
-        ModifyOrderSideEnum::BUY,
+        ModifyOrderSideEnum::Buy,
         1.0,
         1.0,
     )

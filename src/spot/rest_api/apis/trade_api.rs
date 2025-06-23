@@ -20,6 +20,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -104,23 +105,23 @@ impl TradeApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum DeleteOrderCancelRestrictionsEnum {
     #[serde(rename = "ONLY_NEW")]
-    ONLY_NEW,
+    OnlyNew,
     #[serde(rename = "NEW")]
-    NEW,
+    New,
     #[serde(rename = "ONLY_PARTIALLY_FILLED")]
-    ONLY_PARTIALLY_FILLED,
+    OnlyPartiallyFilled,
     #[serde(rename = "PARTIALLY_FILLED")]
-    PARTIALLY_FILLED,
+    PartiallyFilled,
 }
 
 impl DeleteOrderCancelRestrictionsEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            DeleteOrderCancelRestrictionsEnum::ONLY_NEW => "ONLY_NEW",
-            DeleteOrderCancelRestrictionsEnum::NEW => "NEW",
-            DeleteOrderCancelRestrictionsEnum::ONLY_PARTIALLY_FILLED => "ONLY_PARTIALLY_FILLED",
-            DeleteOrderCancelRestrictionsEnum::PARTIALLY_FILLED => "PARTIALLY_FILLED",
+            DeleteOrderCancelRestrictionsEnum::OnlyNew => "ONLY_NEW",
+            DeleteOrderCancelRestrictionsEnum::New => "NEW",
+            DeleteOrderCancelRestrictionsEnum::OnlyPartiallyFilled => "ONLY_PARTIALLY_FILLED",
+            DeleteOrderCancelRestrictionsEnum::PartiallyFilled => "PARTIALLY_FILLED",
         }
     }
 }
@@ -129,17 +130,17 @@ impl DeleteOrderCancelRestrictionsEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl NewOrderSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderSideEnum::BUY => "BUY",
-            NewOrderSideEnum::SELL => "SELL",
+            NewOrderSideEnum::Buy => "BUY",
+            NewOrderSideEnum::Sell => "SELL",
         }
     }
 }
@@ -148,35 +149,35 @@ impl NewOrderSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderTypeEnum {
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl NewOrderTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderTypeEnum::MARKET => "MARKET",
-            NewOrderTypeEnum::LIMIT => "LIMIT",
-            NewOrderTypeEnum::STOP_LOSS => "STOP_LOSS",
-            NewOrderTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            NewOrderTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            NewOrderTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            NewOrderTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            NewOrderTypeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            NewOrderTypeEnum::Market => "MARKET",
+            NewOrderTypeEnum::Limit => "LIMIT",
+            NewOrderTypeEnum::StopLoss => "STOP_LOSS",
+            NewOrderTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            NewOrderTypeEnum::TakeProfit => "TAKE_PROFIT",
+            NewOrderTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            NewOrderTypeEnum::LimitMaker => "LIMIT_MAKER",
+            NewOrderTypeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -185,23 +186,23 @@ impl NewOrderTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl NewOrderTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderTimeInForceEnum::GTC => "GTC",
-            NewOrderTimeInForceEnum::IOC => "IOC",
-            NewOrderTimeInForceEnum::FOK => "FOK",
-            NewOrderTimeInForceEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            NewOrderTimeInForceEnum::Gtc => "GTC",
+            NewOrderTimeInForceEnum::Ioc => "IOC",
+            NewOrderTimeInForceEnum::Fok => "FOK",
+            NewOrderTimeInForceEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -210,26 +211,26 @@ impl NewOrderTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl NewOrderNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderNewOrderRespTypeEnum::ACK => "ACK",
-            NewOrderNewOrderRespTypeEnum::RESULT => "RESULT",
-            NewOrderNewOrderRespTypeEnum::FULL => "FULL",
-            NewOrderNewOrderRespTypeEnum::MARKET => "MARKET",
-            NewOrderNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            NewOrderNewOrderRespTypeEnum::Ack => "ACK",
+            NewOrderNewOrderRespTypeEnum::Result => "RESULT",
+            NewOrderNewOrderRespTypeEnum::Full => "FULL",
+            NewOrderNewOrderRespTypeEnum::Market => "MARKET",
+            NewOrderNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -238,29 +239,29 @@ impl NewOrderNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl NewOrderSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderSelfTradePreventionModeEnum::NONE => "NONE",
-            NewOrderSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            NewOrderSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            NewOrderSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            NewOrderSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            NewOrderSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            NewOrderSelfTradePreventionModeEnum::None => "NONE",
+            NewOrderSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            NewOrderSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            NewOrderSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            NewOrderSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            NewOrderSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -269,17 +270,17 @@ impl NewOrderSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderCancelReplaceSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceSideEnum::BUY => "BUY",
-            OrderCancelReplaceSideEnum::SELL => "SELL",
+            OrderCancelReplaceSideEnum::Buy => "BUY",
+            OrderCancelReplaceSideEnum::Sell => "SELL",
         }
     }
 }
@@ -288,35 +289,35 @@ impl OrderCancelReplaceSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceTypeEnum {
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderCancelReplaceTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceTypeEnum::MARKET => "MARKET",
-            OrderCancelReplaceTypeEnum::LIMIT => "LIMIT",
-            OrderCancelReplaceTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderCancelReplaceTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderCancelReplaceTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderCancelReplaceTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            OrderCancelReplaceTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            OrderCancelReplaceTypeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderCancelReplaceTypeEnum::Market => "MARKET",
+            OrderCancelReplaceTypeEnum::Limit => "LIMIT",
+            OrderCancelReplaceTypeEnum::StopLoss => "STOP_LOSS",
+            OrderCancelReplaceTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderCancelReplaceTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderCancelReplaceTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            OrderCancelReplaceTypeEnum::LimitMaker => "LIMIT_MAKER",
+            OrderCancelReplaceTypeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -325,17 +326,17 @@ impl OrderCancelReplaceTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceCancelReplaceModeEnum {
     #[serde(rename = "STOP_ON_FAILURE")]
-    STOP_ON_FAILURE,
+    StopOnFailure,
     #[serde(rename = "ALLOW_FAILURE")]
-    ALLOW_FAILURE,
+    AllowFailure,
 }
 
 impl OrderCancelReplaceCancelReplaceModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE => "STOP_ON_FAILURE",
-            OrderCancelReplaceCancelReplaceModeEnum::ALLOW_FAILURE => "ALLOW_FAILURE",
+            OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure => "STOP_ON_FAILURE",
+            OrderCancelReplaceCancelReplaceModeEnum::AllowFailure => "ALLOW_FAILURE",
         }
     }
 }
@@ -344,23 +345,23 @@ impl OrderCancelReplaceCancelReplaceModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderCancelReplaceTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceTimeInForceEnum::GTC => "GTC",
-            OrderCancelReplaceTimeInForceEnum::IOC => "IOC",
-            OrderCancelReplaceTimeInForceEnum::FOK => "FOK",
-            OrderCancelReplaceTimeInForceEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderCancelReplaceTimeInForceEnum::Gtc => "GTC",
+            OrderCancelReplaceTimeInForceEnum::Ioc => "IOC",
+            OrderCancelReplaceTimeInForceEnum::Fok => "FOK",
+            OrderCancelReplaceTimeInForceEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -369,26 +370,26 @@ impl OrderCancelReplaceTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderCancelReplaceNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceNewOrderRespTypeEnum::ACK => "ACK",
-            OrderCancelReplaceNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderCancelReplaceNewOrderRespTypeEnum::FULL => "FULL",
-            OrderCancelReplaceNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderCancelReplaceNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderCancelReplaceNewOrderRespTypeEnum::Ack => "ACK",
+            OrderCancelReplaceNewOrderRespTypeEnum::Result => "RESULT",
+            OrderCancelReplaceNewOrderRespTypeEnum::Full => "FULL",
+            OrderCancelReplaceNewOrderRespTypeEnum::Market => "MARKET",
+            OrderCancelReplaceNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -397,29 +398,29 @@ impl OrderCancelReplaceNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderCancelReplaceSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderCancelReplaceSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderCancelReplaceSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderCancelReplaceSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderCancelReplaceSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderCancelReplaceSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderCancelReplaceSelfTradePreventionModeEnum::None => "NONE",
+            OrderCancelReplaceSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderCancelReplaceSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderCancelReplaceSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderCancelReplaceSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderCancelReplaceSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -428,25 +429,25 @@ impl OrderCancelReplaceSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceCancelRestrictionsEnum {
     #[serde(rename = "ONLY_NEW")]
-    ONLY_NEW,
+    OnlyNew,
     #[serde(rename = "NEW")]
-    NEW,
+    New,
     #[serde(rename = "ONLY_PARTIALLY_FILLED")]
-    ONLY_PARTIALLY_FILLED,
+    OnlyPartiallyFilled,
     #[serde(rename = "PARTIALLY_FILLED")]
-    PARTIALLY_FILLED,
+    PartiallyFilled,
 }
 
 impl OrderCancelReplaceCancelRestrictionsEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceCancelRestrictionsEnum::ONLY_NEW => "ONLY_NEW",
-            OrderCancelReplaceCancelRestrictionsEnum::NEW => "NEW",
-            OrderCancelReplaceCancelRestrictionsEnum::ONLY_PARTIALLY_FILLED => {
+            OrderCancelReplaceCancelRestrictionsEnum::OnlyNew => "ONLY_NEW",
+            OrderCancelReplaceCancelRestrictionsEnum::New => "NEW",
+            OrderCancelReplaceCancelRestrictionsEnum::OnlyPartiallyFilled => {
                 "ONLY_PARTIALLY_FILLED"
             }
-            OrderCancelReplaceCancelRestrictionsEnum::PARTIALLY_FILLED => "PARTIALLY_FILLED",
+            OrderCancelReplaceCancelRestrictionsEnum::PartiallyFilled => "PARTIALLY_FILLED",
         }
     }
 }
@@ -455,17 +456,17 @@ impl OrderCancelReplaceCancelRestrictionsEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceOrderRateLimitExceededModeEnum {
     #[serde(rename = "DO_NOTHING")]
-    DO_NOTHING,
+    DoNothing,
     #[serde(rename = "CANCEL_ONLY")]
-    CANCEL_ONLY,
+    CancelOnly,
 }
 
 impl OrderCancelReplaceOrderRateLimitExceededModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceOrderRateLimitExceededModeEnum::DO_NOTHING => "DO_NOTHING",
-            OrderCancelReplaceOrderRateLimitExceededModeEnum::CANCEL_ONLY => "CANCEL_ONLY",
+            OrderCancelReplaceOrderRateLimitExceededModeEnum::DoNothing => "DO_NOTHING",
+            OrderCancelReplaceOrderRateLimitExceededModeEnum::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -474,17 +475,17 @@ impl OrderCancelReplaceOrderRateLimitExceededModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOcoSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListOcoSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOcoSideEnum::BUY => "BUY",
-            OrderListOcoSideEnum::SELL => "SELL",
+            OrderListOcoSideEnum::Buy => "BUY",
+            OrderListOcoSideEnum::Sell => "SELL",
         }
     }
 }
@@ -493,26 +494,26 @@ impl OrderListOcoSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOcoAboveTypeEnum {
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListOcoAboveTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOcoAboveTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListOcoAboveTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListOcoAboveTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            OrderListOcoAboveTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListOcoAboveTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListOcoAboveTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListOcoAboveTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListOcoAboveTypeEnum::LimitMaker => "LIMIT_MAKER",
+            OrderListOcoAboveTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListOcoAboveTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -521,23 +522,23 @@ impl OrderListOcoAboveTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOcoBelowTypeEnum {
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListOcoBelowTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOcoBelowTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListOcoBelowTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListOcoBelowTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListOcoBelowTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListOcoBelowTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListOcoBelowTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListOcoBelowTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListOcoBelowTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -546,20 +547,20 @@ impl OrderListOcoBelowTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOcoBelowTimeInForceEnum {
     #[serde(rename = "belowType")]
-    belowType,
+    Belowtype,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListOcoBelowTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOcoBelowTimeInForceEnum::belowType => "belowType",
-            OrderListOcoBelowTimeInForceEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListOcoBelowTimeInForceEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListOcoBelowTimeInForceEnum::Belowtype => "belowType",
+            OrderListOcoBelowTimeInForceEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListOcoBelowTimeInForceEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -568,26 +569,26 @@ impl OrderListOcoBelowTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOcoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderListOcoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOcoNewOrderRespTypeEnum::ACK => "ACK",
-            OrderListOcoNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderListOcoNewOrderRespTypeEnum::FULL => "FULL",
-            OrderListOcoNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderListOcoNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderListOcoNewOrderRespTypeEnum::Ack => "ACK",
+            OrderListOcoNewOrderRespTypeEnum::Result => "RESULT",
+            OrderListOcoNewOrderRespTypeEnum::Full => "FULL",
+            OrderListOcoNewOrderRespTypeEnum::Market => "MARKET",
+            OrderListOcoNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -596,29 +597,29 @@ impl OrderListOcoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOcoSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderListOcoSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOcoSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderListOcoSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderListOcoSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderListOcoSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderListOcoSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderListOcoSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderListOcoSelfTradePreventionModeEnum::None => "NONE",
+            OrderListOcoSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderListOcoSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderListOcoSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderListOcoSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderListOcoSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -627,17 +628,17 @@ impl OrderListOcoSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoWorkingTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
 }
 
 impl OrderListOtoWorkingTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoWorkingTypeEnum::LIMIT => "LIMIT",
-            OrderListOtoWorkingTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
+            OrderListOtoWorkingTypeEnum::Limit => "LIMIT",
+            OrderListOtoWorkingTypeEnum::LimitMaker => "LIMIT_MAKER",
         }
     }
 }
@@ -646,17 +647,17 @@ impl OrderListOtoWorkingTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoWorkingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListOtoWorkingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoWorkingSideEnum::BUY => "BUY",
-            OrderListOtoWorkingSideEnum::SELL => "SELL",
+            OrderListOtoWorkingSideEnum::Buy => "BUY",
+            OrderListOtoWorkingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -665,32 +666,32 @@ impl OrderListOtoWorkingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoPendingTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
 }
 
 impl OrderListOtoPendingTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoPendingTypeEnum::LIMIT => "LIMIT",
-            OrderListOtoPendingTypeEnum::MARKET => "MARKET",
-            OrderListOtoPendingTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListOtoPendingTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListOtoPendingTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListOtoPendingTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            OrderListOtoPendingTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
+            OrderListOtoPendingTypeEnum::Limit => "LIMIT",
+            OrderListOtoPendingTypeEnum::Market => "MARKET",
+            OrderListOtoPendingTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListOtoPendingTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListOtoPendingTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListOtoPendingTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            OrderListOtoPendingTypeEnum::LimitMaker => "LIMIT_MAKER",
         }
     }
 }
@@ -699,17 +700,17 @@ impl OrderListOtoPendingTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoPendingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListOtoPendingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoPendingSideEnum::BUY => "BUY",
-            OrderListOtoPendingSideEnum::SELL => "SELL",
+            OrderListOtoPendingSideEnum::Buy => "BUY",
+            OrderListOtoPendingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -718,26 +719,26 @@ impl OrderListOtoPendingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderListOtoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoNewOrderRespTypeEnum::ACK => "ACK",
-            OrderListOtoNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderListOtoNewOrderRespTypeEnum::FULL => "FULL",
-            OrderListOtoNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderListOtoNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderListOtoNewOrderRespTypeEnum::Ack => "ACK",
+            OrderListOtoNewOrderRespTypeEnum::Result => "RESULT",
+            OrderListOtoNewOrderRespTypeEnum::Full => "FULL",
+            OrderListOtoNewOrderRespTypeEnum::Market => "MARKET",
+            OrderListOtoNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -746,29 +747,29 @@ impl OrderListOtoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderListOtoSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderListOtoSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderListOtoSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderListOtoSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderListOtoSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderListOtoSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderListOtoSelfTradePreventionModeEnum::None => "NONE",
+            OrderListOtoSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderListOtoSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderListOtoSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderListOtoSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderListOtoSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -777,20 +778,20 @@ impl OrderListOtoSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoWorkingTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListOtoWorkingTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoWorkingTimeInForceEnum::GTC => "GTC",
-            OrderListOtoWorkingTimeInForceEnum::IOC => "IOC",
-            OrderListOtoWorkingTimeInForceEnum::FOK => "FOK",
+            OrderListOtoWorkingTimeInForceEnum::Gtc => "GTC",
+            OrderListOtoWorkingTimeInForceEnum::Ioc => "IOC",
+            OrderListOtoWorkingTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -799,20 +800,20 @@ impl OrderListOtoWorkingTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtoPendingTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListOtoPendingTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtoPendingTimeInForceEnum::GTC => "GTC",
-            OrderListOtoPendingTimeInForceEnum::IOC => "IOC",
-            OrderListOtoPendingTimeInForceEnum::FOK => "FOK",
+            OrderListOtoPendingTimeInForceEnum::Gtc => "GTC",
+            OrderListOtoPendingTimeInForceEnum::Ioc => "IOC",
+            OrderListOtoPendingTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -821,17 +822,17 @@ impl OrderListOtoPendingTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoWorkingTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
 }
 
 impl OrderListOtocoWorkingTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoWorkingTypeEnum::LIMIT => "LIMIT",
-            OrderListOtocoWorkingTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
+            OrderListOtocoWorkingTypeEnum::Limit => "LIMIT",
+            OrderListOtocoWorkingTypeEnum::LimitMaker => "LIMIT_MAKER",
         }
     }
 }
@@ -840,17 +841,17 @@ impl OrderListOtocoWorkingTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoWorkingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListOtocoWorkingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoWorkingSideEnum::BUY => "BUY",
-            OrderListOtocoWorkingSideEnum::SELL => "SELL",
+            OrderListOtocoWorkingSideEnum::Buy => "BUY",
+            OrderListOtocoWorkingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -859,17 +860,17 @@ impl OrderListOtocoWorkingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoPendingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListOtocoPendingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoPendingSideEnum::BUY => "BUY",
-            OrderListOtocoPendingSideEnum::SELL => "SELL",
+            OrderListOtocoPendingSideEnum::Buy => "BUY",
+            OrderListOtocoPendingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -878,26 +879,26 @@ impl OrderListOtocoPendingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoPendingAboveTypeEnum {
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListOtocoPendingAboveTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListOtocoPendingAboveTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListOtocoPendingAboveTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            OrderListOtocoPendingAboveTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListOtocoPendingAboveTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListOtocoPendingAboveTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListOtocoPendingAboveTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListOtocoPendingAboveTypeEnum::LimitMaker => "LIMIT_MAKER",
+            OrderListOtocoPendingAboveTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListOtocoPendingAboveTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -906,26 +907,26 @@ impl OrderListOtocoPendingAboveTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderListOtocoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoNewOrderRespTypeEnum::ACK => "ACK",
-            OrderListOtocoNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderListOtocoNewOrderRespTypeEnum::FULL => "FULL",
-            OrderListOtocoNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderListOtocoNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderListOtocoNewOrderRespTypeEnum::Ack => "ACK",
+            OrderListOtocoNewOrderRespTypeEnum::Result => "RESULT",
+            OrderListOtocoNewOrderRespTypeEnum::Full => "FULL",
+            OrderListOtocoNewOrderRespTypeEnum::Market => "MARKET",
+            OrderListOtocoNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -934,29 +935,29 @@ impl OrderListOtocoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderListOtocoSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderListOtocoSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderListOtocoSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderListOtocoSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderListOtocoSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderListOtocoSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderListOtocoSelfTradePreventionModeEnum::None => "NONE",
+            OrderListOtocoSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderListOtocoSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderListOtocoSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderListOtocoSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderListOtocoSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -965,20 +966,20 @@ impl OrderListOtocoSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoWorkingTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListOtocoWorkingTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoWorkingTimeInForceEnum::GTC => "GTC",
-            OrderListOtocoWorkingTimeInForceEnum::IOC => "IOC",
-            OrderListOtocoWorkingTimeInForceEnum::FOK => "FOK",
+            OrderListOtocoWorkingTimeInForceEnum::Gtc => "GTC",
+            OrderListOtocoWorkingTimeInForceEnum::Ioc => "IOC",
+            OrderListOtocoWorkingTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -987,20 +988,20 @@ impl OrderListOtocoWorkingTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoPendingAboveTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListOtocoPendingAboveTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoPendingAboveTimeInForceEnum::GTC => "GTC",
-            OrderListOtocoPendingAboveTimeInForceEnum::IOC => "IOC",
-            OrderListOtocoPendingAboveTimeInForceEnum::FOK => "FOK",
+            OrderListOtocoPendingAboveTimeInForceEnum::Gtc => "GTC",
+            OrderListOtocoPendingAboveTimeInForceEnum::Ioc => "IOC",
+            OrderListOtocoPendingAboveTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -1009,23 +1010,23 @@ impl OrderListOtocoPendingAboveTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoPendingBelowTypeEnum {
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListOtocoPendingBelowTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoPendingBelowTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListOtocoPendingBelowTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListOtocoPendingBelowTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListOtocoPendingBelowTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListOtocoPendingBelowTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListOtocoPendingBelowTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListOtocoPendingBelowTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListOtocoPendingBelowTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -1034,20 +1035,20 @@ impl OrderListOtocoPendingBelowTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListOtocoPendingBelowTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListOtocoPendingBelowTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListOtocoPendingBelowTimeInForceEnum::GTC => "GTC",
-            OrderListOtocoPendingBelowTimeInForceEnum::IOC => "IOC",
-            OrderListOtocoPendingBelowTimeInForceEnum::FOK => "FOK",
+            OrderListOtocoPendingBelowTimeInForceEnum::Gtc => "GTC",
+            OrderListOtocoPendingBelowTimeInForceEnum::Ioc => "IOC",
+            OrderListOtocoPendingBelowTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -1056,17 +1057,17 @@ impl OrderListOtocoPendingBelowTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderOcoSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderOcoSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderOcoSideEnum::BUY => "BUY",
-            OrderOcoSideEnum::SELL => "SELL",
+            OrderOcoSideEnum::Buy => "BUY",
+            OrderOcoSideEnum::Sell => "SELL",
         }
     }
 }
@@ -1075,20 +1076,20 @@ impl OrderOcoSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderOcoStopLimitTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
 }
 
 impl OrderOcoStopLimitTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderOcoStopLimitTimeInForceEnum::GTC => "GTC",
-            OrderOcoStopLimitTimeInForceEnum::FOK => "FOK",
-            OrderOcoStopLimitTimeInForceEnum::IOC => "IOC",
+            OrderOcoStopLimitTimeInForceEnum::Gtc => "GTC",
+            OrderOcoStopLimitTimeInForceEnum::Fok => "FOK",
+            OrderOcoStopLimitTimeInForceEnum::Ioc => "IOC",
         }
     }
 }
@@ -1097,26 +1098,26 @@ impl OrderOcoStopLimitTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderOcoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderOcoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderOcoNewOrderRespTypeEnum::ACK => "ACK",
-            OrderOcoNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderOcoNewOrderRespTypeEnum::FULL => "FULL",
-            OrderOcoNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderOcoNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderOcoNewOrderRespTypeEnum::Ack => "ACK",
+            OrderOcoNewOrderRespTypeEnum::Result => "RESULT",
+            OrderOcoNewOrderRespTypeEnum::Full => "FULL",
+            OrderOcoNewOrderRespTypeEnum::Market => "MARKET",
+            OrderOcoNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -1125,29 +1126,29 @@ impl OrderOcoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderOcoSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderOcoSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderOcoSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderOcoSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderOcoSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderOcoSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderOcoSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderOcoSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderOcoSelfTradePreventionModeEnum::None => "NONE",
+            OrderOcoSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderOcoSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderOcoSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderOcoSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderOcoSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1156,17 +1157,17 @@ impl OrderOcoSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl SorOrderSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderSideEnum::BUY => "BUY",
-            SorOrderSideEnum::SELL => "SELL",
+            SorOrderSideEnum::Buy => "BUY",
+            SorOrderSideEnum::Sell => "SELL",
         }
     }
 }
@@ -1175,35 +1176,35 @@ impl SorOrderSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderTypeEnum {
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl SorOrderTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderTypeEnum::MARKET => "MARKET",
-            SorOrderTypeEnum::LIMIT => "LIMIT",
-            SorOrderTypeEnum::STOP_LOSS => "STOP_LOSS",
-            SorOrderTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            SorOrderTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            SorOrderTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            SorOrderTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            SorOrderTypeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            SorOrderTypeEnum::Market => "MARKET",
+            SorOrderTypeEnum::Limit => "LIMIT",
+            SorOrderTypeEnum::StopLoss => "STOP_LOSS",
+            SorOrderTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            SorOrderTypeEnum::TakeProfit => "TAKE_PROFIT",
+            SorOrderTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            SorOrderTypeEnum::LimitMaker => "LIMIT_MAKER",
+            SorOrderTypeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1212,23 +1213,23 @@ impl SorOrderTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl SorOrderTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderTimeInForceEnum::GTC => "GTC",
-            SorOrderTimeInForceEnum::IOC => "IOC",
-            SorOrderTimeInForceEnum::FOK => "FOK",
-            SorOrderTimeInForceEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            SorOrderTimeInForceEnum::Gtc => "GTC",
+            SorOrderTimeInForceEnum::Ioc => "IOC",
+            SorOrderTimeInForceEnum::Fok => "FOK",
+            SorOrderTimeInForceEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1237,26 +1238,26 @@ impl SorOrderTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl SorOrderNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderNewOrderRespTypeEnum::ACK => "ACK",
-            SorOrderNewOrderRespTypeEnum::RESULT => "RESULT",
-            SorOrderNewOrderRespTypeEnum::FULL => "FULL",
-            SorOrderNewOrderRespTypeEnum::MARKET => "MARKET",
-            SorOrderNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            SorOrderNewOrderRespTypeEnum::Ack => "ACK",
+            SorOrderNewOrderRespTypeEnum::Result => "RESULT",
+            SorOrderNewOrderRespTypeEnum::Full => "FULL",
+            SorOrderNewOrderRespTypeEnum::Market => "MARKET",
+            SorOrderNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -1265,29 +1266,29 @@ impl SorOrderNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl SorOrderSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderSelfTradePreventionModeEnum::NONE => "NONE",
-            SorOrderSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            SorOrderSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            SorOrderSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            SorOrderSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            SorOrderSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            SorOrderSelfTradePreventionModeEnum::None => "NONE",
+            SorOrderSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            SorOrderSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            SorOrderSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            SorOrderSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            SorOrderSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -2502,9 +2503,6 @@ pub struct OrderTestParams {
 impl OrderTestParams {
     /// Create a builder for [`order_test`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OrderTestParamsBuilder {
         OrderTestParamsBuilder::default()
@@ -2634,9 +2632,6 @@ pub struct SorOrderTestParams {
 impl SorOrderTestParams {
     /// Create a builder for [`sor_order_test`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> SorOrderTestParamsBuilder {
         SorOrderTestParamsBuilder::default()
@@ -2659,7 +2654,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::DeleteOpenOrdersResponseInner>>(
@@ -2695,23 +2690,23 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = cancel_restrictions {
-            query_params.insert("cancel_restrictions".to_string(), json!(rw));
+            query_params.insert("cancelRestrictions".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DeleteOrderResponse>(
@@ -2746,19 +2741,19 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_list_id {
-            query_params.insert("order_list_id".to_string(), json!(rw));
+            query_params.insert("orderListId".to_string(), json!(rw));
         }
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DeleteOrderListResponse>(
@@ -2808,55 +2803,60 @@ impl TradeApi for TradeApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = time_in_force {
-            query_params.insert("time_in_force".to_string(), json!(rw));
+            query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = quantity {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("quantity".to_string(), json!(rw));
         }
 
         if let Some(rw) = quote_order_qty {
-            query_params.insert("quote_order_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("quoteOrderQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = price {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("price".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = strategy_id {
-            query_params.insert("strategy_id".to_string(), json!(rw));
+            query_params.insert("strategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = strategy_type {
-            query_params.insert("strategy_type".to_string(), json!(rw));
+            query_params.insert("strategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_price {
-            query_params.insert("stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = trailing_delta {
-            query_params.insert("trailing_delta".to_string(), json!(rw));
+            query_params.insert("trailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = iceberg_qty {
-            query_params.insert("iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("icebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::NewOrderResponse>(
@@ -2891,22 +2891,23 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
-        query_params.insert("newQty".to_string(), json!(new_qty));
+        let new_qty_value = Decimal::from_f32(new_qty).unwrap_or_default();
+        query_params.insert("newQty".to_string(), json!(new_qty_value));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OrderAmendKeepPriorityResponse>(
@@ -2964,75 +2965,80 @@ impl TradeApi for TradeApiClient {
         query_params.insert("cancelReplaceMode".to_string(), json!(cancel_replace_mode));
 
         if let Some(rw) = time_in_force {
-            query_params.insert("time_in_force".to_string(), json!(rw));
+            query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = quantity {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("quantity".to_string(), json!(rw));
         }
 
         if let Some(rw) = quote_order_qty {
-            query_params.insert("quote_order_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("quoteOrderQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = price {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("price".to_string(), json!(rw));
         }
 
         if let Some(rw) = cancel_new_client_order_id {
-            query_params.insert("cancel_new_client_order_id".to_string(), json!(rw));
+            query_params.insert("cancelNewClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = cancel_orig_client_order_id {
-            query_params.insert("cancel_orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("cancelOrigClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = cancel_order_id {
-            query_params.insert("cancel_order_id".to_string(), json!(rw));
+            query_params.insert("cancelOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = strategy_id {
-            query_params.insert("strategy_id".to_string(), json!(rw));
+            query_params.insert("strategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = strategy_type {
-            query_params.insert("strategy_type".to_string(), json!(rw));
+            query_params.insert("strategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_price {
-            query_params.insert("stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = trailing_delta {
-            query_params.insert("trailing_delta".to_string(), json!(rw));
+            query_params.insert("trailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = iceberg_qty {
-            query_params.insert("iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("icebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = cancel_restrictions {
-            query_params.insert("cancel_restrictions".to_string(), json!(rw));
+            query_params.insert("cancelRestrictions".to_string(), json!(rw));
         }
 
         if let Some(rw) = order_rate_limit_exceeded_mode {
-            query_params.insert("order_rate_limit_exceeded_mode".to_string(), json!(rw));
+            query_params.insert("orderRateLimitExceededMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OrderCancelReplaceResponse>(
@@ -3088,90 +3094,96 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        query_params.insert("quantity".to_string(), json!(quantity_value));
 
         query_params.insert("aboveType".to_string(), json!(above_type));
 
         query_params.insert("belowType".to_string(), json!(below_type));
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_client_order_id {
-            query_params.insert("above_client_order_id".to_string(), json!(rw));
+            query_params.insert("aboveClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_iceberg_qty {
-            query_params.insert("above_iceberg_qty".to_string(), json!(rw));
+            query_params.insert("aboveIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_price {
-            query_params.insert("above_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("abovePrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_stop_price {
-            query_params.insert("above_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("aboveStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_trailing_delta {
-            query_params.insert("above_trailing_delta".to_string(), json!(rw));
+            query_params.insert("aboveTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_time_in_force {
-            query_params.insert("above_time_in_force".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("aboveTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_strategy_id {
-            query_params.insert("above_strategy_id".to_string(), json!(rw));
+            query_params.insert("aboveStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = above_strategy_type {
-            query_params.insert("above_strategy_type".to_string(), json!(rw));
+            query_params.insert("aboveStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_client_order_id {
-            query_params.insert("below_client_order_id".to_string(), json!(rw));
+            query_params.insert("belowClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_iceberg_qty {
-            query_params.insert("below_iceberg_qty".to_string(), json!(rw));
+            query_params.insert("belowIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_price {
-            query_params.insert("below_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("belowPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_stop_price {
-            query_params.insert("below_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("belowStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_trailing_delta {
-            query_params.insert("below_trailing_delta".to_string(), json!(rw));
+            query_params.insert("belowTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_time_in_force {
-            query_params.insert("below_time_in_force".to_string(), json!(rw));
+            query_params.insert("belowTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_strategy_id {
-            query_params.insert("below_strategy_id".to_string(), json!(rw));
+            query_params.insert("belowStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = below_strategy_type {
-            query_params.insert("below_strategy_type".to_string(), json!(rw));
+            query_params.insert("belowStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OrderListOcoResponse>(
@@ -3229,82 +3241,90 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("workingSide".to_string(), json!(working_side));
 
-        query_params.insert("workingPrice".to_string(), json!(working_price));
+        let working_price_value = Decimal::from_f32(working_price).unwrap_or_default();
+        query_params.insert("workingPrice".to_string(), json!(working_price_value));
 
-        query_params.insert("workingQuantity".to_string(), json!(working_quantity));
+        let working_quantity_value = Decimal::from_f32(working_quantity).unwrap_or_default();
+        query_params.insert("workingQuantity".to_string(), json!(working_quantity_value));
 
         query_params.insert("pendingType".to_string(), json!(pending_type));
 
         query_params.insert("pendingSide".to_string(), json!(pending_side));
 
-        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity));
+        let pending_quantity_value = Decimal::from_f32(pending_quantity).unwrap_or_default();
+        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity_value));
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_client_order_id {
-            query_params.insert("working_client_order_id".to_string(), json!(rw));
+            query_params.insert("workingClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_iceberg_qty {
-            query_params.insert("working_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("workingIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_time_in_force {
-            query_params.insert("working_time_in_force".to_string(), json!(rw));
+            query_params.insert("workingTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_strategy_id {
-            query_params.insert("working_strategy_id".to_string(), json!(rw));
+            query_params.insert("workingStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_strategy_type {
-            query_params.insert("working_strategy_type".to_string(), json!(rw));
+            query_params.insert("workingStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_client_order_id {
-            query_params.insert("pending_client_order_id".to_string(), json!(rw));
+            query_params.insert("pendingClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_price {
-            query_params.insert("pending_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_stop_price {
-            query_params.insert("pending_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_trailing_delta {
-            query_params.insert("pending_trailing_delta".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_iceberg_qty {
-            query_params.insert("pending_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_time_in_force {
-            query_params.insert("pending_time_in_force".to_string(), json!(rw));
+            query_params.insert("pendingTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_strategy_id {
-            query_params.insert("pending_strategy_id".to_string(), json!(rw));
+            query_params.insert("pendingStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_strategy_type {
-            query_params.insert("pending_strategy_type".to_string(), json!(rw));
+            query_params.insert("pendingStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OrderListOtoResponse>(
@@ -3371,118 +3391,130 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("workingSide".to_string(), json!(working_side));
 
-        query_params.insert("workingPrice".to_string(), json!(working_price));
+        let working_price_value = Decimal::from_f32(working_price).unwrap_or_default();
+        query_params.insert("workingPrice".to_string(), json!(working_price_value));
 
-        query_params.insert("workingQuantity".to_string(), json!(working_quantity));
+        let working_quantity_value = Decimal::from_f32(working_quantity).unwrap_or_default();
+        query_params.insert("workingQuantity".to_string(), json!(working_quantity_value));
 
         query_params.insert("pendingSide".to_string(), json!(pending_side));
 
-        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity));
+        let pending_quantity_value = Decimal::from_f32(pending_quantity).unwrap_or_default();
+        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity_value));
 
         query_params.insert("pendingAboveType".to_string(), json!(pending_above_type));
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_client_order_id {
-            query_params.insert("working_client_order_id".to_string(), json!(rw));
+            query_params.insert("workingClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_iceberg_qty {
-            query_params.insert("working_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("workingIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_time_in_force {
-            query_params.insert("working_time_in_force".to_string(), json!(rw));
+            query_params.insert("workingTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_strategy_id {
-            query_params.insert("working_strategy_id".to_string(), json!(rw));
+            query_params.insert("workingStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_strategy_type {
-            query_params.insert("working_strategy_type".to_string(), json!(rw));
+            query_params.insert("workingStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_client_order_id {
-            query_params.insert("pending_above_client_order_id".to_string(), json!(rw));
+            query_params.insert("pendingAboveClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_price {
-            query_params.insert("pending_above_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAbovePrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_stop_price {
-            query_params.insert("pending_above_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAboveStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_trailing_delta {
-            query_params.insert("pending_above_trailing_delta".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAboveTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_iceberg_qty {
-            query_params.insert("pending_above_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAboveIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_time_in_force {
-            query_params.insert("pending_above_time_in_force".to_string(), json!(rw));
+            query_params.insert("pendingAboveTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_strategy_id {
-            query_params.insert("pending_above_strategy_id".to_string(), json!(rw));
+            query_params.insert("pendingAboveStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_strategy_type {
-            query_params.insert("pending_above_strategy_type".to_string(), json!(rw));
+            query_params.insert("pendingAboveStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_type {
-            query_params.insert("pending_below_type".to_string(), json!(rw));
+            query_params.insert("pendingBelowType".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_client_order_id {
-            query_params.insert("pending_below_client_order_id".to_string(), json!(rw));
+            query_params.insert("pendingBelowClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_price {
-            query_params.insert("pending_below_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_stop_price {
-            query_params.insert("pending_below_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_trailing_delta {
-            query_params.insert("pending_below_trailing_delta".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_iceberg_qty {
-            query_params.insert("pending_below_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_time_in_force {
-            query_params.insert("pending_below_time_in_force".to_string(), json!(rw));
+            query_params.insert("pendingBelowTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_strategy_id {
-            query_params.insert("pending_below_strategy_id".to_string(), json!(rw));
+            query_params.insert("pendingBelowStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_strategy_type {
-            query_params.insert("pending_below_strategy_type".to_string(), json!(rw));
+            query_params.insert("pendingBelowStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OrderListOtocoResponse>(
@@ -3533,70 +3565,76 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        query_params.insert("quantity".to_string(), json!(quantity_value));
 
-        query_params.insert("price".to_string(), json!(price));
+        let price_value = Decimal::from_f32(price).unwrap_or_default();
+        query_params.insert("price".to_string(), json!(price_value));
 
-        query_params.insert("stopPrice".to_string(), json!(stop_price));
+        let stop_price_value = Decimal::from_f32(stop_price).unwrap_or_default();
+        query_params.insert("stopPrice".to_string(), json!(stop_price_value));
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit_client_order_id {
-            query_params.insert("limit_client_order_id".to_string(), json!(rw));
+            query_params.insert("limitClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit_strategy_id {
-            query_params.insert("limit_strategy_id".to_string(), json!(rw));
+            query_params.insert("limitStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit_strategy_type {
-            query_params.insert("limit_strategy_type".to_string(), json!(rw));
+            query_params.insert("limitStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit_iceberg_qty {
-            query_params.insert("limit_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("limitIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = trailing_delta {
-            query_params.insert("trailing_delta".to_string(), json!(rw));
+            query_params.insert("trailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_client_order_id {
-            query_params.insert("stop_client_order_id".to_string(), json!(rw));
+            query_params.insert("stopClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_strategy_id {
-            query_params.insert("stop_strategy_id".to_string(), json!(rw));
+            query_params.insert("stopStrategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_strategy_type {
-            query_params.insert("stop_strategy_type".to_string(), json!(rw));
+            query_params.insert("stopStrategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_limit_price {
-            query_params.insert("stop_limit_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopLimitPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_iceberg_qty {
-            query_params.insert("stop_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_limit_time_in_force {
-            query_params.insert("stop_limit_time_in_force".to_string(), json!(rw));
+            query_params.insert("stopLimitTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OrderOcoResponse>(
@@ -3625,7 +3663,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = compute_commission_rates {
-            query_params.insert("compute_commission_rates".to_string(), json!(rw));
+            query_params.insert("computeCommissionRates".to_string(), json!(rw));
         }
 
         send_request::<models::OrderTestResponse>(
@@ -3671,42 +3709,45 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("type".to_string(), json!(r#type));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        query_params.insert("quantity".to_string(), json!(quantity_value));
 
         if let Some(rw) = time_in_force {
-            query_params.insert("time_in_force".to_string(), json!(rw));
+            query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = price {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("price".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = strategy_id {
-            query_params.insert("strategy_id".to_string(), json!(rw));
+            query_params.insert("strategyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = strategy_type {
-            query_params.insert("strategy_type".to_string(), json!(rw));
+            query_params.insert("strategyType".to_string(), json!(rw));
         }
 
         if let Some(rw) = iceberg_qty {
-            query_params.insert("iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("icebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SorOrderResponse>(
@@ -3735,7 +3776,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = compute_commission_rates {
-            query_params.insert("compute_commission_rates".to_string(), json!(rw));
+            query_params.insert("computeCommissionRates".to_string(), json!(rw));
         }
 
         send_request::<models::SorOrderTestResponse>(
@@ -4186,7 +4227,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = DeleteOrderParams::builder("BNBUSDT".to_string(),).order_id(1).orig_client_order_id("orig_client_order_id_example".to_string()).new_client_order_id("new_client_order_id_example".to_string()).cancel_restrictions(DeleteOrderCancelRestrictionsEnum::ONLY_NEW).recv_window(5000).build().unwrap();
+            let params = DeleteOrderParams::builder("BNBUSDT".to_string(),).order_id(1).orig_client_order_id("orig_client_order_id_example".to_string()).new_client_order_id("new_client_order_id_example".to_string()).cancel_restrictions(DeleteOrderCancelRestrictionsEnum::OnlyNew).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","origClientOrderId":"myOrder1","orderId":4,"orderListId":-1,"clientOrderId":"cancelMyOrder1","transactTime":1684804350068,"price":"2.00000000","origQty":"1.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"BUY","selfTradePreventionMode":"NONE"}"#).unwrap();
             let expected_response : models::DeleteOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DeleteOrderResponse");
@@ -4273,7 +4314,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("BNBUSDT".to_string(),NewOrderSideEnum::BUY,NewOrderTypeEnum::MARKET,).build().unwrap();
+            let params = NewOrderParams::builder("BNBUSDT".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Market,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","orderId":28,"orderListId":-1,"clientOrderId":"6gCrw2kRUAF9CvJDGP16IP","transactTime":1507725176595,"price":"0.00000000","origQty":"10.00000000","executedQty":"10.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"10.00000000","status":"FILLED","timeInForce":"GTC","type":"MARKET","side":"SELL","workingTime":1507725176595,"selfTradePreventionMode":"NONE","fills":[{"price":"3995.00000000","qty":"1.00000000","commission":"3.99500000","commissionAsset":"USDT","tradeId":60},{"price":"3997.00000000","qty":"1.00000000","commission":"3.99700000","commissionAsset":"USDT","tradeId":59},{"price":"3998.00000000","qty":"2.00000000","commission":"7.99600000","commissionAsset":"USDT","tradeId":58},{"price":"3999.00000000","qty":"5.00000000","commission":"19.99500000","commissionAsset":"USDT","tradeId":57},{"price":"4000.00000000","qty":"1.00000000","commission":"4.00000000","commissionAsset":"USDT","tradeId":56}]}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
@@ -4290,7 +4331,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("BNBUSDT".to_string(),NewOrderSideEnum::BUY,NewOrderTypeEnum::MARKET,).time_in_force(NewOrderTimeInForceEnum::GTC).quantity(1.0).quote_order_qty(1.0).price(400.0).new_client_order_id("new_client_order_id_example".to_string()).strategy_id(1).strategy_type(1).stop_price(1.0).trailing_delta(1).iceberg_qty(1.0).new_order_resp_type(NewOrderNewOrderRespTypeEnum::ACK).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::NONE).recv_window(5000).build().unwrap();
+            let params = NewOrderParams::builder("BNBUSDT".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Market,).time_in_force(NewOrderTimeInForceEnum::Gtc).quantity(1.0).quote_order_qty(1.0).price(400.0).new_client_order_id("new_client_order_id_example".to_string()).strategy_id(1).strategy_type(1).stop_price(1.0).trailing_delta(1).iceberg_qty(1.0).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","orderId":28,"orderListId":-1,"clientOrderId":"6gCrw2kRUAF9CvJDGP16IP","transactTime":1507725176595,"price":"0.00000000","origQty":"10.00000000","executedQty":"10.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"10.00000000","status":"FILLED","timeInForce":"GTC","type":"MARKET","side":"SELL","workingTime":1507725176595,"selfTradePreventionMode":"NONE","fills":[{"price":"3995.00000000","qty":"1.00000000","commission":"3.99500000","commissionAsset":"USDT","tradeId":60},{"price":"3997.00000000","qty":"1.00000000","commission":"3.99700000","commissionAsset":"USDT","tradeId":59},{"price":"3998.00000000","qty":"2.00000000","commission":"7.99600000","commissionAsset":"USDT","tradeId":58},{"price":"3999.00000000","qty":"5.00000000","commission":"19.99500000","commissionAsset":"USDT","tradeId":57},{"price":"4000.00000000","qty":"1.00000000","commission":"4.00000000","commissionAsset":"USDT","tradeId":56}]}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
@@ -4309,8 +4350,8 @@ mod tests {
 
             let params = NewOrderParams::builder(
                 "BNBUSDT".to_string(),
-                NewOrderSideEnum::BUY,
-                NewOrderTypeEnum::MARKET,
+                NewOrderSideEnum::Buy,
+                NewOrderTypeEnum::Market,
             )
             .build()
             .unwrap();
@@ -4381,7 +4422,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceSideEnum::BUY,OrderCancelReplaceTypeEnum::MARKET,OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,).build().unwrap();
+            let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceSideEnum::Buy,OrderCancelReplaceTypeEnum::Market,OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"code":-2021,"msg":"Order cancel-replace partially failed.","data":{"cancelResult":"SUCCESS","newOrderResult":"FAILURE","cancelResponse":{"symbol":"LTCBNB","origClientOrderId":"GKt5zzfOxRDSQLveDYCTkc","orderId":64,"orderListId":-1,"clientOrderId":"loehOJF3FjoreUBDmv739R","transactTime":1715779007228,"price":"1.00","origQty":"10.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00","status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","selfTradePreventionMode":"NONE"},"newOrderResponse":{"code":-1015,"msg":"Too many new orders; current limit is 1 orders per 10 SECOND."}}}"#).unwrap();
             let expected_response : models::OrderCancelReplaceResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderCancelReplaceResponse");
@@ -4398,7 +4439,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceSideEnum::BUY,OrderCancelReplaceTypeEnum::MARKET,OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,).time_in_force(OrderCancelReplaceTimeInForceEnum::GTC).quantity(1.0).quote_order_qty(1.0).price(400.0).cancel_new_client_order_id("cancel_new_client_order_id_example".to_string()).cancel_orig_client_order_id("cancel_orig_client_order_id_example".to_string()).cancel_order_id(1).new_client_order_id("new_client_order_id_example".to_string()).strategy_id(1).strategy_type(1).stop_price(1.0).trailing_delta(1).iceberg_qty(1.0).new_order_resp_type(OrderCancelReplaceNewOrderRespTypeEnum::ACK).self_trade_prevention_mode(OrderCancelReplaceSelfTradePreventionModeEnum::NONE).cancel_restrictions(OrderCancelReplaceCancelRestrictionsEnum::ONLY_NEW).order_rate_limit_exceeded_mode(OrderCancelReplaceOrderRateLimitExceededModeEnum::DO_NOTHING).recv_window(5000).build().unwrap();
+            let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceSideEnum::Buy,OrderCancelReplaceTypeEnum::Market,OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,).time_in_force(OrderCancelReplaceTimeInForceEnum::Gtc).quantity(1.0).quote_order_qty(1.0).price(400.0).cancel_new_client_order_id("cancel_new_client_order_id_example".to_string()).cancel_orig_client_order_id("cancel_orig_client_order_id_example".to_string()).cancel_order_id(1).new_client_order_id("new_client_order_id_example".to_string()).strategy_id(1).strategy_type(1).stop_price(1.0).trailing_delta(1).iceberg_qty(1.0).new_order_resp_type(OrderCancelReplaceNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(OrderCancelReplaceSelfTradePreventionModeEnum::None).cancel_restrictions(OrderCancelReplaceCancelRestrictionsEnum::OnlyNew).order_rate_limit_exceeded_mode(OrderCancelReplaceOrderRateLimitExceededModeEnum::DoNothing).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"code":-2021,"msg":"Order cancel-replace partially failed.","data":{"cancelResult":"SUCCESS","newOrderResult":"FAILURE","cancelResponse":{"symbol":"LTCBNB","origClientOrderId":"GKt5zzfOxRDSQLveDYCTkc","orderId":64,"orderListId":-1,"clientOrderId":"loehOJF3FjoreUBDmv739R","transactTime":1715779007228,"price":"1.00","origQty":"10.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00","status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","selfTradePreventionMode":"NONE"},"newOrderResponse":{"code":-1015,"msg":"Too many new orders; current limit is 1 orders per 10 SECOND."}}}"#).unwrap();
             let expected_response : models::OrderCancelReplaceResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderCancelReplaceResponse");
@@ -4417,9 +4458,9 @@ mod tests {
 
             let params = OrderCancelReplaceParams::builder(
                 "BNBUSDT".to_string(),
-                OrderCancelReplaceSideEnum::BUY,
-                OrderCancelReplaceTypeEnum::MARKET,
-                OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,
+                OrderCancelReplaceSideEnum::Buy,
+                OrderCancelReplaceTypeEnum::Market,
+                OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,
             )
             .build()
             .unwrap();
@@ -4438,7 +4479,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderListOcoParams::builder("BNBUSDT".to_string(),OrderListOcoSideEnum::BUY,1.0,OrderListOcoAboveTypeEnum::STOP_LOSS_LIMIT,OrderListOcoBelowTypeEnum::STOP_LOSS,).build().unwrap();
+            let params = OrderListOcoParams::builder("BNBUSDT".to_string(),OrderListOcoSideEnum::Buy,1.0,OrderListOcoAboveTypeEnum::StopLossLimit,OrderListOcoBelowTypeEnum::StopLoss,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":1,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"lH1YDkuQKWiXVXHPSKYEIp","transactionTime":1710485608839,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":11,"clientOrderId":"NuMp0nVYnciDiFmVqfpBqK"},{"symbol":"LTCBTC","orderId":10,"clientOrderId":"44nZvqpemY7sVYgPYbvPih"}],"orderReports":[{"symbol":"LTCBTC","orderId":11,"orderListId":1,"clientOrderId":"NuMp0nVYnciDiFmVqfpBqK","transactTime":1710485608839,"price":"3.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"SELL","workingTime":1710485608839,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":10,"orderListId":1,"clientOrderId":"44nZvqpemY7sVYgPYbvPih","transactTime":1710485608839,"price":"1.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"SELL","stopPrice":"1.00000000","workingTime":-1,"icebergQty":"1.00000000","selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderListOcoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderListOcoResponse");
@@ -4455,7 +4496,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderListOcoParams::builder("BNBUSDT".to_string(),OrderListOcoSideEnum::BUY,1.0,OrderListOcoAboveTypeEnum::STOP_LOSS_LIMIT,OrderListOcoBelowTypeEnum::STOP_LOSS,).list_client_order_id("list_client_order_id_example".to_string()).above_client_order_id("above_client_order_id_example".to_string()).above_iceberg_qty(1).above_price(1.0).above_stop_price(1.0).above_trailing_delta(1).above_time_in_force(1.0).above_strategy_id(1).above_strategy_type(1).below_client_order_id("below_client_order_id_example".to_string()).below_iceberg_qty(1).below_price(1.0).below_stop_price(1.0).below_trailing_delta(1).below_time_in_force(OrderListOcoBelowTimeInForceEnum::belowType).below_strategy_id(1).below_strategy_type(1).new_order_resp_type(OrderListOcoNewOrderRespTypeEnum::ACK).self_trade_prevention_mode(OrderListOcoSelfTradePreventionModeEnum::NONE).recv_window(5000).build().unwrap();
+            let params = OrderListOcoParams::builder("BNBUSDT".to_string(),OrderListOcoSideEnum::Buy,1.0,OrderListOcoAboveTypeEnum::StopLossLimit,OrderListOcoBelowTypeEnum::StopLoss,).list_client_order_id("list_client_order_id_example".to_string()).above_client_order_id("above_client_order_id_example".to_string()).above_iceberg_qty(1).above_price(1.0).above_stop_price(1.0).above_trailing_delta(1).above_time_in_force(1.0).above_strategy_id(1).above_strategy_type(1).below_client_order_id("below_client_order_id_example".to_string()).below_iceberg_qty(1).below_price(1.0).below_stop_price(1.0).below_trailing_delta(1).below_time_in_force(OrderListOcoBelowTimeInForceEnum::Belowtype).below_strategy_id(1).below_strategy_type(1).new_order_resp_type(OrderListOcoNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(OrderListOcoSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":1,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"lH1YDkuQKWiXVXHPSKYEIp","transactionTime":1710485608839,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":11,"clientOrderId":"NuMp0nVYnciDiFmVqfpBqK"},{"symbol":"LTCBTC","orderId":10,"clientOrderId":"44nZvqpemY7sVYgPYbvPih"}],"orderReports":[{"symbol":"LTCBTC","orderId":11,"orderListId":1,"clientOrderId":"NuMp0nVYnciDiFmVqfpBqK","transactTime":1710485608839,"price":"3.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"SELL","workingTime":1710485608839,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":10,"orderListId":1,"clientOrderId":"44nZvqpemY7sVYgPYbvPih","transactTime":1710485608839,"price":"1.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"SELL","stopPrice":"1.00000000","workingTime":-1,"icebergQty":"1.00000000","selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderListOcoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderListOcoResponse");
@@ -4474,10 +4515,10 @@ mod tests {
 
             let params = OrderListOcoParams::builder(
                 "BNBUSDT".to_string(),
-                OrderListOcoSideEnum::BUY,
+                OrderListOcoSideEnum::Buy,
                 1.0,
-                OrderListOcoAboveTypeEnum::STOP_LOSS_LIMIT,
-                OrderListOcoBelowTypeEnum::STOP_LOSS,
+                OrderListOcoAboveTypeEnum::StopLossLimit,
+                OrderListOcoBelowTypeEnum::StopLoss,
             )
             .build()
             .unwrap();
@@ -4496,7 +4537,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderListOtoParams::builder("BNBUSDT".to_string(),OrderListOtoWorkingTypeEnum::LIMIT,OrderListOtoWorkingSideEnum::BUY,1.0,1.0,OrderListOtoPendingTypeEnum::LIMIT,OrderListOtoPendingSideEnum::BUY,1.0,).build().unwrap();
+            let params = OrderListOtoParams::builder("BNBUSDT".to_string(),OrderListOtoWorkingTypeEnum::Limit,OrderListOtoWorkingSideEnum::Buy,1.0,1.0,OrderListOtoPendingTypeEnum::Limit,OrderListOtoPendingSideEnum::Buy,1.0,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":0,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"yl2ERtcar1o25zcWtqVBTC","transactionTime":1712289389158,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":5,"clientOrderId":"arLFo0zGJVDE69cvGBaU0d"},{"symbol":"LTCBTC","orderId":4,"clientOrderId":"Bq17mn9fP6vyCn75Jw1xya"}],"orderReports":[{"symbol":"LTCBTC","orderId":5,"orderListId":0,"clientOrderId":"arLFo0zGJVDE69cvGBaU0d","transactTime":1712289389158,"price":"0.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"GTC","type":"MARKET","side":"BUY","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":4,"orderListId":0,"clientOrderId":"Bq17mn9fP6vyCn75Jw1xya","transactTime":1712289389158,"price":"1.00000000","origQty":"1.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1712289389158,"selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderListOtoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderListOtoResponse");
@@ -4513,7 +4554,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderListOtoParams::builder("BNBUSDT".to_string(),OrderListOtoWorkingTypeEnum::LIMIT,OrderListOtoWorkingSideEnum::BUY,1.0,1.0,OrderListOtoPendingTypeEnum::LIMIT,OrderListOtoPendingSideEnum::BUY,1.0,).list_client_order_id("list_client_order_id_example".to_string()).new_order_resp_type(OrderListOtoNewOrderRespTypeEnum::ACK).self_trade_prevention_mode(OrderListOtoSelfTradePreventionModeEnum::NONE).working_client_order_id("working_client_order_id_example".to_string()).working_iceberg_qty(1.0).working_time_in_force(OrderListOtoWorkingTimeInForceEnum::GTC).working_strategy_id(1).working_strategy_type(1).pending_client_order_id("pending_client_order_id_example".to_string()).pending_price(1.0).pending_stop_price(1.0).pending_trailing_delta(1.0).pending_iceberg_qty(1.0).pending_time_in_force(OrderListOtoPendingTimeInForceEnum::GTC).pending_strategy_id(1).pending_strategy_type(1).recv_window(5000).build().unwrap();
+            let params = OrderListOtoParams::builder("BNBUSDT".to_string(),OrderListOtoWorkingTypeEnum::Limit,OrderListOtoWorkingSideEnum::Buy,1.0,1.0,OrderListOtoPendingTypeEnum::Limit,OrderListOtoPendingSideEnum::Buy,1.0,).list_client_order_id("list_client_order_id_example".to_string()).new_order_resp_type(OrderListOtoNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(OrderListOtoSelfTradePreventionModeEnum::None).working_client_order_id("working_client_order_id_example".to_string()).working_iceberg_qty(1.0).working_time_in_force(OrderListOtoWorkingTimeInForceEnum::Gtc).working_strategy_id(1).working_strategy_type(1).pending_client_order_id("pending_client_order_id_example".to_string()).pending_price(1.0).pending_stop_price(1.0).pending_trailing_delta(1.0).pending_iceberg_qty(1.0).pending_time_in_force(OrderListOtoPendingTimeInForceEnum::Gtc).pending_strategy_id(1).pending_strategy_type(1).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":0,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"yl2ERtcar1o25zcWtqVBTC","transactionTime":1712289389158,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":5,"clientOrderId":"arLFo0zGJVDE69cvGBaU0d"},{"symbol":"LTCBTC","orderId":4,"clientOrderId":"Bq17mn9fP6vyCn75Jw1xya"}],"orderReports":[{"symbol":"LTCBTC","orderId":5,"orderListId":0,"clientOrderId":"arLFo0zGJVDE69cvGBaU0d","transactTime":1712289389158,"price":"0.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"GTC","type":"MARKET","side":"BUY","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":4,"orderListId":0,"clientOrderId":"Bq17mn9fP6vyCn75Jw1xya","transactTime":1712289389158,"price":"1.00000000","origQty":"1.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1712289389158,"selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderListOtoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderListOtoResponse");
@@ -4532,12 +4573,12 @@ mod tests {
 
             let params = OrderListOtoParams::builder(
                 "BNBUSDT".to_string(),
-                OrderListOtoWorkingTypeEnum::LIMIT,
-                OrderListOtoWorkingSideEnum::BUY,
+                OrderListOtoWorkingTypeEnum::Limit,
+                OrderListOtoWorkingSideEnum::Buy,
                 1.0,
                 1.0,
-                OrderListOtoPendingTypeEnum::LIMIT,
-                OrderListOtoPendingSideEnum::BUY,
+                OrderListOtoPendingTypeEnum::Limit,
+                OrderListOtoPendingSideEnum::Buy,
                 1.0,
             )
             .build()
@@ -4557,7 +4598,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderListOtocoParams::builder("BNBUSDT".to_string(),OrderListOtocoWorkingTypeEnum::LIMIT,OrderListOtocoWorkingSideEnum::BUY,1.0,1.0,OrderListOtocoPendingSideEnum::BUY,1.0,OrderListOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,).build().unwrap();
+            let params = OrderListOtocoParams::builder("BNBUSDT".to_string(),OrderListOtocoWorkingTypeEnum::Limit,OrderListOtocoWorkingSideEnum::Buy,1.0,1.0,OrderListOtocoPendingSideEnum::Buy,1.0,OrderListOtocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":1,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"RumwQpBaDctlUu5jyG5rs0","transactionTime":1712291372842,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":8,"clientOrderId":"r4JMv9cwAYYUwwBZfbussx"},{"symbol":"LTCBTC","orderId":7,"clientOrderId":"6pcQbFIzTXGZQ1e2MkGDq4"},{"symbol":"LTCBTC","orderId":6,"clientOrderId":"fM9Y4m23IFJVCQmIrlUmMK"}],"orderReports":[{"symbol":"LTCBTC","orderId":8,"orderListId":1,"clientOrderId":"r4JMv9cwAYYUwwBZfbussx","transactTime":1712291372842,"price":"3.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":7,"orderListId":1,"clientOrderId":"6pcQbFIzTXGZQ1e2MkGDq4","transactTime":1712291372842,"price":"1.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"IOC","type":"STOP_LOSS_LIMIT","side":"BUY","stopPrice":"6.00000000","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":6,"orderListId":1,"clientOrderId":"fM9Y4m23IFJVCQmIrlUmMK","transactTime":1712291372842,"price":"1.00000000","origQty":"1.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1712291372842,"selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderListOtocoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderListOtocoResponse");
@@ -4574,7 +4615,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderListOtocoParams::builder("BNBUSDT".to_string(),OrderListOtocoWorkingTypeEnum::LIMIT,OrderListOtocoWorkingSideEnum::BUY,1.0,1.0,OrderListOtocoPendingSideEnum::BUY,1.0,OrderListOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,).list_client_order_id("list_client_order_id_example".to_string()).new_order_resp_type(OrderListOtocoNewOrderRespTypeEnum::ACK).self_trade_prevention_mode(OrderListOtocoSelfTradePreventionModeEnum::NONE).working_client_order_id("working_client_order_id_example".to_string()).working_iceberg_qty(1.0).working_time_in_force(OrderListOtocoWorkingTimeInForceEnum::GTC).working_strategy_id(1).working_strategy_type(1).pending_above_client_order_id("pending_above_client_order_id_example".to_string()).pending_above_price(1.0).pending_above_stop_price(1.0).pending_above_trailing_delta(1.0).pending_above_iceberg_qty(1.0).pending_above_time_in_force(OrderListOtocoPendingAboveTimeInForceEnum::GTC).pending_above_strategy_id(1).pending_above_strategy_type(1).pending_below_type(OrderListOtocoPendingBelowTypeEnum::STOP_LOSS).pending_below_client_order_id("pending_below_client_order_id_example".to_string()).pending_below_price(1.0).pending_below_stop_price(1.0).pending_below_trailing_delta(1.0).pending_below_iceberg_qty(1.0).pending_below_time_in_force(OrderListOtocoPendingBelowTimeInForceEnum::GTC).pending_below_strategy_id(1).pending_below_strategy_type(1).recv_window(5000).build().unwrap();
+            let params = OrderListOtocoParams::builder("BNBUSDT".to_string(),OrderListOtocoWorkingTypeEnum::Limit,OrderListOtocoWorkingSideEnum::Buy,1.0,1.0,OrderListOtocoPendingSideEnum::Buy,1.0,OrderListOtocoPendingAboveTypeEnum::StopLossLimit,).list_client_order_id("list_client_order_id_example".to_string()).new_order_resp_type(OrderListOtocoNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(OrderListOtocoSelfTradePreventionModeEnum::None).working_client_order_id("working_client_order_id_example".to_string()).working_iceberg_qty(1.0).working_time_in_force(OrderListOtocoWorkingTimeInForceEnum::Gtc).working_strategy_id(1).working_strategy_type(1).pending_above_client_order_id("pending_above_client_order_id_example".to_string()).pending_above_price(1.0).pending_above_stop_price(1.0).pending_above_trailing_delta(1.0).pending_above_iceberg_qty(1.0).pending_above_time_in_force(OrderListOtocoPendingAboveTimeInForceEnum::Gtc).pending_above_strategy_id(1).pending_above_strategy_type(1).pending_below_type(OrderListOtocoPendingBelowTypeEnum::StopLoss).pending_below_client_order_id("pending_below_client_order_id_example".to_string()).pending_below_price(1.0).pending_below_stop_price(1.0).pending_below_trailing_delta(1.0).pending_below_iceberg_qty(1.0).pending_below_time_in_force(OrderListOtocoPendingBelowTimeInForceEnum::Gtc).pending_below_strategy_id(1).pending_below_strategy_type(1).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":1,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"RumwQpBaDctlUu5jyG5rs0","transactionTime":1712291372842,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":8,"clientOrderId":"r4JMv9cwAYYUwwBZfbussx"},{"symbol":"LTCBTC","orderId":7,"clientOrderId":"6pcQbFIzTXGZQ1e2MkGDq4"},{"symbol":"LTCBTC","orderId":6,"clientOrderId":"fM9Y4m23IFJVCQmIrlUmMK"}],"orderReports":[{"symbol":"LTCBTC","orderId":8,"orderListId":1,"clientOrderId":"r4JMv9cwAYYUwwBZfbussx","transactTime":1712291372842,"price":"3.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":7,"orderListId":1,"clientOrderId":"6pcQbFIzTXGZQ1e2MkGDq4","transactTime":1712291372842,"price":"1.00000000","origQty":"5.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"IOC","type":"STOP_LOSS_LIMIT","side":"BUY","stopPrice":"6.00000000","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":6,"orderListId":1,"clientOrderId":"fM9Y4m23IFJVCQmIrlUmMK","transactTime":1712291372842,"price":"1.00000000","origQty":"1.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1712291372842,"selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderListOtocoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderListOtocoResponse");
@@ -4593,13 +4634,13 @@ mod tests {
 
             let params = OrderListOtocoParams::builder(
                 "BNBUSDT".to_string(),
-                OrderListOtocoWorkingTypeEnum::LIMIT,
-                OrderListOtocoWorkingSideEnum::BUY,
+                OrderListOtocoWorkingTypeEnum::Limit,
+                OrderListOtocoWorkingSideEnum::Buy,
                 1.0,
                 1.0,
-                OrderListOtocoPendingSideEnum::BUY,
+                OrderListOtocoPendingSideEnum::Buy,
                 1.0,
-                OrderListOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,
+                OrderListOtocoPendingAboveTypeEnum::StopLossLimit,
             )
             .build()
             .unwrap();
@@ -4618,7 +4659,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderOcoParams::builder("BNBUSDT".to_string(),OrderOcoSideEnum::BUY,1.0,1.0,1.0,).build().unwrap();
+            let params = OrderOcoParams::builder("BNBUSDT".to_string(),OrderOcoSideEnum::Buy,1.0,1.0,1.0,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":0,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"JYVpp3F0f5CAG15DhtrqLp","transactionTime":1563417480525,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":3,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl"},{"symbol":"LTCBTC","orderId":2,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos"}],"orderReports":[{"symbol":"LTCBTC","orderId":3,"orderListId":0,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl","transactTime":1563417480525,"price":"0.036435","origQty":"0.624363","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","workingTime":1563417480525,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":2,"orderListId":0,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos","transactTime":1563417480525,"price":"0.000000","origQty":"0.624363","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS","side":"BUY","stopPrice":"0.960664","workingTime":-1,"selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderOcoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderOcoResponse");
@@ -4635,7 +4676,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = OrderOcoParams::builder("BNBUSDT".to_string(),OrderOcoSideEnum::BUY,1.0,1.0,1.0,).list_client_order_id("list_client_order_id_example".to_string()).limit_client_order_id("limit_client_order_id_example".to_string()).limit_strategy_id(1).limit_strategy_type(1).limit_iceberg_qty(1.0).trailing_delta(1).stop_client_order_id("stop_client_order_id_example".to_string()).stop_strategy_id(1).stop_strategy_type(1).stop_limit_price(1.0).stop_iceberg_qty(1.0).stop_limit_time_in_force(OrderOcoStopLimitTimeInForceEnum::GTC).new_order_resp_type(OrderOcoNewOrderRespTypeEnum::ACK).self_trade_prevention_mode(OrderOcoSelfTradePreventionModeEnum::NONE).recv_window(5000).build().unwrap();
+            let params = OrderOcoParams::builder("BNBUSDT".to_string(),OrderOcoSideEnum::Buy,1.0,1.0,1.0,).list_client_order_id("list_client_order_id_example".to_string()).limit_client_order_id("limit_client_order_id_example".to_string()).limit_strategy_id(1).limit_strategy_type(1).limit_iceberg_qty(1.0).trailing_delta(1).stop_client_order_id("stop_client_order_id_example".to_string()).stop_strategy_id(1).stop_strategy_type(1).stop_limit_price(1.0).stop_iceberg_qty(1.0).stop_limit_time_in_force(OrderOcoStopLimitTimeInForceEnum::Gtc).new_order_resp_type(OrderOcoNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(OrderOcoSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":0,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"JYVpp3F0f5CAG15DhtrqLp","transactionTime":1563417480525,"symbol":"LTCBTC","orders":[{"symbol":"LTCBTC","orderId":3,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl"},{"symbol":"LTCBTC","orderId":2,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos"}],"orderReports":[{"symbol":"LTCBTC","orderId":3,"orderListId":0,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl","transactTime":1563417480525,"price":"0.036435","origQty":"0.624363","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","workingTime":1563417480525,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":2,"orderListId":0,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos","transactTime":1563417480525,"price":"0.000000","origQty":"0.624363","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS","side":"BUY","stopPrice":"0.960664","workingTime":-1,"selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::OrderOcoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderOcoResponse");
@@ -4654,7 +4695,7 @@ mod tests {
 
             let params = OrderOcoParams::builder(
                 "BNBUSDT".to_string(),
-                OrderOcoSideEnum::BUY,
+                OrderOcoSideEnum::Buy,
                 1.0,
                 1.0,
                 1.0,
@@ -4726,7 +4767,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SorOrderParams::builder("BNBUSDT".to_string(),SorOrderSideEnum::BUY,SorOrderTypeEnum::MARKET,1.0,).build().unwrap();
+            let params = SorOrderParams::builder("BNBUSDT".to_string(),SorOrderSideEnum::Buy,SorOrderTypeEnum::Market,1.0,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","orderId":2,"orderListId":-1,"clientOrderId":"sBI1KM6nNtOfj5tccZSKly","transactTime":1689149087774,"price":"31000.00000000","origQty":"0.50000000","executedQty":"0.50000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"14000.00000000","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1689149087774,"fills":[{"matchType":"ONE_PARTY_TRADE_REPORT","price":"28000.00000000","qty":"0.50000000","commission":"0.00000000","commissionAsset":"BTC","tradeId":-1,"allocId":0}],"workingFloor":"SOR","selfTradePreventionMode":"NONE","usedSor":true}"#).unwrap();
             let expected_response : models::SorOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SorOrderResponse");
@@ -4743,7 +4784,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SorOrderParams::builder("BNBUSDT".to_string(),SorOrderSideEnum::BUY,SorOrderTypeEnum::MARKET,1.0,).time_in_force(SorOrderTimeInForceEnum::GTC).price(400.0).new_client_order_id("new_client_order_id_example".to_string()).strategy_id(1).strategy_type(1).iceberg_qty(1.0).new_order_resp_type(SorOrderNewOrderRespTypeEnum::ACK).self_trade_prevention_mode(SorOrderSelfTradePreventionModeEnum::NONE).recv_window(5000).build().unwrap();
+            let params = SorOrderParams::builder("BNBUSDT".to_string(),SorOrderSideEnum::Buy,SorOrderTypeEnum::Market,1.0,).time_in_force(SorOrderTimeInForceEnum::Gtc).price(400.0).new_client_order_id("new_client_order_id_example".to_string()).strategy_id(1).strategy_type(1).iceberg_qty(1.0).new_order_resp_type(SorOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(SorOrderSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","orderId":2,"orderListId":-1,"clientOrderId":"sBI1KM6nNtOfj5tccZSKly","transactTime":1689149087774,"price":"31000.00000000","origQty":"0.50000000","executedQty":"0.50000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"14000.00000000","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1689149087774,"fills":[{"matchType":"ONE_PARTY_TRADE_REPORT","price":"28000.00000000","qty":"0.50000000","commission":"0.00000000","commissionAsset":"BTC","tradeId":-1,"allocId":0}],"workingFloor":"SOR","selfTradePreventionMode":"NONE","usedSor":true}"#).unwrap();
             let expected_response : models::SorOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SorOrderResponse");
@@ -4762,8 +4803,8 @@ mod tests {
 
             let params = SorOrderParams::builder(
                 "BNBUSDT".to_string(),
-                SorOrderSideEnum::BUY,
-                SorOrderTypeEnum::MARKET,
+                SorOrderSideEnum::Buy,
+                SorOrderTypeEnum::Market,
                 1.0,
             )
             .build()

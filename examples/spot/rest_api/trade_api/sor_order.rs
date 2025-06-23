@@ -26,8 +26,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = SorOrderParams::builder(
         "BNBUSDT".to_string(),
-        SorOrderSideEnum::BUY,
-        SorOrderTypeEnum::MARKET,
+        SorOrderSideEnum::Buy,
+        SorOrderTypeEnum::Market,
         1.0,
     )
     .build()?;

@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -162,9 +163,6 @@ pub struct GetCryptoLoansIncomeHistoryParams {
 impl GetCryptoLoansIncomeHistoryParams {
     /// Create a builder for [`get_crypto_loans_income_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetCryptoLoansIncomeHistoryParamsBuilder {
         GetCryptoLoansIncomeHistoryParamsBuilder::default()
@@ -226,9 +224,6 @@ pub struct GetLoanBorrowHistoryParams {
 
 impl GetLoanBorrowHistoryParams {
     /// Create a builder for [`get_loan_borrow_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetLoanBorrowHistoryParamsBuilder {
@@ -292,9 +287,6 @@ pub struct GetLoanLtvAdjustmentHistoryParams {
 impl GetLoanLtvAdjustmentHistoryParams {
     /// Create a builder for [`get_loan_ltv_adjustment_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetLoanLtvAdjustmentHistoryParamsBuilder {
         GetLoanLtvAdjustmentHistoryParamsBuilder::default()
@@ -357,9 +349,6 @@ pub struct GetLoanRepaymentHistoryParams {
 impl GetLoanRepaymentHistoryParams {
     /// Create a builder for [`get_loan_repayment_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetLoanRepaymentHistoryParamsBuilder {
         GetLoanRepaymentHistoryParamsBuilder::default()
@@ -385,10 +374,11 @@ impl StableRateApi for StableRateApiClient {
 
         query_params.insert("collateralCoin".to_string(), json!(collateral_coin));
 
-        query_params.insert("repayAmount".to_string(), json!(repay_amount));
+        let repay_amount_value = Decimal::from_f32(repay_amount).unwrap_or_default();
+        query_params.insert("repayAmount".to_string(), json!(repay_amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CheckCollateralRepayRateStableRateResponse>(
@@ -427,15 +417,15 @@ impl StableRateApi for StableRateApiClient {
         }
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -443,7 +433,7 @@ impl StableRateApi for StableRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetCryptoLoansIncomeHistoryResponseInner>>(
@@ -479,23 +469,23 @@ impl StableRateApi for StableRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -507,7 +497,7 @@ impl StableRateApi for StableRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLoanBorrowHistoryResponse>(
@@ -543,23 +533,23 @@ impl StableRateApi for StableRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -571,7 +561,7 @@ impl StableRateApi for StableRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLoanLtvAdjustmentHistoryResponse>(
@@ -607,23 +597,23 @@ impl StableRateApi for StableRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -635,7 +625,7 @@ impl StableRateApi for StableRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLoanRepaymentHistoryResponse>(

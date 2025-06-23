@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -131,17 +132,17 @@ impl TradeApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ChangeMarginTypeMarginTypeEnum {
     #[serde(rename = "ISOLATED")]
-    ISOLATED,
+    Isolated,
     #[serde(rename = "CROSSED")]
-    CROSSED,
+    Crossed,
 }
 
 impl ChangeMarginTypeMarginTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ChangeMarginTypeMarginTypeEnum::ISOLATED => "ISOLATED",
-            ChangeMarginTypeMarginTypeEnum::CROSSED => "CROSSED",
+            ChangeMarginTypeMarginTypeEnum::Isolated => "ISOLATED",
+            ChangeMarginTypeMarginTypeEnum::Crossed => "CROSSED",
         }
     }
 }
@@ -150,32 +151,32 @@ impl ChangeMarginTypeMarginTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModifyIsolatedPositionMarginTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "STOP")]
-    STOP,
+    Stop,
     #[serde(rename = "STOP_MARKET")]
-    STOP_MARKET,
+    StopMarket,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_MARKET")]
-    TAKE_PROFIT_MARKET,
+    TakeProfitMarket,
     #[serde(rename = "TRAILING_STOP_MARKET")]
-    TRAILING_STOP_MARKET,
+    TrailingStopMarket,
 }
 
 impl ModifyIsolatedPositionMarginTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ModifyIsolatedPositionMarginTypeEnum::LIMIT => "LIMIT",
-            ModifyIsolatedPositionMarginTypeEnum::MARKET => "MARKET",
-            ModifyIsolatedPositionMarginTypeEnum::STOP => "STOP",
-            ModifyIsolatedPositionMarginTypeEnum::STOP_MARKET => "STOP_MARKET",
-            ModifyIsolatedPositionMarginTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            ModifyIsolatedPositionMarginTypeEnum::TAKE_PROFIT_MARKET => "TAKE_PROFIT_MARKET",
-            ModifyIsolatedPositionMarginTypeEnum::TRAILING_STOP_MARKET => "TRAILING_STOP_MARKET",
+            ModifyIsolatedPositionMarginTypeEnum::Limit => "LIMIT",
+            ModifyIsolatedPositionMarginTypeEnum::Market => "MARKET",
+            ModifyIsolatedPositionMarginTypeEnum::Stop => "STOP",
+            ModifyIsolatedPositionMarginTypeEnum::StopMarket => "STOP_MARKET",
+            ModifyIsolatedPositionMarginTypeEnum::TakeProfit => "TAKE_PROFIT",
+            ModifyIsolatedPositionMarginTypeEnum::TakeProfitMarket => "TAKE_PROFIT_MARKET",
+            ModifyIsolatedPositionMarginTypeEnum::TrailingStopMarket => "TRAILING_STOP_MARKET",
         }
     }
 }
@@ -184,20 +185,20 @@ impl ModifyIsolatedPositionMarginTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModifyIsolatedPositionMarginPositionSideEnum {
     #[serde(rename = "BOTH")]
-    BOTH,
+    Both,
     #[serde(rename = "LONG")]
-    LONG,
+    Long,
     #[serde(rename = "SHORT")]
-    SHORT,
+    Short,
 }
 
 impl ModifyIsolatedPositionMarginPositionSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ModifyIsolatedPositionMarginPositionSideEnum::BOTH => "BOTH",
-            ModifyIsolatedPositionMarginPositionSideEnum::LONG => "LONG",
-            ModifyIsolatedPositionMarginPositionSideEnum::SHORT => "SHORT",
+            ModifyIsolatedPositionMarginPositionSideEnum::Both => "BOTH",
+            ModifyIsolatedPositionMarginPositionSideEnum::Long => "LONG",
+            ModifyIsolatedPositionMarginPositionSideEnum::Short => "SHORT",
         }
     }
 }
@@ -206,17 +207,17 @@ impl ModifyIsolatedPositionMarginPositionSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModifyOrderSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl ModifyOrderSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ModifyOrderSideEnum::BUY => "BUY",
-            ModifyOrderSideEnum::SELL => "SELL",
+            ModifyOrderSideEnum::Buy => "BUY",
+            ModifyOrderSideEnum::Sell => "SELL",
         }
     }
 }
@@ -225,38 +226,38 @@ impl ModifyOrderSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModifyOrderPriceMatchEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "OPPONENT")]
-    OPPONENT,
+    Opponent,
     #[serde(rename = "OPPONENT_5")]
-    OPPONENT_5,
+    Opponent5,
     #[serde(rename = "OPPONENT_10")]
-    OPPONENT_10,
+    Opponent10,
     #[serde(rename = "OPPONENT_20")]
-    OPPONENT_20,
+    Opponent20,
     #[serde(rename = "QUEUE")]
-    QUEUE,
+    Queue,
     #[serde(rename = "QUEUE_5")]
-    QUEUE_5,
+    Queue5,
     #[serde(rename = "QUEUE_10")]
-    QUEUE_10,
+    Queue10,
     #[serde(rename = "QUEUE_20")]
-    QUEUE_20,
+    Queue20,
 }
 
 impl ModifyOrderPriceMatchEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ModifyOrderPriceMatchEnum::NONE => "NONE",
-            ModifyOrderPriceMatchEnum::OPPONENT => "OPPONENT",
-            ModifyOrderPriceMatchEnum::OPPONENT_5 => "OPPONENT_5",
-            ModifyOrderPriceMatchEnum::OPPONENT_10 => "OPPONENT_10",
-            ModifyOrderPriceMatchEnum::OPPONENT_20 => "OPPONENT_20",
-            ModifyOrderPriceMatchEnum::QUEUE => "QUEUE",
-            ModifyOrderPriceMatchEnum::QUEUE_5 => "QUEUE_5",
-            ModifyOrderPriceMatchEnum::QUEUE_10 => "QUEUE_10",
-            ModifyOrderPriceMatchEnum::QUEUE_20 => "QUEUE_20",
+            ModifyOrderPriceMatchEnum::None => "NONE",
+            ModifyOrderPriceMatchEnum::Opponent => "OPPONENT",
+            ModifyOrderPriceMatchEnum::Opponent5 => "OPPONENT_5",
+            ModifyOrderPriceMatchEnum::Opponent10 => "OPPONENT_10",
+            ModifyOrderPriceMatchEnum::Opponent20 => "OPPONENT_20",
+            ModifyOrderPriceMatchEnum::Queue => "QUEUE",
+            ModifyOrderPriceMatchEnum::Queue5 => "QUEUE_5",
+            ModifyOrderPriceMatchEnum::Queue10 => "QUEUE_10",
+            ModifyOrderPriceMatchEnum::Queue20 => "QUEUE_20",
         }
     }
 }
@@ -265,17 +266,17 @@ impl ModifyOrderPriceMatchEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl NewOrderSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderSideEnum::BUY => "BUY",
-            NewOrderSideEnum::SELL => "SELL",
+            NewOrderSideEnum::Buy => "BUY",
+            NewOrderSideEnum::Sell => "SELL",
         }
     }
 }
@@ -284,32 +285,32 @@ impl NewOrderSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "STOP")]
-    STOP,
+    Stop,
     #[serde(rename = "STOP_MARKET")]
-    STOP_MARKET,
+    StopMarket,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_MARKET")]
-    TAKE_PROFIT_MARKET,
+    TakeProfitMarket,
     #[serde(rename = "TRAILING_STOP_MARKET")]
-    TRAILING_STOP_MARKET,
+    TrailingStopMarket,
 }
 
 impl NewOrderTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderTypeEnum::LIMIT => "LIMIT",
-            NewOrderTypeEnum::MARKET => "MARKET",
-            NewOrderTypeEnum::STOP => "STOP",
-            NewOrderTypeEnum::STOP_MARKET => "STOP_MARKET",
-            NewOrderTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            NewOrderTypeEnum::TAKE_PROFIT_MARKET => "TAKE_PROFIT_MARKET",
-            NewOrderTypeEnum::TRAILING_STOP_MARKET => "TRAILING_STOP_MARKET",
+            NewOrderTypeEnum::Limit => "LIMIT",
+            NewOrderTypeEnum::Market => "MARKET",
+            NewOrderTypeEnum::Stop => "STOP",
+            NewOrderTypeEnum::StopMarket => "STOP_MARKET",
+            NewOrderTypeEnum::TakeProfit => "TAKE_PROFIT",
+            NewOrderTypeEnum::TakeProfitMarket => "TAKE_PROFIT_MARKET",
+            NewOrderTypeEnum::TrailingStopMarket => "TRAILING_STOP_MARKET",
         }
     }
 }
@@ -318,20 +319,20 @@ impl NewOrderTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderPositionSideEnum {
     #[serde(rename = "BOTH")]
-    BOTH,
+    Both,
     #[serde(rename = "LONG")]
-    LONG,
+    Long,
     #[serde(rename = "SHORT")]
-    SHORT,
+    Short,
 }
 
 impl NewOrderPositionSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderPositionSideEnum::BOTH => "BOTH",
-            NewOrderPositionSideEnum::LONG => "LONG",
-            NewOrderPositionSideEnum::SHORT => "SHORT",
+            NewOrderPositionSideEnum::Both => "BOTH",
+            NewOrderPositionSideEnum::Long => "LONG",
+            NewOrderPositionSideEnum::Short => "SHORT",
         }
     }
 }
@@ -340,23 +341,23 @@ impl NewOrderPositionSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "GTX")]
-    GTX,
+    Gtx,
 }
 
 impl NewOrderTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderTimeInForceEnum::GTC => "GTC",
-            NewOrderTimeInForceEnum::IOC => "IOC",
-            NewOrderTimeInForceEnum::FOK => "FOK",
-            NewOrderTimeInForceEnum::GTX => "GTX",
+            NewOrderTimeInForceEnum::Gtc => "GTC",
+            NewOrderTimeInForceEnum::Ioc => "IOC",
+            NewOrderTimeInForceEnum::Fok => "FOK",
+            NewOrderTimeInForceEnum::Gtx => "GTX",
         }
     }
 }
@@ -365,17 +366,17 @@ impl NewOrderTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderWorkingTypeEnum {
     #[serde(rename = "MARK_PRICE")]
-    MARK_PRICE,
+    MarkPrice,
     #[serde(rename = "CONTRACT_PRICE")]
-    CONTRACT_PRICE,
+    ContractPrice,
 }
 
 impl NewOrderWorkingTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderWorkingTypeEnum::MARK_PRICE => "MARK_PRICE",
-            NewOrderWorkingTypeEnum::CONTRACT_PRICE => "CONTRACT_PRICE",
+            NewOrderWorkingTypeEnum::MarkPrice => "MARK_PRICE",
+            NewOrderWorkingTypeEnum::ContractPrice => "CONTRACT_PRICE",
         }
     }
 }
@@ -384,17 +385,17 @@ impl NewOrderWorkingTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
 }
 
 impl NewOrderNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderNewOrderRespTypeEnum::ACK => "ACK",
-            NewOrderNewOrderRespTypeEnum::RESULT => "RESULT",
+            NewOrderNewOrderRespTypeEnum::Ack => "ACK",
+            NewOrderNewOrderRespTypeEnum::Result => "RESULT",
         }
     }
 }
@@ -403,38 +404,38 @@ impl NewOrderNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderPriceMatchEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "OPPONENT")]
-    OPPONENT,
+    Opponent,
     #[serde(rename = "OPPONENT_5")]
-    OPPONENT_5,
+    Opponent5,
     #[serde(rename = "OPPONENT_10")]
-    OPPONENT_10,
+    Opponent10,
     #[serde(rename = "OPPONENT_20")]
-    OPPONENT_20,
+    Opponent20,
     #[serde(rename = "QUEUE")]
-    QUEUE,
+    Queue,
     #[serde(rename = "QUEUE_5")]
-    QUEUE_5,
+    Queue5,
     #[serde(rename = "QUEUE_10")]
-    QUEUE_10,
+    Queue10,
     #[serde(rename = "QUEUE_20")]
-    QUEUE_20,
+    Queue20,
 }
 
 impl NewOrderPriceMatchEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderPriceMatchEnum::NONE => "NONE",
-            NewOrderPriceMatchEnum::OPPONENT => "OPPONENT",
-            NewOrderPriceMatchEnum::OPPONENT_5 => "OPPONENT_5",
-            NewOrderPriceMatchEnum::OPPONENT_10 => "OPPONENT_10",
-            NewOrderPriceMatchEnum::OPPONENT_20 => "OPPONENT_20",
-            NewOrderPriceMatchEnum::QUEUE => "QUEUE",
-            NewOrderPriceMatchEnum::QUEUE_5 => "QUEUE_5",
-            NewOrderPriceMatchEnum::QUEUE_10 => "QUEUE_10",
-            NewOrderPriceMatchEnum::QUEUE_20 => "QUEUE_20",
+            NewOrderPriceMatchEnum::None => "NONE",
+            NewOrderPriceMatchEnum::Opponent => "OPPONENT",
+            NewOrderPriceMatchEnum::Opponent5 => "OPPONENT_5",
+            NewOrderPriceMatchEnum::Opponent10 => "OPPONENT_10",
+            NewOrderPriceMatchEnum::Opponent20 => "OPPONENT_20",
+            NewOrderPriceMatchEnum::Queue => "QUEUE",
+            NewOrderPriceMatchEnum::Queue5 => "QUEUE_5",
+            NewOrderPriceMatchEnum::Queue10 => "QUEUE_10",
+            NewOrderPriceMatchEnum::Queue20 => "QUEUE_20",
         }
     }
 }
@@ -443,23 +444,23 @@ impl NewOrderPriceMatchEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
 }
 
 impl NewOrderSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderSelfTradePreventionModeEnum::NONE => "NONE",
-            NewOrderSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            NewOrderSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            NewOrderSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
+            NewOrderSelfTradePreventionModeEnum::None => "NONE",
+            NewOrderSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            NewOrderSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            NewOrderSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
         }
     }
 }
@@ -468,17 +469,17 @@ impl NewOrderSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum UsersForceOrdersAutoCloseTypeEnum {
     #[serde(rename = "LIQUIDATION")]
-    LIQUIDATION,
+    Liquidation,
     #[serde(rename = "ADL")]
-    ADL,
+    Adl,
 }
 
 impl UsersForceOrdersAutoCloseTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            UsersForceOrdersAutoCloseTypeEnum::LIQUIDATION => "LIQUIDATION",
-            UsersForceOrdersAutoCloseTypeEnum::ADL => "ADL",
+            UsersForceOrdersAutoCloseTypeEnum::Liquidation => "LIQUIDATION",
+            UsersForceOrdersAutoCloseTypeEnum::Adl => "ADL",
         }
     }
 }
@@ -541,9 +542,6 @@ pub struct AccountTradeListParams {
 impl AccountTradeListParams {
     /// Create a builder for [`account_trade_list`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AccountTradeListParamsBuilder {
         AccountTradeListParamsBuilder::default()
@@ -601,9 +599,6 @@ pub struct AllOrdersParams {
 
 impl AllOrdersParams {
     /// Create a builder for [`all_orders`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AllOrdersParamsBuilder {
@@ -918,9 +913,6 @@ pub struct CurrentAllOpenOrdersParams {
 
 impl CurrentAllOpenOrdersParams {
     /// Create a builder for [`current_all_open_orders`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> CurrentAllOpenOrdersParamsBuilder {
@@ -1360,9 +1352,6 @@ pub struct PositionAdlQuantileEstimationParams {
 impl PositionAdlQuantileEstimationParams {
     /// Create a builder for [`position_adl_quantile_estimation`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> PositionAdlQuantileEstimationParamsBuilder {
         PositionAdlQuantileEstimationParamsBuilder::default()
@@ -1397,9 +1386,6 @@ pub struct PositionInformationParams {
 
 impl PositionInformationParams {
     /// Create a builder for [`position_information`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> PositionInformationParamsBuilder {
@@ -1542,9 +1528,6 @@ pub struct UsersForceOrdersParams {
 impl UsersForceOrdersParams {
     /// Create a builder for [`users_force_orders`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> UsersForceOrdersParamsBuilder {
         UsersForceOrdersParamsBuilder::default()
@@ -1579,19 +1562,19 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1599,7 +1582,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AccountTradeListResponseInner>>(
@@ -1642,15 +1625,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1658,7 +1641,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AllOrdersResponseInner>>(
@@ -1693,7 +1676,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("countdownTime".to_string(), json!(countdown_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Value>(
@@ -1725,7 +1708,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelAllOpenOrdersResponse>(
@@ -1759,15 +1742,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id_list {
-            query_params.insert("order_id_list".to_string(), json!(rw));
+            query_params.insert("orderIdList".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id_list {
-            query_params.insert("orig_client_order_id_list".to_string(), json!(rw));
+            query_params.insert("origClientOrderIdList".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::CancelMultipleOrdersResponseInner>>(
@@ -1801,15 +1784,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelOrderResponse>(
@@ -1844,7 +1827,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("leverage".to_string(), json!(leverage));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeInitialLeverageResponse>(
@@ -1879,7 +1862,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("marginType".to_string(), json!(margin_type));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeMarginTypeResponse>(
@@ -1911,7 +1894,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("dualSidePosition".to_string(), json!(dual_side_position));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangePositionModeResponse>(
@@ -1950,7 +1933,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::CurrentAllOpenOrdersResponseInner>>(
@@ -1987,19 +1970,19 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2007,7 +1990,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetOrderModifyHistoryResponseInner>>(
@@ -2044,15 +2027,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2060,7 +2043,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetPositionMarginChangeHistoryResponseInner>>(
@@ -2094,16 +2077,17 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = position_side {
-            query_params.insert("position_side".to_string(), json!(rw));
+            query_params.insert("positionSide".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ModifyIsolatedPositionMarginResponse>(
@@ -2135,7 +2119,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("batchOrders".to_string(), json!(batch_orders));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::ModifyMultipleOrdersResponseInner>>(
@@ -2175,27 +2159,29 @@ impl TradeApi for TradeApiClient {
         query_params.insert("side".to_string(), json!(side));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = quantity {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("quantity".to_string(), json!(rw));
         }
 
         if let Some(rw) = price {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("price".to_string(), json!(rw));
         }
 
         if let Some(rw) = price_match {
-            query_params.insert("price_match".to_string(), json!(rw));
+            query_params.insert("priceMatch".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ModifyOrderResponse>(
@@ -2248,67 +2234,72 @@ impl TradeApi for TradeApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = position_side {
-            query_params.insert("position_side".to_string(), json!(rw));
+            query_params.insert("positionSide".to_string(), json!(rw));
         }
 
         if let Some(rw) = time_in_force {
-            query_params.insert("time_in_force".to_string(), json!(rw));
+            query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = quantity {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("quantity".to_string(), json!(rw));
         }
 
         if let Some(rw) = reduce_only {
-            query_params.insert("reduce_only".to_string(), json!(rw));
+            query_params.insert("reduceOnly".to_string(), json!(rw));
         }
 
         if let Some(rw) = price {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("price".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_price {
-            query_params.insert("stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = close_position {
-            query_params.insert("close_position".to_string(), json!(rw));
+            query_params.insert("closePosition".to_string(), json!(rw));
         }
 
         if let Some(rw) = activation_price {
-            query_params.insert("activation_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("activationPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = callback_rate {
-            query_params.insert("callback_rate".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("callbackRate".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_type {
-            query_params.insert("working_type".to_string(), json!(rw));
+            query_params.insert("workingType".to_string(), json!(rw));
         }
 
         if let Some(rw) = price_protect {
-            query_params.insert("price_protect".to_string(), json!(rw));
+            query_params.insert("priceProtect".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = price_match {
-            query_params.insert("price_match".to_string(), json!(rw));
+            query_params.insert("priceMatch".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::NewOrderResponse>(
@@ -2343,7 +2334,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::PositionAdlQuantileEstimationResponseInner>>(
@@ -2374,7 +2365,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = margin_asset {
-            query_params.insert("margin_asset".to_string(), json!(rw));
+            query_params.insert("marginAsset".to_string(), json!(rw));
         }
 
         if let Some(rw) = pair {
@@ -2382,7 +2373,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::PositionInformationResponseInner>>(
@@ -2416,15 +2407,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryCurrentOpenOrderResponse>(
@@ -2458,15 +2449,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryOrderResponse>(
@@ -2504,15 +2495,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = auto_close_type {
-            query_params.insert("auto_close_type".to_string(), json!(rw));
+            query_params.insert("autoCloseType".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2520,7 +2511,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::UsersForceOrdersResponseInner>>(
@@ -3524,7 +3515,7 @@ mod tests {
 
             let params = ChangeMarginTypeParams::builder(
                 "symbol_example".to_string(),
-                ChangeMarginTypeMarginTypeEnum::ISOLATED,
+                ChangeMarginTypeMarginTypeEnum::Isolated,
             )
             .build()
             .unwrap();
@@ -3551,7 +3542,7 @@ mod tests {
 
             let params = ChangeMarginTypeParams::builder(
                 "symbol_example".to_string(),
-                ChangeMarginTypeMarginTypeEnum::ISOLATED,
+                ChangeMarginTypeMarginTypeEnum::Isolated,
             )
             .recv_window(5000)
             .build()
@@ -3579,7 +3570,7 @@ mod tests {
 
             let params = ChangeMarginTypeParams::builder(
                 "symbol_example".to_string(),
-                ChangeMarginTypeMarginTypeEnum::ISOLATED,
+                ChangeMarginTypeMarginTypeEnum::Isolated,
             )
             .build()
             .unwrap();
@@ -3823,7 +3814,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyIsolatedPositionMarginParams::builder("symbol_example".to_string(),1.0,ModifyIsolatedPositionMarginTypeEnum::LIMIT,).build().unwrap();
+            let params = ModifyIsolatedPositionMarginParams::builder("symbol_example".to_string(),1.0,ModifyIsolatedPositionMarginTypeEnum::Limit,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap();
             let expected_response : models::ModifyIsolatedPositionMarginResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyIsolatedPositionMarginResponse");
@@ -3840,7 +3831,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyIsolatedPositionMarginParams::builder("symbol_example".to_string(),1.0,ModifyIsolatedPositionMarginTypeEnum::LIMIT,).position_side(ModifyIsolatedPositionMarginPositionSideEnum::BOTH).recv_window(5000).build().unwrap();
+            let params = ModifyIsolatedPositionMarginParams::builder("symbol_example".to_string(),1.0,ModifyIsolatedPositionMarginTypeEnum::Limit,).position_side(ModifyIsolatedPositionMarginPositionSideEnum::Both).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap();
             let expected_response : models::ModifyIsolatedPositionMarginResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyIsolatedPositionMarginResponse");
@@ -3860,7 +3851,7 @@ mod tests {
             let params = ModifyIsolatedPositionMarginParams::builder(
                 "symbol_example".to_string(),
                 1.0,
-                ModifyIsolatedPositionMarginTypeEnum::LIMIT,
+                ModifyIsolatedPositionMarginTypeEnum::Limit,
             )
             .build()
             .unwrap();
@@ -3929,7 +3920,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::BUY,).build().unwrap();
+            let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::Buy,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap();
             let expected_response : models::ModifyOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyOrderResponse");
@@ -3946,7 +3937,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::BUY,).order_id(1).orig_client_order_id("1".to_string()).quantity(1.0).price(1.0).price_match(ModifyOrderPriceMatchEnum::NONE).recv_window(5000).build().unwrap();
+            let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::Buy,).order_id(1).orig_client_order_id("1".to_string()).quantity(1.0).price(1.0).price_match(ModifyOrderPriceMatchEnum::None).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap();
             let expected_response : models::ModifyOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyOrderResponse");
@@ -3964,7 +3955,7 @@ mod tests {
             let client = MockTradeApiClient { force_error: true };
 
             let params =
-                ModifyOrderParams::builder("symbol_example".to_string(), ModifyOrderSideEnum::BUY)
+                ModifyOrderParams::builder("symbol_example".to_string(), ModifyOrderSideEnum::Buy)
                     .build()
                     .unwrap();
 
@@ -3982,7 +3973,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::BUY,NewOrderTypeEnum::LIMIT,).build().unwrap();
+            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
@@ -3999,7 +3990,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::BUY,NewOrderTypeEnum::LIMIT,).position_side(NewOrderPositionSideEnum::BOTH).time_in_force(NewOrderTimeInForceEnum::GTC).quantity(1.0).reduce_only("false".to_string()).price(1.0).new_client_order_id("1".to_string()).stop_price(1.0).close_position("close_position_example".to_string()).activation_price(1.0).callback_rate(1.0).working_type(NewOrderWorkingTypeEnum::MARK_PRICE).price_protect("false".to_string()).new_order_resp_type(NewOrderNewOrderRespTypeEnum::ACK).price_match(NewOrderPriceMatchEnum::NONE).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::NONE).recv_window(5000).build().unwrap();
+            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).position_side(NewOrderPositionSideEnum::Both).time_in_force(NewOrderTimeInForceEnum::Gtc).quantity(1.0).reduce_only("false".to_string()).price(1.0).new_client_order_id("1".to_string()).stop_price(1.0).close_position("close_position_example".to_string()).activation_price(1.0).callback_rate(1.0).working_type(NewOrderWorkingTypeEnum::MarkPrice).price_protect("false".to_string()).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).price_match(NewOrderPriceMatchEnum::None).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
@@ -4018,8 +4009,8 @@ mod tests {
 
             let params = NewOrderParams::builder(
                 "symbol_example".to_string(),
-                NewOrderSideEnum::BUY,
-                NewOrderTypeEnum::LIMIT,
+                NewOrderSideEnum::Buy,
+                NewOrderTypeEnum::Limit,
             )
             .build()
             .unwrap();
@@ -4261,7 +4252,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = UsersForceOrdersParams::builder().symbol("symbol_example".to_string()).auto_close_type(UsersForceOrdersAutoCloseTypeEnum::LIQUIDATION).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
+            let params = UsersForceOrdersParams::builder().symbol("symbol_example".to_string()).auto_close_type(UsersForceOrdersAutoCloseTypeEnum::Liquidation).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"orderId":165123080,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1596542005017000006","price":"11326.9","avgPrice":"11326.9","origQty":"1","executedQty":"1","cumBase":"0.00882854","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1596542005019,"updateTime":1596542005050},{"orderId":207251986,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1597307316020000006","price":"11619.4","avgPrice":"11661.2","origQty":"1","executedQty":"1","cumBase":"0.00857544","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1597307316022,"updateTime":1597307316035}]"#).unwrap();
             let expected_response : Vec<models::UsersForceOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::UsersForceOrdersResponseInner>");

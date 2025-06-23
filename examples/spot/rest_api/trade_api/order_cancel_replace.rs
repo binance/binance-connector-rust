@@ -29,9 +29,9 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = OrderCancelReplaceParams::builder(
         "BNBUSDT".to_string(),
-        OrderCancelReplaceSideEnum::BUY,
-        OrderCancelReplaceTypeEnum::MARKET,
-        OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,
+        OrderCancelReplaceSideEnum::Buy,
+        OrderCancelReplaceTypeEnum::Market,
+        OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,
     )
     .build()?;
 

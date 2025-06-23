@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -328,9 +329,6 @@ pub struct GetFlexibleLoanAssetsDataParams {
 impl GetFlexibleLoanAssetsDataParams {
     /// Create a builder for [`get_flexible_loan_assets_data`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetFlexibleLoanAssetsDataParamsBuilder {
         GetFlexibleLoanAssetsDataParamsBuilder::default()
@@ -388,9 +386,6 @@ pub struct GetFlexibleLoanBorrowHistoryParams {
 impl GetFlexibleLoanBorrowHistoryParams {
     /// Create a builder for [`get_flexible_loan_borrow_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetFlexibleLoanBorrowHistoryParamsBuilder {
         GetFlexibleLoanBorrowHistoryParamsBuilder::default()
@@ -419,9 +414,6 @@ pub struct GetFlexibleLoanCollateralAssetsDataParams {
 
 impl GetFlexibleLoanCollateralAssetsDataParams {
     /// Create a builder for [`get_flexible_loan_collateral_assets_data`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetFlexibleLoanCollateralAssetsDataParamsBuilder {
@@ -480,9 +472,6 @@ pub struct GetFlexibleLoanLiquidationHistoryParams {
 impl GetFlexibleLoanLiquidationHistoryParams {
     /// Create a builder for [`get_flexible_loan_liquidation_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetFlexibleLoanLiquidationHistoryParamsBuilder {
         GetFlexibleLoanLiquidationHistoryParamsBuilder::default()
@@ -540,9 +529,6 @@ pub struct GetFlexibleLoanLtvAdjustmentHistoryParams {
 impl GetFlexibleLoanLtvAdjustmentHistoryParams {
     /// Create a builder for [`get_flexible_loan_ltv_adjustment_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetFlexibleLoanLtvAdjustmentHistoryParamsBuilder {
         GetFlexibleLoanLtvAdjustmentHistoryParamsBuilder::default()
@@ -587,9 +573,6 @@ pub struct GetFlexibleLoanOngoingOrdersParams {
 
 impl GetFlexibleLoanOngoingOrdersParams {
     /// Create a builder for [`get_flexible_loan_ongoing_orders`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetFlexibleLoanOngoingOrdersParamsBuilder {
@@ -648,9 +631,6 @@ pub struct GetFlexibleLoanRepaymentHistoryParams {
 impl GetFlexibleLoanRepaymentHistoryParams {
     /// Create a builder for [`get_flexible_loan_repayment_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetFlexibleLoanRepaymentHistoryParamsBuilder {
         GetFlexibleLoanRepaymentHistoryParamsBuilder::default()
@@ -676,7 +656,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         query_params.insert("collateralCoin".to_string(), json!(collateral_coin));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CheckCollateralRepayRateResponse>(
@@ -712,12 +692,16 @@ impl FlexibleRateApi for FlexibleRateApiClient {
 
         query_params.insert("collateralCoin".to_string(), json!(collateral_coin));
 
-        query_params.insert("adjustmentAmount".to_string(), json!(adjustment_amount));
+        let adjustment_amount_value = Decimal::from_f32(adjustment_amount).unwrap_or_default();
+        query_params.insert(
+            "adjustmentAmount".to_string(),
+            json!(adjustment_amount_value),
+        );
 
         query_params.insert("direction".to_string(), json!(direction));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FlexibleLoanAdjustLtvResponse>(
@@ -752,7 +736,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         query_params.insert("collateralCoin".to_string(), json!(collateral_coin));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FlexibleLoanBorrowResponse>(
@@ -790,22 +774,23 @@ impl FlexibleRateApi for FlexibleRateApiClient {
 
         query_params.insert("collateralCoin".to_string(), json!(collateral_coin));
 
-        query_params.insert("repayAmount".to_string(), json!(repay_amount));
+        let repay_amount_value = Decimal::from_f32(repay_amount).unwrap_or_default();
+        query_params.insert("repayAmount".to_string(), json!(repay_amount_value));
 
         if let Some(rw) = collateral_return {
-            query_params.insert("collateral_return".to_string(), json!(rw));
+            query_params.insert("collateralReturn".to_string(), json!(rw));
         }
 
         if let Some(rw) = full_repayment {
-            query_params.insert("full_repayment".to_string(), json!(rw));
+            query_params.insert("fullRepayment".to_string(), json!(rw));
         }
 
         if let Some(rw) = repayment_type {
-            query_params.insert("repayment_type".to_string(), json!(rw));
+            query_params.insert("repaymentType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FlexibleLoanRepayResponse>(
@@ -835,11 +820,11 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleLoanAssetsDataResponse>(
@@ -874,19 +859,19 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -898,7 +883,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleLoanBorrowHistoryResponse>(
@@ -928,11 +913,11 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleLoanCollateralAssetsDataResponse>(
@@ -967,19 +952,19 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -991,7 +976,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleLoanLiquidationHistoryResponse>(
@@ -1026,19 +1011,19 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -1050,7 +1035,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleLoanLtvAdjustmentHistoryResponse>(
@@ -1083,11 +1068,11 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -1099,7 +1084,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleLoanOngoingOrdersResponse>(
@@ -1134,19 +1119,19 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -1158,7 +1143,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleLoanRepaymentHistoryResponse>(

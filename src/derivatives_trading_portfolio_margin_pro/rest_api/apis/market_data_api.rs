@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -79,9 +80,6 @@ pub struct PortfolioMarginProTieredCollateralRateParams {
 impl PortfolioMarginProTieredCollateralRateParams {
     /// Create a builder for [`portfolio_margin_pro_tiered_collateral_rate`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> PortfolioMarginProTieredCollateralRateParamsBuilder {
         PortfolioMarginProTieredCollateralRateParamsBuilder::default()
@@ -104,9 +102,6 @@ pub struct QueryPortfolioMarginAssetIndexPriceParams {
 
 impl QueryPortfolioMarginAssetIndexPriceParams {
     /// Create a builder for [`query_portfolio_margin_asset_index_price`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryPortfolioMarginAssetIndexPriceParamsBuilder {
@@ -169,7 +164,7 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::PortfolioMarginProTieredCollateralRateResponseInner>>(

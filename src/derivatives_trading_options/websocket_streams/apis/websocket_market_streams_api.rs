@@ -201,9 +201,6 @@ pub struct NewSymbolInfoParams {
 impl NewSymbolInfoParams {
     /// Create a builder for [`new_symbol_info`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> NewSymbolInfoParamsBuilder {
         NewSymbolInfoParamsBuilder::default()
@@ -470,7 +467,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         } = params;
 
         let pairs: &[(&str, Option<String>)] = &[
-            ("underlying_asset", Some(underlying_asset.clone())),
+            ("underlyingAsset", Some(underlying_asset.clone())),
             ("id", id.clone()),
         ];
 
@@ -529,8 +526,8 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         } = params;
 
         let pairs: &[(&str, Option<String>)] = &[
-            ("underlying_asset", Some(underlying_asset.clone())),
-            ("expiration_date", Some(expiration_date.clone())),
+            ("underlyingAsset", Some(underlying_asset.clone())),
+            ("expirationDate", Some(expiration_date.clone())),
             ("id", id.clone()),
         ];
 
@@ -571,7 +568,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
             ("symbol", Some(symbol.clone())),
             ("levels", Some(levels.to_string())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -637,8 +634,8 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         } = params;
 
         let pairs: &[(&str, Option<String>)] = &[
-            ("underlying_asset", Some(underlying_asset.clone())),
-            ("expiration_date", Some(expiration_date.clone())),
+            ("underlyingAsset", Some(underlying_asset.clone())),
+            ("expirationDate", Some(expiration_date.clone())),
             ("id", id.clone()),
         ];
 
@@ -1035,7 +1032,7 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset", Some(underlying_asset.clone())),
+                ("underlyingAsset", Some(underlying_asset.clone())),
                 ("id", id.clone()),
             ];
 
@@ -1073,7 +1070,7 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset",
+                ("underlyingAsset",
                         Some(underlying_asset.clone())
                 ),
                 ("id",
@@ -1123,7 +1120,7 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset",
+                ("underlyingAsset",
                         Some(underlying_asset.clone())
                 ),
                 ("id",
@@ -1317,8 +1314,8 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset", Some(underlying_asset.clone())),
-                ("expiration_date", Some(expiration_date.clone())),
+                ("underlyingAsset", Some(underlying_asset.clone())),
+                ("expirationDate", Some(expiration_date.clone())),
                 ("id", id.clone()),
             ];
 
@@ -1358,10 +1355,10 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset",
+                ("underlyingAsset",
                         Some(underlying_asset.clone())
                 ),
-                ("expiration_date",
+                ("expirationDate",
                         Some(expiration_date.clone())
                 ),
                 ("id",
@@ -1411,10 +1408,10 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset",
+                ("underlyingAsset",
                         Some(underlying_asset.clone())
                 ),
-                ("expiration_date",
+                ("expirationDate",
                         Some(expiration_date.clone())
                 ),
                 ("id",
@@ -1478,7 +1475,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.to_string())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1526,7 +1523,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -1582,7 +1579,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -1775,10 +1772,10 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset",
+                ("underlyingAsset",
                         Some(underlying_asset.clone())
                 ),
-                ("expiration_date",
+                ("expirationDate",
                         Some(expiration_date.clone())
                 ),
                 ("id",
@@ -1813,10 +1810,10 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset",
+                ("underlyingAsset",
                         Some(underlying_asset.clone())
                 ),
-                ("expiration_date",
+                ("expirationDate",
                         Some(expiration_date.clone())
                 ),
                 ("id",
@@ -1866,10 +1863,10 @@ mod tests {
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("underlying_asset",
+                ("underlyingAsset",
                         Some(underlying_asset.clone())
                 ),
-                ("expiration_date",
+                ("expirationDate",
                         Some(expiration_date.clone())
                 ),
                 ("id",

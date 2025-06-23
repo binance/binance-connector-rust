@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -149,9 +150,6 @@ pub struct GetInterestHistoryParams {
 
 impl GetInterestHistoryParams {
     /// Create a builder for [`get_interest_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetInterestHistoryParamsBuilder {
@@ -435,15 +433,15 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         }
 
         if let Some(rw) = isolated_symbol {
-            query_params.insert("isolated_symbol".to_string(), json!(rw));
+            query_params.insert("isolatedSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -455,7 +453,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetInterestHistoryResponse>(
@@ -499,7 +497,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginAccountBorrowRepayResponse>(
@@ -543,19 +541,19 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         }
 
         if let Some(rw) = isolated_symbol {
-            query_params.insert("isolated_symbol".to_string(), json!(rw));
+            query_params.insert("isolatedSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -567,7 +565,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryBorrowRepayRecordsInMarginAccountResponse>(
@@ -603,19 +601,19 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = vip_level {
-            query_params.insert("vip_level".to_string(), json!(rw));
+            query_params.insert("vipLevel".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryMarginInterestRateHistoryResponseInner>>(
@@ -648,11 +646,11 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = isolated_symbol {
-            query_params.insert("isolated_symbol".to_string(), json!(rw));
+            query_params.insert("isolatedSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryMaxBorrowResponse>(

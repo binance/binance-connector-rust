@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -275,9 +276,6 @@ pub struct GetSubAccountsStatusOnMarginOrFuturesParams {
 impl GetSubAccountsStatusOnMarginOrFuturesParams {
     /// Create a builder for [`get_sub_accounts_status_on_margin_or_futures`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSubAccountsStatusOnMarginOrFuturesParamsBuilder {
         GetSubAccountsStatusOnMarginOrFuturesParamsBuilder::default()
@@ -320,9 +318,6 @@ pub struct QuerySubAccountListParams {
 
 impl QuerySubAccountListParams {
     /// Create a builder for [`query_sub_account_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QuerySubAccountListParamsBuilder {
@@ -378,7 +373,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         query_params.insert("subAccountString".to_string(), json!(sub_account_string));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CreateAVirtualSubAccountResponse>(
@@ -407,7 +402,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::EnableFuturesForSubAccountResponse>(
@@ -436,7 +431,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::EnableOptionsForSubAccountResponse>(
@@ -469,7 +464,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<
@@ -506,7 +501,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         query_params.insert("futuresType".to_string(), json!(futures_type));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFuturesPositionRiskOfSubAccountV2Response>(
@@ -539,7 +534,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetSubAccountsStatusOnMarginOrFuturesResponseInner>>(
@@ -576,7 +571,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         }
 
         if let Some(rw) = is_freeze {
-            query_params.insert("is_freeze".to_string(), json!(rw));
+            query_params.insert("isFreeze".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -588,7 +583,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySubAccountListResponse>(
@@ -617,7 +612,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySubAccountTransactionStatisticsResponse>(

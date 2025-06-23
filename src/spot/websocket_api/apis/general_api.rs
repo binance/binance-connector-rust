@@ -20,6 +20,7 @@
 use anyhow::Context;
 use async_trait::async_trait;
 use derive_builder::Builder;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{collections::BTreeMap, sync::Arc};
@@ -61,26 +62,26 @@ impl GeneralApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ExchangeInfoSymbolStatusEnum {
     #[serde(rename = "TRADING")]
-    TRADING,
+    Trading,
     #[serde(rename = "END_OF_DAY")]
-    END_OF_DAY,
+    EndOfDay,
     #[serde(rename = "HALT")]
-    HALT,
+    Halt,
     #[serde(rename = "BREAK")]
-    BREAK,
+    Break,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl ExchangeInfoSymbolStatusEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ExchangeInfoSymbolStatusEnum::TRADING => "TRADING",
-            ExchangeInfoSymbolStatusEnum::END_OF_DAY => "END_OF_DAY",
-            ExchangeInfoSymbolStatusEnum::HALT => "HALT",
-            ExchangeInfoSymbolStatusEnum::BREAK => "BREAK",
-            ExchangeInfoSymbolStatusEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            ExchangeInfoSymbolStatusEnum::Trading => "TRADING",
+            ExchangeInfoSymbolStatusEnum::EndOfDay => "END_OF_DAY",
+            ExchangeInfoSymbolStatusEnum::Halt => "HALT",
+            ExchangeInfoSymbolStatusEnum::Break => "BREAK",
+            ExchangeInfoSymbolStatusEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -130,9 +131,6 @@ pub struct ExchangeInfoParams {
 impl ExchangeInfoParams {
     /// Create a builder for [`exchange_info`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> ExchangeInfoParamsBuilder {
         ExchangeInfoParamsBuilder::default()
@@ -155,9 +153,6 @@ pub struct PingParams {
 impl PingParams {
     /// Create a builder for [`ping`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> PingParamsBuilder {
         PingParamsBuilder::default()
@@ -179,9 +174,6 @@ pub struct TimeParams {
 
 impl TimeParams {
     /// Create a builder for [`time`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> TimeParamsBuilder {
@@ -218,10 +210,10 @@ impl GeneralApi for GeneralApiClient {
             payload.insert("permissions".to_string(), serde_json::json!(value));
         }
         if let Some(value) = show_permission_sets {
-            payload.insert("show_permission_sets".to_string(), serde_json::json!(value));
+            payload.insert("showPermissionSets".to_string(), serde_json::json!(value));
         }
         if let Some(value) = symbol_status {
-            payload.insert("symbol_status".to_string(), serde_json::json!(value));
+            payload.insert("symbolStatus".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -340,7 +332,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/exchangeInfo".trim_start_matches('/'));
@@ -383,7 +375,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -436,9 +428,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -469,7 +460,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/ping".trim_start_matches('/'));
@@ -512,7 +503,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -565,9 +556,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -598,7 +588,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/time".trim_start_matches('/'));
@@ -641,7 +631,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -694,9 +684,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();

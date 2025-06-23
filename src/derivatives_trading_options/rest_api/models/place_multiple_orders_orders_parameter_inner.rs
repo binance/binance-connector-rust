@@ -63,55 +63,55 @@ impl PlaceMultipleOrdersOrdersParameterInner {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl Default for SideEnum {
     fn default() -> SideEnum {
-        Self::BUY
+        Self::Buy
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl Default for TypeEnum {
     fn default() -> TypeEnum {
-        Self::LIMIT
+        Self::Limit
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl Default for TimeInForceEnum {
     fn default() -> TimeInForceEnum {
-        Self::GTC
+        Self::Gtc
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
 }
 
 impl Default for NewOrderRespTypeEnum {
     fn default() -> NewOrderRespTypeEnum {
-        Self::ACK
+        Self::Ack
     }
 }

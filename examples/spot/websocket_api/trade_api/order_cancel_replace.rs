@@ -35,9 +35,9 @@ async fn main() -> Result<()> {
     // Setup the WS API parameters
     let params = OrderCancelReplaceParams::builder(
         "BNBUSDT".to_string(),
-        OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,
-        OrderCancelReplaceSideEnum::BUY,
-        OrderCancelReplaceTypeEnum::MARKET,
+        OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,
+        OrderCancelReplaceSideEnum::Buy,
+        OrderCancelReplaceTypeEnum::Market,
     )
     .build()?;
 

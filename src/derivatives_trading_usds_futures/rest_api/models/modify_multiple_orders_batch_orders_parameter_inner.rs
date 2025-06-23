@@ -87,121 +87,121 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl Default for SideEnum {
     fn default() -> SideEnum {
-        Self::BUY
+        Self::Buy
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PositionSideEnum {
     #[serde(rename = "BOTH")]
-    BOTH,
+    Both,
     #[serde(rename = "LONG")]
-    LONG,
+    Long,
     #[serde(rename = "SHORT")]
-    SHORT,
+    Short,
 }
 
 impl Default for PositionSideEnum {
     fn default() -> PositionSideEnum {
-        Self::BOTH
+        Self::Both
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "GTX")]
-    GTX,
+    Gtx,
     #[serde(rename = "GTD")]
-    GTD,
+    Gtd,
 }
 
 impl Default for TimeInForceEnum {
     fn default() -> TimeInForceEnum {
-        Self::GTC
+        Self::Gtc
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum WorkingTypeEnum {
     #[serde(rename = "MARK_PRICE")]
-    MARK_PRICE,
+    MarkPrice,
     #[serde(rename = "CONTRACT_PRICE")]
-    CONTRACT_PRICE,
+    ContractPrice,
 }
 
 impl Default for WorkingTypeEnum {
     fn default() -> WorkingTypeEnum {
-        Self::MARK_PRICE
+        Self::MarkPrice
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
 }
 
 impl Default for NewOrderRespTypeEnum {
     fn default() -> NewOrderRespTypeEnum {
-        Self::ACK
+        Self::Ack
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PriceMatchEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "OPPONENT")]
-    OPPONENT,
+    Opponent,
     #[serde(rename = "OPPONENT_5")]
-    OPPONENT_5,
+    Opponent5,
     #[serde(rename = "OPPONENT_10")]
-    OPPONENT_10,
+    Opponent10,
     #[serde(rename = "OPPONENT_20")]
-    OPPONENT_20,
+    Opponent20,
     #[serde(rename = "QUEUE")]
-    QUEUE,
+    Queue,
     #[serde(rename = "QUEUE_5")]
-    QUEUE_5,
+    Queue5,
     #[serde(rename = "QUEUE_10")]
-    QUEUE_10,
+    Queue10,
     #[serde(rename = "QUEUE_20")]
-    QUEUE_20,
+    Queue20,
 }
 
 impl Default for PriceMatchEnum {
     fn default() -> PriceMatchEnum {
-        Self::NONE
+        Self::None
     }
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SelfTradePreventionModeEnum {
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
 }
 
 impl Default for SelfTradePreventionModeEnum {
     fn default() -> SelfTradePreventionModeEnum {
-        Self::EXPIRE_TAKER
+        Self::ExpireTaker
     }
 }

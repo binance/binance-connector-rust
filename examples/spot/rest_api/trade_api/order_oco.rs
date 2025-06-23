@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        OrderOcoParams::builder("BNBUSDT".to_string(), OrderOcoSideEnum::BUY, 1.0, 1.0, 1.0)
+        OrderOcoParams::builder("BNBUSDT".to_string(), OrderOcoSideEnum::Buy, 1.0, 1.0, 1.0)
             .build()?;
 
     // Make the API call

@@ -29,8 +29,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = NewCmConditionalOrderParams::builder(
         "symbol_example".to_string(),
-        NewCmConditionalOrderSideEnum::BUY,
-        NewCmConditionalOrderStrategyTypeEnum::STOP,
+        NewCmConditionalOrderSideEnum::Buy,
+        NewCmConditionalOrderStrategyTypeEnum::Stop,
     )
     .build()?;
 

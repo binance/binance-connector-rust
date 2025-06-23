@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -126,9 +127,6 @@ pub struct GetAutoCancelAllOpenOrdersParams {
 impl GetAutoCancelAllOpenOrdersParams {
     /// Create a builder for [`get_auto_cancel_all_open_orders`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetAutoCancelAllOpenOrdersParamsBuilder {
         GetAutoCancelAllOpenOrdersParamsBuilder::default()
@@ -157,9 +155,6 @@ pub struct GetMarketMakerProtectionConfigParams {
 impl GetMarketMakerProtectionConfigParams {
     /// Create a builder for [`get_market_maker_protection_config`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetMarketMakerProtectionConfigParamsBuilder {
         GetMarketMakerProtectionConfigParamsBuilder::default()
@@ -182,9 +177,6 @@ pub struct OptionMarginAccountInformationParams {
 
 impl OptionMarginAccountInformationParams {
     /// Create a builder for [`option_margin_account_information`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> OptionMarginAccountInformationParamsBuilder {
@@ -213,9 +205,6 @@ pub struct ResetMarketMakerProtectionConfigParams {
 
 impl ResetMarketMakerProtectionConfigParams {
     /// Create a builder for [`reset_market_maker_protection_config`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> ResetMarketMakerProtectionConfigParamsBuilder {
@@ -308,9 +297,6 @@ pub struct SetMarketMakerProtectionConfigParams {
 impl SetMarketMakerProtectionConfigParams {
     /// Create a builder for [`set_market_maker_protection_config`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> SetMarketMakerProtectionConfigParamsBuilder {
         SetMarketMakerProtectionConfigParamsBuilder::default()
@@ -333,7 +319,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         query_params.insert("underlyings".to_string(), json!(underlyings));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AutoCancelAllOpenOrdersResponse>(
@@ -367,7 +353,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetAutoCancelAllOpenOrdersResponse>(
@@ -401,7 +387,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetMarketMakerProtectionConfigResponse>(
@@ -428,7 +414,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OptionMarginAccountInformationResponse>(
@@ -462,7 +448,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ResetMarketMakerProtectionConfigResponse>(
@@ -497,7 +483,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         query_params.insert("countdownTime".to_string(), json!(countdown_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SetAutoCancelAllOpenOrdersResponse>(
@@ -535,23 +521,25 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         }
 
         if let Some(rw) = window_time_in_milliseconds {
-            query_params.insert("window_time_in_milliseconds".to_string(), json!(rw));
+            query_params.insert("windowTimeInMilliseconds".to_string(), json!(rw));
         }
 
         if let Some(rw) = frozen_time_in_milliseconds {
-            query_params.insert("frozen_time_in_milliseconds".to_string(), json!(rw));
+            query_params.insert("frozenTimeInMilliseconds".to_string(), json!(rw));
         }
 
         if let Some(rw) = qty_limit {
-            query_params.insert("qty_limit".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("qtyLimit".to_string(), json!(rw));
         }
 
         if let Some(rw) = delta_limit {
-            query_params.insert("delta_limit".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("deltaLimit".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SetMarketMakerProtectionConfigResponse>(

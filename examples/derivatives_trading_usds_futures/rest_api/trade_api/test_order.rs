@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = TestOrderParams::builder(
         "symbol_example".to_string(),
-        TestOrderSideEnum::BUY,
+        TestOrderSideEnum::Buy,
         "r#type_example".to_string(),
     )
     .build()?;

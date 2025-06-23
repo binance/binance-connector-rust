@@ -26,8 +26,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = NewMarginOrderParams::builder(
         "symbol_example".to_string(),
-        NewMarginOrderSideEnum::BUY,
-        NewMarginOrderTypeEnum::LIMIT,
+        NewMarginOrderSideEnum::Buy,
+        NewMarginOrderTypeEnum::Limit,
     )
     .build()?;
 

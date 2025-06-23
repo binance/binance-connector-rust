@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the stream parameters
     let params = RollingWindowTickerParams::builder(
         "bnbusdt".to_string(),
-        RollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,
+        RollingWindowTickerWindowSizeEnum::WindowSize1h,
     )
     .build()?;
 

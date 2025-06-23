@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -121,9 +122,6 @@ pub struct GetCollateralRecordParams {
 impl GetCollateralRecordParams {
     /// Create a builder for [`get_collateral_record`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetCollateralRecordParamsBuilder {
         GetCollateralRecordParamsBuilder::default()
@@ -186,9 +184,6 @@ pub struct GetFlexibleRedemptionRecordParams {
 
 impl GetFlexibleRedemptionRecordParams {
     /// Create a builder for [`get_flexible_redemption_record`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetFlexibleRedemptionRecordParamsBuilder {
@@ -319,9 +314,6 @@ pub struct GetFlexibleSubscriptionRecordParams {
 impl GetFlexibleSubscriptionRecordParams {
     /// Create a builder for [`get_flexible_subscription_record`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetFlexibleSubscriptionRecordParamsBuilder {
         GetFlexibleSubscriptionRecordParamsBuilder::default()
@@ -385,9 +377,6 @@ pub struct GetLockedRedemptionRecordParams {
 impl GetLockedRedemptionRecordParams {
     /// Create a builder for [`get_locked_redemption_record`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetLockedRedemptionRecordParamsBuilder {
         GetLockedRedemptionRecordParamsBuilder::default()
@@ -445,9 +434,6 @@ pub struct GetLockedRewardsHistoryParams {
 impl GetLockedRewardsHistoryParams {
     /// Create a builder for [`get_locked_rewards_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetLockedRewardsHistoryParamsBuilder {
         GetLockedRewardsHistoryParamsBuilder::default()
@@ -504,9 +490,6 @@ pub struct GetLockedSubscriptionRecordParams {
 
 impl GetLockedSubscriptionRecordParams {
     /// Create a builder for [`get_locked_subscription_record`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetLockedSubscriptionRecordParamsBuilder {
@@ -592,15 +575,15 @@ impl HistoryApi for HistoryApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = product_id {
-            query_params.insert("product_id".to_string(), json!(rw));
+            query_params.insert("productId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -612,7 +595,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCollateralRecordResponse>(
@@ -648,11 +631,11 @@ impl HistoryApi for HistoryApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = product_id {
-            query_params.insert("product_id".to_string(), json!(rw));
+            query_params.insert("productId".to_string(), json!(rw));
         }
 
         if let Some(rw) = redeem_id {
-            query_params.insert("redeem_id".to_string(), json!(rw));
+            query_params.insert("redeemId".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -660,11 +643,11 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -676,7 +659,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleRedemptionRecordResponse>(
@@ -714,7 +697,7 @@ impl HistoryApi for HistoryApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = product_id {
-            query_params.insert("product_id".to_string(), json!(rw));
+            query_params.insert("productId".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -722,11 +705,11 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -738,7 +721,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleRewardsHistoryResponse>(
@@ -774,11 +757,11 @@ impl HistoryApi for HistoryApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = product_id {
-            query_params.insert("product_id".to_string(), json!(rw));
+            query_params.insert("productId".to_string(), json!(rw));
         }
 
         if let Some(rw) = purchase_id {
-            query_params.insert("purchase_id".to_string(), json!(rw));
+            query_params.insert("purchaseId".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -786,11 +769,11 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -802,7 +785,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleSubscriptionRecordResponse>(
@@ -838,11 +821,11 @@ impl HistoryApi for HistoryApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = position_id {
-            query_params.insert("position_id".to_string(), json!(rw));
+            query_params.insert("positionId".to_string(), json!(rw));
         }
 
         if let Some(rw) = redeem_id {
-            query_params.insert("redeem_id".to_string(), json!(rw));
+            query_params.insert("redeemId".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -850,11 +833,11 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -866,7 +849,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLockedRedemptionRecordResponse>(
@@ -901,7 +884,7 @@ impl HistoryApi for HistoryApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = position_id {
-            query_params.insert("position_id".to_string(), json!(rw));
+            query_params.insert("positionId".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -909,11 +892,11 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -925,7 +908,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLockedRewardsHistoryResponse>(
@@ -960,7 +943,7 @@ impl HistoryApi for HistoryApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = purchase_id {
-            query_params.insert("purchase_id".to_string(), json!(rw));
+            query_params.insert("purchaseId".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -968,11 +951,11 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -984,7 +967,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLockedSubscriptionRecordResponse>(
@@ -1021,15 +1004,15 @@ impl HistoryApi for HistoryApiClient {
         query_params.insert("productId".to_string(), json!(product_id));
 
         if let Some(rw) = apr_period {
-            query_params.insert("apr_period".to_string(), json!(rw));
+            query_params.insert("aprPeriod".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -1041,7 +1024,7 @@ impl HistoryApi for HistoryApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetRateHistoryResponse>(

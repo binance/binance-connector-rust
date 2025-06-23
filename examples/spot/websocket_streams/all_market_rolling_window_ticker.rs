@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
 
     // Setup the stream parameters
     let params = AllMarketRollingWindowTickerParams::builder(
-        AllMarketRollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,
+        AllMarketRollingWindowTickerWindowSizeEnum::WindowSize1h,
     )
     .build()?;
 

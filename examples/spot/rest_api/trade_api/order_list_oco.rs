@@ -29,10 +29,10 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = OrderListOcoParams::builder(
         "BNBUSDT".to_string(),
-        OrderListOcoSideEnum::BUY,
+        OrderListOcoSideEnum::Buy,
         1.0,
-        OrderListOcoAboveTypeEnum::STOP_LOSS_LIMIT,
-        OrderListOcoBelowTypeEnum::STOP_LOSS,
+        OrderListOcoAboveTypeEnum::StopLossLimit,
+        OrderListOcoBelowTypeEnum::StopLoss,
     )
     .build()?;
 

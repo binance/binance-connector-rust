@@ -30,8 +30,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = ContinuousContractKlineCandlestickDataParams::builder(
         "pair_example".to_string(),
-        ContinuousContractKlineCandlestickDataContractTypeEnum::PERPETUAL,
-        ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1m,
+        ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,
+        ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,
     )
     .build()?;
 

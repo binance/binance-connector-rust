@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = MarginAccountNewOcoParams::builder(
         "symbol_example".to_string(),
-        MarginAccountNewOcoSideEnum::BUY,
+        MarginAccountNewOcoSideEnum::Buy,
         1.0,
         1.0,
         1.0,

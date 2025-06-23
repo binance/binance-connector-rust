@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -102,9 +103,6 @@ pub struct GetAllCrossMarginPairsParams {
 impl GetAllCrossMarginPairsParams {
     /// Create a builder for [`get_all_cross_margin_pairs`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetAllCrossMarginPairsParamsBuilder {
         GetAllCrossMarginPairsParamsBuilder::default()
@@ -132,9 +130,6 @@ pub struct GetAllIsolatedMarginSymbolParams {
 impl GetAllIsolatedMarginSymbolParams {
     /// Create a builder for [`get_all_isolated_margin_symbol`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetAllIsolatedMarginSymbolParamsBuilder {
         GetAllIsolatedMarginSymbolParamsBuilder::default()
@@ -158,9 +153,6 @@ pub struct GetAllMarginAssetsParams {
 impl GetAllMarginAssetsParams {
     /// Create a builder for [`get_all_margin_assets`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetAllMarginAssetsParamsBuilder {
         GetAllMarginAssetsParamsBuilder::default()
@@ -183,9 +175,6 @@ pub struct GetDelistScheduleParams {
 impl GetDelistScheduleParams {
     /// Create a builder for [`get_delist_schedule`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetDelistScheduleParamsBuilder {
         GetDelistScheduleParamsBuilder::default()
@@ -207,9 +196,6 @@ pub struct GetListScheduleParams {
 
 impl GetListScheduleParams {
     /// Create a builder for [`get_list_schedule`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetListScheduleParamsBuilder {
@@ -372,7 +358,7 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetAllIsolatedMarginSymbolResponseInner>>(
@@ -426,7 +412,7 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetDelistScheduleResponseInner>>(
@@ -453,7 +439,7 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetListScheduleResponseInner>>(
@@ -491,7 +477,7 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryIsolatedMarginTierDataResponseInner>>(

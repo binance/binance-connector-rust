@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = OpenInterestStatisticsParams::builder(
         "symbol_example".to_string(),
-        OpenInterestStatisticsPeriodEnum::PERIOD_5m,
+        OpenInterestStatisticsPeriodEnum::Period5m,
     )
     .build()?;
 

@@ -2,6 +2,7 @@ pub mod rest_api;
 
 use crate::common::{
     config::ConfigurationRestApi, constants::DUAL_INVESTMENT_REST_API_PROD_URL, logger,
+    utils::build_user_agent,
 };
 
 /// Represents the `DualInvestment` REST API client for interacting with the Binance `DualInvestment` REST API.
@@ -25,6 +26,7 @@ impl DualInvestmentRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("dual-investment");
         if config.base_path.is_none() {
             config.base_path = Some(DUAL_INVESTMENT_REST_API_PROD_URL.to_string());
         }

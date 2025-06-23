@@ -32,8 +32,8 @@ async fn main() -> Result<()> {
     // Setup the WS API parameters
     let params = NewOrderParams::builder(
         "symbol_example".to_string(),
-        NewOrderSideEnum::BUY,
-        NewOrderTypeEnum::LIMIT,
+        NewOrderSideEnum::Buy,
+        NewOrderTypeEnum::Limit,
     )
     .build()?;
 

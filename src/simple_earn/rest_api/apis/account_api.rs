@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -144,9 +145,6 @@ pub struct GetFlexibleProductPositionParams {
 impl GetFlexibleProductPositionParams {
     /// Create a builder for [`get_flexible_product_position`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetFlexibleProductPositionParamsBuilder {
         GetFlexibleProductPositionParamsBuilder::default()
@@ -231,9 +229,6 @@ pub struct GetLockedProductPositionParams {
 impl GetLockedProductPositionParams {
     /// Create a builder for [`get_locked_product_position`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetLockedProductPositionParamsBuilder {
         GetLockedProductPositionParamsBuilder::default()
@@ -272,9 +267,6 @@ pub struct GetSimpleEarnFlexibleProductListParams {
 
 impl GetSimpleEarnFlexibleProductListParams {
     /// Create a builder for [`get_simple_earn_flexible_product_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetSimpleEarnFlexibleProductListParamsBuilder {
@@ -315,9 +307,6 @@ pub struct GetSimpleEarnLockedProductListParams {
 impl GetSimpleEarnLockedProductListParams {
     /// Create a builder for [`get_simple_earn_locked_product_list`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSimpleEarnLockedProductListParamsBuilder {
         GetSimpleEarnLockedProductListParamsBuilder::default()
@@ -341,9 +330,6 @@ pub struct SimpleAccountParams {
 impl SimpleAccountParams {
     /// Create a builder for [`simple_account`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> SimpleAccountParamsBuilder {
         SimpleAccountParamsBuilder::default()
@@ -366,7 +352,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("productId".to_string(), json!(product_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexiblePersonalLeftQuotaResponse>(
@@ -403,7 +389,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = product_id {
-            query_params.insert("product_id".to_string(), json!(rw));
+            query_params.insert("productId".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -415,7 +401,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFlexibleProductPositionResponse>(
@@ -447,7 +433,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("projectId".to_string(), json!(project_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLockedPersonalLeftQuotaResponse>(
@@ -485,11 +471,11 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = position_id {
-            query_params.insert("position_id".to_string(), json!(rw));
+            query_params.insert("positionId".to_string(), json!(rw));
         }
 
         if let Some(rw) = project_id {
-            query_params.insert("project_id".to_string(), json!(rw));
+            query_params.insert("projectId".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -501,7 +487,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLockedProductPositionResponse>(
@@ -545,7 +531,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSimpleEarnFlexibleProductListResponse>(
@@ -589,7 +575,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSimpleEarnLockedProductListResponse>(
@@ -616,7 +602,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SimpleAccountResponse>(

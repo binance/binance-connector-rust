@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -95,7 +96,7 @@ impl PortfolioMarginEndpointsApi for PortfolioMarginEndpointsApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ClassicPortfolioMarginAccountInformationResponse>(

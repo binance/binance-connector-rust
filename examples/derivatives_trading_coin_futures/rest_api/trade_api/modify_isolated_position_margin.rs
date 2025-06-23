@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let params = ModifyIsolatedPositionMarginParams::builder(
         "symbol_example".to_string(),
         1.0,
-        ModifyIsolatedPositionMarginTypeEnum::LIMIT,
+        ModifyIsolatedPositionMarginTypeEnum::Limit,
     )
     .build()?;
 

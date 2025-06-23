@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -149,17 +150,17 @@ impl TradeApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginAccountNewOcoSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl MarginAccountNewOcoSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarginAccountNewOcoSideEnum::BUY => "BUY",
-            MarginAccountNewOcoSideEnum::SELL => "SELL",
+            MarginAccountNewOcoSideEnum::Buy => "BUY",
+            MarginAccountNewOcoSideEnum::Sell => "SELL",
         }
     }
 }
@@ -168,20 +169,20 @@ impl MarginAccountNewOcoSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginAccountNewOcoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
 }
 
 impl MarginAccountNewOcoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarginAccountNewOcoNewOrderRespTypeEnum::ACK => "ACK",
-            MarginAccountNewOcoNewOrderRespTypeEnum::RESULT => "RESULT",
-            MarginAccountNewOcoNewOrderRespTypeEnum::FULL => "FULL",
+            MarginAccountNewOcoNewOrderRespTypeEnum::Ack => "ACK",
+            MarginAccountNewOcoNewOrderRespTypeEnum::Result => "RESULT",
+            MarginAccountNewOcoNewOrderRespTypeEnum::Full => "FULL",
         }
     }
 }
@@ -190,17 +191,17 @@ impl MarginAccountNewOcoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginAccountNewOrderSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl MarginAccountNewOrderSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarginAccountNewOrderSideEnum::BUY => "BUY",
-            MarginAccountNewOrderSideEnum::SELL => "SELL",
+            MarginAccountNewOrderSideEnum::Buy => "BUY",
+            MarginAccountNewOrderSideEnum::Sell => "SELL",
         }
     }
 }
@@ -209,20 +210,20 @@ impl MarginAccountNewOrderSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginAccountNewOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
 }
 
 impl MarginAccountNewOrderNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarginAccountNewOrderNewOrderRespTypeEnum::ACK => "ACK",
-            MarginAccountNewOrderNewOrderRespTypeEnum::RESULT => "RESULT",
-            MarginAccountNewOrderNewOrderRespTypeEnum::FULL => "FULL",
+            MarginAccountNewOrderNewOrderRespTypeEnum::Ack => "ACK",
+            MarginAccountNewOrderNewOrderRespTypeEnum::Result => "RESULT",
+            MarginAccountNewOrderNewOrderRespTypeEnum::Full => "FULL",
         }
     }
 }
@@ -231,20 +232,20 @@ impl MarginAccountNewOrderNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginAccountNewOrderTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl MarginAccountNewOrderTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarginAccountNewOrderTimeInForceEnum::GTC => "GTC",
-            MarginAccountNewOrderTimeInForceEnum::IOC => "IOC",
-            MarginAccountNewOrderTimeInForceEnum::FOK => "FOK",
+            MarginAccountNewOrderTimeInForceEnum::Gtc => "GTC",
+            MarginAccountNewOrderTimeInForceEnum::Ioc => "IOC",
+            MarginAccountNewOrderTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -253,20 +254,20 @@ impl MarginAccountNewOrderTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginAccountNewOtoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
 }
 
 impl MarginAccountNewOtoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarginAccountNewOtoNewOrderRespTypeEnum::ACK => "ACK",
-            MarginAccountNewOtoNewOrderRespTypeEnum::RESULT => "RESULT",
-            MarginAccountNewOtoNewOrderRespTypeEnum::FULL => "FULL",
+            MarginAccountNewOtoNewOrderRespTypeEnum::Ack => "ACK",
+            MarginAccountNewOtoNewOrderRespTypeEnum::Result => "RESULT",
+            MarginAccountNewOtoNewOrderRespTypeEnum::Full => "FULL",
         }
     }
 }
@@ -275,20 +276,20 @@ impl MarginAccountNewOtoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarginAccountNewOtocoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
 }
 
 impl MarginAccountNewOtocoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarginAccountNewOtocoNewOrderRespTypeEnum::ACK => "ACK",
-            MarginAccountNewOtocoNewOrderRespTypeEnum::RESULT => "RESULT",
-            MarginAccountNewOtocoNewOrderRespTypeEnum::FULL => "FULL",
+            MarginAccountNewOtocoNewOrderRespTypeEnum::Ack => "ACK",
+            MarginAccountNewOtocoNewOrderRespTypeEnum::Result => "RESULT",
+            MarginAccountNewOtocoNewOrderRespTypeEnum::Full => "FULL",
         }
     }
 }
@@ -372,9 +373,6 @@ pub struct DeleteSpecialKeyParams {
 
 impl DeleteSpecialKeyParams {
     /// Create a builder for [`delete_special_key`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> DeleteSpecialKeyParamsBuilder {
@@ -460,9 +458,6 @@ pub struct GetForceLiquidationRecordParams {
 impl GetForceLiquidationRecordParams {
     /// Create a builder for [`get_force_liquidation_record`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetForceLiquidationRecordParamsBuilder {
         GetForceLiquidationRecordParamsBuilder::default()
@@ -484,9 +479,6 @@ pub struct GetSmallLiabilityExchangeCoinListParams {
 
 impl GetSmallLiabilityExchangeCoinListParams {
     /// Create a builder for [`get_small_liability_exchange_coin_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetSmallLiabilityExchangeCoinListParamsBuilder {
@@ -1374,9 +1366,6 @@ pub struct QueryCurrentMarginOrderCountUsageParams {
 impl QueryCurrentMarginOrderCountUsageParams {
     /// Create a builder for [`query_current_margin_order_count_usage`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryCurrentMarginOrderCountUsageParamsBuilder {
         QueryCurrentMarginOrderCountUsageParamsBuilder::default()
@@ -1429,9 +1418,6 @@ pub struct QueryMarginAccountsAllOcoParams {
 
 impl QueryMarginAccountsAllOcoParams {
     /// Create a builder for [`query_margin_accounts_all_oco`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryMarginAccountsAllOcoParamsBuilder {
@@ -1535,9 +1521,6 @@ pub struct QueryMarginAccountsOcoParams {
 impl QueryMarginAccountsOcoParams {
     /// Create a builder for [`query_margin_accounts_oco`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryMarginAccountsOcoParamsBuilder {
         QueryMarginAccountsOcoParamsBuilder::default()
@@ -1570,9 +1553,6 @@ pub struct QueryMarginAccountsOpenOcoParams {
 impl QueryMarginAccountsOpenOcoParams {
     /// Create a builder for [`query_margin_accounts_open_oco`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryMarginAccountsOpenOcoParamsBuilder {
         QueryMarginAccountsOpenOcoParamsBuilder::default()
@@ -1604,9 +1584,6 @@ pub struct QueryMarginAccountsOpenOrdersParams {
 
 impl QueryMarginAccountsOpenOrdersParams {
     /// Create a builder for [`query_margin_accounts_open_orders`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryMarginAccountsOpenOrdersParamsBuilder {
@@ -1748,9 +1725,6 @@ pub struct QuerySpecialKeyParams {
 impl QuerySpecialKeyParams {
     /// Create a builder for [`query_special_key`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QuerySpecialKeyParamsBuilder {
         QuerySpecialKeyParamsBuilder::default()
@@ -1777,9 +1751,6 @@ pub struct QuerySpecialKeyListParams {
 
 impl QuerySpecialKeyListParams {
     /// Create a builder for [`query_special_key_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QuerySpecialKeyListParamsBuilder {
@@ -1846,15 +1817,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = public_key {
-            query_params.insert("public_key".to_string(), json!(rw));
+            query_params.insert("publicKey".to_string(), json!(rw));
         }
 
         if let Some(rw) = permission_mode {
-            query_params.insert("permission_mode".to_string(), json!(rw));
+            query_params.insert("permissionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CreateSpecialKeyResponse>(
@@ -1885,7 +1856,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = api_name {
-            query_params.insert("api_name".to_string(), json!(rw));
+            query_params.insert("apiName".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol {
@@ -1893,7 +1864,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Value>(
@@ -1930,7 +1901,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Value>(
@@ -1964,15 +1935,15 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = isolated_symbol {
-            query_params.insert("isolated_symbol".to_string(), json!(rw));
+            query_params.insert("isolatedSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -1984,7 +1955,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetForceLiquidationRecordResponse>(
@@ -2012,7 +1983,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetSmallLiabilityExchangeCoinListResponseInner>>(
@@ -2049,15 +2020,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("size".to_string(), json!(size));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSmallLiabilityExchangeHistoryResponse>(
@@ -2092,11 +2063,11 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::MarginAccountCancelAllOpenOrdersOnASymbolResponseInner>>(
@@ -2132,23 +2103,23 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = order_list_id {
-            query_params.insert("order_list_id".to_string(), json!(rw));
+            query_params.insert("orderListId".to_string(), json!(rw));
         }
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginAccountCancelOcoResponse>(
@@ -2184,23 +2155,23 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginAccountCancelOrderResponse>(
@@ -2249,62 +2220,68 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        query_params.insert("quantity".to_string(), json!(quantity_value));
 
-        query_params.insert("price".to_string(), json!(price));
+        let price_value = Decimal::from_f32(price).unwrap_or_default();
+        query_params.insert("price".to_string(), json!(price_value));
 
-        query_params.insert("stopPrice".to_string(), json!(stop_price));
+        let stop_price_value = Decimal::from_f32(stop_price).unwrap_or_default();
+        query_params.insert("stopPrice".to_string(), json!(stop_price_value));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit_client_order_id {
-            query_params.insert("limit_client_order_id".to_string(), json!(rw));
+            query_params.insert("limitClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit_iceberg_qty {
-            query_params.insert("limit_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("limitIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_client_order_id {
-            query_params.insert("stop_client_order_id".to_string(), json!(rw));
+            query_params.insert("stopClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_limit_price {
-            query_params.insert("stop_limit_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopLimitPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_iceberg_qty {
-            query_params.insert("stop_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_limit_time_in_force {
-            query_params.insert("stop_limit_time_in_force".to_string(), json!(rw));
+            query_params.insert("stopLimitTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = side_effect_type {
-            query_params.insert("side_effect_type".to_string(), json!(rw));
+            query_params.insert("sideEffectType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = auto_repay_at_cancel {
-            query_params.insert("auto_repay_at_cancel".to_string(), json!(rw));
+            query_params.insert("autoRepayAtCancel".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginAccountNewOcoResponse>(
@@ -2354,55 +2331,60 @@ impl TradeApi for TradeApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = quantity {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("quantity".to_string(), json!(rw));
         }
 
         if let Some(rw) = quote_order_qty {
-            query_params.insert("quote_order_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("quoteOrderQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = price {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("price".to_string(), json!(rw));
         }
 
         if let Some(rw) = stop_price {
-            query_params.insert("stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("stopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_client_order_id {
-            query_params.insert("new_client_order_id".to_string(), json!(rw));
+            query_params.insert("newClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = iceberg_qty {
-            query_params.insert("iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("icebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = side_effect_type {
-            query_params.insert("side_effect_type".to_string(), json!(rw));
+            query_params.insert("sideEffectType".to_string(), json!(rw));
         }
 
         if let Some(rw) = time_in_force {
-            query_params.insert("time_in_force".to_string(), json!(rw));
+            query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = auto_repay_at_cancel {
-            query_params.insert("auto_repay_at_cancel".to_string(), json!(rw));
+            query_params.insert("autoRepayAtCancel".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginAccountNewOrderResponse>(
@@ -2458,72 +2440,83 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("workingSide".to_string(), json!(working_side));
 
-        query_params.insert("workingPrice".to_string(), json!(working_price));
+        let working_price_value = Decimal::from_f32(working_price).unwrap_or_default();
+        query_params.insert("workingPrice".to_string(), json!(working_price_value));
 
-        query_params.insert("workingQuantity".to_string(), json!(working_quantity));
+        let working_quantity_value = Decimal::from_f32(working_quantity).unwrap_or_default();
+        query_params.insert("workingQuantity".to_string(), json!(working_quantity_value));
 
-        query_params.insert("workingIcebergQty".to_string(), json!(working_iceberg_qty));
+        let working_iceberg_qty_value = Decimal::from_f32(working_iceberg_qty).unwrap_or_default();
+        query_params.insert(
+            "workingIcebergQty".to_string(),
+            json!(working_iceberg_qty_value),
+        );
 
         query_params.insert("pendingType".to_string(), json!(pending_type));
 
         query_params.insert("pendingSide".to_string(), json!(pending_side));
 
-        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity));
+        let pending_quantity_value = Decimal::from_f32(pending_quantity).unwrap_or_default();
+        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity_value));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = side_effect_type {
-            query_params.insert("side_effect_type".to_string(), json!(rw));
+            query_params.insert("sideEffectType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = auto_repay_at_cancel {
-            query_params.insert("auto_repay_at_cancel".to_string(), json!(rw));
+            query_params.insert("autoRepayAtCancel".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_client_order_id {
-            query_params.insert("working_client_order_id".to_string(), json!(rw));
+            query_params.insert("workingClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_time_in_force {
-            query_params.insert("working_time_in_force".to_string(), json!(rw));
+            query_params.insert("workingTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_client_order_id {
-            query_params.insert("pending_client_order_id".to_string(), json!(rw));
+            query_params.insert("pendingClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_price {
-            query_params.insert("pending_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_stop_price {
-            query_params.insert("pending_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_trailing_delta {
-            query_params.insert("pending_trailing_delta".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_iceberg_qty {
-            query_params.insert("pending_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_time_in_force {
-            query_params.insert("pending_time_in_force".to_string(), json!(rw));
+            query_params.insert("pendingTimeInForce".to_string(), json!(rw));
         }
 
         send_request::<models::MarginAccountNewOtoResponse>(
@@ -2586,102 +2579,114 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("workingSide".to_string(), json!(working_side));
 
-        query_params.insert("workingPrice".to_string(), json!(working_price));
+        let working_price_value = Decimal::from_f32(working_price).unwrap_or_default();
+        query_params.insert("workingPrice".to_string(), json!(working_price_value));
 
-        query_params.insert("workingQuantity".to_string(), json!(working_quantity));
+        let working_quantity_value = Decimal::from_f32(working_quantity).unwrap_or_default();
+        query_params.insert("workingQuantity".to_string(), json!(working_quantity_value));
 
         query_params.insert("pendingSide".to_string(), json!(pending_side));
 
-        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity));
+        let pending_quantity_value = Decimal::from_f32(pending_quantity).unwrap_or_default();
+        query_params.insert("pendingQuantity".to_string(), json!(pending_quantity_value));
 
         query_params.insert("pendingAboveType".to_string(), json!(pending_above_type));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = side_effect_type {
-            query_params.insert("side_effect_type".to_string(), json!(rw));
+            query_params.insert("sideEffectType".to_string(), json!(rw));
         }
 
         if let Some(rw) = auto_repay_at_cancel {
-            query_params.insert("auto_repay_at_cancel".to_string(), json!(rw));
+            query_params.insert("autoRepayAtCancel".to_string(), json!(rw));
         }
 
         if let Some(rw) = list_client_order_id {
-            query_params.insert("list_client_order_id".to_string(), json!(rw));
+            query_params.insert("listClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("self_trade_prevention_mode".to_string(), json!(rw));
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_client_order_id {
-            query_params.insert("working_client_order_id".to_string(), json!(rw));
+            query_params.insert("workingClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_iceberg_qty {
-            query_params.insert("working_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("workingIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_time_in_force {
-            query_params.insert("working_time_in_force".to_string(), json!(rw));
+            query_params.insert("workingTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_client_order_id {
-            query_params.insert("pending_above_client_order_id".to_string(), json!(rw));
+            query_params.insert("pendingAboveClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_price {
-            query_params.insert("pending_above_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAbovePrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_stop_price {
-            query_params.insert("pending_above_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAboveStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_trailing_delta {
-            query_params.insert("pending_above_trailing_delta".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAboveTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_iceberg_qty {
-            query_params.insert("pending_above_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingAboveIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_above_time_in_force {
-            query_params.insert("pending_above_time_in_force".to_string(), json!(rw));
+            query_params.insert("pendingAboveTimeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_type {
-            query_params.insert("pending_below_type".to_string(), json!(rw));
+            query_params.insert("pendingBelowType".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_client_order_id {
-            query_params.insert("pending_below_client_order_id".to_string(), json!(rw));
+            query_params.insert("pendingBelowClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_price {
-            query_params.insert("pending_below_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_stop_price {
-            query_params.insert("pending_below_stop_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowStopPrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_trailing_delta {
-            query_params.insert("pending_below_trailing_delta".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowTrailingDelta".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_iceberg_qty {
-            query_params.insert("pending_below_iceberg_qty".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("pendingBelowIcebergQty".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_below_time_in_force {
-            query_params.insert("pending_below_time_in_force".to_string(), json!(rw));
+            query_params.insert("pendingBelowTimeInForce".to_string(), json!(rw));
         }
 
         send_request::<models::MarginAccountNewOtocoResponse>(
@@ -2718,7 +2723,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginManualLiquidationResponse>(
@@ -2750,7 +2755,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol {
@@ -2758,7 +2763,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryCurrentMarginOrderCountUsageResponseInner>>(
@@ -2793,7 +2798,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol {
@@ -2801,15 +2806,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2817,7 +2822,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryMarginAccountsAllOcoResponseInner>>(
@@ -2855,19 +2860,19 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2875,7 +2880,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryMarginAccountsAllOrdersResponseInner>>(
@@ -2908,7 +2913,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol {
@@ -2916,15 +2921,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = order_list_id {
-            query_params.insert("order_list_id".to_string(), json!(rw));
+            query_params.insert("orderListId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryMarginAccountsOcoResponse>(
@@ -2955,7 +2960,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol {
@@ -2963,7 +2968,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryMarginAccountsOpenOcoResponseInner>>(
@@ -2999,11 +3004,11 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryMarginAccountsOpenOrdersResponseInner>>(
@@ -3038,19 +3043,19 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryMarginAccountsOrderResponse>(
@@ -3089,23 +3094,23 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = is_isolated {
-            query_params.insert("is_isolated".to_string(), json!(rw));
+            query_params.insert("isIsolated".to_string(), json!(rw));
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -3113,7 +3118,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryMarginAccountsTradeListResponseInner>>(
@@ -3147,7 +3152,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySpecialKeyResponse>(
@@ -3181,7 +3186,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QuerySpecialKeyListResponseInner>>(
@@ -3213,7 +3218,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("assetNames".to_string(), json!(asset_names));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Value>(
@@ -4392,7 +4397,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = MarginAccountNewOcoParams::builder("symbol_example".to_string(),MarginAccountNewOcoSideEnum::BUY,1.0,1.0,1.0,).build().unwrap();
+            let params = MarginAccountNewOcoParams::builder("symbol_example".to_string(),MarginAccountNewOcoSideEnum::Buy,1.0,1.0,1.0,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":0,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"JYVpp3F0f5CAG15DhtrqLp","transactionTime":1563417480525,"symbol":"LTCBTC","marginBuyBorrowAmount":"5","marginBuyBorrowAsset":"BTC","isIsolated":false,"orders":[{"symbol":"LTCBTC","orderId":2,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos"},{"symbol":"LTCBTC","orderId":3,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl"}],"orderReports":[{"symbol":"LTCBTC","orderId":2,"orderListId":0,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos","transactTime":1563417480525,"price":"0.000000","origQty":"0.624363","executedQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS","side":"BUY","stopPrice":"0.960664","selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":3,"orderListId":0,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl","transactTime":1563417480525,"price":"0.036435","origQty":"0.624363","executedQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::MarginAccountNewOcoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MarginAccountNewOcoResponse");
@@ -4409,7 +4414,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = MarginAccountNewOcoParams::builder("symbol_example".to_string(),MarginAccountNewOcoSideEnum::BUY,1.0,1.0,1.0,).is_isolated("false".to_string()).list_client_order_id("1".to_string()).limit_client_order_id("1".to_string()).limit_iceberg_qty(1.0).stop_client_order_id("1".to_string()).stop_limit_price(1.0).stop_iceberg_qty(1.0).stop_limit_time_in_force("stop_limit_time_in_force_example".to_string()).new_order_resp_type(MarginAccountNewOcoNewOrderRespTypeEnum::ACK).side_effect_type("NO_SIDE_EFFECT".to_string()).self_trade_prevention_mode("NONE".to_string()).auto_repay_at_cancel(true).recv_window(5000).build().unwrap();
+            let params = MarginAccountNewOcoParams::builder("symbol_example".to_string(),MarginAccountNewOcoSideEnum::Buy,1.0,1.0,1.0,).is_isolated("false".to_string()).list_client_order_id("1".to_string()).limit_client_order_id("1".to_string()).limit_iceberg_qty(1.0).stop_client_order_id("1".to_string()).stop_limit_price(1.0).stop_iceberg_qty(1.0).stop_limit_time_in_force("stop_limit_time_in_force_example".to_string()).new_order_resp_type(MarginAccountNewOcoNewOrderRespTypeEnum::Ack).side_effect_type("NO_SIDE_EFFECT".to_string()).self_trade_prevention_mode("NONE".to_string()).auto_repay_at_cancel(true).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":0,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"JYVpp3F0f5CAG15DhtrqLp","transactionTime":1563417480525,"symbol":"LTCBTC","marginBuyBorrowAmount":"5","marginBuyBorrowAsset":"BTC","isIsolated":false,"orders":[{"symbol":"LTCBTC","orderId":2,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos"},{"symbol":"LTCBTC","orderId":3,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl"}],"orderReports":[{"symbol":"LTCBTC","orderId":2,"orderListId":0,"clientOrderId":"Kk7sqHb9J6mJWTMDVW7Vos","transactTime":1563417480525,"price":"0.000000","origQty":"0.624363","executedQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS","side":"BUY","stopPrice":"0.960664","selfTradePreventionMode":"NONE"},{"symbol":"LTCBTC","orderId":3,"orderListId":0,"clientOrderId":"xTXKaGYd4bluPVp78IVRvl","transactTime":1563417480525,"price":"0.036435","origQty":"0.624363","executedQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::MarginAccountNewOcoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MarginAccountNewOcoResponse");
@@ -4428,7 +4433,7 @@ mod tests {
 
             let params = MarginAccountNewOcoParams::builder(
                 "symbol_example".to_string(),
-                MarginAccountNewOcoSideEnum::BUY,
+                MarginAccountNewOcoSideEnum::Buy,
                 1.0,
                 1.0,
                 1.0,
@@ -4450,7 +4455,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = MarginAccountNewOrderParams::builder("symbol_example".to_string(),MarginAccountNewOrderSideEnum::BUY,"r#type_example".to_string(),).build().unwrap();
+            let params = MarginAccountNewOrderParams::builder("symbol_example".to_string(),MarginAccountNewOrderSideEnum::Buy,"r#type_example".to_string(),).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","orderId":26769564559,"clientOrderId":"E156O3KP4gOif65bjuUK5V","isIsolated":false,"transactTime":1713873075893,"price":"0","origQty":"0.001","executedQty":"0.001","cummulativeQuoteQty":"65.98253","status":"FILLED","timeInForce":"GTC","type":"MARKET","side":"SELL","selfTradePreventionMode":"EXPIRE_MAKER","marginBuyBorrowAmount":5,"marginBuyBorrowAsset":"BTC","fills":[{"price":"65982.53","qty":"0.001","commission":"0.06598253","commissionAsset":"USDT","tradeId":3570680726}]}"#).unwrap();
             let expected_response : models::MarginAccountNewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MarginAccountNewOrderResponse");
@@ -4467,7 +4472,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = MarginAccountNewOrderParams::builder("symbol_example".to_string(),MarginAccountNewOrderSideEnum::BUY,"r#type_example".to_string(),).is_isolated("false".to_string()).quantity(1.0).quote_order_qty(1.0).price(1.0).stop_price(1.0).new_client_order_id("1".to_string()).iceberg_qty(1.0).new_order_resp_type(MarginAccountNewOrderNewOrderRespTypeEnum::ACK).side_effect_type("NO_SIDE_EFFECT".to_string()).time_in_force(MarginAccountNewOrderTimeInForceEnum::GTC).self_trade_prevention_mode("NONE".to_string()).auto_repay_at_cancel(true).recv_window(5000).build().unwrap();
+            let params = MarginAccountNewOrderParams::builder("symbol_example".to_string(),MarginAccountNewOrderSideEnum::Buy,"r#type_example".to_string(),).is_isolated("false".to_string()).quantity(1.0).quote_order_qty(1.0).price(1.0).stop_price(1.0).new_client_order_id("1".to_string()).iceberg_qty(1.0).new_order_resp_type(MarginAccountNewOrderNewOrderRespTypeEnum::Ack).side_effect_type("NO_SIDE_EFFECT".to_string()).time_in_force(MarginAccountNewOrderTimeInForceEnum::Gtc).self_trade_prevention_mode("NONE".to_string()).auto_repay_at_cancel(true).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","orderId":26769564559,"clientOrderId":"E156O3KP4gOif65bjuUK5V","isIsolated":false,"transactTime":1713873075893,"price":"0","origQty":"0.001","executedQty":"0.001","cummulativeQuoteQty":"65.98253","status":"FILLED","timeInForce":"GTC","type":"MARKET","side":"SELL","selfTradePreventionMode":"EXPIRE_MAKER","marginBuyBorrowAmount":5,"marginBuyBorrowAsset":"BTC","fills":[{"price":"65982.53","qty":"0.001","commission":"0.06598253","commissionAsset":"USDT","tradeId":3570680726}]}"#).unwrap();
             let expected_response : models::MarginAccountNewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MarginAccountNewOrderResponse");
@@ -4486,7 +4491,7 @@ mod tests {
 
             let params = MarginAccountNewOrderParams::builder(
                 "symbol_example".to_string(),
-                MarginAccountNewOrderSideEnum::BUY,
+                MarginAccountNewOrderSideEnum::Buy,
                 "r#type_example".to_string(),
             )
             .build()
@@ -4523,7 +4528,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = MarginAccountNewOtoParams::builder("symbol_example".to_string(),"working_type_example".to_string(),"working_side_example".to_string(),1.0,1.0,1.0,"Order Types".to_string(),"pending_side_example".to_string(),1.0,).is_isolated("false".to_string()).list_client_order_id("1".to_string()).new_order_resp_type(MarginAccountNewOtoNewOrderRespTypeEnum::ACK).side_effect_type("NO_SIDE_EFFECT".to_string()).self_trade_prevention_mode("NONE".to_string()).auto_repay_at_cancel(true).working_client_order_id("1".to_string()).working_time_in_force("working_time_in_force_example".to_string()).pending_client_order_id("1".to_string()).pending_price(1.0).pending_stop_price(1.0).pending_trailing_delta(1.0).pending_iceberg_qty(1.0).pending_time_in_force("pending_time_in_force_example".to_string()).build().unwrap();
+            let params = MarginAccountNewOtoParams::builder("symbol_example".to_string(),"working_type_example".to_string(),"working_side_example".to_string(),1.0,1.0,1.0,"Order Types".to_string(),"pending_side_example".to_string(),1.0,).is_isolated("false".to_string()).list_client_order_id("1".to_string()).new_order_resp_type(MarginAccountNewOtoNewOrderRespTypeEnum::Ack).side_effect_type("NO_SIDE_EFFECT".to_string()).self_trade_prevention_mode("NONE".to_string()).auto_repay_at_cancel(true).working_client_order_id("1".to_string()).working_time_in_force("working_time_in_force_example".to_string()).pending_client_order_id("1".to_string()).pending_price(1.0).pending_stop_price(1.0).pending_trailing_delta(1.0).pending_iceberg_qty(1.0).pending_time_in_force("pending_time_in_force_example".to_string()).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":13551,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"JDuOrsu0Ge8GTyvx8J7VTD","transactionTime":1725521998054,"symbol":"BTCUSDT","isIsolated":false,"orders":[{"symbol":"BTCUSDT","orderId":29896699,"clientOrderId":"y8RB6tQEMuHUXybqbtzTxk"},{"symbol":"BTCUSDT","orderId":29896700,"clientOrderId":"dKQEdh5HhXb7Lpp85jz1dQ"}],"orderReports":[{"symbol":"BTCUSDT","orderId":29896699,"orderListId":13551,"clientOrderId":"y8RB6tQEMuHUXybqbtzTxk","transactTime":1725521998054,"price":"80000.00000000","origQty":"0.02000000","executedQty":"0","cummulativeQuoteQty":"0","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","orderId":29896700,"orderListId":13551,"clientOrderId":"dKQEdh5HhXb7Lpp85jz1dQ","transactTime":1725521998054,"price":"50000.00000000","origQty":"0.02000000","executedQty":"0","cummulativeQuoteQty":"0","status":"PENDING_NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::MarginAccountNewOtoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MarginAccountNewOtoResponse");
@@ -4585,7 +4590,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = MarginAccountNewOtocoParams::builder("symbol_example".to_string(),"working_type_example".to_string(),"working_side_example".to_string(),1.0,1.0,"pending_side_example".to_string(),1.0,"pending_above_type_example".to_string(),).is_isolated("false".to_string()).side_effect_type("NO_SIDE_EFFECT".to_string()).auto_repay_at_cancel(true).list_client_order_id("1".to_string()).new_order_resp_type(MarginAccountNewOtocoNewOrderRespTypeEnum::ACK).self_trade_prevention_mode("NONE".to_string()).working_client_order_id("1".to_string()).working_iceberg_qty(1.0).working_time_in_force("working_time_in_force_example".to_string()).pending_above_client_order_id("1".to_string()).pending_above_price(1.0).pending_above_stop_price(1.0).pending_above_trailing_delta(1.0).pending_above_iceberg_qty(1.0).pending_above_time_in_force("pending_above_time_in_force_example".to_string()).pending_below_type("pending_below_type_example".to_string()).pending_below_client_order_id("1".to_string()).pending_below_price(1.0).pending_below_stop_price(1.0).pending_below_trailing_delta(1.0).pending_below_iceberg_qty(1.0).pending_below_time_in_force("pending_below_time_in_force_example".to_string()).build().unwrap();
+            let params = MarginAccountNewOtocoParams::builder("symbol_example".to_string(),"working_type_example".to_string(),"working_side_example".to_string(),1.0,1.0,"pending_side_example".to_string(),1.0,"pending_above_type_example".to_string(),).is_isolated("false".to_string()).side_effect_type("NO_SIDE_EFFECT".to_string()).auto_repay_at_cancel(true).list_client_order_id("1".to_string()).new_order_resp_type(MarginAccountNewOtocoNewOrderRespTypeEnum::Ack).self_trade_prevention_mode("NONE".to_string()).working_client_order_id("1".to_string()).working_iceberg_qty(1.0).working_time_in_force("working_time_in_force_example".to_string()).pending_above_client_order_id("1".to_string()).pending_above_price(1.0).pending_above_stop_price(1.0).pending_above_trailing_delta(1.0).pending_above_iceberg_qty(1.0).pending_above_time_in_force("pending_above_time_in_force_example".to_string()).pending_below_type("pending_below_type_example".to_string()).pending_below_client_order_id("1".to_string()).pending_below_price(1.0).pending_below_stop_price(1.0).pending_below_trailing_delta(1.0).pending_below_iceberg_qty(1.0).pending_below_time_in_force("pending_below_time_in_force_example".to_string()).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderListId":13509,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"u2AUo48LLef5qVenRtwJZy","transactionTime":1725521881300,"symbol":"BNBUSDT","isIsolated":false,"orders":[{"symbol":"BNBUSDT","orderId":28282534,"clientOrderId":"IfYDxvrZI4kiyqYpRH13iI"},{"symbol":"BNBUSDT","orderId":28282535,"clientOrderId":"0HCSsPRxVfW8BkTUy9z4np"},{"symbol":"BNBUSDT","orderId":28282536,"clientOrderId":"dypsgdxWnLY75kwT930cbD"}],"orderReports":[{"symbol":"BNBUSDT","orderId":28282534,"orderListId":13509,"clientOrderId":"IfYDxvrZI4kiyqYpRH13iI","transactTime":1725521881300,"price":"300.00000000","origQty":"1.00000000","executedQty":"0","cummulativeQuoteQty":"0","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","selfTradePreventionMode":"NONE"},{"symbol":"BNBUSDT","orderId":28282535,"orderListId":13509,"clientOrderId":"0HCSsPRxVfW8BkTUy9z4np","transactTime":1725521881300,"price":"0E-8","origQty":"1.00000000","executedQty":"0","cummulativeQuoteQty":"0","status":"PENDING_NEW","timeInForce":"GTC","type":"STOP_LOSS","side":"SELL","stopPrice":"299.00000000","selfTradePreventionMode":"NONE"},{"symbol":"BNBUSDT","orderId":28282536,"orderListId":13509,"clientOrderId":"dypsgdxWnLY75kwT930cbD","transactTime":1725521881300,"price":"301.00000000","origQty":"1.00000000","executedQty":"0","cummulativeQuoteQty":"0","status":"PENDING_NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"SELL","selfTradePreventionMode":"NONE"}]}"#).unwrap();
             let expected_response : models::MarginAccountNewOtocoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MarginAccountNewOtocoResponse");

@@ -28,8 +28,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = TakerBuySellVolumeParams::builder(
         "pair_example".to_string(),
-        TakerBuySellVolumeContractTypeEnum::PERPETUAL,
-        TakerBuySellVolumePeriodEnum::PERIOD_5m,
+        TakerBuySellVolumeContractTypeEnum::Perpetual,
+        TakerBuySellVolumePeriodEnum::Period5m,
     )
     .build()?;
 

@@ -15,6 +15,7 @@
 use anyhow::Context;
 use async_trait::async_trait;
 use derive_builder::Builder;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{collections::BTreeMap, sync::Arc};
@@ -71,9 +72,6 @@ pub struct AccountInformationParams {
 impl AccountInformationParams {
     /// Create a builder for [`account_information`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AccountInformationParamsBuilder {
         AccountInformationParamsBuilder::default()
@@ -102,9 +100,6 @@ pub struct FuturesAccountBalanceParams {
 impl FuturesAccountBalanceParams {
     /// Create a builder for [`futures_account_balance`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> FuturesAccountBalanceParamsBuilder {
         FuturesAccountBalanceParamsBuilder::default()
@@ -124,7 +119,7 @@ impl AccountApi for AccountApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -153,7 +148,7 @@ impl AccountApi for AccountApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -222,7 +217,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.status".trim_start_matches('/'));
@@ -265,7 +260,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -318,9 +313,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -351,7 +345,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.balance".trim_start_matches('/'));
@@ -394,7 +388,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -447,9 +441,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();

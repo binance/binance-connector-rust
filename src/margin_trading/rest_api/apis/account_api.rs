@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -196,9 +197,6 @@ pub struct GetBnbBurnStatusParams {
 impl GetBnbBurnStatusParams {
     /// Create a builder for [`get_bnb_burn_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetBnbBurnStatusParamsBuilder {
         GetBnbBurnStatusParamsBuilder::default()
@@ -220,9 +218,6 @@ pub struct GetSummaryOfMarginAccountParams {
 
 impl GetSummaryOfMarginAccountParams {
     /// Create a builder for [`get_summary_of_margin_account`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetSummaryOfMarginAccountParamsBuilder {
@@ -283,9 +278,6 @@ pub struct QueryCrossIsolatedMarginCapitalFlowParams {
 impl QueryCrossIsolatedMarginCapitalFlowParams {
     /// Create a builder for [`query_cross_isolated_margin_capital_flow`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryCrossIsolatedMarginCapitalFlowParamsBuilder {
         QueryCrossIsolatedMarginCapitalFlowParamsBuilder::default()
@@ -307,9 +299,6 @@ pub struct QueryCrossMarginAccountDetailsParams {
 
 impl QueryCrossMarginAccountDetailsParams {
     /// Create a builder for [`query_cross_margin_account_details`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryCrossMarginAccountDetailsParamsBuilder {
@@ -344,9 +333,6 @@ pub struct QueryCrossMarginFeeDataParams {
 impl QueryCrossMarginFeeDataParams {
     /// Create a builder for [`query_cross_margin_fee_data`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryCrossMarginFeeDataParamsBuilder {
         QueryCrossMarginFeeDataParamsBuilder::default()
@@ -368,9 +354,6 @@ pub struct QueryEnabledIsolatedMarginAccountLimitParams {
 
 impl QueryEnabledIsolatedMarginAccountLimitParams {
     /// Create a builder for [`query_enabled_isolated_margin_account_limit`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryEnabledIsolatedMarginAccountLimitParamsBuilder {
@@ -398,9 +381,6 @@ pub struct QueryIsolatedMarginAccountInfoParams {
 
 impl QueryIsolatedMarginAccountInfoParams {
     /// Create a builder for [`query_isolated_margin_account_info`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryIsolatedMarginAccountInfoParamsBuilder {
@@ -433,9 +413,6 @@ pub struct QueryIsolatedMarginFeeDataParams {
 
 impl QueryIsolatedMarginFeeDataParams {
     /// Create a builder for [`query_isolated_margin_fee_data`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryIsolatedMarginFeeDataParamsBuilder {
@@ -484,7 +461,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DisableIsolatedMarginAccountResponse>(
@@ -516,7 +493,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::EnableIsolatedMarginAccountResponse>(
@@ -543,7 +520,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetBnbBurnStatusResponse>(
@@ -570,7 +547,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSummaryOfMarginAccountResponse>(
@@ -616,19 +593,19 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -636,7 +613,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryCrossIsolatedMarginCapitalFlowResponseInner>>(
@@ -663,7 +640,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryCrossMarginAccountDetailsResponse>(
@@ -694,7 +671,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = vip_level {
-            query_params.insert("vip_level".to_string(), json!(rw));
+            query_params.insert("vipLevel".to_string(), json!(rw));
         }
 
         if let Some(rw) = coin {
@@ -702,7 +679,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryCrossMarginFeeDataResponseInner>>(
@@ -730,7 +707,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryEnabledIsolatedMarginAccountLimitResponse>(
@@ -764,7 +741,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryIsolatedMarginAccountInfoResponse>(
@@ -795,7 +772,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = vip_level {
-            query_params.insert("vip_level".to_string(), json!(rw));
+            query_params.insert("vipLevel".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol {
@@ -803,7 +780,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryIsolatedMarginFeeDataResponseInner>>(

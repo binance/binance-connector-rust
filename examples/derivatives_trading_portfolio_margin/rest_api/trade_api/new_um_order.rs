@@ -26,8 +26,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = NewUmOrderParams::builder(
         "symbol_example".to_string(),
-        NewUmOrderSideEnum::BUY,
-        NewUmOrderTypeEnum::LIMIT,
+        NewUmOrderSideEnum::Buy,
+        NewUmOrderTypeEnum::Limit,
     )
     .build()?;
 

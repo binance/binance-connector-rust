@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -66,9 +67,6 @@ pub struct GetSymbolsDelistScheduleForSpotParams {
 impl GetSymbolsDelistScheduleForSpotParams {
     /// Create a builder for [`get_symbols_delist_schedule_for_spot`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSymbolsDelistScheduleForSpotParamsBuilder {
         GetSymbolsDelistScheduleForSpotParamsBuilder::default()
@@ -87,7 +85,7 @@ impl OthersApi for OthersApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetSymbolsDelistScheduleForSpotResponseInner>>(

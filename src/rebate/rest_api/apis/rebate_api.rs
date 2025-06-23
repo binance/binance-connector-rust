@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -82,9 +83,6 @@ pub struct GetSpotRebateHistoryRecordsParams {
 impl GetSpotRebateHistoryRecordsParams {
     /// Create a builder for [`get_spot_rebate_history_records`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSpotRebateHistoryRecordsParamsBuilder {
         GetSpotRebateHistoryRecordsParamsBuilder::default()
@@ -107,11 +105,11 @@ impl RebateApi for RebateApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -119,7 +117,7 @@ impl RebateApi for RebateApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSpotRebateHistoryRecordsResponse>(

@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -145,9 +146,6 @@ pub struct AccountInformationV2Params {
 impl AccountInformationV2Params {
     /// Create a builder for [`account_information_v2`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AccountInformationV2ParamsBuilder {
         AccountInformationV2ParamsBuilder::default()
@@ -170,9 +168,6 @@ pub struct AccountInformationV3Params {
 
 impl AccountInformationV3Params {
     /// Create a builder for [`account_information_v3`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AccountInformationV3ParamsBuilder {
@@ -197,9 +192,6 @@ pub struct FuturesAccountBalanceV2Params {
 impl FuturesAccountBalanceV2Params {
     /// Create a builder for [`futures_account_balance_v2`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> FuturesAccountBalanceV2ParamsBuilder {
         FuturesAccountBalanceV2ParamsBuilder::default()
@@ -223,9 +215,6 @@ pub struct FuturesAccountBalanceV3Params {
 impl FuturesAccountBalanceV3Params {
     /// Create a builder for [`futures_account_balance_v3`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> FuturesAccountBalanceV3ParamsBuilder {
         FuturesAccountBalanceV3ParamsBuilder::default()
@@ -248,9 +237,6 @@ pub struct FuturesAccountConfigurationParams {
 
 impl FuturesAccountConfigurationParams {
     /// Create a builder for [`futures_account_configuration`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> FuturesAccountConfigurationParamsBuilder {
@@ -281,9 +267,6 @@ pub struct FuturesTradingQuantitativeRulesIndicatorsParams {
 impl FuturesTradingQuantitativeRulesIndicatorsParams {
     /// Create a builder for [`futures_trading_quantitative_rules_indicators`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> FuturesTradingQuantitativeRulesIndicatorsParamsBuilder {
         FuturesTradingQuantitativeRulesIndicatorsParamsBuilder::default()
@@ -306,9 +289,6 @@ pub struct GetBnbBurnStatusParams {
 
 impl GetBnbBurnStatusParams {
     /// Create a builder for [`get_bnb_burn_status`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetBnbBurnStatusParamsBuilder {
@@ -333,9 +313,6 @@ pub struct GetCurrentMultiAssetsModeParams {
 impl GetCurrentMultiAssetsModeParams {
     /// Create a builder for [`get_current_multi_assets_mode`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetCurrentMultiAssetsModeParamsBuilder {
         GetCurrentMultiAssetsModeParamsBuilder::default()
@@ -358,9 +335,6 @@ pub struct GetCurrentPositionModeParams {
 
 impl GetCurrentPositionModeParams {
     /// Create a builder for [`get_current_position_mode`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetCurrentPositionModeParamsBuilder {
@@ -647,9 +621,6 @@ pub struct GetIncomeHistoryParams {
 impl GetIncomeHistoryParams {
     /// Create a builder for [`get_income_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetIncomeHistoryParamsBuilder {
         GetIncomeHistoryParamsBuilder::default()
@@ -679,9 +650,6 @@ pub struct NotionalAndLeverageBracketsParams {
 impl NotionalAndLeverageBracketsParams {
     /// Create a builder for [`notional_and_leverage_brackets`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> NotionalAndLeverageBracketsParamsBuilder {
         NotionalAndLeverageBracketsParamsBuilder::default()
@@ -704,9 +672,6 @@ pub struct QueryUserRateLimitParams {
 
 impl QueryUserRateLimitParams {
     /// Create a builder for [`query_user_rate_limit`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryUserRateLimitParamsBuilder {
@@ -736,9 +701,6 @@ pub struct SymbolConfigurationParams {
 
 impl SymbolConfigurationParams {
     /// Create a builder for [`symbol_configuration`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> SymbolConfigurationParamsBuilder {
@@ -822,7 +784,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountInformationV2Response>(
@@ -849,7 +811,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountInformationV3Response>(
@@ -876,7 +838,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::FuturesAccountBalanceV2ResponseInner>>(
@@ -903,7 +865,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::FuturesAccountBalanceV2ResponseInner>>(
@@ -930,7 +892,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FuturesAccountConfigurationResponse>(
@@ -965,7 +927,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FuturesTradingQuantitativeRulesIndicatorsResponse>(
@@ -992,7 +954,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetBnbBurnStatusResponse>(
@@ -1019,7 +981,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCurrentMultiAssetsModeResponse>(
@@ -1046,7 +1008,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCurrentPositionModeResponse>(
@@ -1081,7 +1043,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDownloadIdForFuturesOrderHistoryResponse>(
@@ -1116,7 +1078,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDownloadIdForFuturesTradeHistoryResponse>(
@@ -1152,7 +1114,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDownloadIdForFuturesTransactionHistoryResponse>(
@@ -1185,7 +1147,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("downloadId".to_string(), json!(download_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFuturesOrderHistoryDownloadLinkByIdResponse>(
@@ -1217,7 +1179,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("downloadId".to_string(), json!(download_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFuturesTradeDownloadLinkByIdResponse>(
@@ -1250,7 +1212,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("downloadId".to_string(), json!(download_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFuturesTransactionHistoryDownloadLinkByIdResponse>(
@@ -1289,15 +1251,15 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = income_type {
-            query_params.insert("income_type".to_string(), json!(rw));
+            query_params.insert("incomeType".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -1309,7 +1271,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetIncomeHistoryResponseInner>>(
@@ -1343,7 +1305,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::NotionalAndLeverageBracketsResponse>(
@@ -1370,7 +1332,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryUserRateLimitResponseInner>>(
@@ -1404,7 +1366,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::SymbolConfigurationResponseInner>>(
@@ -1436,7 +1398,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("feeBurn".to_string(), json!(fee_burn));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ToggleBnbBurnOnFuturesTradeResponse>(
@@ -1468,7 +1430,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::UserCommissionRateResponse>(

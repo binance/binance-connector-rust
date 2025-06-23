@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = MarginAccountNewOrderParams::builder(
         "symbol_example".to_string(),
-        MarginAccountNewOrderSideEnum::BUY,
+        MarginAccountNewOrderSideEnum::Buy,
         "r#type_example".to_string(),
     )
     .build()?;

@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -176,9 +177,6 @@ pub struct FetchRsaPublicKeyParams {
 impl FetchRsaPublicKeyParams {
     /// Create a builder for [`fetch_rsa_public_key`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> FetchRsaPublicKeyParamsBuilder {
         FetchRsaPublicKeyParamsBuilder::default()
@@ -305,10 +303,14 @@ impl MarketDataApi for MarketDataApiClient {
 
         query_params.insert("faceToken".to_string(), json!(face_token));
 
-        query_params.insert("baseTokenAmount".to_string(), json!(base_token_amount));
+        let base_token_amount_value = Decimal::from_f32(base_token_amount).unwrap_or_default();
+        query_params.insert(
+            "baseTokenAmount".to_string(),
+            json!(base_token_amount_value),
+        );
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CreateADualTokenGiftCardResponse>(
@@ -340,10 +342,11 @@ impl MarketDataApi for MarketDataApiClient {
 
         query_params.insert("token".to_string(), json!(token));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CreateASingleTokenGiftCardResponse>(
@@ -370,7 +373,7 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FetchRsaPublicKeyResponse>(
@@ -402,7 +405,7 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("baseToken".to_string(), json!(base_token));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FetchTokenLimitResponse>(
@@ -435,11 +438,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("code".to_string(), json!(code));
 
         if let Some(rw) = external_uid {
-            query_params.insert("external_uid".to_string(), json!(rw));
+            query_params.insert("externalUid".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RedeemABinanceGiftCardResponse>(
@@ -472,7 +475,7 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("referenceNo".to_string(), json!(reference_no));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::VerifyBinanceGiftCardByGiftCardNumberResponse>(

@@ -115,7 +115,8 @@ pub struct WebsocketApiRateLimit {
     #[serde(rename = "intervalNum")]
     pub interval_num: u32,
     pub limit: u32,
-    pub count: Option<u32>,
+    #[serde(default)]
+    pub count: u32,
 }
 
 #[derive(Debug)]

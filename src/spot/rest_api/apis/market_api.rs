@@ -20,6 +20,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -100,59 +101,59 @@ impl MarketApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KlinesIntervalEnum {
     #[serde(rename = "1s")]
-    INTERVAL_1s,
+    Interval1s,
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl KlinesIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            KlinesIntervalEnum::INTERVAL_1s => "1s",
-            KlinesIntervalEnum::INTERVAL_1m => "1m",
-            KlinesIntervalEnum::INTERVAL_3m => "3m",
-            KlinesIntervalEnum::INTERVAL_5m => "5m",
-            KlinesIntervalEnum::INTERVAL_15m => "15m",
-            KlinesIntervalEnum::INTERVAL_30m => "30m",
-            KlinesIntervalEnum::INTERVAL_1h => "1h",
-            KlinesIntervalEnum::INTERVAL_2h => "2h",
-            KlinesIntervalEnum::INTERVAL_4h => "4h",
-            KlinesIntervalEnum::INTERVAL_6h => "6h",
-            KlinesIntervalEnum::INTERVAL_8h => "8h",
-            KlinesIntervalEnum::INTERVAL_12h => "12h",
-            KlinesIntervalEnum::INTERVAL_1d => "1d",
-            KlinesIntervalEnum::INTERVAL_3d => "3d",
-            KlinesIntervalEnum::INTERVAL_1w => "1w",
-            KlinesIntervalEnum::INTERVAL_1M => "1M",
+            KlinesIntervalEnum::Interval1s => "1s",
+            KlinesIntervalEnum::Interval1m => "1m",
+            KlinesIntervalEnum::Interval3m => "3m",
+            KlinesIntervalEnum::Interval5m => "5m",
+            KlinesIntervalEnum::Interval15m => "15m",
+            KlinesIntervalEnum::Interval30m => "30m",
+            KlinesIntervalEnum::Interval1h => "1h",
+            KlinesIntervalEnum::Interval2h => "2h",
+            KlinesIntervalEnum::Interval4h => "4h",
+            KlinesIntervalEnum::Interval6h => "6h",
+            KlinesIntervalEnum::Interval8h => "8h",
+            KlinesIntervalEnum::Interval12h => "12h",
+            KlinesIntervalEnum::Interval1d => "1d",
+            KlinesIntervalEnum::Interval3d => "3d",
+            KlinesIntervalEnum::Interval1w => "1w",
+            KlinesIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -161,275 +162,275 @@ impl KlinesIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TickerWindowSizeEnum {
     #[serde(rename = "1m")]
-    WINDOW_SIZE_1m,
+    WindowSize1m,
     #[serde(rename = "2m")]
-    WINDOW_SIZE_2m,
+    WindowSize2m,
     #[serde(rename = "3m")]
-    WINDOW_SIZE_3m,
+    WindowSize3m,
     #[serde(rename = "4m")]
-    WINDOW_SIZE_4m,
+    WindowSize4m,
     #[serde(rename = "5m")]
-    WINDOW_SIZE_5m,
+    WindowSize5m,
     #[serde(rename = "6m")]
-    WINDOW_SIZE_6m,
+    WindowSize6m,
     #[serde(rename = "7m")]
-    WINDOW_SIZE_7m,
+    WindowSize7m,
     #[serde(rename = "8m")]
-    WINDOW_SIZE_8m,
+    WindowSize8m,
     #[serde(rename = "9m")]
-    WINDOW_SIZE_9m,
+    WindowSize9m,
     #[serde(rename = "10m")]
-    WINDOW_SIZE_10m,
+    WindowSize10m,
     #[serde(rename = "11m")]
-    WINDOW_SIZE_11m,
+    WindowSize11m,
     #[serde(rename = "12m")]
-    WINDOW_SIZE_12m,
+    WindowSize12m,
     #[serde(rename = "13m")]
-    WINDOW_SIZE_13m,
+    WindowSize13m,
     #[serde(rename = "14m")]
-    WINDOW_SIZE_14m,
+    WindowSize14m,
     #[serde(rename = "15m")]
-    WINDOW_SIZE_15m,
+    WindowSize15m,
     #[serde(rename = "16m")]
-    WINDOW_SIZE_16m,
+    WindowSize16m,
     #[serde(rename = "17m")]
-    WINDOW_SIZE_17m,
+    WindowSize17m,
     #[serde(rename = "18m")]
-    WINDOW_SIZE_18m,
+    WindowSize18m,
     #[serde(rename = "19m")]
-    WINDOW_SIZE_19m,
+    WindowSize19m,
     #[serde(rename = "20m")]
-    WINDOW_SIZE_20m,
+    WindowSize20m,
     #[serde(rename = "21m")]
-    WINDOW_SIZE_21m,
+    WindowSize21m,
     #[serde(rename = "22m")]
-    WINDOW_SIZE_22m,
+    WindowSize22m,
     #[serde(rename = "23m")]
-    WINDOW_SIZE_23m,
+    WindowSize23m,
     #[serde(rename = "24m")]
-    WINDOW_SIZE_24m,
+    WindowSize24m,
     #[serde(rename = "25m")]
-    WINDOW_SIZE_25m,
+    WindowSize25m,
     #[serde(rename = "26m")]
-    WINDOW_SIZE_26m,
+    WindowSize26m,
     #[serde(rename = "27m")]
-    WINDOW_SIZE_27m,
+    WindowSize27m,
     #[serde(rename = "28m")]
-    WINDOW_SIZE_28m,
+    WindowSize28m,
     #[serde(rename = "29m")]
-    WINDOW_SIZE_29m,
+    WindowSize29m,
     #[serde(rename = "30m")]
-    WINDOW_SIZE_30m,
+    WindowSize30m,
     #[serde(rename = "31m")]
-    WINDOW_SIZE_31m,
+    WindowSize31m,
     #[serde(rename = "32m")]
-    WINDOW_SIZE_32m,
+    WindowSize32m,
     #[serde(rename = "33m")]
-    WINDOW_SIZE_33m,
+    WindowSize33m,
     #[serde(rename = "34m")]
-    WINDOW_SIZE_34m,
+    WindowSize34m,
     #[serde(rename = "35m")]
-    WINDOW_SIZE_35m,
+    WindowSize35m,
     #[serde(rename = "36m")]
-    WINDOW_SIZE_36m,
+    WindowSize36m,
     #[serde(rename = "37m")]
-    WINDOW_SIZE_37m,
+    WindowSize37m,
     #[serde(rename = "38m")]
-    WINDOW_SIZE_38m,
+    WindowSize38m,
     #[serde(rename = "39m")]
-    WINDOW_SIZE_39m,
+    WindowSize39m,
     #[serde(rename = "40m")]
-    WINDOW_SIZE_40m,
+    WindowSize40m,
     #[serde(rename = "41m")]
-    WINDOW_SIZE_41m,
+    WindowSize41m,
     #[serde(rename = "42m")]
-    WINDOW_SIZE_42m,
+    WindowSize42m,
     #[serde(rename = "43m")]
-    WINDOW_SIZE_43m,
+    WindowSize43m,
     #[serde(rename = "44m")]
-    WINDOW_SIZE_44m,
+    WindowSize44m,
     #[serde(rename = "45m")]
-    WINDOW_SIZE_45m,
+    WindowSize45m,
     #[serde(rename = "46m")]
-    WINDOW_SIZE_46m,
+    WindowSize46m,
     #[serde(rename = "47m")]
-    WINDOW_SIZE_47m,
+    WindowSize47m,
     #[serde(rename = "48m")]
-    WINDOW_SIZE_48m,
+    WindowSize48m,
     #[serde(rename = "49m")]
-    WINDOW_SIZE_49m,
+    WindowSize49m,
     #[serde(rename = "50m")]
-    WINDOW_SIZE_50m,
+    WindowSize50m,
     #[serde(rename = "51m")]
-    WINDOW_SIZE_51m,
+    WindowSize51m,
     #[serde(rename = "52m")]
-    WINDOW_SIZE_52m,
+    WindowSize52m,
     #[serde(rename = "53m")]
-    WINDOW_SIZE_53m,
+    WindowSize53m,
     #[serde(rename = "54m")]
-    WINDOW_SIZE_54m,
+    WindowSize54m,
     #[serde(rename = "55m")]
-    WINDOW_SIZE_55m,
+    WindowSize55m,
     #[serde(rename = "56m")]
-    WINDOW_SIZE_56m,
+    WindowSize56m,
     #[serde(rename = "57m")]
-    WINDOW_SIZE_57m,
+    WindowSize57m,
     #[serde(rename = "58m")]
-    WINDOW_SIZE_58m,
+    WindowSize58m,
     #[serde(rename = "59m")]
-    WINDOW_SIZE_59m,
+    WindowSize59m,
     #[serde(rename = "1h")]
-    WINDOW_SIZE_1h,
+    WindowSize1h,
     #[serde(rename = "2h")]
-    WINDOW_SIZE_2h,
+    WindowSize2h,
     #[serde(rename = "3h")]
-    WINDOW_SIZE_3h,
+    WindowSize3h,
     #[serde(rename = "4h")]
-    WINDOW_SIZE_4h,
+    WindowSize4h,
     #[serde(rename = "5h")]
-    WINDOW_SIZE_5h,
+    WindowSize5h,
     #[serde(rename = "6h")]
-    WINDOW_SIZE_6h,
+    WindowSize6h,
     #[serde(rename = "7h")]
-    WINDOW_SIZE_7h,
+    WindowSize7h,
     #[serde(rename = "8h")]
-    WINDOW_SIZE_8h,
+    WindowSize8h,
     #[serde(rename = "9h")]
-    WINDOW_SIZE_9h,
+    WindowSize9h,
     #[serde(rename = "10h")]
-    WINDOW_SIZE_10h,
+    WindowSize10h,
     #[serde(rename = "11h")]
-    WINDOW_SIZE_11h,
+    WindowSize11h,
     #[serde(rename = "12h")]
-    WINDOW_SIZE_12h,
+    WindowSize12h,
     #[serde(rename = "13h")]
-    WINDOW_SIZE_13h,
+    WindowSize13h,
     #[serde(rename = "14h")]
-    WINDOW_SIZE_14h,
+    WindowSize14h,
     #[serde(rename = "15h")]
-    WINDOW_SIZE_15h,
+    WindowSize15h,
     #[serde(rename = "16h")]
-    WINDOW_SIZE_16h,
+    WindowSize16h,
     #[serde(rename = "17h")]
-    WINDOW_SIZE_17h,
+    WindowSize17h,
     #[serde(rename = "18h")]
-    WINDOW_SIZE_18h,
+    WindowSize18h,
     #[serde(rename = "19h")]
-    WINDOW_SIZE_19h,
+    WindowSize19h,
     #[serde(rename = "20h")]
-    WINDOW_SIZE_20h,
+    WindowSize20h,
     #[serde(rename = "21h")]
-    WINDOW_SIZE_21h,
+    WindowSize21h,
     #[serde(rename = "22h")]
-    WINDOW_SIZE_22h,
+    WindowSize22h,
     #[serde(rename = "23h")]
-    WINDOW_SIZE_23h,
+    WindowSize23h,
     #[serde(rename = "1d")]
-    WINDOW_SIZE_1d,
+    WindowSize1d,
     #[serde(rename = "2d")]
-    WINDOW_SIZE_2d,
+    WindowSize2d,
     #[serde(rename = "3d")]
-    WINDOW_SIZE_3d,
+    WindowSize3d,
     #[serde(rename = "4d")]
-    WINDOW_SIZE_4d,
+    WindowSize4d,
     #[serde(rename = "5d")]
-    WINDOW_SIZE_5d,
+    WindowSize5d,
     #[serde(rename = "6d")]
-    WINDOW_SIZE_6d,
+    WindowSize6d,
 }
 
 impl TickerWindowSizeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            TickerWindowSizeEnum::WINDOW_SIZE_1m => "1m",
-            TickerWindowSizeEnum::WINDOW_SIZE_2m => "2m",
-            TickerWindowSizeEnum::WINDOW_SIZE_3m => "3m",
-            TickerWindowSizeEnum::WINDOW_SIZE_4m => "4m",
-            TickerWindowSizeEnum::WINDOW_SIZE_5m => "5m",
-            TickerWindowSizeEnum::WINDOW_SIZE_6m => "6m",
-            TickerWindowSizeEnum::WINDOW_SIZE_7m => "7m",
-            TickerWindowSizeEnum::WINDOW_SIZE_8m => "8m",
-            TickerWindowSizeEnum::WINDOW_SIZE_9m => "9m",
-            TickerWindowSizeEnum::WINDOW_SIZE_10m => "10m",
-            TickerWindowSizeEnum::WINDOW_SIZE_11m => "11m",
-            TickerWindowSizeEnum::WINDOW_SIZE_12m => "12m",
-            TickerWindowSizeEnum::WINDOW_SIZE_13m => "13m",
-            TickerWindowSizeEnum::WINDOW_SIZE_14m => "14m",
-            TickerWindowSizeEnum::WINDOW_SIZE_15m => "15m",
-            TickerWindowSizeEnum::WINDOW_SIZE_16m => "16m",
-            TickerWindowSizeEnum::WINDOW_SIZE_17m => "17m",
-            TickerWindowSizeEnum::WINDOW_SIZE_18m => "18m",
-            TickerWindowSizeEnum::WINDOW_SIZE_19m => "19m",
-            TickerWindowSizeEnum::WINDOW_SIZE_20m => "20m",
-            TickerWindowSizeEnum::WINDOW_SIZE_21m => "21m",
-            TickerWindowSizeEnum::WINDOW_SIZE_22m => "22m",
-            TickerWindowSizeEnum::WINDOW_SIZE_23m => "23m",
-            TickerWindowSizeEnum::WINDOW_SIZE_24m => "24m",
-            TickerWindowSizeEnum::WINDOW_SIZE_25m => "25m",
-            TickerWindowSizeEnum::WINDOW_SIZE_26m => "26m",
-            TickerWindowSizeEnum::WINDOW_SIZE_27m => "27m",
-            TickerWindowSizeEnum::WINDOW_SIZE_28m => "28m",
-            TickerWindowSizeEnum::WINDOW_SIZE_29m => "29m",
-            TickerWindowSizeEnum::WINDOW_SIZE_30m => "30m",
-            TickerWindowSizeEnum::WINDOW_SIZE_31m => "31m",
-            TickerWindowSizeEnum::WINDOW_SIZE_32m => "32m",
-            TickerWindowSizeEnum::WINDOW_SIZE_33m => "33m",
-            TickerWindowSizeEnum::WINDOW_SIZE_34m => "34m",
-            TickerWindowSizeEnum::WINDOW_SIZE_35m => "35m",
-            TickerWindowSizeEnum::WINDOW_SIZE_36m => "36m",
-            TickerWindowSizeEnum::WINDOW_SIZE_37m => "37m",
-            TickerWindowSizeEnum::WINDOW_SIZE_38m => "38m",
-            TickerWindowSizeEnum::WINDOW_SIZE_39m => "39m",
-            TickerWindowSizeEnum::WINDOW_SIZE_40m => "40m",
-            TickerWindowSizeEnum::WINDOW_SIZE_41m => "41m",
-            TickerWindowSizeEnum::WINDOW_SIZE_42m => "42m",
-            TickerWindowSizeEnum::WINDOW_SIZE_43m => "43m",
-            TickerWindowSizeEnum::WINDOW_SIZE_44m => "44m",
-            TickerWindowSizeEnum::WINDOW_SIZE_45m => "45m",
-            TickerWindowSizeEnum::WINDOW_SIZE_46m => "46m",
-            TickerWindowSizeEnum::WINDOW_SIZE_47m => "47m",
-            TickerWindowSizeEnum::WINDOW_SIZE_48m => "48m",
-            TickerWindowSizeEnum::WINDOW_SIZE_49m => "49m",
-            TickerWindowSizeEnum::WINDOW_SIZE_50m => "50m",
-            TickerWindowSizeEnum::WINDOW_SIZE_51m => "51m",
-            TickerWindowSizeEnum::WINDOW_SIZE_52m => "52m",
-            TickerWindowSizeEnum::WINDOW_SIZE_53m => "53m",
-            TickerWindowSizeEnum::WINDOW_SIZE_54m => "54m",
-            TickerWindowSizeEnum::WINDOW_SIZE_55m => "55m",
-            TickerWindowSizeEnum::WINDOW_SIZE_56m => "56m",
-            TickerWindowSizeEnum::WINDOW_SIZE_57m => "57m",
-            TickerWindowSizeEnum::WINDOW_SIZE_58m => "58m",
-            TickerWindowSizeEnum::WINDOW_SIZE_59m => "59m",
-            TickerWindowSizeEnum::WINDOW_SIZE_1h => "1h",
-            TickerWindowSizeEnum::WINDOW_SIZE_2h => "2h",
-            TickerWindowSizeEnum::WINDOW_SIZE_3h => "3h",
-            TickerWindowSizeEnum::WINDOW_SIZE_4h => "4h",
-            TickerWindowSizeEnum::WINDOW_SIZE_5h => "5h",
-            TickerWindowSizeEnum::WINDOW_SIZE_6h => "6h",
-            TickerWindowSizeEnum::WINDOW_SIZE_7h => "7h",
-            TickerWindowSizeEnum::WINDOW_SIZE_8h => "8h",
-            TickerWindowSizeEnum::WINDOW_SIZE_9h => "9h",
-            TickerWindowSizeEnum::WINDOW_SIZE_10h => "10h",
-            TickerWindowSizeEnum::WINDOW_SIZE_11h => "11h",
-            TickerWindowSizeEnum::WINDOW_SIZE_12h => "12h",
-            TickerWindowSizeEnum::WINDOW_SIZE_13h => "13h",
-            TickerWindowSizeEnum::WINDOW_SIZE_14h => "14h",
-            TickerWindowSizeEnum::WINDOW_SIZE_15h => "15h",
-            TickerWindowSizeEnum::WINDOW_SIZE_16h => "16h",
-            TickerWindowSizeEnum::WINDOW_SIZE_17h => "17h",
-            TickerWindowSizeEnum::WINDOW_SIZE_18h => "18h",
-            TickerWindowSizeEnum::WINDOW_SIZE_19h => "19h",
-            TickerWindowSizeEnum::WINDOW_SIZE_20h => "20h",
-            TickerWindowSizeEnum::WINDOW_SIZE_21h => "21h",
-            TickerWindowSizeEnum::WINDOW_SIZE_22h => "22h",
-            TickerWindowSizeEnum::WINDOW_SIZE_23h => "23h",
-            TickerWindowSizeEnum::WINDOW_SIZE_1d => "1d",
-            TickerWindowSizeEnum::WINDOW_SIZE_2d => "2d",
-            TickerWindowSizeEnum::WINDOW_SIZE_3d => "3d",
-            TickerWindowSizeEnum::WINDOW_SIZE_4d => "4d",
-            TickerWindowSizeEnum::WINDOW_SIZE_5d => "5d",
-            TickerWindowSizeEnum::WINDOW_SIZE_6d => "6d",
+            TickerWindowSizeEnum::WindowSize1m => "1m",
+            TickerWindowSizeEnum::WindowSize2m => "2m",
+            TickerWindowSizeEnum::WindowSize3m => "3m",
+            TickerWindowSizeEnum::WindowSize4m => "4m",
+            TickerWindowSizeEnum::WindowSize5m => "5m",
+            TickerWindowSizeEnum::WindowSize6m => "6m",
+            TickerWindowSizeEnum::WindowSize7m => "7m",
+            TickerWindowSizeEnum::WindowSize8m => "8m",
+            TickerWindowSizeEnum::WindowSize9m => "9m",
+            TickerWindowSizeEnum::WindowSize10m => "10m",
+            TickerWindowSizeEnum::WindowSize11m => "11m",
+            TickerWindowSizeEnum::WindowSize12m => "12m",
+            TickerWindowSizeEnum::WindowSize13m => "13m",
+            TickerWindowSizeEnum::WindowSize14m => "14m",
+            TickerWindowSizeEnum::WindowSize15m => "15m",
+            TickerWindowSizeEnum::WindowSize16m => "16m",
+            TickerWindowSizeEnum::WindowSize17m => "17m",
+            TickerWindowSizeEnum::WindowSize18m => "18m",
+            TickerWindowSizeEnum::WindowSize19m => "19m",
+            TickerWindowSizeEnum::WindowSize20m => "20m",
+            TickerWindowSizeEnum::WindowSize21m => "21m",
+            TickerWindowSizeEnum::WindowSize22m => "22m",
+            TickerWindowSizeEnum::WindowSize23m => "23m",
+            TickerWindowSizeEnum::WindowSize24m => "24m",
+            TickerWindowSizeEnum::WindowSize25m => "25m",
+            TickerWindowSizeEnum::WindowSize26m => "26m",
+            TickerWindowSizeEnum::WindowSize27m => "27m",
+            TickerWindowSizeEnum::WindowSize28m => "28m",
+            TickerWindowSizeEnum::WindowSize29m => "29m",
+            TickerWindowSizeEnum::WindowSize30m => "30m",
+            TickerWindowSizeEnum::WindowSize31m => "31m",
+            TickerWindowSizeEnum::WindowSize32m => "32m",
+            TickerWindowSizeEnum::WindowSize33m => "33m",
+            TickerWindowSizeEnum::WindowSize34m => "34m",
+            TickerWindowSizeEnum::WindowSize35m => "35m",
+            TickerWindowSizeEnum::WindowSize36m => "36m",
+            TickerWindowSizeEnum::WindowSize37m => "37m",
+            TickerWindowSizeEnum::WindowSize38m => "38m",
+            TickerWindowSizeEnum::WindowSize39m => "39m",
+            TickerWindowSizeEnum::WindowSize40m => "40m",
+            TickerWindowSizeEnum::WindowSize41m => "41m",
+            TickerWindowSizeEnum::WindowSize42m => "42m",
+            TickerWindowSizeEnum::WindowSize43m => "43m",
+            TickerWindowSizeEnum::WindowSize44m => "44m",
+            TickerWindowSizeEnum::WindowSize45m => "45m",
+            TickerWindowSizeEnum::WindowSize46m => "46m",
+            TickerWindowSizeEnum::WindowSize47m => "47m",
+            TickerWindowSizeEnum::WindowSize48m => "48m",
+            TickerWindowSizeEnum::WindowSize49m => "49m",
+            TickerWindowSizeEnum::WindowSize50m => "50m",
+            TickerWindowSizeEnum::WindowSize51m => "51m",
+            TickerWindowSizeEnum::WindowSize52m => "52m",
+            TickerWindowSizeEnum::WindowSize53m => "53m",
+            TickerWindowSizeEnum::WindowSize54m => "54m",
+            TickerWindowSizeEnum::WindowSize55m => "55m",
+            TickerWindowSizeEnum::WindowSize56m => "56m",
+            TickerWindowSizeEnum::WindowSize57m => "57m",
+            TickerWindowSizeEnum::WindowSize58m => "58m",
+            TickerWindowSizeEnum::WindowSize59m => "59m",
+            TickerWindowSizeEnum::WindowSize1h => "1h",
+            TickerWindowSizeEnum::WindowSize2h => "2h",
+            TickerWindowSizeEnum::WindowSize3h => "3h",
+            TickerWindowSizeEnum::WindowSize4h => "4h",
+            TickerWindowSizeEnum::WindowSize5h => "5h",
+            TickerWindowSizeEnum::WindowSize6h => "6h",
+            TickerWindowSizeEnum::WindowSize7h => "7h",
+            TickerWindowSizeEnum::WindowSize8h => "8h",
+            TickerWindowSizeEnum::WindowSize9h => "9h",
+            TickerWindowSizeEnum::WindowSize10h => "10h",
+            TickerWindowSizeEnum::WindowSize11h => "11h",
+            TickerWindowSizeEnum::WindowSize12h => "12h",
+            TickerWindowSizeEnum::WindowSize13h => "13h",
+            TickerWindowSizeEnum::WindowSize14h => "14h",
+            TickerWindowSizeEnum::WindowSize15h => "15h",
+            TickerWindowSizeEnum::WindowSize16h => "16h",
+            TickerWindowSizeEnum::WindowSize17h => "17h",
+            TickerWindowSizeEnum::WindowSize18h => "18h",
+            TickerWindowSizeEnum::WindowSize19h => "19h",
+            TickerWindowSizeEnum::WindowSize20h => "20h",
+            TickerWindowSizeEnum::WindowSize21h => "21h",
+            TickerWindowSizeEnum::WindowSize22h => "22h",
+            TickerWindowSizeEnum::WindowSize23h => "23h",
+            TickerWindowSizeEnum::WindowSize1d => "1d",
+            TickerWindowSizeEnum::WindowSize2d => "2d",
+            TickerWindowSizeEnum::WindowSize3d => "3d",
+            TickerWindowSizeEnum::WindowSize4d => "4d",
+            TickerWindowSizeEnum::WindowSize5d => "5d",
+            TickerWindowSizeEnum::WindowSize6d => "6d",
         }
     }
 }
@@ -438,17 +439,17 @@ impl TickerWindowSizeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TickerTypeEnum {
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MINI")]
-    MINI,
+    Mini,
 }
 
 impl TickerTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            TickerTypeEnum::FULL => "FULL",
-            TickerTypeEnum::MINI => "MINI",
+            TickerTypeEnum::Full => "FULL",
+            TickerTypeEnum::Mini => "MINI",
         }
     }
 }
@@ -457,17 +458,17 @@ impl TickerTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Ticker24hrTypeEnum {
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MINI")]
-    MINI,
+    Mini,
 }
 
 impl Ticker24hrTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Ticker24hrTypeEnum::FULL => "FULL",
-            Ticker24hrTypeEnum::MINI => "MINI",
+            Ticker24hrTypeEnum::Full => "FULL",
+            Ticker24hrTypeEnum::Mini => "MINI",
         }
     }
 }
@@ -476,17 +477,17 @@ impl Ticker24hrTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TickerTradingDayTypeEnum {
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MINI")]
-    MINI,
+    Mini,
 }
 
 impl TickerTradingDayTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            TickerTradingDayTypeEnum::FULL => "FULL",
-            TickerTradingDayTypeEnum::MINI => "MINI",
+            TickerTradingDayTypeEnum::Full => "FULL",
+            TickerTradingDayTypeEnum::Mini => "MINI",
         }
     }
 }
@@ -495,59 +496,59 @@ impl TickerTradingDayTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum UiKlinesIntervalEnum {
     #[serde(rename = "1s")]
-    INTERVAL_1s,
+    Interval1s,
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl UiKlinesIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            UiKlinesIntervalEnum::INTERVAL_1s => "1s",
-            UiKlinesIntervalEnum::INTERVAL_1m => "1m",
-            UiKlinesIntervalEnum::INTERVAL_3m => "3m",
-            UiKlinesIntervalEnum::INTERVAL_5m => "5m",
-            UiKlinesIntervalEnum::INTERVAL_15m => "15m",
-            UiKlinesIntervalEnum::INTERVAL_30m => "30m",
-            UiKlinesIntervalEnum::INTERVAL_1h => "1h",
-            UiKlinesIntervalEnum::INTERVAL_2h => "2h",
-            UiKlinesIntervalEnum::INTERVAL_4h => "4h",
-            UiKlinesIntervalEnum::INTERVAL_6h => "6h",
-            UiKlinesIntervalEnum::INTERVAL_8h => "8h",
-            UiKlinesIntervalEnum::INTERVAL_12h => "12h",
-            UiKlinesIntervalEnum::INTERVAL_1d => "1d",
-            UiKlinesIntervalEnum::INTERVAL_3d => "3d",
-            UiKlinesIntervalEnum::INTERVAL_1w => "1w",
-            UiKlinesIntervalEnum::INTERVAL_1M => "1M",
+            UiKlinesIntervalEnum::Interval1s => "1s",
+            UiKlinesIntervalEnum::Interval1m => "1m",
+            UiKlinesIntervalEnum::Interval3m => "3m",
+            UiKlinesIntervalEnum::Interval5m => "5m",
+            UiKlinesIntervalEnum::Interval15m => "15m",
+            UiKlinesIntervalEnum::Interval30m => "30m",
+            UiKlinesIntervalEnum::Interval1h => "1h",
+            UiKlinesIntervalEnum::Interval2h => "2h",
+            UiKlinesIntervalEnum::Interval4h => "4h",
+            UiKlinesIntervalEnum::Interval6h => "6h",
+            UiKlinesIntervalEnum::Interval8h => "8h",
+            UiKlinesIntervalEnum::Interval12h => "12h",
+            UiKlinesIntervalEnum::Interval1d => "1d",
+            UiKlinesIntervalEnum::Interval3d => "3d",
+            UiKlinesIntervalEnum::Interval1w => "1w",
+            UiKlinesIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -817,9 +818,6 @@ pub struct TickerParams {
 impl TickerParams {
     /// Create a builder for [`ticker`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> TickerParamsBuilder {
         TickerParamsBuilder::default()
@@ -853,9 +851,6 @@ pub struct Ticker24hrParams {
 impl Ticker24hrParams {
     /// Create a builder for [`ticker24hr`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> Ticker24hrParamsBuilder {
         Ticker24hrParamsBuilder::default()
@@ -883,9 +878,6 @@ pub struct TickerBookTickerParams {
 impl TickerBookTickerParams {
     /// Create a builder for [`ticker_book_ticker`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> TickerBookTickerParamsBuilder {
         TickerBookTickerParamsBuilder::default()
@@ -912,9 +904,6 @@ pub struct TickerPriceParams {
 
 impl TickerPriceParams {
     /// Create a builder for [`ticker_price`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> TickerPriceParamsBuilder {
@@ -953,9 +942,6 @@ pub struct TickerTradingDayParams {
 
 impl TickerTradingDayParams {
     /// Create a builder for [`ticker_trading_day`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> TickerTradingDayParamsBuilder {
@@ -1038,15 +1024,15 @@ impl MarketApi for MarketApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1170,7 +1156,7 @@ impl MarketApi for MarketApiClient {
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::HistoricalTradesResponseInner>>(
@@ -1208,15 +1194,15 @@ impl MarketApi for MarketApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = time_zone {
-            query_params.insert("time_zone".to_string(), json!(rw));
+            query_params.insert("timeZone".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1260,11 +1246,11 @@ impl MarketApi for MarketApiClient {
         }
 
         if let Some(rw) = window_size {
-            query_params.insert("window_size".to_string(), json!(rw));
+            query_params.insert("windowSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         send_request::<models::TickerResponse>(
@@ -1303,7 +1289,7 @@ impl MarketApi for MarketApiClient {
         }
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         send_request::<models::Ticker24hrResponse>(
@@ -1405,11 +1391,11 @@ impl MarketApi for MarketApiClient {
         }
 
         if let Some(rw) = time_zone {
-            query_params.insert("time_zone".to_string(), json!(rw));
+            query_params.insert("timeZone".to_string(), json!(rw));
         }
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         send_request::<models::TickerTradingDayResponse>(
@@ -1447,15 +1433,15 @@ impl MarketApi for MarketApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = time_zone {
-            query_params.insert("time_zone".to_string(), json!(rw));
+            query_params.insert("timeZone".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2090,7 +2076,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = KlinesParams::builder("BNBUSDT".to_string(),KlinesIntervalEnum::INTERVAL_1s,).build().unwrap();
+            let params = KlinesParams::builder("BNBUSDT".to_string(),KlinesIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlinesItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlinesItemInner>>");
@@ -2107,7 +2093,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = KlinesParams::builder("BNBUSDT".to_string(),KlinesIntervalEnum::INTERVAL_1s,).start_time(1735693200000).end_time(1735693200000).time_zone("time_zone_example".to_string()).limit(500).build().unwrap();
+            let params = KlinesParams::builder("BNBUSDT".to_string(),KlinesIntervalEnum::Interval1s,).start_time(1735693200000).end_time(1735693200000).time_zone("time_zone_example".to_string()).limit(500).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlinesItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlinesItemInner>>");
@@ -2125,7 +2111,7 @@ mod tests {
             let client = MockMarketApiClient { force_error: true };
 
             let params =
-                KlinesParams::builder("BNBUSDT".to_string(), KlinesIntervalEnum::INTERVAL_1s)
+                KlinesParams::builder("BNBUSDT".to_string(), KlinesIntervalEnum::Interval1s)
                     .build()
                     .unwrap();
 
@@ -2160,7 +2146,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = TickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).window_size(TickerWindowSizeEnum::WINDOW_SIZE_1m).r#type(TickerTypeEnum::FULL).build().unwrap();
+            let params = TickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).window_size(TickerWindowSizeEnum::WindowSize1m).r#type(TickerTypeEnum::Full).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","openPrice":"0.10000000","highPrice":"2.00000000","lowPrice":"0.10000000","lastPrice":"2.00000000","volume":"39.00000000","quoteVolume":"13.40000000","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap();
             let expected_response : models::TickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerResponse");
@@ -2210,7 +2196,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = Ticker24hrParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).r#type(Ticker24hrTypeEnum::FULL).build().unwrap();
+            let params = Ticker24hrParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).r#type(Ticker24hrTypeEnum::Full).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","openPrice":"99.00000000","highPrice":"100.00000000","lowPrice":"0.10000000","lastPrice":"4.00000200","volume":"8913.30000000","quoteVolume":"15.30000000","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap();
             let expected_response : models::Ticker24hrResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::Ticker24hrResponse");
@@ -2376,7 +2362,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = TickerTradingDayParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).time_zone("time_zone_example".to_string()).r#type(TickerTradingDayTypeEnum::FULL).build().unwrap();
+            let params = TickerTradingDayParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).time_zone("time_zone_example".to_string()).r#type(TickerTradingDayTypeEnum::Full).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","openPrice":"26304.80000000","highPrice":"26397.46000000","lowPrice":"26088.34000000","lastPrice":"26221.67000000","volume":"18495.35066000","quoteVolume":"485217905.04210480","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap();
             let expected_response : models::TickerTradingDayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerTradingDayResponse");
@@ -2409,7 +2395,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = UiKlinesParams::builder("BNBUSDT".to_string(),UiKlinesIntervalEnum::INTERVAL_1s,).build().unwrap();
+            let params = UiKlinesParams::builder("BNBUSDT".to_string(),UiKlinesIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlinesItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlinesItemInner>>");
@@ -2426,7 +2412,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = UiKlinesParams::builder("BNBUSDT".to_string(),UiKlinesIntervalEnum::INTERVAL_1s,).start_time(1735693200000).end_time(1735693200000).time_zone("time_zone_example".to_string()).limit(500).build().unwrap();
+            let params = UiKlinesParams::builder("BNBUSDT".to_string(),UiKlinesIntervalEnum::Interval1s,).start_time(1735693200000).end_time(1735693200000).time_zone("time_zone_example".to_string()).limit(500).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlinesItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlinesItemInner>>");
@@ -2444,7 +2430,7 @@ mod tests {
             let client = MockMarketApiClient { force_error: true };
 
             let params =
-                UiKlinesParams::builder("BNBUSDT".to_string(), UiKlinesIntervalEnum::INTERVAL_1s)
+                UiKlinesParams::builder("BNBUSDT".to_string(), UiKlinesIntervalEnum::Interval1s)
                     .build()
                     .unwrap();
 

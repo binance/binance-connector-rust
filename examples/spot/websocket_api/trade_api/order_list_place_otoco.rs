@@ -36,13 +36,13 @@ async fn main() -> Result<()> {
     // Setup the WS API parameters
     let params = OrderListPlaceOtocoParams::builder(
         "BNBUSDT".to_string(),
-        OrderListPlaceOtocoWorkingTypeEnum::LIMIT,
-        OrderListPlaceOtocoWorkingSideEnum::BUY,
+        OrderListPlaceOtocoWorkingTypeEnum::Limit,
+        OrderListPlaceOtocoWorkingSideEnum::Buy,
         1.0,
         1.0,
-        OrderListPlaceOtocoPendingSideEnum::BUY,
+        OrderListPlaceOtocoPendingSideEnum::Buy,
         1.0,
-        OrderListPlaceOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,
+        OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,
     )
     .build()?;
 

@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -180,11 +181,11 @@ impl FiatApi for FiatApiClient {
         query_params.insert("transactionType".to_string(), json!(transaction_type));
 
         if let Some(rw) = begin_time {
-            query_params.insert("begin_time".to_string(), json!(rw));
+            query_params.insert("beginTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -196,7 +197,7 @@ impl FiatApi for FiatApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFiatDepositWithdrawHistoryResponse>(
@@ -232,11 +233,11 @@ impl FiatApi for FiatApiClient {
         query_params.insert("transactionType".to_string(), json!(transaction_type));
 
         if let Some(rw) = begin_time {
-            query_params.insert("begin_time".to_string(), json!(rw));
+            query_params.insert("beginTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -248,7 +249,7 @@ impl FiatApi for FiatApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetFiatPaymentsHistoryResponse>(

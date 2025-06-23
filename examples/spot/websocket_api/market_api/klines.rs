@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
 
     // Setup the WS API parameters
     let params =
-        KlinesParams::builder("BNBUSDT".to_string(), KlinesIntervalEnum::INTERVAL_1s).build()?;
+        KlinesParams::builder("BNBUSDT".to_string(), KlinesIntervalEnum::Interval1s).build()?;
 
     // Make the WS API call
     let response = connection

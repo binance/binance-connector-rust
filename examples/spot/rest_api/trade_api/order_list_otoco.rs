@@ -29,13 +29,13 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = OrderListOtocoParams::builder(
         "BNBUSDT".to_string(),
-        OrderListOtocoWorkingTypeEnum::LIMIT,
-        OrderListOtocoWorkingSideEnum::BUY,
+        OrderListOtocoWorkingTypeEnum::Limit,
+        OrderListOtocoWorkingSideEnum::Buy,
         1.0,
         1.0,
-        OrderListOtocoPendingSideEnum::BUY,
+        OrderListOtocoPendingSideEnum::Buy,
         1.0,
-        OrderListOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,
+        OrderListOtocoPendingAboveTypeEnum::StopLossLimit,
     )
     .build()?;
 

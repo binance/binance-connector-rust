@@ -1,6 +1,8 @@
 pub mod rest_api;
 
-use crate::common::{config::ConfigurationRestApi, constants::NFT_REST_API_PROD_URL, logger};
+use crate::common::{
+    config::ConfigurationRestApi, constants::NFT_REST_API_PROD_URL, logger, utils::build_user_agent,
+};
 
 /// Represents the NFT REST API client for interacting with the Binance NFT REST API.
 ///
@@ -23,6 +25,7 @@ impl NFTRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("nft");
         if config.base_path.is_none() {
             config.base_path = Some(NFT_REST_API_PROD_URL.to_string());
         }

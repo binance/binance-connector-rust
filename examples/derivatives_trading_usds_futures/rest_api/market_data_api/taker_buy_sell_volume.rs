@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = TakerBuySellVolumeParams::builder(
         "symbol_example".to_string(),
-        TakerBuySellVolumePeriodEnum::PERIOD_5m,
+        TakerBuySellVolumePeriodEnum::Period5m,
     )
     .build()?;
 

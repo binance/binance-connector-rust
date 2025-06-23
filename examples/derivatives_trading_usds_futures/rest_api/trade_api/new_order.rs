@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = NewOrderParams::builder(
         "symbol_example".to_string(),
-        NewOrderSideEnum::BUY,
+        NewOrderSideEnum::Buy,
         "r#type_example".to_string(),
     )
     .build()?;

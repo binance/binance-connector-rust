@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -232,11 +233,11 @@ impl ApiManagementApi for ApiManagementApiClient {
         query_params.insert("status".to_string(), json!(status));
 
         if let Some(rw) = ip_address {
-            query_params.insert("ip_address".to_string(), json!(rw));
+            query_params.insert("ipAddress".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AddIpRestrictionForSubAccountApiKeyResponse>(
@@ -274,7 +275,7 @@ impl ApiManagementApi for ApiManagementApiClient {
         query_params.insert("ipAddress".to_string(), json!(ip_address));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DeleteIpListForASubAccountApiKeyResponse>(
@@ -309,7 +310,7 @@ impl ApiManagementApi for ApiManagementApiClient {
         query_params.insert("subAccountApiKey".to_string(), json!(sub_account_api_key));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetIpRestrictionForASubAccountApiKeyResponse>(

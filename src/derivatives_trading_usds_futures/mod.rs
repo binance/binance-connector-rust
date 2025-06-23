@@ -13,6 +13,7 @@ use crate::common::{
         DERIVATIVES_TRADING_USDS_FUTURES_WS_STREAMS_TESTNET_URL,
     },
     logger,
+    utils::build_user_agent,
 };
 
 /// Represents the `DerivativesTradingUsdsFutures` REST API client for interacting with the Binance `DerivativesTradingUsdsFutures` REST API.
@@ -36,6 +37,7 @@ impl DerivativesTradingUsdsFuturesRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("derivatives-trading-usds-futures");
         if config.base_path.is_none() {
             config.base_path = Some(DERIVATIVES_TRADING_USDS_FUTURES_REST_API_PROD_URL.to_string());
         }
@@ -94,6 +96,7 @@ impl DerivativesTradingUsdsFuturesWsApi {
     pub fn from_config(mut config: ConfigurationWebsocketApi) -> websocket_api::WebsocketApiHandle {
         logger::init();
 
+        config.user_agent = build_user_agent("derivatives-trading-usds-futures");
         if config.ws_url.is_none() {
             config.ws_url = Some(DERIVATIVES_TRADING_USDS_FUTURES_WS_API_PROD_URL.to_string());
         }
@@ -154,6 +157,7 @@ impl DerivativesTradingUsdsFuturesWsStreams {
     ) -> websocket_streams::WebsocketStreamsHandle {
         logger::init();
 
+        config.user_agent = build_user_agent("derivatives-trading-usds-futures");
         if config.ws_url.is_none() {
             config.ws_url = Some(DERIVATIVES_TRADING_USDS_FUTURES_WS_STREAMS_PROD_URL.to_string());
         }

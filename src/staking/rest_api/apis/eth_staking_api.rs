@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -105,9 +106,6 @@ pub struct EthStakingAccountParams {
 impl EthStakingAccountParams {
     /// Create a builder for [`eth_staking_account`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> EthStakingAccountParamsBuilder {
         EthStakingAccountParamsBuilder::default()
@@ -130,9 +128,6 @@ pub struct GetCurrentEthStakingQuotaParams {
 
 impl GetCurrentEthStakingQuotaParams {
     /// Create a builder for [`get_current_eth_staking_quota`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetCurrentEthStakingQuotaParamsBuilder {
@@ -179,9 +174,6 @@ pub struct GetEthRedemptionHistoryParams {
 impl GetEthRedemptionHistoryParams {
     /// Create a builder for [`get_eth_redemption_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetEthRedemptionHistoryParamsBuilder {
         GetEthRedemptionHistoryParamsBuilder::default()
@@ -226,9 +218,6 @@ pub struct GetEthStakingHistoryParams {
 
 impl GetEthStakingHistoryParams {
     /// Create a builder for [`get_eth_staking_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetEthStakingHistoryParamsBuilder {
@@ -275,9 +264,6 @@ pub struct GetWbethRateHistoryParams {
 impl GetWbethRateHistoryParams {
     /// Create a builder for [`get_wbeth_rate_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetWbethRateHistoryParamsBuilder {
         GetWbethRateHistoryParamsBuilder::default()
@@ -322,9 +308,6 @@ pub struct GetWbethRewardsHistoryParams {
 
 impl GetWbethRewardsHistoryParams {
     /// Create a builder for [`get_wbeth_rewards_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetWbethRewardsHistoryParamsBuilder {
@@ -371,9 +354,6 @@ pub struct GetWbethUnwrapHistoryParams {
 impl GetWbethUnwrapHistoryParams {
     /// Create a builder for [`get_wbeth_unwrap_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetWbethUnwrapHistoryParamsBuilder {
         GetWbethUnwrapHistoryParamsBuilder::default()
@@ -418,9 +398,6 @@ pub struct GetWbethWrapHistoryParams {
 
 impl GetWbethWrapHistoryParams {
     /// Create a builder for [`get_wbeth_wrap_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetWbethWrapHistoryParamsBuilder {
@@ -540,7 +517,7 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::EthStakingAccountResponse>(
@@ -567,7 +544,7 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCurrentEthStakingQuotaResponse>(
@@ -600,11 +577,11 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -616,7 +593,7 @@ impl EthStakingApi for EthStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetEthRedemptionHistoryResponse>(
@@ -649,11 +626,11 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -665,7 +642,7 @@ impl EthStakingApi for EthStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetEthStakingHistoryResponse>(
@@ -698,11 +675,11 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -714,7 +691,7 @@ impl EthStakingApi for EthStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetWbethRateHistoryResponse>(
@@ -747,11 +724,11 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -763,7 +740,7 @@ impl EthStakingApi for EthStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetWbethRewardsHistoryResponse>(
@@ -796,11 +773,11 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -812,7 +789,7 @@ impl EthStakingApi for EthStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetWbethUnwrapHistoryResponse>(
@@ -845,11 +822,11 @@ impl EthStakingApi for EthStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -861,7 +838,7 @@ impl EthStakingApi for EthStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetWbethWrapHistoryResponse>(
@@ -891,14 +868,15 @@ impl EthStakingApi for EthStakingApiClient {
 
         let mut query_params = BTreeMap::new();
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RedeemEthResponse>(
@@ -927,10 +905,11 @@ impl EthStakingApi for EthStakingApiClient {
 
         let mut query_params = BTreeMap::new();
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SubscribeEthStakingResponse>(
@@ -959,10 +938,11 @@ impl EthStakingApi for EthStakingApiClient {
 
         let mut query_params = BTreeMap::new();
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::WrapBethResponse>(

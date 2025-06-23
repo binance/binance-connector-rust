@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -120,9 +121,6 @@ pub struct AssetDetailParams {
 impl AssetDetailParams {
     /// Create a builder for [`asset_detail`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AssetDetailParamsBuilder {
         AssetDetailParamsBuilder::default()
@@ -167,9 +165,6 @@ pub struct AssetDividendRecordParams {
 
 impl AssetDividendRecordParams {
     /// Create a builder for [`asset_dividend_record`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AssetDividendRecordParamsBuilder {
@@ -244,9 +239,6 @@ pub struct DustlogParams {
 impl DustlogParams {
     /// Create a builder for [`dustlog`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> DustlogParamsBuilder {
         DustlogParamsBuilder::default()
@@ -280,9 +272,6 @@ pub struct FundingWalletParams {
 impl FundingWalletParams {
     /// Create a builder for [`funding_wallet`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> FundingWalletParamsBuilder {
         FundingWalletParamsBuilder::default()
@@ -310,9 +299,6 @@ pub struct GetAssetsThatCanBeConvertedIntoBnbParams {
 
 impl GetAssetsThatCanBeConvertedIntoBnbParams {
     /// Create a builder for [`get_assets_that_can_be_converted_into_bnb`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetAssetsThatCanBeConvertedIntoBnbParamsBuilder {
@@ -547,9 +533,6 @@ pub struct QueryUserWalletBalanceParams {
 impl QueryUserWalletBalanceParams {
     /// Create a builder for [`query_user_wallet_balance`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryUserWalletBalanceParamsBuilder {
         QueryUserWalletBalanceParamsBuilder::default()
@@ -583,9 +566,6 @@ pub struct ToggleBnbBurnOnSpotTradeAndMarginInterestParams {
 impl ToggleBnbBurnOnSpotTradeAndMarginInterestParams {
     /// Create a builder for [`toggle_bnb_burn_on_spot_trade_and_margin_interest`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> ToggleBnbBurnOnSpotTradeAndMarginInterestParamsBuilder {
         ToggleBnbBurnOnSpotTradeAndMarginInterestParamsBuilder::default()
@@ -614,9 +594,6 @@ pub struct TradeFeeParams {
 
 impl TradeFeeParams {
     /// Create a builder for [`trade_fee`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> TradeFeeParamsBuilder {
@@ -650,9 +627,6 @@ pub struct UserAssetParams {
 
 impl UserAssetParams {
     /// Create a builder for [`user_asset`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> UserAssetParamsBuilder {
@@ -737,7 +711,7 @@ impl AssetApi for AssetApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AssetDetailResponse>(
@@ -774,11 +748,11 @@ impl AssetApi for AssetApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -786,7 +760,7 @@ impl AssetApi for AssetApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AssetDividendRecordResponse>(
@@ -819,11 +793,11 @@ impl AssetApi for AssetApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = account_type {
-            query_params.insert("account_type".to_string(), json!(rw));
+            query_params.insert("accountType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DustTransferResponse>(
@@ -854,15 +828,15 @@ impl AssetApi for AssetApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DustlogResponse>(
@@ -897,11 +871,11 @@ impl AssetApi for AssetApiClient {
         }
 
         if let Some(rw) = need_btc_valuation {
-            query_params.insert("need_btc_valuation".to_string(), json!(rw));
+            query_params.insert("needBtcValuation".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::FundingWalletResponseInner>>(
@@ -931,11 +905,11 @@ impl AssetApi for AssetApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = account_type {
-            query_params.insert("account_type".to_string(), json!(rw));
+            query_params.insert("accountType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetAssetsThatCanBeConvertedIntoBnbResponse>(
@@ -975,11 +949,11 @@ impl AssetApi for AssetApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = tran_id {
-            query_params.insert("tran_id".to_string(), json!(rw));
+            query_params.insert("tranId".to_string(), json!(rw));
         }
 
         if let Some(rw) = client_tran_id {
-            query_params.insert("client_tran_id".to_string(), json!(rw));
+            query_params.insert("clientTranId".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -1053,7 +1027,7 @@ impl AssetApi for AssetApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         if let Some(rw) = asset {
@@ -1069,7 +1043,7 @@ impl AssetApi for AssetApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryUserDelegationHistoryResponse>(
@@ -1107,11 +1081,11 @@ impl AssetApi for AssetApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -1123,15 +1097,15 @@ impl AssetApi for AssetApiClient {
         }
 
         if let Some(rw) = from_symbol {
-            query_params.insert("from_symbol".to_string(), json!(rw));
+            query_params.insert("fromSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_symbol {
-            query_params.insert("to_symbol".to_string(), json!(rw));
+            query_params.insert("toSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryUserUniversalTransferHistoryResponse>(
@@ -1161,11 +1135,11 @@ impl AssetApi for AssetApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = quote_asset {
-            query_params.insert("quote_asset".to_string(), json!(rw));
+            query_params.insert("quoteAsset".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryUserWalletBalanceResponseInner>>(
@@ -1197,15 +1171,15 @@ impl AssetApi for AssetApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = spot_bnb_burn {
-            query_params.insert("spot_bnb_burn".to_string(), json!(rw));
+            query_params.insert("spotBNBBurn".to_string(), json!(rw));
         }
 
         if let Some(rw) = interest_bnb_burn {
-            query_params.insert("interest_bnb_burn".to_string(), json!(rw));
+            query_params.insert("interestBNBBurn".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ToggleBnbBurnOnSpotTradeAndMarginInterestResponse>(
@@ -1239,7 +1213,7 @@ impl AssetApi for AssetApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::TradeFeeResponseInner>>(
@@ -1274,11 +1248,11 @@ impl AssetApi for AssetApiClient {
         }
 
         if let Some(rw) = need_btc_valuation {
-            query_params.insert("need_btc_valuation".to_string(), json!(rw));
+            query_params.insert("needBtcValuation".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::UserAssetResponseInner>>(
@@ -1315,18 +1289,19 @@ impl AssetApi for AssetApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = from_symbol {
-            query_params.insert("from_symbol".to_string(), json!(rw));
+            query_params.insert("fromSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_symbol {
-            query_params.insert("to_symbol".to_string(), json!(rw));
+            query_params.insert("toSymbol".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::UserUniversalTransferResponse>(

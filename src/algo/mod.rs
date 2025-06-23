@@ -1,6 +1,9 @@
 pub mod rest_api;
 
-use crate::common::{config::ConfigurationRestApi, constants::ALGO_REST_API_PROD_URL, logger};
+use crate::common::{
+    config::ConfigurationRestApi, constants::ALGO_REST_API_PROD_URL, logger,
+    utils::build_user_agent,
+};
 
 /// Represents the Algo REST API client for interacting with the Binance Algo REST API.
 ///
@@ -23,6 +26,7 @@ impl AlgoRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("algo");
         if config.base_path.is_none() {
             config.base_path = Some(ALGO_REST_API_PROD_URL.to_string());
         }

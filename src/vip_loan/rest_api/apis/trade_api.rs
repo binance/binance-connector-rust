@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -239,7 +240,8 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
 
-        query_params.insert("loanAmount".to_string(), json!(loan_amount));
+        let loan_amount_value = Decimal::from_f32(loan_amount).unwrap_or_default();
+        query_params.insert("loanAmount".to_string(), json!(loan_amount_value));
 
         query_params.insert(
             "collateralAccountId".to_string(),
@@ -251,7 +253,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("isFlexibleRate".to_string(), json!(is_flexible_rate));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::VipLoanBorrowResponse>(
@@ -286,7 +288,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("loanTerm".to_string(), json!(loan_term));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::VipLoanRenewResponse>(
@@ -318,10 +320,11 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("orderId".to_string(), json!(order_id));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::VipLoanRepayResponse>(

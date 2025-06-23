@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        KlinesParams::builder("BNBUSDT".to_string(), KlinesIntervalEnum::INTERVAL_1s).build()?;
+        KlinesParams::builder("BNBUSDT".to_string(), KlinesIntervalEnum::Interval1s).build()?;
 
     // Make the API call
     let response = rest_client

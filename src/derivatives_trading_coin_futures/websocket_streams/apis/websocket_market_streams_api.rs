@@ -167,9 +167,6 @@ pub struct AllBookTickersStreamParams {
 impl AllBookTickersStreamParams {
     /// Create a builder for [`all_book_tickers_stream`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AllBookTickersStreamParamsBuilder {
         AllBookTickersStreamParamsBuilder::default()
@@ -191,9 +188,6 @@ pub struct AllMarketLiquidationOrderStreamsParams {
 
 impl AllMarketLiquidationOrderStreamsParams {
     /// Create a builder for [`all_market_liquidation_order_streams`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AllMarketLiquidationOrderStreamsParamsBuilder {
@@ -217,9 +211,6 @@ pub struct AllMarketMiniTickersStreamParams {
 impl AllMarketMiniTickersStreamParams {
     /// Create a builder for [`all_market_mini_tickers_stream`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AllMarketMiniTickersStreamParamsBuilder {
         AllMarketMiniTickersStreamParamsBuilder::default()
@@ -241,9 +232,6 @@ pub struct AllMarketTickersStreamsParams {
 
 impl AllMarketTickersStreamsParams {
     /// Create a builder for [`all_market_tickers_streams`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AllMarketTickersStreamsParamsBuilder {
@@ -316,9 +304,6 @@ pub struct ContractInfoStreamParams {
 
 impl ContractInfoStreamParams {
     /// Create a builder for [`contract_info_stream`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> ContractInfoStreamParamsBuilder {
@@ -914,7 +899,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
 
         let pairs: &[(&str, Option<String>)] = &[
             ("pair", Some(pair.clone())),
-            ("contract_type", Some(contract_type.clone())),
+            ("contractType", Some(contract_type.clone())),
             ("interval", Some(interval.clone())),
             ("id", id.clone()),
         ];
@@ -979,7 +964,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1046,7 +1031,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("pair", Some(pair.clone())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1267,7 +1252,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("pair", Some(pair.clone())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1303,7 +1288,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1339,7 +1324,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
             ("symbol", Some(symbol.clone())),
             ("levels", Some(levels.to_string())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -2089,7 +2074,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("pair", Some(pair.clone())),
-                ("contract_type", Some(contract_type.clone())),
+                ("contractType", Some(contract_type.clone())),
                 ("interval", Some(interval.clone())),
                 ("id", id.clone()),
             ];
@@ -2135,7 +2120,7 @@ mod tests {
                 ("pair",
                         Some(pair.clone())
                 ),
-                ("contract_type",
+                ("contractType",
                         Some(contract_type.clone())
                 ),
                 ("interval",
@@ -2191,7 +2176,7 @@ mod tests {
                 ("pair",
                         Some(pair.clone())
                 ),
-                ("contract_type",
+                ("contractType",
                         Some(contract_type.clone())
                 ),
                 ("interval",
@@ -2390,7 +2375,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2433,7 +2418,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -2486,7 +2471,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -2699,7 +2684,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("pair", Some(pair.clone())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2743,7 +2728,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("pair", Some(pair.clone())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2802,7 +2787,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("pair", Some(pair.clone())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -3749,7 +3734,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("pair", Some(pair.clone())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -3792,7 +3777,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -3845,7 +3830,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -3904,7 +3889,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -3947,7 +3932,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -4000,7 +3985,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -4061,7 +4046,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.to_string())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -4109,7 +4094,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -4165,7 +4150,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];

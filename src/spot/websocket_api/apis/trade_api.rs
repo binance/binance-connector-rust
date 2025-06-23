@@ -102,23 +102,23 @@ impl TradeApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelCancelRestrictionsEnum {
     #[serde(rename = "ONLY_NEW")]
-    ONLY_NEW,
+    OnlyNew,
     #[serde(rename = "NEW")]
-    NEW,
+    New,
     #[serde(rename = "ONLY_PARTIALLY_FILLED")]
-    ONLY_PARTIALLY_FILLED,
+    OnlyPartiallyFilled,
     #[serde(rename = "PARTIALLY_FILLED")]
-    PARTIALLY_FILLED,
+    PartiallyFilled,
 }
 
 impl OrderCancelCancelRestrictionsEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelCancelRestrictionsEnum::ONLY_NEW => "ONLY_NEW",
-            OrderCancelCancelRestrictionsEnum::NEW => "NEW",
-            OrderCancelCancelRestrictionsEnum::ONLY_PARTIALLY_FILLED => "ONLY_PARTIALLY_FILLED",
-            OrderCancelCancelRestrictionsEnum::PARTIALLY_FILLED => "PARTIALLY_FILLED",
+            OrderCancelCancelRestrictionsEnum::OnlyNew => "ONLY_NEW",
+            OrderCancelCancelRestrictionsEnum::New => "NEW",
+            OrderCancelCancelRestrictionsEnum::OnlyPartiallyFilled => "ONLY_PARTIALLY_FILLED",
+            OrderCancelCancelRestrictionsEnum::PartiallyFilled => "PARTIALLY_FILLED",
         }
     }
 }
@@ -127,17 +127,17 @@ impl OrderCancelCancelRestrictionsEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceCancelReplaceModeEnum {
     #[serde(rename = "STOP_ON_FAILURE")]
-    STOP_ON_FAILURE,
+    StopOnFailure,
     #[serde(rename = "ALLOW_FAILURE")]
-    ALLOW_FAILURE,
+    AllowFailure,
 }
 
 impl OrderCancelReplaceCancelReplaceModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE => "STOP_ON_FAILURE",
-            OrderCancelReplaceCancelReplaceModeEnum::ALLOW_FAILURE => "ALLOW_FAILURE",
+            OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure => "STOP_ON_FAILURE",
+            OrderCancelReplaceCancelReplaceModeEnum::AllowFailure => "ALLOW_FAILURE",
         }
     }
 }
@@ -146,17 +146,17 @@ impl OrderCancelReplaceCancelReplaceModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderCancelReplaceSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceSideEnum::BUY => "BUY",
-            OrderCancelReplaceSideEnum::SELL => "SELL",
+            OrderCancelReplaceSideEnum::Buy => "BUY",
+            OrderCancelReplaceSideEnum::Sell => "SELL",
         }
     }
 }
@@ -165,35 +165,35 @@ impl OrderCancelReplaceSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceTypeEnum {
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderCancelReplaceTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceTypeEnum::MARKET => "MARKET",
-            OrderCancelReplaceTypeEnum::LIMIT => "LIMIT",
-            OrderCancelReplaceTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderCancelReplaceTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderCancelReplaceTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderCancelReplaceTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            OrderCancelReplaceTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            OrderCancelReplaceTypeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderCancelReplaceTypeEnum::Market => "MARKET",
+            OrderCancelReplaceTypeEnum::Limit => "LIMIT",
+            OrderCancelReplaceTypeEnum::StopLoss => "STOP_LOSS",
+            OrderCancelReplaceTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderCancelReplaceTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderCancelReplaceTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            OrderCancelReplaceTypeEnum::LimitMaker => "LIMIT_MAKER",
+            OrderCancelReplaceTypeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -202,23 +202,23 @@ impl OrderCancelReplaceTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderCancelReplaceTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceTimeInForceEnum::GTC => "GTC",
-            OrderCancelReplaceTimeInForceEnum::IOC => "IOC",
-            OrderCancelReplaceTimeInForceEnum::FOK => "FOK",
-            OrderCancelReplaceTimeInForceEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderCancelReplaceTimeInForceEnum::Gtc => "GTC",
+            OrderCancelReplaceTimeInForceEnum::Ioc => "IOC",
+            OrderCancelReplaceTimeInForceEnum::Fok => "FOK",
+            OrderCancelReplaceTimeInForceEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -227,26 +227,26 @@ impl OrderCancelReplaceTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderCancelReplaceNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceNewOrderRespTypeEnum::ACK => "ACK",
-            OrderCancelReplaceNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderCancelReplaceNewOrderRespTypeEnum::FULL => "FULL",
-            OrderCancelReplaceNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderCancelReplaceNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderCancelReplaceNewOrderRespTypeEnum::Ack => "ACK",
+            OrderCancelReplaceNewOrderRespTypeEnum::Result => "RESULT",
+            OrderCancelReplaceNewOrderRespTypeEnum::Full => "FULL",
+            OrderCancelReplaceNewOrderRespTypeEnum::Market => "MARKET",
+            OrderCancelReplaceNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -255,29 +255,29 @@ impl OrderCancelReplaceNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderCancelReplaceSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderCancelReplaceSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderCancelReplaceSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderCancelReplaceSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderCancelReplaceSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderCancelReplaceSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderCancelReplaceSelfTradePreventionModeEnum::None => "NONE",
+            OrderCancelReplaceSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderCancelReplaceSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderCancelReplaceSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderCancelReplaceSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderCancelReplaceSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -286,25 +286,25 @@ impl OrderCancelReplaceSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceCancelRestrictionsEnum {
     #[serde(rename = "ONLY_NEW")]
-    ONLY_NEW,
+    OnlyNew,
     #[serde(rename = "NEW")]
-    NEW,
+    New,
     #[serde(rename = "ONLY_PARTIALLY_FILLED")]
-    ONLY_PARTIALLY_FILLED,
+    OnlyPartiallyFilled,
     #[serde(rename = "PARTIALLY_FILLED")]
-    PARTIALLY_FILLED,
+    PartiallyFilled,
 }
 
 impl OrderCancelReplaceCancelRestrictionsEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceCancelRestrictionsEnum::ONLY_NEW => "ONLY_NEW",
-            OrderCancelReplaceCancelRestrictionsEnum::NEW => "NEW",
-            OrderCancelReplaceCancelRestrictionsEnum::ONLY_PARTIALLY_FILLED => {
+            OrderCancelReplaceCancelRestrictionsEnum::OnlyNew => "ONLY_NEW",
+            OrderCancelReplaceCancelRestrictionsEnum::New => "NEW",
+            OrderCancelReplaceCancelRestrictionsEnum::OnlyPartiallyFilled => {
                 "ONLY_PARTIALLY_FILLED"
             }
-            OrderCancelReplaceCancelRestrictionsEnum::PARTIALLY_FILLED => "PARTIALLY_FILLED",
+            OrderCancelReplaceCancelRestrictionsEnum::PartiallyFilled => "PARTIALLY_FILLED",
         }
     }
 }
@@ -313,17 +313,17 @@ impl OrderCancelReplaceCancelRestrictionsEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderCancelReplaceOrderRateLimitExceededModeEnum {
     #[serde(rename = "DO_NOTHING")]
-    DO_NOTHING,
+    DoNothing,
     #[serde(rename = "CANCEL_ONLY")]
-    CANCEL_ONLY,
+    CancelOnly,
 }
 
 impl OrderCancelReplaceOrderRateLimitExceededModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderCancelReplaceOrderRateLimitExceededModeEnum::DO_NOTHING => "DO_NOTHING",
-            OrderCancelReplaceOrderRateLimitExceededModeEnum::CANCEL_ONLY => "CANCEL_ONLY",
+            OrderCancelReplaceOrderRateLimitExceededModeEnum::DoNothing => "DO_NOTHING",
+            OrderCancelReplaceOrderRateLimitExceededModeEnum::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -332,17 +332,17 @@ impl OrderCancelReplaceOrderRateLimitExceededModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListPlaceSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceSideEnum::BUY => "BUY",
-            OrderListPlaceSideEnum::SELL => "SELL",
+            OrderListPlaceSideEnum::Buy => "BUY",
+            OrderListPlaceSideEnum::Sell => "SELL",
         }
     }
 }
@@ -351,20 +351,20 @@ impl OrderListPlaceSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceStopLimitTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
 }
 
 impl OrderListPlaceStopLimitTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceStopLimitTimeInForceEnum::GTC => "GTC",
-            OrderListPlaceStopLimitTimeInForceEnum::FOK => "FOK",
-            OrderListPlaceStopLimitTimeInForceEnum::IOC => "IOC",
+            OrderListPlaceStopLimitTimeInForceEnum::Gtc => "GTC",
+            OrderListPlaceStopLimitTimeInForceEnum::Fok => "FOK",
+            OrderListPlaceStopLimitTimeInForceEnum::Ioc => "IOC",
         }
     }
 }
@@ -373,26 +373,26 @@ impl OrderListPlaceStopLimitTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderListPlaceNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceNewOrderRespTypeEnum::ACK => "ACK",
-            OrderListPlaceNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderListPlaceNewOrderRespTypeEnum::FULL => "FULL",
-            OrderListPlaceNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderListPlaceNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderListPlaceNewOrderRespTypeEnum::Ack => "ACK",
+            OrderListPlaceNewOrderRespTypeEnum::Result => "RESULT",
+            OrderListPlaceNewOrderRespTypeEnum::Full => "FULL",
+            OrderListPlaceNewOrderRespTypeEnum::Market => "MARKET",
+            OrderListPlaceNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -401,29 +401,29 @@ impl OrderListPlaceNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderListPlaceSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderListPlaceSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderListPlaceSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderListPlaceSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderListPlaceSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderListPlaceSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderListPlaceSelfTradePreventionModeEnum::None => "NONE",
+            OrderListPlaceSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderListPlaceSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderListPlaceSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderListPlaceSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderListPlaceSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -432,17 +432,17 @@ impl OrderListPlaceSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOcoSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListPlaceOcoSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOcoSideEnum::BUY => "BUY",
-            OrderListPlaceOcoSideEnum::SELL => "SELL",
+            OrderListPlaceOcoSideEnum::Buy => "BUY",
+            OrderListPlaceOcoSideEnum::Sell => "SELL",
         }
     }
 }
@@ -451,26 +451,26 @@ impl OrderListPlaceOcoSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOcoAboveTypeEnum {
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListPlaceOcoAboveTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOcoAboveTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListPlaceOcoAboveTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListPlaceOcoAboveTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            OrderListPlaceOcoAboveTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListPlaceOcoAboveTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListPlaceOcoAboveTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListPlaceOcoAboveTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListPlaceOcoAboveTypeEnum::LimitMaker => "LIMIT_MAKER",
+            OrderListPlaceOcoAboveTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListPlaceOcoAboveTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -479,23 +479,23 @@ impl OrderListPlaceOcoAboveTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOcoBelowTypeEnum {
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListPlaceOcoBelowTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOcoBelowTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListPlaceOcoBelowTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListPlaceOcoBelowTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListPlaceOcoBelowTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListPlaceOcoBelowTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListPlaceOcoBelowTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListPlaceOcoBelowTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListPlaceOcoBelowTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -504,20 +504,20 @@ impl OrderListPlaceOcoBelowTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOcoBelowTimeInForceEnum {
     #[serde(rename = "belowType")]
-    belowType,
+    Belowtype,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListPlaceOcoBelowTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOcoBelowTimeInForceEnum::belowType => "belowType",
-            OrderListPlaceOcoBelowTimeInForceEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListPlaceOcoBelowTimeInForceEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListPlaceOcoBelowTimeInForceEnum::Belowtype => "belowType",
+            OrderListPlaceOcoBelowTimeInForceEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListPlaceOcoBelowTimeInForceEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -526,26 +526,26 @@ impl OrderListPlaceOcoBelowTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOcoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderListPlaceOcoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOcoNewOrderRespTypeEnum::ACK => "ACK",
-            OrderListPlaceOcoNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderListPlaceOcoNewOrderRespTypeEnum::FULL => "FULL",
-            OrderListPlaceOcoNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderListPlaceOcoNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderListPlaceOcoNewOrderRespTypeEnum::Ack => "ACK",
+            OrderListPlaceOcoNewOrderRespTypeEnum::Result => "RESULT",
+            OrderListPlaceOcoNewOrderRespTypeEnum::Full => "FULL",
+            OrderListPlaceOcoNewOrderRespTypeEnum::Market => "MARKET",
+            OrderListPlaceOcoNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -554,29 +554,29 @@ impl OrderListPlaceOcoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOcoSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderListPlaceOcoSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOcoSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderListPlaceOcoSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderListPlaceOcoSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderListPlaceOcoSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderListPlaceOcoSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderListPlaceOcoSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderListPlaceOcoSelfTradePreventionModeEnum::None => "NONE",
+            OrderListPlaceOcoSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderListPlaceOcoSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderListPlaceOcoSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderListPlaceOcoSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderListPlaceOcoSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -585,17 +585,17 @@ impl OrderListPlaceOcoSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoWorkingTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
 }
 
 impl OrderListPlaceOtoWorkingTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoWorkingTypeEnum::LIMIT => "LIMIT",
-            OrderListPlaceOtoWorkingTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
+            OrderListPlaceOtoWorkingTypeEnum::Limit => "LIMIT",
+            OrderListPlaceOtoWorkingTypeEnum::LimitMaker => "LIMIT_MAKER",
         }
     }
 }
@@ -604,17 +604,17 @@ impl OrderListPlaceOtoWorkingTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoWorkingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListPlaceOtoWorkingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoWorkingSideEnum::BUY => "BUY",
-            OrderListPlaceOtoWorkingSideEnum::SELL => "SELL",
+            OrderListPlaceOtoWorkingSideEnum::Buy => "BUY",
+            OrderListPlaceOtoWorkingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -623,32 +623,32 @@ impl OrderListPlaceOtoWorkingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoPendingTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
 }
 
 impl OrderListPlaceOtoPendingTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoPendingTypeEnum::LIMIT => "LIMIT",
-            OrderListPlaceOtoPendingTypeEnum::MARKET => "MARKET",
-            OrderListPlaceOtoPendingTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListPlaceOtoPendingTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListPlaceOtoPendingTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListPlaceOtoPendingTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            OrderListPlaceOtoPendingTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
+            OrderListPlaceOtoPendingTypeEnum::Limit => "LIMIT",
+            OrderListPlaceOtoPendingTypeEnum::Market => "MARKET",
+            OrderListPlaceOtoPendingTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListPlaceOtoPendingTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListPlaceOtoPendingTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListPlaceOtoPendingTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            OrderListPlaceOtoPendingTypeEnum::LimitMaker => "LIMIT_MAKER",
         }
     }
 }
@@ -657,17 +657,17 @@ impl OrderListPlaceOtoPendingTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoPendingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListPlaceOtoPendingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoPendingSideEnum::BUY => "BUY",
-            OrderListPlaceOtoPendingSideEnum::SELL => "SELL",
+            OrderListPlaceOtoPendingSideEnum::Buy => "BUY",
+            OrderListPlaceOtoPendingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -676,26 +676,26 @@ impl OrderListPlaceOtoPendingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderListPlaceOtoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoNewOrderRespTypeEnum::ACK => "ACK",
-            OrderListPlaceOtoNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderListPlaceOtoNewOrderRespTypeEnum::FULL => "FULL",
-            OrderListPlaceOtoNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderListPlaceOtoNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderListPlaceOtoNewOrderRespTypeEnum::Ack => "ACK",
+            OrderListPlaceOtoNewOrderRespTypeEnum::Result => "RESULT",
+            OrderListPlaceOtoNewOrderRespTypeEnum::Full => "FULL",
+            OrderListPlaceOtoNewOrderRespTypeEnum::Market => "MARKET",
+            OrderListPlaceOtoNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -704,29 +704,29 @@ impl OrderListPlaceOtoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderListPlaceOtoSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderListPlaceOtoSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderListPlaceOtoSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderListPlaceOtoSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderListPlaceOtoSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderListPlaceOtoSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderListPlaceOtoSelfTradePreventionModeEnum::None => "NONE",
+            OrderListPlaceOtoSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderListPlaceOtoSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderListPlaceOtoSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderListPlaceOtoSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderListPlaceOtoSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -735,20 +735,20 @@ impl OrderListPlaceOtoSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoWorkingTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListPlaceOtoWorkingTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoWorkingTimeInForceEnum::GTC => "GTC",
-            OrderListPlaceOtoWorkingTimeInForceEnum::IOC => "IOC",
-            OrderListPlaceOtoWorkingTimeInForceEnum::FOK => "FOK",
+            OrderListPlaceOtoWorkingTimeInForceEnum::Gtc => "GTC",
+            OrderListPlaceOtoWorkingTimeInForceEnum::Ioc => "IOC",
+            OrderListPlaceOtoWorkingTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -757,20 +757,20 @@ impl OrderListPlaceOtoWorkingTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoPendingTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListPlaceOtoPendingTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtoPendingTimeInForceEnum::GTC => "GTC",
-            OrderListPlaceOtoPendingTimeInForceEnum::IOC => "IOC",
-            OrderListPlaceOtoPendingTimeInForceEnum::FOK => "FOK",
+            OrderListPlaceOtoPendingTimeInForceEnum::Gtc => "GTC",
+            OrderListPlaceOtoPendingTimeInForceEnum::Ioc => "IOC",
+            OrderListPlaceOtoPendingTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -779,17 +779,17 @@ impl OrderListPlaceOtoPendingTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoWorkingTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
 }
 
 impl OrderListPlaceOtocoWorkingTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoWorkingTypeEnum::LIMIT => "LIMIT",
-            OrderListPlaceOtocoWorkingTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
+            OrderListPlaceOtocoWorkingTypeEnum::Limit => "LIMIT",
+            OrderListPlaceOtocoWorkingTypeEnum::LimitMaker => "LIMIT_MAKER",
         }
     }
 }
@@ -798,17 +798,17 @@ impl OrderListPlaceOtocoWorkingTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoWorkingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListPlaceOtocoWorkingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoWorkingSideEnum::BUY => "BUY",
-            OrderListPlaceOtocoWorkingSideEnum::SELL => "SELL",
+            OrderListPlaceOtocoWorkingSideEnum::Buy => "BUY",
+            OrderListPlaceOtocoWorkingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -817,17 +817,17 @@ impl OrderListPlaceOtocoWorkingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoPendingSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderListPlaceOtocoPendingSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoPendingSideEnum::BUY => "BUY",
-            OrderListPlaceOtocoPendingSideEnum::SELL => "SELL",
+            OrderListPlaceOtocoPendingSideEnum::Buy => "BUY",
+            OrderListPlaceOtocoPendingSideEnum::Sell => "SELL",
         }
     }
 }
@@ -836,26 +836,26 @@ impl OrderListPlaceOtocoPendingSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoPendingAboveTypeEnum {
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListPlaceOtocoPendingAboveTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListPlaceOtocoPendingAboveTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListPlaceOtocoPendingAboveTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            OrderListPlaceOtocoPendingAboveTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListPlaceOtocoPendingAboveTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListPlaceOtocoPendingAboveTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListPlaceOtocoPendingAboveTypeEnum::LimitMaker => "LIMIT_MAKER",
+            OrderListPlaceOtocoPendingAboveTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListPlaceOtocoPendingAboveTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -864,26 +864,26 @@ impl OrderListPlaceOtocoPendingAboveTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderListPlaceOtocoNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoNewOrderRespTypeEnum::ACK => "ACK",
-            OrderListPlaceOtocoNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderListPlaceOtocoNewOrderRespTypeEnum::FULL => "FULL",
-            OrderListPlaceOtocoNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderListPlaceOtocoNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderListPlaceOtocoNewOrderRespTypeEnum::Ack => "ACK",
+            OrderListPlaceOtocoNewOrderRespTypeEnum::Result => "RESULT",
+            OrderListPlaceOtocoNewOrderRespTypeEnum::Full => "FULL",
+            OrderListPlaceOtocoNewOrderRespTypeEnum::Market => "MARKET",
+            OrderListPlaceOtocoNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -892,31 +892,29 @@ impl OrderListPlaceOtocoNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderListPlaceOtocoSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderListPlaceOtocoSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderListPlaceOtocoSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderListPlaceOtocoSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderListPlaceOtocoSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderListPlaceOtocoSelfTradePreventionModeEnum::NON_REPRESENTABLE => {
-                "NON_REPRESENTABLE"
-            }
+            OrderListPlaceOtocoSelfTradePreventionModeEnum::None => "NONE",
+            OrderListPlaceOtocoSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderListPlaceOtocoSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderListPlaceOtocoSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderListPlaceOtocoSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderListPlaceOtocoSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -925,20 +923,20 @@ impl OrderListPlaceOtocoSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoWorkingTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListPlaceOtocoWorkingTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoWorkingTimeInForceEnum::GTC => "GTC",
-            OrderListPlaceOtocoWorkingTimeInForceEnum::IOC => "IOC",
-            OrderListPlaceOtocoWorkingTimeInForceEnum::FOK => "FOK",
+            OrderListPlaceOtocoWorkingTimeInForceEnum::Gtc => "GTC",
+            OrderListPlaceOtocoWorkingTimeInForceEnum::Ioc => "IOC",
+            OrderListPlaceOtocoWorkingTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -947,20 +945,20 @@ impl OrderListPlaceOtocoWorkingTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoPendingAboveTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListPlaceOtocoPendingAboveTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoPendingAboveTimeInForceEnum::GTC => "GTC",
-            OrderListPlaceOtocoPendingAboveTimeInForceEnum::IOC => "IOC",
-            OrderListPlaceOtocoPendingAboveTimeInForceEnum::FOK => "FOK",
+            OrderListPlaceOtocoPendingAboveTimeInForceEnum::Gtc => "GTC",
+            OrderListPlaceOtocoPendingAboveTimeInForceEnum::Ioc => "IOC",
+            OrderListPlaceOtocoPendingAboveTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -969,23 +967,23 @@ impl OrderListPlaceOtocoPendingAboveTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoPendingBelowTypeEnum {
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
 }
 
 impl OrderListPlaceOtocoPendingBelowTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoPendingBelowTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderListPlaceOtocoPendingBelowTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderListPlaceOtocoPendingBelowTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderListPlaceOtocoPendingBelowTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
+            OrderListPlaceOtocoPendingBelowTypeEnum::StopLoss => "STOP_LOSS",
+            OrderListPlaceOtocoPendingBelowTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderListPlaceOtocoPendingBelowTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderListPlaceOtocoPendingBelowTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
         }
     }
 }
@@ -994,20 +992,20 @@ impl OrderListPlaceOtocoPendingBelowTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoPendingBelowTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl OrderListPlaceOtocoPendingBelowTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderListPlaceOtocoPendingBelowTimeInForceEnum::GTC => "GTC",
-            OrderListPlaceOtocoPendingBelowTimeInForceEnum::IOC => "IOC",
-            OrderListPlaceOtocoPendingBelowTimeInForceEnum::FOK => "FOK",
+            OrderListPlaceOtocoPendingBelowTimeInForceEnum::Gtc => "GTC",
+            OrderListPlaceOtocoPendingBelowTimeInForceEnum::Ioc => "IOC",
+            OrderListPlaceOtocoPendingBelowTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -1016,17 +1014,17 @@ impl OrderListPlaceOtocoPendingBelowTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderPlaceSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl OrderPlaceSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderPlaceSideEnum::BUY => "BUY",
-            OrderPlaceSideEnum::SELL => "SELL",
+            OrderPlaceSideEnum::Buy => "BUY",
+            OrderPlaceSideEnum::Sell => "SELL",
         }
     }
 }
@@ -1035,35 +1033,35 @@ impl OrderPlaceSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderPlaceTypeEnum {
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderPlaceTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderPlaceTypeEnum::MARKET => "MARKET",
-            OrderPlaceTypeEnum::LIMIT => "LIMIT",
-            OrderPlaceTypeEnum::STOP_LOSS => "STOP_LOSS",
-            OrderPlaceTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            OrderPlaceTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            OrderPlaceTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            OrderPlaceTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            OrderPlaceTypeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderPlaceTypeEnum::Market => "MARKET",
+            OrderPlaceTypeEnum::Limit => "LIMIT",
+            OrderPlaceTypeEnum::StopLoss => "STOP_LOSS",
+            OrderPlaceTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            OrderPlaceTypeEnum::TakeProfit => "TAKE_PROFIT",
+            OrderPlaceTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            OrderPlaceTypeEnum::LimitMaker => "LIMIT_MAKER",
+            OrderPlaceTypeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1072,23 +1070,23 @@ impl OrderPlaceTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderPlaceTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderPlaceTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderPlaceTimeInForceEnum::GTC => "GTC",
-            OrderPlaceTimeInForceEnum::IOC => "IOC",
-            OrderPlaceTimeInForceEnum::FOK => "FOK",
-            OrderPlaceTimeInForceEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderPlaceTimeInForceEnum::Gtc => "GTC",
+            OrderPlaceTimeInForceEnum::Ioc => "IOC",
+            OrderPlaceTimeInForceEnum::Fok => "FOK",
+            OrderPlaceTimeInForceEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1097,26 +1095,26 @@ impl OrderPlaceTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderPlaceNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl OrderPlaceNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderPlaceNewOrderRespTypeEnum::ACK => "ACK",
-            OrderPlaceNewOrderRespTypeEnum::RESULT => "RESULT",
-            OrderPlaceNewOrderRespTypeEnum::FULL => "FULL",
-            OrderPlaceNewOrderRespTypeEnum::MARKET => "MARKET",
-            OrderPlaceNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            OrderPlaceNewOrderRespTypeEnum::Ack => "ACK",
+            OrderPlaceNewOrderRespTypeEnum::Result => "RESULT",
+            OrderPlaceNewOrderRespTypeEnum::Full => "FULL",
+            OrderPlaceNewOrderRespTypeEnum::Market => "MARKET",
+            OrderPlaceNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -1125,29 +1123,29 @@ impl OrderPlaceNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderPlaceSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl OrderPlaceSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OrderPlaceSelfTradePreventionModeEnum::NONE => "NONE",
-            OrderPlaceSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            OrderPlaceSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            OrderPlaceSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            OrderPlaceSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            OrderPlaceSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            OrderPlaceSelfTradePreventionModeEnum::None => "NONE",
+            OrderPlaceSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            OrderPlaceSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            OrderPlaceSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            OrderPlaceSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            OrderPlaceSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1156,17 +1154,17 @@ impl OrderPlaceSelfTradePreventionModeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderPlaceSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl SorOrderPlaceSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderPlaceSideEnum::BUY => "BUY",
-            SorOrderPlaceSideEnum::SELL => "SELL",
+            SorOrderPlaceSideEnum::Buy => "BUY",
+            SorOrderPlaceSideEnum::Sell => "SELL",
         }
     }
 }
@@ -1175,35 +1173,35 @@ impl SorOrderPlaceSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderPlaceTypeEnum {
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
     #[serde(rename = "STOP_LOSS")]
-    STOP_LOSS,
+    StopLoss,
     #[serde(rename = "STOP_LOSS_LIMIT")]
-    STOP_LOSS_LIMIT,
+    StopLossLimit,
     #[serde(rename = "TAKE_PROFIT")]
-    TAKE_PROFIT,
+    TakeProfit,
     #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TAKE_PROFIT_LIMIT,
+    TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
-    LIMIT_MAKER,
+    LimitMaker,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl SorOrderPlaceTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderPlaceTypeEnum::MARKET => "MARKET",
-            SorOrderPlaceTypeEnum::LIMIT => "LIMIT",
-            SorOrderPlaceTypeEnum::STOP_LOSS => "STOP_LOSS",
-            SorOrderPlaceTypeEnum::STOP_LOSS_LIMIT => "STOP_LOSS_LIMIT",
-            SorOrderPlaceTypeEnum::TAKE_PROFIT => "TAKE_PROFIT",
-            SorOrderPlaceTypeEnum::TAKE_PROFIT_LIMIT => "TAKE_PROFIT_LIMIT",
-            SorOrderPlaceTypeEnum::LIMIT_MAKER => "LIMIT_MAKER",
-            SorOrderPlaceTypeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            SorOrderPlaceTypeEnum::Market => "MARKET",
+            SorOrderPlaceTypeEnum::Limit => "LIMIT",
+            SorOrderPlaceTypeEnum::StopLoss => "STOP_LOSS",
+            SorOrderPlaceTypeEnum::StopLossLimit => "STOP_LOSS_LIMIT",
+            SorOrderPlaceTypeEnum::TakeProfit => "TAKE_PROFIT",
+            SorOrderPlaceTypeEnum::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
+            SorOrderPlaceTypeEnum::LimitMaker => "LIMIT_MAKER",
+            SorOrderPlaceTypeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1212,23 +1210,23 @@ impl SorOrderPlaceTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderPlaceTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl SorOrderPlaceTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderPlaceTimeInForceEnum::GTC => "GTC",
-            SorOrderPlaceTimeInForceEnum::IOC => "IOC",
-            SorOrderPlaceTimeInForceEnum::FOK => "FOK",
-            SorOrderPlaceTimeInForceEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            SorOrderPlaceTimeInForceEnum::Gtc => "GTC",
+            SorOrderPlaceTimeInForceEnum::Ioc => "IOC",
+            SorOrderPlaceTimeInForceEnum::Fok => "FOK",
+            SorOrderPlaceTimeInForceEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1237,26 +1235,26 @@ impl SorOrderPlaceTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderPlaceNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
     #[serde(rename = "FULL")]
-    FULL,
+    Full,
     #[serde(rename = "MARKET")]
-    MARKET,
+    Market,
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl SorOrderPlaceNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderPlaceNewOrderRespTypeEnum::ACK => "ACK",
-            SorOrderPlaceNewOrderRespTypeEnum::RESULT => "RESULT",
-            SorOrderPlaceNewOrderRespTypeEnum::FULL => "FULL",
-            SorOrderPlaceNewOrderRespTypeEnum::MARKET => "MARKET",
-            SorOrderPlaceNewOrderRespTypeEnum::LIMIT => "LIMIT",
+            SorOrderPlaceNewOrderRespTypeEnum::Ack => "ACK",
+            SorOrderPlaceNewOrderRespTypeEnum::Result => "RESULT",
+            SorOrderPlaceNewOrderRespTypeEnum::Full => "FULL",
+            SorOrderPlaceNewOrderRespTypeEnum::Market => "MARKET",
+            SorOrderPlaceNewOrderRespTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -1265,29 +1263,29 @@ impl SorOrderPlaceNewOrderRespTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SorOrderPlaceSelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    NONE,
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
-    EXPIRE_TAKER,
+    ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
-    EXPIRE_MAKER,
+    ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
-    EXPIRE_BOTH,
+    ExpireBoth,
     #[serde(rename = "DECREMENT")]
-    DECREMENT,
+    Decrement,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl SorOrderPlaceSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            SorOrderPlaceSelfTradePreventionModeEnum::NONE => "NONE",
-            SorOrderPlaceSelfTradePreventionModeEnum::EXPIRE_TAKER => "EXPIRE_TAKER",
-            SorOrderPlaceSelfTradePreventionModeEnum::EXPIRE_MAKER => "EXPIRE_MAKER",
-            SorOrderPlaceSelfTradePreventionModeEnum::EXPIRE_BOTH => "EXPIRE_BOTH",
-            SorOrderPlaceSelfTradePreventionModeEnum::DECREMENT => "DECREMENT",
-            SorOrderPlaceSelfTradePreventionModeEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            SorOrderPlaceSelfTradePreventionModeEnum::None => "NONE",
+            SorOrderPlaceSelfTradePreventionModeEnum::ExpireTaker => "EXPIRE_TAKER",
+            SorOrderPlaceSelfTradePreventionModeEnum::ExpireMaker => "EXPIRE_MAKER",
+            SorOrderPlaceSelfTradePreventionModeEnum::ExpireBoth => "EXPIRE_BOTH",
+            SorOrderPlaceSelfTradePreventionModeEnum::Decrement => "DECREMENT",
+            SorOrderPlaceSelfTradePreventionModeEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -2561,9 +2559,6 @@ pub struct OrderTestParams {
 impl OrderTestParams {
     /// Create a builder for [`order_test`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OrderTestParamsBuilder {
         OrderTestParamsBuilder::default()
@@ -2704,9 +2699,6 @@ pub struct SorOrderTestParams {
 impl SorOrderTestParams {
     /// Create a builder for [`sor_order_test`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> SorOrderTestParamsBuilder {
         SorOrderTestParamsBuilder::default()
@@ -2727,12 +2719,13 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -2765,22 +2758,24 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
-        payload.insert("new_qty".to_string(), serde_json::json!(new_qty));
+        let new_qty_value = Decimal::from_f32(new_qty).unwrap_or_default();
+        payload.insert("newQty".to_string(), serde_json::json!(new_qty_value));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_id {
-            payload.insert("order_id".to_string(), serde_json::json!(value));
+            payload.insert("orderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = orig_client_order_id {
-            payload.insert("orig_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("origClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_client_order_id {
-            payload.insert("new_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("newClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -2812,24 +2807,25 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_id {
-            payload.insert("order_id".to_string(), serde_json::json!(value));
+            payload.insert("orderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = orig_client_order_id {
-            payload.insert("orig_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("origClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_client_order_id {
-            payload.insert("new_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("newClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = cancel_restrictions {
-            payload.insert("cancel_restrictions".to_string(), serde_json::json!(value));
+            payload.insert("cancelRestrictions".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -2877,81 +2873,90 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
+
         payload.insert(
-            "cancel_replace_mode".to_string(),
+            "cancelReplaceMode".to_string(),
             serde_json::json!(cancel_replace_mode),
         );
+
         payload.insert("side".to_string(), serde_json::json!(side));
         payload.insert("type".to_string(), serde_json::json!(r#type));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = cancel_order_id {
-            payload.insert("cancel_order_id".to_string(), serde_json::json!(value));
+            payload.insert("cancelOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = cancel_orig_client_order_id {
             payload.insert(
-                "cancel_orig_client_order_id".to_string(),
+                "cancelOrigClientOrderId".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = cancel_new_client_order_id {
             payload.insert(
-                "cancel_new_client_order_id".to_string(),
+                "cancelNewClientOrderId".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = time_in_force {
-            payload.insert("time_in_force".to_string(), serde_json::json!(value));
+            payload.insert("timeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = price {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("price".to_string(), serde_json::json!(value));
         }
         if let Some(value) = quantity {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("quantity".to_string(), serde_json::json!(value));
         }
         if let Some(value) = quote_order_qty {
-            payload.insert("quote_order_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("quoteOrderQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_client_order_id {
-            payload.insert("new_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("newClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
-            payload.insert("new_order_resp_type".to_string(), serde_json::json!(value));
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_price {
-            payload.insert("stop_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("stopPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = trailing_delta {
-            payload.insert("trailing_delta".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("trailingDelta".to_string(), serde_json::json!(value));
         }
         if let Some(value) = iceberg_qty {
-            payload.insert("iceberg_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("icebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_id {
-            payload.insert("strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("strategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_type {
-            payload.insert("strategy_type".to_string(), serde_json::json!(value));
+            payload.insert("strategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = self_trade_prevention_mode {
             payload.insert(
-                "self_trade_prevention_mode".to_string(),
+                "selfTradePreventionMode".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = cancel_restrictions {
-            payload.insert("cancel_restrictions".to_string(), serde_json::json!(value));
+            payload.insert("cancelRestrictions".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_rate_limit_exceeded_mode {
             payload.insert(
-                "order_rate_limit_exceeded_mode".to_string(),
+                "orderRateLimitExceededMode".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -2982,21 +2987,22 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_list_id {
-            payload.insert("order_list_id".to_string(), serde_json::json!(value));
+            payload.insert("orderListId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = list_client_order_id {
-            payload.insert("list_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("listClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_client_order_id {
-            payload.insert("new_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("newClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -3042,69 +3048,71 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
+
         payload.insert("side".to_string(), serde_json::json!(side));
-        payload.insert("price".to_string(), serde_json::json!(price));
-        payload.insert("quantity".to_string(), serde_json::json!(quantity));
+        let price_value = Decimal::from_f32(price).unwrap_or_default();
+        payload.insert("price".to_string(), serde_json::json!(price_value));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        payload.insert("quantity".to_string(), serde_json::json!(quantity_value));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = list_client_order_id {
-            payload.insert("list_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("listClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit_client_order_id {
-            payload.insert(
-                "limit_client_order_id".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("limitClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit_iceberg_qty {
-            payload.insert("limit_iceberg_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("limitIcebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit_strategy_id {
-            payload.insert("limit_strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("limitStrategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit_strategy_type {
-            payload.insert("limit_strategy_type".to_string(), serde_json::json!(value));
+            payload.insert("limitStrategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_price {
-            payload.insert("stop_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("stopPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = trailing_delta {
-            payload.insert("trailing_delta".to_string(), serde_json::json!(value));
+            payload.insert("trailingDelta".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_client_order_id {
-            payload.insert("stop_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("stopClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_limit_price {
-            payload.insert("stop_limit_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("stopLimitPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_limit_time_in_force {
-            payload.insert(
-                "stop_limit_time_in_force".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("stopLimitTimeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_iceberg_qty {
-            payload.insert("stop_iceberg_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("stopIcebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_strategy_id {
-            payload.insert("stop_strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("stopStrategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_strategy_type {
-            payload.insert("stop_strategy_type".to_string(), serde_json::json!(value));
+            payload.insert("stopStrategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
-            payload.insert("new_order_resp_type".to_string(), serde_json::json!(value));
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = self_trade_prevention_mode {
             payload.insert(
-                "self_trade_prevention_mode".to_string(),
+                "selfTradePreventionMode".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -3155,82 +3163,86 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
+
         payload.insert("side".to_string(), serde_json::json!(side));
-        payload.insert("quantity".to_string(), serde_json::json!(quantity));
-        payload.insert("above_type".to_string(), serde_json::json!(above_type));
-        payload.insert("below_type".to_string(), serde_json::json!(below_type));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        payload.insert("quantity".to_string(), serde_json::json!(quantity_value));
+
+        payload.insert("aboveType".to_string(), serde_json::json!(above_type));
+
+        payload.insert("belowType".to_string(), serde_json::json!(below_type));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = list_client_order_id {
-            payload.insert("list_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("listClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_client_order_id {
-            payload.insert(
-                "above_client_order_id".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("aboveClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_iceberg_qty {
-            payload.insert("above_iceberg_qty".to_string(), serde_json::json!(value));
+            payload.insert("aboveIcebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_price {
-            payload.insert("above_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("abovePrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_stop_price {
-            payload.insert("above_stop_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("aboveStopPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_trailing_delta {
-            payload.insert("above_trailing_delta".to_string(), serde_json::json!(value));
+            payload.insert("aboveTrailingDelta".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_time_in_force {
-            payload.insert("above_time_in_force".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("aboveTimeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_strategy_id {
-            payload.insert("above_strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("aboveStrategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = above_strategy_type {
-            payload.insert("above_strategy_type".to_string(), serde_json::json!(value));
+            payload.insert("aboveStrategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_client_order_id {
-            payload.insert(
-                "below_client_order_id".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("belowClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_iceberg_qty {
-            payload.insert("below_iceberg_qty".to_string(), serde_json::json!(value));
+            payload.insert("belowIcebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_price {
-            payload.insert("below_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("belowPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_stop_price {
-            payload.insert("below_stop_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("belowStopPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_trailing_delta {
-            payload.insert("below_trailing_delta".to_string(), serde_json::json!(value));
+            payload.insert("belowTrailingDelta".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_time_in_force {
-            payload.insert("below_time_in_force".to_string(), serde_json::json!(value));
+            payload.insert("belowTimeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_strategy_id {
-            payload.insert("below_strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("belowStrategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = below_strategy_type {
-            payload.insert("below_strategy_type".to_string(), serde_json::json!(value));
+            payload.insert("belowStrategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
-            payload.insert("new_order_resp_type".to_string(), serde_json::json!(value));
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = self_trade_prevention_mode {
             payload.insert(
-                "self_trade_prevention_mode".to_string(),
+                "selfTradePreventionMode".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -3281,100 +3293,92 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
-        payload.insert("working_type".to_string(), serde_json::json!(working_type));
-        payload.insert("working_side".to_string(), serde_json::json!(working_side));
+
+        payload.insert("workingType".to_string(), serde_json::json!(working_type));
+
+        payload.insert("workingSide".to_string(), serde_json::json!(working_side));
+        let working_price_value = Decimal::from_f32(working_price).unwrap_or_default();
         payload.insert(
-            "working_price".to_string(),
-            serde_json::json!(working_price),
+            "workingPrice".to_string(),
+            serde_json::json!(working_price_value),
         );
+        let working_quantity_value = Decimal::from_f32(working_quantity).unwrap_or_default();
         payload.insert(
-            "working_quantity".to_string(),
-            serde_json::json!(working_quantity),
+            "workingQuantity".to_string(),
+            serde_json::json!(working_quantity_value),
         );
-        payload.insert("pending_type".to_string(), serde_json::json!(pending_type));
-        payload.insert("pending_side".to_string(), serde_json::json!(pending_side));
+
+        payload.insert("pendingType".to_string(), serde_json::json!(pending_type));
+
+        payload.insert("pendingSide".to_string(), serde_json::json!(pending_side));
+        let pending_quantity_value = Decimal::from_f32(pending_quantity).unwrap_or_default();
         payload.insert(
-            "pending_quantity".to_string(),
-            serde_json::json!(pending_quantity),
+            "pendingQuantity".to_string(),
+            serde_json::json!(pending_quantity_value),
         );
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = list_client_order_id {
-            payload.insert("list_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("listClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
-            payload.insert("new_order_resp_type".to_string(), serde_json::json!(value));
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = self_trade_prevention_mode {
             payload.insert(
-                "self_trade_prevention_mode".to_string(),
+                "selfTradePreventionMode".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = working_client_order_id {
-            payload.insert(
-                "working_client_order_id".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("workingClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_iceberg_qty {
-            payload.insert("working_iceberg_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("workingIcebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_time_in_force {
-            payload.insert(
-                "working_time_in_force".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("workingTimeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_strategy_id {
-            payload.insert("working_strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("workingStrategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_strategy_type {
-            payload.insert(
-                "working_strategy_type".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("workingStrategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_client_order_id {
-            payload.insert(
-                "pending_client_order_id".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("pendingClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_price {
-            payload.insert("pending_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("pendingPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_stop_price {
-            payload.insert("pending_stop_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("pendingStopPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_trailing_delta {
-            payload.insert(
-                "pending_trailing_delta".to_string(),
-                serde_json::json!(value),
-            );
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("pendingTrailingDelta".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_iceberg_qty {
-            payload.insert("pending_iceberg_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("pendingIcebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_time_in_force {
-            payload.insert(
-                "pending_time_in_force".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("pendingTimeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_strategy_id {
-            payload.insert("pending_strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("pendingStrategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_strategy_type {
-            payload.insert(
-                "pending_strategy_type".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("pendingStrategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -3434,160 +3438,168 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
-        payload.insert("working_type".to_string(), serde_json::json!(working_type));
-        payload.insert("working_side".to_string(), serde_json::json!(working_side));
+
+        payload.insert("workingType".to_string(), serde_json::json!(working_type));
+
+        payload.insert("workingSide".to_string(), serde_json::json!(working_side));
+        let working_price_value = Decimal::from_f32(working_price).unwrap_or_default();
         payload.insert(
-            "working_price".to_string(),
-            serde_json::json!(working_price),
+            "workingPrice".to_string(),
+            serde_json::json!(working_price_value),
         );
+        let working_quantity_value = Decimal::from_f32(working_quantity).unwrap_or_default();
         payload.insert(
-            "working_quantity".to_string(),
-            serde_json::json!(working_quantity),
+            "workingQuantity".to_string(),
+            serde_json::json!(working_quantity_value),
         );
-        payload.insert("pending_side".to_string(), serde_json::json!(pending_side));
+
+        payload.insert("pendingSide".to_string(), serde_json::json!(pending_side));
+        let pending_quantity_value = Decimal::from_f32(pending_quantity).unwrap_or_default();
         payload.insert(
-            "pending_quantity".to_string(),
-            serde_json::json!(pending_quantity),
+            "pendingQuantity".to_string(),
+            serde_json::json!(pending_quantity_value),
         );
+
         payload.insert(
-            "pending_above_type".to_string(),
+            "pendingAboveType".to_string(),
             serde_json::json!(pending_above_type),
         );
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = list_client_order_id {
-            payload.insert("list_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("listClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
-            payload.insert("new_order_resp_type".to_string(), serde_json::json!(value));
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = self_trade_prevention_mode {
             payload.insert(
-                "self_trade_prevention_mode".to_string(),
+                "selfTradePreventionMode".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = working_client_order_id {
-            payload.insert(
-                "working_client_order_id".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("workingClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_iceberg_qty {
-            payload.insert("working_iceberg_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("workingIcebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_time_in_force {
-            payload.insert(
-                "working_time_in_force".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("workingTimeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_strategy_id {
-            payload.insert("working_strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("workingStrategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = working_strategy_type {
-            payload.insert(
-                "working_strategy_type".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("workingStrategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_above_client_order_id {
             payload.insert(
-                "pending_above_client_order_id".to_string(),
+                "pendingAboveClientOrderId".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_above_price {
-            payload.insert("pending_above_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("pendingAbovePrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_above_stop_price {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert(
-                "pending_above_stop_price".to_string(),
+                "pendingAboveStopPrice".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_above_trailing_delta {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert(
-                "pending_above_trailing_delta".to_string(),
+                "pendingAboveTrailingDelta".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_above_iceberg_qty {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert(
-                "pending_above_iceberg_qty".to_string(),
+                "pendingAboveIcebergQty".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_above_time_in_force {
             payload.insert(
-                "pending_above_time_in_force".to_string(),
+                "pendingAboveTimeInForce".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_above_strategy_id {
             payload.insert(
-                "pending_above_strategy_id".to_string(),
+                "pendingAboveStrategyId".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_above_strategy_type {
             payload.insert(
-                "pending_above_strategy_type".to_string(),
+                "pendingAboveStrategyType".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_below_type {
-            payload.insert("pending_below_type".to_string(), serde_json::json!(value));
+            payload.insert("pendingBelowType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_below_client_order_id {
             payload.insert(
-                "pending_below_client_order_id".to_string(),
+                "pendingBelowClientOrderId".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_below_price {
-            payload.insert("pending_below_price".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("pendingBelowPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = pending_below_stop_price {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert(
-                "pending_below_stop_price".to_string(),
+                "pendingBelowStopPrice".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_below_trailing_delta {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert(
-                "pending_below_trailing_delta".to_string(),
+                "pendingBelowTrailingDelta".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_below_iceberg_qty {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert(
-                "pending_below_iceberg_qty".to_string(),
+                "pendingBelowIcebergQty".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_below_time_in_force {
             payload.insert(
-                "pending_below_time_in_force".to_string(),
+                "pendingBelowTimeInForce".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_below_strategy_id {
             payload.insert(
-                "pending_below_strategy_id".to_string(),
+                "pendingBelowStrategyId".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = pending_below_strategy_type {
             payload.insert(
-                "pending_below_strategy_type".to_string(),
+                "pendingBelowStrategyType".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -3629,7 +3641,9 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
+
         payload.insert("side".to_string(), serde_json::json!(side));
         payload.insert("type".to_string(), serde_json::json!(r#type));
         if let Some(value) = id {
@@ -3639,9 +3653,11 @@ impl TradeApi for TradeApiClient {
             payload.insert("timeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = price {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("price".to_string(), serde_json::json!(value));
         }
         if let Some(value) = quantity {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("quantity".to_string(), serde_json::json!(value));
         }
         if let Some(value) = quote_order_qty {
@@ -3663,6 +3679,7 @@ impl TradeApi for TradeApiClient {
             payload.insert("icebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_id {
+            payload.insert("strategyId".to_string(), serde_json::json!(value));
             payload.insert("strategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_type {
@@ -3707,7 +3724,7 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = compute_commission_rates {
             payload.insert(
-                "compute_commission_rates".to_string(),
+                "computeCommissionRates".to_string(),
                 serde_json::json!(value),
             );
         }
@@ -3748,7 +3765,9 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
+
         payload.insert("side".to_string(), serde_json::json!(side));
         payload.insert("type".to_string(), serde_json::json!(r#type));
         payload.insert("quantity".to_string(), serde_json::json!(quantity));
@@ -3756,34 +3775,36 @@ impl TradeApi for TradeApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = time_in_force {
-            payload.insert("time_in_force".to_string(), serde_json::json!(value));
+            payload.insert("timeInForce".to_string(), serde_json::json!(value));
         }
         if let Some(value) = price {
+            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("price".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_client_order_id {
-            payload.insert("new_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("newClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
-            payload.insert("new_order_resp_type".to_string(), serde_json::json!(value));
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = iceberg_qty {
-            payload.insert("iceberg_qty".to_string(), serde_json::json!(value));
+            let value = Decimal::from_f32(value).unwrap_or_default();
+            payload.insert("icebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_id {
-            payload.insert("strategy_id".to_string(), serde_json::json!(value));
+            payload.insert("strategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_type {
-            payload.insert("strategy_type".to_string(), serde_json::json!(value));
+            payload.insert("strategyType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = self_trade_prevention_mode {
             payload.insert(
-                "self_trade_prevention_mode".to_string(),
+                "selfTradePreventionMode".to_string(),
                 serde_json::json!(value),
             );
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -3815,7 +3836,7 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = compute_commission_rates {
             payload.insert(
-                "compute_commission_rates".to_string(),
+                "computeCommissionRates".to_string(),
                 serde_json::json!(value),
             );
         }
@@ -3886,7 +3907,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/openOrders.cancelAll".trim_start_matches('/'));
@@ -3929,7 +3950,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -3984,9 +4005,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4017,7 +4037,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.amend.keepPriority".trim_start_matches('/'));
@@ -4060,7 +4080,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -4115,9 +4135,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4148,7 +4167,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.cancel".trim_start_matches('/'));
@@ -4191,7 +4210,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -4246,9 +4265,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4274,12 +4292,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,OrderCancelReplaceSideEnum::BUY,OrderCancelReplaceTypeEnum::MARKET,).build().unwrap();
+                let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,OrderCancelReplaceSideEnum::Buy,OrderCancelReplaceTypeEnum::Market,).build().unwrap();
                 client.order_cancel_replace(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.cancelReplace".trim_start_matches('/'));
@@ -4317,12 +4335,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,OrderCancelReplaceSideEnum::BUY,OrderCancelReplaceTypeEnum::MARKET,).build().unwrap();
+                let params = OrderCancelReplaceParams::builder("BNBUSDT".to_string(),OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,OrderCancelReplaceSideEnum::Buy,OrderCancelReplaceTypeEnum::Market,).build().unwrap();
                 client.order_cancel_replace(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -4369,9 +4387,9 @@ mod tests {
             let handle = spawn(async move {
                 let params = OrderCancelReplaceParams::builder(
                     "BNBUSDT".to_string(),
-                    OrderCancelReplaceCancelReplaceModeEnum::STOP_ON_FAILURE,
-                    OrderCancelReplaceSideEnum::BUY,
-                    OrderCancelReplaceTypeEnum::MARKET,
+                    OrderCancelReplaceCancelReplaceModeEnum::StopOnFailure,
+                    OrderCancelReplaceSideEnum::Buy,
+                    OrderCancelReplaceTypeEnum::Market,
                 )
                 .build()
                 .unwrap();
@@ -4382,9 +4400,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4415,7 +4432,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.cancel".trim_start_matches('/'));
@@ -4458,7 +4475,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -4513,9 +4530,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4541,12 +4557,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::BUY,1.0,1.0,).build().unwrap();
+                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::Buy,1.0,1.0,).build().unwrap();
                 client.order_list_place(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place".trim_start_matches('/'));
@@ -4584,12 +4600,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::BUY,1.0,1.0,).build().unwrap();
+                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::Buy,1.0,1.0,).build().unwrap();
                 client.order_list_place(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -4636,7 +4652,7 @@ mod tests {
             let handle = spawn(async move {
                 let params = OrderListPlaceParams::builder(
                     "BNBUSDT".to_string(),
-                    OrderListPlaceSideEnum::BUY,
+                    OrderListPlaceSideEnum::Buy,
                     1.0,
                     1.0,
                 )
@@ -4649,9 +4665,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4677,12 +4692,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::BUY,1.0,OrderListPlaceOcoAboveTypeEnum::STOP_LOSS_LIMIT,OrderListPlaceOcoBelowTypeEnum::STOP_LOSS,).build().unwrap();
+                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::Buy,1.0,OrderListPlaceOcoAboveTypeEnum::StopLossLimit,OrderListPlaceOcoBelowTypeEnum::StopLoss,).build().unwrap();
                 client.order_list_place_oco(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.oco".trim_start_matches('/'));
@@ -4720,12 +4735,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::BUY,1.0,OrderListPlaceOcoAboveTypeEnum::STOP_LOSS_LIMIT,OrderListPlaceOcoBelowTypeEnum::STOP_LOSS,).build().unwrap();
+                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::Buy,1.0,OrderListPlaceOcoAboveTypeEnum::StopLossLimit,OrderListPlaceOcoBelowTypeEnum::StopLoss,).build().unwrap();
                 client.order_list_place_oco(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -4772,10 +4787,10 @@ mod tests {
             let handle = spawn(async move {
                 let params = OrderListPlaceOcoParams::builder(
                     "BNBUSDT".to_string(),
-                    OrderListPlaceOcoSideEnum::BUY,
+                    OrderListPlaceOcoSideEnum::Buy,
                     1.0,
-                    OrderListPlaceOcoAboveTypeEnum::STOP_LOSS_LIMIT,
-                    OrderListPlaceOcoBelowTypeEnum::STOP_LOSS,
+                    OrderListPlaceOcoAboveTypeEnum::StopLossLimit,
+                    OrderListPlaceOcoBelowTypeEnum::StopLoss,
                 )
                 .build()
                 .unwrap();
@@ -4786,9 +4801,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4814,12 +4828,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::LIMIT,OrderListPlaceOtoWorkingSideEnum::BUY,1.0,1.0,OrderListPlaceOtoPendingTypeEnum::LIMIT,OrderListPlaceOtoPendingSideEnum::BUY,1.0,).build().unwrap();
+                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::Limit,OrderListPlaceOtoWorkingSideEnum::Buy,1.0,1.0,OrderListPlaceOtoPendingTypeEnum::Limit,OrderListPlaceOtoPendingSideEnum::Buy,1.0,).build().unwrap();
                 client.order_list_place_oto(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.oto".trim_start_matches('/'));
@@ -4857,12 +4871,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::LIMIT,OrderListPlaceOtoWorkingSideEnum::BUY,1.0,1.0,OrderListPlaceOtoPendingTypeEnum::LIMIT,OrderListPlaceOtoPendingSideEnum::BUY,1.0,).build().unwrap();
+                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::Limit,OrderListPlaceOtoWorkingSideEnum::Buy,1.0,1.0,OrderListPlaceOtoPendingTypeEnum::Limit,OrderListPlaceOtoPendingSideEnum::Buy,1.0,).build().unwrap();
                 client.order_list_place_oto(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -4909,12 +4923,12 @@ mod tests {
             let handle = spawn(async move {
                 let params = OrderListPlaceOtoParams::builder(
                     "BNBUSDT".to_string(),
-                    OrderListPlaceOtoWorkingTypeEnum::LIMIT,
-                    OrderListPlaceOtoWorkingSideEnum::BUY,
+                    OrderListPlaceOtoWorkingTypeEnum::Limit,
+                    OrderListPlaceOtoWorkingSideEnum::Buy,
                     1.0,
                     1.0,
-                    OrderListPlaceOtoPendingTypeEnum::LIMIT,
-                    OrderListPlaceOtoPendingSideEnum::BUY,
+                    OrderListPlaceOtoPendingTypeEnum::Limit,
+                    OrderListPlaceOtoPendingSideEnum::Buy,
                     1.0,
                 )
                 .build()
@@ -4926,9 +4940,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -4954,12 +4967,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::LIMIT,OrderListPlaceOtocoWorkingSideEnum::BUY,1.0,1.0,OrderListPlaceOtocoPendingSideEnum::BUY,1.0,OrderListPlaceOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,).build().unwrap();
+                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::Limit,OrderListPlaceOtocoWorkingSideEnum::Buy,1.0,1.0,OrderListPlaceOtocoPendingSideEnum::Buy,1.0,OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
                 client.order_list_place_otoco(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.otoco".trim_start_matches('/'));
@@ -4997,12 +5010,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::LIMIT,OrderListPlaceOtocoWorkingSideEnum::BUY,1.0,1.0,OrderListPlaceOtocoPendingSideEnum::BUY,1.0,OrderListPlaceOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,).build().unwrap();
+                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::Limit,OrderListPlaceOtocoWorkingSideEnum::Buy,1.0,1.0,OrderListPlaceOtocoPendingSideEnum::Buy,1.0,OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
                 client.order_list_place_otoco(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -5049,13 +5062,13 @@ mod tests {
             let handle = spawn(async move {
                 let params = OrderListPlaceOtocoParams::builder(
                     "BNBUSDT".to_string(),
-                    OrderListPlaceOtocoWorkingTypeEnum::LIMIT,
-                    OrderListPlaceOtocoWorkingSideEnum::BUY,
+                    OrderListPlaceOtocoWorkingTypeEnum::Limit,
+                    OrderListPlaceOtocoWorkingSideEnum::Buy,
                     1.0,
                     1.0,
-                    OrderListPlaceOtocoPendingSideEnum::BUY,
+                    OrderListPlaceOtocoPendingSideEnum::Buy,
                     1.0,
-                    OrderListPlaceOtocoPendingAboveTypeEnum::STOP_LOSS_LIMIT,
+                    OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,
                 )
                 .build()
                 .unwrap();
@@ -5066,9 +5079,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -5094,12 +5106,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderPlaceParams::builder("BNBUSDT".to_string(),OrderPlaceSideEnum::BUY,OrderPlaceTypeEnum::MARKET,).build().unwrap();
+                let params = OrderPlaceParams::builder("BNBUSDT".to_string(),OrderPlaceSideEnum::Buy,OrderPlaceTypeEnum::Market,).build().unwrap();
                 client.order_place(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.place".trim_start_matches('/'));
@@ -5137,12 +5149,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderPlaceParams::builder("BNBUSDT".to_string(),OrderPlaceSideEnum::BUY,OrderPlaceTypeEnum::MARKET,).build().unwrap();
+                let params = OrderPlaceParams::builder("BNBUSDT".to_string(),OrderPlaceSideEnum::Buy,OrderPlaceTypeEnum::Market,).build().unwrap();
                 client.order_place(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -5189,8 +5201,8 @@ mod tests {
             let handle = spawn(async move {
                 let params = OrderPlaceParams::builder(
                     "BNBUSDT".to_string(),
-                    OrderPlaceSideEnum::BUY,
-                    OrderPlaceTypeEnum::MARKET,
+                    OrderPlaceSideEnum::Buy,
+                    OrderPlaceTypeEnum::Market,
                 )
                 .build()
                 .unwrap();
@@ -5201,9 +5213,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -5234,7 +5245,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.test".trim_start_matches('/'));
@@ -5277,7 +5288,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -5330,9 +5341,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -5358,12 +5368,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::BUY,SorOrderPlaceTypeEnum::MARKET,1.0,).build().unwrap();
+                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::Buy,SorOrderPlaceTypeEnum::Market,1.0,).build().unwrap();
                 client.sor_order_place(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/sor.order.place".trim_start_matches('/'));
@@ -5401,12 +5411,12 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::BUY,SorOrderPlaceTypeEnum::MARKET,1.0,).build().unwrap();
+                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::Buy,SorOrderPlaceTypeEnum::Market,1.0,).build().unwrap();
                 client.sor_order_place(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -5453,8 +5463,8 @@ mod tests {
             let handle = spawn(async move {
                 let params = SorOrderPlaceParams::builder(
                     "BNBUSDT".to_string(),
-                    SorOrderPlaceSideEnum::BUY,
-                    SorOrderPlaceTypeEnum::MARKET,
+                    SorOrderPlaceSideEnum::Buy,
+                    SorOrderPlaceTypeEnum::Market,
                     1.0,
                 )
                 .build()
@@ -5466,9 +5476,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -5499,7 +5508,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/sor.order.test".trim_start_matches('/'));
@@ -5542,7 +5551,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -5595,9 +5604,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();

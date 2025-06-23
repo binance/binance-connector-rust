@@ -9,6 +9,7 @@ use crate::common::{
         SPOT_WS_API_TESTNET_URL, SPOT_WS_STREAMS_PROD_URL, SPOT_WS_STREAMS_TESTNET_URL,
     },
     logger,
+    utils::build_user_agent,
 };
 
 /// Represents the Spot REST API client for interacting with the Binance Spot REST API.
@@ -32,6 +33,7 @@ impl SpotRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("spot");
         if config.base_path.is_none() {
             config.base_path = Some(SPOT_REST_API_PROD_URL.to_string());
         }
@@ -90,6 +92,7 @@ impl SpotWsApi {
     pub fn from_config(mut config: ConfigurationWebsocketApi) -> websocket_api::WebsocketApiHandle {
         logger::init();
 
+        config.user_agent = build_user_agent("spot");
         if config.ws_url.is_none() {
             config.ws_url = Some(SPOT_WS_API_PROD_URL.to_string());
         }
@@ -150,6 +153,7 @@ impl SpotWsStreams {
     ) -> websocket_streams::WebsocketStreamsHandle {
         logger::init();
 
+        config.user_agent = build_user_agent("spot");
         if config.ws_url.is_none() {
             config.ws_url = Some(SPOT_WS_STREAMS_PROD_URL.to_string());
         }

@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "2.0.1"
+version = "4.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -17,6 +17,17 @@ module_name_repetitions = "allow"
 too_many_arguments = "allow"
 similar_names = "allow"
 single_match_else = "allow"
+unreadable_literal = "allow"
+empty_docs = "allow"
+tabs_in_doc_comments = "allow"
+doc_link_with_quotes = "allow"
+too_many_lines = "allow"
+pub_underscore_fields = "allow"
+type_complexity = "allow"
+fn_params_excessive_bools = "allow"
+doc_lazy_continuation = "allow"
+default_trait_access = "allow"
+match_wild_err_arm = "allow"
 
   [lints.clippy.pedantic]
   level = "warn"
@@ -54,6 +65,7 @@ futures = "0.3"
 http = "1"
 tracing = "0.1"
 once_cell = "1.21"
+rust_decimal = "1.37.2"
 
   [dependencies.serde]
   version = "^1.0"

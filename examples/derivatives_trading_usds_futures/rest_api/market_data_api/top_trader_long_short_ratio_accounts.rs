@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = TopTraderLongShortRatioAccountsParams::builder(
         "symbol_example".to_string(),
-        TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_5m,
+        TopTraderLongShortRatioAccountsPeriodEnum::Period5m,
     )
     .build()?;
 

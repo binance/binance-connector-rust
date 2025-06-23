@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -105,9 +106,6 @@ pub struct ClaimBoostRewardsParams {
 impl ClaimBoostRewardsParams {
     /// Create a builder for [`claim_boost_rewards`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> ClaimBoostRewardsParamsBuilder {
         ClaimBoostRewardsParamsBuilder::default()
@@ -153,9 +151,6 @@ pub struct GetBnsolRateHistoryParams {
 impl GetBnsolRateHistoryParams {
     /// Create a builder for [`get_bnsol_rate_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetBnsolRateHistoryParamsBuilder {
         GetBnsolRateHistoryParamsBuilder::default()
@@ -200,9 +195,6 @@ pub struct GetBnsolRewardsHistoryParams {
 
 impl GetBnsolRewardsHistoryParams {
     /// Create a builder for [`get_bnsol_rewards_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetBnsolRewardsHistoryParamsBuilder {
@@ -303,9 +295,6 @@ pub struct GetSolRedemptionHistoryParams {
 impl GetSolRedemptionHistoryParams {
     /// Create a builder for [`get_sol_redemption_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSolRedemptionHistoryParamsBuilder {
         GetSolRedemptionHistoryParamsBuilder::default()
@@ -351,9 +340,6 @@ pub struct GetSolStakingHistoryParams {
 impl GetSolStakingHistoryParams {
     /// Create a builder for [`get_sol_staking_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSolStakingHistoryParamsBuilder {
         GetSolStakingHistoryParamsBuilder::default()
@@ -377,9 +363,6 @@ pub struct GetSolStakingQuotaDetailsParams {
 impl GetSolStakingQuotaDetailsParams {
     /// Create a builder for [`get_sol_staking_quota_details`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSolStakingQuotaDetailsParamsBuilder {
         GetSolStakingQuotaDetailsParamsBuilder::default()
@@ -402,9 +385,6 @@ pub struct GetUnclaimedRewardsParams {
 
 impl GetUnclaimedRewardsParams {
     /// Create a builder for [`get_unclaimed_rewards`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetUnclaimedRewardsParamsBuilder {
@@ -461,9 +441,6 @@ pub struct SolStakingAccountParams {
 impl SolStakingAccountParams {
     /// Create a builder for [`sol_staking_account`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> SolStakingAccountParamsBuilder {
         SolStakingAccountParamsBuilder::default()
@@ -513,7 +490,7 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ClaimBoostRewardsResponse>(
@@ -546,11 +523,11 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -562,7 +539,7 @@ impl SolStakingApi for SolStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetBnsolRateHistoryResponse>(
@@ -595,11 +572,11 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -611,7 +588,7 @@ impl SolStakingApi for SolStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetBnsolRewardsHistoryResponse>(
@@ -647,11 +624,11 @@ impl SolStakingApi for SolStakingApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -663,7 +640,7 @@ impl SolStakingApi for SolStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetBoostRewardsHistoryResponse>(
@@ -696,11 +673,11 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -712,7 +689,7 @@ impl SolStakingApi for SolStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSolRedemptionHistoryResponse>(
@@ -745,11 +722,11 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -761,7 +738,7 @@ impl SolStakingApi for SolStakingApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSolStakingHistoryResponse>(
@@ -788,7 +765,7 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSolStakingQuotaDetailsResponse>(
@@ -815,7 +792,7 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetUnclaimedRewardsResponseInner>>(
@@ -844,10 +821,11 @@ impl SolStakingApi for SolStakingApiClient {
 
         let mut query_params = BTreeMap::new();
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RedeemSolResponse>(
@@ -874,7 +852,7 @@ impl SolStakingApi for SolStakingApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SolStakingAccountResponse>(
@@ -903,10 +881,11 @@ impl SolStakingApi for SolStakingApiClient {
 
         let mut query_params = BTreeMap::new();
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SubscribeSolStakingResponse>(

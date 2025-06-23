@@ -106,20 +106,20 @@ impl WebSocketStreamsApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AllMarketRollingWindowTickerWindowSizeEnum {
     #[serde(rename = "1h")]
-    WINDOW_SIZE_1h,
+    WindowSize1h,
     #[serde(rename = "4h")]
-    WINDOW_SIZE_4h,
+    WindowSize4h,
     #[serde(rename = "1d")]
-    WINDOW_SIZE_1d,
+    WindowSize1d,
 }
 
 impl AllMarketRollingWindowTickerWindowSizeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            AllMarketRollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h => "1h",
-            AllMarketRollingWindowTickerWindowSizeEnum::WINDOW_SIZE_4h => "4h",
-            AllMarketRollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1d => "1d",
+            AllMarketRollingWindowTickerWindowSizeEnum::WindowSize1h => "1h",
+            AllMarketRollingWindowTickerWindowSizeEnum::WindowSize4h => "4h",
+            AllMarketRollingWindowTickerWindowSizeEnum::WindowSize1d => "1d",
         }
     }
 }
@@ -128,59 +128,59 @@ impl AllMarketRollingWindowTickerWindowSizeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KlineIntervalEnum {
     #[serde(rename = "1s")]
-    INTERVAL_1s,
+    Interval1s,
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl KlineIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            KlineIntervalEnum::INTERVAL_1s => "1s",
-            KlineIntervalEnum::INTERVAL_1m => "1m",
-            KlineIntervalEnum::INTERVAL_3m => "3m",
-            KlineIntervalEnum::INTERVAL_5m => "5m",
-            KlineIntervalEnum::INTERVAL_15m => "15m",
-            KlineIntervalEnum::INTERVAL_30m => "30m",
-            KlineIntervalEnum::INTERVAL_1h => "1h",
-            KlineIntervalEnum::INTERVAL_2h => "2h",
-            KlineIntervalEnum::INTERVAL_4h => "4h",
-            KlineIntervalEnum::INTERVAL_6h => "6h",
-            KlineIntervalEnum::INTERVAL_8h => "8h",
-            KlineIntervalEnum::INTERVAL_12h => "12h",
-            KlineIntervalEnum::INTERVAL_1d => "1d",
-            KlineIntervalEnum::INTERVAL_3d => "3d",
-            KlineIntervalEnum::INTERVAL_1w => "1w",
-            KlineIntervalEnum::INTERVAL_1M => "1M",
+            KlineIntervalEnum::Interval1s => "1s",
+            KlineIntervalEnum::Interval1m => "1m",
+            KlineIntervalEnum::Interval3m => "3m",
+            KlineIntervalEnum::Interval5m => "5m",
+            KlineIntervalEnum::Interval15m => "15m",
+            KlineIntervalEnum::Interval30m => "30m",
+            KlineIntervalEnum::Interval1h => "1h",
+            KlineIntervalEnum::Interval2h => "2h",
+            KlineIntervalEnum::Interval4h => "4h",
+            KlineIntervalEnum::Interval6h => "6h",
+            KlineIntervalEnum::Interval8h => "8h",
+            KlineIntervalEnum::Interval12h => "12h",
+            KlineIntervalEnum::Interval1d => "1d",
+            KlineIntervalEnum::Interval3d => "3d",
+            KlineIntervalEnum::Interval1w => "1w",
+            KlineIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -189,59 +189,59 @@ impl KlineIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KlineOffsetIntervalEnum {
     #[serde(rename = "1s")]
-    INTERVAL_1s,
+    Interval1s,
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl KlineOffsetIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            KlineOffsetIntervalEnum::INTERVAL_1s => "1s",
-            KlineOffsetIntervalEnum::INTERVAL_1m => "1m",
-            KlineOffsetIntervalEnum::INTERVAL_3m => "3m",
-            KlineOffsetIntervalEnum::INTERVAL_5m => "5m",
-            KlineOffsetIntervalEnum::INTERVAL_15m => "15m",
-            KlineOffsetIntervalEnum::INTERVAL_30m => "30m",
-            KlineOffsetIntervalEnum::INTERVAL_1h => "1h",
-            KlineOffsetIntervalEnum::INTERVAL_2h => "2h",
-            KlineOffsetIntervalEnum::INTERVAL_4h => "4h",
-            KlineOffsetIntervalEnum::INTERVAL_6h => "6h",
-            KlineOffsetIntervalEnum::INTERVAL_8h => "8h",
-            KlineOffsetIntervalEnum::INTERVAL_12h => "12h",
-            KlineOffsetIntervalEnum::INTERVAL_1d => "1d",
-            KlineOffsetIntervalEnum::INTERVAL_3d => "3d",
-            KlineOffsetIntervalEnum::INTERVAL_1w => "1w",
-            KlineOffsetIntervalEnum::INTERVAL_1M => "1M",
+            KlineOffsetIntervalEnum::Interval1s => "1s",
+            KlineOffsetIntervalEnum::Interval1m => "1m",
+            KlineOffsetIntervalEnum::Interval3m => "3m",
+            KlineOffsetIntervalEnum::Interval5m => "5m",
+            KlineOffsetIntervalEnum::Interval15m => "15m",
+            KlineOffsetIntervalEnum::Interval30m => "30m",
+            KlineOffsetIntervalEnum::Interval1h => "1h",
+            KlineOffsetIntervalEnum::Interval2h => "2h",
+            KlineOffsetIntervalEnum::Interval4h => "4h",
+            KlineOffsetIntervalEnum::Interval6h => "6h",
+            KlineOffsetIntervalEnum::Interval8h => "8h",
+            KlineOffsetIntervalEnum::Interval12h => "12h",
+            KlineOffsetIntervalEnum::Interval1d => "1d",
+            KlineOffsetIntervalEnum::Interval3d => "3d",
+            KlineOffsetIntervalEnum::Interval1w => "1w",
+            KlineOffsetIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -250,20 +250,20 @@ impl KlineOffsetIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum PartialBookDepthLevelsEnum {
     #[serde(rename = "5")]
-    LEVELS_5,
+    Levels5,
     #[serde(rename = "10")]
-    LEVELS_10,
+    Levels10,
     #[serde(rename = "20")]
-    LEVELS_20,
+    Levels20,
 }
 
 impl PartialBookDepthLevelsEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            PartialBookDepthLevelsEnum::LEVELS_5 => "5",
-            PartialBookDepthLevelsEnum::LEVELS_10 => "10",
-            PartialBookDepthLevelsEnum::LEVELS_20 => "20",
+            PartialBookDepthLevelsEnum::Levels5 => "5",
+            PartialBookDepthLevelsEnum::Levels10 => "10",
+            PartialBookDepthLevelsEnum::Levels20 => "20",
         }
     }
 }
@@ -272,20 +272,20 @@ impl PartialBookDepthLevelsEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum RollingWindowTickerWindowSizeEnum {
     #[serde(rename = "1h")]
-    WINDOW_SIZE_1h,
+    WindowSize1h,
     #[serde(rename = "4h")]
-    WINDOW_SIZE_4h,
+    WindowSize4h,
     #[serde(rename = "1d")]
-    WINDOW_SIZE_1d,
+    WindowSize1d,
 }
 
 impl RollingWindowTickerWindowSizeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            RollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h => "1h",
-            RollingWindowTickerWindowSizeEnum::WINDOW_SIZE_4h => "4h",
-            RollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1d => "1d",
+            RollingWindowTickerWindowSizeEnum::WindowSize1h => "1h",
+            RollingWindowTickerWindowSizeEnum::WindowSize4h => "4h",
+            RollingWindowTickerWindowSizeEnum::WindowSize1d => "1d",
         }
     }
 }
@@ -372,9 +372,6 @@ pub struct AllMiniTickerParams {
 impl AllMiniTickerParams {
     /// Create a builder for [`all_mini_ticker`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AllMiniTickerParamsBuilder {
         AllMiniTickerParamsBuilder::default()
@@ -396,9 +393,6 @@ pub struct AllTickerParams {
 
 impl AllTickerParams {
     /// Create a builder for [`all_ticker`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AllTickerParamsBuilder {
@@ -804,7 +798,7 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         let AllMarketRollingWindowTickerParams { window_size, id } = params;
 
         let pairs: &[(&str, Option<String>)] = &[
-            ("window_size", Some(window_size.as_str().to_string())),
+            ("windowSize", Some(window_size.as_str().to_string())),
             ("id", id.clone()),
         ];
 
@@ -946,7 +940,7 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1074,7 +1068,7 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
             ("symbol", Some(symbol.clone())),
             ("levels", Some(levels.as_str().to_string())),
             ("id", id.clone()),
-            ("update_speed", update_speed.clone()),
+            ("updateSpeed", update_speed.clone()),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1107,7 +1101,7 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
 
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
-            ("window_size", Some(window_size.as_str().to_string())),
+            ("windowSize", Some(window_size.as_str().to_string())),
             ("id", id.clone()),
         ];
 
@@ -1356,7 +1350,7 @@ mod tests {
             let id = "test-id-123".to_string();
 
             let params = AllMarketRollingWindowTickerParams::builder(
-                AllMarketRollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,
+                AllMarketRollingWindowTickerWindowSizeEnum::WindowSize1h,
             )
             .id(Some(id.clone()))
             .build()
@@ -1365,7 +1359,7 @@ mod tests {
             let AllMarketRollingWindowTickerParams { window_size, id } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("window_size", Some(window_size.as_str().to_string())),
+                ("windowSize", Some(window_size.as_str().to_string())),
                 ("id", id.clone()),
             ];
 
@@ -1395,14 +1389,14 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = AllMarketRollingWindowTickerParams::builder(AllMarketRollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,).id(Some(id.clone())).build().unwrap();
+            let params = AllMarketRollingWindowTickerParams::builder(AllMarketRollingWindowTickerWindowSizeEnum::WindowSize1h,).id(Some(id.clone())).build().unwrap();
 
             let AllMarketRollingWindowTickerParams {
                 window_size,id,
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("window_size",
+                ("windowSize",
                         Some(window_size.as_str().to_string())
                 ),
                 ("id",
@@ -1445,14 +1439,14 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = AllMarketRollingWindowTickerParams::builder(AllMarketRollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,).id(Some(id.clone())).build().unwrap();
+            let params = AllMarketRollingWindowTickerParams::builder(AllMarketRollingWindowTickerWindowSizeEnum::WindowSize1h,).id(Some(id.clone())).build().unwrap();
 
             let AllMarketRollingWindowTickerParams {
                 window_size,id,
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
-                ("window_size",
+                ("windowSize",
                         Some(window_size.as_str().to_string())
                 ),
                 ("id",
@@ -2064,7 +2058,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2107,7 +2101,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -2160,7 +2154,7 @@ mod tests {
                 ("id",
                         id.clone()
                 ),
-                ("update_speed",
+                ("updateSpeed",
                         update_speed.clone()
                 ),
             ];
@@ -2205,11 +2199,10 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params =
-                KlineParams::builder("bnbusdt".to_string(), KlineIntervalEnum::INTERVAL_1s)
-                    .id(Some(id.clone()))
-                    .build()
-                    .unwrap();
+            let params = KlineParams::builder("bnbusdt".to_string(), KlineIntervalEnum::Interval1s)
+                .id(Some(id.clone()))
+                .build()
+                .unwrap();
 
             let KlineParams {
                 symbol,
@@ -2250,7 +2243,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = KlineParams::builder("bnbusdt".to_string(),KlineIntervalEnum::INTERVAL_1s,).id(Some(id.clone())).build().unwrap();
+            let params = KlineParams::builder("bnbusdt".to_string(),KlineIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let KlineParams {
                 symbol,interval,id,
@@ -2303,7 +2296,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = KlineParams::builder("bnbusdt".to_string(),KlineIntervalEnum::INTERVAL_1s,).id(Some(id.clone())).build().unwrap();
+            let params = KlineParams::builder("bnbusdt".to_string(),KlineIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let KlineParams {
                 symbol,interval,id,
@@ -2363,7 +2356,7 @@ mod tests {
 
             let params = KlineOffsetParams::builder(
                 "bnbusdt".to_string(),
-                KlineOffsetIntervalEnum::INTERVAL_1s,
+                KlineOffsetIntervalEnum::Interval1s,
             )
             .id(Some(id.clone()))
             .build()
@@ -2408,7 +2401,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = KlineOffsetParams::builder("bnbusdt".to_string(),KlineOffsetIntervalEnum::INTERVAL_1s,).id(Some(id.clone())).build().unwrap();
+            let params = KlineOffsetParams::builder("bnbusdt".to_string(),KlineOffsetIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let KlineOffsetParams {
                 symbol,interval,id,
@@ -2461,7 +2454,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = KlineOffsetParams::builder("bnbusdt".to_string(),KlineOffsetIntervalEnum::INTERVAL_1s,).id(Some(id.clone())).build().unwrap();
+            let params = KlineOffsetParams::builder("bnbusdt".to_string(),KlineOffsetIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let KlineOffsetParams {
                 symbol,interval,id,
@@ -2662,7 +2655,7 @@ mod tests {
 
             let params = PartialBookDepthParams::builder(
                 "bnbusdt".to_string(),
-                PartialBookDepthLevelsEnum::LEVELS_5,
+                PartialBookDepthLevelsEnum::Levels5,
             )
             .id(Some(id.clone()))
             .build()
@@ -2679,7 +2672,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.as_str().to_string())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2713,7 +2706,7 @@ mod tests {
 
             let params = PartialBookDepthParams::builder(
                 "bnbusdt".to_string(),
-                PartialBookDepthLevelsEnum::LEVELS_5,
+                PartialBookDepthLevelsEnum::Levels5,
             )
             .id(Some(id.clone()))
             .build()
@@ -2730,7 +2723,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.as_str().to_string())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2779,7 +2772,7 @@ mod tests {
 
             let params = PartialBookDepthParams::builder(
                 "bnbusdt".to_string(),
-                PartialBookDepthLevelsEnum::LEVELS_5,
+                PartialBookDepthLevelsEnum::Levels5,
             )
             .id(Some(id.clone()))
             .build()
@@ -2796,7 +2789,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.as_str().to_string())),
                 ("id", id.clone()),
-                ("update_speed", update_speed.clone()),
+                ("updateSpeed", update_speed.clone()),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2853,7 +2846,7 @@ mod tests {
 
             let params = RollingWindowTickerParams::builder(
                 "bnbusdt".to_string(),
-                RollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,
+                RollingWindowTickerWindowSizeEnum::WindowSize1h,
             )
             .id(Some(id.clone()))
             .build()
@@ -2867,7 +2860,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("window_size", Some(window_size.as_str().to_string())),
+                ("windowSize", Some(window_size.as_str().to_string())),
                 ("id", id.clone()),
             ];
 
@@ -2898,7 +2891,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = RollingWindowTickerParams::builder("bnbusdt".to_string(),RollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,).id(Some(id.clone())).build().unwrap();
+            let params = RollingWindowTickerParams::builder("bnbusdt".to_string(),RollingWindowTickerWindowSizeEnum::WindowSize1h,).id(Some(id.clone())).build().unwrap();
 
             let RollingWindowTickerParams {
                 symbol,window_size,id,
@@ -2908,7 +2901,7 @@ mod tests {
                 ("symbol",
                         Some(symbol.clone())
                 ),
-                ("window_size",
+                ("windowSize",
                         Some(window_size.as_str().to_string())
                 ),
                 ("id",
@@ -2951,7 +2944,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = RollingWindowTickerParams::builder("bnbusdt".to_string(),RollingWindowTickerWindowSizeEnum::WINDOW_SIZE_1h,).id(Some(id.clone())).build().unwrap();
+            let params = RollingWindowTickerParams::builder("bnbusdt".to_string(),RollingWindowTickerWindowSizeEnum::WindowSize1h,).id(Some(id.clone())).build().unwrap();
 
             let RollingWindowTickerParams {
                 symbol,window_size,id,
@@ -2961,7 +2954,7 @@ mod tests {
                 ("symbol",
                         Some(symbol.clone())
                 ),
-                ("window_size",
+                ("windowSize",
                         Some(window_size.as_str().to_string())
                 ),
                 ("id",

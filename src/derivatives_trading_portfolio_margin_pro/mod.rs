@@ -3,6 +3,7 @@ pub mod rest_api;
 use crate::common::{
     config::ConfigurationRestApi,
     constants::DERIVATIVES_TRADING_PORTFOLIO_MARGIN_PRO_REST_API_PROD_URL, logger,
+    utils::build_user_agent,
 };
 
 /// Represents the `DerivativesTradingPortfolioMarginPro` REST API client for interacting with the Binance `DerivativesTradingPortfolioMarginPro` REST API.
@@ -26,6 +27,7 @@ impl DerivativesTradingPortfolioMarginProRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("derivatives-trading-portfolio-margin-pro");
         if config.base_path.is_none() {
             config.base_path =
                 Some(DERIVATIVES_TRADING_PORTFOLIO_MARGIN_PRO_REST_API_PROD_URL.to_string());

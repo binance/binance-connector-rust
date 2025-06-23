@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -384,9 +385,6 @@ pub struct HashrateResaleListParams {
 impl HashrateResaleListParams {
     /// Create a builder for [`hashrate_resale_list`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> HashrateResaleListParamsBuilder {
         HashrateResaleListParamsBuilder::default()
@@ -690,7 +688,7 @@ impl MiningApi for MiningApiClient {
         query_params.insert("userName".to_string(), json!(user_name));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountListResponse>(
@@ -765,7 +763,7 @@ impl MiningApi for MiningApiClient {
         query_params.insert("userName".to_string(), json!(user_name));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelHashrateResaleConfigurationResponse>(
@@ -809,23 +807,23 @@ impl MiningApi for MiningApiClient {
         }
 
         if let Some(rw) = start_date {
-            query_params.insert("start_date".to_string(), json!(rw));
+            query_params.insert("startDate".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_date {
-            query_params.insert("end_date".to_string(), json!(rw));
+            query_params.insert("endDate".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::EarningsListResponse>(
@@ -869,23 +867,23 @@ impl MiningApi for MiningApiClient {
         }
 
         if let Some(rw) = start_date {
-            query_params.insert("start_date".to_string(), json!(rw));
+            query_params.insert("startDate".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_date {
-            query_params.insert("end_date".to_string(), json!(rw));
+            query_params.insert("endDate".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ExtraBonusListResponse>(
@@ -922,15 +920,15 @@ impl MiningApi for MiningApiClient {
         query_params.insert("userName".to_string(), json!(user_name));
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::HashrateResaleDetailResponse>(
@@ -961,15 +959,15 @@ impl MiningApi for MiningApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::HashrateResaleListResponse>(
@@ -1016,7 +1014,7 @@ impl MiningApi for MiningApiClient {
         query_params.insert("hashRate".to_string(), json!(hash_rate));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::HashrateResaleRequestResponse>(
@@ -1052,23 +1050,23 @@ impl MiningApi for MiningApiClient {
         query_params.insert("algo".to_string(), json!(algo));
 
         if let Some(rw) = start_date {
-            query_params.insert("start_date".to_string(), json!(rw));
+            query_params.insert("startDate".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_date {
-            query_params.insert("end_date".to_string(), json!(rw));
+            query_params.insert("endDate".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MiningAccountEarningResponse>(
@@ -1106,7 +1104,7 @@ impl MiningApi for MiningApiClient {
         query_params.insert("workerName".to_string(), json!(worker_name));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RequestForDetailMinerListResponse>(
@@ -1145,7 +1143,7 @@ impl MiningApi for MiningApiClient {
         query_params.insert("userName".to_string(), json!(user_name));
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = sort {
@@ -1153,15 +1151,15 @@ impl MiningApi for MiningApiClient {
         }
 
         if let Some(rw) = sort_column {
-            query_params.insert("sort_column".to_string(), json!(rw));
+            query_params.insert("sortColumn".to_string(), json!(rw));
         }
 
         if let Some(rw) = worker_status {
-            query_params.insert("worker_status".to_string(), json!(rw));
+            query_params.insert("workerStatus".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RequestForMinerListResponse>(
@@ -1196,7 +1194,7 @@ impl MiningApi for MiningApiClient {
         query_params.insert("userName".to_string(), json!(user_name));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::StatisticListResponse>(

@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -89,9 +90,6 @@ pub struct AccountApiTradingStatusParams {
 impl AccountApiTradingStatusParams {
     /// Create a builder for [`account_api_trading_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AccountApiTradingStatusParamsBuilder {
         AccountApiTradingStatusParamsBuilder::default()
@@ -115,9 +113,6 @@ pub struct AccountInfoParams {
 impl AccountInfoParams {
     /// Create a builder for [`account_info`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AccountInfoParamsBuilder {
         AccountInfoParamsBuilder::default()
@@ -140,9 +135,6 @@ pub struct AccountStatusParams {
 
 impl AccountStatusParams {
     /// Create a builder for [`account_status`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AccountStatusParamsBuilder {
@@ -217,9 +209,6 @@ pub struct DisableFastWithdrawSwitchParams {
 impl DisableFastWithdrawSwitchParams {
     /// Create a builder for [`disable_fast_withdraw_switch`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> DisableFastWithdrawSwitchParamsBuilder {
         DisableFastWithdrawSwitchParamsBuilder::default()
@@ -242,9 +231,6 @@ pub struct EnableFastWithdrawSwitchParams {
 
 impl EnableFastWithdrawSwitchParams {
     /// Create a builder for [`enable_fast_withdraw_switch`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> EnableFastWithdrawSwitchParamsBuilder {
@@ -269,9 +255,6 @@ pub struct GetApiKeyPermissionParams {
 impl GetApiKeyPermissionParams {
     /// Create a builder for [`get_api_key_permission`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetApiKeyPermissionParamsBuilder {
         GetApiKeyPermissionParamsBuilder::default()
@@ -289,7 +272,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountApiTradingStatusResponse>(
@@ -316,7 +299,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountInfoResponse>(
@@ -343,7 +326,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountStatusResponse>(
@@ -378,11 +361,11 @@ impl AccountApi for AccountApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -390,7 +373,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DailyAccountSnapshotResponse>(
@@ -417,7 +400,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Value>(
@@ -444,7 +427,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Value>(
@@ -471,7 +454,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetApiKeyPermissionResponse>(

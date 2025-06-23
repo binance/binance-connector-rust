@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = PremiumIndexKlineDataParams::builder(
         "symbol_example".to_string(),
-        PremiumIndexKlineDataIntervalEnum::INTERVAL_1m,
+        PremiumIndexKlineDataIntervalEnum::Interval1m,
     )
     .build()?;
 

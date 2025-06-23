@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -85,9 +86,6 @@ pub struct CheckVipLoanCollateralAccountParams {
 impl CheckVipLoanCollateralAccountParams {
     /// Create a builder for [`check_vip_loan_collateral_account`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> CheckVipLoanCollateralAccountParamsBuilder {
         CheckVipLoanCollateralAccountParamsBuilder::default()
@@ -145,9 +143,6 @@ pub struct GetVipLoanOngoingOrdersParams {
 impl GetVipLoanOngoingOrdersParams {
     /// Create a builder for [`get_vip_loan_ongoing_orders`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetVipLoanOngoingOrdersParamsBuilder {
         GetVipLoanOngoingOrdersParamsBuilder::default()
@@ -181,9 +176,6 @@ pub struct QueryApplicationStatusParams {
 impl QueryApplicationStatusParams {
     /// Create a builder for [`query_application_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryApplicationStatusParamsBuilder {
         QueryApplicationStatusParamsBuilder::default()
@@ -205,15 +197,15 @@ impl UserInformationApi for UserInformationApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_account_id {
-            query_params.insert("collateral_account_id".to_string(), json!(rw));
+            query_params.insert("collateralAccountId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CheckVipLoanCollateralAccountResponse>(
@@ -248,19 +240,19 @@ impl UserInformationApi for UserInformationApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_account_id {
-            query_params.insert("collateral_account_id".to_string(), json!(rw));
+            query_params.insert("collateralAccountId".to_string(), json!(rw));
         }
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -272,7 +264,7 @@ impl UserInformationApi for UserInformationApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetVipLoanOngoingOrdersResponse>(
@@ -311,7 +303,7 @@ impl UserInformationApi for UserInformationApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryApplicationStatusResponse>(

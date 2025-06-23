@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -87,9 +88,6 @@ pub struct GetNftAssetParams {
 impl GetNftAssetParams {
     /// Create a builder for [`get_nft_asset`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetNftAssetParamsBuilder {
         GetNftAssetParamsBuilder::default()
@@ -134,9 +132,6 @@ pub struct GetNftDepositHistoryParams {
 
 impl GetNftDepositHistoryParams {
     /// Create a builder for [`get_nft_deposit_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetNftDepositHistoryParamsBuilder {
@@ -237,9 +232,6 @@ pub struct GetNftWithdrawHistoryParams {
 impl GetNftWithdrawHistoryParams {
     /// Create a builder for [`get_nft_withdraw_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetNftWithdrawHistoryParamsBuilder {
         GetNftWithdrawHistoryParamsBuilder::default()
@@ -269,7 +261,7 @@ impl NftApi for NftApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetNftAssetResponse>(
@@ -302,11 +294,11 @@ impl NftApi for NftApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -318,7 +310,7 @@ impl NftApi for NftApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetNftDepositHistoryResponse>(
@@ -354,11 +346,11 @@ impl NftApi for NftApiClient {
         query_params.insert("orderType".to_string(), json!(order_type));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -370,7 +362,7 @@ impl NftApi for NftApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetNftTransactionHistoryResponse>(
@@ -403,11 +395,11 @@ impl NftApi for NftApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -419,7 +411,7 @@ impl NftApi for NftApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetNftWithdrawHistoryResponse>(

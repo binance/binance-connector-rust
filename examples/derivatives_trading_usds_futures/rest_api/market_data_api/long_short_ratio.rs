@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = LongShortRatioParams::builder(
         "symbol_example".to_string(),
-        LongShortRatioPeriodEnum::PERIOD_5m,
+        LongShortRatioPeriodEnum::Period5m,
     )
     .build()?;
 

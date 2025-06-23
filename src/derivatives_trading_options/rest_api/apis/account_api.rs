@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -206,9 +207,6 @@ pub struct OptionAccountInformationParams {
 impl OptionAccountInformationParams {
     /// Create a builder for [`option_account_information`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OptionAccountInformationParamsBuilder {
         OptionAccountInformationParamsBuilder::default()
@@ -235,15 +233,15 @@ impl AccountApi for AccountApiClient {
         query_params.insert("currency".to_string(), json!(currency));
 
         if let Some(rw) = record_id {
-            query_params.insert("record_id".to_string(), json!(rw));
+            query_params.insert("recordId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -251,7 +249,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AccountFundingFlowResponseInner>>(
@@ -287,7 +285,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDownloadIdForOptionTransactionHistoryResponse>(
@@ -320,7 +318,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("downloadId".to_string(), json!(download_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetOptionTransactionHistoryDownloadLinkByIdResponse>(
@@ -347,7 +345,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::OptionAccountInformationResponse>(

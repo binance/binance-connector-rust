@@ -20,6 +20,7 @@
 use anyhow::Context;
 use async_trait::async_trait;
 use derive_builder::Builder;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{collections::BTreeMap, sync::Arc};
@@ -151,9 +152,6 @@ pub struct AccountRateLimitsOrdersParams {
 impl AccountRateLimitsOrdersParams {
     /// Create a builder for [`account_rate_limits_orders`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AccountRateLimitsOrdersParamsBuilder {
         AccountRateLimitsOrdersParamsBuilder::default()
@@ -185,9 +183,6 @@ pub struct AccountStatusParams {
 
 impl AccountStatusParams {
     /// Create a builder for [`account_status`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AccountStatusParamsBuilder {
@@ -237,9 +232,6 @@ pub struct AllOrderListsParams {
 
 impl AllOrderListsParams {
     /// Create a builder for [`all_order_lists`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AllOrderListsParamsBuilder {
@@ -515,9 +507,6 @@ pub struct OpenOrderListsStatusParams {
 impl OpenOrderListsStatusParams {
     /// Create a builder for [`open_order_lists_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OpenOrderListsStatusParamsBuilder {
         OpenOrderListsStatusParamsBuilder::default()
@@ -549,9 +538,6 @@ pub struct OpenOrdersStatusParams {
 
 impl OpenOrdersStatusParams {
     /// Create a builder for [`open_orders_status`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> OpenOrdersStatusParamsBuilder {
@@ -647,9 +633,6 @@ pub struct OrderListStatusParams {
 impl OrderListStatusParams {
     /// Create a builder for [`order_list_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OrderListStatusParamsBuilder {
         OrderListStatusParamsBuilder::default()
@@ -712,6 +695,7 @@ impl AccountApi for AccountApiClient {
         let AccountCommissionParams { symbol, id } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
@@ -743,7 +727,7 @@ impl AccountApi for AccountApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -775,10 +759,10 @@ impl AccountApi for AccountApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = omit_zero_balances {
-            payload.insert("omit_zero_balances".to_string(), serde_json::json!(value));
+            payload.insert("omitZeroBalances".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -813,19 +797,19 @@ impl AccountApi for AccountApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = from_id {
-            payload.insert("from_id".to_string(), serde_json::json!(value));
+            payload.insert("fromId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = start_time {
-            payload.insert("start_time".to_string(), serde_json::json!(value));
+            payload.insert("startTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = end_time {
-            payload.insert("end_time".to_string(), serde_json::json!(value));
+            payload.insert("endTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit {
             payload.insert("limit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -857,24 +841,25 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_id {
-            payload.insert("order_id".to_string(), serde_json::json!(value));
+            payload.insert("orderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = start_time {
-            payload.insert("start_time".to_string(), serde_json::json!(value));
+            payload.insert("startTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = end_time {
-            payload.insert("end_time".to_string(), serde_json::json!(value));
+            payload.insert("endTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit {
             payload.insert("limit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -907,27 +892,28 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = start_time {
-            payload.insert("start_time".to_string(), serde_json::json!(value));
+            payload.insert("startTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = end_time {
-            payload.insert("end_time".to_string(), serde_json::json!(value));
+            payload.insert("endTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = from_allocation_id {
-            payload.insert("from_allocation_id".to_string(), serde_json::json!(value));
+            payload.insert("fromAllocationId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit {
             payload.insert("limit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_id {
-            payload.insert("order_id".to_string(), serde_json::json!(value));
+            payload.insert("orderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -960,27 +946,25 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = prevented_match_id {
-            payload.insert("prevented_match_id".to_string(), serde_json::json!(value));
+            payload.insert("preventedMatchId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_id {
-            payload.insert("order_id".to_string(), serde_json::json!(value));
+            payload.insert("orderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = from_prevented_match_id {
-            payload.insert(
-                "from_prevented_match_id".to_string(),
-                serde_json::json!(value),
-            );
+            payload.insert("fromPreventedMatchId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit {
             payload.insert("limit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -1013,27 +997,28 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_id {
-            payload.insert("order_id".to_string(), serde_json::json!(value));
+            payload.insert("orderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = start_time {
-            payload.insert("start_time".to_string(), serde_json::json!(value));
+            payload.insert("startTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = end_time {
-            payload.insert("end_time".to_string(), serde_json::json!(value));
+            payload.insert("endTime".to_string(), serde_json::json!(value));
         }
         if let Some(value) = from_id {
-            payload.insert("from_id".to_string(), serde_json::json!(value));
+            payload.insert("fromId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit {
             payload.insert("limit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -1062,7 +1047,7 @@ impl AccountApi for AccountApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -1098,7 +1083,7 @@ impl AccountApi for AccountApiClient {
             payload.insert("symbol".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -1129,19 +1114,21 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
-        payload.insert("order_id".to_string(), serde_json::json!(order_id));
+
+        payload.insert("orderId".to_string(), serde_json::json!(order_id));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = from_execution_id {
-            payload.insert("from_execution_id".to_string(), serde_json::json!(value));
+            payload.insert("fromExecutionId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = limit {
             payload.insert("limit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -1174,13 +1161,13 @@ impl AccountApi for AccountApiClient {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = orig_client_order_id {
-            payload.insert("orig_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("origClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_list_id {
-            payload.insert("order_list_id".to_string(), serde_json::json!(value));
+            payload.insert("orderListId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -1210,18 +1197,19 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
         if let Some(value) = order_id {
-            payload.insert("order_id".to_string(), serde_json::json!(value));
+            payload.insert("orderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = orig_client_order_id {
-            payload.insert("orig_client_order_id".to_string(), serde_json::json!(value));
+            payload.insert("origClientOrderId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
-            payload.insert("recv_window".to_string(), serde_json::json!(value));
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -1290,7 +1278,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.commission".trim_start_matches('/'));
@@ -1333,7 +1321,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -1388,9 +1376,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -1421,7 +1408,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.rateLimits.orders".trim_start_matches('/'));
@@ -1464,7 +1451,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -1517,9 +1504,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -1550,7 +1536,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.status".trim_start_matches('/'));
@@ -1593,7 +1579,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -1646,9 +1632,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -1679,7 +1664,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/allOrderLists".trim_start_matches('/'));
@@ -1722,7 +1707,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -1775,9 +1760,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -1808,7 +1792,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/allOrders".trim_start_matches('/'));
@@ -1851,7 +1835,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -1906,9 +1890,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -1939,7 +1922,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/myAllocations".trim_start_matches('/'));
@@ -1982,7 +1965,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2037,9 +2020,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -2070,7 +2052,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/myPreventedMatches".trim_start_matches('/'));
@@ -2113,7 +2095,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2168,9 +2150,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -2201,7 +2182,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/myTrades".trim_start_matches('/'));
@@ -2244,7 +2225,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2299,9 +2280,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -2332,7 +2312,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/openOrderLists.status".trim_start_matches('/'));
@@ -2375,7 +2355,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2428,9 +2408,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -2461,7 +2440,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/openOrders.status".trim_start_matches('/'));
@@ -2504,7 +2483,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2557,9 +2536,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -2590,7 +2568,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.amendments".trim_start_matches('/'));
@@ -2633,7 +2611,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2688,9 +2666,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -2721,7 +2698,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.status".trim_start_matches('/'));
@@ -2764,7 +2741,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2817,9 +2794,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();
@@ -2850,7 +2826,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.status".trim_start_matches('/'));
@@ -2893,7 +2869,7 @@ mod tests {
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
-            let text = match sent { Message::Text(t) => t, _ => panic!() };
+            let Message::Text(text) = sent else { panic!() };
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap().to_string();
 
@@ -2948,9 +2924,8 @@ mod tests {
                 .await
                 .expect("send should occur")
                 .expect("channel closed");
-            let text = match sent {
-                Message::Text(t) => t,
-                _ => panic!("expected Message Text"),
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
             };
 
             let _: Value = serde_json::from_str(&text).unwrap();

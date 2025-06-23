@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
 
     // Setup the WS API parameters
     let params =
-        OrderListPlaceParams::builder("BNBUSDT".to_string(), OrderListPlaceSideEnum::BUY, 1.0, 1.0)
+        OrderListPlaceParams::builder("BNBUSDT".to_string(), OrderListPlaceSideEnum::Buy, 1.0, 1.0)
             .build()?;
 
     // Make the WS API call

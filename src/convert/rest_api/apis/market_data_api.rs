@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -75,9 +76,6 @@ pub struct ListAllConvertPairsParams {
 impl ListAllConvertPairsParams {
     /// Create a builder for [`list_all_convert_pairs`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> ListAllConvertPairsParamsBuilder {
         ListAllConvertPairsParamsBuilder::default()
@@ -100,9 +98,6 @@ pub struct QueryOrderQuantityPrecisionPerAssetParams {
 impl QueryOrderQuantityPrecisionPerAssetParams {
     /// Create a builder for [`query_order_quantity_precision_per_asset`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryOrderQuantityPrecisionPerAssetParamsBuilder {
         QueryOrderQuantityPrecisionPerAssetParamsBuilder::default()
@@ -123,11 +118,11 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = from_asset {
-            query_params.insert("from_asset".to_string(), json!(rw));
+            query_params.insert("fromAsset".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_asset {
-            query_params.insert("to_asset".to_string(), json!(rw));
+            query_params.insert("toAsset".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::ListAllConvertPairsResponseInner>>(
@@ -156,7 +151,7 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryOrderQuantityPrecisionPerAssetResponseInner>>(

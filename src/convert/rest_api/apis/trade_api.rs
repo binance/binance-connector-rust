@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -202,9 +203,6 @@ pub struct OrderStatusParams {
 impl OrderStatusParams {
     /// Create a builder for [`order_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OrderStatusParamsBuilder {
         OrderStatusParamsBuilder::default()
@@ -308,9 +306,6 @@ pub struct QueryLimitOpenOrdersParams {
 impl QueryLimitOpenOrdersParams {
     /// Create a builder for [`query_limit_open_orders`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryLimitOpenOrdersParamsBuilder {
         QueryLimitOpenOrdersParamsBuilder::default()
@@ -394,7 +389,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("quoteId".to_string(), json!(quote_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AcceptQuoteResponse>(
@@ -426,7 +421,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("orderId".to_string(), json!(order_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelLimitOrderResponse>(
@@ -466,7 +461,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetConvertTradeHistoryResponse>(
@@ -493,11 +488,11 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = quote_id {
-            query_params.insert("quote_id".to_string(), json!(rw));
+            query_params.insert("quoteId".to_string(), json!(rw));
         }
 
         send_request::<models::OrderStatusResponse>(
@@ -537,26 +532,29 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("quoteAsset".to_string(), json!(quote_asset));
 
-        query_params.insert("limitPrice".to_string(), json!(limit_price));
+        let limit_price_value = Decimal::from_f32(limit_price).unwrap_or_default();
+        query_params.insert("limitPrice".to_string(), json!(limit_price_value));
 
         query_params.insert("side".to_string(), json!(side));
 
         query_params.insert("expiredType".to_string(), json!(expired_type));
 
         if let Some(rw) = base_amount {
-            query_params.insert("base_amount".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("baseAmount".to_string(), json!(rw));
         }
 
         if let Some(rw) = quote_amount {
-            query_params.insert("quote_amount".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("quoteAmount".to_string(), json!(rw));
         }
 
         if let Some(rw) = wallet_type {
-            query_params.insert("wallet_type".to_string(), json!(rw));
+            query_params.insert("walletType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::PlaceLimitOrderResponse>(
@@ -583,7 +581,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryLimitOpenOrdersResponse>(
@@ -622,23 +620,25 @@ impl TradeApi for TradeApiClient {
         query_params.insert("toAsset".to_string(), json!(to_asset));
 
         if let Some(rw) = from_amount {
-            query_params.insert("from_amount".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("fromAmount".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_amount {
-            query_params.insert("to_amount".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("toAmount".to_string(), json!(rw));
         }
 
         if let Some(rw) = wallet_type {
-            query_params.insert("wallet_type".to_string(), json!(rw));
+            query_params.insert("walletType".to_string(), json!(rw));
         }
 
         if let Some(rw) = valid_time {
-            query_params.insert("valid_time".to_string(), json!(rw));
+            query_params.insert("validTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SendQuoteRequestResponse>(

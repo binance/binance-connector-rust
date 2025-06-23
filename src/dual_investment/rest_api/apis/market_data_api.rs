@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -132,15 +133,15 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("investCoin".to_string(), json!(invest_coin));
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDualInvestmentProductListResponse>(

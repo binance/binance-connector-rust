@@ -5,7 +5,7 @@ use std::sync::Arc;
 use tokio_tungstenite::Connector;
 
 use super::models::{ConfigBuildError, TimeUnit, WebsocketMode};
-use super::utils::{SignatureGenerator, build_client, build_user_agent};
+use super::utils::{SignatureGenerator, build_client};
 
 #[derive(Clone)]
 pub struct AgentConnector(pub Connector);
@@ -108,7 +108,7 @@ impl ConfigurationRestApi {
 }
 
 impl ConfigurationRestApiBuilder {
-    /// Builds a `ConfigurationRestApi` instance with configured user agent, HTTP client, and signature generator.
+    /// Builds a `ConfigurationRestApi` instance with configured HTTP client and signature generator.
     ///
     /// # Returns
     ///
@@ -119,7 +119,6 @@ impl ConfigurationRestApiBuilder {
     /// Returns a `ConfigBuildError` if the initial configuration build fails or if client setup encounters issues.
     pub fn build(self) -> Result<ConfigurationRestApi, ConfigBuildError> {
         let mut cfg = self.try_build()?;
-        cfg.user_agent = build_user_agent();
         cfg.client = build_client(
             cfg.timeout,
             cfg.keep_alive,
@@ -171,6 +170,9 @@ pub struct ConfigurationWebsocketApi {
 
     #[builder(setter(strip_option), default)]
     pub time_unit: Option<TimeUnit>,
+
+    #[builder(setter(skip))]
+    pub(crate) user_agent: String,
 
     #[builder(setter(skip))]
     pub(crate) signature_gen: SignatureGenerator,
@@ -237,6 +239,9 @@ pub struct ConfigurationWebsocketStreams {
 
     #[builder(setter(strip_option), default)]
     pub time_unit: Option<TimeUnit>,
+
+    #[builder(setter(skip))]
+    pub(crate) user_agent: String,
 }
 
 impl ConfigurationWebsocketStreams {

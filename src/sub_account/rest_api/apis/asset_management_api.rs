@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -511,9 +512,6 @@ pub struct GetSummaryOfSubAccountsFuturesAccountParams {
 impl GetSummaryOfSubAccountsFuturesAccountParams {
     /// Create a builder for [`get_summary_of_sub_accounts_futures_account`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetSummaryOfSubAccountsFuturesAccountParamsBuilder {
         GetSummaryOfSubAccountsFuturesAccountParamsBuilder::default()
@@ -578,9 +576,6 @@ pub struct GetSummaryOfSubAccountsMarginAccountParams {
 
 impl GetSummaryOfSubAccountsMarginAccountParams {
     /// Create a builder for [`get_summary_of_sub_accounts_margin_account`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetSummaryOfSubAccountsMarginAccountParamsBuilder {
@@ -890,9 +885,6 @@ pub struct QuerySubAccountSpotAssetTransferHistoryParams {
 impl QuerySubAccountSpotAssetTransferHistoryParams {
     /// Create a builder for [`query_sub_account_spot_asset_transfer_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QuerySubAccountSpotAssetTransferHistoryParamsBuilder {
         QuerySubAccountSpotAssetTransferHistoryParamsBuilder::default()
@@ -930,9 +922,6 @@ pub struct QuerySubAccountSpotAssetsSummaryParams {
 
 impl QuerySubAccountSpotAssetsSummaryParams {
     /// Create a builder for [`query_sub_account_spot_assets_summary`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QuerySubAccountSpotAssetsSummaryParamsBuilder {
@@ -996,9 +985,6 @@ pub struct QueryUniversalTransferHistoryParams {
 
 impl QueryUniversalTransferHistoryParams {
     /// Create a builder for [`query_universal_transfer_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryUniversalTransferHistoryParamsBuilder {
@@ -1125,9 +1111,6 @@ pub struct SubAccountTransferHistoryParams {
 
 impl SubAccountTransferHistoryParams {
     /// Create a builder for [`sub_account_transfer_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> SubAccountTransferHistoryParamsBuilder {
@@ -1335,12 +1318,13 @@ impl AssetManagementApi for AssetManagementApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FuturesTransferForSubAccountResponse>(
@@ -1369,7 +1353,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDetailOnSubAccountsFuturesAccountResponse>(
@@ -1405,7 +1389,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("futuresType".to_string(), json!(futures_type));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDetailOnSubAccountsFuturesAccountV2Response>(
@@ -1434,7 +1418,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDetailOnSubAccountsMarginAccountResponse>(
@@ -1474,15 +1458,15 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("row".to_string(), json!(row));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetMovePositionHistoryForSubAccountResponse>(
@@ -1523,11 +1507,12 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = amount {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("amount".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSubAccountDepositAddressResponse>(
@@ -1575,11 +1560,11 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1591,11 +1576,11 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetSubAccountDepositHistoryResponseInner>>(
@@ -1623,7 +1608,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSummaryOfSubAccountsFuturesAccountResponse>(
@@ -1666,7 +1651,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSummaryOfSubAccountsFuturesAccountV2Response>(
@@ -1693,7 +1678,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetSummaryOfSubAccountsMarginAccountResponse>(
@@ -1729,12 +1714,13 @@ impl AssetManagementApi for AssetManagementApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginTransferForSubAccountResponse>(
@@ -1775,7 +1761,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("orderArgs".to_string(), json!(order_args));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MovePositionForSubAccountResponse>(
@@ -1804,7 +1790,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySubAccountAssetsResponse>(
@@ -1833,7 +1819,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySubAccountAssetsAssetManagementResponse>(
@@ -1873,11 +1859,11 @@ impl AssetManagementApi for AssetManagementApiClient {
         query_params.insert("futuresType".to_string(), json!(futures_type));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -1889,7 +1875,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySubAccountFuturesAssetTransferHistoryResponse>(
@@ -1926,19 +1912,19 @@ impl AssetManagementApi for AssetManagementApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = from_email {
-            query_params.insert("from_email".to_string(), json!(rw));
+            query_params.insert("fromEmail".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_email {
-            query_params.insert("to_email".to_string(), json!(rw));
+            query_params.insert("toEmail".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -1950,7 +1936,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QuerySubAccountSpotAssetTransferHistoryResponseInner>>(
@@ -1994,7 +1980,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySubAccountSpotAssetsSummaryResponse>(
@@ -2030,23 +2016,23 @@ impl AssetManagementApi for AssetManagementApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = from_email {
-            query_params.insert("from_email".to_string(), json!(rw));
+            query_params.insert("fromEmail".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_email {
-            query_params.insert("to_email".to_string(), json!(rw));
+            query_params.insert("toEmail".to_string(), json!(rw));
         }
 
         if let Some(rw) = client_tran_id {
-            query_params.insert("client_tran_id".to_string(), json!(rw));
+            query_params.insert("clientTranId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -2058,7 +2044,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryUniversalTransferHistoryResponse>(
@@ -2099,10 +2085,11 @@ impl AssetManagementApi for AssetManagementApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SubAccountFuturesAssetTransferResponse>(
@@ -2141,15 +2128,15 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = r#type {
-            query_params.insert("r#type".to_string(), json!(rw));
+            query_params.insert("type".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2157,11 +2144,11 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = return_fail_history {
-            query_params.insert("return_fail_history".to_string(), json!(rw));
+            query_params.insert("returnFailHistory".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::SubAccountTransferHistoryResponseInner>>(
@@ -2193,10 +2180,11 @@ impl AssetManagementApi for AssetManagementApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::TransferToMasterResponse>(
@@ -2231,10 +2219,11 @@ impl AssetManagementApi for AssetManagementApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::TransferToSubAccountOfSameMasterResponse>(
@@ -2276,18 +2265,19 @@ impl AssetManagementApi for AssetManagementApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = from_email {
-            query_params.insert("from_email".to_string(), json!(rw));
+            query_params.insert("fromEmail".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_email {
-            query_params.insert("to_email".to_string(), json!(rw));
+            query_params.insert("toEmail".to_string(), json!(rw));
         }
 
         if let Some(rw) = client_tran_id {
-            query_params.insert("client_tran_id".to_string(), json!(rw));
+            query_params.insert("clientTranId".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol {
@@ -2295,7 +2285,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::UniversalTransferResponse>(

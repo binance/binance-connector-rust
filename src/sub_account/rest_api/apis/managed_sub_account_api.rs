@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -294,9 +295,6 @@ pub struct QueryManagedSubAccountListParams {
 
 impl QueryManagedSubAccountListParams {
     /// Create a builder for [`query_managed_sub_account_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryManagedSubAccountListParamsBuilder {
@@ -682,10 +680,11 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::DepositAssetsIntoTheManagedSubAccountResponse>(
@@ -726,11 +725,12 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         }
 
         if let Some(rw) = amount {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("amount".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetManagedSubAccountDepositAddressResponse>(
@@ -760,7 +760,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryManagedSubAccountAssetDetailsResponseInner>>(
@@ -793,7 +793,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = account_type {
-            query_params.insert("account_type".to_string(), json!(rw));
+            query_params.insert("accountType".to_string(), json!(rw));
         }
 
         send_request::<models::QueryManagedSubAccountFuturesAssetDetailsResponse>(
@@ -837,7 +837,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryManagedSubAccountListResponse>(
@@ -870,7 +870,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         query_params.insert("email".to_string(), json!(email));
 
         if let Some(rw) = account_type {
-            query_params.insert("account_type".to_string(), json!(rw));
+            query_params.insert("accountType".to_string(), json!(rw));
         }
 
         send_request::<models::QueryManagedSubAccountMarginAssetDetailsResponse>(
@@ -908,11 +908,11 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -920,7 +920,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryManagedSubAccountSnapshotResponse>(
@@ -971,7 +971,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         }
 
         if let Some(rw) = transfer_function_account_type {
-            query_params.insert("transfer_function_account_type".to_string(), json!(rw));
+            query_params.insert("transferFunctionAccountType".to_string(), json!(rw));
         }
 
         send_request::<models::QueryManagedSubAccountTransferLogMasterAccountInvestorResponse>(
@@ -1022,7 +1022,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         }
 
         if let Some(rw) = transfer_function_account_type {
-            query_params.insert("transfer_function_account_type".to_string(), json!(rw));
+            query_params.insert("transferFunctionAccountType".to_string(), json!(rw));
         }
 
         send_request::<models::QueryManagedSubAccountTransferLogMasterAccountTradingResponse>(
@@ -1071,11 +1071,11 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         }
 
         if let Some(rw) = transfer_function_account_type {
-            query_params.insert("transfer_function_account_type".to_string(), json!(rw));
+            query_params.insert("transferFunctionAccountType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryManagedSubAccountTransferLogSubAccountTradingResponse>(
@@ -1112,14 +1112,15 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
 
         query_params.insert("asset".to_string(), json!(asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = transfer_date {
-            query_params.insert("transfer_date".to_string(), json!(rw));
+            query_params.insert("transferDate".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::WithdrawlAssetsFromTheManagedSubAccountResponse>(

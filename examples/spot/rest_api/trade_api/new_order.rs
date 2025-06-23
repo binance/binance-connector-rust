@@ -26,8 +26,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = NewOrderParams::builder(
         "BNBUSDT".to_string(),
-        NewOrderSideEnum::BUY,
-        NewOrderTypeEnum::MARKET,
+        NewOrderSideEnum::Buy,
+        NewOrderTypeEnum::Market,
     )
     .build()?;
 

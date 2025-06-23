@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -113,9 +114,6 @@ pub struct CheckDualInvestmentAccountsParams {
 impl CheckDualInvestmentAccountsParams {
     /// Create a builder for [`check_dual_investment_accounts`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> CheckDualInvestmentAccountsParamsBuilder {
         CheckDualInvestmentAccountsParamsBuilder::default()
@@ -152,9 +150,6 @@ pub struct GetDualInvestmentPositionsParams {
 
 impl GetDualInvestmentPositionsParams {
     /// Create a builder for [`get_dual_investment_positions`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetDualInvestmentPositionsParamsBuilder {
@@ -237,11 +232,11 @@ impl TradeApi for TradeApiClient {
         query_params.insert("positionId".to_string(), json!(position_id));
 
         if let Some(rw) = auto_compound_plan {
-            query_params.insert("auto_compound_plan".to_string(), json!(rw));
+            query_params.insert("AutoCompoundPlan".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeAutoCompoundStatusResponse>(
@@ -268,7 +263,7 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CheckDualInvestmentAccountsResponse>(
@@ -304,15 +299,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = page_index {
-            query_params.insert("page_index".to_string(), json!(rw));
+            query_params.insert("pageIndex".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDualInvestmentPositionsResponse>(
@@ -348,12 +343,13 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("orderId".to_string(), json!(order_id));
 
-        query_params.insert("depositAmount".to_string(), json!(deposit_amount));
+        let deposit_amount_value = Decimal::from_f32(deposit_amount).unwrap_or_default();
+        query_params.insert("depositAmount".to_string(), json!(deposit_amount_value));
 
         query_params.insert("autoCompoundPlan".to_string(), json!(auto_compound_plan));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SubscribeDualInvestmentProductsResponse>(

@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
 
     // Setup the stream parameters
     let params =
-        KlineParams::builder("bnbusdt".to_string(), KlineIntervalEnum::INTERVAL_1s).build()?;
+        KlineParams::builder("bnbusdt".to_string(), KlineIntervalEnum::Interval1s).build()?;
 
     // Subscribe to the stream
     let stream = connection

@@ -1,6 +1,9 @@
 pub mod rest_api;
 
-use crate::common::{config::ConfigurationRestApi, constants::REBATE_REST_API_PROD_URL, logger};
+use crate::common::{
+    config::ConfigurationRestApi, constants::REBATE_REST_API_PROD_URL, logger,
+    utils::build_user_agent,
+};
 
 /// Represents the Rebate REST API client for interacting with the Binance Rebate REST API.
 ///
@@ -23,6 +26,7 @@ impl RebateRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("rebate");
         if config.base_path.is_none() {
             config.base_path = Some(REBATE_REST_API_PROD_URL.to_string());
         }

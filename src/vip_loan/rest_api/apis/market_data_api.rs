@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -112,9 +113,6 @@ pub struct GetCollateralAssetDataParams {
 impl GetCollateralAssetDataParams {
     /// Create a builder for [`get_collateral_asset_data`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetCollateralAssetDataParamsBuilder {
         GetCollateralAssetDataParamsBuilder::default()
@@ -149,9 +147,6 @@ pub struct GetLoanableAssetsDataParams {
 impl GetLoanableAssetsDataParams {
     /// Create a builder for [`get_loanable_assets_data`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetLoanableAssetsDataParamsBuilder {
         GetLoanableAssetsDataParamsBuilder::default()
@@ -174,7 +169,7 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetBorrowInterestRateResponseInner>>(
@@ -204,11 +199,11 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = collateral_coin {
-            query_params.insert("collateral_coin".to_string(), json!(rw));
+            query_params.insert("collateralCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCollateralAssetDataResponse>(
@@ -239,15 +234,15 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
-            query_params.insert("loan_coin".to_string(), json!(rw));
+            query_params.insert("loanCoin".to_string(), json!(rw));
         }
 
         if let Some(rw) = vip_level {
-            query_params.insert("vip_level".to_string(), json!(rw));
+            query_params.insert("vipLevel".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetLoanableAssetsDataResponse>(

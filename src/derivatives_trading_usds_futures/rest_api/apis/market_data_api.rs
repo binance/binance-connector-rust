@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -171,29 +172,29 @@ impl MarketDataApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum BasisContractTypeEnum {
     #[serde(rename = "PERPETUAL")]
-    PERPETUAL,
+    Perpetual,
     #[serde(rename = "CURRENT_MONTH")]
-    CURRENT_MONTH,
+    CurrentMonth,
     #[serde(rename = "NEXT_MONTH")]
-    NEXT_MONTH,
+    NextMonth,
     #[serde(rename = "CURRENT_QUARTER")]
-    CURRENT_QUARTER,
+    CurrentQuarter,
     #[serde(rename = "NEXT_QUARTER")]
-    NEXT_QUARTER,
+    NextQuarter,
     #[serde(rename = "PERPETUAL_DELIVERING")]
-    PERPETUAL_DELIVERING,
+    PerpetualDelivering,
 }
 
 impl BasisContractTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            BasisContractTypeEnum::PERPETUAL => "PERPETUAL",
-            BasisContractTypeEnum::CURRENT_MONTH => "CURRENT_MONTH",
-            BasisContractTypeEnum::NEXT_MONTH => "NEXT_MONTH",
-            BasisContractTypeEnum::CURRENT_QUARTER => "CURRENT_QUARTER",
-            BasisContractTypeEnum::NEXT_QUARTER => "NEXT_QUARTER",
-            BasisContractTypeEnum::PERPETUAL_DELIVERING => "PERPETUAL_DELIVERING",
+            BasisContractTypeEnum::Perpetual => "PERPETUAL",
+            BasisContractTypeEnum::CurrentMonth => "CURRENT_MONTH",
+            BasisContractTypeEnum::NextMonth => "NEXT_MONTH",
+            BasisContractTypeEnum::CurrentQuarter => "CURRENT_QUARTER",
+            BasisContractTypeEnum::NextQuarter => "NEXT_QUARTER",
+            BasisContractTypeEnum::PerpetualDelivering => "PERPETUAL_DELIVERING",
         }
     }
 }
@@ -202,38 +203,38 @@ impl BasisContractTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum BasisPeriodEnum {
     #[serde(rename = "5m")]
-    PERIOD_5m,
+    Period5m,
     #[serde(rename = "15m")]
-    PERIOD_15m,
+    Period15m,
     #[serde(rename = "30m")]
-    PERIOD_30m,
+    Period30m,
     #[serde(rename = "1h")]
-    PERIOD_1h,
+    Period1h,
     #[serde(rename = "2h")]
-    PERIOD_2h,
+    Period2h,
     #[serde(rename = "4h")]
-    PERIOD_4h,
+    Period4h,
     #[serde(rename = "6h")]
-    PERIOD_6h,
+    Period6h,
     #[serde(rename = "12h")]
-    PERIOD_12h,
+    Period12h,
     #[serde(rename = "1d")]
-    PERIOD_1d,
+    Period1d,
 }
 
 impl BasisPeriodEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            BasisPeriodEnum::PERIOD_5m => "5m",
-            BasisPeriodEnum::PERIOD_15m => "15m",
-            BasisPeriodEnum::PERIOD_30m => "30m",
-            BasisPeriodEnum::PERIOD_1h => "1h",
-            BasisPeriodEnum::PERIOD_2h => "2h",
-            BasisPeriodEnum::PERIOD_4h => "4h",
-            BasisPeriodEnum::PERIOD_6h => "6h",
-            BasisPeriodEnum::PERIOD_12h => "12h",
-            BasisPeriodEnum::PERIOD_1d => "1d",
+            BasisPeriodEnum::Period5m => "5m",
+            BasisPeriodEnum::Period15m => "15m",
+            BasisPeriodEnum::Period30m => "30m",
+            BasisPeriodEnum::Period1h => "1h",
+            BasisPeriodEnum::Period2h => "2h",
+            BasisPeriodEnum::Period4h => "4h",
+            BasisPeriodEnum::Period6h => "6h",
+            BasisPeriodEnum::Period12h => "12h",
+            BasisPeriodEnum::Period1d => "1d",
         }
     }
 }
@@ -242,33 +243,31 @@ impl BasisPeriodEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ContinuousContractKlineCandlestickDataContractTypeEnum {
     #[serde(rename = "PERPETUAL")]
-    PERPETUAL,
+    Perpetual,
     #[serde(rename = "CURRENT_MONTH")]
-    CURRENT_MONTH,
+    CurrentMonth,
     #[serde(rename = "NEXT_MONTH")]
-    NEXT_MONTH,
+    NextMonth,
     #[serde(rename = "CURRENT_QUARTER")]
-    CURRENT_QUARTER,
+    CurrentQuarter,
     #[serde(rename = "NEXT_QUARTER")]
-    NEXT_QUARTER,
+    NextQuarter,
     #[serde(rename = "PERPETUAL_DELIVERING")]
-    PERPETUAL_DELIVERING,
+    PerpetualDelivering,
 }
 
 impl ContinuousContractKlineCandlestickDataContractTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ContinuousContractKlineCandlestickDataContractTypeEnum::PERPETUAL => "PERPETUAL",
-            ContinuousContractKlineCandlestickDataContractTypeEnum::CURRENT_MONTH => {
-                "CURRENT_MONTH"
-            }
-            ContinuousContractKlineCandlestickDataContractTypeEnum::NEXT_MONTH => "NEXT_MONTH",
-            ContinuousContractKlineCandlestickDataContractTypeEnum::CURRENT_QUARTER => {
+            ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual => "PERPETUAL",
+            ContinuousContractKlineCandlestickDataContractTypeEnum::CurrentMonth => "CURRENT_MONTH",
+            ContinuousContractKlineCandlestickDataContractTypeEnum::NextMonth => "NEXT_MONTH",
+            ContinuousContractKlineCandlestickDataContractTypeEnum::CurrentQuarter => {
                 "CURRENT_QUARTER"
             }
-            ContinuousContractKlineCandlestickDataContractTypeEnum::NEXT_QUARTER => "NEXT_QUARTER",
-            ContinuousContractKlineCandlestickDataContractTypeEnum::PERPETUAL_DELIVERING => {
+            ContinuousContractKlineCandlestickDataContractTypeEnum::NextQuarter => "NEXT_QUARTER",
+            ContinuousContractKlineCandlestickDataContractTypeEnum::PerpetualDelivering => {
                 "PERPETUAL_DELIVERING"
             }
         }
@@ -279,56 +278,56 @@ impl ContinuousContractKlineCandlestickDataContractTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ContinuousContractKlineCandlestickDataIntervalEnum {
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl ContinuousContractKlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1m => "1m",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_3m => "3m",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_5m => "5m",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_15m => "15m",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_30m => "30m",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1h => "1h",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_2h => "2h",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_4h => "4h",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_6h => "6h",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_8h => "8h",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_12h => "12h",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1d => "1d",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_3d => "3d",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1w => "1w",
-            ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1M => "1M",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m => "1m",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval3m => "3m",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval5m => "5m",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval15m => "15m",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval30m => "30m",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval1h => "1h",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval2h => "2h",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval4h => "4h",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval6h => "6h",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval8h => "8h",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval12h => "12h",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval1d => "1d",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval3d => "3d",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval1w => "1w",
+            ContinuousContractKlineCandlestickDataIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -337,56 +336,56 @@ impl ContinuousContractKlineCandlestickDataIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum IndexPriceKlineCandlestickDataIntervalEnum {
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl IndexPriceKlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m => "1m",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_3m => "3m",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_5m => "5m",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_15m => "15m",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_30m => "30m",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1h => "1h",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_2h => "2h",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_4h => "4h",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_6h => "6h",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_8h => "8h",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_12h => "12h",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1d => "1d",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_3d => "3d",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1w => "1w",
-            IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1M => "1M",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval1m => "1m",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval3m => "3m",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval5m => "5m",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval15m => "15m",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval30m => "30m",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval1h => "1h",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval2h => "2h",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval4h => "4h",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval6h => "6h",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval8h => "8h",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval12h => "12h",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval1d => "1d",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval3d => "3d",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval1w => "1w",
+            IndexPriceKlineCandlestickDataIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -395,56 +394,56 @@ impl IndexPriceKlineCandlestickDataIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KlineCandlestickDataIntervalEnum {
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl KlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            KlineCandlestickDataIntervalEnum::INTERVAL_1m => "1m",
-            KlineCandlestickDataIntervalEnum::INTERVAL_3m => "3m",
-            KlineCandlestickDataIntervalEnum::INTERVAL_5m => "5m",
-            KlineCandlestickDataIntervalEnum::INTERVAL_15m => "15m",
-            KlineCandlestickDataIntervalEnum::INTERVAL_30m => "30m",
-            KlineCandlestickDataIntervalEnum::INTERVAL_1h => "1h",
-            KlineCandlestickDataIntervalEnum::INTERVAL_2h => "2h",
-            KlineCandlestickDataIntervalEnum::INTERVAL_4h => "4h",
-            KlineCandlestickDataIntervalEnum::INTERVAL_6h => "6h",
-            KlineCandlestickDataIntervalEnum::INTERVAL_8h => "8h",
-            KlineCandlestickDataIntervalEnum::INTERVAL_12h => "12h",
-            KlineCandlestickDataIntervalEnum::INTERVAL_1d => "1d",
-            KlineCandlestickDataIntervalEnum::INTERVAL_3d => "3d",
-            KlineCandlestickDataIntervalEnum::INTERVAL_1w => "1w",
-            KlineCandlestickDataIntervalEnum::INTERVAL_1M => "1M",
+            KlineCandlestickDataIntervalEnum::Interval1m => "1m",
+            KlineCandlestickDataIntervalEnum::Interval3m => "3m",
+            KlineCandlestickDataIntervalEnum::Interval5m => "5m",
+            KlineCandlestickDataIntervalEnum::Interval15m => "15m",
+            KlineCandlestickDataIntervalEnum::Interval30m => "30m",
+            KlineCandlestickDataIntervalEnum::Interval1h => "1h",
+            KlineCandlestickDataIntervalEnum::Interval2h => "2h",
+            KlineCandlestickDataIntervalEnum::Interval4h => "4h",
+            KlineCandlestickDataIntervalEnum::Interval6h => "6h",
+            KlineCandlestickDataIntervalEnum::Interval8h => "8h",
+            KlineCandlestickDataIntervalEnum::Interval12h => "12h",
+            KlineCandlestickDataIntervalEnum::Interval1d => "1d",
+            KlineCandlestickDataIntervalEnum::Interval3d => "3d",
+            KlineCandlestickDataIntervalEnum::Interval1w => "1w",
+            KlineCandlestickDataIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -453,38 +452,38 @@ impl KlineCandlestickDataIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum LongShortRatioPeriodEnum {
     #[serde(rename = "5m")]
-    PERIOD_5m,
+    Period5m,
     #[serde(rename = "15m")]
-    PERIOD_15m,
+    Period15m,
     #[serde(rename = "30m")]
-    PERIOD_30m,
+    Period30m,
     #[serde(rename = "1h")]
-    PERIOD_1h,
+    Period1h,
     #[serde(rename = "2h")]
-    PERIOD_2h,
+    Period2h,
     #[serde(rename = "4h")]
-    PERIOD_4h,
+    Period4h,
     #[serde(rename = "6h")]
-    PERIOD_6h,
+    Period6h,
     #[serde(rename = "12h")]
-    PERIOD_12h,
+    Period12h,
     #[serde(rename = "1d")]
-    PERIOD_1d,
+    Period1d,
 }
 
 impl LongShortRatioPeriodEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            LongShortRatioPeriodEnum::PERIOD_5m => "5m",
-            LongShortRatioPeriodEnum::PERIOD_15m => "15m",
-            LongShortRatioPeriodEnum::PERIOD_30m => "30m",
-            LongShortRatioPeriodEnum::PERIOD_1h => "1h",
-            LongShortRatioPeriodEnum::PERIOD_2h => "2h",
-            LongShortRatioPeriodEnum::PERIOD_4h => "4h",
-            LongShortRatioPeriodEnum::PERIOD_6h => "6h",
-            LongShortRatioPeriodEnum::PERIOD_12h => "12h",
-            LongShortRatioPeriodEnum::PERIOD_1d => "1d",
+            LongShortRatioPeriodEnum::Period5m => "5m",
+            LongShortRatioPeriodEnum::Period15m => "15m",
+            LongShortRatioPeriodEnum::Period30m => "30m",
+            LongShortRatioPeriodEnum::Period1h => "1h",
+            LongShortRatioPeriodEnum::Period2h => "2h",
+            LongShortRatioPeriodEnum::Period4h => "4h",
+            LongShortRatioPeriodEnum::Period6h => "6h",
+            LongShortRatioPeriodEnum::Period12h => "12h",
+            LongShortRatioPeriodEnum::Period1d => "1d",
         }
     }
 }
@@ -493,56 +492,56 @@ impl LongShortRatioPeriodEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarkPriceKlineCandlestickDataIntervalEnum {
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl MarkPriceKlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m => "1m",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_3m => "3m",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_5m => "5m",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_15m => "15m",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_30m => "30m",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1h => "1h",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_2h => "2h",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_4h => "4h",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_6h => "6h",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_8h => "8h",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_12h => "12h",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1d => "1d",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_3d => "3d",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1w => "1w",
-            MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1M => "1M",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval1m => "1m",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval3m => "3m",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval5m => "5m",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval15m => "15m",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval30m => "30m",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval1h => "1h",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval2h => "2h",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval4h => "4h",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval6h => "6h",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval8h => "8h",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval12h => "12h",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval1d => "1d",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval3d => "3d",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval1w => "1w",
+            MarkPriceKlineCandlestickDataIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -551,38 +550,38 @@ impl MarkPriceKlineCandlestickDataIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OpenInterestStatisticsPeriodEnum {
     #[serde(rename = "5m")]
-    PERIOD_5m,
+    Period5m,
     #[serde(rename = "15m")]
-    PERIOD_15m,
+    Period15m,
     #[serde(rename = "30m")]
-    PERIOD_30m,
+    Period30m,
     #[serde(rename = "1h")]
-    PERIOD_1h,
+    Period1h,
     #[serde(rename = "2h")]
-    PERIOD_2h,
+    Period2h,
     #[serde(rename = "4h")]
-    PERIOD_4h,
+    Period4h,
     #[serde(rename = "6h")]
-    PERIOD_6h,
+    Period6h,
     #[serde(rename = "12h")]
-    PERIOD_12h,
+    Period12h,
     #[serde(rename = "1d")]
-    PERIOD_1d,
+    Period1d,
 }
 
 impl OpenInterestStatisticsPeriodEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            OpenInterestStatisticsPeriodEnum::PERIOD_5m => "5m",
-            OpenInterestStatisticsPeriodEnum::PERIOD_15m => "15m",
-            OpenInterestStatisticsPeriodEnum::PERIOD_30m => "30m",
-            OpenInterestStatisticsPeriodEnum::PERIOD_1h => "1h",
-            OpenInterestStatisticsPeriodEnum::PERIOD_2h => "2h",
-            OpenInterestStatisticsPeriodEnum::PERIOD_4h => "4h",
-            OpenInterestStatisticsPeriodEnum::PERIOD_6h => "6h",
-            OpenInterestStatisticsPeriodEnum::PERIOD_12h => "12h",
-            OpenInterestStatisticsPeriodEnum::PERIOD_1d => "1d",
+            OpenInterestStatisticsPeriodEnum::Period5m => "5m",
+            OpenInterestStatisticsPeriodEnum::Period15m => "15m",
+            OpenInterestStatisticsPeriodEnum::Period30m => "30m",
+            OpenInterestStatisticsPeriodEnum::Period1h => "1h",
+            OpenInterestStatisticsPeriodEnum::Period2h => "2h",
+            OpenInterestStatisticsPeriodEnum::Period4h => "4h",
+            OpenInterestStatisticsPeriodEnum::Period6h => "6h",
+            OpenInterestStatisticsPeriodEnum::Period12h => "12h",
+            OpenInterestStatisticsPeriodEnum::Period1d => "1d",
         }
     }
 }
@@ -591,56 +590,56 @@ impl OpenInterestStatisticsPeriodEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum PremiumIndexKlineDataIntervalEnum {
     #[serde(rename = "1m")]
-    INTERVAL_1m,
+    Interval1m,
     #[serde(rename = "3m")]
-    INTERVAL_3m,
+    Interval3m,
     #[serde(rename = "5m")]
-    INTERVAL_5m,
+    Interval5m,
     #[serde(rename = "15m")]
-    INTERVAL_15m,
+    Interval15m,
     #[serde(rename = "30m")]
-    INTERVAL_30m,
+    Interval30m,
     #[serde(rename = "1h")]
-    INTERVAL_1h,
+    Interval1h,
     #[serde(rename = "2h")]
-    INTERVAL_2h,
+    Interval2h,
     #[serde(rename = "4h")]
-    INTERVAL_4h,
+    Interval4h,
     #[serde(rename = "6h")]
-    INTERVAL_6h,
+    Interval6h,
     #[serde(rename = "8h")]
-    INTERVAL_8h,
+    Interval8h,
     #[serde(rename = "12h")]
-    INTERVAL_12h,
+    Interval12h,
     #[serde(rename = "1d")]
-    INTERVAL_1d,
+    Interval1d,
     #[serde(rename = "3d")]
-    INTERVAL_3d,
+    Interval3d,
     #[serde(rename = "1w")]
-    INTERVAL_1w,
+    Interval1w,
     #[serde(rename = "1M")]
-    INTERVAL_1M,
+    Interval1M,
 }
 
 impl PremiumIndexKlineDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_1m => "1m",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_3m => "3m",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_5m => "5m",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_15m => "15m",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_30m => "30m",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_1h => "1h",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_2h => "2h",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_4h => "4h",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_6h => "6h",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_8h => "8h",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_12h => "12h",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_1d => "1d",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_3d => "3d",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_1w => "1w",
-            PremiumIndexKlineDataIntervalEnum::INTERVAL_1M => "1M",
+            PremiumIndexKlineDataIntervalEnum::Interval1m => "1m",
+            PremiumIndexKlineDataIntervalEnum::Interval3m => "3m",
+            PremiumIndexKlineDataIntervalEnum::Interval5m => "5m",
+            PremiumIndexKlineDataIntervalEnum::Interval15m => "15m",
+            PremiumIndexKlineDataIntervalEnum::Interval30m => "30m",
+            PremiumIndexKlineDataIntervalEnum::Interval1h => "1h",
+            PremiumIndexKlineDataIntervalEnum::Interval2h => "2h",
+            PremiumIndexKlineDataIntervalEnum::Interval4h => "4h",
+            PremiumIndexKlineDataIntervalEnum::Interval6h => "6h",
+            PremiumIndexKlineDataIntervalEnum::Interval8h => "8h",
+            PremiumIndexKlineDataIntervalEnum::Interval12h => "12h",
+            PremiumIndexKlineDataIntervalEnum::Interval1d => "1d",
+            PremiumIndexKlineDataIntervalEnum::Interval3d => "3d",
+            PremiumIndexKlineDataIntervalEnum::Interval1w => "1w",
+            PremiumIndexKlineDataIntervalEnum::Interval1M => "1M",
         }
     }
 }
@@ -649,38 +648,38 @@ impl PremiumIndexKlineDataIntervalEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TakerBuySellVolumePeriodEnum {
     #[serde(rename = "5m")]
-    PERIOD_5m,
+    Period5m,
     #[serde(rename = "15m")]
-    PERIOD_15m,
+    Period15m,
     #[serde(rename = "30m")]
-    PERIOD_30m,
+    Period30m,
     #[serde(rename = "1h")]
-    PERIOD_1h,
+    Period1h,
     #[serde(rename = "2h")]
-    PERIOD_2h,
+    Period2h,
     #[serde(rename = "4h")]
-    PERIOD_4h,
+    Period4h,
     #[serde(rename = "6h")]
-    PERIOD_6h,
+    Period6h,
     #[serde(rename = "12h")]
-    PERIOD_12h,
+    Period12h,
     #[serde(rename = "1d")]
-    PERIOD_1d,
+    Period1d,
 }
 
 impl TakerBuySellVolumePeriodEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            TakerBuySellVolumePeriodEnum::PERIOD_5m => "5m",
-            TakerBuySellVolumePeriodEnum::PERIOD_15m => "15m",
-            TakerBuySellVolumePeriodEnum::PERIOD_30m => "30m",
-            TakerBuySellVolumePeriodEnum::PERIOD_1h => "1h",
-            TakerBuySellVolumePeriodEnum::PERIOD_2h => "2h",
-            TakerBuySellVolumePeriodEnum::PERIOD_4h => "4h",
-            TakerBuySellVolumePeriodEnum::PERIOD_6h => "6h",
-            TakerBuySellVolumePeriodEnum::PERIOD_12h => "12h",
-            TakerBuySellVolumePeriodEnum::PERIOD_1d => "1d",
+            TakerBuySellVolumePeriodEnum::Period5m => "5m",
+            TakerBuySellVolumePeriodEnum::Period15m => "15m",
+            TakerBuySellVolumePeriodEnum::Period30m => "30m",
+            TakerBuySellVolumePeriodEnum::Period1h => "1h",
+            TakerBuySellVolumePeriodEnum::Period2h => "2h",
+            TakerBuySellVolumePeriodEnum::Period4h => "4h",
+            TakerBuySellVolumePeriodEnum::Period6h => "6h",
+            TakerBuySellVolumePeriodEnum::Period12h => "12h",
+            TakerBuySellVolumePeriodEnum::Period1d => "1d",
         }
     }
 }
@@ -689,38 +688,38 @@ impl TakerBuySellVolumePeriodEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TopTraderLongShortRatioAccountsPeriodEnum {
     #[serde(rename = "5m")]
-    PERIOD_5m,
+    Period5m,
     #[serde(rename = "15m")]
-    PERIOD_15m,
+    Period15m,
     #[serde(rename = "30m")]
-    PERIOD_30m,
+    Period30m,
     #[serde(rename = "1h")]
-    PERIOD_1h,
+    Period1h,
     #[serde(rename = "2h")]
-    PERIOD_2h,
+    Period2h,
     #[serde(rename = "4h")]
-    PERIOD_4h,
+    Period4h,
     #[serde(rename = "6h")]
-    PERIOD_6h,
+    Period6h,
     #[serde(rename = "12h")]
-    PERIOD_12h,
+    Period12h,
     #[serde(rename = "1d")]
-    PERIOD_1d,
+    Period1d,
 }
 
 impl TopTraderLongShortRatioAccountsPeriodEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_5m => "5m",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_15m => "15m",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_30m => "30m",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_1h => "1h",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_2h => "2h",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_4h => "4h",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_6h => "6h",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_12h => "12h",
-            TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_1d => "1d",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period5m => "5m",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period15m => "15m",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period30m => "30m",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period1h => "1h",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period2h => "2h",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period4h => "4h",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period6h => "6h",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period12h => "12h",
+            TopTraderLongShortRatioAccountsPeriodEnum::Period1d => "1d",
         }
     }
 }
@@ -729,38 +728,38 @@ impl TopTraderLongShortRatioAccountsPeriodEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TopTraderLongShortRatioPositionsPeriodEnum {
     #[serde(rename = "5m")]
-    PERIOD_5m,
+    Period5m,
     #[serde(rename = "15m")]
-    PERIOD_15m,
+    Period15m,
     #[serde(rename = "30m")]
-    PERIOD_30m,
+    Period30m,
     #[serde(rename = "1h")]
-    PERIOD_1h,
+    Period1h,
     #[serde(rename = "2h")]
-    PERIOD_2h,
+    Period2h,
     #[serde(rename = "4h")]
-    PERIOD_4h,
+    Period4h,
     #[serde(rename = "6h")]
-    PERIOD_6h,
+    Period6h,
     #[serde(rename = "12h")]
-    PERIOD_12h,
+    Period12h,
     #[serde(rename = "1d")]
-    PERIOD_1d,
+    Period1d,
 }
 
 impl TopTraderLongShortRatioPositionsPeriodEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_5m => "5m",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_15m => "15m",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_30m => "30m",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_1h => "1h",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_2h => "2h",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_4h => "4h",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_6h => "6h",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_12h => "12h",
-            TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_1d => "1d",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period5m => "5m",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period15m => "15m",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period30m => "30m",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period1h => "1h",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period2h => "2h",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period4h => "4h",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period6h => "6h",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period12h => "12h",
+            TopTraderLongShortRatioPositionsPeriodEnum::Period1d => "1d",
         }
     }
 }
@@ -849,9 +848,6 @@ pub struct CompositeIndexSymbolInformationParams {
 
 impl CompositeIndexSymbolInformationParams {
     /// Create a builder for [`composite_index_symbol_information`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> CompositeIndexSymbolInformationParamsBuilder {
@@ -1006,9 +1002,6 @@ pub struct GetFundingRateHistoryParams {
 
 impl GetFundingRateHistoryParams {
     /// Create a builder for [`get_funding_rate_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetFundingRateHistoryParamsBuilder {
@@ -1200,9 +1193,6 @@ pub struct MarkPriceParams {
 impl MarkPriceParams {
     /// Create a builder for [`mark_price`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> MarkPriceParamsBuilder {
         MarkPriceParamsBuilder::default()
@@ -1281,9 +1271,6 @@ pub struct MultiAssetsModeAssetIndexParams {
 
 impl MultiAssetsModeAssetIndexParams {
     /// Create a builder for [`multi_assets_mode_asset_index`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> MultiAssetsModeAssetIndexParamsBuilder {
@@ -1569,9 +1556,6 @@ pub struct QueryInsuranceFundBalanceSnapshotParams {
 impl QueryInsuranceFundBalanceSnapshotParams {
     /// Create a builder for [`query_insurance_fund_balance_snapshot`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryInsuranceFundBalanceSnapshotParamsBuilder {
         QueryInsuranceFundBalanceSnapshotParamsBuilder::default()
@@ -1627,9 +1611,6 @@ pub struct SymbolOrderBookTickerParams {
 impl SymbolOrderBookTickerParams {
     /// Create a builder for [`symbol_order_book_ticker`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> SymbolOrderBookTickerParamsBuilder {
         SymbolOrderBookTickerParamsBuilder::default()
@@ -1653,9 +1634,6 @@ pub struct SymbolPriceTickerParams {
 impl SymbolPriceTickerParams {
     /// Create a builder for [`symbol_price_ticker`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> SymbolPriceTickerParamsBuilder {
         SymbolPriceTickerParamsBuilder::default()
@@ -1678,9 +1656,6 @@ pub struct SymbolPriceTickerV2Params {
 
 impl SymbolPriceTickerV2Params {
     /// Create a builder for [`symbol_price_ticker_v2`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> SymbolPriceTickerV2ParamsBuilder {
@@ -1759,9 +1734,6 @@ pub struct Ticker24hrPriceChangeStatisticsParams {
 
 impl Ticker24hrPriceChangeStatisticsParams {
     /// Create a builder for [`ticker24hr_price_change_statistics`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> Ticker24hrPriceChangeStatisticsParamsBuilder {
@@ -1905,11 +1877,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("limit".to_string(), json!(limit));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::BasisResponseInner>>(
@@ -1993,15 +1965,15 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2047,11 +2019,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2111,11 +2083,11 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2178,11 +2150,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2224,11 +2196,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2273,11 +2245,11 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::LongShortRatioResponseInner>>(
@@ -2343,11 +2315,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2415,7 +2387,7 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::OldTradesLookupResponseInner>>(
@@ -2481,11 +2453,11 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::OpenInterestStatisticsResponseInner>>(
@@ -2552,11 +2524,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -2789,11 +2761,11 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::TakerBuySellVolumeResponseInner>>(
@@ -2880,11 +2852,11 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::TopTraderLongShortRatioAccountsResponseInner>>(
@@ -2926,11 +2898,11 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::TopTraderLongShortRatioPositionsResponseInner>>(
@@ -3786,7 +3758,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::PERPETUAL,BasisPeriodEnum::PERIOD_5m,30,).build().unwrap();
+            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::Perpetual,BasisPeriodEnum::Period5m,30,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"indexPrice":"34400.15945055","contractType":"PERPETUAL","basisRate":"0.0004","futuresPrice":"34414.10","annualizedBasisRate":"","basis":"13.94054945","pair":"BTCUSDT","timestamp":1698742800000}]"#).unwrap();
             let expected_response : Vec<models::BasisResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::BasisResponseInner>");
@@ -3803,7 +3775,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::PERPETUAL,BasisPeriodEnum::PERIOD_5m,30,).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::Perpetual,BasisPeriodEnum::Period5m,30,).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"indexPrice":"34400.15945055","contractType":"PERPETUAL","basisRate":"0.0004","futuresPrice":"34414.10","annualizedBasisRate":"","basis":"13.94054945","pair":"BTCUSDT","timestamp":1698742800000}]"#).unwrap();
             let expected_response : Vec<models::BasisResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::BasisResponseInner>");
@@ -3822,8 +3794,8 @@ mod tests {
 
             let params = BasisParams::builder(
                 "pair_example".to_string(),
-                BasisContractTypeEnum::PERPETUAL,
-                BasisPeriodEnum::PERIOD_5m,
+                BasisContractTypeEnum::Perpetual,
+                BasisPeriodEnum::Period5m,
                 30,
             )
             .build()
@@ -4001,7 +3973,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::PERPETUAL,ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1m,).build().unwrap();
+            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1607444700000,"18879.99","18900.00","18878.98","18896.13","492.363",1607444759999,"9302145.66080",1874,"385.983","7292402.33267","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>");
@@ -4018,7 +3990,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::PERPETUAL,ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1607444700000,"18879.99","18900.00","18878.98","18896.13","492.363",1607444759999,"9302145.66080",1874,"385.983","7292402.33267","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>");
@@ -4037,8 +4009,8 @@ mod tests {
 
             let params = ContinuousContractKlineCandlestickDataParams::builder(
                 "pair_example".to_string(),
-                ContinuousContractKlineCandlestickDataContractTypeEnum::PERPETUAL,
-                ContinuousContractKlineCandlestickDataIntervalEnum::INTERVAL_1m,
+                ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,
+                ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,
             )
             .build()
             .unwrap();
@@ -4202,7 +4174,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m,).build().unwrap();
+            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256400000,"9653.69440000","9653.69640000","9651.38600000","9651.55200000","0",1591256459999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>>");
@@ -4219,7 +4191,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256400000,"9653.69440000","9653.69640000","9651.38600000","9651.55200000","0",1591256459999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>>");
@@ -4238,7 +4210,7 @@ mod tests {
 
             let params = IndexPriceKlineCandlestickDataParams::builder(
                 "pair_example".to_string(),
-                IndexPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m,
+                IndexPriceKlineCandlestickDataIntervalEnum::Interval1m,
             )
             .build()
             .unwrap();
@@ -4257,7 +4229,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::INTERVAL_1m,).build().unwrap();
+            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","17928899.62484339"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlineCandlestickDataResponseItemInner>>");
@@ -4274,7 +4246,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::INTERVAL_1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","17928899.62484339"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlineCandlestickDataResponseItemInner>>");
@@ -4293,7 +4265,7 @@ mod tests {
 
             let params = KlineCandlestickDataParams::builder(
                 "symbol_example".to_string(),
-                KlineCandlestickDataIntervalEnum::INTERVAL_1m,
+                KlineCandlestickDataIntervalEnum::Interval1m,
             )
             .build()
             .unwrap();
@@ -4312,7 +4284,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = LongShortRatioParams::builder("symbol_example".to_string(),LongShortRatioPeriodEnum::PERIOD_5m,).build().unwrap();
+            let params = LongShortRatioParams::builder("symbol_example".to_string(),LongShortRatioPeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::LongShortRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::LongShortRatioResponseInner>");
@@ -4329,7 +4301,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = LongShortRatioParams::builder("symbol_example".to_string(),LongShortRatioPeriodEnum::PERIOD_5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = LongShortRatioParams::builder("symbol_example".to_string(),LongShortRatioPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::LongShortRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::LongShortRatioResponseInner>");
@@ -4348,7 +4320,7 @@ mod tests {
 
             let params = LongShortRatioParams::builder(
                 "symbol_example".to_string(),
-                LongShortRatioPeriodEnum::PERIOD_5m,
+                LongShortRatioPeriodEnum::Period5m,
             )
             .build()
             .unwrap();
@@ -4417,7 +4389,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m,).build().unwrap();
+            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256460000,"9653.29201333","9654.56401333","9653.07367333","9653.07367333","0",1591256519999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>");
@@ -4434,7 +4406,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256460000,"9653.29201333","9654.56401333","9653.07367333","9653.07367333","0",1591256519999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>");
@@ -4453,7 +4425,7 @@ mod tests {
 
             let params = MarkPriceKlineCandlestickDataParams::builder(
                 "symbol_example".to_string(),
-                MarkPriceKlineCandlestickDataIntervalEnum::INTERVAL_1m,
+                MarkPriceKlineCandlestickDataIntervalEnum::Interval1m,
             )
             .build()
             .unwrap();
@@ -4646,7 +4618,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = OpenInterestStatisticsParams::builder("symbol_example".to_string(),OpenInterestStatisticsPeriodEnum::PERIOD_5m,).build().unwrap();
+            let params = OpenInterestStatisticsParams::builder("symbol_example".to_string(),OpenInterestStatisticsPeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","timestamp":"1583127900000"},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","timestamp":"1583128200000"}]"#).unwrap();
             let expected_response : Vec<models::OpenInterestStatisticsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OpenInterestStatisticsResponseInner>");
@@ -4663,7 +4635,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = OpenInterestStatisticsParams::builder("symbol_example".to_string(),OpenInterestStatisticsPeriodEnum::PERIOD_5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = OpenInterestStatisticsParams::builder("symbol_example".to_string(),OpenInterestStatisticsPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","timestamp":"1583127900000"},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","timestamp":"1583128200000"}]"#).unwrap();
             let expected_response : Vec<models::OpenInterestStatisticsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OpenInterestStatisticsResponseInner>");
@@ -4682,7 +4654,7 @@ mod tests {
 
             let params = OpenInterestStatisticsParams::builder(
                 "symbol_example".to_string(),
-                OpenInterestStatisticsPeriodEnum::PERIOD_5m,
+                OpenInterestStatisticsPeriodEnum::Period5m,
             )
             .build()
             .unwrap();
@@ -4753,7 +4725,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::INTERVAL_1m,).build().unwrap();
+            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::Interval1m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1691603820000,"-0.00042931","-0.00023641","-0.00059406","-0.00043659","0",1691603879999,"0",12,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>>");
@@ -4770,7 +4742,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::INTERVAL_1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1691603820000,"-0.00042931","-0.00023641","-0.00059406","-0.00043659","0",1691603879999,"0",12,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>>");
@@ -4789,7 +4761,7 @@ mod tests {
 
             let params = PremiumIndexKlineDataParams::builder(
                 "symbol_example".to_string(),
-                PremiumIndexKlineDataIntervalEnum::INTERVAL_1m,
+                PremiumIndexKlineDataIntervalEnum::Interval1m,
             )
             .build()
             .unwrap();
@@ -5205,7 +5177,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TakerBuySellVolumeParams::builder("symbol_example".to_string(),TakerBuySellVolumePeriodEnum::PERIOD_5m,).build().unwrap();
+            let params = TakerBuySellVolumeParams::builder("symbol_example".to_string(),TakerBuySellVolumePeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":"1585614900000"},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::TakerBuySellVolumeResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TakerBuySellVolumeResponseInner>");
@@ -5222,7 +5194,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TakerBuySellVolumeParams::builder("symbol_example".to_string(),TakerBuySellVolumePeriodEnum::PERIOD_5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = TakerBuySellVolumeParams::builder("symbol_example".to_string(),TakerBuySellVolumePeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":"1585614900000"},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::TakerBuySellVolumeResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TakerBuySellVolumeResponseInner>");
@@ -5241,7 +5213,7 @@ mod tests {
 
             let params = TakerBuySellVolumeParams::builder(
                 "symbol_example".to_string(),
-                TakerBuySellVolumePeriodEnum::PERIOD_5m,
+                TakerBuySellVolumePeriodEnum::Period5m,
             )
             .build()
             .unwrap();
@@ -5360,7 +5332,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_5m,).build().unwrap();
+            let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioAccountsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioAccountsResponseInner>");
@@ -5377,7 +5349,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioAccountsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioAccountsResponseInner>");
@@ -5396,7 +5368,7 @@ mod tests {
 
             let params = TopTraderLongShortRatioAccountsParams::builder(
                 "symbol_example".to_string(),
-                TopTraderLongShortRatioAccountsPeriodEnum::PERIOD_5m,
+                TopTraderLongShortRatioAccountsPeriodEnum::Period5m,
             )
             .build()
             .unwrap();
@@ -5415,7 +5387,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TopTraderLongShortRatioPositionsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_5m,).build().unwrap();
+            let params = TopTraderLongShortRatioPositionsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioPositionsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioPositionsResponseInner>");
@@ -5432,7 +5404,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TopTraderLongShortRatioPositionsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = TopTraderLongShortRatioPositionsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":"1583139900000"}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioPositionsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioPositionsResponseInner>");
@@ -5451,7 +5423,7 @@ mod tests {
 
             let params = TopTraderLongShortRatioPositionsParams::builder(
                 "symbol_example".to_string(),
-                TopTraderLongShortRatioPositionsPeriodEnum::PERIOD_5m,
+                TopTraderLongShortRatioPositionsPeriodEnum::Period5m,
             )
             .build()
             .unwrap();

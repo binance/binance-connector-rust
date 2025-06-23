@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -114,9 +115,6 @@ pub struct ListAllConvertPairsParams {
 impl ListAllConvertPairsParams {
     /// Create a builder for [`list_all_convert_pairs`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> ListAllConvertPairsParamsBuilder {
         ListAllConvertPairsParamsBuilder::default()
@@ -143,9 +141,6 @@ pub struct OrderStatusParams {
 
 impl OrderStatusParams {
     /// Create a builder for [`order_status`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> OrderStatusParamsBuilder {
@@ -226,7 +221,7 @@ impl ConvertApi for ConvertApiClient {
         query_params.insert("quoteId".to_string(), json!(quote_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AcceptTheOfferedQuoteResponse>(
@@ -256,11 +251,11 @@ impl ConvertApi for ConvertApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = from_asset {
-            query_params.insert("from_asset".to_string(), json!(rw));
+            query_params.insert("fromAsset".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_asset {
-            query_params.insert("to_asset".to_string(), json!(rw));
+            query_params.insert("toAsset".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::ListAllConvertPairsResponseInner>>(
@@ -287,11 +282,11 @@ impl ConvertApi for ConvertApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = quote_id {
-            query_params.insert("quote_id".to_string(), json!(rw));
+            query_params.insert("quoteId".to_string(), json!(rw));
         }
 
         send_request::<models::OrderStatusResponse>(
@@ -329,19 +324,21 @@ impl ConvertApi for ConvertApiClient {
         query_params.insert("toAsset".to_string(), json!(to_asset));
 
         if let Some(rw) = from_amount {
-            query_params.insert("from_amount".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("fromAmount".to_string(), json!(rw));
         }
 
         if let Some(rw) = to_amount {
-            query_params.insert("to_amount".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("toAmount".to_string(), json!(rw));
         }
 
         if let Some(rw) = valid_time {
-            query_params.insert("valid_time".to_string(), json!(rw));
+            query_params.insert("validTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::SendQuoteRequestResponse>(

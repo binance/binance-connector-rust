@@ -26,8 +26,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = NewCmOrderParams::builder(
         "symbol_example".to_string(),
-        NewCmOrderSideEnum::BUY,
-        NewCmOrderTypeEnum::LIMIT,
+        NewCmOrderSideEnum::Buy,
+        NewCmOrderTypeEnum::Limit,
     )
     .build()?;
 

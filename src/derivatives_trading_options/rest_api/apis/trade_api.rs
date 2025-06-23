@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -95,17 +96,17 @@ impl TradeApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl NewOrderSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderSideEnum::BUY => "BUY",
-            NewOrderSideEnum::SELL => "SELL",
+            NewOrderSideEnum::Buy => "BUY",
+            NewOrderSideEnum::Sell => "SELL",
         }
     }
 }
@@ -114,14 +115,14 @@ impl NewOrderSideEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderTypeEnum {
     #[serde(rename = "LIMIT")]
-    LIMIT,
+    Limit,
 }
 
 impl NewOrderTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderTypeEnum::LIMIT => "LIMIT",
+            NewOrderTypeEnum::Limit => "LIMIT",
         }
     }
 }
@@ -130,20 +131,20 @@ impl NewOrderTypeEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderTimeInForceEnum {
     #[serde(rename = "GTC")]
-    GTC,
+    Gtc,
     #[serde(rename = "IOC")]
-    IOC,
+    Ioc,
     #[serde(rename = "FOK")]
-    FOK,
+    Fok,
 }
 
 impl NewOrderTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderTimeInForceEnum::GTC => "GTC",
-            NewOrderTimeInForceEnum::IOC => "IOC",
-            NewOrderTimeInForceEnum::FOK => "FOK",
+            NewOrderTimeInForceEnum::Gtc => "GTC",
+            NewOrderTimeInForceEnum::Ioc => "IOC",
+            NewOrderTimeInForceEnum::Fok => "FOK",
         }
     }
 }
@@ -152,17 +153,17 @@ impl NewOrderTimeInForceEnum {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    ACK,
+    Ack,
     #[serde(rename = "RESULT")]
-    RESULT,
+    Result,
 }
 
 impl NewOrderNewOrderRespTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewOrderNewOrderRespTypeEnum::ACK => "ACK",
-            NewOrderNewOrderRespTypeEnum::RESULT => "RESULT",
+            NewOrderNewOrderRespTypeEnum::Ack => "ACK",
+            NewOrderNewOrderRespTypeEnum::Result => "RESULT",
         }
     }
 }
@@ -209,9 +210,6 @@ pub struct AccountTradeListParams {
 
 impl AccountTradeListParams {
     /// Create a builder for [`account_trade_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AccountTradeListParamsBuilder {
@@ -483,9 +481,6 @@ pub struct OptionPositionInformationParams {
 impl OptionPositionInformationParams {
     /// Create a builder for [`option_position_information`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OptionPositionInformationParamsBuilder {
         OptionPositionInformationParamsBuilder::default()
@@ -567,9 +562,6 @@ pub struct QueryCurrentOpenOptionOrdersParams {
 
 impl QueryCurrentOpenOptionOrdersParams {
     /// Create a builder for [`query_current_open_option_orders`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryCurrentOpenOptionOrdersParamsBuilder {
@@ -708,9 +700,6 @@ pub struct UserExerciseRecordParams {
 impl UserExerciseRecordParams {
     /// Create a builder for [`user_exercise_record`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> UserExerciseRecordParamsBuilder {
         UserExerciseRecordParamsBuilder::default()
@@ -739,15 +728,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -755,7 +744,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AccountTradeListResponseInner>>(
@@ -787,7 +776,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("underlying".to_string(), json!(underlying));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelAllOptionOrdersByUnderlyingResponse>(
@@ -820,7 +809,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelAllOptionOrdersOnSpecificSymbolResponse>(
@@ -854,15 +843,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_ids {
-            query_params.insert("order_ids".to_string(), json!(rw));
+            query_params.insert("orderIds".to_string(), json!(rw));
         }
 
         if let Some(rw) = client_order_ids {
-            query_params.insert("client_order_ids".to_string(), json!(rw));
+            query_params.insert("clientOrderIds".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::CancelMultipleOptionOrdersResponseInner>>(
@@ -896,15 +885,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = client_order_id {
-            query_params.insert("client_order_id".to_string(), json!(rw));
+            query_params.insert("clientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelOptionOrderResponse>(
@@ -949,38 +938,40 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("type".to_string(), json!(r#type));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        query_params.insert("quantity".to_string(), json!(quantity_value));
 
         if let Some(rw) = price {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("price".to_string(), json!(rw));
         }
 
         if let Some(rw) = time_in_force {
-            query_params.insert("time_in_force".to_string(), json!(rw));
+            query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = reduce_only {
-            query_params.insert("reduce_only".to_string(), json!(rw));
+            query_params.insert("reduceOnly".to_string(), json!(rw));
         }
 
         if let Some(rw) = post_only {
-            query_params.insert("post_only".to_string(), json!(rw));
+            query_params.insert("postOnly".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
-            query_params.insert("new_order_resp_type".to_string(), json!(rw));
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
         }
 
         if let Some(rw) = client_order_id {
-            query_params.insert("client_order_id".to_string(), json!(rw));
+            query_params.insert("clientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = is_mmp {
-            query_params.insert("is_mmp".to_string(), json!(rw));
+            query_params.insert("isMmp".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::NewOrderResponse>(
@@ -1014,7 +1005,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::OptionPositionInformationResponseInner>>(
@@ -1046,7 +1037,7 @@ impl TradeApi for TradeApiClient {
         query_params.insert("orders".to_string(), json!(orders));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::PlaceMultipleOrdersResponseInner>>(
@@ -1085,15 +1076,15 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1101,7 +1092,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryCurrentOpenOptionOrdersResponseInner>>(
@@ -1137,15 +1128,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1153,7 +1144,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryOptionOrderHistoryResponseInner>>(
@@ -1187,15 +1178,15 @@ impl TradeApi for TradeApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = client_order_id {
-            query_params.insert("client_order_id".to_string(), json!(rw));
+            query_params.insert("clientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySingleOrderResponse>(
@@ -1232,11 +1223,11 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1244,7 +1235,7 @@ impl TradeApi for TradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::UserExerciseRecordResponseInner>>(
@@ -1914,7 +1905,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::BUY,NewOrderTypeEnum::LIMIT,1.0,).build().unwrap();
+            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,1.0,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","side":"BUY","type":"LIMIT","createDate":1592465880683,"reduceOnly":false,"postOnly":false,"mmp":false,"executedQty":"0","fee":"0","timeInForce":"GTC","createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
@@ -1931,7 +1922,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::BUY,NewOrderTypeEnum::LIMIT,1.0,).price(1.0).time_in_force(NewOrderTimeInForceEnum::GTC).reduce_only(false).post_only(false).new_order_resp_type(NewOrderNewOrderRespTypeEnum::ACK).client_order_id("1".to_string()).is_mmp(true).recv_window(5000).build().unwrap();
+            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,1.0,).price(1.0).time_in_force(NewOrderTimeInForceEnum::Gtc).reduce_only(false).post_only(false).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).client_order_id("1".to_string()).is_mmp(true).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","side":"BUY","type":"LIMIT","createDate":1592465880683,"reduceOnly":false,"postOnly":false,"mmp":false,"executedQty":"0","fee":"0","timeInForce":"GTC","createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
@@ -1950,8 +1941,8 @@ mod tests {
 
             let params = NewOrderParams::builder(
                 "symbol_example".to_string(),
-                NewOrderSideEnum::BUY,
-                NewOrderTypeEnum::LIMIT,
+                NewOrderSideEnum::Buy,
+                NewOrderTypeEnum::Limit,
                 1.0,
             )
             .build()

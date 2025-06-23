@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use flate2::read::ZlibDecoder;
 use futures::{SinkExt, StreamExt, stream::FuturesUnordered};
+use http::header::USER_AGENT;
 use regex::Regex;
 use serde::de::DeserializeOwned;
 use serde_json::{Value, json};
@@ -245,6 +246,7 @@ pub struct WebsocketCommon {
     renewal_tx: Sender<(String, String)>,
     reconnect_delay: usize,
     agent: Option<AgentConnector>,
+    user_agent: Option<String>,
 }
 
 impl WebsocketCommon {
@@ -254,6 +256,7 @@ impl WebsocketCommon {
         mode: WebsocketMode,
         reconnect_delay: usize,
         agent: Option<AgentConnector>,
+        user_agent: Option<String>,
     ) -> Arc<Self> {
         if initial_pool.is_empty() {
             for _ in 0..mode.pool_size() {
@@ -274,6 +277,7 @@ impl WebsocketCommon {
             renewal_tx,
             reconnect_delay,
             agent,
+            user_agent,
         });
 
         Self::spawn_reconnect_loop(Arc::clone(&common), reconnect_rx);
@@ -671,6 +675,7 @@ impl WebsocketCommon {
     ///
     /// * `url` - The WebSocket server URL to connect to
     /// * `agent` - Optional agent connector for configuring the connection
+    /// * `user_agent` - Optional custom user agent string
     ///
     /// # Returns
     ///
@@ -685,14 +690,19 @@ impl WebsocketCommon {
     /// # Behavior
     ///
     /// Attempts to establish a WebSocket connection with a configurable timeout,
-    /// supporting optional TLS and custom connectors
+    /// supporting optional TLS, custom user agent, and connection connectors
     async fn create_websocket(
         url: &str,
         agent: Option<AgentConnector>,
+        user_agent: Option<String>,
     ) -> Result<WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>, WebsocketError> {
-        let req = url
+        let mut req = url
             .into_client_request()
             .map_err(|e| WebsocketError::Handshake(e.to_string()))?;
+
+        if let Some(ua) = user_agent {
+            req.headers_mut().insert(USER_AGENT, ua.parse().unwrap());
+        }
 
         let ws_config: Option<WebSocketConfig> = None;
         let disable_nagle = false;
@@ -810,7 +820,7 @@ impl WebsocketCommon {
             }
         }
 
-        let ws = Self::create_websocket(url, self.agent.clone())
+        let ws = Self::create_websocket(url, self.agent.clone(), self.user_agent.clone())
             .await
             .map_err(|e| {
                 error!("Handshake failed {}: {:?}", url, e);
@@ -908,11 +918,15 @@ impl WebsocketCommon {
                             let reconnect_url = common
                                 .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
                                 .await;
-                            let _ = common.reconnect_tx.send(ReconnectEntry {
-                                connection_id: reader_conn.id.clone(),
-                                url: reconnect_url,
-                                is_renewal: false,
-                            });
+
+                            let _ = common
+                                .reconnect_tx
+                                .send(ReconnectEntry {
+                                    connection_id: reader_conn.id.clone(),
+                                    url: reconnect_url,
+                                    is_renewal: false,
+                                })
+                                .await;
                         }
                         break;
                     }
@@ -928,7 +942,6 @@ impl WebsocketCommon {
 
         Ok(())
     }
-
     /// Gracefully disconnects all active WebSocket connections.
     ///
     /// This method attempts to close all connections in the connection pool within a 30-second timeout.
@@ -1151,12 +1164,14 @@ impl WebsocketApi {
         connection_pool: Vec<Arc<WebsocketConnection>>,
     ) -> Arc<Self> {
         let agent_clone = configuration.agent.clone();
+        let user_agent_clone = configuration.user_agent.clone();
         let common = WebsocketCommon::new(
             connection_pool,
             configuration.mode.clone(),
             usize::try_from(configuration.reconnect_delay)
                 .expect("reconnect_delay should fit in usize"),
             agent_clone,
+            Some(user_agent_clone),
         );
 
         Arc::new(Self {
@@ -1488,7 +1503,7 @@ impl WebsocketHandler for WebsocketApi {
                     let code = error_map
                         .get("code")
                         .and_then(Value::as_i64)
-                        .unwrap_or(status as i64);
+                        .unwrap_or(status.try_into().unwrap());
 
                     let message = error_map
                         .get("msg")
@@ -1570,12 +1585,14 @@ impl WebsocketStreams {
         connection_pool: Vec<Arc<WebsocketConnection>>,
     ) -> Arc<Self> {
         let agent_clone = configuration.agent.clone();
+        let user_agent_clone = configuration.user_agent.clone();
         let common = WebsocketCommon::new(
             connection_pool,
             configuration.mode.clone(),
             usize::try_from(configuration.reconnect_delay)
                 .expect("reconnect_delay should fit in usize"),
             agent_clone,
+            Some(user_agent_clone),
         );
         Arc::new(Self {
             common,
@@ -1720,7 +1737,7 @@ impl WebsocketStreams {
                 conn_state.pending_subscriptions.extend(streams.clone());
                 continue;
             }
-            self.send_subscription_payload(conn.clone(), streams.clone(), id.clone());
+            self.send_subscription_payload(&conn, &streams, id.clone());
         }
     }
 
@@ -1964,8 +1981,8 @@ impl WebsocketStreams {
     /// If serialization fails, an error is logged and the method returns without sending.
     fn send_subscription_payload(
         &self,
-        connection: Arc<WebsocketConnection>,
-        streams: Vec<String>,
+        connection: &Arc<WebsocketConnection>,
+        streams: &Vec<String>,
         id: Option<String>,
     ) {
         let request_id = id
@@ -1988,7 +2005,7 @@ impl WebsocketStreams {
                 return;
             }
         };
-        let conn_clone = Arc::clone(&connection);
+        let conn_clone = Arc::clone(connection);
 
         spawn(async move {
             let _ = common
@@ -2026,7 +2043,7 @@ impl WebsocketHandler for WebsocketStreams {
 
         if !pending_subs.is_empty() {
             info!("Processing queued subscriptions for connection");
-            self.send_subscription_payload(connection.clone(), pending_subs, None);
+            self.send_subscription_payload(&connection, &pending_subs, None);
         }
     }
 
@@ -2326,7 +2343,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::TOKIO_SHARED_RT;
-    use crate::common::utils::SignatureGenerator;
+    use crate::common::utils::{SignatureGenerator, build_user_agent};
     use crate::common::websocket::{
         PendingRequest, ReconnectEntry, WebsocketApi, WebsocketBase, WebsocketCommon,
         WebsocketConnection, WebsocketEvent, WebsocketEventEmitter, WebsocketHandler,
@@ -2338,6 +2355,7 @@ mod tests {
     use crate::models::TimeUnit;
     use async_trait::async_trait;
     use futures::{SinkExt, StreamExt};
+    use http::header::USER_AGENT;
     use regex::Regex;
     use serde_json::{Value, json};
     use std::collections::{BTreeMap, HashSet};
@@ -2350,7 +2368,8 @@ mod tests {
     use tokio::net::TcpListener;
     use tokio::sync::{Mutex, mpsc::unbounded_channel, oneshot};
     use tokio::time::{Duration, advance, pause, resume, sleep, timeout};
-    use tokio_tungstenite::{accept_async, tungstenite, tungstenite::Message};
+    use tokio_tungstenite::{accept_async, accept_hdr_async, tungstenite, tungstenite::Message};
+    use tungstenite::handshake::server::Request;
 
     fn subscribe_events(common: &WebsocketCommon) -> Arc<Mutex<Vec<WebsocketEvent>>> {
         let events = Arc::new(Mutex::new(Vec::new()));
@@ -2404,6 +2423,7 @@ mod tests {
             timeout: 500,
             time_unit,
             agent: None,
+            user_agent: build_user_agent("product"),
         };
         let conn = WebsocketConnection::new("c1");
         WebsocketApi::new(config, vec![conn])
@@ -2426,6 +2446,7 @@ mod tests {
             reconnect_delay: 500,
             time_unit: None,
             agent: None,
+            user_agent: build_user_agent("product"),
         };
         WebsocketStreams::new(config, connections)
     }
@@ -2463,7 +2484,7 @@ mod tests {
             #[test]
             fn single_mode() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let common = WebsocketCommon::new(vec![], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(vec![], WebsocketMode::Single, 0, None, None);
                     assert_eq!(common.connection_pool.len(), 1);
                 });
             }
@@ -2471,7 +2492,8 @@ mod tests {
             #[test]
             fn pool_mode() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let common = WebsocketCommon::new(vec![], WebsocketMode::Pool(3), 0, None);
+                    let common =
+                        WebsocketCommon::new(vec![], WebsocketMode::Pool(3), 0, None, None);
                     assert_eq!(common.connection_pool.len(), 3);
                 });
             }
@@ -2493,8 +2515,13 @@ mod tests {
                     });
 
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 10, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        10,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common
                         .reconnect_tx
@@ -2526,8 +2553,13 @@ mod tests {
                     });
 
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 5, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        5,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common
                         .reconnect_tx
@@ -2559,8 +2591,13 @@ mod tests {
                     });
 
                     let conn = WebsocketConnection::new("renew");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 200, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        200,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common
                         .reconnect_tx
@@ -2593,8 +2630,13 @@ mod tests {
                     });
 
                     let conn = WebsocketConnection::new("nonrenew");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 200, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        200,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common
                         .reconnect_tx
@@ -2625,7 +2667,7 @@ mod tests {
 
                 let conn = WebsocketConnection::new("known");
                 let common =
-                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None, None);
                 let url = "wss://example".to_string();
                 common
                     .renewal_tx
@@ -2643,7 +2685,7 @@ mod tests {
 
                 let conn = WebsocketConnection::new("c1");
                 let common =
-                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None, None);
                 common
                     .renewal_tx
                     .send(("other".into(), "u".into()))
@@ -2662,8 +2704,13 @@ mod tests {
             fn is_connection_ready() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     assert!(!common.is_connection_ready(&conn, false).await);
                     assert!(common.is_connection_ready(&conn, true).await);
                 });
@@ -2673,8 +2720,13 @@ mod tests {
             fn connection_ready_basic() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = create_connection("c1", true, false, false, false).await;
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     assert!(common.is_connection_ready(&conn, false).await);
                 });
             }
@@ -2683,8 +2735,13 @@ mod tests {
             fn connection_not_ready_without_writer() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = create_connection("c1", false, false, false, false).await;
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     assert!(!common.is_connection_ready(&conn, false).await);
                     assert!(common.is_connection_ready(&conn, true).await);
                 });
@@ -2701,6 +2758,7 @@ mod tests {
                         vec![conn1.clone(), conn2.clone(), conn3.clone()],
                         WebsocketMode::Pool(3),
                         0,
+                        None,
                         None,
                     );
 
@@ -2721,7 +2779,7 @@ mod tests {
                     let conn_b = create_connection("b", false, false, false, false).await;
                     let conn_c = create_connection("c", true, true, false, false).await;
                     let pool = vec![conn_a.clone(), conn_b.clone(), conn_c.clone()];
-                    let common = WebsocketCommon::new(pool, WebsocketMode::Pool(3), 0, None);
+                    let common = WebsocketCommon::new(pool, WebsocketMode::Pool(3), 0, None, None);
 
                     assert!(common.is_connected(None).await);
                     assert!(common.is_connected(Some(&conn_a)).await);
@@ -2741,6 +2799,7 @@ mod tests {
                         WebsocketMode::Pool(3),
                         0,
                         None,
+                        None,
                     );
 
                     assert!(!common.is_connected(None).await);
@@ -2758,6 +2817,7 @@ mod tests {
                         WebsocketMode::Pool(3),
                         0,
                         None,
+                        None,
                     );
 
                     assert!(common.is_connected(None).await);
@@ -2772,7 +2832,7 @@ mod tests {
             #[test]
             fn single_mode() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let common = WebsocketCommon::new(vec![], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(vec![], WebsocketMode::Single, 0, None, None);
                     let conn = common
                         .get_connection(false)
                         .await
@@ -2784,7 +2844,8 @@ mod tests {
             #[test]
             fn pool_mode_not_ready() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let common = WebsocketCommon::new(vec![], WebsocketMode::Pool(2), 0, None);
+                    let common =
+                        WebsocketCommon::new(vec![], WebsocketMode::Pool(2), 0, None, None);
                     let result = common.get_connection(false).await;
                     assert!(matches!(
                         result,
@@ -2804,7 +2865,7 @@ mod tests {
                         s1.ws_write_tx = Some(tx1);
                     }
                     let pool = vec![conn1.clone(), conn2.clone()];
-                    let common = WebsocketCommon::new(pool, WebsocketMode::Pool(2), 0, None);
+                    let common = WebsocketCommon::new(pool, WebsocketMode::Pool(2), 0, None, None);
                     let result = common.get_connection(false).await;
                     assert!(result.is_ok());
                     let chosen = result.unwrap();
@@ -2829,7 +2890,7 @@ mod tests {
                         .insert("r".to_string(), PendingRequest { completion: req_tx });
                 }
                 let common =
-                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None, None);
                 let close_fut = common.close_connection_gracefully(tx.clone(), conn.clone());
                 advance(Duration::from_secs(1)).await;
                 {
@@ -2862,7 +2923,7 @@ mod tests {
                     );
                 }
                 let common =
-                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None, None);
                 let close_fut = common.close_connection_gracefully(tx.clone(), conn.clone());
                 advance(Duration::from_secs(30)).await;
                 close_fut.await.unwrap();
@@ -2899,8 +2960,13 @@ mod tests {
             fn returns_default_when_no_handler() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let default = "wss://default".to_string();
                     let result = common.get_reconnect_url(&default, conn.clone()).await;
                     assert_eq!(result, default);
@@ -2915,8 +2981,13 @@ mod tests {
                         url: "wss://custom".into(),
                     });
                     conn.set_handler(handler).await;
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let default = "wss://default".to_string();
                     let result = common.get_reconnect_url(&default, conn.clone()).await;
                     assert_eq!(result, "wss://custom");
@@ -2962,8 +3033,13 @@ mod tests {
                     });
 
                     conn.set_handler(handler.clone()).await;
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let events = subscribe_events(&common);
                     common
                         .on_open("wss://example.com".into(), conn.clone(), None)
@@ -2990,8 +3066,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.renewal_pending = true;
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     common
                         .on_open("url".into(), conn.clone(), Some(old_tx.clone()))
                         .await;
@@ -3030,8 +3111,13 @@ mod tests {
             fn emits_message_event_without_handler() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let events = subscribe_events(&common);
                     common.on_message("msg".into(), conn.clone()).await;
 
@@ -3056,8 +3142,13 @@ mod tests {
                     });
                     conn.set_handler(handler.clone()).await;
 
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let events = subscribe_events(&common);
                     common.on_message("msg".into(), conn.clone()).await;
 
@@ -3082,24 +3173,38 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr: SocketAddr = listener.local_addr().unwrap();
+
+                    let expected_ua = build_user_agent("product");
+                    let expected_ua_clone = expected_ua.clone();
+
                     tokio::spawn(async move {
                         if let Ok((stream, _)) = listener.accept().await {
-                            if let Ok(mut ws_stream) = accept_async(stream).await {
-                                let _ = ws_stream.close(None).await;
-                            }
+                            let callback = |req: &Request, resp| {
+                                let got = req
+                                    .headers()
+                                    .get(USER_AGENT)
+                                    .expect("no USER_AGENT header in WS handshake")
+                                    .to_str()
+                                    .expect("invalid USER_AGENT header");
+                                assert_eq!(got, expected_ua_clone, "User-Agent mismatch");
+                                Ok(resp)
+                            };
+                            let _ = accept_hdr_async(stream, callback).await.unwrap();
                         }
                     });
 
                     let url = format!("ws://{addr}");
-                    let res = WebsocketCommon::create_websocket(&url, None).await;
-                    assert!(res.is_ok(), "Expected successful handshake, got {res:?}");
+                    let res =
+                        WebsocketCommon::create_websocket(&url, None, Some(expected_ua)).await;
+                    assert!(res.is_ok(), "handshake failed: {res:?}");
                 });
             }
 
             #[test]
             fn invalid_url_returns_handshake_error() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let res = WebsocketCommon::create_websocket("not-a-valid-url", None).await;
+                    let res =
+                        WebsocketCommon::create_websocket("not-a-valid-url", None, None).await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
             }
@@ -3107,7 +3212,8 @@ mod tests {
             #[test]
             fn unreachable_host_returns_handshake_error() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let res = WebsocketCommon::create_websocket("ws://127.0.0.1:1", None).await;
+                    let res =
+                        WebsocketCommon::create_websocket("ws://127.0.0.1:1", None, None).await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
             }
@@ -3137,6 +3243,7 @@ mod tests {
                         conns.clone(),
                         WebsocketMode::Pool(pool_size),
                         0,
+                        None,
                         None,
                     );
                     let url = format!("ws://{addr}");
@@ -3173,6 +3280,7 @@ mod tests {
                         WebsocketMode::Pool(pool_size),
                         0,
                         None,
+                        None,
                     );
                     let res = common.clone().connect_pool(&valid_url).await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
@@ -3183,7 +3291,7 @@ mod tests {
             fn fails_on_invalid_url() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conns = vec![WebsocketConnection::new("c1")];
-                    let common = WebsocketCommon::new(conns, WebsocketMode::Pool(1), 0, None);
+                    let common = WebsocketCommon::new(conns, WebsocketMode::Pool(1), 0, None, None);
                     let res = common.connect_pool("not-a-url").await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
@@ -3202,8 +3310,13 @@ mod tests {
                     });
                     let good = WebsocketConnection::new("good");
                     let bad = WebsocketConnection::new("bad");
-                    let common =
-                        WebsocketCommon::new(vec![good, bad], WebsocketMode::Pool(2), 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![good, bad],
+                        WebsocketMode::Pool(2),
+                        0,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     let res = common.connect_pool(&url).await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
@@ -3232,6 +3345,7 @@ mod tests {
                         WebsocketMode::Pool(pool_size),
                         0,
                         None,
+                        None,
                     );
                     let url = format!("ws://{addr}");
                     common.clone().connect_pool(&url).await.unwrap();
@@ -3254,8 +3368,13 @@ mod tests {
                         }
                     });
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common.connect_pool(&url).await.unwrap();
                     let st = conn.state.lock().await;
@@ -3287,6 +3406,7 @@ mod tests {
                         vec![c1.clone(), c2.clone()],
                         WebsocketMode::Pool(2),
                         0,
+                        None,
                         None,
                     );
                     let url = format!("ws://{addr}");
@@ -3323,8 +3443,13 @@ mod tests {
                     });
 
                     let conn = WebsocketConnection::new("cw");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common
                         .clone()
@@ -3365,8 +3490,13 @@ mod tests {
                     });
 
                     let conn = WebsocketConnection::new("c-ping");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common
                         .clone()
@@ -3384,8 +3514,13 @@ mod tests {
             fn handshake_error_on_invalid_url() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c-invalid");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let res = common
                         .clone()
                         .init_connect("not-a-url", false, Some(conn.clone()))
@@ -3403,8 +3538,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx.clone());
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let res = common
                         .clone()
                         .init_connect("ws://127.0.0.1:1", false, Some(conn.clone()))
@@ -3423,8 +3563,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.renewal_pending = true;
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let res = common
                         .clone()
                         .init_connect("ws://127.0.0.1:1", true, Some(conn.clone()))
@@ -3448,8 +3593,13 @@ mod tests {
                     });
 
                     let conn = WebsocketConnection::new("c-new-renew");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     let res = common
                         .clone()
@@ -3475,8 +3625,13 @@ mod tests {
                         }
                     });
                     let conn = WebsocketConnection::new("c-default");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     let res = common.clone().init_connect(&url, false, None).await;
 
@@ -3502,8 +3657,13 @@ mod tests {
                         }
                     });
                     let conn = WebsocketConnection::new("c-close");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 10, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        10,
+                        None,
+                        None,
+                    );
                     let url = format!("ws://{addr}");
                     common
                         .clone()
@@ -3529,8 +3689,13 @@ mod tests {
             fn returns_ok_when_no_connections_are_ready() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let res = common.disconnect().await;
 
                     assert!(res.is_ok());
@@ -3558,6 +3723,7 @@ mod tests {
                         WebsocketMode::Pool(2),
                         0,
                         None,
+                        None,
                     );
                     let fut = common.disconnect();
 
@@ -3579,8 +3745,13 @@ mod tests {
             fn does_not_mark_close_initiated_if_no_writer() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c-new");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     common.disconnect().await.unwrap();
 
                     assert!(!conn.state.lock().await.close_initiated);
@@ -3601,6 +3772,7 @@ mod tests {
                         vec![conn_w.clone(), conn_wo.clone()],
                         WebsocketMode::Pool(2),
                         0,
+                        None,
                         None,
                     );
                     let fut = common.disconnect();
@@ -3624,8 +3796,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     common.disconnect().await.unwrap();
                     assert!(!common.is_connected(Some(&conn)).await);
                 });
@@ -3652,6 +3829,7 @@ mod tests {
                         conns.iter().map(|(c, _)| c.clone()).collect(),
                         WebsocketMode::Pool(3),
                         0,
+                        None,
                         None,
                     );
                     common.ping_server().await;
@@ -3683,6 +3861,7 @@ mod tests {
                         WebsocketMode::Pool(2),
                         0,
                         None,
+                        None,
                     );
                     common.ping_server().await;
                     match rx_r.try_recv() {
@@ -3702,8 +3881,13 @@ mod tests {
                         st.ws_write_tx = Some(tx);
                         st.reconnection_pending = true;
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     common.ping_server().await;
                     assert!(rx.try_recv().is_err());
                 });
@@ -3732,6 +3916,7 @@ mod tests {
                         vec![conn1.clone(), conn2.clone()],
                         WebsocketMode::Pool(2),
                         0,
+                        None,
                         None,
                     );
 
@@ -3785,6 +3970,7 @@ mod tests {
                         WebsocketMode::Pool(2),
                         0,
                         None,
+                        None,
                     );
                     let res = common
                         .send("bar".into(), None, false, Duration::from_secs(1), None)
@@ -3812,6 +3998,7 @@ mod tests {
                         vec![conn1.clone(), conn2.clone()],
                         WebsocketMode::Pool(2),
                         0,
+                        None,
                         None,
                     );
                     let res = common
@@ -3841,8 +4028,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let res = common
                         .send(
                             "msg".into(),
@@ -3866,8 +4058,13 @@ mod tests {
             fn sync_send_error_if_not_ready() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let err = common
                         .send(
                             "msg".into(),
@@ -3886,8 +4083,13 @@ mod tests {
             fn sync_send_error_when_no_ready() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let err = common
                         .send("msg".into(), None, false, Duration::from_secs(1), None)
                         .await
@@ -3905,8 +4107,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let fut = common
                         .send(
                             "hello".into(),
@@ -3941,8 +4148,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let fut = common
                         .send(
                             "msg".into(),
@@ -3977,8 +4189,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let err = common
                         .send(
                             "msg".into(),
@@ -4003,8 +4220,13 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let fut = common
                         .send(
                             "msg".into(),
@@ -4027,8 +4249,13 @@ mod tests {
             fn async_send_errors_if_no_connection_ready() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let common =
-                        WebsocketCommon::new(vec![conn.clone()], WebsocketMode::Single, 0, None);
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
                     let err = common
                         .send(
                             "msg".into(),
@@ -4075,6 +4302,7 @@ mod tests {
                         timeout: 500,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
 
                     let api = WebsocketApi::new(config, pool.clone());
@@ -4116,6 +4344,7 @@ mod tests {
                         timeout: 10,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.clone().connect().await;
@@ -4149,6 +4378,7 @@ mod tests {
                         timeout: 10,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.connect().await;
@@ -4177,6 +4407,7 @@ mod tests {
                         timeout: 10,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.connect().await;
@@ -4205,6 +4436,7 @@ mod tests {
                         timeout: 10,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let fut1 = tokio::spawn(api.clone().connect());
@@ -4238,6 +4470,7 @@ mod tests {
                         timeout: 10,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.clone().connect().await;
@@ -4282,11 +4515,7 @@ mod tests {
                     });
 
                     let sent = rx.recv().await.unwrap();
-                    let txt = if let Message::Text(s) = sent {
-                        s
-                    } else {
-                        panic!()
-                    };
+                    let Message::Text(txt) = sent else { panic!() };
                     let req: Value = serde_json::from_str(&txt).unwrap();
                     assert_eq!(req["method"], "mymethod");
                     assert!(req["params"]["foo"] == "bar");
@@ -4340,9 +4569,7 @@ mod tests {
                         }
                     });
 
-                    let txt = if let Message::Text(s) = rx.recv().await.unwrap() {
-                        s
-                    } else {
+                    let Message::Text(txt) = rx.recv().await.unwrap() else {
                         panic!()
                     };
                     let req: Value = serde_json::from_str(&txt).unwrap();
@@ -4396,9 +4623,7 @@ mod tests {
                         }
                     });
 
-                    let txt = if let Message::Text(s) = rx.recv().await.unwrap() {
-                        s
-                    } else {
+                    let Message::Text(txt) = rx.recv().await.unwrap() else {
                         panic!()
                     };
                     let req: Value = serde_json::from_str(&txt).unwrap();
@@ -4504,6 +4729,7 @@ mod tests {
                     timeout: 1000,
                     time_unit: None,
                     agent: None,
+                    user_agent: build_user_agent("product"),
                 };
                 let conn = WebsocketConnection::new("test");
                 let api = WebsocketApi::new(config, vec![conn.clone()]);
@@ -4525,7 +4751,7 @@ mod tests {
                     let got = rx.await.unwrap().unwrap();
                     assert_eq!(got, msg);
                     let st = conn.state.lock().await;
-                    assert!(st.pending_requests.get("id1").is_none());
+                    assert!(!st.pending_requests.contains_key("id1"));
                 });
             }
 
@@ -4593,7 +4819,7 @@ mod tests {
                         other => panic!("expected ResponseError, got {other:?}"),
                     }
                     let st = conn.state.lock().await;
-                    assert!(st.pending_requests.get("bad").is_none());
+                    assert!(!st.pending_requests.contains_key("bad"));
                 });
             }
 
@@ -4695,6 +4921,7 @@ mod tests {
                         timeout: 500,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let conn1 = WebsocketConnection::new("c1");
                     let conn2 = WebsocketConnection::new("c2");
@@ -4737,6 +4964,7 @@ mod tests {
                             reconnect_delay: 500,
                             time_unit: None,
                             agent: None,
+                            user_agent: build_user_agent("product"),
                         };
                         WebsocketStreams::new(config, vec![c1, c2])
                     };
@@ -5051,6 +5279,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: None,
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns);
                     let url = ws.prepare_url(&["s1".into(), "s2".into()]);
@@ -5068,6 +5297,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: Some(TimeUnit::Millisecond),
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns);
                     let url = ws.prepare_url(&["a".into()]);
@@ -5085,6 +5315,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: Some(TimeUnit::Microsecond),
                         agent: None,
+                        user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns);
                     let url = ws.prepare_url(&["x".into(), "y".into(), "z".into()]);
@@ -5243,8 +5474,8 @@ mod tests {
                         st.ws_write_tx = Some(tx);
                     }
                     ws.send_subscription_payload(
-                        conn.clone(),
-                        vec!["s1".to_string()],
+                        conn,
+                        &vec!["s1".to_string()],
                         Some("badid".to_string()),
                     );
                     let msg = rx.recv().await.expect("no message sent");
@@ -5272,12 +5503,12 @@ mod tests {
                         st.ws_write_tx = Some(tx);
                     }
                     ws.send_subscription_payload(
-                        conn.clone(),
-                        vec!["a".to_string(), "b".to_string()],
+                        conn,
+                        &vec!["a".to_string(), "b".to_string()],
                         Some("deadbeefdeadbeefdeadbeefdeadbeef".to_string()),
                     );
                     let msg1 = rx.recv().await.unwrap();
-                    ws.send_subscription_payload(conn.clone(), vec!["x".to_string()], None);
+                    ws.send_subscription_payload(conn, &vec!["x".to_string()], None);
                     let msg2 = rx.recv().await.unwrap();
 
                     if let Message::Text(txt1) = msg1 {

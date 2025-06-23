@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -75,17 +76,17 @@ impl MarketMakerBlockTradeApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewBlockTradeOrderSideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl NewBlockTradeOrderSideEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            NewBlockTradeOrderSideEnum::BUY => "BUY",
-            NewBlockTradeOrderSideEnum::SELL => "SELL",
+            NewBlockTradeOrderSideEnum::Buy => "BUY",
+            NewBlockTradeOrderSideEnum::Sell => "SELL",
         }
     }
 }
@@ -156,9 +157,6 @@ pub struct AccountBlockTradeListParams {
 
 impl AccountBlockTradeListParams {
     /// Create a builder for [`account_block_trade_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AccountBlockTradeListParamsBuilder {
@@ -380,9 +378,6 @@ pub struct QueryBlockTradeOrderParams {
 impl QueryBlockTradeOrderParams {
     /// Create a builder for [`query_block_trade_order`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryBlockTradeOrderParamsBuilder {
         QueryBlockTradeOrderParamsBuilder::default()
@@ -408,7 +403,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         );
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AcceptBlockTradeOrderResponse>(
@@ -440,11 +435,11 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = underlying {
@@ -452,7 +447,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AccountBlockTradeListResponseInner>>(
@@ -487,7 +482,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         );
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Value>(
@@ -522,7 +517,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         );
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ExtendBlockTradeOrderResponse>(
@@ -564,12 +559,14 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("price".to_string(), json!(price));
+        let price_value = Decimal::from_f32(price).unwrap_or_default();
+        query_params.insert("price".to_string(), json!(price_value));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        query_params.insert("quantity".to_string(), json!(quantity_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::NewBlockTradeOrderResponse>(
@@ -604,7 +601,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         );
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryBlockTradeDetailsResponse>(
@@ -637,15 +634,15 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = block_order_matching_key {
-            query_params.insert("block_order_matching_key".to_string(), json!(rw));
+            query_params.insert("blockOrderMatchingKey".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = underlying {
@@ -653,7 +650,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryBlockTradeOrderResponseInner>>(
@@ -1109,7 +1106,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = NewBlockTradeOrderParams::builder("liquidity_example".to_string(),[].to_vec(),"symbol_example".to_string(),NewBlockTradeOrderSideEnum::BUY,1.0,1.0,).build().unwrap();
+            let params = NewBlockTradeOrderParams::builder("liquidity_example".to_string(),[].to_vec(),"symbol_example".to_string(),NewBlockTradeOrderSideEnum::Buy,1.0,1.0,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
             let expected_response : models::NewBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewBlockTradeOrderResponse");
@@ -1126,7 +1123,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = NewBlockTradeOrderParams::builder("liquidity_example".to_string(),[].to_vec(),"symbol_example".to_string(),NewBlockTradeOrderSideEnum::BUY,1.0,1.0,).recv_window(5000).build().unwrap();
+            let params = NewBlockTradeOrderParams::builder("liquidity_example".to_string(),[].to_vec(),"symbol_example".to_string(),NewBlockTradeOrderSideEnum::Buy,1.0,1.0,).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
             let expected_response : models::NewBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewBlockTradeOrderResponse");
@@ -1147,7 +1144,7 @@ mod tests {
                 "liquidity_example".to_string(),
                 [].to_vec(),
                 "symbol_example".to_string(),
-                NewBlockTradeOrderSideEnum::BUY,
+                NewBlockTradeOrderSideEnum::Buy,
                 1.0,
                 1.0,
             )

@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -212,9 +213,6 @@ pub struct FundAutoCollectionParams {
 impl FundAutoCollectionParams {
     /// Create a builder for [`fund_auto_collection`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> FundAutoCollectionParamsBuilder {
         FundAutoCollectionParamsBuilder::default()
@@ -270,9 +268,6 @@ pub struct GetAutoRepayFuturesStatusParams {
 impl GetAutoRepayFuturesStatusParams {
     /// Create a builder for [`get_auto_repay_futures_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetAutoRepayFuturesStatusParamsBuilder {
         GetAutoRepayFuturesStatusParamsBuilder::default()
@@ -302,9 +297,6 @@ pub struct GetPortfolioMarginProAccountBalanceParams {
 impl GetPortfolioMarginProAccountBalanceParams {
     /// Create a builder for [`get_portfolio_margin_pro_account_balance`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetPortfolioMarginProAccountBalanceParamsBuilder {
         GetPortfolioMarginProAccountBalanceParamsBuilder::default()
@@ -328,9 +320,6 @@ pub struct GetPortfolioMarginProAccountInfoParams {
 impl GetPortfolioMarginProAccountInfoParams {
     /// Create a builder for [`get_portfolio_margin_pro_account_info`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetPortfolioMarginProAccountInfoParamsBuilder {
         GetPortfolioMarginProAccountInfoParamsBuilder::default()
@@ -353,9 +342,6 @@ pub struct GetPortfolioMarginProSpanAccountInfoParams {
 
 impl GetPortfolioMarginProSpanAccountInfoParams {
     /// Create a builder for [`get_portfolio_margin_pro_span_account_info`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetPortfolioMarginProSpanAccountInfoParamsBuilder {
@@ -480,9 +466,6 @@ pub struct PortfolioMarginProBankruptcyLoanRepayParams {
 impl PortfolioMarginProBankruptcyLoanRepayParams {
     /// Create a builder for [`portfolio_margin_pro_bankruptcy_loan_repay`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> PortfolioMarginProBankruptcyLoanRepayParamsBuilder {
         PortfolioMarginProBankruptcyLoanRepayParamsBuilder::default()
@@ -505,9 +488,6 @@ pub struct QueryPortfolioMarginProBankruptcyLoanAmountParams {
 
 impl QueryPortfolioMarginProBankruptcyLoanAmountParams {
     /// Create a builder for [`query_portfolio_margin_pro_bankruptcy_loan_amount`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryPortfolioMarginProBankruptcyLoanAmountParamsBuilder {
@@ -554,9 +534,6 @@ pub struct QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams {
 impl QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams {
     /// Create a builder for [`query_portfolio_margin_pro_bankruptcy_loan_repay_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryPortfolioMarginProBankruptcyLoanRepayHistoryParamsBuilder {
         QueryPortfolioMarginProBankruptcyLoanRepayHistoryParamsBuilder::default()
@@ -602,9 +579,6 @@ pub struct QueryPortfolioMarginProNegativeBalanceInterestHistoryParams {
 
 impl QueryPortfolioMarginProNegativeBalanceInterestHistoryParams {
     /// Create a builder for [`query_portfolio_margin_pro_negative_balance_interest_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryPortfolioMarginProNegativeBalanceInterestHistoryParamsBuilder {
@@ -686,9 +660,6 @@ pub struct RepayFuturesNegativeBalanceParams {
 impl RepayFuturesNegativeBalanceParams {
     /// Create a builder for [`repay_futures_negative_balance`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> RepayFuturesNegativeBalanceParamsBuilder {
         RepayFuturesNegativeBalanceParamsBuilder::default()
@@ -761,12 +732,13 @@ impl AccountApi for AccountApiClient {
 
         let mut query_params = BTreeMap::new();
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         query_params.insert("transferSide".to_string(), json!(transfer_side));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::BnbTransferResponse>(
@@ -798,7 +770,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("autoRepay".to_string(), json!(auto_repay));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeAutoRepayFuturesStatusResponse>(
@@ -825,7 +797,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FundAutoCollectionResponse>(
@@ -854,7 +826,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FundCollectionByAssetResponse>(
@@ -881,7 +853,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetAutoRepayFuturesStatusResponse>(
@@ -914,7 +886,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetPortfolioMarginProAccountBalanceResponseInner>>(
@@ -941,7 +913,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetPortfolioMarginProAccountInfoResponse>(
@@ -968,7 +940,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetPortfolioMarginProSpanAccountInfoResponse>(
@@ -1005,7 +977,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("transferType".to_string(), json!(transfer_type));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetTransferableEarnAssetBalanceForPortfolioMarginResponse>(
@@ -1040,10 +1012,11 @@ impl AccountApi for AccountApiClient {
 
         query_params.insert("targetAsset".to_string(), json!(target_asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MintBfusdForPortfolioMarginResponse>(
@@ -1075,7 +1048,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::PortfolioMarginProBankruptcyLoanRepayResponse>(
@@ -1103,7 +1076,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryPortfolioMarginProBankruptcyLoanAmountResponse>(
@@ -1138,11 +1111,11 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -1154,7 +1127,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryPortfolioMarginProBankruptcyLoanRepayHistoryResponse>(
@@ -1195,11 +1168,11 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = size {
@@ -1207,7 +1180,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<
@@ -1244,10 +1217,11 @@ impl AccountApi for AccountApiClient {
 
         query_params.insert("targetAsset".to_string(), json!(target_asset));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RedeemBfusdForPortfolioMarginResponse>(
@@ -1278,7 +1252,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RepayFuturesNegativeBalanceResponse>(
@@ -1313,10 +1287,11 @@ impl AccountApi for AccountApiClient {
 
         query_params.insert("transferType".to_string(), json!(transfer_type));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::TransferLdusdtForPortfolioMarginResponse>(

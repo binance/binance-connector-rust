@@ -24,11 +24,9 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = PartialBookDepthParams::builder(
-        "bnbusdt".to_string(),
-        PartialBookDepthLevelsEnum::LEVELS_5,
-    )
-    .build()?;
+    let params =
+        PartialBookDepthParams::builder("bnbusdt".to_string(), PartialBookDepthLevelsEnum::Levels5)
+            .build()?;
 
     // Subscribe to the stream
     let stream = connection

@@ -51,13 +51,13 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    BUY,
+    Buy,
     #[serde(rename = "SELL")]
-    SELL,
+    Sell,
 }
 
 impl Default for SideEnum {
     fn default() -> SideEnum {
-        Self::BUY
+        Self::Buy
     }
 }

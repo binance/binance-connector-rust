@@ -1,6 +1,9 @@
 pub mod rest_api;
 
-use crate::common::{config::ConfigurationRestApi, constants::WALLET_REST_API_PROD_URL, logger};
+use crate::common::{
+    config::ConfigurationRestApi, constants::WALLET_REST_API_PROD_URL, logger,
+    utils::build_user_agent,
+};
 
 /// Represents the Wallet REST API client for interacting with the Binance Wallet REST API.
 ///
@@ -23,6 +26,7 @@ impl WalletRestApi {
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
         logger::init();
 
+        config.user_agent = build_user_agent("wallet");
         if config.base_path.is_none() {
             config.base_path = Some(WALLET_REST_API_PROD_URL.to_string());
         }

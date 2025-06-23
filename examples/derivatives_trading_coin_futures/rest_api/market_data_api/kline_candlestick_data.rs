@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = KlineCandlestickDataParams::builder(
         "symbol_example".to_string(),
-        KlineCandlestickDataIntervalEnum::INTERVAL_1m,
+        KlineCandlestickDataIntervalEnum::Interval1m,
     )
     .build()?;
 

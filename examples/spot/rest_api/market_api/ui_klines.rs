@@ -24,8 +24,8 @@ async fn main() -> Result<()> {
     let rest_client = SpotRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = UiKlinesParams::builder("BNBUSDT".to_string(), UiKlinesIntervalEnum::INTERVAL_1s)
-        .build()?;
+    let params =
+        UiKlinesParams::builder("BNBUSDT".to_string(), UiKlinesIntervalEnum::Interval1s).build()?;
 
     // Make the API call
     let response = rest_client

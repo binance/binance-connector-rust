@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -255,9 +256,6 @@ pub struct DepositHistoryTravelRuleParams {
 impl DepositHistoryTravelRuleParams {
     /// Create a builder for [`deposit_history_travel_rule`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> DepositHistoryTravelRuleParamsBuilder {
         DepositHistoryTravelRuleParamsBuilder::default()
@@ -463,9 +461,6 @@ pub struct WithdrawHistoryV1Params {
 impl WithdrawHistoryV1Params {
     /// Create a builder for [`withdraw_history_v1`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> WithdrawHistoryV1ParamsBuilder {
         WithdrawHistoryV1ParamsBuilder::default()
@@ -543,9 +538,6 @@ pub struct WithdrawHistoryV2Params {
 
 impl WithdrawHistoryV2Params {
     /// Create a builder for [`withdraw_history_v2`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> WithdrawHistoryV2ParamsBuilder {
@@ -673,7 +665,8 @@ impl TravelRuleApi for TravelRuleApiClient {
 
         query_params.insert("coin".to_string(), json!(coin));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         query_params.insert("withdrawOrderId".to_string(), json!(withdraw_order_id));
 
@@ -684,7 +677,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         query_params.insert("signature".to_string(), json!(signature));
 
         if let Some(rw) = address_tag {
-            query_params.insert("address_tag".to_string(), json!(rw));
+            query_params.insert("addressTag".to_string(), json!(rw));
         }
 
         if let Some(rw) = network {
@@ -692,15 +685,15 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = address_name {
-            query_params.insert("address_name".to_string(), json!(rw));
+            query_params.insert("addressName".to_string(), json!(rw));
         }
 
         if let Some(rw) = transaction_fee_flag {
-            query_params.insert("transaction_fee_flag".to_string(), json!(rw));
+            query_params.insert("transactionFeeFlag".to_string(), json!(rw));
         }
 
         if let Some(rw) = wallet_type {
-            query_params.insert("wallet_type".to_string(), json!(rw));
+            query_params.insert("walletType".to_string(), json!(rw));
         }
 
         send_request::<models::BrokerWithdrawResponse>(
@@ -739,15 +732,15 @@ impl TravelRuleApi for TravelRuleApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = tr_id {
-            query_params.insert("tr_id".to_string(), json!(rw));
+            query_params.insert("trId".to_string(), json!(rw));
         }
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         if let Some(rw) = tran_id {
-            query_params.insert("tran_id".to_string(), json!(rw));
+            query_params.insert("tranId".to_string(), json!(rw));
         }
 
         if let Some(rw) = network {
@@ -759,19 +752,19 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = travel_rule_status {
-            query_params.insert("travel_rule_status".to_string(), json!(rw));
+            query_params.insert("travelRuleStatus".to_string(), json!(rw));
         }
 
         if let Some(rw) = pending_questionnaire {
-            query_params.insert("pending_questionnaire".to_string(), json!(rw));
+            query_params.insert("pendingQuestionnaire".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = offset {
@@ -876,6 +869,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = amount {
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
             query_params.insert("amount".to_string(), json!(rw));
         }
 
@@ -884,7 +878,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = address_tag {
-            query_params.insert("address_tag".to_string(), json!(rw));
+            query_params.insert("addressTag".to_string(), json!(rw));
         }
 
         send_request::<models::SubmitDepositQuestionnaireResponse>(
@@ -953,15 +947,15 @@ impl TravelRuleApi for TravelRuleApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = tr_id {
-            query_params.insert("tr_id".to_string(), json!(rw));
+            query_params.insert("trId".to_string(), json!(rw));
         }
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         if let Some(rw) = withdraw_order_id {
-            query_params.insert("withdraw_order_id".to_string(), json!(rw));
+            query_params.insert("withdrawOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = network {
@@ -973,7 +967,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = travel_rule_status {
-            query_params.insert("travel_rule_status".to_string(), json!(rw));
+            query_params.insert("travelRuleStatus".to_string(), json!(rw));
         }
 
         if let Some(rw) = offset {
@@ -985,15 +979,15 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::WithdrawHistoryV2ResponseInner>>(
@@ -1032,15 +1026,15 @@ impl TravelRuleApi for TravelRuleApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = tr_id {
-            query_params.insert("tr_id".to_string(), json!(rw));
+            query_params.insert("trId".to_string(), json!(rw));
         }
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         if let Some(rw) = withdraw_order_id {
-            query_params.insert("withdraw_order_id".to_string(), json!(rw));
+            query_params.insert("withdrawOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = network {
@@ -1052,7 +1046,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = travel_rule_status {
-            query_params.insert("travel_rule_status".to_string(), json!(rw));
+            query_params.insert("travelRuleStatus".to_string(), json!(rw));
         }
 
         if let Some(rw) = offset {
@@ -1064,15 +1058,15 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::WithdrawHistoryV2ResponseInner>>(
@@ -1114,12 +1108,13 @@ impl TravelRuleApi for TravelRuleApiClient {
 
         query_params.insert("address".to_string(), json!(address));
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         query_params.insert("questionnaire".to_string(), json!(questionnaire));
 
         if let Some(rw) = withdraw_order_id {
-            query_params.insert("withdraw_order_id".to_string(), json!(rw));
+            query_params.insert("withdrawOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = network {
@@ -1127,11 +1122,11 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = address_tag {
-            query_params.insert("address_tag".to_string(), json!(rw));
+            query_params.insert("addressTag".to_string(), json!(rw));
         }
 
         if let Some(rw) = transaction_fee_flag {
-            query_params.insert("transaction_fee_flag".to_string(), json!(rw));
+            query_params.insert("transactionFeeFlag".to_string(), json!(rw));
         }
 
         if let Some(rw) = name {
@@ -1139,11 +1134,11 @@ impl TravelRuleApi for TravelRuleApiClient {
         }
 
         if let Some(rw) = wallet_type {
-            query_params.insert("wallet_type".to_string(), json!(rw));
+            query_params.insert("walletType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::WithdrawTravelRuleResponse>(

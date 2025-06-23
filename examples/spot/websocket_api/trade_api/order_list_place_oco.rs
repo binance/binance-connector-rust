@@ -35,10 +35,10 @@ async fn main() -> Result<()> {
     // Setup the WS API parameters
     let params = OrderListPlaceOcoParams::builder(
         "BNBUSDT".to_string(),
-        OrderListPlaceOcoSideEnum::BUY,
+        OrderListPlaceOcoSideEnum::Buy,
         1.0,
-        OrderListPlaceOcoAboveTypeEnum::STOP_LOSS_LIMIT,
-        OrderListPlaceOcoBelowTypeEnum::STOP_LOSS,
+        OrderListPlaceOcoAboveTypeEnum::StopLossLimit,
+        OrderListPlaceOcoBelowTypeEnum::StopLoss,
     )
     .build()?;
 

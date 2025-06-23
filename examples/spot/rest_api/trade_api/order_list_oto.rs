@@ -29,12 +29,12 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = OrderListOtoParams::builder(
         "BNBUSDT".to_string(),
-        OrderListOtoWorkingTypeEnum::LIMIT,
-        OrderListOtoWorkingSideEnum::BUY,
+        OrderListOtoWorkingTypeEnum::Limit,
+        OrderListOtoWorkingSideEnum::Buy,
         1.0,
         1.0,
-        OrderListOtoPendingTypeEnum::LIMIT,
-        OrderListOtoPendingSideEnum::BUY,
+        OrderListOtoPendingTypeEnum::Limit,
+        OrderListOtoPendingSideEnum::Buy,
         1.0,
     )
     .build()?;

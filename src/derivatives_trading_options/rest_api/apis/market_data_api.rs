@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -121,9 +122,6 @@ pub struct HistoricalExerciseRecordsParams {
 
 impl HistoricalExerciseRecordsParams {
     /// Create a builder for [`historical_exercise_records`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> HistoricalExerciseRecordsParamsBuilder {
@@ -266,9 +264,6 @@ pub struct OptionMarkPriceParams {
 impl OptionMarkPriceParams {
     /// Create a builder for [`option_mark_price`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OptionMarkPriceParamsBuilder {
         OptionMarkPriceParamsBuilder::default()
@@ -326,9 +321,6 @@ pub struct RecentBlockTradesListParams {
 
 impl RecentBlockTradesListParams {
     /// Create a builder for [`recent_block_trades_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> RecentBlockTradesListParamsBuilder {
@@ -409,9 +401,6 @@ pub struct Ticker24hrPriceChangeStatisticsParams {
 impl Ticker24hrPriceChangeStatisticsParams {
     /// Create a builder for [`ticker24hr_price_change_statistics`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> Ticker24hrPriceChangeStatisticsParamsBuilder {
         Ticker24hrPriceChangeStatisticsParamsBuilder::default()
@@ -478,11 +467,11 @@ impl MarketDataApi for MarketDataApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -523,11 +512,11 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("interval".to_string(), json!(interval));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -564,7 +553,7 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {

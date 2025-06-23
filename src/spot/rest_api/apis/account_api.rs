@@ -20,6 +20,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -164,9 +165,6 @@ pub struct AllOrderListParams {
 impl AllOrderListParams {
     /// Create a builder for [`all_order_list`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AllOrderListParamsBuilder {
         AllOrderListParamsBuilder::default()
@@ -247,9 +245,6 @@ pub struct GetAccountParams {
 impl GetAccountParams {
     /// Create a builder for [`get_account`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetAccountParamsBuilder {
         GetAccountParamsBuilder::default()
@@ -276,9 +271,6 @@ pub struct GetOpenOrdersParams {
 
 impl GetOpenOrdersParams {
     /// Create a builder for [`get_open_orders`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetOpenOrdersParamsBuilder {
@@ -356,9 +348,6 @@ pub struct GetOrderListParams {
 
 impl GetOrderListParams {
     /// Create a builder for [`get_order_list`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetOrderListParamsBuilder {
@@ -554,9 +543,6 @@ pub struct OpenOrderListParams {
 impl OpenOrderListParams {
     /// Create a builder for [`open_order_list`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> OpenOrderListParamsBuilder {
         OpenOrderListParamsBuilder::default()
@@ -631,9 +617,6 @@ pub struct RateLimitOrderParams {
 impl RateLimitOrderParams {
     /// Create a builder for [`rate_limit_order`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> RateLimitOrderParamsBuilder {
         RateLimitOrderParamsBuilder::default()
@@ -682,15 +665,15 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -698,7 +681,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AllOrderListResponseInner>>(
@@ -734,15 +717,15 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -750,7 +733,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AllOrdersResponseInner>>(
@@ -780,11 +763,11 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = omit_zero_balances {
-            query_params.insert("omit_zero_balances".to_string(), json!(rw));
+            query_params.insert("omitZeroBalances".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetAccountResponse>(
@@ -818,7 +801,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::AllOrdersResponseInner>>(
@@ -852,15 +835,15 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetOrderResponse>(
@@ -891,15 +874,15 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = order_list_id {
-            query_params.insert("order_list_id".to_string(), json!(rw));
+            query_params.insert("orderListId".to_string(), json!(rw));
         }
 
         if let Some(rw) = orig_client_order_id {
-            query_params.insert("orig_client_order_id".to_string(), json!(rw));
+            query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetOrderListResponse>(
@@ -936,15 +919,15 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = from_allocation_id {
-            query_params.insert("from_allocation_id".to_string(), json!(rw));
+            query_params.insert("fromAllocationId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -952,11 +935,11 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::MyAllocationsResponseInner>>(
@@ -992,15 +975,15 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = prevented_match_id {
-            query_params.insert("prevented_match_id".to_string(), json!(rw));
+            query_params.insert("preventedMatchId".to_string(), json!(rw));
         }
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = from_prevented_match_id {
-            query_params.insert("from_prevented_match_id".to_string(), json!(rw));
+            query_params.insert("fromPreventedMatchId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1008,7 +991,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::MyPreventedMatchesResponseInner>>(
@@ -1045,19 +1028,19 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = order_id {
-            query_params.insert("order_id".to_string(), json!(rw));
+            query_params.insert("orderId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = from_id {
-            query_params.insert("from_id".to_string(), json!(rw));
+            query_params.insert("fromId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1065,7 +1048,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::MyTradesResponseInner>>(
@@ -1092,7 +1075,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::OpenOrderListResponseInner>>(
@@ -1129,7 +1112,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("orderId".to_string(), json!(order_id));
 
         if let Some(rw) = from_execution_id {
-            query_params.insert("from_execution_id".to_string(), json!(rw));
+            query_params.insert("fromExecutionId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -1137,7 +1120,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::OrderAmendmentsResponseInner>>(
@@ -1164,7 +1147,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::RateLimitOrderResponseInner>>(

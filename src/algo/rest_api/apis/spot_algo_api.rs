@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -113,9 +114,6 @@ pub struct QueryCurrentAlgoOpenOrdersSpotAlgoParams {
 impl QueryCurrentAlgoOpenOrdersSpotAlgoParams {
     /// Create a builder for [`query_current_algo_open_orders_spot_algo`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryCurrentAlgoOpenOrdersSpotAlgoParamsBuilder {
         QueryCurrentAlgoOpenOrdersSpotAlgoParamsBuilder::default()
@@ -168,9 +166,6 @@ pub struct QueryHistoricalAlgoOrdersSpotAlgoParams {
 
 impl QueryHistoricalAlgoOrdersSpotAlgoParams {
     /// Create a builder for [`query_historical_algo_orders_spot_algo`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryHistoricalAlgoOrdersSpotAlgoParamsBuilder {
@@ -299,7 +294,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         query_params.insert("algoId".to_string(), json!(algo_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::CancelAlgoOrderSpotAlgoResponse>(
@@ -326,7 +321,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryCurrentAlgoOpenOrdersSpotAlgoResponse>(
@@ -369,11 +364,11 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -381,11 +376,11 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryHistoricalAlgoOrdersSpotAlgoResponse>(
@@ -423,11 +418,11 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         }
 
         if let Some(rw) = page_size {
-            query_params.insert("page_size".to_string(), json!(rw));
+            query_params.insert("pageSize".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QuerySubOrdersSpotAlgoResponse>(
@@ -464,16 +459,18 @@ impl SpotAlgoApi for SpotAlgoApiClient {
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
+        query_params.insert("quantity".to_string(), json!(quantity_value));
 
         query_params.insert("duration".to_string(), json!(duration));
 
         if let Some(rw) = client_algo_id {
-            query_params.insert("client_algo_id".to_string(), json!(rw));
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit_price {
-            query_params.insert("limit_price".to_string(), json!(rw));
+            let rw = Decimal::from_f32(rw).unwrap_or_default();
+            query_params.insert("limitPrice".to_string(), json!(rw));
         }
 
         send_request::<models::TimeWeightedAveragePriceSpotAlgoResponse>(

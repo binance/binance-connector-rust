@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
         "liquidity_example".to_string(),
         [].to_vec(),
         "symbol_example".to_string(),
-        NewBlockTradeOrderSideEnum::BUY,
+        NewBlockTradeOrderSideEnum::Buy,
         1.0,
         1.0,
     )

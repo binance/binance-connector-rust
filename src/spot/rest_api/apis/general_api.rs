@@ -20,6 +20,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -58,26 +59,26 @@ impl GeneralApiClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ExchangeInfoSymbolStatusEnum {
     #[serde(rename = "TRADING")]
-    TRADING,
+    Trading,
     #[serde(rename = "END_OF_DAY")]
-    END_OF_DAY,
+    EndOfDay,
     #[serde(rename = "HALT")]
-    HALT,
+    Halt,
     #[serde(rename = "BREAK")]
-    BREAK,
+    Break,
     #[serde(rename = "NON_REPRESENTABLE")]
-    NON_REPRESENTABLE,
+    NonRepresentable,
 }
 
 impl ExchangeInfoSymbolStatusEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            ExchangeInfoSymbolStatusEnum::TRADING => "TRADING",
-            ExchangeInfoSymbolStatusEnum::END_OF_DAY => "END_OF_DAY",
-            ExchangeInfoSymbolStatusEnum::HALT => "HALT",
-            ExchangeInfoSymbolStatusEnum::BREAK => "BREAK",
-            ExchangeInfoSymbolStatusEnum::NON_REPRESENTABLE => "NON_REPRESENTABLE",
+            ExchangeInfoSymbolStatusEnum::Trading => "TRADING",
+            ExchangeInfoSymbolStatusEnum::EndOfDay => "END_OF_DAY",
+            ExchangeInfoSymbolStatusEnum::Halt => "HALT",
+            ExchangeInfoSymbolStatusEnum::Break => "BREAK",
+            ExchangeInfoSymbolStatusEnum::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -120,9 +121,6 @@ pub struct ExchangeInfoParams {
 impl ExchangeInfoParams {
     /// Create a builder for [`exchange_info`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> ExchangeInfoParamsBuilder {
         ExchangeInfoParamsBuilder::default()
@@ -158,11 +156,11 @@ impl GeneralApi for GeneralApiClient {
         }
 
         if let Some(rw) = show_permission_sets {
-            query_params.insert("show_permission_sets".to_string(), json!(rw));
+            query_params.insert("showPermissionSets".to_string(), json!(rw));
         }
 
         if let Some(rw) = symbol_status {
-            query_params.insert("symbol_status".to_string(), json!(rw));
+            query_params.insert("symbolStatus".to_string(), json!(rw));
         }
 
         send_request::<models::ExchangeInfoResponse>(
@@ -337,7 +335,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockGeneralApiClient { force_error: false };
 
-            let params = ExchangeInfoParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).permissions(["null".to_string(),].to_vec()).show_permission_sets(true).symbol_status(ExchangeInfoSymbolStatusEnum::TRADING).build().unwrap();
+            let params = ExchangeInfoParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).permissions(["null".to_string(),].to_vec()).show_permission_sets(true).symbol_status(ExchangeInfoSymbolStatusEnum::Trading).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000}],"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ICEBERG_ORDERS","maxNumIcebergOrders":10000},{"filterType":"EXCHANGE_MAX_NUM_ALGO_ORDERS","maxNumAlgoOrders":200},{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000},{"filterType":"TRAILING_DELTA","minTrailingAboveDelta":10,"maxTrailingAboveDelta":2000,"minTrailingBelowDelta":10,"maxTrailingBelowDelta":2000},{"filterType":"MAX_POSITION","maxPosition":"10.00000000"},{"filterType":"MAX_NUM_ICEBERG_ORDERS","maxNumIcebergOrders":5},{"filterType":"MAX_NUM_ALGO_ORDERS","maxNumAlgoOrders":5},{"filterType":"MAX_NUM_ORDERS","maxNumOrders":25},{"filterType":"MARKET_LOT_SIZE","minQty":"0.00100000","maxQty":"100000.00000000","stepSize":"0.00100000"},{"filterType":"ICEBERG_PARTS","limit":10},{"filterType":"NOTIONAL","minNotional":"10.00000000","applyMinToMarket":false,"maxNotional":"10000.00000000","applyMaxToMarket":false,"avgPriceMins":5},{"filterType":"MIN_NOTIONAL","minNotional":"0.00100000","applyToMarket":true,"avgPriceMins":5},{"filterType":"LOT_SIZE","minQty":"0.00100000","maxQty":"100000.00000000","stepSize":"0.00100000"},{"filterType":"PERCENT_PRICE_BY_SIDE","bidMultiplierUp":"1.2","bidMultiplierDown":"0.2","askMultiplierUp":"5","askMultiplierDown":"0.8","avgPriceMins":1},{"filterType":"PERCENT_PRICE","multiplierUp":"1.3000","multiplierDown":"0.7000","avgPriceMins":5},{"filterType":"PRICE_FILTER","minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"}],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[{"filterType":"EXCHANGE_MAX_NUM_ICEBERG_ORDERS","maxNumIcebergOrders":10000},{"filterType":"EXCHANGE_MAX_NUM_ALGO_ORDERS","maxNumAlgoOrders":200},{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000},{"filterType":"TRAILING_DELTA","minTrailingAboveDelta":10,"maxTrailingAboveDelta":2000,"minTrailingBelowDelta":10,"maxTrailingBelowDelta":2000},{"filterType":"MAX_POSITION","maxPosition":"10.00000000"},{"filterType":"MAX_NUM_ICEBERG_ORDERS","maxNumIcebergOrders":5},{"filterType":"MAX_NUM_ALGO_ORDERS","maxNumAlgoOrders":5},{"filterType":"MAX_NUM_ORDERS","maxNumOrders":25},{"filterType":"MARKET_LOT_SIZE","minQty":"0.00100000","maxQty":"100000.00000000","stepSize":"0.00100000"},{"filterType":"ICEBERG_PARTS","limit":10},{"filterType":"NOTIONAL","minNotional":"10.00000000","applyMinToMarket":false,"maxNotional":"10000.00000000","applyMaxToMarket":false,"avgPriceMins":5},{"filterType":"MIN_NOTIONAL","minNotional":"0.00100000","applyToMarket":true,"avgPriceMins":5},{"filterType":"LOT_SIZE","minQty":"0.00100000","maxQty":"100000.00000000","stepSize":"0.00100000"},{"filterType":"PERCENT_PRICE_BY_SIDE","bidMultiplierUp":"1.2","bidMultiplierDown":"0.2","askMultiplierUp":"5","askMultiplierDown":"0.8","avgPriceMins":1},{"filterType":"PERCENT_PRICE","multiplierUp":"1.3000","multiplierDown":"0.7000","avgPriceMins":5},{"filterType":"PRICE_FILTER","minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"}],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
             let expected_response : models::ExchangeInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExchangeInfoResponse");

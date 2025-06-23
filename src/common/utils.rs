@@ -299,28 +299,38 @@ pub fn build_client(
     builder.build().expect("Failed to build reqwest client")
 }
 
-/// Generates a user agent string with package name, version, Rust version, operating system, and architecture.
+/// Generates a user agent string for the current module.
+///
+/// # Arguments
+///
+/// * `product` - A string slice representing the product.
 ///
 /// # Returns
 ///
-/// * A `String` containing the formatted user agent information.
+/// A formatted user agent string containing:
+/// - Package name
+/// - Product
+/// - Package version
+/// - Rust compiler version
+/// - Operating system
+/// - Architecture
 ///
 /// # Examples
 ///
 ///
-/// let `user_agent` = `build_user_agent()`;
-/// println!("User Agent: {}", `user_agent`);
-/// // Might output something like: "`my_package/1.0.0` (Rust/1.55.0; linux; `x86_64`)"
+/// let `user_agent` = `build_user_agent("spot`");
+/// // Might return something like: "`binance_sdk/spot/1.0.0` (Rust/rustc 1.87.0; linux; `x86_64`;)"
 ///
 #[must_use]
-pub fn build_user_agent() -> String {
+pub fn build_user_agent(product: &str) -> String {
     format!(
-        "{}/{} (Rust/{}; {}; {})",
+        "{}/{}/{} (Rust/{}; {}; {})",
         env!("CARGO_PKG_NAME"),
+        product,
         env!("CARGO_PKG_VERSION"),
         env!("RUSTC_VERSION"),
         std::env::consts::OS,
-        std::env::consts::ARCH
+        std::env::consts::ARCH,
     )
 }
 
@@ -1049,32 +1059,46 @@ mod tests {
         use crate::common::utils::build_user_agent;
 
         #[test]
-        fn build_user_agent_contains_crate_and_rust_info() {
-            let ua = build_user_agent();
+        fn build_user_agent_contains_crate_product_and_rust_info() {
+            let product = "product";
+            let user_agent = build_user_agent(product);
+
             let name = env!("CARGO_PKG_NAME");
             let version = env!("CARGO_PKG_VERSION");
             let rustc = env!("RUSTC_VERSION");
             let os = std::env::consts::OS;
             let arch = std::env::consts::ARCH;
 
-            let expected_prefix = format!("{name}/{version} (Rust/");
-            assert!(ua.starts_with(&expected_prefix), "prefix mismatch: {ua}");
+            let expected_prefix = format!("{name}/{product}/{version} (Rust/");
+            assert!(
+                user_agent.starts_with(&expected_prefix),
+                "prefix mismatch: {user_agent}"
+            );
 
-            assert!(ua.contains(rustc), "user agent missing RUSTC_VERSION: {ua}");
+            assert!(
+                user_agent.contains(rustc),
+                "user agent missing RUSTC_VERSION: {user_agent}"
+            );
 
-            let expected_os = format!("; {os}");
-            let expected_arch = format!("; {arch}");
-            assert!(ua.contains(&expected_os), "user agent missing OS: {ua}");
-            assert!(ua.contains(&expected_arch), "user agent missing ARCH: {ua}");
-
-            assert!(ua.ends_with(')'), "missing trailing ')': {ua}");
+            assert!(
+                user_agent.contains(&format!("; {os}")),
+                "user agent missing OS: {user_agent}"
+            );
+            assert!(
+                user_agent.contains(&format!("; {arch}")),
+                "user agent missing ARCH: {user_agent}"
+            );
         }
 
         #[test]
         fn build_user_agent_is_deterministic() {
-            let ua1 = build_user_agent();
-            let ua2 = build_user_agent();
-            assert_eq!(ua1, ua2, "user agent should be the same on repeated calls");
+            let product = "product";
+            let user_agent1 = build_user_agent(product);
+            let user_agent2 = build_user_agent(product);
+            assert_eq!(
+                user_agent1, user_agent2,
+                "user agent should be the same on repeated calls"
+            );
         }
     }
 

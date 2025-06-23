@@ -15,6 +15,7 @@
 use async_trait::async_trait;
 use derive_builder::Builder;
 use reqwest;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -241,9 +242,6 @@ pub struct AccountBalanceParams {
 impl AccountBalanceParams {
     /// Create a builder for [`account_balance`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> AccountBalanceParamsBuilder {
         AccountBalanceParamsBuilder::default()
@@ -266,9 +264,6 @@ pub struct AccountInformationParams {
 
 impl AccountInformationParams {
     /// Create a builder for [`account_information`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> AccountInformationParamsBuilder {
@@ -518,9 +513,6 @@ pub struct CmNotionalAndLeverageBracketsParams {
 impl CmNotionalAndLeverageBracketsParams {
     /// Create a builder for [`cm_notional_and_leverage_brackets`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> CmNotionalAndLeverageBracketsParamsBuilder {
         CmNotionalAndLeverageBracketsParamsBuilder::default()
@@ -543,9 +535,6 @@ pub struct FundAutoCollectionParams {
 
 impl FundAutoCollectionParams {
     /// Create a builder for [`fund_auto_collection`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> FundAutoCollectionParamsBuilder {
@@ -603,9 +592,6 @@ pub struct GetAutoRepayFuturesStatusParams {
 impl GetAutoRepayFuturesStatusParams {
     /// Create a builder for [`get_auto_repay_futures_status`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetAutoRepayFuturesStatusParamsBuilder {
         GetAutoRepayFuturesStatusParamsBuilder::default()
@@ -629,9 +615,6 @@ pub struct GetCmAccountDetailParams {
 impl GetCmAccountDetailParams {
     /// Create a builder for [`get_cm_account_detail`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetCmAccountDetailParamsBuilder {
         GetCmAccountDetailParamsBuilder::default()
@@ -654,9 +637,6 @@ pub struct GetCmCurrentPositionModeParams {
 
 impl GetCmCurrentPositionModeParams {
     /// Create a builder for [`get_cm_current_position_mode`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetCmCurrentPositionModeParamsBuilder {
@@ -712,9 +692,6 @@ pub struct GetCmIncomeHistoryParams {
 
 impl GetCmIncomeHistoryParams {
     /// Create a builder for [`get_cm_income_history`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetCmIncomeHistoryParamsBuilder {
@@ -905,9 +882,6 @@ pub struct GetMarginBorrowLoanInterestHistoryParams {
 impl GetMarginBorrowLoanInterestHistoryParams {
     /// Create a builder for [`get_margin_borrow_loan_interest_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetMarginBorrowLoanInterestHistoryParamsBuilder {
         GetMarginBorrowLoanInterestHistoryParamsBuilder::default()
@@ -930,9 +904,6 @@ pub struct GetUmAccountDetailParams {
 
 impl GetUmAccountDetailParams {
     /// Create a builder for [`get_um_account_detail`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetUmAccountDetailParamsBuilder {
@@ -957,9 +928,6 @@ pub struct GetUmAccountDetailV2Params {
 impl GetUmAccountDetailV2Params {
     /// Create a builder for [`get_um_account_detail_v2`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetUmAccountDetailV2ParamsBuilder {
         GetUmAccountDetailV2ParamsBuilder::default()
@@ -982,9 +950,6 @@ pub struct GetUmCurrentPositionModeParams {
 
 impl GetUmCurrentPositionModeParams {
     /// Create a builder for [`get_um_current_position_mode`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> GetUmCurrentPositionModeParamsBuilder {
@@ -1137,9 +1102,6 @@ pub struct GetUmIncomeHistoryParams {
 impl GetUmIncomeHistoryParams {
     /// Create a builder for [`get_um_income_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> GetUmIncomeHistoryParamsBuilder {
         GetUmIncomeHistoryParamsBuilder::default()
@@ -1268,9 +1230,6 @@ pub struct PortfolioMarginUmTradingQuantitativeRulesIndicatorsParams {
 impl PortfolioMarginUmTradingQuantitativeRulesIndicatorsParams {
     /// Create a builder for [`portfolio_margin_um_trading_quantitative_rules_indicators`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> PortfolioMarginUmTradingQuantitativeRulesIndicatorsParamsBuilder {
         PortfolioMarginUmTradingQuantitativeRulesIndicatorsParamsBuilder::default()
@@ -1305,9 +1264,6 @@ pub struct QueryCmPositionInformationParams {
 
 impl QueryCmPositionInformationParams {
     /// Create a builder for [`query_cm_position_information`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryCmPositionInformationParamsBuilder {
@@ -1512,9 +1468,6 @@ pub struct QueryPortfolioMarginNegativeBalanceInterestHistoryParams {
 impl QueryPortfolioMarginNegativeBalanceInterestHistoryParams {
     /// Create a builder for [`query_portfolio_margin_negative_balance_interest_history`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryPortfolioMarginNegativeBalanceInterestHistoryParamsBuilder {
         QueryPortfolioMarginNegativeBalanceInterestHistoryParamsBuilder::default()
@@ -1543,9 +1496,6 @@ pub struct QueryUmPositionInformationParams {
 
 impl QueryUmPositionInformationParams {
     /// Create a builder for [`query_um_position_information`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> QueryUmPositionInformationParamsBuilder {
@@ -1615,9 +1565,6 @@ pub struct QueryUserRateLimitParams {
 impl QueryUserRateLimitParams {
     /// Create a builder for [`query_user_rate_limit`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> QueryUserRateLimitParamsBuilder {
         QueryUserRateLimitParamsBuilder::default()
@@ -1641,9 +1588,6 @@ pub struct RepayFuturesNegativeBalanceParams {
 impl RepayFuturesNegativeBalanceParams {
     /// Create a builder for [`repay_futures_negative_balance`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> RepayFuturesNegativeBalanceParamsBuilder {
         RepayFuturesNegativeBalanceParamsBuilder::default()
@@ -1666,9 +1610,6 @@ pub struct UmFuturesAccountConfigurationParams {
 
 impl UmFuturesAccountConfigurationParams {
     /// Create a builder for [`um_futures_account_configuration`].
-    ///
-    /// Required parameters:
-    ///
     ///
     #[must_use]
     pub fn builder() -> UmFuturesAccountConfigurationParamsBuilder {
@@ -1699,9 +1640,6 @@ pub struct UmFuturesSymbolConfigurationParams {
 impl UmFuturesSymbolConfigurationParams {
     /// Create a builder for [`um_futures_symbol_configuration`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> UmFuturesSymbolConfigurationParamsBuilder {
         UmFuturesSymbolConfigurationParamsBuilder::default()
@@ -1731,9 +1669,6 @@ pub struct UmNotionalAndLeverageBracketsParams {
 impl UmNotionalAndLeverageBracketsParams {
     /// Create a builder for [`um_notional_and_leverage_brackets`].
     ///
-    /// Required parameters:
-    ///
-    ///
     #[must_use]
     pub fn builder() -> UmNotionalAndLeverageBracketsParamsBuilder {
         UmNotionalAndLeverageBracketsParamsBuilder::default()
@@ -1755,7 +1690,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountBalanceResponse>(
@@ -1782,7 +1717,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::AccountInformationResponse>(
@@ -1812,12 +1747,13 @@ impl AccountApi for AccountApiClient {
 
         let mut query_params = BTreeMap::new();
 
-        query_params.insert("amount".to_string(), json!(amount));
+        let amount_value = Decimal::from_f32(amount).unwrap_or_default();
+        query_params.insert("amount".to_string(), json!(amount_value));
 
         query_params.insert("transferSide".to_string(), json!(transfer_side));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::BnbTransferResponse>(
@@ -1849,7 +1785,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("autoRepay".to_string(), json!(auto_repay));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeAutoRepayFuturesStatusResponse>(
@@ -1884,7 +1820,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("leverage".to_string(), json!(leverage));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeCmInitialLeverageResponse>(
@@ -1916,7 +1852,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("dualSidePosition".to_string(), json!(dual_side_position));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeCmPositionModeResponse>(
@@ -1951,7 +1887,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("leverage".to_string(), json!(leverage));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeUmInitialLeverageResponse>(
@@ -1983,7 +1919,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("dualSidePosition".to_string(), json!(dual_side_position));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::ChangeUmPositionModeResponse>(
@@ -2018,7 +1954,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::CmNotionalAndLeverageBracketsResponseInner>>(
@@ -2045,7 +1981,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FundAutoCollectionResponse>(
@@ -2074,7 +2010,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::FundCollectionByAssetResponse>(
@@ -2101,7 +2037,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetAutoRepayFuturesStatusResponse>(
@@ -2128,7 +2064,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCmAccountDetailResponse>(
@@ -2155,7 +2091,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetCmCurrentPositionModeResponse>(
@@ -2194,15 +2130,15 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = income_type {
-            query_params.insert("income_type".to_string(), json!(rw));
+            query_params.insert("incomeType".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -2214,7 +2150,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetCmIncomeHistoryResponseInner>>(
@@ -2250,7 +2186,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDownloadIdForUmFuturesOrderHistoryResponse>(
@@ -2286,7 +2222,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDownloadIdForUmFuturesTradeHistoryResponse>(
@@ -2322,7 +2258,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetDownloadIdForUmFuturesTransactionHistoryResponse>(
@@ -2361,11 +2297,11 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -2381,7 +2317,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetMarginBorrowLoanInterestHistoryResponse>(
@@ -2408,7 +2344,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUmAccountDetailResponse>(
@@ -2435,7 +2371,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUmAccountDetailV2Response>(
@@ -2462,7 +2398,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUmCurrentPositionModeResponse>(
@@ -2494,7 +2430,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("downloadId".to_string(), json!(download_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUmFuturesOrderDownloadLinkByIdResponse>(
@@ -2526,7 +2462,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("downloadId".to_string(), json!(download_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUmFuturesTradeDownloadLinkByIdResponse>(
@@ -2559,7 +2495,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("downloadId".to_string(), json!(download_id));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUmFuturesTransactionDownloadLinkByIdResponse>(
@@ -2598,15 +2534,15 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = income_type {
-            query_params.insert("income_type".to_string(), json!(rw));
+            query_params.insert("incomeType".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = page {
@@ -2618,7 +2554,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::GetUmIncomeHistoryResponseInner>>(
@@ -2650,7 +2586,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUserCommissionRateForCmResponse>(
@@ -2682,7 +2618,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("symbol".to_string(), json!(symbol));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::GetUserCommissionRateForUmResponse>(
@@ -2711,7 +2647,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::MarginMaxBorrowResponse>(
@@ -2747,7 +2683,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponse>(
@@ -2778,7 +2714,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = margin_asset {
-            query_params.insert("margin_asset".to_string(), json!(rw));
+            query_params.insert("marginAsset".to_string(), json!(rw));
         }
 
         if let Some(rw) = pair {
@@ -2786,7 +2722,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryCmPositionInformationResponseInner>>(
@@ -2824,15 +2760,15 @@ impl AccountApi for AccountApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -2848,7 +2784,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryMarginLoanRecordResponse>(
@@ -2877,7 +2813,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryMarginMaxWithdrawResponse>(
@@ -2915,15 +2851,15 @@ impl AccountApi for AccountApiClient {
         query_params.insert("asset".to_string(), json!(asset));
 
         if let Some(rw) = tx_id {
-            query_params.insert("tx_id".to_string(), json!(rw));
+            query_params.insert("txId".to_string(), json!(rw));
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = current {
@@ -2939,7 +2875,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryMarginRepayRecordResponse>(
@@ -2980,11 +2916,11 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = start_time {
-            query_params.insert("start_time".to_string(), json!(rw));
+            query_params.insert("startTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = end_time {
-            query_params.insert("end_time".to_string(), json!(rw));
+            query_params.insert("endTime".to_string(), json!(rw));
         }
 
         if let Some(rw) = size {
@@ -2992,7 +2928,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryPortfolioMarginNegativeBalanceInterestHistoryResponseInner>>(
@@ -3021,7 +2957,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryUmPositionInformationResponseInner>>(
@@ -3057,7 +2993,7 @@ impl AccountApi for AccountApiClient {
         query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::QueryUserNegativeBalanceAutoExchangeRecordResponse>(
@@ -3084,7 +3020,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::QueryUserRateLimitResponseInner>>(
@@ -3111,7 +3047,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::RepayFuturesNegativeBalanceResponse>(
@@ -3138,7 +3074,7 @@ impl AccountApi for AccountApiClient {
         let mut query_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<models::UmFuturesAccountConfigurationResponse>(
@@ -3173,7 +3109,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::UmFuturesSymbolConfigurationResponseInner>>(
@@ -3208,7 +3144,7 @@ impl AccountApi for AccountApiClient {
         }
 
         if let Some(rw) = recv_window {
-            query_params.insert("recv_window".to_string(), json!(rw));
+            query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
         send_request::<Vec<models::UmNotionalAndLeverageBracketsResponseInner>>(
