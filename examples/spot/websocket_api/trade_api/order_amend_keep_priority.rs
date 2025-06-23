@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use rust_decimal::Decimal;
 use std::env;
 use tracing::info;
 
@@ -27,7 +28,7 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket API")?;
 
     // Setup the WS API parameters
-    let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), 1.0).build()?;
+    let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), Decimal::ONE).build()?;
 
     // Make the WS API call
     let response = connection

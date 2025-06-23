@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use rust_decimal::Decimal;
 use std::env;
 use tracing::info;
 
@@ -31,7 +32,7 @@ async fn main() -> Result<()> {
 
     // Setup the WS API parameters
     let params =
-        OrderListPlaceParams::builder("BNBUSDT".to_string(), OrderListPlaceSideEnum::Buy, 1.0, 1.0)
+        OrderListPlaceParams::builder("BNBUSDT".to_string(), OrderListPlaceSideEnum::Buy, Decimal::ONE, Decimal::ONE)
             .build()?;
 
     // Make the WS API call

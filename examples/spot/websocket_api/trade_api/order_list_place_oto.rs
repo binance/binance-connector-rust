@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use rust_decimal::Decimal;
 use std::env;
 use tracing::info;
 
@@ -38,11 +39,11 @@ async fn main() -> Result<()> {
         "BNBUSDT".to_string(),
         OrderListPlaceOtoWorkingTypeEnum::Limit,
         OrderListPlaceOtoWorkingSideEnum::Buy,
-        1.0,
-        1.0,
+        Decimal::ONE,
+        Decimal::ONE,
         OrderListPlaceOtoPendingTypeEnum::Limit,
         OrderListPlaceOtoPendingSideEnum::Buy,
-        1.0,
+        Decimal::ONE,
     )
     .build()?;
 
