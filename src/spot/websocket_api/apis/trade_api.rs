@@ -20,7 +20,7 @@
 use anyhow::Context;
 use async_trait::async_trait;
 use derive_builder::Builder;
-use rust_decimal::{Decimal, prelude::FromPrimitive};
+use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{collections::BTreeMap, sync::Arc};
@@ -1344,7 +1344,7 @@ pub struct OrderAmendKeepPriorityParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub new_qty: f32,
+    pub new_qty: Decimal,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
@@ -1381,7 +1381,7 @@ impl OrderAmendKeepPriorityParams {
     /// * `new_qty` — `newQty` must be greater than 0 and less than the order's quantity.
     ///
     #[must_use]
-    pub fn builder(symbol: String, new_qty: f32) -> OrderAmendKeepPriorityParamsBuilder {
+    pub fn builder(symbol: String, new_qty: Decimal) -> OrderAmendKeepPriorityParamsBuilder {
         OrderAmendKeepPriorityParamsBuilder::default()
             .symbol(symbol)
             .new_qty(new_qty)
@@ -1508,19 +1508,19 @@ pub struct OrderCancelReplaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub price: Option<f32>,
+    pub price: Option<Decimal>,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub quantity: Option<f32>,
+    pub quantity: Option<Decimal>,
     ///
     /// The `quote_order_qty` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub quote_order_qty: Option<f32>,
+    pub quote_order_qty: Option<Decimal>,
     /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
@@ -1537,18 +1537,18 @@ pub struct OrderCancelReplaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub stop_price: Option<f32>,
+    pub stop_price: Option<Decimal>,
     /// See Trailing Stop order FAQ
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub trailing_delta: Option<f32>,
+    pub trailing_delta: Option<Decimal>,
     ///
     /// The `iceberg_qty` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub iceberg_qty: Option<f32>,
+    pub iceberg_qty: Option<Decimal>,
     /// Arbitrary numeric value identifying the order within an order strategy.
     ///
     /// This field is **optional.
@@ -1685,13 +1685,13 @@ pub struct OrderListPlaceParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub price: f32,
+    pub price: Decimal,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub quantity: f32,
+    pub quantity: Decimal,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
@@ -1713,7 +1713,7 @@ pub struct OrderListPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub limit_iceberg_qty: Option<f32>,
+    pub limit_iceberg_qty: Option<Decimal>,
     /// Arbitrary numeric value identifying the limit order within an order strategy.
     ///
     /// This field is **optional.
@@ -1729,7 +1729,7 @@ pub struct OrderListPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub stop_price: Option<f32>,
+    pub stop_price: Option<Decimal>,
     /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md)
     ///
     /// This field is **optional.
@@ -1745,7 +1745,7 @@ pub struct OrderListPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub stop_limit_price: Option<f32>,
+    pub stop_limit_price: Option<Decimal>,
     ///
     /// The `stop_limit_time_in_force` parameter.
     ///
@@ -1757,7 +1757,7 @@ pub struct OrderListPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub stop_iceberg_qty: Option<f32>,
+    pub stop_iceberg_qty: Option<Decimal>,
     /// Arbitrary numeric value identifying the stop order within an order strategy.
     ///
     /// This field is **optional.
@@ -1795,14 +1795,14 @@ impl OrderListPlaceParams {
     /// * `symbol` — String
     /// * `side` — String
     /// * `price` — Price for the limit order
-    /// * `quantity` — f32
+    /// * `quantity` — Decimal
     ///
     #[must_use]
     pub fn builder(
         symbol: String,
         side: OrderListPlaceSideEnum,
-        price: f32,
-        quantity: f32,
+        price: Decimal,
+        quantity: Decimal,
     ) -> OrderListPlaceParamsBuilder {
         OrderListPlaceParamsBuilder::default()
             .symbol(symbol)
@@ -1835,7 +1835,7 @@ pub struct OrderListPlaceOcoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub quantity: f32,
+    pub quantity: Decimal,
     ///
     /// The `above_type` parameter.
     ///
@@ -1873,12 +1873,12 @@ pub struct OrderListPlaceOcoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub above_price: Option<f32>,
+    pub above_price: Option<Decimal>,
     /// Can be used if `aboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. <br>Either `aboveStopPrice` or `aboveTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub above_stop_price: Option<f32>,
+    pub above_stop_price: Option<Decimal>,
     /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md).
     ///
     /// This field is **optional.
@@ -1888,7 +1888,7 @@ pub struct OrderListPlaceOcoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub above_time_in_force: Option<f32>,
+    pub above_time_in_force: Option<Decimal>,
     /// Arbitrary numeric value identifying the above order within an order strategy.
     ///
     /// This field is **optional.
@@ -1914,12 +1914,12 @@ pub struct OrderListPlaceOcoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub below_price: Option<f32>,
+    pub below_price: Option<Decimal>,
     /// Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` or `TAKE_PROFIT_LIMIT`. <br>Either `belowStopPrice` or `belowTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub below_stop_price: Option<f32>,
+    pub below_stop_price: Option<Decimal>,
     /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md).
     ///
     /// This field is **optional.
@@ -1967,7 +1967,7 @@ impl OrderListPlaceOcoParams {
     ///
     /// * `symbol` — String
     /// * `side` — String
-    /// * `quantity` — f32
+    /// * `quantity` — Decimal
     /// * `above_type` — String
     /// * `below_type` — String
     ///
@@ -1975,7 +1975,7 @@ impl OrderListPlaceOcoParams {
     pub fn builder(
         symbol: String,
         side: OrderListPlaceOcoSideEnum,
-        quantity: f32,
+        quantity: Decimal,
         above_type: OrderListPlaceOcoAboveTypeEnum,
         below_type: OrderListPlaceOcoBelowTypeEnum,
     ) -> OrderListPlaceOcoParamsBuilder {
@@ -2017,12 +2017,12 @@ pub struct OrderListPlaceOtoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub working_price: f32,
+    pub working_price: Decimal,
     /// Sets the quantity for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub working_quantity: f32,
+    pub working_quantity: Decimal,
     ///
     /// The `pending_type` parameter.
     ///
@@ -2039,7 +2039,7 @@ pub struct OrderListPlaceOtoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub pending_quantity: f32,
+    pub pending_quantity: Decimal,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
@@ -2072,7 +2072,7 @@ pub struct OrderListPlaceOtoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub working_iceberg_qty: Option<f32>,
+    pub working_iceberg_qty: Option<Decimal>,
     ///
     /// The `working_time_in_force` parameter.
     ///
@@ -2099,24 +2099,24 @@ pub struct OrderListPlaceOtoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_price: Option<f32>,
+    pub pending_price: Option<Decimal>,
     ///
     /// The `pending_stop_price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_stop_price: Option<f32>,
+    pub pending_stop_price: Option<Decimal>,
     ///
     /// The `pending_trailing_delta` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_trailing_delta: Option<f32>,
+    pub pending_trailing_delta: Option<Decimal>,
     /// This can only be used if `pendingTimeInForce` is `GTC`, or if `pendingType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_iceberg_qty: Option<f32>,
+    pub pending_iceberg_qty: Option<Decimal>,
     ///
     /// The `pending_time_in_force` parameter.
     ///
@@ -2148,7 +2148,7 @@ impl OrderListPlaceOtoParams {
     /// * `symbol` — String
     /// * `working_type` — String
     /// * `working_side` — String
-    /// * `working_price` — f32
+    /// * `working_price` — Decimal
     /// * `working_quantity` — Sets the quantity for the working order.
     /// * `pending_type` — String
     /// * `pending_side` — String
@@ -2159,11 +2159,11 @@ impl OrderListPlaceOtoParams {
         symbol: String,
         working_type: OrderListPlaceOtoWorkingTypeEnum,
         working_side: OrderListPlaceOtoWorkingSideEnum,
-        working_price: f32,
-        working_quantity: f32,
+        working_price: Decimal,
+        working_quantity: Decimal,
         pending_type: OrderListPlaceOtoPendingTypeEnum,
         pending_side: OrderListPlaceOtoPendingSideEnum,
-        pending_quantity: f32,
+        pending_quantity: Decimal,
     ) -> OrderListPlaceOtoParamsBuilder {
         OrderListPlaceOtoParamsBuilder::default()
             .symbol(symbol)
@@ -2206,12 +2206,12 @@ pub struct OrderListPlaceOtocoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub working_price: f32,
+    pub working_price: Decimal,
     /// Sets the quantity for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub working_quantity: f32,
+    pub working_quantity: Decimal,
     ///
     /// The `pending_side` parameter.
     ///
@@ -2222,7 +2222,7 @@ pub struct OrderListPlaceOtocoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub pending_quantity: f32,
+    pub pending_quantity: Decimal,
     ///
     /// The `pending_above_type` parameter.
     ///
@@ -2261,7 +2261,7 @@ pub struct OrderListPlaceOtocoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub working_iceberg_qty: Option<f32>,
+    pub working_iceberg_qty: Option<Decimal>,
     ///
     /// The `working_time_in_force` parameter.
     ///
@@ -2287,22 +2287,22 @@ pub struct OrderListPlaceOtocoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_above_price: Option<f32>,
+    pub pending_above_price: Option<Decimal>,
     /// Can be used if `pendingAboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_above_stop_price: Option<f32>,
+    pub pending_above_stop_price: Option<Decimal>,
     /// See [Trailing Stop FAQ](faqs/trailing-stop-faq.md)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_above_trailing_delta: Option<f32>,
+    pub pending_above_trailing_delta: Option<Decimal>,
     /// This can only be used if `pendingAboveTimeInForce` is `GTC` or if `pendingAboveType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_above_iceberg_qty: Option<f32>,
+    pub pending_above_iceberg_qty: Option<Decimal>,
     ///
     /// The `pending_above_time_in_force` parameter.
     ///
@@ -2334,23 +2334,23 @@ pub struct OrderListPlaceOtocoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_below_price: Option<f32>,
+    pub pending_below_price: Option<Decimal>,
     /// Can be used if `pendingBelowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT, TAKE_PROFIT or TAKE_PROFIT_LIMIT`. <br>Either `pendingBelowStopPrice` or `pendingBelowTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_below_stop_price: Option<f32>,
+    pub pending_below_stop_price: Option<Decimal>,
     ///
     /// The `pending_below_trailing_delta` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_below_trailing_delta: Option<f32>,
+    pub pending_below_trailing_delta: Option<Decimal>,
     /// This can only be used if `pendingBelowTimeInForce` is `GTC`, or if `pendingBelowType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub pending_below_iceberg_qty: Option<f32>,
+    pub pending_below_iceberg_qty: Option<Decimal>,
     ///
     /// The `pending_below_time_in_force` parameter.
     ///
@@ -2382,7 +2382,7 @@ impl OrderListPlaceOtocoParams {
     /// * `symbol` — String
     /// * `working_type` — String
     /// * `working_side` — String
-    /// * `working_price` — f32
+    /// * `working_price` — Decimal
     /// * `working_quantity` — Sets the quantity for the working order.
     /// * `pending_side` — String
     /// * `pending_quantity` — Sets the quantity for the pending order.
@@ -2393,10 +2393,10 @@ impl OrderListPlaceOtocoParams {
         symbol: String,
         working_type: OrderListPlaceOtocoWorkingTypeEnum,
         working_side: OrderListPlaceOtocoWorkingSideEnum,
-        working_price: f32,
-        working_quantity: f32,
+        working_price: Decimal,
+        working_quantity: Decimal,
         pending_side: OrderListPlaceOtocoPendingSideEnum,
-        pending_quantity: f32,
+        pending_quantity: Decimal,
         pending_above_type: OrderListPlaceOtocoPendingAboveTypeEnum,
     ) -> OrderListPlaceOtocoParamsBuilder {
         OrderListPlaceOtocoParamsBuilder::default()
@@ -2451,19 +2451,19 @@ pub struct OrderPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub price: Option<f32>,
+    pub price: Option<Decimal>,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub quantity: Option<f32>,
+    pub quantity: Option<Decimal>,
     ///
     /// The `quote_order_qty` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub quote_order_qty: Option<f32>,
+    pub quote_order_qty: Option<Decimal>,
     /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
@@ -2480,7 +2480,7 @@ pub struct OrderPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub stop_price: Option<f32>,
+    pub stop_price: Option<Decimal>,
     /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md)
     ///
     /// This field is **optional.
@@ -2491,7 +2491,7 @@ pub struct OrderPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub iceberg_qty: Option<f32>,
+    pub iceberg_qty: Option<Decimal>,
     /// Arbitrary numeric value identifying the order within an order strategy.
     ///
     /// This field is **optional.
@@ -2594,7 +2594,7 @@ pub struct SorOrderPlaceParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub quantity: f32,
+    pub quantity: Decimal,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
@@ -2611,7 +2611,7 @@ pub struct SorOrderPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub price: Option<f32>,
+    pub price: Option<Decimal>,
     /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
@@ -2628,7 +2628,7 @@ pub struct SorOrderPlaceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub iceberg_qty: Option<f32>,
+    pub iceberg_qty: Option<Decimal>,
     /// Arbitrary numeric value identifying the order within an order strategy.
     ///
     /// This field is **optional.
@@ -2661,14 +2661,14 @@ impl SorOrderPlaceParams {
     /// * `symbol` — String
     /// * `side` — String
     /// * `r#type` — String
-    /// * `quantity` — f32
+    /// * `quantity` — Decimal
     ///
     #[must_use]
     pub fn builder(
         symbol: String,
         side: SorOrderPlaceSideEnum,
         r#type: SorOrderPlaceTypeEnum,
-        quantity: f32,
+        quantity: Decimal,
     ) -> SorOrderPlaceParamsBuilder {
         SorOrderPlaceParamsBuilder::default()
             .symbol(symbol)
@@ -2882,7 +2882,6 @@ impl TradeApi for TradeApiClient {
         );
 
         payload.insert("side".to_string(), serde_json::json!(side));
-
         payload.insert("type".to_string(), serde_json::json!(r#type));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
@@ -3646,7 +3645,6 @@ impl TradeApi for TradeApiClient {
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
 
         payload.insert("side".to_string(), serde_json::json!(side));
-
         payload.insert("type".to_string(), serde_json::json!(r#type));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
@@ -3663,7 +3661,6 @@ impl TradeApi for TradeApiClient {
             payload.insert("quantity".to_string(), serde_json::json!(value));
         }
         if let Some(value) = quote_order_qty {
-            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("quoteOrderQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_client_order_id {
@@ -3673,17 +3670,16 @@ impl TradeApi for TradeApiClient {
             payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = stop_price {
-            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("stopPrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = trailing_delta {
             payload.insert("trailingDelta".to_string(), serde_json::json!(value));
         }
         if let Some(value) = iceberg_qty {
-            let value = Decimal::from_f32(value).unwrap_or_default();
             payload.insert("icebergQty".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_id {
+            payload.insert("strategyId".to_string(), serde_json::json!(value));
             payload.insert("strategyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = strategy_type {
@@ -3773,10 +3769,8 @@ impl TradeApi for TradeApiClient {
         payload.insert("symbol".to_string(), serde_json::json!(symbol));
 
         payload.insert("side".to_string(), serde_json::json!(side));
-
         payload.insert("type".to_string(), serde_json::json!(r#type));
-        let quantity_value = Decimal::from_f32(quantity).unwrap_or_default();
-        payload.insert("quantity".to_string(), serde_json::json!(quantity_value));
+        payload.insert("quantity".to_string(), serde_json::json!(quantity));
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
