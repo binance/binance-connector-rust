@@ -450,22 +450,6 @@ pub fn build_query_string(params: &BTreeMap<String, Value>) -> Result<String, an
                 ser.append_pair(key, &val);
                 segments.push(ser.finish());
             }
-            Value::Array(arr)
-                if arr
-                    .iter()
-                    .all(|v| matches!(v, Value::String(_) | Value::Bool(_) | Value::Number(_))) =>
-            {
-                let mut parts = Vec::with_capacity(arr.len());
-                for v in arr {
-                    match v {
-                        Value::String(s) => parts.push(s.clone()),
-                        Value::Bool(b) => parts.push(b.to_string()),
-                        Value::Number(n) => parts.push(n.to_string()),
-                        _ => unreachable!(),
-                    }
-                }
-                segments.push(format!("{}={}", key, parts.join(",")));
-            }
             Value::Array(arr) => {
                 let json =
                     serde_json::to_string(arr).context("Failed to JSON-serialize nested array")?;
