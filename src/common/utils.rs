@@ -945,7 +945,8 @@ where
         original.starts_with('/') && PLACEHOLDER_RE.find(body).is_some_and(|m| m.start() == 0);
 
     // Lowercase only that first placeholder's value
-    let result = if should_lower_head {
+
+    if should_lower_head {
         if let Some(caps) = PLACEHOLDER_RE.captures(body) {
             let key = normalize_ws_streams_key(caps.get(2).unwrap().as_str());
             let first_val = normalized.get(&key).cloned().unwrap_or_default();
@@ -960,9 +961,7 @@ where
         }
     } else {
         stripped.clone()
-    };
-
-    result
+    }
 }
 
 /// Builds a WebSocket API message with optional authentication and signature generation.

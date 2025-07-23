@@ -39,7 +39,7 @@ use tracing::{debug, error, info, warn};
 
 use super::{
     config::{AgentConnector, ConfigurationWebsocketApi, ConfigurationWebsocketStreams},
-    errors::WebsocketError,
+    errors::{WebsocketConnectionFailureReason, WebsocketError},
     models::{WebsocketApiResponse, WebsocketEvent, WebsocketMode},
     utils::{ID_REGEX, build_websocket_api_message, random_string, validate_time_unit},
 };
@@ -898,11 +898,53 @@ impl WebsocketCommon {
 
         {
             let wconn = conn.clone();
+            let common_clone = self.clone();
+            let writer_url = url.to_string();
+
             spawn(async move {
                 let mut sink = write_half;
                 while let Some(msg) = rx.recv().await {
-                    if sink.send(msg).await.is_err() {
-                        error!("Write error {}", wconn.id);
+                    if let Err(e) = sink.send(msg).await {
+                        let failure_reason =
+                            WebsocketConnectionFailureReason::from_tungstenite_error(&e);
+
+                        error!(
+                            "Write error on {}: {:?}, classified as {:?}",
+                            wconn.id, e, failure_reason
+                        );
+
+                        // Apply same reconnection logic as reader errors
+                        let mut conn_state = wconn.state.lock().await;
+                        if !conn_state.close_initiated
+                            && !is_renewal
+                            && failure_reason.should_reconnect()
+                        {
+                            info!(
+                                "Writer connection {} has recoverable error, attempting reconnection: {:?}",
+                                wconn.id, failure_reason
+                            );
+                            conn_state.reconnection_pending = true;
+                            conn_state.is_session_logged_on = false;
+                            drop(conn_state);
+                            let reconnect_url = common_clone
+                                .get_reconnect_url(&writer_url, Arc::clone(&wconn))
+                                .await;
+
+                            let _ = common_clone
+                                .reconnect_tx
+                                .send(ReconnectEntry {
+                                    connection_id: wconn.id.clone(),
+                                    url: reconnect_url,
+                                    is_renewal: false,
+                                })
+                                .await;
+                        } else {
+                            warn!(
+                                "Writer connection {} has permanent error, will not reconnect: {:?}",
+                                wconn.id, failure_reason
+                            );
+                        }
+
                         break;
                     }
                 }
@@ -967,14 +1009,31 @@ impl WebsocketCommon {
                                 .events
                                 .emit(&WebsocketEvent::Close(code, reason.clone()));
 
+                            // Classify the close reason
+                            let user_initiated = {
+                                let conn_state = reader_conn.state.lock().await;
+                                conn_state.close_initiated
+                            };
+
+                            let failure_reason = WebsocketConnectionFailureReason::from_close_code(
+                                code,
+                                user_initiated,
+                            );
+
+                            info!(
+                                "Connection {} received close frame: code={}, reason='{}', classified as {:?}",
+                                reader_conn.id, code, reason, failure_reason
+                            );
+
+                            // Use the existing logic but with enhanced classification
                             let mut conn_state = reader_conn.state.lock().await;
                             if !conn_state.close_initiated
                                 && !is_renewal
-                                && CloseCode::from(code) != CloseCode::Normal
+                                && failure_reason.should_reconnect()
                             {
-                                warn!(
-                                    "Connection {} closed due to {}: {}",
-                                    reader_conn.id, code, reason
+                                info!(
+                                    "Connection {} received close frame with reconnectable failure: {:?}",
+                                    reader_conn.id, failure_reason
                                 );
                                 conn_state.reconnection_pending = true;
                                 conn_state.is_session_logged_on = false;
@@ -991,16 +1050,116 @@ impl WebsocketCommon {
                                         is_renewal: false,
                                     })
                                     .await;
+                            } else {
+                                warn!(
+                                    "Connection {} received close frame with non-reconnectable failure: {:?}",
+                                    reader_conn.id, failure_reason
+                                );
+
+                                // Emit detailed error for permanent failures
+                                common.events.emit(&WebsocketEvent::Error(format!(
+                                    "[CRITICAL] Connection {} permanently failed: {:?}",
+                                    reader_conn.id, failure_reason
+                                )));
                             }
+
                             break;
                         }
                         Err(e) => {
-                            error!("WebSocket error on {}: {:?}", reader_conn.id, e);
+                            // Classify the error type for reconnection decision
+                            let failure_reason =
+                                WebsocketConnectionFailureReason::from_tungstenite_error(&e);
+
+                            error!(
+                                "WebSocket error on {}: {:?}, classified as {:?}",
+                                reader_conn.id, e, failure_reason
+                            );
+
                             common.events.emit(&WebsocketEvent::Error(e.to_string()));
+
+                            // Apply the same reconnection logic as Close frames
+                            let mut conn_state = reader_conn.state.lock().await;
+                            if !conn_state.close_initiated
+                                && !is_renewal
+                                && failure_reason.should_reconnect()
+                            {
+                                info!(
+                                    "Connection {} has recoverable error, attempting reconnection: {:?}",
+                                    reader_conn.id, failure_reason
+                                );
+                                conn_state.reconnection_pending = true;
+                                conn_state.is_session_logged_on = false;
+                                drop(conn_state);
+                                let reconnect_url = common
+                                    .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
+                                    .await;
+
+                                let _ = common
+                                    .reconnect_tx
+                                    .send(ReconnectEntry {
+                                        connection_id: reader_conn.id.clone(),
+                                        url: reconnect_url,
+                                        is_renewal: false,
+                                    })
+                                    .await;
+                            } else {
+                                warn!(
+                                    "Connection {} has permanent error, will not reconnect: {:?}",
+                                    reader_conn.id, failure_reason
+                                );
+
+                                // Emit critical error for non-reconnectable failures
+                                common.events.emit(&WebsocketEvent::Error(format!(
+                                    "[CRITICAL] Connection {} permanently failed: {:?}",
+                                    reader_conn.id, failure_reason
+                                )));
+                            }
+
+                            break;
                         }
                         _ => {}
                     }
                 }
+
+                // Handle case where stream ends unexpectedly (e.g., network disconnection)
+                info!("WebSocket stream ended for connection {}", reader_conn.id);
+
+                // Handle unexpected stream end with same logic as other errors
+                let failure_reason = WebsocketConnectionFailureReason::StreamEnded;
+
+                info!(
+                    "WebSocket stream ended for connection {}, classified as {:?}",
+                    reader_conn.id, failure_reason
+                );
+
+                let mut conn_state = reader_conn.state.lock().await;
+                if !conn_state.close_initiated && !is_renewal && failure_reason.should_reconnect() {
+                    info!(
+                        "Connection {} stream ended unexpectedly, attempting reconnection",
+                        reader_conn.id
+                    );
+                    conn_state.reconnection_pending = true;
+                    conn_state.is_session_logged_on = false;
+                    drop(conn_state);
+                    let reconnect_url = common
+                        .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
+                        .await;
+
+                    let _ = common
+                        .reconnect_tx
+                        .send(ReconnectEntry {
+                            connection_id: reader_conn.id.clone(),
+                            url: reconnect_url,
+                            is_renewal: false,
+                        })
+                        .await;
+                } else {
+                    debug!(
+                        "Connection {} stream ended normally (close_initiated={}, is_renewal={})",
+                        reader_conn.id, conn_state.close_initiated, is_renewal
+                    );
+                }
+
                 debug!("Reader actor for {} exiting", reader_conn.id);
             });
         }
@@ -2598,7 +2757,7 @@ mod tests {
         WebsocketStream, WebsocketStreams, create_stream_handler,
     };
     use crate::config::{ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey};
-    use crate::errors::WebsocketError;
+    use crate::errors::{WebsocketConnectionFailureReason, WebsocketError};
     use crate::models::TimeUnit;
     use async_trait::async_trait;
     use futures::{SinkExt, StreamExt};
@@ -7237,6 +7396,258 @@ mod tests {
                 assert_eq!(handler.stream_or_id, identifier);
                 assert_eq!(handler.id, custom_id);
             });
+        }
+    }
+
+    mod websocket_connection_failure_reason {
+        use super::*;
+        use std::io::{Error as IoError, ErrorKind};
+        use tokio_tungstenite::tungstenite::Error as TungsteniteError;
+
+        #[test]
+        fn from_tungstenite_error_classifies_connection_closed() {
+            let error = TungsteniteError::ConnectionClosed;
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ConnectionReset
+            ));
+            assert!(reason.should_reconnect());
+        }
+
+        #[test]
+        fn from_tungstenite_error_classifies_already_closed() {
+            let error = TungsteniteError::AlreadyClosed;
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ConnectionReset
+            ));
+            assert!(reason.should_reconnect());
+        }
+
+        #[test]
+        fn from_tungstenite_error_classifies_io_errors() {
+            // Test ConnectionReset
+            let io_error = IoError::new(ErrorKind::ConnectionReset, "connection reset");
+            let error = TungsteniteError::Io(io_error);
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ConnectionReset
+            ));
+            assert!(reason.should_reconnect());
+
+            // Test ConnectionAborted
+            let io_error = IoError::new(ErrorKind::ConnectionAborted, "connection aborted");
+            let error = TungsteniteError::Io(io_error);
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ConnectionReset
+            ));
+            assert!(reason.should_reconnect());
+
+            // Test TimedOut
+            let io_error = IoError::new(ErrorKind::TimedOut, "timed out");
+            let error = TungsteniteError::Io(io_error);
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::NetworkInterruption
+            ));
+            assert!(reason.should_reconnect());
+
+            // Test UnexpectedEof
+            let io_error = IoError::new(ErrorKind::UnexpectedEof, "unexpected eof");
+            let error = TungsteniteError::Io(io_error);
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::StreamEnded
+            ));
+            assert!(reason.should_reconnect());
+
+            // Test PermissionDenied
+            let io_error = IoError::new(ErrorKind::PermissionDenied, "permission denied");
+            let error = TungsteniteError::Io(io_error);
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::AuthenticationFailure
+            ));
+            assert!(!reason.should_reconnect());
+
+            // Test other IO errors default to NetworkInterruption
+            let io_error = IoError::other("other error");
+            let error = TungsteniteError::Io(io_error);
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::NetworkInterruption
+            ));
+            assert!(reason.should_reconnect());
+        }
+
+        #[test]
+        fn from_tungstenite_error_classifies_protocol_errors() {
+            // Protocol error -> ProtocolViolation
+            use tokio_tungstenite::tungstenite::error::ProtocolError;
+            let protocol_error = ProtocolError::ResetWithoutClosingHandshake;
+            let error = TungsteniteError::Protocol(protocol_error);
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ProtocolViolation
+            ));
+            assert!(!reason.should_reconnect());
+
+            // UTF8 error -> ProtocolViolation
+            let error = TungsteniteError::Utf8;
+            let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ProtocolViolation
+            ));
+            assert!(!reason.should_reconnect());
+        }
+
+        #[test]
+        fn from_close_code_classifies_standard_codes() {
+            // Normal closure
+            let reason = WebsocketConnectionFailureReason::from_close_code(1000, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::NormalClose
+            ));
+            assert!(!reason.should_reconnect());
+
+            // Going away (server restart) -> ServerTemporaryError
+            let reason = WebsocketConnectionFailureReason::from_close_code(1001, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ServerTemporaryError
+            ));
+            assert!(reason.should_reconnect());
+
+            // Protocol error -> ProtocolViolation
+            let reason = WebsocketConnectionFailureReason::from_close_code(1002, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ProtocolViolation
+            ));
+            assert!(!reason.should_reconnect());
+
+            // Abnormal closure -> UnexpectedClose
+            let reason = WebsocketConnectionFailureReason::from_close_code(1006, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::UnexpectedClose
+            ));
+            assert!(reason.should_reconnect());
+
+            // Policy violation -> PermanentServerError
+            let reason = WebsocketConnectionFailureReason::from_close_code(1008, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::PermanentServerError
+            ));
+            assert!(!reason.should_reconnect());
+
+            // Server error -> ServerTemporaryError
+            let reason = WebsocketConnectionFailureReason::from_close_code(1011, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ServerTemporaryError
+            ));
+            assert!(reason.should_reconnect());
+
+            // TLS handshake failure -> ConfigurationError
+            let reason = WebsocketConnectionFailureReason::from_close_code(1015, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::ConfigurationError
+            ));
+            assert!(!reason.should_reconnect());
+
+            // Business/application errors -> PermanentServerError
+            let reason = WebsocketConnectionFailureReason::from_close_code(4000, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::PermanentServerError
+            ));
+            assert!(!reason.should_reconnect());
+
+            let reason = WebsocketConnectionFailureReason::from_close_code(4999, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::PermanentServerError
+            ));
+            assert!(!reason.should_reconnect());
+
+            // Unknown codes default to UnexpectedClose
+            let reason = WebsocketConnectionFailureReason::from_close_code(9999, false);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::UnexpectedClose
+            ));
+            assert!(reason.should_reconnect());
+        }
+
+        #[test]
+        fn from_close_code_handles_user_initiated() {
+            // Any code with user_initiated=true should return UserInitiatedClose
+            let reason = WebsocketConnectionFailureReason::from_close_code(1000, true);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::UserInitiatedClose
+            ));
+            assert!(!reason.should_reconnect());
+
+            let reason = WebsocketConnectionFailureReason::from_close_code(1006, true);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::UserInitiatedClose
+            ));
+            assert!(!reason.should_reconnect());
+
+            let reason = WebsocketConnectionFailureReason::from_close_code(4000, true);
+            assert!(matches!(
+                reason,
+                WebsocketConnectionFailureReason::UserInitiatedClose
+            ));
+            assert!(!reason.should_reconnect());
+        }
+
+        #[test]
+        fn should_reconnect_logic() {
+            // Reconnectable failures
+            assert!(WebsocketConnectionFailureReason::NetworkInterruption.should_reconnect());
+            assert!(WebsocketConnectionFailureReason::ConnectionReset.should_reconnect());
+            assert!(WebsocketConnectionFailureReason::ServerTemporaryError.should_reconnect());
+            assert!(WebsocketConnectionFailureReason::UnexpectedClose.should_reconnect());
+            assert!(WebsocketConnectionFailureReason::StreamEnded.should_reconnect());
+
+            // Non-reconnectable failures
+            assert!(!WebsocketConnectionFailureReason::AuthenticationFailure.should_reconnect());
+            assert!(!WebsocketConnectionFailureReason::ProtocolViolation.should_reconnect());
+            assert!(!WebsocketConnectionFailureReason::ConfigurationError.should_reconnect());
+            assert!(!WebsocketConnectionFailureReason::UserInitiatedClose.should_reconnect());
+            assert!(!WebsocketConnectionFailureReason::PermanentServerError.should_reconnect());
+            assert!(!WebsocketConnectionFailureReason::NormalClose.should_reconnect());
+        }
+
+        #[test]
+        fn debug_and_clone_work() {
+            let reason = WebsocketConnectionFailureReason::NetworkInterruption;
+            let cloned = reason.clone();
+            let debug_str = format!("{:?}", reason);
+
+            assert!(matches!(
+                cloned,
+                WebsocketConnectionFailureReason::NetworkInterruption
+            ));
+            assert!(debug_str.contains("NetworkInterruption"));
         }
     }
 }
