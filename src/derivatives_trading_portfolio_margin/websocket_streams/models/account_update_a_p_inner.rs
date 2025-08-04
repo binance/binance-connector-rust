@@ -16,6 +16,30 @@ use crate::derivatives_trading_portfolio_margin::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// Custom deserializer for breakeven price field that can handle both string and floating point formats
+/// Binance API sometimes returns this field as a string, sometimes as a floating point number
+fn deserialize_string_or_f64<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let value: Value = Deserialize::deserialize(deserializer)?;
+    match value {
+        Value::Null => Ok(None),
+        Value::String(s) => Ok(Some(s)),
+        Value::Number(n) => {
+            if let Some(f) = n.as_f64() {
+                Ok(Some(f.to_string()))
+            } else {
+                Ok(Some(n.to_string()))
+            }
+        }
+        _ => Err(serde::de::Error::custom(format!(
+            "Expected string or number for breakeven price, found: {:?}",
+            value
+        ))),
+    }
+}
+
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountUpdateAPInner {
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
@@ -30,7 +54,11 @@ pub struct AccountUpdateAPInner {
     pub up: Option<String>,
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
-    #[serde(rename = "bep", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "bep",
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "deserialize_string_or_f64"
+    )]
     pub bep: Option<String>,
 }
 
