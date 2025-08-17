@@ -79,7 +79,8 @@ once_cell = "1.21"
 
   [dependencies.reqwest]
   version = "^0.12"
-  features = [ "json", "multipart", "blocking" ]
+  default-features = false
+  features = []
 
   [dependencies.reqwest-middleware]
   version = "^0.3"
@@ -117,7 +118,15 @@ futures-util = "0.3"
 tokio-test = "0.4"
 
 [features]
-default = [ ]
+default = [
+  "reqwest/default-tls",
+  "reqwest/charset",
+  "reqwest/system-proxy",
+  "reqwest/http2",
+  "reqwest/json",
+  "reqwest/multipart",
+  "reqwest/blocking" 
+]
 algo = [ ]
 c2c = [ ]
 convert = [ ]
@@ -142,6 +151,15 @@ staking = [ ]
 sub_account = [ ]
 vip_loan = [ ]
 wallet = [ ]
+rustls = [
+  "reqwest/rustls-tls",
+  "reqwest/charset",
+  "reqwest/system-proxy",
+  "reqwest/http2",
+  "reqwest/json",
+  "reqwest/multipart",
+  "reqwest/blocking" 
+]
 all = [
   "algo",
   "c2c",
