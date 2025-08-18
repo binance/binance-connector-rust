@@ -47,6 +47,8 @@ pub mod get_interest_history_response;
 pub use self::get_interest_history_response::GetInterestHistoryResponse;
 pub mod get_interest_history_response_rows_inner;
 pub use self::get_interest_history_response_rows_inner::GetInterestHistoryResponseRowsInner;
+pub mod get_limit_price_pairs_response;
+pub use self::get_limit_price_pairs_response::GetLimitPricePairsResponse;
 pub mod get_list_schedule_response_inner;
 pub use self::get_list_schedule_response_inner::GetListScheduleResponseInner;
 pub mod get_small_liability_exchange_coin_list_response_inner;

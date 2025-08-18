@@ -864,7 +864,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = GetFutureHourlyInterestRateParams::builder("assets_example".to_string(),true).build().unwrap();
+            let params = GetFutureHourlyInterestRateParams::builder("assets_example".to_string(),false).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"},{"asset":"ETH","nextHourlyInterestRate":"0.00000578"}]"#).unwrap();
             let expected_response : Vec<models::GetFutureHourlyInterestRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFutureHourlyInterestRateResponseInner>");
@@ -881,7 +881,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = GetFutureHourlyInterestRateParams::builder("assets_example".to_string(),true).build().unwrap();
+            let params = GetFutureHourlyInterestRateParams::builder("assets_example".to_string(),false).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"},{"asset":"ETH","nextHourlyInterestRate":"0.00000578"}]"#).unwrap();
             let expected_response : Vec<models::GetFutureHourlyInterestRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFutureHourlyInterestRateResponseInner>");
@@ -899,7 +899,7 @@ mod tests {
             let client = MockBorrowRepayApiClient { force_error: true };
 
             let params =
-                GetFutureHourlyInterestRateParams::builder("assets_example".to_string(), true)
+                GetFutureHourlyInterestRateParams::builder("assets_example".to_string(), false)
                     .build()
                     .unwrap();
 
@@ -969,7 +969,7 @@ mod tests {
 
             let params = MarginAccountBorrowRepayParams::builder(
                 "asset_example".to_string(),
-                String::new(),
+                "FALSE".to_string(),
                 "symbol_example".to_string(),
                 "amount_example".to_string(),
                 "r#type_example".to_string(),
@@ -999,7 +999,7 @@ mod tests {
 
             let params = MarginAccountBorrowRepayParams::builder(
                 "asset_example".to_string(),
-                String::new(),
+                "FALSE".to_string(),
                 "symbol_example".to_string(),
                 "amount_example".to_string(),
                 "r#type_example".to_string(),
@@ -1030,7 +1030,7 @@ mod tests {
 
             let params = MarginAccountBorrowRepayParams::builder(
                 "asset_example".to_string(),
-                String::new(),
+                "FALSE".to_string(),
                 "symbol_example".to_string(),
                 "amount_example".to_string(),
                 "r#type_example".to_string(),

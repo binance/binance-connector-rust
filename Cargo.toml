@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "11.0.0"
+version = "12.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2490,6 +2490,16 @@ path = "examples/margin_trading/rest_api/market_data_api/get_delist_schedule.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]
+name = "margin_trading_rest_api_market_data_api_get_limit_price_pairs"
+path = "examples/margin_trading/rest_api/market_data_api/get_limit_price_pairs.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_market_data_api_get_list_schedule"
+path = "examples/margin_trading/rest_api/market_data_api/get_list_schedule.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
 name = "margin_trading_rest_api_market_data_api_query_isolated_margin_tier_data"
 path = "examples/margin_trading/rest_api/market_data_api/query_isolated_margin_tier_data.rs"
 required-features = [ "margin_trading" ]
@@ -3345,6 +3355,11 @@ path = "examples/spot/websocket_api/trade_api/sor_order_test.rs"
 required-features = [ "spot" ]
 
 [[example]]
+name = "spot_websocket_api_user_data_stream_api_session_subscriptions"
+path = "examples/spot/websocket_api/user_data_stream_api/session_subscriptions.rs"
+required-features = [ "spot" ]
+
+[[example]]
 name = "spot_websocket_api_user_data_stream_api_user_data_stream_ping"
 path = "examples/spot/websocket_api/user_data_stream_api/user_data_stream_ping.rs"
 required-features = [ "spot" ]
@@ -3357,6 +3372,11 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_api_user_data_stream_api_user_data_stream_stop"
 path = "examples/spot/websocket_api/user_data_stream_api/user_data_stream_stop.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_api_user_data_stream_api_user_data_stream_subscribe_signature"
+path = "examples/spot/websocket_api/user_data_stream_api/user_data_stream_subscribe_signature.rs"
 required-features = [ "spot" ]
 
 [[example]]

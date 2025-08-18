@@ -22,25 +22,22 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct SorOrderTestResponse {
+pub struct SessionSubscriptionsResponse {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
-    pub result: Option<Box<models::SorOrderTestResponseResult>>,
-    #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::RateLimitsInner>>,
+    pub result: Option<Vec<models::SessionSubscriptionsResponseResultInner>>,
 }
 
-impl SorOrderTestResponse {
+impl SessionSubscriptionsResponse {
     #[must_use]
-    pub fn new() -> SorOrderTestResponse {
-        SorOrderTestResponse {
+    pub fn new() -> SessionSubscriptionsResponse {
+        SessionSubscriptionsResponse {
             id: None,
             status: None,
             result: None,
-            rate_limits: None,
         }
     }
 }

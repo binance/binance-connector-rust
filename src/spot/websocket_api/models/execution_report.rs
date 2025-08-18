@@ -123,6 +123,14 @@ pub struct ExecutionReport {
     pub k: Option<String>,
     #[serde(rename = "uS", skip_serializing_if = "Option::is_none")]
     pub u_s: Option<bool>,
+    #[serde(rename = "gP", skip_serializing_if = "Option::is_none")]
+    pub g_p: Option<String>,
+    #[serde(rename = "gOT", skip_serializing_if = "Option::is_none")]
+    pub g_ot: Option<String>,
+    #[serde(rename = "gOV", skip_serializing_if = "Option::is_none")]
+    pub g_ov: Option<i64>,
+    #[serde(rename = "gp", skip_serializing_if = "Option::is_none")]
+    pub gp: Option<String>,
 }
 
 impl ExecutionReport {
@@ -179,6 +187,10 @@ impl ExecutionReport {
             a: None,
             k: None,
             u_s: None,
+            g_p: None,
+            g_ot: None,
+            g_ov: None,
+            gp: None,
         }
     }
 }

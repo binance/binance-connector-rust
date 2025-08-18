@@ -86,7 +86,7 @@ pub trait TradeApi: Send + Sync {
     async fn sor_order_test(
         &self,
         params: SorOrderTestParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderTestResponseResult>>>;
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::SorOrderTestResponseResult>>>;
 }
 
 #[derive(Clone)]
@@ -473,6 +473,72 @@ impl std::str::FromStr for OrderCancelReplaceOrderRateLimitExceededModeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderCancelReplacePegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl OrderCancelReplacePegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderCancelReplacePegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid OrderCancelReplacePegPriceTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderCancelReplacePegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl OrderCancelReplacePegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderCancelReplacePegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid OrderCancelReplacePegOffsetTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceSideEnum {
     #[serde(rename = "BUY")]
     Buy,
@@ -748,6 +814,68 @@ impl std::str::FromStr for OrderListPlaceOcoBelowTypeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOcoAbovePegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+}
+
+impl OrderListPlaceOcoAbovePegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOcoAbovePegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            other => {
+                Err(format!("invalid OrderListPlaceOcoAbovePegPriceTypeEnum: {}", other).into())
+            }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOcoAbovePegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+}
+
+impl OrderListPlaceOcoAbovePegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOcoAbovePegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            other => {
+                Err(format!("invalid OrderListPlaceOcoAbovePegOffsetTypeEnum: {}", other).into())
+            }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOcoBelowTimeInForceEnum {
     #[serde(rename = "belowType")]
     Belowtype,
@@ -778,6 +906,68 @@ impl std::str::FromStr for OrderListPlaceOcoBelowTimeInForceEnum {
             "TAKE_PROFIT_LIMIT" => Ok(Self::TakeProfitLimit),
             other => {
                 Err(format!("invalid OrderListPlaceOcoBelowTimeInForceEnum: {}", other).into())
+            }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOcoBelowPegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+}
+
+impl OrderListPlaceOcoBelowPegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOcoBelowPegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            other => {
+                Err(format!("invalid OrderListPlaceOcoBelowPegPriceTypeEnum: {}", other).into())
+            }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOcoBelowPegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+}
+
+impl OrderListPlaceOcoBelowPegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOcoBelowPegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            other => {
+                Err(format!("invalid OrderListPlaceOcoBelowPegOffsetTypeEnum: {}", other).into())
             }
         }
     }
@@ -1158,6 +1348,72 @@ impl std::str::FromStr for OrderListPlaceOtoWorkingTimeInForceEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtoWorkingPegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+}
+
+impl OrderListPlaceOtoWorkingPegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtoWorkingPegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            other => Err(format!(
+                "invalid OrderListPlaceOtoWorkingPegPriceTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtoWorkingPegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+}
+
+impl OrderListPlaceOtoWorkingPegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtoWorkingPegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            other => Err(format!(
+                "invalid OrderListPlaceOtoWorkingPegOffsetTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtoPendingTimeInForceEnum {
     #[serde(rename = "GTC")]
     Gtc,
@@ -1189,6 +1445,72 @@ impl std::str::FromStr for OrderListPlaceOtoPendingTimeInForceEnum {
             other => {
                 Err(format!("invalid OrderListPlaceOtoPendingTimeInForceEnum: {}", other).into())
             }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtoPendingPegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+}
+
+impl OrderListPlaceOtoPendingPegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtoPendingPegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            other => Err(format!(
+                "invalid OrderListPlaceOtoPendingPegOffsetTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtoPendingPegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+}
+
+impl OrderListPlaceOtoPendingPegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtoPendingPegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            other => Err(format!(
+                "invalid OrderListPlaceOtoPendingPegPriceTypeEnum: {}",
+                other
+            )
+            .into()),
         }
     }
 }
@@ -1468,6 +1790,72 @@ impl std::str::FromStr for OrderListPlaceOtocoWorkingTimeInForceEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtocoWorkingPegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+}
+
+impl OrderListPlaceOtocoWorkingPegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtocoWorkingPegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            other => Err(format!(
+                "invalid OrderListPlaceOtocoWorkingPegPriceTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtocoWorkingPegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+}
+
+impl OrderListPlaceOtocoWorkingPegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtocoWorkingPegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            other => Err(format!(
+                "invalid OrderListPlaceOtocoWorkingPegOffsetTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderListPlaceOtocoPendingAboveTimeInForceEnum {
     #[serde(rename = "GTC")]
     Gtc,
@@ -1498,6 +1886,72 @@ impl std::str::FromStr for OrderListPlaceOtocoPendingAboveTimeInForceEnum {
             "FOK" => Ok(Self::Fok),
             other => Err(format!(
                 "invalid OrderListPlaceOtocoPendingAboveTimeInForceEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtocoPendingAbovePegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+}
+
+impl OrderListPlaceOtocoPendingAbovePegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtocoPendingAbovePegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            other => Err(format!(
+                "invalid OrderListPlaceOtocoPendingAbovePegPriceTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtocoPendingAbovePegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+}
+
+impl OrderListPlaceOtocoPendingAbovePegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtocoPendingAbovePegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            other => Err(format!(
+                "invalid OrderListPlaceOtocoPendingAbovePegOffsetTypeEnum: {}",
                 other
             )
             .into()),
@@ -1578,6 +2032,72 @@ impl std::str::FromStr for OrderListPlaceOtocoPendingBelowTimeInForceEnum {
             "FOK" => Ok(Self::Fok),
             other => Err(format!(
                 "invalid OrderListPlaceOtocoPendingBelowTimeInForceEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtocoPendingBelowPegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+}
+
+impl OrderListPlaceOtocoPendingBelowPegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtocoPendingBelowPegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            other => Err(format!(
+                "invalid OrderListPlaceOtocoPendingBelowPegPriceTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderListPlaceOtocoPendingBelowPegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+}
+
+impl OrderListPlaceOtocoPendingBelowPegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderListPlaceOtocoPendingBelowPegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            other => Err(format!(
+                "invalid OrderListPlaceOtocoPendingBelowPegOffsetTypeEnum: {}",
                 other
             )
             .into()),
@@ -1804,6 +2324,72 @@ impl std::str::FromStr for OrderPlaceSelfTradePreventionModeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderPlacePegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl OrderPlacePegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderPlacePegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid OrderPlacePegPriceTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderPlacePegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl OrderPlacePegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderPlacePegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid OrderPlacePegOffsetTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderTestSideEnum {
     #[serde(rename = "BUY")]
     Buy,
@@ -2013,6 +2599,72 @@ impl std::str::FromStr for OrderTestSelfTradePreventionModeEnum {
             "DECREMENT" => Ok(Self::Decrement),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderTestSelfTradePreventionModeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderTestPegPriceTypeEnum {
+    #[serde(rename = "PRIMARY_PEG")]
+    PrimaryPeg,
+    #[serde(rename = "MARKET_PEG")]
+    MarketPeg,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl OrderTestPegPriceTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PrimaryPeg => "PRIMARY_PEG",
+            Self::MarketPeg => "MARKET_PEG",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderTestPegPriceTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
+            "MARKET_PEG" => Ok(Self::MarketPeg),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid OrderTestPegPriceTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OrderTestPegOffsetTypeEnum {
+    #[serde(rename = "PRICE_LEVEL")]
+    PriceLevel,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl OrderTestPegOffsetTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::PriceLevel => "PRICE_LEVEL",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for OrderTestPegOffsetTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PRICE_LEVEL" => Ok(Self::PriceLevel),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid OrderTestPegOffsetTypeEnum: {}", other).into()),
         }
     }
 }
@@ -2744,6 +3396,24 @@ pub struct OrderCancelReplaceParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub order_rate_limit_exceeded_mode: Option<OrderCancelReplaceOrderRateLimitExceededModeEnum>,
+    ///
+    /// The `peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_price_type: Option<OrderCancelReplacePegPriceTypeEnum>,
+    /// Price level to peg the price to (max: 100)
+    /// See Pegged Orders
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_offset_value: Option<i32>,
+    ///
+    /// The `peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_offset_type: Option<OrderCancelReplacePegOffsetTypeEnum>,
     /// The value cannot be greater than `60000`
     ///
     /// This field is **optional.
@@ -3066,6 +3736,24 @@ pub struct OrderListPlaceOcoParams {
     #[builder(setter(into), default)]
     pub above_strategy_type: Option<i32>,
     ///
+    /// The `above_peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub above_peg_price_type: Option<OrderListPlaceOcoAbovePegPriceTypeEnum>,
+    ///
+    /// The `above_peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub above_peg_offset_type: Option<OrderListPlaceOcoAbovePegOffsetTypeEnum>,
+    ///
+    /// The `above_peg_offset_value` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub above_peg_offset_value: Option<i32>,
+    ///
     /// The `below_client_order_id` parameter.
     ///
     /// This field is **optional.
@@ -3107,6 +3795,24 @@ pub struct OrderListPlaceOcoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub below_strategy_type: Option<i32>,
+    ///
+    /// The `below_peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub below_peg_price_type: Option<OrderListPlaceOcoBelowPegPriceTypeEnum>,
+    ///
+    /// The `below_peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub below_peg_offset_type: Option<OrderListPlaceOcoBelowPegOffsetTypeEnum>,
+    ///
+    /// The `below_peg_offset_value` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub below_peg_offset_value: Option<i32>,
     ///
     /// The `new_order_resp_type` parameter.
     ///
@@ -3255,6 +3961,24 @@ pub struct OrderListPlaceOtoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub working_strategy_type: Option<i32>,
+    ///
+    /// The `working_peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub working_peg_price_type: Option<OrderListPlaceOtoWorkingPegPriceTypeEnum>,
+    ///
+    /// The `working_peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub working_peg_offset_type: Option<OrderListPlaceOtoWorkingPegOffsetTypeEnum>,
+    ///
+    /// The `working_peg_offset_value` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub working_peg_offset_value: Option<i32>,
     /// Arbitrary unique ID among open orders for the pending order.<br> Automatically generated if not sent.
     ///
     /// This field is **optional.
@@ -3299,6 +4023,24 @@ pub struct OrderListPlaceOtoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub pending_strategy_type: Option<i32>,
+    ///
+    /// The `pending_peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_peg_offset_type: Option<OrderListPlaceOtoPendingPegOffsetTypeEnum>,
+    ///
+    /// The `pending_peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_peg_price_type: Option<OrderListPlaceOtoPendingPegPriceTypeEnum>,
+    ///
+    /// The `pending_peg_offset_value` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_peg_offset_value: Option<i32>,
     /// The value cannot be greater than `60000`
     ///
     /// This field is **optional.
@@ -3444,6 +4186,24 @@ pub struct OrderListPlaceOtocoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub working_strategy_type: Option<i32>,
+    ///
+    /// The `working_peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub working_peg_price_type: Option<OrderListPlaceOtocoWorkingPegPriceTypeEnum>,
+    ///
+    /// The `working_peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub working_peg_offset_type: Option<OrderListPlaceOtocoWorkingPegOffsetTypeEnum>,
+    ///
+    /// The `working_peg_offset_value` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub working_peg_offset_value: Option<i32>,
     /// Arbitrary unique ID among open orders for the pending above order.<br> Automatically generated if not sent.
     ///
     /// This field is **optional.
@@ -3485,6 +4245,24 @@ pub struct OrderListPlaceOtocoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub pending_above_strategy_type: Option<i32>,
+    ///
+    /// The `pending_above_peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_above_peg_price_type: Option<OrderListPlaceOtocoPendingAbovePegPriceTypeEnum>,
+    ///
+    /// The `pending_above_peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_above_peg_offset_type: Option<OrderListPlaceOtocoPendingAbovePegOffsetTypeEnum>,
+    ///
+    /// The `pending_above_peg_offset_value` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_above_peg_offset_value: Option<i32>,
     ///
     /// The `pending_below_type` parameter.
     ///
@@ -3533,6 +4311,24 @@ pub struct OrderListPlaceOtocoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub pending_below_strategy_type: Option<i32>,
+    ///
+    /// The `pending_below_peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_below_peg_price_type: Option<OrderListPlaceOtocoPendingBelowPegPriceTypeEnum>,
+    ///
+    /// The `pending_below_peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_below_peg_offset_type: Option<OrderListPlaceOtocoPendingBelowPegOffsetTypeEnum>,
+    ///
+    /// The `pending_below_peg_offset_value` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub pending_below_peg_offset_value: Option<i32>,
     /// The value cannot be greater than `60000`
     ///
     /// This field is **optional.
@@ -3675,6 +4471,24 @@ pub struct OrderPlaceParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub self_trade_prevention_mode: Option<OrderPlaceSelfTradePreventionModeEnum>,
+    ///
+    /// The `peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_price_type: Option<OrderPlacePegPriceTypeEnum>,
+    /// Price level to peg the price to (max: 100)
+    /// See Pegged Orders
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_offset_value: Option<i32>,
+    ///
+    /// The `peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_offset_type: Option<OrderPlacePegOffsetTypeEnum>,
     /// The value cannot be greater than `60000`
     ///
     /// This field is **optional.
@@ -3733,7 +4547,7 @@ pub struct OrderTestParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Default: `false`
+    /// Default: `false` <br> See [Commissions FAQ](faqs/commission_faq.md#test-order-diferences) to learn more.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -3807,6 +4621,24 @@ pub struct OrderTestParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub self_trade_prevention_mode: Option<OrderTestSelfTradePreventionModeEnum>,
+    ///
+    /// The `peg_price_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_price_type: Option<OrderTestPegPriceTypeEnum>,
+    /// Price level to peg the price to (max: 100)
+    /// See Pegged Orders
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_offset_value: Option<i32>,
+    ///
+    /// The `peg_offset_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub peg_offset_type: Option<OrderTestPegOffsetTypeEnum>,
     /// The value cannot be greater than `60000`
     ///
     /// This field is **optional.
@@ -3984,7 +4816,7 @@ pub struct SorOrderTestParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Default: `false`
+    /// Default: `false` <br> See [Commissions FAQ](faqs/commission_faq.md#test-order-diferences) to learn more.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -4230,6 +5062,9 @@ impl TradeApi for TradeApiClient {
             self_trade_prevention_mode,
             cancel_restrictions,
             order_rate_limit_exceeded_mode,
+            peg_price_type,
+            peg_offset_value,
+            peg_offset_type,
             recv_window,
         } = params;
 
@@ -4306,6 +5141,15 @@ impl TradeApi for TradeApiClient {
                 "orderRateLimitExceededMode".to_string(),
                 serde_json::json!(value),
             );
+        }
+        if let Some(value) = peg_price_type {
+            payload.insert("pegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = peg_offset_value {
+            payload.insert("pegOffsetValue".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = peg_offset_type {
+            payload.insert("pegOffsetType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
@@ -4495,6 +5339,9 @@ impl TradeApi for TradeApiClient {
             above_time_in_force,
             above_strategy_id,
             above_strategy_type,
+            above_peg_price_type,
+            above_peg_offset_type,
+            above_peg_offset_value,
             below_client_order_id,
             below_iceberg_qty,
             below_price,
@@ -4503,6 +5350,9 @@ impl TradeApi for TradeApiClient {
             below_time_in_force,
             below_strategy_id,
             below_strategy_type,
+            below_peg_price_type,
+            below_peg_offset_type,
+            below_peg_offset_value,
             new_order_resp_type,
             self_trade_prevention_mode,
             recv_window,
@@ -4544,6 +5394,15 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = above_strategy_type {
             payload.insert("aboveStrategyType".to_string(), serde_json::json!(value));
         }
+        if let Some(value) = above_peg_price_type {
+            payload.insert("abovePegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = above_peg_offset_type {
+            payload.insert("abovePegOffsetType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = above_peg_offset_value {
+            payload.insert("abovePegOffsetValue".to_string(), serde_json::json!(value));
+        }
         if let Some(value) = below_client_order_id {
             payload.insert("belowClientOrderId".to_string(), serde_json::json!(value));
         }
@@ -4567,6 +5426,15 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = below_strategy_type {
             payload.insert("belowStrategyType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = below_peg_price_type {
+            payload.insert("belowPegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = below_peg_offset_type {
+            payload.insert("belowPegOffsetType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = below_peg_offset_value {
+            payload.insert("belowPegOffsetValue".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
             payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
@@ -4618,6 +5486,9 @@ impl TradeApi for TradeApiClient {
             working_time_in_force,
             working_strategy_id,
             working_strategy_type,
+            working_peg_price_type,
+            working_peg_offset_type,
+            working_peg_offset_value,
             pending_client_order_id,
             pending_price,
             pending_stop_price,
@@ -4626,6 +5497,9 @@ impl TradeApi for TradeApiClient {
             pending_time_in_force,
             pending_strategy_id,
             pending_strategy_type,
+            pending_peg_offset_type,
+            pending_peg_price_type,
+            pending_peg_offset_value,
             recv_window,
         } = params;
 
@@ -4674,6 +5548,18 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = working_strategy_type {
             payload.insert("workingStrategyType".to_string(), serde_json::json!(value));
         }
+        if let Some(value) = working_peg_price_type {
+            payload.insert("workingPegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = working_peg_offset_type {
+            payload.insert("workingPegOffsetType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = working_peg_offset_value {
+            payload.insert(
+                "workingPegOffsetValue".to_string(),
+                serde_json::json!(value),
+            );
+        }
         if let Some(value) = pending_client_order_id {
             payload.insert("pendingClientOrderId".to_string(), serde_json::json!(value));
         }
@@ -4697,6 +5583,18 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = pending_strategy_type {
             payload.insert("pendingStrategyType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = pending_peg_offset_type {
+            payload.insert("pendingPegOffsetType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = pending_peg_price_type {
+            payload.insert("pendingPegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = pending_peg_offset_value {
+            payload.insert(
+                "pendingPegOffsetValue".to_string(),
+                serde_json::json!(value),
+            );
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
@@ -4739,6 +5637,9 @@ impl TradeApi for TradeApiClient {
             working_time_in_force,
             working_strategy_id,
             working_strategy_type,
+            working_peg_price_type,
+            working_peg_offset_type,
+            working_peg_offset_value,
             pending_above_client_order_id,
             pending_above_price,
             pending_above_stop_price,
@@ -4747,6 +5648,9 @@ impl TradeApi for TradeApiClient {
             pending_above_time_in_force,
             pending_above_strategy_id,
             pending_above_strategy_type,
+            pending_above_peg_price_type,
+            pending_above_peg_offset_type,
+            pending_above_peg_offset_value,
             pending_below_type,
             pending_below_client_order_id,
             pending_below_price,
@@ -4756,6 +5660,9 @@ impl TradeApi for TradeApiClient {
             pending_below_time_in_force,
             pending_below_strategy_id,
             pending_below_strategy_type,
+            pending_below_peg_price_type,
+            pending_below_peg_offset_type,
+            pending_below_peg_offset_value,
             recv_window,
         } = params;
 
@@ -4807,6 +5714,18 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = working_strategy_type {
             payload.insert("workingStrategyType".to_string(), serde_json::json!(value));
         }
+        if let Some(value) = working_peg_price_type {
+            payload.insert("workingPegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = working_peg_offset_type {
+            payload.insert("workingPegOffsetType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = working_peg_offset_value {
+            payload.insert(
+                "workingPegOffsetValue".to_string(),
+                serde_json::json!(value),
+            );
+        }
         if let Some(value) = pending_above_client_order_id {
             payload.insert(
                 "pendingAboveClientOrderId".to_string(),
@@ -4849,6 +5768,24 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = pending_above_strategy_type {
             payload.insert(
                 "pendingAboveStrategyType".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_above_peg_price_type {
+            payload.insert(
+                "pendingAbovePegPriceType".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_above_peg_offset_type {
+            payload.insert(
+                "pendingAbovePegOffsetType".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_above_peg_offset_value {
+            payload.insert(
+                "pendingAbovePegOffsetValue".to_string(),
                 serde_json::json!(value),
             );
         }
@@ -4900,6 +5837,24 @@ impl TradeApi for TradeApiClient {
                 serde_json::json!(value),
             );
         }
+        if let Some(value) = pending_below_peg_price_type {
+            payload.insert(
+                "pendingBelowPegPriceType".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_below_peg_offset_type {
+            payload.insert(
+                "pendingBelowPegOffsetType".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_below_peg_offset_value {
+            payload.insert(
+                "pendingBelowPegOffsetValue".to_string(),
+                serde_json::json!(value),
+            );
+        }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
@@ -4940,6 +5895,9 @@ impl TradeApi for TradeApiClient {
             strategy_id,
             strategy_type,
             self_trade_prevention_mode,
+            peg_price_type,
+            peg_offset_value,
+            peg_offset_type,
             recv_window,
         } = params;
 
@@ -4989,6 +5947,15 @@ impl TradeApi for TradeApiClient {
                 serde_json::json!(value),
             );
         }
+        if let Some(value) = peg_price_type {
+            payload.insert("pegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = peg_offset_value {
+            payload.insert("pegOffsetValue".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = peg_offset_type {
+            payload.insert("pegOffsetType".to_string(), serde_json::json!(value));
+        }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
@@ -5030,6 +5997,9 @@ impl TradeApi for TradeApiClient {
             strategy_id,
             strategy_type,
             self_trade_prevention_mode,
+            peg_price_type,
+            peg_offset_value,
+            peg_offset_type,
             recv_window,
         } = params;
 
@@ -5084,6 +6054,15 @@ impl TradeApi for TradeApiClient {
                 "selfTradePreventionMode".to_string(),
                 serde_json::json!(value),
             );
+        }
+        if let Some(value) = peg_price_type {
+            payload.insert("pegPriceType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = peg_offset_value {
+            payload.insert("pegOffsetValue".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = peg_offset_type {
+            payload.insert("pegOffsetType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
@@ -5182,7 +6161,7 @@ impl TradeApi for TradeApiClient {
     async fn sor_order_test(
         &self,
         params: SorOrderTestParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderTestResponseResult>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::SorOrderTestResponseResult>>> {
         let SorOrderTestParams {
             symbol,
             side,
@@ -5248,7 +6227,7 @@ impl TradeApi for TradeApiClient {
         let payload = remove_empty_value(payload);
 
         self.websocket_api_base
-            .send_message::<Box<models::OrderTestResponseResult>>(
+            .send_message::<Box<models::SorOrderTestResponseResult>>(
                 "/sor.order.test".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new().signed(),
@@ -6667,7 +7646,7 @@ mod tests {
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.test".trim_start_matches('/'));
 
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"6ffebe91-01d9-43ac-be99-57cf062e0e30","status":200,"result":{"standardCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"taxCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB","discount":"0.25000000"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"6ffebe91-01d9-43ac-be99-57cf062e0e30","status":200,"result":{"standardCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"specialCommissionForOrder":{"maker":"0.05000000","taker":"0.06000000"},"taxCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB","discount":"0.25000000"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -6942,7 +7921,7 @@ mod tests {
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
-            let expected_data: Box<models::OrderTestResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let expected_data: Box<models::SorOrderTestResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
             let empty_array = Value::Array(vec![]);
             let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
             let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =

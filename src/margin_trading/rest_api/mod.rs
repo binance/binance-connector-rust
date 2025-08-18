@@ -1125,6 +1125,53 @@ impl RestApi {
             .await
     }
 
+    /// Get Limit Price `Pairs(MARKET_DATA)`
+    ///
+    /// Query trading pairs with restriction on limit price range.
+    /// In margin trading, you can place orders with limit price. Limit price should be within (-15%, 15%) of current index price for a list of margin trading pairs. This rule only impacts limit sell orders with limit price that is lower than current index price and limit buy orders with limit price that is higher than current index price.
+    ///
+    /// - Buy order: Your order will be rejected with an error message notification if the limit price is 15% above the index price.
+    /// - Sell order: Your order will be rejected with an error message notification if the limit price is 15% below the index price.
+    /// Please review the limit price order placing strategy, backtest and calibrate the planned order size with the trading volume and order book depth to prevent trading loss.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetLimitPricePairsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetLimitPricePairsResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-Limit-Price-Pairs).
+    ///
+    pub async fn get_limit_price_pairs(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::GetLimitPricePairsResponse>> {
+        self.market_data_api_client.get_limit_price_pairs().await
+    }
+
     /// Get list Schedule (`MARKET_DATA`)
     ///
     /// Get the upcoming tokens or symbols listing schedule for Cross Margin and Isolated Margin.

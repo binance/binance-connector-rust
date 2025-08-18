@@ -35,6 +35,10 @@ use crate::spot::websocket_api::models;
 
 #[async_trait]
 pub trait UserDataStreamApi: Send + Sync {
+    async fn session_subscriptions(
+        &self,
+        params: SessionSubscriptionsParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::SessionSubscriptionsResponseResultInner>>>;
     async fn user_data_stream_ping(
         &self,
         params: UserDataStreamPingParams,
@@ -51,6 +55,12 @@ pub trait UserDataStreamApi: Send + Sync {
         &self,
         params: UserDataStreamSubscribeParams,
     ) -> anyhow::Result<WebsocketApiResponse<serde_json::Value>>;
+    async fn user_data_stream_subscribe_signature(
+        &self,
+        params: UserDataStreamSubscribeSignatureParams,
+    ) -> anyhow::Result<
+        WebsocketApiResponse<Box<models::UserDataStreamSubscribeSignatureResponseResult>>,
+    >;
     async fn user_data_stream_unsubscribe(
         &self,
         params: UserDataStreamUnsubscribeParams,
@@ -68,6 +78,28 @@ impl UserDataStreamApiClient {
     }
 }
 
+/// Request parameters for the [`session_subscriptions`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`session_subscriptions`](#method.session_subscriptions).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct SessionSubscriptionsParams {
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+}
+
+impl SessionSubscriptionsParams {
+    /// Create a builder for [`session_subscriptions`].
+    ///
+    #[must_use]
+    pub fn builder() -> SessionSubscriptionsParamsBuilder {
+        SessionSubscriptionsParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`user_data_stream_ping`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -176,6 +208,28 @@ impl UserDataStreamSubscribeParams {
         UserDataStreamSubscribeParamsBuilder::default()
     }
 }
+/// Request parameters for the [`user_data_stream_subscribe_signature`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`user_data_stream_subscribe_signature`](#method.user_data_stream_subscribe_signature).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct UserDataStreamSubscribeSignatureParams {
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+}
+
+impl UserDataStreamSubscribeSignatureParams {
+    /// Create a builder for [`user_data_stream_subscribe_signature`].
+    ///
+    #[must_use]
+    pub fn builder() -> UserDataStreamSubscribeSignatureParamsBuilder {
+        UserDataStreamSubscribeSignatureParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`user_data_stream_unsubscribe`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -188,6 +242,11 @@ pub struct UserDataStreamUnsubscribeParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
+    /// When called with no parameter, this will close all subscriptions. <br>When called with the `subscriptionId` parameter, this will attempt to close the subscription with that subscription id, if it exists.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub subscription_id: Option<i32>,
 }
 
 impl UserDataStreamUnsubscribeParams {
@@ -201,6 +260,33 @@ impl UserDataStreamUnsubscribeParams {
 
 #[async_trait]
 impl UserDataStreamApi for UserDataStreamApiClient {
+    async fn session_subscriptions(
+        &self,
+        params: SessionSubscriptionsParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::SessionSubscriptionsResponseResultInner>>>
+    {
+        let SessionSubscriptionsParams { id } = params;
+
+        let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+        if let Some(value) = id {
+            payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        let payload = remove_empty_value(payload);
+
+        self.websocket_api_base
+            .send_message::<Vec<models::SessionSubscriptionsResponseResultInner>>(
+                "/session.subscriptions".trim_start_matches('/'),
+                payload,
+                WebsocketMessageSendOptions::new(),
+            )
+            .await
+            .map_err(anyhow::Error::from)?
+            .into_iter()
+            .next()
+            .ok_or(WebsocketError::NoResponse)
+            .map_err(anyhow::Error::from)
+    }
+
     async fn user_data_stream_ping(
         &self,
         params: UserDataStreamPingParams,
@@ -307,15 +393,49 @@ impl UserDataStreamApi for UserDataStreamApiClient {
             .map_err(anyhow::Error::from)
     }
 
-    async fn user_data_stream_unsubscribe(
+    async fn user_data_stream_subscribe_signature(
         &self,
-        params: UserDataStreamUnsubscribeParams,
-    ) -> anyhow::Result<WebsocketApiResponse<serde_json::Value>> {
-        let UserDataStreamUnsubscribeParams { id } = params;
+        params: UserDataStreamSubscribeSignatureParams,
+    ) -> anyhow::Result<
+        WebsocketApiResponse<Box<models::UserDataStreamSubscribeSignatureResponseResult>>,
+    > {
+        let UserDataStreamSubscribeSignatureParams { id } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        let payload = remove_empty_value(payload);
+
+        self.websocket_api_base
+            .send_message::<Box<models::UserDataStreamSubscribeSignatureResponseResult>>(
+                "/userDataStream.subscribe.signature".trim_start_matches('/'),
+                payload,
+                WebsocketMessageSendOptions::new().with_api_key(),
+            )
+            .await
+            .map_err(anyhow::Error::from)?
+            .into_iter()
+            .next()
+            .ok_or(WebsocketError::NoResponse)
+            .map_err(anyhow::Error::from)
+    }
+
+    async fn user_data_stream_unsubscribe(
+        &self,
+        params: UserDataStreamUnsubscribeParams,
+    ) -> anyhow::Result<WebsocketApiResponse<serde_json::Value>> {
+        let UserDataStreamUnsubscribeParams {
+            id,
+            subscription_id,
+        } = params;
+
+        let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+        if let Some(value) = id {
+            payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = subscription_id {
+            payload.insert("subscriptionId".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -371,6 +491,135 @@ mod tests {
         ws_api.clone().connect().await.unwrap();
 
         (ws_api, conn, rx)
+    }
+
+    #[test]
+    fn session_subscriptions_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = UserDataStreamApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = SessionSubscriptionsParams::builder().build().unwrap();
+                client.session_subscriptions(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap();
+            assert_eq!(v["method"], "/session.subscriptions".trim_start_matches('/'));
+
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df5a22-88ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":[{"subscriptionId":1},{"subscriptionId":0}]}"#).unwrap();
+            resp_json["id"] = id.into();
+
+            let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
+            let expected_data: Vec<models::SessionSubscriptionsResponseResultInner> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let empty_array = Value::Array(vec![]);
+            let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
+            let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
+                match raw_rate_limits.as_array() {
+                    Some(arr) if arr.is_empty() => None,
+                    Some(_) => Some(serde_json::from_value(raw_rate_limits.clone()).expect("should parse rateLimits array")),
+                    None => None,
+                };
+
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let response = timeout(Duration::from_secs(1), handle).await.expect("task done").expect("no panic").expect("no error");
+
+
+            let response_rate_limits = response.rate_limits.clone();
+            let response_data = response.data().expect("deserialize data");
+
+            assert_eq!(response_rate_limits, expected_rate_limits);
+            assert_eq!(response_data, expected_data);
+        });
+    }
+
+    #[test]
+    fn session_subscriptions_error_response() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = UserDataStreamApiClient::new(ws_api.clone());
+
+            let handle = tokio::spawn(async move {
+                let params = SessionSubscriptionsParams::builder().build().unwrap();
+                client.session_subscriptions(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap().to_string();
+
+            let resp_json = json!({
+                "id": id,
+                "status": 400,
+                    "error": {
+                        "code": -2010,
+                        "msg": "Account has insufficient balance for requested action.",
+                    },
+                    "rateLimits": [
+                        {
+                            "rateLimitType": "ORDERS",
+                            "interval": "SECOND",
+                            "intervalNum": 10,
+                            "limit": 50,
+                            "count": 13
+                        },
+                    ],
+            });
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let join = timeout(Duration::from_secs(1), handle).await.unwrap();
+            match join {
+                Ok(Err(e)) => {
+                    let msg = e.to_string();
+                    assert!(
+                        msg.contains("Server‐side response error (code -2010): Account has insufficient balance for requested action."),
+                        "Expected error msg to contain server error, got: {msg}"
+                    );
+                }
+                Ok(Ok(_)) => panic!("Expected error"),
+                Err(_) => panic!("Task panicked"),
+            }
+        });
+    }
+
+    #[test]
+    fn session_subscriptions_request_timeout() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, _conn, mut rx) = setup().await;
+            let client = UserDataStreamApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = SessionSubscriptionsParams::builder().build().unwrap();
+                client.session_subscriptions(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv())
+                .await
+                .expect("send should occur")
+                .expect("channel closed");
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
+            };
+
+            let _: Value = serde_json::from_str(&text).unwrap();
+
+            let result = handle.await.expect("task completed");
+            match result {
+                Err(e) => {
+                    if let Some(inner) = e.downcast_ref::<WebsocketError>() {
+                        assert!(matches!(inner, WebsocketError::Timeout));
+                    } else {
+                        panic!("Unexpected error type: {:?}", e);
+                    }
+                }
+                Ok(_) => panic!("Expected timeout error"),
+            }
+        });
     }
 
     #[test]
@@ -886,6 +1135,137 @@ mod tests {
             let handle = spawn(async move {
                 let params = UserDataStreamSubscribeParams::builder().build().unwrap();
                 client.user_data_stream_subscribe(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv())
+                .await
+                .expect("send should occur")
+                .expect("channel closed");
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
+            };
+
+            let _: Value = serde_json::from_str(&text).unwrap();
+
+            let result = handle.await.expect("task completed");
+            match result {
+                Err(e) => {
+                    if let Some(inner) = e.downcast_ref::<WebsocketError>() {
+                        assert!(matches!(inner, WebsocketError::Timeout));
+                    } else {
+                        panic!("Unexpected error type: {:?}", e);
+                    }
+                }
+                Ok(_) => panic!("Expected timeout error"),
+            }
+        });
+    }
+
+    #[test]
+    fn user_data_stream_subscribe_signature_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = UserDataStreamApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = UserDataStreamSubscribeSignatureParams::builder().build().unwrap();
+                client.user_data_stream_subscribe_signature(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap();
+            assert_eq!(v["method"], "/userDataStream.subscribe.signature".trim_start_matches('/'));
+
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df8a22-98ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":{"subscriptionId":0}}"#).unwrap();
+            resp_json["id"] = id.into();
+
+            let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
+            let expected_data: Box<models::UserDataStreamSubscribeSignatureResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let empty_array = Value::Array(vec![]);
+            let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
+            let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
+                match raw_rate_limits.as_array() {
+                    Some(arr) if arr.is_empty() => None,
+                    Some(_) => Some(serde_json::from_value(raw_rate_limits.clone()).expect("should parse rateLimits array")),
+                    None => None,
+                };
+
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let response = timeout(Duration::from_secs(1), handle).await.expect("task done").expect("no panic").expect("no error");
+
+
+            let response_rate_limits = response.rate_limits.clone();
+            let response_data = response.data().expect("deserialize data");
+
+            assert_eq!(response_rate_limits, expected_rate_limits);
+            assert_eq!(response_data, expected_data);
+        });
+    }
+
+    #[test]
+    fn user_data_stream_subscribe_signature_error_response() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = UserDataStreamApiClient::new(ws_api.clone());
+
+            let handle = tokio::spawn(async move {
+                let params = UserDataStreamSubscribeSignatureParams::builder().build().unwrap();
+                client.user_data_stream_subscribe_signature(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap().to_string();
+
+            let resp_json = json!({
+                "id": id,
+                "status": 400,
+                    "error": {
+                        "code": -2010,
+                        "msg": "Account has insufficient balance for requested action.",
+                    },
+                    "rateLimits": [
+                        {
+                            "rateLimitType": "ORDERS",
+                            "interval": "SECOND",
+                            "intervalNum": 10,
+                            "limit": 50,
+                            "count": 13
+                        },
+                    ],
+            });
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let join = timeout(Duration::from_secs(1), handle).await.unwrap();
+            match join {
+                Ok(Err(e)) => {
+                    let msg = e.to_string();
+                    assert!(
+                        msg.contains("Server‐side response error (code -2010): Account has insufficient balance for requested action."),
+                        "Expected error msg to contain server error, got: {msg}"
+                    );
+                }
+                Ok(Ok(_)) => panic!("Expected error"),
+                Err(_) => panic!("Task panicked"),
+            }
+        });
+    }
+
+    #[test]
+    fn user_data_stream_subscribe_signature_request_timeout() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, _conn, mut rx) = setup().await;
+            let client = UserDataStreamApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = UserDataStreamSubscribeSignatureParams::builder()
+                    .build()
+                    .unwrap();
+                client.user_data_stream_subscribe_signature(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv())

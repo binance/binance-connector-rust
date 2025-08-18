@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = MarginAccountBorrowRepayParams::builder(
         "asset_example".to_string(),
-        String::new(),
+        "FALSE".to_string(),
         "symbol_example".to_string(),
         "amount_example".to_string(),
         "r#type_example".to_string(),

@@ -50,6 +50,9 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: GetDelistScheduleParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetDelistScheduleResponseInner>>>;
+    async fn get_limit_price_pairs(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::GetLimitPricePairsResponse>>;
     async fn get_list_schedule(
         &self,
         params: GetListScheduleParams,
@@ -430,6 +433,26 @@ impl MarketDataApi for MarketDataApiClient {
         .await
     }
 
+    async fn get_limit_price_pairs(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::GetLimitPricePairsResponse>> {
+        let query_params = BTreeMap::new();
+
+        send_request::<models::GetLimitPricePairsResponse>(
+            &self.configuration,
+            "/sapi/v1/margin/limit-price-pairs",
+            reqwest::Method::GET,
+            query_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
     async fn get_list_schedule(
         &self,
         params: GetListScheduleParams,
@@ -722,6 +745,30 @@ mod tests {
             let dummy_response: Vec<models::GetDelistScheduleResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetDelistScheduleResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_limit_price_pairs(
+            &self,
+        ) -> anyhow::Result<RestApiResponse<models::GetLimitPricePairsResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC","SANDBTC","QKCBTC","SEIFDUSD","NEOUSDC","ARBFDUSD","ORDIUSDC"]}"#).unwrap();
+            let dummy_response: models::GetLimitPricePairsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetLimitPricePairsResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1104,6 +1151,52 @@ mod tests {
             let params = GetDelistScheduleParams::builder().build().unwrap();
 
             match client.get_delist_schedule(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_limit_price_pairs_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+
+            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC","SANDBTC","QKCBTC","SEIFDUSD","NEOUSDC","ARBFDUSD","ORDIUSDC"]}"#).unwrap();
+            let expected_response : models::GetLimitPricePairsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLimitPricePairsResponse");
+
+            let resp = client.get_limit_price_pairs().await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_limit_price_pairs_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+
+            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC","SANDBTC","QKCBTC","SEIFDUSD","NEOUSDC","ARBFDUSD","ORDIUSDC"]}"#).unwrap();
+            let expected_response : models::GetLimitPricePairsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLimitPricePairsResponse");
+
+            let resp = client.get_limit_price_pairs().await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_limit_price_pairs_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            match client.get_limit_price_pairs().await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

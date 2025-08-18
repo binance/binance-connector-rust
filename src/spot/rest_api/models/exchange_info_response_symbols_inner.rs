@@ -72,6 +72,11 @@ pub struct ExchangeInfoResponseSymbolsInner {
     #[serde(rename = "amendAllowed", skip_serializing_if = "Option::is_none")]
     pub amend_allowed: Option<bool>,
     #[serde(
+        rename = "pegInstructionsAllowed",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub peg_instructions_allowed: Option<bool>,
+    #[serde(
         rename = "isSpotTradingAllowed",
         skip_serializing_if = "Option::is_none"
     )]
@@ -120,6 +125,7 @@ impl ExchangeInfoResponseSymbolsInner {
             allow_trailing_stop: None,
             cancel_replace_allowed: None,
             amend_allowed: None,
+            peg_instructions_allowed: None,
             is_spot_trading_allowed: None,
             is_margin_trading_allowed: None,
             filters: None,

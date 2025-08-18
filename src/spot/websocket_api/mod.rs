@@ -1675,7 +1675,7 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Box<models::OrderTestResponseResult>>`] on success.
+    /// [`WebsocketApiResponse<Box<models::SorOrderTestResponseResult>>`] on success.
     ///
     /// # Errors
     ///
@@ -1687,8 +1687,42 @@ impl WebsocketApi {
     pub async fn sor_order_test(
         &self,
         params: SorOrderTestParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderTestResponseResult>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::SorOrderTestResponseResult>>> {
         self.trade_api_client.sor_order_test(params).await
+    }
+
+    /// WebSocket Listing all subscriptions
+    ///
+    ///
+    /// Weight: 2
+    ///
+    /// **Data Source**:
+    /// Memory
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`SessionSubscriptionsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Vec<models::SessionSubscriptionsResponseResultInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#listing-all-subscriptions).
+    ///
+    pub async fn session_subscriptions(
+        &self,
+        params: SessionSubscriptionsParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::SessionSubscriptionsResponseResultInner>>>
+    {
+        self.user_data_stream_api_client
+            .session_subscriptions(params)
+            .await
     }
 
     /// WebSocket Ping user data stream
@@ -1829,9 +1863,53 @@ impl WebsocketApi {
         Ok((response, stream))
     }
 
+    /// WebSocket Subscribe to User Data Stream through signature subscription
+    ///
+    ///
+    /// Weight: 2
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`UserDataStreamSubscribeSignatureParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Box<models::UserDataStreamSubscribeSignatureResponseResult>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#subscribe-to-user-data-stream-through-signature-subscription-user\_stream).
+    ///
+    pub async fn user_data_stream_subscribe_signature(
+        &self,
+        params: UserDataStreamSubscribeSignatureParams,
+    ) -> anyhow::Result<(
+        WebsocketApiResponse<Box<models::UserDataStreamSubscribeSignatureResponseResult>>,
+        Arc<WebsocketStream<UserDataStreamEventsResponse>>,
+    )> {
+        let response = self
+            .user_data_stream_api_client
+            .user_data_stream_subscribe_signature(params)
+            .await?;
+        let stream = create_stream_handler::<UserDataStreamEventsResponse>(
+            WebsocketBase::WebsocketApi(self.websocket_api_base.clone()),
+            random_string(),
+            None,
+        )
+        .await;
+
+        Ok((response, stream))
+    }
+
     /// WebSocket Unsubscribe from User Data Stream
     ///
     /// Stop listening to the User Data Stream in the current WebSocket connection.
+    ///
+    /// Note that `session.logout` will only close the subscription created with `userdataStream.subscribe` but not subscriptions opened with `userDataStream.subscribe.signature`.
     /// Weight: 2
     ///
     /// # Arguments
@@ -1848,7 +1926,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#unsubscribe-from-user-data-stream-user_stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#unsubscribe-from-user-data-stream).
     ///
     pub async fn user_data_stream_unsubscribe(
         &self,

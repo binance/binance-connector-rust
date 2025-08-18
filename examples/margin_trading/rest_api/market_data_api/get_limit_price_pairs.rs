@@ -3,9 +3,7 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::margin_trading::{
-    MarginTradingRestApi, rest_api::GetFutureHourlyInterestRateParams,
-};
+use binance_sdk::margin_trading::MarginTradingRestApi;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -22,19 +20,15 @@ async fn main() -> Result<()> {
     // Create the MarginTrading REST API client
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
-    // Setup the API parameters
-    let params =
-        GetFutureHourlyInterestRateParams::builder("assets_example".to_string(), false).build()?;
-
     // Make the API call
     let response = rest_client
-        .get_future_hourly_interest_rate(params)
+        .get_limit_price_pairs()
         .await
-        .context("get_future_hourly_interest_rate request failed")?;
+        .context("get_limit_price_pairs request failed")?;
 
-    info!(?response.rate_limits, "get_future_hourly_interest_rate rate limits");
+    info!(?response.rate_limits, "get_limit_price_pairs rate limits");
     let data = response.data().await?;
-    info!(?data, "get_future_hourly_interest_rate data");
+    info!(?data, "get_limit_price_pairs data");
 
     Ok(())
 }

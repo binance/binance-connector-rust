@@ -22,25 +22,19 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct SorOrderTestResponse {
-    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i64>,
-    #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
-    pub result: Option<Box<models::SorOrderTestResponseResult>>,
-    #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::RateLimitsInner>>,
+pub struct OrderTestResponseResultSpecialCommissionForOrder {
+    #[serde(rename = "maker", skip_serializing_if = "Option::is_none")]
+    pub maker: Option<String>,
+    #[serde(rename = "taker", skip_serializing_if = "Option::is_none")]
+    pub taker: Option<String>,
 }
 
-impl SorOrderTestResponse {
+impl OrderTestResponseResultSpecialCommissionForOrder {
     #[must_use]
-    pub fn new() -> SorOrderTestResponse {
-        SorOrderTestResponse {
-            id: None,
-            status: None,
-            result: None,
-            rate_limits: None,
+    pub fn new() -> OrderTestResponseResultSpecialCommissionForOrder {
+        OrderTestResponseResultSpecialCommissionForOrder {
+            maker: None,
+            taker: None,
         }
     }
 }

@@ -26,6 +26,8 @@ pub struct AccountCommissionResponse {
     pub symbol: Option<String>,
     #[serde(rename = "standardCommission", skip_serializing_if = "Option::is_none")]
     pub standard_commission: Option<Box<models::AccountCommissionResponseStandardCommission>>,
+    #[serde(rename = "specialCommission", skip_serializing_if = "Option::is_none")]
+    pub special_commission: Option<Box<models::AccountCommissionResponseSpecialCommission>>,
     #[serde(rename = "taxCommission", skip_serializing_if = "Option::is_none")]
     pub tax_commission: Option<Box<models::AccountCommissionResponseTaxCommission>>,
     #[serde(rename = "discount", skip_serializing_if = "Option::is_none")]
@@ -38,6 +40,7 @@ impl AccountCommissionResponse {
         AccountCommissionResponse {
             symbol: None,
             standard_commission: None,
+            special_commission: None,
             tax_commission: None,
             discount: None,
         }

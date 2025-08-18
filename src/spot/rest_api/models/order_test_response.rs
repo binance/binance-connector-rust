@@ -29,6 +29,12 @@ pub struct OrderTestResponse {
     pub standard_commission_for_order:
         Option<Box<models::OrderTestResponseStandardCommissionForOrder>>,
     #[serde(
+        rename = "specialCommissionForOrder",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub special_commission_for_order:
+        Option<Box<models::OrderTestResponseSpecialCommissionForOrder>>,
+    #[serde(
         rename = "taxCommissionForOrder",
         skip_serializing_if = "Option::is_none"
     )]
@@ -42,6 +48,7 @@ impl OrderTestResponse {
     pub fn new() -> OrderTestResponse {
         OrderTestResponse {
             standard_commission_for_order: None,
+            special_commission_for_order: None,
             tax_commission_for_order: None,
             discount: None,
         }

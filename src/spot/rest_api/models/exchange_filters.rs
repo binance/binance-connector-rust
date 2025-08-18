@@ -93,6 +93,10 @@ pub struct ExchangeFilters {
         skip_serializing_if = "Option::is_none"
     )]
     pub max_trailing_below_delta: Option<i64>,
+    #[serde(rename = "maxNumOrderAmends", skip_serializing_if = "Option::is_none")]
+    pub max_num_order_amends: Option<i64>,
+    #[serde(rename = "maxNumOrderLists", skip_serializing_if = "Option::is_none")]
+    pub max_num_order_lists: Option<i64>,
 }
 
 impl ExchangeFilters {
@@ -127,6 +131,8 @@ impl ExchangeFilters {
             max_trailing_above_delta: None,
             min_trailing_below_delta: None,
             max_trailing_below_delta: None,
+            max_num_order_amends: None,
+            max_num_order_lists: None,
         }
     }
 }
