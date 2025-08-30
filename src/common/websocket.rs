@@ -2576,7 +2576,11 @@ where
             Arc::new(
                 move |v: &Value| match serde_json::from_value::<T>(v.clone()) {
                     Ok(data) => callback_fn(data),
-                    Err(e) => error!("Failed to deserialize stream payload: {:?}", e),
+                    Err(e) => {
+                        let json_str =
+                            serde_json::to_string(v).unwrap_or_else(|_| format!("{:?}", v));
+                        error!("Deserialization error: {:?} | Raw JSON: {}", e, json_str);
+                    }
                 },
             );
 
