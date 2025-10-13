@@ -13,7 +13,7 @@ jobs:
       modified_targets: ${{ steps.filter.outputs.modified_targets }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 2 
 
@@ -44,8 +44,7 @@ jobs:
           MODIFIED_TARGETS_JSON=$(printf '%s\n' "${MODIFIED_TARGETS[@]}" | jq -R -s -c 'split("\n") | map(select(. != ""))')
 
           echo "Detected modified targets: $MODIFIED_TARGETS_JSON"
-          echo "modified_targets=$MODIFIED_TARGETS_JSON" >> $GITHUB_ENV
-          echo "::set-output name=modified_targets::$MODIFIED_TARGETS_JSON"
+          echo "modified_targets=$MODIFIED_TARGETS_JSON" >> $GITHUB_OUTPUT
 
   build-target:
     runs-on: ubuntu-latest
@@ -58,7 +57,7 @@ jobs:
       max-parallel: 1
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up Rust ${{ matrix.rust-version }}
         uses: actions-rust-lang/setup-rust-toolchain@v1
