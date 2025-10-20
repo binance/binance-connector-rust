@@ -1,5 +1,16 @@
 # Changelog
 
+## 25.0.0 - 2025-10-20
+
+**Derivatives Trading Usds Futures**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified User Data Streams response for `OrderTradeUpdateO`:
+  - `er` added 
+
 ## 24.0.0 - 2025-10-09
 
 **Derivatives Trading Coin Futures**
