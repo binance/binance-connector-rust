@@ -32,8 +32,6 @@ pub enum UserDataStreamEventsResponse {
     ExecutionReport(Box<models::ExecutionReport>),
     #[serde(rename = "listStatus")]
     ListStatus(Box<models::ListStatus>),
-    #[serde(rename = "listenKeyExpired")]
-    ListenKeyExpired(Box<models::ListenKeyExpired>),
     #[serde(rename = "eventStreamTerminated")]
     EventStreamTerminated(Box<models::EventStreamTerminated>),
     #[serde(rename = "externalLockUpdate")]
@@ -81,13 +79,6 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             "listStatus" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::ListStatus(Box::new(payload)))
-            }
-
-            "listenKeyExpired" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
-                    payload,
-                )))
             }
 
             "eventStreamTerminated" => {

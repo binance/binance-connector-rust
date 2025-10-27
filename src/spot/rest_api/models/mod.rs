@@ -114,8 +114,6 @@ pub mod new_order_response;
 pub use self::new_order_response::NewOrderResponse;
 pub mod new_order_response_fills_inner;
 pub use self::new_order_response_fills_inner::NewOrderResponseFillsInner;
-pub mod new_user_data_stream_response;
-pub use self::new_user_data_stream_response::NewUserDataStreamResponse;
 pub mod notional_filter;
 pub use self::notional_filter::NotionalFilter;
 pub mod open_order_list_response_inner;

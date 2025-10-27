@@ -1,5 +1,54 @@
 # Changelog
 
+## 26.0.0 - 2025-10-27
+
+**Derivatives Trading Usds Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Marked `symbol_price_ticker` (`GET /fapi/v1/ticker/price`) as deprecated.
+
+**Margin Trading**
+
+### Changed (6)
+
+#### REST API
+
+- Marked `close_isolated_margin_user_data_stream` (`DELETE /sapi/v1/userDataStream/isolated`) as deprecated
+- Marked `close_margin_user_data_stream` (`DELETE /sapi/v1/userDataStream`) as deprecated
+- Marked `keepalive_isolated_margin_user_data_stream` (`PUT /sapi/v1/userDataStream/isolated`) as deprecated
+- Marked `keepalive_margin_user_data_stream` (`PUT /sapi/v1/userDataStream`) as deprecated
+- Marked `start_isolated_margin_user_data_stream` (`POST /sapi/v1/userDataStream/isolated`) as deprecated
+- Marked `start_margin_user_data_stream` (`POST /sapi/v1/userDataStream`) as deprecated
+
+**Spot**
+
+### Changed (2)
+
+#### REST API
+
+- Marked `order_oco` (`POST /api/v3/order/oco`) as deprecated.
+
+#### WebSocket API
+
+- Marked `order_list_place` (`orderList.place` method) as deprecated.
+
+### Removed (6)
+
+#### REST API
+
+- `delete_user_data_stream()` (`DELETE /api/v3/userDataStream`)
+- `new_user_data_stream()` (`POST /api/v3/userDataStream`)
+- `put_user_data_stream()` (`PUT /api/v3/userDataStream`)
+
+#### WebSocket API
+
+- `/user_data_stream.ping()` (`userDataStream.ping` method)
+- `/user_data_stream.start()` (`userDataStream.start` method)
+- `/user_data_stream.stop()` (`userDataStream.stop` method)
+
 ## 25.0.0 - 2025-10-20
 
 **Derivatives Trading Usds Futures**

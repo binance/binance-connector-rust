@@ -1532,9 +1532,19 @@ impl RestApi {
 
     /// Create Special Key(Low-Latency Trading)(TRADE)
     ///
-    /// **Binance Margin offers low-latency trading through a [special key](https://www.binance.com/en/support/faq/frequently-asked-questions-on-margin-special-api-key-3208663e900d4d2e9fec4140e1832f4e), available exclusively to users with VIP level 4 or higher. **
+    /// - Binance Margin offers low-latency trading through a [special key](https://www.binance.com/en/support/faq/frequently-asked-questions-on-margin-special-api-key-3208663e900d4d2e9fec4140e1832f4e), available exclusively to users with VIP level 4 or higher.
+    /// - If you are VIP level 3 or below, please contact your VIP manager for eligibility criterias.**
     ///
-    /// **If you are VIP level 3 or below, please contact your VIP manager for eligibility criterias.**
+    /// **Supported Products:**
+    ///
+    /// - Cross Margin
+    /// - Isolated Margin
+    /// - Portfolio Margin Pro
+    /// - Cross Margin Pro (Additional agreement required and subject to meeting eligibility criteria)
+    ///
+    /// **Unsupported Products:**
+    ///
+    /// - Portfolio Margin
     ///
     /// We support several types of API keys:
     ///
@@ -1543,10 +1553,6 @@ impl RestApi {
     /// * RSA
     ///
     /// We recommend to **use Ed25519 API keys** as it should provide the best performance and security out of all supported key types. We accept PKCS#8 (BEGIN PUBLIC KEY). For how to generate an RSA key pair to send API requests on Binance. Please refer to the document below [FAQ](https://www.binance.com/en/support/faq/how-to-generate-an-rsa-key-pair-to-send-api-requests-on-binance-2b79728f331e43079b27440d9d15c5db) .
-    ///
-    /// Read [REST API](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#signed-trade-and-user_data-endpoint-security) or [WebSocket API](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md#request-security) documentation to learn how to use different API keys
-    ///
-    /// You need to enable Permits “Enable Spot & Margin Trading” option for the API Key which requests this endpoint.
     ///
     /// Weight: 1(UID)
     ///
@@ -2752,6 +2758,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade-data-stream/Close-Isolated-Margin-User-Data-Stream).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn close_isolated_margin_user_data_stream(
         &self,
         params: CloseIsolatedMarginUserDataStreamParams,
@@ -2797,6 +2807,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade-data-stream/Close-Margin-User-Data-Stream).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn close_margin_user_data_stream(
         &self,
         params: CloseMarginUserDataStreamParams,
@@ -2842,6 +2856,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade-data-stream/Keepalive-Isolated-Margin-User-Data-Stream).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn keepalive_isolated_margin_user_data_stream(
         &self,
         params: KeepaliveIsolatedMarginUserDataStreamParams,
@@ -2887,6 +2905,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade-data-stream/Keepalive-Margin-User-Data-Stream).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn keepalive_margin_user_data_stream(
         &self,
         params: KeepaliveMarginUserDataStreamParams,
@@ -2932,6 +2954,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade-data-stream/Start-Isolated-Margin-User-Data-Stream).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn start_isolated_margin_user_data_stream(
         &self,
         params: StartIsolatedMarginUserDataStreamParams,
@@ -2977,6 +3003,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade-data-stream/Start-Margin-User-Data-Stream).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn start_margin_user_data_stream(
         &self,
     ) -> anyhow::Result<RestApiResponse<models::StartMarginUserDataStreamResponse>> {

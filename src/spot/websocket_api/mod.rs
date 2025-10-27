@@ -1467,6 +1467,10 @@ impl WebsocketApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#place-new-oco---deprecated-trade).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn order_list_place(
         &self,
         params: OrderListPlaceParams,
@@ -1753,107 +1757,6 @@ impl WebsocketApi {
             .await
     }
 
-    /// WebSocket Ping user data stream
-    ///
-    /// Ping a user data stream to keep it alive.
-    ///
-    /// User data streams close automatically after 60 minutes,
-    /// even if you're listening to them on WebSocket Streams.
-    /// In order to keep the stream open, you have to regularly send pings using the `userDataStream.ping` request.
-    ///
-    /// It is recommended to send a ping once every 30 minutes.
-    ///
-    /// This request does not require `signature`.
-    /// Weight: 2
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`UserDataStreamPingParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`WebsocketApiResponse<serde_json::Value>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#ping-user-data-stream-user_stream).
-    ///
-    pub async fn user_data_stream_ping(
-        &self,
-        params: UserDataStreamPingParams,
-    ) -> anyhow::Result<WebsocketApiResponse<serde_json::Value>> {
-        self.user_data_stream_api_client
-            .user_data_stream_ping(params)
-            .await
-    }
-
-    /// WebSocket Start user data stream
-    ///
-    /// Start a new user data stream.
-    /// Note the stream will close in 60 minutes unless `userDataStream.ping` requests are sent regularly.
-    /// This request does not require `signature`.
-    /// Weight: 2
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`UserDataStreamStartParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`WebsocketApiResponse<Box<models::UserDataStreamStartResponseResult>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#start-user-data-stream-user_stream).
-    ///
-    pub async fn user_data_stream_start(
-        &self,
-        params: UserDataStreamStartParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::UserDataStreamStartResponseResult>>> {
-        self.user_data_stream_api_client
-            .user_data_stream_start(params)
-            .await
-    }
-
-    /// WebSocket Stop user data stream
-    ///
-    /// Explicitly stop and close the user data stream.
-    /// This request does not require `signature`.
-    /// Weight: 2
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`UserDataStreamStopParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`WebsocketApiResponse<serde_json::Value>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#stop-user-data-stream-user_stream).
-    ///
-    pub async fn user_data_stream_stop(
-        &self,
-        params: UserDataStreamStopParams,
-    ) -> anyhow::Result<WebsocketApiResponse<serde_json::Value>> {
-        self.user_data_stream_api_client
-            .user_data_stream_stop(params)
-            .await
-    }
-
     /// WebSocket Subscribe to User Data Stream
     ///
     /// Subscribe to the User Data Stream in the current WebSocket connection.
@@ -1915,7 +1818,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#subscribe-to-user-data-stream-through-signature-subscription-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#subscribe-to-user-data-stream-through-signature-subscription-user_stream).
     ///
     pub async fn user_data_stream_subscribe_signature(
         &self,

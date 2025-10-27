@@ -37,7 +37,6 @@ pub struct RestApi {
     general_api_client: GeneralApiClient,
     market_api_client: MarketApiClient,
     trade_api_client: TradeApiClient,
-    user_data_stream_api_client: UserDataStreamApiClient,
 }
 
 impl RestApi {
@@ -46,7 +45,6 @@ impl RestApi {
         let general_api_client = GeneralApiClient::new(configuration.clone());
         let market_api_client = MarketApiClient::new(configuration.clone());
         let trade_api_client = TradeApiClient::new(configuration.clone());
-        let user_data_stream_api_client = UserDataStreamApiClient::new(configuration.clone());
 
         Self {
             configuration,
@@ -54,7 +52,6 @@ impl RestApi {
             general_api_client,
             market_api_client,
             trade_api_client,
-            user_data_stream_api_client,
         }
     }
 
@@ -1895,6 +1892,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-oco---deprecated-trade).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn order_oco(
         &self,
         params: OrderOcoParams,
@@ -2040,139 +2041,5 @@ impl RestApi {
         params: SorOrderTestParams,
     ) -> anyhow::Result<RestApiResponse<models::SorOrderTestResponse>> {
         self.trade_api_client.sor_order_test(params).await
-    }
-
-    /// Close user data stream
-    ///
-    /// Close out a user data stream.
-    /// Weight: 2
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`DeleteUserDataStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<Value>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/user-data-stream-endpoints---deprecated#close-user-data-stream-user_stream).
-    ///
-    pub async fn delete_user_data_stream(
-        &self,
-        params: DeleteUserDataStreamParams,
-    ) -> anyhow::Result<RestApiResponse<Value>> {
-        self.user_data_stream_api_client
-            .delete_user_data_stream(params)
-            .await
-    }
-
-    /// Start user data stream
-    ///
-    /// Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent.
-    /// This request does not require `signature`.
-    /// Weight: 2
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`NewUserDataStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::NewUserDataStreamResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/user-data-stream-endpoints---deprecated#start-user-data-stream-user_stream).
-    ///
-    pub async fn new_user_data_stream(
-        &self,
-    ) -> anyhow::Result<RestApiResponse<models::NewUserDataStreamResponse>> {
-        self.user_data_stream_api_client
-            .new_user_data_stream()
-            .await
-    }
-
-    /// Keepalive user data stream
-    ///
-    /// Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes. It's recommended to send a ping about every 30 minutes.
-    ///
-    /// This request does not require `signature`.
-    /// Weight: 2
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`PutUserDataStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<Value>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/user-data-stream-endpoints---deprecated#keepalive-user-data-stream-user_stream).
-    ///
-    pub async fn put_user_data_stream(
-        &self,
-        params: PutUserDataStreamParams,
-    ) -> anyhow::Result<RestApiResponse<Value>> {
-        self.user_data_stream_api_client
-            .put_user_data_stream(params)
-            .await
     }
 }

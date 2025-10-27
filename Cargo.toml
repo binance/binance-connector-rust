@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "25.0.0"
+version = "26.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -3165,21 +3165,6 @@ path = "examples/spot/rest_api/trade_api/sor_order.rs"
 required-features = [ "spot" ]
 
 [[example]]
-name = "spot_rest_api_user_data_stream_api_delete_user_data_stream"
-path = "examples/spot/rest_api/user_data_stream_api/delete_user_data_stream.rs"
-required-features = [ "spot" ]
-
-[[example]]
-name = "spot_rest_api_user_data_stream_api_new_user_data_stream"
-path = "examples/spot/rest_api/user_data_stream_api/new_user_data_stream.rs"
-required-features = [ "spot" ]
-
-[[example]]
-name = "spot_rest_api_user_data_stream_api_put_user_data_stream"
-path = "examples/spot/rest_api/user_data_stream_api/put_user_data_stream.rs"
-required-features = [ "spot" ]
-
-[[example]]
 name = "spot_websocket_api_account_api_account_commission"
 path = "examples/spot/websocket_api/account_api/account_commission.rs"
 required-features = [ "spot" ]
@@ -3407,21 +3392,6 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_api_user_data_stream_api_session_subscriptions"
 path = "examples/spot/websocket_api/user_data_stream_api/session_subscriptions.rs"
-required-features = [ "spot" ]
-
-[[example]]
-name = "spot_websocket_api_user_data_stream_api_user_data_stream_ping"
-path = "examples/spot/websocket_api/user_data_stream_api/user_data_stream_ping.rs"
-required-features = [ "spot" ]
-
-[[example]]
-name = "spot_websocket_api_user_data_stream_api_user_data_stream_start"
-path = "examples/spot/websocket_api/user_data_stream_api/user_data_stream_start.rs"
-required-features = [ "spot" ]
-
-[[example]]
-name = "spot_websocket_api_user_data_stream_api_user_data_stream_stop"
-path = "examples/spot/websocket_api/user_data_stream_api/user_data_stream_stop.rs"
 required-features = [ "spot" ]
 
 [[example]]
