@@ -16,7 +16,7 @@ use crate::simple_earn::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct GetRwusdRateHistoryResponseRowsInner {
+pub struct GetBfusdRateHistoryResponseRowsInner {
     #[serde(
         rename = "annualPercentageRate",
         skip_serializing_if = "Option::is_none"
@@ -26,10 +26,10 @@ pub struct GetRwusdRateHistoryResponseRowsInner {
     pub time: Option<i64>,
 }
 
-impl GetRwusdRateHistoryResponseRowsInner {
+impl GetBfusdRateHistoryResponseRowsInner {
     #[must_use]
-    pub fn new() -> GetRwusdRateHistoryResponseRowsInner {
-        GetRwusdRateHistoryResponseRowsInner {
+    pub fn new() -> GetBfusdRateHistoryResponseRowsInner {
+        GetBfusdRateHistoryResponseRowsInner {
             annual_percentage_rate: None,
             time: None,
         }

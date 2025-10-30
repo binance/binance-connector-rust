@@ -1,5 +1,59 @@
 # Changelog
 
+## 27.0.0 - 2025-10-30
+
+**Simple Earn**
+
+### Added (8)
+
+- `get_bfusd_account()` (`GET /sapi/v1/bfusd/account`)
+- `get_bfusd_quota_details()` (`GET /sapi/v1/bfusd/quota`)
+- `get_bfusd_rate_history()` (`GET /sapi/v1/bfusd/history/rateHistory`)
+- `get_bfusd_redemption_history()` (`GET /sapi/v1/bfusd/history/redemptionHistory`)
+- `get_bfusd_rewards_history()` (`GET /sapi/v1/bfusd/history/rewardsHistory`)
+- `get_bfusd_subscription_history()` (`GET /sapi/v1/bfusd/history/subscriptionHistory`)
+- `redeem_bfusd()` (`POST /sapi/v1/bfusd/redeem`)
+- `subscribe_bfusd()` (`POST /sapi/v1/bfusd/subscribe`)
+
+**Spot**
+
+### Changed (2)
+
+#### REST API
+
+- Added parameter `symbolStatus`
+  - affected methods:
+    - `depth()` (`GET /api/v3/depth`)
+    - `ticker()` (`GET /api/v3/ticker`)
+    - `ticker24hr()` (`GET /api/v3/ticker/24hr`)
+    - `ticker_book_ticker()` (`GET /api/v3/ticker/bookTicker`)
+    - `ticker_price()` (`GET /api/v3/ticker/price`)
+    - `ticker_trading_day()` (`GET /api/v3/ticker/tradingDay`)
+
+#### WebSocket API
+
+- Added parameter `symbolStatus`
+  - affected methods:
+    - `depth()` (`depth` method)
+    - `ticker()` (`ticker` method)
+    - `ticker24hr()` (`ticker.24hr` method)
+    - `ticker_book()` (`ticker.book` method)
+    - `ticker_price()` (`ticker.price` method)
+    - `ticker_trading_day()` (`ticker.tradingDay` method)
+
+**Staking**
+
+### Changed (1)
+
+- Modified response for `get_current_eth_staking_quota()` (`GET /sapi/v1/eth-staking/eth/quota`):
+  - property `minRedeemAmount` added
+  - property `redeemPeriod` added
+  - property `stakeable` added
+  - property `commissionFee` added
+  - property `redeemable` added
+  - property `calculating` added
+  - property `minStakeAmount` added
+
 ## 26.0.0 - 2025-10-27
 
 **Derivatives Trading Usds Futures**

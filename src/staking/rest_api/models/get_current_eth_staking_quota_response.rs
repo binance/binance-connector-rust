@@ -27,6 +27,20 @@ pub struct GetCurrentEthStakingQuotaResponse {
         skip_serializing_if = "Option::is_none"
     )]
     pub left_redemption_personal_quota: Option<String>,
+    #[serde(rename = "minStakeAmount", skip_serializing_if = "Option::is_none")]
+    pub min_stake_amount: Option<String>,
+    #[serde(rename = "minRedeemAmount", skip_serializing_if = "Option::is_none")]
+    pub min_redeem_amount: Option<String>,
+    #[serde(rename = "redeemPeriod", skip_serializing_if = "Option::is_none")]
+    pub redeem_period: Option<i64>,
+    #[serde(rename = "stakeable", skip_serializing_if = "Option::is_none")]
+    pub stakeable: Option<bool>,
+    #[serde(rename = "redeemable", skip_serializing_if = "Option::is_none")]
+    pub redeemable: Option<bool>,
+    #[serde(rename = "commissionFee", skip_serializing_if = "Option::is_none")]
+    pub commission_fee: Option<String>,
+    #[serde(rename = "calculating", skip_serializing_if = "Option::is_none")]
+    pub calculating: Option<bool>,
 }
 
 impl GetCurrentEthStakingQuotaResponse {
@@ -35,6 +49,13 @@ impl GetCurrentEthStakingQuotaResponse {
         GetCurrentEthStakingQuotaResponse {
             left_staking_personal_quota: None,
             left_redemption_personal_quota: None,
+            min_stake_amount: None,
+            min_redeem_amount: None,
+            redeem_period: None,
+            stakeable: None,
+            redeemable: None,
+            commission_fee: None,
+            calculating: None,
         }
     }
 }

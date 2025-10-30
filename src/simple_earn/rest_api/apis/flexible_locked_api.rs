@@ -165,18 +165,17 @@ pub struct GetCollateralRecordParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -204,8 +203,7 @@ pub struct GetFlexiblePersonalLeftQuotaParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub product_id: String,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -242,18 +240,17 @@ pub struct GetFlexibleProductPositionParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub product_id: Option<String>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -304,18 +301,17 @@ pub struct GetFlexibleRedemptionRecordParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -365,18 +361,17 @@ pub struct GetFlexibleRewardsHistoryParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -413,8 +408,7 @@ pub struct GetFlexibleSubscriptionPreviewParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub amount: rust_decimal::Decimal,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -475,18 +469,17 @@ pub struct GetFlexibleSubscriptionRecordParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -514,8 +507,7 @@ pub struct GetLockedPersonalLeftQuotaParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub project_id: String,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -558,18 +550,17 @@ pub struct GetLockedProductPositionParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub project_id: Option<String>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -620,18 +611,17 @@ pub struct GetLockedRedemptionRecordParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -676,18 +666,17 @@ pub struct GetLockedRewardsHistoryParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -725,8 +714,7 @@ pub struct GetLockedSubscriptionPreviewParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub auto_subscribe: Option<bool>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -781,18 +769,17 @@ pub struct GetLockedSubscriptionRecordParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -837,18 +824,17 @@ pub struct GetRateHistoryParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -879,18 +865,17 @@ pub struct GetSimpleEarnFlexibleProductListParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub asset: Option<String>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -917,18 +902,17 @@ pub struct GetSimpleEarnLockedProductListParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub asset: Option<String>,
-    /// Currently querying the page. Start from 1. Default:1
+    /// Currently querying page. Starts from 1. Default: 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page. Default: 10, Max: 100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -971,8 +955,7 @@ pub struct RedeemFlexibleProductParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub dest_account: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1004,8 +987,7 @@ pub struct RedeemLockedProductParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub position_id: String,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1042,8 +1024,7 @@ pub struct SetFlexibleAutoSubscribeParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub auto_subscribe: bool,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1086,8 +1067,7 @@ pub struct SetLockedAutoSubscribeParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub auto_subscribe: bool,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1130,8 +1110,7 @@ pub struct SetLockedProductRedeemOptionParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub redeem_to: String,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1163,8 +1142,7 @@ impl SetLockedProductRedeemOptionParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SimpleAccountParams {
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1207,8 +1185,7 @@ pub struct SubscribeFlexibleProductParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub source_account: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1266,8 +1243,7 @@ pub struct SubscribeLockedProductParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub redeem_to: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

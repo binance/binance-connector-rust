@@ -16,19 +16,19 @@ use crate::simple_earn::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct GetRwusdRateHistoryResponse {
-    #[serde(rename = "rows", skip_serializing_if = "Option::is_none")]
-    pub rows: Option<Vec<models::GetBfusdRateHistoryResponseRowsInner>>,
-    #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
-    pub total: Option<String>,
+pub struct SubscribeBfusdResponse {
+    #[serde(rename = "success", skip_serializing_if = "Option::is_none")]
+    pub success: Option<bool>,
+    #[serde(rename = "bfusdAmount", skip_serializing_if = "Option::is_none")]
+    pub bfusd_amount: Option<String>,
 }
 
-impl GetRwusdRateHistoryResponse {
+impl SubscribeBfusdResponse {
     #[must_use]
-    pub fn new() -> GetRwusdRateHistoryResponse {
-        GetRwusdRateHistoryResponse {
-            rows: None,
-            total: None,
+    pub fn new() -> SubscribeBfusdResponse {
+        SubscribeBfusdResponse {
+            success: None,
+            bfusd_amount: None,
         }
     }
 }

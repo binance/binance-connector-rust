@@ -28,17 +28,20 @@ pub use models::*;
 #[derive(Debug, Clone)]
 pub struct RestApi {
     configuration: ConfigurationRestApi,
+    bfusd_api_client: BfusdApiClient,
     flexible_locked_api_client: FlexibleLockedApiClient,
     rwusd_api_client: RwusdApiClient,
 }
 
 impl RestApi {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
+        let bfusd_api_client = BfusdApiClient::new(configuration.clone());
         let flexible_locked_api_client = FlexibleLockedApiClient::new(configuration.clone());
         let rwusd_api_client = RwusdApiClient::new(configuration.clone());
 
         Self {
             configuration,
+            bfusd_api_client,
             flexible_locked_api_client,
             rwusd_api_client,
         }
@@ -90,6 +93,380 @@ impl RestApi {
         params: BTreeMap<String, Value>,
     ) -> anyhow::Result<RestApiResponse<R>> {
         send_request::<R>(&self.configuration, endpoint, method, params, None, true).await
+    }
+
+    /// Get BFUSD Account (`USER_DATA`)
+    ///
+    /// Get BFUSD account information.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetBfusdAccountParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetBfusdAccountResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/account/).
+    ///
+    pub async fn get_bfusd_account(
+        &self,
+        params: GetBfusdAccountParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdAccountResponse>> {
+        self.bfusd_api_client.get_bfusd_account(params).await
+    }
+
+    /// Get BFUSD Quota Details (`USER_DATA`)
+    ///
+    /// Get BFUSD quota details including fast redemption quota and standard redemption quota.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetBfusdQuotaDetailsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetBfusdQuotaDetailsResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/account/Get-BFUSD-Quota-Details).
+    ///
+    pub async fn get_bfusd_quota_details(
+        &self,
+        params: GetBfusdQuotaDetailsParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdQuotaDetailsResponse>> {
+        self.bfusd_api_client.get_bfusd_quota_details(params).await
+    }
+
+    /// Get BFUSD Rate History (`USER_DATA`)
+    ///
+    /// Get BFUSD rate history sorted by descending order.
+    ///
+    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
+    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetBfusdRateHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetBfusdRateHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-Rate-History).
+    ///
+    pub async fn get_bfusd_rate_history(
+        &self,
+        params: GetBfusdRateHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRateHistoryResponse>> {
+        self.bfusd_api_client.get_bfusd_rate_history(params).await
+    }
+
+    /// Get BFUSD Redemption History (`USER_DATA`)
+    ///
+    /// Get BFUSD redemption history.
+    ///
+    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
+    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetBfusdRedemptionHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetBfusdRedemptionHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-Redemption-History).
+    ///
+    pub async fn get_bfusd_redemption_history(
+        &self,
+        params: GetBfusdRedemptionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRedemptionHistoryResponse>> {
+        self.bfusd_api_client
+            .get_bfusd_redemption_history(params)
+            .await
+    }
+
+    /// Get BFUSD Rewards History (`USER_DATA`)
+    ///
+    /// Get BFUSD rewards history.
+    ///
+    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
+    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetBfusdRewardsHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetBfusdRewardsHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-Rewards-History).
+    ///
+    pub async fn get_bfusd_rewards_history(
+        &self,
+        params: GetBfusdRewardsHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRewardsHistoryResponse>> {
+        self.bfusd_api_client
+            .get_bfusd_rewards_history(params)
+            .await
+    }
+
+    /// Get BFUSD subscription `history(USER_DATA)`
+    ///
+    /// Get BFUSD subscription history
+    ///
+    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
+    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time advanced by one month, and data between `startTime` and `endTime` will be returned.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetBfusdSubscriptionHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetBfusdSubscriptionHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-subscription-history).
+    ///
+    pub async fn get_bfusd_subscription_history(
+        &self,
+        params: GetBfusdSubscriptionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdSubscriptionHistoryResponse>> {
+        self.bfusd_api_client
+            .get_bfusd_subscription_history(params)
+            .await
+    }
+
+    /// Redeem BFUSD(TRADE)
+    ///
+    /// Redeem BFUSD to USDT
+    ///
+    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`RedeemBfusdParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::RedeemBfusdResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/earn/Redeem-BFUSD).
+    ///
+    pub async fn redeem_bfusd(
+        &self,
+        params: RedeemBfusdParams,
+    ) -> anyhow::Result<RestApiResponse<models::RedeemBfusdResponse>> {
+        self.bfusd_api_client.redeem_bfusd(params).await
+    }
+
+    /// Subscribe BFUSD(TRADE)
+    ///
+    /// Subscribe BFUSD
+    ///
+    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`SubscribeBfusdParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::SubscribeBfusdResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/earn/Subscribe-BFUSD).
+    ///
+    pub async fn subscribe_bfusd(
+        &self,
+        params: SubscribeBfusdParams,
+    ) -> anyhow::Result<RestApiResponse<models::SubscribeBfusdResponse>> {
+        self.bfusd_api_client.subscribe_bfusd(params).await
     }
 
     /// Get Collateral `Record(USER_DATA)`

@@ -30,59 +30,59 @@ use crate::simple_earn::rest_api::models;
 const HAS_TIME_UNIT: bool = false;
 
 #[async_trait]
-pub trait RwusdApi: Send + Sync {
-    async fn get_rwusd_account(
+pub trait BfusdApi: Send + Sync {
+    async fn get_bfusd_account(
         &self,
-        params: GetRwusdAccountParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdAccountResponse>>;
-    async fn get_rwusd_quota_details(
+        params: GetBfusdAccountParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdAccountResponse>>;
+    async fn get_bfusd_quota_details(
         &self,
-        params: GetRwusdQuotaDetailsParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdQuotaDetailsResponse>>;
-    async fn get_rwusd_rate_history(
+        params: GetBfusdQuotaDetailsParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdQuotaDetailsResponse>>;
+    async fn get_bfusd_rate_history(
         &self,
-        params: GetRwusdRateHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdRateHistoryResponse>>;
-    async fn get_rwusd_redemption_history(
+        params: GetBfusdRateHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRateHistoryResponse>>;
+    async fn get_bfusd_redemption_history(
         &self,
-        params: GetRwusdRedemptionHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdRedemptionHistoryResponse>>;
-    async fn get_rwusd_rewards_history(
+        params: GetBfusdRedemptionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRedemptionHistoryResponse>>;
+    async fn get_bfusd_rewards_history(
         &self,
-        params: GetRwusdRewardsHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdRewardsHistoryResponse>>;
-    async fn get_rwusd_subscription_history(
+        params: GetBfusdRewardsHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRewardsHistoryResponse>>;
+    async fn get_bfusd_subscription_history(
         &self,
-        params: GetRwusdSubscriptionHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdSubscriptionHistoryResponse>>;
-    async fn redeem_rwusd(
+        params: GetBfusdSubscriptionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdSubscriptionHistoryResponse>>;
+    async fn redeem_bfusd(
         &self,
-        params: RedeemRwusdParams,
-    ) -> anyhow::Result<RestApiResponse<models::RedeemRwusdResponse>>;
-    async fn subscribe_rwusd(
+        params: RedeemBfusdParams,
+    ) -> anyhow::Result<RestApiResponse<models::RedeemBfusdResponse>>;
+    async fn subscribe_bfusd(
         &self,
-        params: SubscribeRwusdParams,
-    ) -> anyhow::Result<RestApiResponse<models::SubscribeRwusdResponse>>;
+        params: SubscribeBfusdParams,
+    ) -> anyhow::Result<RestApiResponse<models::SubscribeBfusdResponse>>;
 }
 
 #[derive(Debug, Clone)]
-pub struct RwusdApiClient {
+pub struct BfusdApiClient {
     configuration: ConfigurationRestApi,
 }
 
-impl RwusdApiClient {
+impl BfusdApiClient {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
         Self { configuration }
     }
 }
 
-/// Request parameters for the [`get_rwusd_account`] operation.
+/// Request parameters for the [`get_bfusd_account`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`get_rwusd_account`](#method.get_rwusd_account).
+/// [`get_bfusd_account`](#method.get_bfusd_account).
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetRwusdAccountParams {
+pub struct GetBfusdAccountParams {
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
@@ -90,21 +90,21 @@ pub struct GetRwusdAccountParams {
     pub recv_window: Option<i64>,
 }
 
-impl GetRwusdAccountParams {
-    /// Create a builder for [`get_rwusd_account`].
+impl GetBfusdAccountParams {
+    /// Create a builder for [`get_bfusd_account`].
     ///
     #[must_use]
-    pub fn builder() -> GetRwusdAccountParamsBuilder {
-        GetRwusdAccountParamsBuilder::default()
+    pub fn builder() -> GetBfusdAccountParamsBuilder {
+        GetBfusdAccountParamsBuilder::default()
     }
 }
-/// Request parameters for the [`get_rwusd_quota_details`] operation.
+/// Request parameters for the [`get_bfusd_quota_details`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`get_rwusd_quota_details`](#method.get_rwusd_quota_details).
+/// [`get_bfusd_quota_details`](#method.get_bfusd_quota_details).
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetRwusdQuotaDetailsParams {
+pub struct GetBfusdQuotaDetailsParams {
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
@@ -112,21 +112,21 @@ pub struct GetRwusdQuotaDetailsParams {
     pub recv_window: Option<i64>,
 }
 
-impl GetRwusdQuotaDetailsParams {
-    /// Create a builder for [`get_rwusd_quota_details`].
+impl GetBfusdQuotaDetailsParams {
+    /// Create a builder for [`get_bfusd_quota_details`].
     ///
     #[must_use]
-    pub fn builder() -> GetRwusdQuotaDetailsParamsBuilder {
-        GetRwusdQuotaDetailsParamsBuilder::default()
+    pub fn builder() -> GetBfusdQuotaDetailsParamsBuilder {
+        GetBfusdQuotaDetailsParamsBuilder::default()
     }
 }
-/// Request parameters for the [`get_rwusd_rate_history`] operation.
+/// Request parameters for the [`get_bfusd_rate_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`get_rwusd_rate_history`](#method.get_rwusd_rate_history).
+/// [`get_bfusd_rate_history`](#method.get_bfusd_rate_history).
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetRwusdRateHistoryParams {
+pub struct GetBfusdRateHistoryParams {
     ///
     /// The `start_time` parameter.
     ///
@@ -156,21 +156,21 @@ pub struct GetRwusdRateHistoryParams {
     pub recv_window: Option<i64>,
 }
 
-impl GetRwusdRateHistoryParams {
-    /// Create a builder for [`get_rwusd_rate_history`].
+impl GetBfusdRateHistoryParams {
+    /// Create a builder for [`get_bfusd_rate_history`].
     ///
     #[must_use]
-    pub fn builder() -> GetRwusdRateHistoryParamsBuilder {
-        GetRwusdRateHistoryParamsBuilder::default()
+    pub fn builder() -> GetBfusdRateHistoryParamsBuilder {
+        GetBfusdRateHistoryParamsBuilder::default()
     }
 }
-/// Request parameters for the [`get_rwusd_redemption_history`] operation.
+/// Request parameters for the [`get_bfusd_redemption_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`get_rwusd_redemption_history`](#method.get_rwusd_redemption_history).
+/// [`get_bfusd_redemption_history`](#method.get_bfusd_redemption_history).
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetRwusdRedemptionHistoryParams {
+pub struct GetBfusdRedemptionHistoryParams {
     ///
     /// The `start_time` parameter.
     ///
@@ -200,21 +200,21 @@ pub struct GetRwusdRedemptionHistoryParams {
     pub recv_window: Option<i64>,
 }
 
-impl GetRwusdRedemptionHistoryParams {
-    /// Create a builder for [`get_rwusd_redemption_history`].
+impl GetBfusdRedemptionHistoryParams {
+    /// Create a builder for [`get_bfusd_redemption_history`].
     ///
     #[must_use]
-    pub fn builder() -> GetRwusdRedemptionHistoryParamsBuilder {
-        GetRwusdRedemptionHistoryParamsBuilder::default()
+    pub fn builder() -> GetBfusdRedemptionHistoryParamsBuilder {
+        GetBfusdRedemptionHistoryParamsBuilder::default()
     }
 }
-/// Request parameters for the [`get_rwusd_rewards_history`] operation.
+/// Request parameters for the [`get_bfusd_rewards_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`get_rwusd_rewards_history`](#method.get_rwusd_rewards_history).
+/// [`get_bfusd_rewards_history`](#method.get_bfusd_rewards_history).
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetRwusdRewardsHistoryParams {
+pub struct GetBfusdRewardsHistoryParams {
     ///
     /// The `start_time` parameter.
     ///
@@ -244,21 +244,21 @@ pub struct GetRwusdRewardsHistoryParams {
     pub recv_window: Option<i64>,
 }
 
-impl GetRwusdRewardsHistoryParams {
-    /// Create a builder for [`get_rwusd_rewards_history`].
+impl GetBfusdRewardsHistoryParams {
+    /// Create a builder for [`get_bfusd_rewards_history`].
     ///
     #[must_use]
-    pub fn builder() -> GetRwusdRewardsHistoryParamsBuilder {
-        GetRwusdRewardsHistoryParamsBuilder::default()
+    pub fn builder() -> GetBfusdRewardsHistoryParamsBuilder {
+        GetBfusdRewardsHistoryParamsBuilder::default()
     }
 }
-/// Request parameters for the [`get_rwusd_subscription_history`] operation.
+/// Request parameters for the [`get_bfusd_subscription_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`get_rwusd_subscription_history`](#method.get_rwusd_subscription_history).
+/// [`get_bfusd_subscription_history`](#method.get_bfusd_subscription_history).
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetRwusdSubscriptionHistoryParams {
+pub struct GetBfusdSubscriptionHistoryParams {
     /// USDC or USDT
     ///
     /// This field is **optional.
@@ -293,21 +293,21 @@ pub struct GetRwusdSubscriptionHistoryParams {
     pub recv_window: Option<i64>,
 }
 
-impl GetRwusdSubscriptionHistoryParams {
-    /// Create a builder for [`get_rwusd_subscription_history`].
+impl GetBfusdSubscriptionHistoryParams {
+    /// Create a builder for [`get_bfusd_subscription_history`].
     ///
     #[must_use]
-    pub fn builder() -> GetRwusdSubscriptionHistoryParamsBuilder {
-        GetRwusdSubscriptionHistoryParamsBuilder::default()
+    pub fn builder() -> GetBfusdSubscriptionHistoryParamsBuilder {
+        GetBfusdSubscriptionHistoryParamsBuilder::default()
     }
 }
-/// Request parameters for the [`redeem_rwusd`] operation.
+/// Request parameters for the [`redeem_bfusd`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`redeem_rwusd`](#method.redeem_rwusd).
+/// [`redeem_bfusd`](#method.redeem_bfusd).
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct RedeemRwusdParams {
+pub struct RedeemBfusdParams {
     /// Amount
     ///
     /// This field is **required.
@@ -325,8 +325,8 @@ pub struct RedeemRwusdParams {
     pub recv_window: Option<i64>,
 }
 
-impl RedeemRwusdParams {
-    /// Create a builder for [`redeem_rwusd`].
+impl RedeemBfusdParams {
+    /// Create a builder for [`redeem_bfusd`].
     ///
     /// Required parameters:
     ///
@@ -334,19 +334,19 @@ impl RedeemRwusdParams {
     /// * `r#type` — FAST or STANDARD, defaults to STANDARD
     ///
     #[must_use]
-    pub fn builder(amount: rust_decimal::Decimal, r#type: String) -> RedeemRwusdParamsBuilder {
-        RedeemRwusdParamsBuilder::default()
+    pub fn builder(amount: rust_decimal::Decimal, r#type: String) -> RedeemBfusdParamsBuilder {
+        RedeemBfusdParamsBuilder::default()
             .amount(amount)
             .r#type(r#type)
     }
 }
-/// Request parameters for the [`subscribe_rwusd`] operation.
+/// Request parameters for the [`subscribe_bfusd`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`subscribe_rwusd`](#method.subscribe_rwusd).
+/// [`subscribe_bfusd`](#method.subscribe_bfusd).
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct SubscribeRwusdParams {
+pub struct SubscribeBfusdParams {
     /// USDT or USDC (whichever is eligible)
     ///
     /// This field is **required.
@@ -364,8 +364,8 @@ pub struct SubscribeRwusdParams {
     pub recv_window: Option<i64>,
 }
 
-impl SubscribeRwusdParams {
-    /// Create a builder for [`subscribe_rwusd`].
+impl SubscribeBfusdParams {
+    /// Create a builder for [`subscribe_bfusd`].
     ///
     /// Required parameters:
     ///
@@ -373,20 +373,20 @@ impl SubscribeRwusdParams {
     /// * `amount` — Amount
     ///
     #[must_use]
-    pub fn builder(asset: String, amount: rust_decimal::Decimal) -> SubscribeRwusdParamsBuilder {
-        SubscribeRwusdParamsBuilder::default()
+    pub fn builder(asset: String, amount: rust_decimal::Decimal) -> SubscribeBfusdParamsBuilder {
+        SubscribeBfusdParamsBuilder::default()
             .asset(asset)
             .amount(amount)
     }
 }
 
 #[async_trait]
-impl RwusdApi for RwusdApiClient {
-    async fn get_rwusd_account(
+impl BfusdApi for BfusdApiClient {
+    async fn get_bfusd_account(
         &self,
-        params: GetRwusdAccountParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdAccountResponse>> {
-        let GetRwusdAccountParams { recv_window } = params;
+        params: GetBfusdAccountParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdAccountResponse>> {
+        let GetBfusdAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
 
@@ -394,9 +394,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::GetRwusdAccountResponse>(
+        send_request::<models::GetBfusdAccountResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/account",
+            "/sapi/v1/bfusd/account",
             reqwest::Method::GET,
             query_params,
             if HAS_TIME_UNIT {
@@ -409,11 +409,11 @@ impl RwusdApi for RwusdApiClient {
         .await
     }
 
-    async fn get_rwusd_quota_details(
+    async fn get_bfusd_quota_details(
         &self,
-        params: GetRwusdQuotaDetailsParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdQuotaDetailsResponse>> {
-        let GetRwusdQuotaDetailsParams { recv_window } = params;
+        params: GetBfusdQuotaDetailsParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdQuotaDetailsResponse>> {
+        let GetBfusdQuotaDetailsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
 
@@ -421,9 +421,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::GetRwusdQuotaDetailsResponse>(
+        send_request::<models::GetBfusdQuotaDetailsResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/quota",
+            "/sapi/v1/bfusd/quota",
             reqwest::Method::GET,
             query_params,
             if HAS_TIME_UNIT {
@@ -436,11 +436,11 @@ impl RwusdApi for RwusdApiClient {
         .await
     }
 
-    async fn get_rwusd_rate_history(
+    async fn get_bfusd_rate_history(
         &self,
-        params: GetRwusdRateHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdRateHistoryResponse>> {
-        let GetRwusdRateHistoryParams {
+        params: GetBfusdRateHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRateHistoryResponse>> {
+        let GetBfusdRateHistoryParams {
             start_time,
             end_time,
             current,
@@ -470,9 +470,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::GetRwusdRateHistoryResponse>(
+        send_request::<models::GetBfusdRateHistoryResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/history/rateHistory",
+            "/sapi/v1/bfusd/history/rateHistory",
             reqwest::Method::GET,
             query_params,
             if HAS_TIME_UNIT {
@@ -485,11 +485,11 @@ impl RwusdApi for RwusdApiClient {
         .await
     }
 
-    async fn get_rwusd_redemption_history(
+    async fn get_bfusd_redemption_history(
         &self,
-        params: GetRwusdRedemptionHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdRedemptionHistoryResponse>> {
-        let GetRwusdRedemptionHistoryParams {
+        params: GetBfusdRedemptionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRedemptionHistoryResponse>> {
+        let GetBfusdRedemptionHistoryParams {
             start_time,
             end_time,
             current,
@@ -519,9 +519,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::GetRwusdRedemptionHistoryResponse>(
+        send_request::<models::GetBfusdRedemptionHistoryResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/history/redemptionHistory",
+            "/sapi/v1/bfusd/history/redemptionHistory",
             reqwest::Method::GET,
             query_params,
             if HAS_TIME_UNIT {
@@ -534,11 +534,11 @@ impl RwusdApi for RwusdApiClient {
         .await
     }
 
-    async fn get_rwusd_rewards_history(
+    async fn get_bfusd_rewards_history(
         &self,
-        params: GetRwusdRewardsHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdRewardsHistoryResponse>> {
-        let GetRwusdRewardsHistoryParams {
+        params: GetBfusdRewardsHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdRewardsHistoryResponse>> {
+        let GetBfusdRewardsHistoryParams {
             start_time,
             end_time,
             current,
@@ -568,9 +568,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::GetRwusdRewardsHistoryResponse>(
+        send_request::<models::GetBfusdRewardsHistoryResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/history/rewardsHistory",
+            "/sapi/v1/bfusd/history/rewardsHistory",
             reqwest::Method::GET,
             query_params,
             if HAS_TIME_UNIT {
@@ -583,11 +583,11 @@ impl RwusdApi for RwusdApiClient {
         .await
     }
 
-    async fn get_rwusd_subscription_history(
+    async fn get_bfusd_subscription_history(
         &self,
-        params: GetRwusdSubscriptionHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetRwusdSubscriptionHistoryResponse>> {
-        let GetRwusdSubscriptionHistoryParams {
+        params: GetBfusdSubscriptionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetBfusdSubscriptionHistoryResponse>> {
+        let GetBfusdSubscriptionHistoryParams {
             asset,
             start_time,
             end_time,
@@ -622,9 +622,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::GetRwusdSubscriptionHistoryResponse>(
+        send_request::<models::GetBfusdSubscriptionHistoryResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/history/subscriptionHistory",
+            "/sapi/v1/bfusd/history/subscriptionHistory",
             reqwest::Method::GET,
             query_params,
             if HAS_TIME_UNIT {
@@ -637,11 +637,11 @@ impl RwusdApi for RwusdApiClient {
         .await
     }
 
-    async fn redeem_rwusd(
+    async fn redeem_bfusd(
         &self,
-        params: RedeemRwusdParams,
-    ) -> anyhow::Result<RestApiResponse<models::RedeemRwusdResponse>> {
-        let RedeemRwusdParams {
+        params: RedeemBfusdParams,
+    ) -> anyhow::Result<RestApiResponse<models::RedeemBfusdResponse>> {
+        let RedeemBfusdParams {
             amount,
             r#type,
             recv_window,
@@ -657,9 +657,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::RedeemRwusdResponse>(
+        send_request::<models::RedeemBfusdResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/redeem",
+            "/sapi/v1/bfusd/redeem",
             reqwest::Method::POST,
             query_params,
             if HAS_TIME_UNIT {
@@ -672,11 +672,11 @@ impl RwusdApi for RwusdApiClient {
         .await
     }
 
-    async fn subscribe_rwusd(
+    async fn subscribe_bfusd(
         &self,
-        params: SubscribeRwusdParams,
-    ) -> anyhow::Result<RestApiResponse<models::SubscribeRwusdResponse>> {
-        let SubscribeRwusdParams {
+        params: SubscribeBfusdParams,
+    ) -> anyhow::Result<RestApiResponse<models::SubscribeBfusdResponse>> {
+        let SubscribeBfusdParams {
             asset,
             amount,
             recv_window,
@@ -692,9 +692,9 @@ impl RwusdApi for RwusdApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::SubscribeRwusdResponse>(
+        send_request::<models::SubscribeBfusdResponse>(
             &self.configuration,
-            "/sapi/v1/rwusd/subscribe",
+            "/sapi/v1/bfusd/subscribe",
             reqwest::Method::POST,
             query_params,
             if HAS_TIME_UNIT {
@@ -734,16 +734,16 @@ mod tests {
         }
     }
 
-    struct MockRwusdApiClient {
+    struct MockBfusdApiClient {
         force_error: bool,
     }
 
     #[async_trait]
-    impl RwusdApi for MockRwusdApiClient {
-        async fn get_rwusd_account(
+    impl BfusdApi for MockBfusdApiClient {
+        async fn get_bfusd_account(
             &self,
-            _params: GetRwusdAccountParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetRwusdAccountResponse>> {
+            _params: GetBfusdAccountParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetBfusdAccountResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
@@ -751,10 +751,10 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
-            let dummy_response: models::GetRwusdAccountResponse =
+                serde_json::from_str(r#"{"bfusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+            let dummy_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdAccountResponse");
+                    .expect("should parse into models::GetBfusdAccountResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -766,20 +766,20 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn get_rwusd_quota_details(
+        async fn get_bfusd_quota_details(
             &self,
-            _params: GetRwusdQuotaDetailsParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetRwusdQuotaDetailsResponse>> {
+            _params: GetBfusdQuotaDetailsParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetBfusdQuotaDetailsResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT","USDC"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
-            let dummy_response: models::GetRwusdQuotaDetailsResponse =
+            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let dummy_response: models::GetBfusdQuotaDetailsResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdQuotaDetailsResponse");
+                    .expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -791,10 +791,10 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn get_rwusd_rate_history(
+        async fn get_bfusd_rate_history(
             &self,
-            _params: GetRwusdRateHistoryParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetRwusdRateHistoryResponse>> {
+            _params: GetBfusdRateHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetBfusdRateHistoryResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
@@ -805,9 +805,9 @@ mod tests {
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
             .unwrap();
-            let dummy_response: models::GetRwusdRateHistoryResponse =
+            let dummy_response: models::GetBfusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdRateHistoryResponse");
+                    .expect("should parse into models::GetBfusdRateHistoryResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -819,20 +819,20 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn get_rwusd_redemption_history(
+        async fn get_bfusd_redemption_history(
             &self,
-            _params: GetRwusdRedemptionHistoryParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetRwusdRedemptionHistoryResponse>> {
+            _params: GetBfusdRedemptionHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetBfusdRedemptionHistoryResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
-            let dummy_response: models::GetRwusdRedemptionHistoryResponse =
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let dummy_response: models::GetBfusdRedemptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdRedemptionHistoryResponse");
+                    .expect("should parse into models::GetBfusdRedemptionHistoryResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -844,20 +844,20 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn get_rwusd_rewards_history(
+        async fn get_bfusd_rewards_history(
             &self,
-            _params: GetRwusdRewardsHistoryParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetRwusdRewardsHistoryResponse>> {
+            _params: GetBfusdRewardsHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetBfusdRewardsHistoryResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
-            let dummy_response: models::GetRwusdRewardsHistoryResponse =
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let dummy_response: models::GetBfusdRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdRewardsHistoryResponse");
+                    .expect("should parse into models::GetBfusdRewardsHistoryResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -869,20 +869,20 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn get_rwusd_subscription_history(
+        async fn get_bfusd_subscription_history(
             &self,
-            _params: GetRwusdSubscriptionHistoryParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetRwusdSubscriptionHistoryResponse>> {
+            _params: GetBfusdSubscriptionHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetBfusdSubscriptionHistoryResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
-            let dummy_response: models::GetRwusdSubscriptionHistoryResponse =
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let dummy_response: models::GetBfusdSubscriptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdSubscriptionHistoryResponse");
+                    .expect("should parse into models::GetBfusdSubscriptionHistoryResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -894,10 +894,10 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn redeem_rwusd(
+        async fn redeem_bfusd(
             &self,
-            _params: RedeemRwusdParams,
-        ) -> anyhow::Result<RestApiResponse<models::RedeemRwusdResponse>> {
+            _params: RedeemBfusdParams,
+        ) -> anyhow::Result<RestApiResponse<models::RedeemBfusdResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
@@ -905,9 +905,9 @@ mod tests {
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
-            let dummy_response: models::RedeemRwusdResponse =
+            let dummy_response: models::RedeemBfusdResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::RedeemRwusdResponse");
+                    .expect("should parse into models::RedeemBfusdResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -919,10 +919,10 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn subscribe_rwusd(
+        async fn subscribe_bfusd(
             &self,
-            _params: SubscribeRwusdParams,
-        ) -> anyhow::Result<RestApiResponse<models::SubscribeRwusdResponse>> {
+            _params: SubscribeBfusdParams,
+        ) -> anyhow::Result<RestApiResponse<models::SubscribeBfusdResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
@@ -930,10 +930,10 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#).unwrap();
-            let dummy_response: models::SubscribeRwusdResponse =
+                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#).unwrap();
+            let dummy_response: models::SubscribeBfusdResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SubscribeRwusdResponse");
+                    .expect("should parse into models::SubscribeBfusdResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -947,20 +947,20 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_account_required_params_success() {
+    fn get_bfusd_account_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdAccountParams::builder().build().unwrap();
+            let params = GetBfusdAccountParams::builder().build().unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
-            let expected_response: models::GetRwusdAccountResponse =
+                serde_json::from_str(r#"{"bfusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+            let expected_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdAccountResponse");
+                    .expect("should parse into models::GetBfusdAccountResponse");
 
             let resp = client
-                .get_rwusd_account(params)
+                .get_bfusd_account(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -970,23 +970,23 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_account_optional_params_success() {
+    fn get_bfusd_account_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdAccountParams::builder()
+            let params = GetBfusdAccountParams::builder()
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
-            let expected_response: models::GetRwusdAccountResponse =
+                serde_json::from_str(r#"{"bfusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+            let expected_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdAccountResponse");
+                    .expect("should parse into models::GetBfusdAccountResponse");
 
             let resp = client
-                .get_rwusd_account(params)
+                .get_bfusd_account(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -996,13 +996,13 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_account_response_error() {
+    fn get_bfusd_account_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = GetRwusdAccountParams::builder().build().unwrap();
+            let params = GetBfusdAccountParams::builder().build().unwrap();
 
-            match client.get_rwusd_account(params).await {
+            match client.get_bfusd_account(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1012,16 +1012,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_quota_details_required_params_success() {
+    fn get_bfusd_quota_details_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdQuotaDetailsParams::builder().build().unwrap();
+            let params = GetBfusdQuotaDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT","USDC"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
-            let expected_response : models::GetRwusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdQuotaDetailsResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
-            let resp = client.get_rwusd_quota_details(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1029,16 +1029,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_quota_details_optional_params_success() {
+    fn get_bfusd_quota_details_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdQuotaDetailsParams::builder().recv_window(5000).build().unwrap();
+            let params = GetBfusdQuotaDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT","USDC"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
-            let expected_response : models::GetRwusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdQuotaDetailsResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
-            let resp = client.get_rwusd_quota_details(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1046,13 +1046,13 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_quota_details_response_error() {
+    fn get_bfusd_quota_details_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = GetRwusdQuotaDetailsParams::builder().build().unwrap();
+            let params = GetBfusdQuotaDetailsParams::builder().build().unwrap();
 
-            match client.get_rwusd_quota_details(params).await {
+            match client.get_bfusd_quota_details(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1062,22 +1062,22 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_rate_history_required_params_success() {
+    fn get_bfusd_rate_history_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdRateHistoryParams::builder().build().unwrap();
+            let params = GetBfusdRateHistoryParams::builder().build().unwrap();
 
             let resp_json: Value = serde_json::from_str(
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
             .unwrap();
-            let expected_response: models::GetRwusdRateHistoryResponse =
+            let expected_response: models::GetBfusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdRateHistoryResponse");
+                    .expect("should parse into models::GetBfusdRateHistoryResponse");
 
             let resp = client
-                .get_rwusd_rate_history(params)
+                .get_bfusd_rate_history(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -1087,11 +1087,11 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_rate_history_optional_params_success() {
+    fn get_bfusd_rate_history_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdRateHistoryParams::builder()
+            let params = GetBfusdRateHistoryParams::builder()
                 .start_time(1623319461670)
                 .end_time(1641782889000)
                 .current(1)
@@ -1104,12 +1104,12 @@ mod tests {
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
             .unwrap();
-            let expected_response: models::GetRwusdRateHistoryResponse =
+            let expected_response: models::GetBfusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetRwusdRateHistoryResponse");
+                    .expect("should parse into models::GetBfusdRateHistoryResponse");
 
             let resp = client
-                .get_rwusd_rate_history(params)
+                .get_bfusd_rate_history(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -1119,13 +1119,13 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_rate_history_response_error() {
+    fn get_bfusd_rate_history_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = GetRwusdRateHistoryParams::builder().build().unwrap();
+            let params = GetBfusdRateHistoryParams::builder().build().unwrap();
 
-            match client.get_rwusd_rate_history(params).await {
+            match client.get_bfusd_rate_history(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1135,16 +1135,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_redemption_history_required_params_success() {
+    fn get_bfusd_redemption_history_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdRedemptionHistoryParams::builder().build().unwrap();
+            let params = GetBfusdRedemptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
-            let expected_response : models::GetRwusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRedemptionHistoryResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let expected_response : models::GetBfusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRedemptionHistoryResponse");
 
-            let resp = client.get_rwusd_redemption_history(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_redemption_history(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1152,16 +1152,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_redemption_history_optional_params_success() {
+    fn get_bfusd_redemption_history_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdRedemptionHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetBfusdRedemptionHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
-            let expected_response : models::GetRwusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRedemptionHistoryResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let expected_response : models::GetBfusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRedemptionHistoryResponse");
 
-            let resp = client.get_rwusd_redemption_history(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_redemption_history(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1169,13 +1169,13 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_redemption_history_response_error() {
+    fn get_bfusd_redemption_history_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = GetRwusdRedemptionHistoryParams::builder().build().unwrap();
+            let params = GetBfusdRedemptionHistoryParams::builder().build().unwrap();
 
-            match client.get_rwusd_redemption_history(params).await {
+            match client.get_bfusd_redemption_history(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1185,16 +1185,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_rewards_history_required_params_success() {
+    fn get_bfusd_rewards_history_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdRewardsHistoryParams::builder().build().unwrap();
+            let params = GetBfusdRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
-            let expected_response : models::GetRwusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRewardsHistoryResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let expected_response : models::GetBfusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRewardsHistoryResponse");
 
-            let resp = client.get_rwusd_rewards_history(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_rewards_history(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1202,16 +1202,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_rewards_history_optional_params_success() {
+    fn get_bfusd_rewards_history_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdRewardsHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetBfusdRewardsHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
-            let expected_response : models::GetRwusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRewardsHistoryResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let expected_response : models::GetBfusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRewardsHistoryResponse");
 
-            let resp = client.get_rwusd_rewards_history(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_rewards_history(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1219,13 +1219,13 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_rewards_history_response_error() {
+    fn get_bfusd_rewards_history_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = GetRwusdRewardsHistoryParams::builder().build().unwrap();
+            let params = GetBfusdRewardsHistoryParams::builder().build().unwrap();
 
-            match client.get_rwusd_rewards_history(params).await {
+            match client.get_bfusd_rewards_history(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1235,16 +1235,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_subscription_history_required_params_success() {
+    fn get_bfusd_subscription_history_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdSubscriptionHistoryParams::builder().build().unwrap();
+            let params = GetBfusdSubscriptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
-            let expected_response : models::GetRwusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdSubscriptionHistoryResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let expected_response : models::GetBfusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdSubscriptionHistoryResponse");
 
-            let resp = client.get_rwusd_subscription_history(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_subscription_history(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1252,16 +1252,16 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_subscription_history_optional_params_success() {
+    fn get_bfusd_subscription_history_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetRwusdSubscriptionHistoryParams::builder().asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetBfusdSubscriptionHistoryParams::builder().asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
-            let expected_response : models::GetRwusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdSubscriptionHistoryResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let expected_response : models::GetBfusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdSubscriptionHistoryResponse");
 
-            let resp = client.get_rwusd_subscription_history(params).await.expect("Expected a response");
+            let resp = client.get_bfusd_subscription_history(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1269,15 +1269,15 @@ mod tests {
     }
 
     #[test]
-    fn get_rwusd_subscription_history_response_error() {
+    fn get_bfusd_subscription_history_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = GetRwusdSubscriptionHistoryParams::builder()
+            let params = GetBfusdSubscriptionHistoryParams::builder()
                 .build()
                 .unwrap();
 
-            match client.get_rwusd_subscription_history(params).await {
+            match client.get_bfusd_subscription_history(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1287,16 +1287,16 @@ mod tests {
     }
 
     #[test]
-    fn redeem_rwusd_required_params_success() {
+    fn redeem_bfusd_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = RedeemRwusdParams::builder(dec!(1.0),"s".to_string(),).build().unwrap();
+            let params = RedeemBfusdParams::builder(dec!(1.0),"s".to_string(),).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
-            let expected_response : models::RedeemRwusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemRwusdResponse");
+            let expected_response : models::RedeemBfusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemBfusdResponse");
 
-            let resp = client.redeem_rwusd(params).await.expect("Expected a response");
+            let resp = client.redeem_bfusd(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1304,16 +1304,16 @@ mod tests {
     }
 
     #[test]
-    fn redeem_rwusd_optional_params_success() {
+    fn redeem_bfusd_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = RedeemRwusdParams::builder(dec!(1.0),"s".to_string(),).recv_window(5000).build().unwrap();
+            let params = RedeemBfusdParams::builder(dec!(1.0),"s".to_string(),).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
-            let expected_response : models::RedeemRwusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemRwusdResponse");
+            let expected_response : models::RedeemBfusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemBfusdResponse");
 
-            let resp = client.redeem_rwusd(params).await.expect("Expected a response");
+            let resp = client.redeem_bfusd(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1321,15 +1321,15 @@ mod tests {
     }
 
     #[test]
-    fn redeem_rwusd_response_error() {
+    fn redeem_bfusd_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = RedeemRwusdParams::builder(dec!(1.0), "s".to_string())
+            let params = RedeemBfusdParams::builder(dec!(1.0), "s".to_string())
                 .build()
                 .unwrap();
 
-            match client.redeem_rwusd(params).await {
+            match client.redeem_bfusd(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1339,22 +1339,22 @@ mod tests {
     }
 
     #[test]
-    fn subscribe_rwusd_required_params_success() {
+    fn subscribe_bfusd_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = SubscribeRwusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeBfusdParams::builder("asset_example".to_string(), dec!(1.0))
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#).unwrap();
-            let expected_response: models::SubscribeRwusdResponse =
+                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#).unwrap();
+            let expected_response: models::SubscribeBfusdResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SubscribeRwusdResponse");
+                    .expect("should parse into models::SubscribeBfusdResponse");
 
             let resp = client
-                .subscribe_rwusd(params)
+                .subscribe_bfusd(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -1364,23 +1364,23 @@ mod tests {
     }
 
     #[test]
-    fn subscribe_rwusd_optional_params_success() {
+    fn subscribe_bfusd_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: false };
+            let client = MockBfusdApiClient { force_error: false };
 
-            let params = SubscribeRwusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeBfusdParams::builder("asset_example".to_string(), dec!(1.0))
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#).unwrap();
-            let expected_response: models::SubscribeRwusdResponse =
+                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#).unwrap();
+            let expected_response: models::SubscribeBfusdResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SubscribeRwusdResponse");
+                    .expect("should parse into models::SubscribeBfusdResponse");
 
             let resp = client
-                .subscribe_rwusd(params)
+                .subscribe_bfusd(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -1390,15 +1390,15 @@ mod tests {
     }
 
     #[test]
-    fn subscribe_rwusd_response_error() {
+    fn subscribe_bfusd_response_error() {
         TOKIO_SHARED_RT.block_on(async {
-            let client = MockRwusdApiClient { force_error: true };
+            let client = MockBfusdApiClient { force_error: true };
 
-            let params = SubscribeRwusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeBfusdParams::builder("asset_example".to_string(), dec!(1.0))
                 .build()
                 .unwrap();
 
-            match client.subscribe_rwusd(params).await {
+            match client.subscribe_bfusd(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

@@ -11,6 +11,8 @@
  * Do not edit the class manually.
  */
 
+pub mod bfusd_api;
+pub use bfusd_api::*;
 pub mod flexible_locked_api;
 pub use flexible_locked_api::*;
 pub mod rwusd_api;

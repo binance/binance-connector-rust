@@ -99,6 +99,49 @@ impl MarketApiClient {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum DepthSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl DepthSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for DepthSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid DepthSymbolStatusEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KlinesIntervalEnum {
     #[serde(rename = "1s")]
     Interval1s,
@@ -592,6 +635,49 @@ impl std::str::FromStr for TickerTypeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TickerSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl TickerSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for TickerSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid TickerSymbolStatusEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Ticker24hrTypeEnum {
     #[serde(rename = "FULL")]
     Full,
@@ -623,6 +709,135 @@ impl std::str::FromStr for Ticker24hrTypeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum Ticker24hrSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl Ticker24hrSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for Ticker24hrSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid Ticker24hrSymbolStatusEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TickerBookTickerSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl TickerBookTickerSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for TickerBookTickerSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid TickerBookTickerSymbolStatusEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TickerPriceSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl TickerPriceSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for TickerPriceSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid TickerPriceSymbolStatusEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TickerTradingDayTypeEnum {
     #[serde(rename = "FULL")]
     Full,
@@ -648,6 +863,49 @@ impl std::str::FromStr for TickerTradingDayTypeEnum {
             "FULL" => Ok(Self::Full),
             "MINI" => Ok(Self::Mini),
             other => Err(format!("invalid TickerTradingDayTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TickerTradingDaySymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl TickerTradingDaySymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for TickerTradingDaySymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid TickerTradingDaySymbolStatusEnum: {}", other).into()),
         }
     }
 }
@@ -831,6 +1089,12 @@ pub struct DepthParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub limit: Option<i32>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<DepthSymbolStatusEnum>,
 }
 
 impl DepthParams {
@@ -999,6 +1263,12 @@ pub struct TickerParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub r#type: Option<TickerTypeEnum>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<TickerSymbolStatusEnum>,
 }
 
 impl TickerParams {
@@ -1032,6 +1302,12 @@ pub struct Ticker24hrParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub r#type: Option<Ticker24hrTypeEnum>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<Ticker24hrSymbolStatusEnum>,
 }
 
 impl Ticker24hrParams {
@@ -1059,6 +1335,12 @@ pub struct TickerBookTickerParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub symbols: Option<Vec<String>>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<TickerBookTickerSymbolStatusEnum>,
 }
 
 impl TickerBookTickerParams {
@@ -1086,6 +1368,12 @@ pub struct TickerPriceParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub symbols: Option<Vec<String>>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<TickerPriceSymbolStatusEnum>,
 }
 
 impl TickerPriceParams {
@@ -1124,6 +1412,12 @@ pub struct TickerTradingDayParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub r#type: Option<TickerTradingDayTypeEnum>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<TickerTradingDaySymbolStatusEnum>,
 }
 
 impl TickerTradingDayParams {
@@ -1269,7 +1563,11 @@ impl MarketApi for MarketApiClient {
         &self,
         params: DepthParams,
     ) -> anyhow::Result<RestApiResponse<models::DepthResponse>> {
-        let DepthParams { symbol, limit } = params;
+        let DepthParams {
+            symbol,
+            limit,
+            symbol_status,
+        } = params;
 
         let mut query_params = BTreeMap::new();
 
@@ -1277,6 +1575,10 @@ impl MarketApi for MarketApiClient {
 
         if let Some(rw) = limit {
             query_params.insert("limit".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
         }
 
         send_request::<models::DepthResponse>(
@@ -1419,6 +1721,7 @@ impl MarketApi for MarketApiClient {
             symbols,
             window_size,
             r#type,
+            symbol_status,
         } = params;
 
         let mut query_params = BTreeMap::new();
@@ -1437,6 +1740,10 @@ impl MarketApi for MarketApiClient {
 
         if let Some(rw) = r#type {
             query_params.insert("type".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
         }
 
         send_request::<models::TickerResponse>(
@@ -1462,6 +1769,7 @@ impl MarketApi for MarketApiClient {
             symbol,
             symbols,
             r#type,
+            symbol_status,
         } = params;
 
         let mut query_params = BTreeMap::new();
@@ -1476,6 +1784,10 @@ impl MarketApi for MarketApiClient {
 
         if let Some(rw) = r#type {
             query_params.insert("type".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
         }
 
         send_request::<models::Ticker24hrResponse>(
@@ -1497,7 +1809,11 @@ impl MarketApi for MarketApiClient {
         &self,
         params: TickerBookTickerParams,
     ) -> anyhow::Result<RestApiResponse<models::TickerBookTickerResponse>> {
-        let TickerBookTickerParams { symbol, symbols } = params;
+        let TickerBookTickerParams {
+            symbol,
+            symbols,
+            symbol_status,
+        } = params;
 
         let mut query_params = BTreeMap::new();
 
@@ -1507,6 +1823,10 @@ impl MarketApi for MarketApiClient {
 
         if let Some(rw) = symbols {
             query_params.insert("symbols".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
         }
 
         send_request::<models::TickerBookTickerResponse>(
@@ -1528,7 +1848,11 @@ impl MarketApi for MarketApiClient {
         &self,
         params: TickerPriceParams,
     ) -> anyhow::Result<RestApiResponse<models::TickerPriceResponse>> {
-        let TickerPriceParams { symbol, symbols } = params;
+        let TickerPriceParams {
+            symbol,
+            symbols,
+            symbol_status,
+        } = params;
 
         let mut query_params = BTreeMap::new();
 
@@ -1538,6 +1862,10 @@ impl MarketApi for MarketApiClient {
 
         if let Some(rw) = symbols {
             query_params.insert("symbols".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
         }
 
         send_request::<models::TickerPriceResponse>(
@@ -1564,6 +1892,7 @@ impl MarketApi for MarketApiClient {
             symbols,
             time_zone,
             r#type,
+            symbol_status,
         } = params;
 
         let mut query_params = BTreeMap::new();
@@ -1582,6 +1911,10 @@ impl MarketApi for MarketApiClient {
 
         if let Some(rw) = r#type {
             query_params.insert("type".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
         }
 
         send_request::<models::TickerTradingDayResponse>(
@@ -2125,7 +2458,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = DepthParams::builder("BNBUSDT".to_string(),).limit(500).build().unwrap();
+            let params = DepthParams::builder("BNBUSDT".to_string(),).limit(500).symbol_status(DepthSymbolStatusEnum::Trading).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"lastUpdateId":1027024,"bids":[["4.00000000","431.00000000"]],"asks":[["4.00000200","12.00000000"]]}"#).unwrap();
             let expected_response : models::DepthResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DepthResponse");
@@ -2332,7 +2665,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = TickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).window_size(TickerWindowSizeEnum::WindowSize1m).r#type(TickerTypeEnum::Full).build().unwrap();
+            let params = TickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).window_size(TickerWindowSizeEnum::WindowSize1m).r#type(TickerTypeEnum::Full).symbol_status(TickerSymbolStatusEnum::Trading).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","priceChange":"-8.00000000","priceChangePercent":"-88.889","weightedAvgPrice":"2.60427807","openPrice":"0.10000000","highPrice":"2.00000000","lowPrice":"0.10000000","lastPrice":"2.00000000","volume":"39.00000000","quoteVolume":"13.40000000","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap();
             let expected_response : models::TickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerResponse");
@@ -2382,7 +2715,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = Ticker24hrParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).r#type(Ticker24hrTypeEnum::Full).build().unwrap();
+            let params = Ticker24hrParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).r#type(Ticker24hrTypeEnum::Full).symbol_status(Ticker24hrSymbolStatusEnum::Trading).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","priceChange":"-94.99999800","priceChangePercent":"-95.960","weightedAvgPrice":"0.29628482","prevClosePrice":"0.10002000","lastPrice":"4.00000200","lastQty":"200.00000000","bidPrice":"4.00000000","bidQty":"100.00000000","askPrice":"4.00000200","askQty":"100.00000000","openPrice":"99.00000000","highPrice":"100.00000000","lowPrice":"0.10000000","volume":"8913.30000000","quoteVolume":"15.30000000","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap();
             let expected_response : models::Ticker24hrResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::Ticker24hrResponse");
@@ -2432,7 +2765,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = TickerBookTickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string()].to_vec()).build().unwrap();
+            let params = TickerBookTickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).symbol_status(TickerBookTickerSymbolStatusEnum::Trading).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","bidPrice":"4.00000000","bidQty":"431.00000000","askPrice":"4.00000200","askQty":"9.00000000"}"#).unwrap();
             let expected_response : models::TickerBookTickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerBookTickerResponse");
@@ -2491,6 +2824,7 @@ mod tests {
             let params = TickerPriceParams::builder()
                 .symbol("BNBUSDT".to_string())
                 .symbols(["null".to_string()].to_vec())
+                .symbol_status(TickerPriceSymbolStatusEnum::Trading)
                 .build()
                 .unwrap();
 
@@ -2548,7 +2882,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = TickerTradingDayParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).time_zone("time_zone_example".to_string()).r#type(TickerTradingDayTypeEnum::Full).build().unwrap();
+            let params = TickerTradingDayParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).time_zone("time_zone_example".to_string()).r#type(TickerTradingDayTypeEnum::Full).symbol_status(TickerTradingDaySymbolStatusEnum::Trading).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","priceChange":"-83.13000000","priceChangePercent":"-0.317","weightedAvgPrice":"26234.58803036","openPrice":"26304.80000000","highPrice":"26397.46000000","lowPrice":"26088.34000000","lastPrice":"26221.67000000","volume":"18495.35066000","quoteVolume":"485217905.04210480","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap();
             let expected_response : models::TickerTradingDayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerTradingDayResponse");

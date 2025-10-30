@@ -1025,10 +1025,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000"}"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap();
             let dummy_response: models::GetCurrentEthStakingQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentEthStakingQuotaResponse");
@@ -1332,18 +1329,10 @@ mod tests {
 
             let params = GetCurrentEthStakingQuotaParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000"}"#,
-            )
-            .unwrap();
-            let expected_response: models::GetCurrentEthStakingQuotaResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetCurrentEthStakingQuotaResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap();
+            let expected_response : models::GetCurrentEthStakingQuotaResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCurrentEthStakingQuotaResponse");
 
-            let resp = client
-                .get_current_eth_staking_quota(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.get_current_eth_staking_quota(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1355,23 +1344,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = GetCurrentEthStakingQuotaParams::builder()
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = GetCurrentEthStakingQuotaParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000"}"#,
-            )
-            .unwrap();
-            let expected_response: models::GetCurrentEthStakingQuotaResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetCurrentEthStakingQuotaResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap();
+            let expected_response : models::GetCurrentEthStakingQuotaResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCurrentEthStakingQuotaResponse");
 
-            let resp = client
-                .get_current_eth_staking_quota(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.get_current_eth_staking_quota(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);

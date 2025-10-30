@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "26.0.0"
+version = "27.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2793,6 +2793,46 @@ required-features = [ "pay" ]
 name = "rebate_rest_api_rebate_api_get_spot_rebate_history_records"
 path = "examples/rebate/rest_api/rebate_api/get_spot_rebate_history_records.rs"
 required-features = [ "rebate" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_get_bfusd_account"
+path = "examples/simple_earn/rest_api/bfusd_api/get_bfusd_account.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_get_bfusd_quota_details"
+path = "examples/simple_earn/rest_api/bfusd_api/get_bfusd_quota_details.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_get_bfusd_rate_history"
+path = "examples/simple_earn/rest_api/bfusd_api/get_bfusd_rate_history.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_get_bfusd_redemption_history"
+path = "examples/simple_earn/rest_api/bfusd_api/get_bfusd_redemption_history.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_get_bfusd_rewards_history"
+path = "examples/simple_earn/rest_api/bfusd_api/get_bfusd_rewards_history.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_get_bfusd_subscription_history"
+path = "examples/simple_earn/rest_api/bfusd_api/get_bfusd_subscription_history.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_redeem_bfusd"
+path = "examples/simple_earn/rest_api/bfusd_api/redeem_bfusd.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
+name = "simple_earn_rest_api_bfusd_api_subscribe_bfusd"
+path = "examples/simple_earn/rest_api/bfusd_api/subscribe_bfusd.rs"
+required-features = [ "simple_earn" ]
 
 [[example]]
 name = "simple_earn_rest_api_flexible_locked_api_get_collateral_record"

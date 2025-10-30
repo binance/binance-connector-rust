@@ -16,17 +16,17 @@ use crate::simple_earn::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct GetRwusdRateHistoryResponse {
+pub struct GetBfusdRewardsHistoryResponse {
     #[serde(rename = "rows", skip_serializing_if = "Option::is_none")]
-    pub rows: Option<Vec<models::GetBfusdRateHistoryResponseRowsInner>>,
+    pub rows: Option<Vec<models::GetBfusdRewardsHistoryResponseRowsInner>>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
-    pub total: Option<String>,
+    pub total: Option<i64>,
 }
 
-impl GetRwusdRateHistoryResponse {
+impl GetBfusdRewardsHistoryResponse {
     #[must_use]
-    pub fn new() -> GetRwusdRateHistoryResponse {
-        GetRwusdRateHistoryResponse {
+    pub fn new() -> GetBfusdRewardsHistoryResponse {
+        GetBfusdRewardsHistoryResponse {
             rows: None,
             total: None,
         }
