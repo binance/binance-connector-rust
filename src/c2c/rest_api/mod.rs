@@ -94,9 +94,8 @@ impl RestApi {
     /// Get C2C Trade History
     ///
     /// * The max interval between startTime and endTime is 30 days.
-    /// * If startTime and endTime are not sent, the recent 7 days' data will be returned.
-    /// * The earliest startTime is supported on June 10, 2020
-    /// * Return up to 200 records per request.
+    /// * If startTime and endTime are not sent, the recent 30 days' data will be returned.
+    /// * You can only view data from the past 6 months. To see all C2C orders, please check <https://c2c.binance.com/en/fiatOrder>
     ///
     /// Weight: 1
     ///

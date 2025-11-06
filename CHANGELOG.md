@@ -1,5 +1,18 @@
 # Changelog
 
+## 28.0.0 - 2025-11-06
+
+**C2c**
+
+### Changed (2)
+
+- Added parameter `rows`
+  - affected methods:
+    - `get_c2_c_trade_history()` (`GET /sapi/v1/c2c/orderMatch/listUserOrderHistory`)
+- Added parameter `tradeType`
+  - affected methods:
+    - `get_c2_c_trade_history()` (`GET /sapi/v1/c2c/orderMatch/listUserOrderHistory`)
+
 ## 27.0.0 - 2025-10-30
 
 **Simple Earn**
