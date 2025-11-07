@@ -1789,7 +1789,7 @@ impl RestApi {
     ///
     /// Mark Price and Funding Rate
     ///
-    /// Weight: 1
+    /// Weight: 1 with symbol, 10 without symbol
     ///
     /// # Arguments
     ///
@@ -2946,6 +2946,96 @@ impl RestApi {
             .await
     }
 
+    /// Cancel Algo Order (TRADE)
+    ///
+    /// Cancel an active algo order.
+    ///
+    /// * Either `algoid` or `clientalgoid` must be sent.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CancelAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CancelAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Algo-Order).
+    ///
+    pub async fn cancel_algo_order(
+        &self,
+        params: CancelAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAlgoOrderResponse>> {
+        self.trade_api_client.cancel_algo_order(params).await
+    }
+
+    /// Cancel All Algo Open Orders (TRADE)
+    ///
+    /// Cancel All Algo Open Orders
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CancelAllAlgoOpenOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CancelAllAlgoOpenOrdersResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Algo-Open-Orders).
+    ///
+    pub async fn cancel_all_algo_open_orders(
+        &self,
+        params: CancelAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAllAlgoOpenOrdersResponse>> {
+        self.trade_api_client
+            .cancel_all_algo_open_orders(params)
+            .await
+    }
+
     /// Cancel All Open Orders (TRADE)
     ///
     /// Cancel All Open Orders
@@ -3251,6 +3341,54 @@ impl RestApi {
         self.trade_api_client.change_position_mode(params).await
     }
 
+    /// Current All Algo Open Orders (`USER_DATA`)
+    ///
+    /// Get all algo open orders on a symbol.
+    ///
+    /// * If the symbol is not sent, orders for all symbols will be returned in an array.
+    ///
+    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+    /// Careful when accessing this with no symbol.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CurrentAllAlgoOpenOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Current-All-Algo-Open-Orders).
+    ///
+    pub async fn current_all_algo_open_orders(
+        &self,
+        params: CurrentAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>> {
+        self.trade_api_client
+            .current_all_algo_open_orders(params)
+            .await
+    }
+
     /// Current All Open Orders (`USER_DATA`)
     ///
     /// Get all open orders on a symbol.
@@ -3544,6 +3682,79 @@ impl RestApi {
         self.trade_api_client.modify_order(params).await
     }
 
+    /// New Algo Order(TRADE)
+    ///
+    /// Send in a new Algo order.
+    ///
+    /// * Condition orders will be triggered when:
+    ///
+    /// * If parameter`priceProtect`is sent as true:
+    /// * when price reaches the `triggerPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
+    /// * "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
+    ///
+    /// * `STOP`, `STOP_MARKET`:
+    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
+    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
+    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
+    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
+    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
+    /// * `TRAILING_STOP_MARKET`:
+    /// * BUY: the lowest price after order placed <= `activationPrice`, and the latest price >= the lowest price * (1 + `callbackRate`)
+    /// * SELL: the highest price after order placed >= `activationPrice`, and the latest price <= the highest price * (1 - `callbackRate`)
+    ///
+    /// * For `TRAILING_STOP_MARKET`, if you got such error code.
+    /// ``{"code": -2021, "msg": "Order would immediately trigger."}``
+    /// means that the parameters you send do not meet the following requirements:
+    /// * BUY: `activationPrice` should be smaller than latest price.
+    /// * SELL: `activationPrice` should be larger than latest price.
+    ///
+    /// * `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
+    /// * Follow the same rules for condition orders.
+    /// * If triggered，**close all** current long position( if `SELL`) or current short position( if `BUY`).
+    /// * Cannot be used with `quantity` paremeter
+    /// * Cannot be used with `reduceOnly` parameter
+    /// * In Hedge Mode,cannot be used with `BUY` orders in `LONG` position side. and cannot be used with `SELL` orders in `SHORT` position side
+    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
+    ///
+    /// Weight: 0 on IP rate limit(x-mbx-used-weight-1m)
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`NewAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::NewAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Algo-Order).
+    ///
+    pub async fn new_algo_order(
+        &self,
+        params: NewAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::NewAlgoOrderResponse>> {
+        self.trade_api_client.new_algo_order(params).await
+    }
+
     /// New Order(TRADE)
     ///
     /// Send in a new order.
@@ -3816,6 +4027,106 @@ impl RestApi {
         params: PositionInformationV3Params,
     ) -> anyhow::Result<RestApiResponse<Vec<models::PositionInformationV3ResponseInner>>> {
         self.trade_api_client.position_information_v3(params).await
+    }
+
+    /// Query Algo Order (`USER_DATA`)
+    ///
+    /// Check an algo order's status.
+    ///
+    /// * These orders will not be found:
+    /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time
+    /// * order create time + 90 days < current time
+    ///
+    /// * Either `algoId` or `clientAlgoId` must be sent.
+    /// * `algoId` is self-increment for each specific `symbol`
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::QueryAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Algo-Order).
+    ///
+    pub async fn query_algo_order(
+        &self,
+        params: QueryAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryAlgoOrderResponse>> {
+        self.trade_api_client.query_algo_order(params).await
+    }
+
+    /// Query All Algo Orders (`USER_DATA`)
+    ///
+    /// Get all algo orders; active, canceled, or filled.
+    ///
+    /// * These orders will not be found:
+    /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time
+    /// * order create time + 90 days < current time
+    ///
+    /// * If `algoId` is set, it will get orders >= that `algoId`. Otherwise most recent orders are returned.
+    /// * The query time period must be less then 7 days( default as the recent 7 days).
+    ///
+    /// Weight: 5
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryAllAlgoOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::QueryAllAlgoOrdersResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-All-Algo-Orders).
+    ///
+    pub async fn query_all_algo_orders(
+        &self,
+        params: QueryAllAlgoOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllAlgoOrdersResponseInner>>> {
+        self.trade_api_client.query_all_algo_orders(params).await
     }
 
     /// Query Current Open Order (`USER_DATA`)

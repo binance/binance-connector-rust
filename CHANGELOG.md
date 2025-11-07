@@ -1,5 +1,20 @@
 # Changelog
 
+## 29.0.0 - 2025-11-07
+
+**Derivatives Trading Usds Futures**
+
+### Added (6)
+
+#### REST API
+
+- `cancel_algo_order()` (`DELETE /fapi/v1/algoOrder`)
+- `cancel_all_algo_open_orders()` (`DELETE /fapi/v1/algoOpenOrders`)
+- `current_all_algo_open_orders()` (`GET /fapi/v1/openAlgoOrders`)
+- `new_algo_order()` (`POST /fapi/v1/algoOrder`)
+- `query_algo_order()` (`GET /fapi/v1/algoOrder`)
+- `query_all_algo_orders()` (`GET /fapi/v1/allAlgoOrders`)
+
 ## 28.0.0 - 2025-11-06
 
 **C2c**

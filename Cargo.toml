@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "28.0.0"
+version = "29.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2020,6 +2020,16 @@ path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/auto_cancel
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_rest_api_trade_api_cancel_algo_order"
+path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/cancel_algo_order.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
+name = "derivatives_trading_usds_futures_rest_api_trade_api_cancel_all_algo_open_orders"
+path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/cancel_all_algo_open_orders.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_rest_api_trade_api_cancel_all_open_orders"
 path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/cancel_all_open_orders.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2055,6 +2065,11 @@ path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/change_posi
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_rest_api_trade_api_current_all_algo_open_orders"
+path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/current_all_algo_open_orders.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_rest_api_trade_api_current_all_open_orders"
 path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/current_all_open_orders.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2085,6 +2100,11 @@ path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/modify_orde
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_rest_api_trade_api_new_algo_order"
+path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/new_algo_order.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_rest_api_trade_api_new_order"
 path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/new_order.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2107,6 +2127,16 @@ required-features = [ "derivatives_trading_usds_futures" ]
 [[example]]
 name = "derivatives_trading_usds_futures_rest_api_trade_api_position_information_v3"
 path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/position_information_v3.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
+name = "derivatives_trading_usds_futures_rest_api_trade_api_query_algo_order"
+path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/query_algo_order.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
+name = "derivatives_trading_usds_futures_rest_api_trade_api_query_all_algo_orders"
+path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/query_all_algo_orders.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]

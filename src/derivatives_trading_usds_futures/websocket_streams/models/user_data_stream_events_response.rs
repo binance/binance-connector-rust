@@ -21,6 +21,8 @@ use serde_json::Value;
 pub enum UserDataStreamEventsResponse {
     #[serde(rename = "ACCOUNT_CONFIG_UPDATE")]
     AccountConfigUpdate(Box<models::AccountConfigUpdate>),
+    #[serde(rename = "ALGO_UPDATE")]
+    AlgoUpdate(Box<models::AlgoUpdate>),
     #[serde(rename = "ACCOUNT_UPDATE")]
     AccountUpdate(Box<models::AccountUpdate>),
     #[serde(rename = "CONDITIONAL_ORDER_TRIGGER_REJECT")]
@@ -61,6 +63,11 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 Ok(UserDataStreamEventsResponse::AccountConfigUpdate(Box::new(
                     payload,
                 )))
+            }
+
+            "ALGO_UPDATE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::AlgoUpdate(Box::new(payload)))
             }
 
             "ACCOUNT_UPDATE" => {
