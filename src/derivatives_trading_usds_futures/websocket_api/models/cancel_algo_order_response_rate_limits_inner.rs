@@ -17,7 +17,7 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct CancelOrderResponseRateLimitsInner {
+pub struct CancelAlgoOrderResponseRateLimitsInner {
     #[serde(rename = "rateLimitType", skip_serializing_if = "Option::is_none")]
     pub rate_limit_type: Option<String>,
     #[serde(rename = "interval", skip_serializing_if = "Option::is_none")]
@@ -30,10 +30,10 @@ pub struct CancelOrderResponseRateLimitsInner {
     pub count: Option<i64>,
 }
 
-impl CancelOrderResponseRateLimitsInner {
+impl CancelAlgoOrderResponseRateLimitsInner {
     #[must_use]
-    pub fn new() -> CancelOrderResponseRateLimitsInner {
-        CancelOrderResponseRateLimitsInner {
+    pub fn new() -> CancelAlgoOrderResponseRateLimitsInner {
+        CancelAlgoOrderResponseRateLimitsInner {
             rate_limit_type: None,
             interval: None,
             interval_num: None,

@@ -505,51 +505,6 @@ impl RestApi {
             .await
     }
 
-    /// Mint BFUSD for Portfolio Margin(TRADE)
-    ///
-    /// Mint BFUSD for all types of Portfolio Margin account
-    ///
-    /// Weight: 1500
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`MintBfusdForPortfolioMarginParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::MintBfusdForPortfolioMarginResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Mint-BFUSD-Portfolio-Margin).
-    ///
-    pub async fn mint_bfusd_for_portfolio_margin(
-        &self,
-        params: MintBfusdForPortfolioMarginParams,
-    ) -> anyhow::Result<RestApiResponse<models::MintBfusdForPortfolioMarginResponse>> {
-        self.account_api_client
-            .mint_bfusd_for_portfolio_margin(params)
-            .await
-    }
-
     /// Portfolio Margin Pro Bankruptcy Loan Repay
     ///
     /// Repay Portfolio Margin Pro Bankruptcy Loan
@@ -742,51 +697,6 @@ impl RestApi {
     > {
         self.account_api_client
             .query_portfolio_margin_pro_negative_balance_interest_history(params)
-            .await
-    }
-
-    /// Redeem BFUSD for Portfolio Margin(TRADE)
-    ///
-    /// Redeem BFUSD for all types of Portfolio Margin account
-    ///
-    /// Weight: 1500
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`RedeemBfusdForPortfolioMarginParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::RedeemBfusdForPortfolioMarginResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Redeem-BFUSD-Portfolio-Margin).
-    ///
-    pub async fn redeem_bfusd_for_portfolio_margin(
-        &self,
-        params: RedeemBfusdForPortfolioMarginParams,
-    ) -> anyhow::Result<RestApiResponse<models::RedeemBfusdForPortfolioMarginResponse>> {
-        self.account_api_client
-            .redeem_bfusd_for_portfolio_margin(params)
             .await
     }
 

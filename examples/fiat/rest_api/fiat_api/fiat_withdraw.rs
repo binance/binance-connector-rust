@@ -3,7 +3,7 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::margin_trading::MarginTradingRestApi;
+use binance_sdk::fiat::{FiatRestApi, rest_api::FiatWithdrawParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -17,18 +17,21 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the MarginTrading REST API client
-    let rest_client = MarginTradingRestApi::production(rest_conf);
+    // Create the Fiat REST API client
+    let rest_client = FiatRestApi::production(rest_conf);
+
+    // Setup the API parameters
+    let params = FiatWithdrawParams::default();
 
     // Make the API call
     let response = rest_client
-        .start_margin_user_data_stream()
+        .fiat_withdraw(params)
         .await
-        .context("start_margin_user_data_stream request failed")?;
+        .context("fiat_withdraw request failed")?;
 
-    info!(?response.rate_limits, "start_margin_user_data_stream rate limits");
+    info!(?response.rate_limits, "fiat_withdraw rate limits");
     let data = response.data().await?;
-    info!(?data, "start_margin_user_data_stream data");
+    info!(?data, "fiat_withdraw data");
 
     Ok(())
 }

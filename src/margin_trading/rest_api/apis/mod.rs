@@ -21,7 +21,5 @@ pub mod risk_data_stream_api;
 pub use risk_data_stream_api::*;
 pub mod trade_api;
 pub use trade_api::*;
-pub mod trade_data_stream_api;
-pub use trade_data_stream_api::*;
 pub mod transfer_api;
 pub use transfer_api::*;

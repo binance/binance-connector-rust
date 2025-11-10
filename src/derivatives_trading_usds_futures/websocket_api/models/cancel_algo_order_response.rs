@@ -17,21 +17,21 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct CancelOrderResponse {
+pub struct CancelAlgoOrderResponse {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
-    pub result: Option<Box<models::CancelOrderResponseResult>>,
+    pub result: Option<Box<models::CancelAlgoOrderResponseResult>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
     pub rate_limits: Option<Vec<models::CancelAlgoOrderResponseRateLimitsInner>>,
 }
 
-impl CancelOrderResponse {
+impl CancelAlgoOrderResponse {
     #[must_use]
-    pub fn new() -> CancelOrderResponse {
-        CancelOrderResponse {
+    pub fn new() -> CancelAlgoOrderResponse {
+        CancelAlgoOrderResponse {
             id: None,
             status: None,
             result: None,

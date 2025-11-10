@@ -3,9 +3,7 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::margin_trading::{
-    MarginTradingRestApi, rest_api::CloseMarginUserDataStreamParams,
-};
+use binance_sdk::fiat::{FiatRestApi, rest_api::GetOrderDetailParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -19,22 +17,21 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the MarginTrading REST API client
-    let rest_client = MarginTradingRestApi::production(rest_conf);
+    // Create the Fiat REST API client
+    let rest_client = FiatRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        CloseMarginUserDataStreamParams::builder("listenkey_example".to_string()).build()?;
+    let params = GetOrderDetailParams::builder("1".to_string()).build()?;
 
     // Make the API call
     let response = rest_client
-        .close_margin_user_data_stream(params)
+        .get_order_detail(params)
         .await
-        .context("close_margin_user_data_stream request failed")?;
+        .context("get_order_detail request failed")?;
 
-    info!(?response.rate_limits, "close_margin_user_data_stream rate limits");
+    info!(?response.rate_limits, "get_order_detail rate limits");
     let data = response.data().await?;
-    info!(?data, "close_margin_user_data_stream data");
+    info!(?data, "get_order_detail data");
 
     Ok(())
 }

@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "29.0.0"
+version = "30.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2210,6 +2210,11 @@ path = "examples/derivatives_trading_usds_futures/websocket_api/market_data_api/
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_websocket_api_trade_api_cancel_algo_order"
+path = "examples/derivatives_trading_usds_futures/websocket_api/trade_api/cancel_algo_order.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_websocket_api_trade_api_cancel_order"
 path = "examples/derivatives_trading_usds_futures/websocket_api/trade_api/cancel_order.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2217,6 +2222,11 @@ required-features = [ "derivatives_trading_usds_futures" ]
 [[example]]
 name = "derivatives_trading_usds_futures_websocket_api_trade_api_modify_order"
 path = "examples/derivatives_trading_usds_futures/websocket_api/trade_api/modify_order.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
+name = "derivatives_trading_usds_futures_websocket_api_trade_api_new_algo_order"
+path = "examples/derivatives_trading_usds_futures/websocket_api/trade_api/new_algo_order.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
@@ -2370,6 +2380,11 @@ path = "examples/dual_investment/rest_api/trade_api/subscribe_dual_investment_pr
 required-features = [ "dual_investment" ]
 
 [[example]]
+name = "fiat_rest_api_fiat_api_fiat_withdraw"
+path = "examples/fiat/rest_api/fiat_api/fiat_withdraw.rs"
+required-features = [ "fiat" ]
+
+[[example]]
 name = "fiat_rest_api_fiat_api_get_fiat_deposit_withdraw_history"
 path = "examples/fiat/rest_api/fiat_api/get_fiat_deposit_withdraw_history.rs"
 required-features = [ "fiat" ]
@@ -2377,6 +2392,11 @@ required-features = [ "fiat" ]
 [[example]]
 name = "fiat_rest_api_fiat_api_get_fiat_payments_history"
 path = "examples/fiat/rest_api/fiat_api/get_fiat_payments_history.rs"
+required-features = [ "fiat" ]
+
+[[example]]
+name = "fiat_rest_api_fiat_api_get_order_detail"
+path = "examples/fiat/rest_api/fiat_api/get_order_detail.rs"
 required-features = [ "fiat" ]
 
 [[example]]

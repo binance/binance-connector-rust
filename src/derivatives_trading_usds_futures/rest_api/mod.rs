@@ -4081,7 +4081,7 @@ impl RestApi {
 
     /// Query All Algo Orders (`USER_DATA`)
     ///
-    /// Get all algo orders; active, canceled, or filled.
+    /// Get all algo orders; active, CANCELED, TRIGGERED or FINISHED .
     ///
     /// * These orders will not be found:
     /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time

@@ -11,6 +11,12 @@
  * Do not edit the class manually.
  */
 
+pub mod deposit_response;
+pub use self::deposit_response::DepositResponse;
+pub mod deposit_response_data;
+pub use self::deposit_response_data::DepositResponseData;
+pub mod fiat_withdraw_response;
+pub use self::fiat_withdraw_response::FiatWithdrawResponse;
 pub mod get_fiat_deposit_withdraw_history_response;
 pub use self::get_fiat_deposit_withdraw_history_response::GetFiatDepositWithdrawHistoryResponse;
 pub mod get_fiat_deposit_withdraw_history_response_data_inner;
@@ -19,3 +25,7 @@ pub mod get_fiat_payments_history_response;
 pub use self::get_fiat_payments_history_response::GetFiatPaymentsHistoryResponse;
 pub mod get_fiat_payments_history_response_data_inner;
 pub use self::get_fiat_payments_history_response_data_inner::GetFiatPaymentsHistoryResponseDataInner;
+pub mod get_order_detail_response;
+pub use self::get_order_detail_response::GetOrderDetailResponse;
+pub mod get_order_detail_response_data;
+pub use self::get_order_detail_response_data::GetOrderDetailResponseData;

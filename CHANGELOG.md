@@ -1,5 +1,62 @@
 # Changelog
 
+## 30.0.0 - 2025-11-10
+
+**C2C**
+
+### Changed (4)
+
+- Added parameter `endTimestamp`
+  - affected methods:
+    - `get_c2_c_trade_history()` (`GET /sapi/v1/c2c/orderMatch/listUserOrderHistory`)
+- Added parameter `startTimestamp`
+  - affected methods:
+    - `get_c2_c_trade_history()` (`GET /sapi/v1/c2c/orderMatch/listUserOrderHistory`)
+- Deleted parameter `endTime`
+  - affected methods:
+    - `get_c2_c_trade_history()` (`GET /sapi/v1/c2c/orderMatch/listUserOrderHistory`)
+- Deleted parameter `startTime`
+  - affected methods:
+    - `get_c2_c_trade_history()` (`GET /sapi/v1/c2c/orderMatch/listUserOrderHistory`)
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Removed (2)
+
+#### REST API
+
+- `mint_bfusd_for_portfolio_margin()` (`POST /sapi/v1/portfolio/mint`)
+- `redeem_bfusd_for_portfolio_margin()` (`POST /sapi/v1/portfolio/redeem`)
+
+**Derivatives Trading Usds Futures**
+
+### Added (2)
+
+#### WebSocket API
+
+- `cancel_algo_order()` (`algoOrder.cancel` method)
+- `new_algo_order()` (`algoOrder.place` method)
+
+**Fiat**
+
+### Added (2)
+
+- `fiat_withdraw()` (`GET /sapi/v2/fiat/withdraw`)
+- `get_order_detail()` (`GET /sapi/v1/fiat/get-order-detail`)
+
+**Margin Trading**
+
+### Removed (6)
+
+#### REST API
+
+- `close_isolated_margin_user_data_stream()` (`DELETE /sapi/v1/userDataStream/isolated`)
+- `close_margin_user_data_stream()` (`DELETE /sapi/v1/userDataStream`)
+- `keepalive_isolated_margin_user_data_stream()` (`PUT /sapi/v1/userDataStream/isolated`)
+- `keepalive_margin_user_data_stream()` (`PUT /sapi/v1/userDataStream`)
+- `start_isolated_margin_user_data_stream()` (`POST /sapi/v1/userDataStream/isolated`)
+- `start_margin_user_data_stream()` (`POST /sapi/v1/userDataStream`)
+
 ## 29.0.0 - 2025-11-07
 
 **Derivatives Trading Usds Futures**
