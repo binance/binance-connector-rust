@@ -25,7 +25,7 @@ pub struct TradeStreamsResponse {
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
-    pub t: Option<i64>,
+    pub t: Option<String>,
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]

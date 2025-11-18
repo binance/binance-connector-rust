@@ -1,5 +1,79 @@
 # Changelog
 
+## 31.0.0 - 2025-11-18
+
+**Derivatives Trading Options**
+
+### Changed (1)
+
+#### REST API
+
+- Renamed `symbol_price_ticker()` to `index_price_ticker()`.
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified response for `trade_streams()` (`<symbol>@trade` method):
+  - `t`: number -> string
+ 
+**Derivatives Trading Portfolio Margin**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified response for `user_data()` method:
+  - removed `m_uppercase` from `Executionreport`
+
+**Derivatives Trading Usds Futures**
+
+### Changed (5)
+
+#### REST API
+
+- Modified parameter `batchOrders`:
+  - items.`timeInForce`: enum added: `RPI`
+  - items.`timeInForce`: enum added: `RPI`
+  - affected methods:
+    - `place_multiple_orders()` (`POST /fapi/v1/batchOrders`)
+- Modified parameter `timeInForce`:
+  - enum added: `RPI`
+  - affected methods:
+    - `new_algo_order()` (`POST /fapi/v1/algoOrder`)
+    - `new_order()` (`POST /fapi/v1/order`)
+    - `test_order()` (`POST /fapi/v1/order/test`)
+- Modified response for `old_trades_lookup()` (`GET /fapi/v1/historicalTrades`):
+  - items: property `isRPITrade` added
+  - items: item property `isRPITrade` added
+
+- Modified response for `recent_trades_list()` (`GET /fapi/v1/trades`):
+  - items: property `isRPITrade` added
+  - items: item property `isRPITrade` added
+
+#### WebSocket API
+
+- Modified parameter `timeInForce`:
+  - enum added: `RPI`
+  - affected methods:
+    - `new_algo_order()` (`algoOrder.place` method)
+    - `new_order()` (`order.place` method)
+
+**Fiat**
+
+### Removed (2)
+
+- `fiat_withdraw()` (`GET /sapi/v2/fiat/withdraw`)
+- `get_order_detail()` (`GET /sapi/v1/fiat/get-order-detail`)
+
+**Spot**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Marked `all_ticker()` (`!ticker@arr` stream) as deprecated.
+
 ## 30.0.0 - 2025-11-10
 
 **C2C**

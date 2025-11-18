@@ -316,7 +316,7 @@ impl WebsocketStreams {
             .await
     }
 
-    /// WebSocket All Market Tickers Stream
+    /// WebSocket All Market Tickers Stream (DEPRECATED)
     ///
     /// 24hr rolling window ticker statistics for all symbols that changed in an array. These are NOT the statistics of the UTC day, but a 24hr rolling window for the previous 24hrs. Note that only tickers that have changed will be present in the array.
     ///
@@ -334,8 +334,12 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#all-market-tickers-stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#all-market-tickers-stream-deprecated).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn all_ticker(
         &self,
         params: AllTickerParams,

@@ -29,6 +29,8 @@ pub struct OldTradesLookupResponseInner {
     pub time: Option<i64>,
     #[serde(rename = "isBuyerMaker", skip_serializing_if = "Option::is_none")]
     pub is_buyer_maker: Option<bool>,
+    #[serde(rename = "isRPITrade", skip_serializing_if = "Option::is_none")]
+    pub is_rpi_trade: Option<bool>,
 }
 
 impl OldTradesLookupResponseInner {
@@ -41,6 +43,7 @@ impl OldTradesLookupResponseInner {
             quote_qty: None,
             time: None,
             is_buyer_maker: None,
+            is_rpi_trade: None,
         }
     }
 }

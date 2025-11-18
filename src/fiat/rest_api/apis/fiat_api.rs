@@ -31,10 +31,6 @@ const HAS_TIME_UNIT: bool = false;
 
 #[async_trait]
 pub trait FiatApi: Send + Sync {
-    async fn fiat_withdraw(
-        &self,
-        params: FiatWithdrawParams,
-    ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>>;
     async fn get_fiat_deposit_withdraw_history(
         &self,
         params: GetFiatDepositWithdrawHistoryParams,
@@ -43,10 +39,6 @@ pub trait FiatApi: Send + Sync {
         &self,
         params: GetFiatPaymentsHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetFiatPaymentsHistoryResponse>>;
-    async fn get_order_detail(
-        &self,
-        params: GetOrderDetailParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>>;
 }
 
 #[derive(Debug, Clone)]
@@ -60,29 +52,6 @@ impl FiatApiClient {
     }
 }
 
-/// Request parameters for the [`fiat_withdraw`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`fiat_withdraw`](#method.fiat_withdraw).
-#[derive(Clone, Debug, Builder, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct FiatWithdrawParams {
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub recv_window: Option<i64>,
-}
-
-impl FiatWithdrawParams {
-    /// Create a builder for [`fiat_withdraw`].
-    ///
-    #[must_use]
-    pub fn builder() -> FiatWithdrawParamsBuilder {
-        FiatWithdrawParamsBuilder::default()
-    }
-}
 /// Request parameters for the [`get_fiat_deposit_withdraw_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -191,68 +160,9 @@ impl GetFiatPaymentsHistoryParams {
         GetFiatPaymentsHistoryParamsBuilder::default().transaction_type(transaction_type)
     }
 }
-/// Request parameters for the [`get_order_detail`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`get_order_detail`](#method.get_order_detail).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetOrderDetailParams {
-    /// order id retrieved from the api call of withdrawal
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub order_id: String,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub recv_window: Option<i64>,
-}
-
-impl GetOrderDetailParams {
-    /// Create a builder for [`get_order_detail`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `order_id` — order id retrieved from the api call of withdrawal
-    ///
-    #[must_use]
-    pub fn builder(order_id: String) -> GetOrderDetailParamsBuilder {
-        GetOrderDetailParamsBuilder::default().order_id(order_id)
-    }
-}
 
 #[async_trait]
 impl FiatApi for FiatApiClient {
-    async fn fiat_withdraw(
-        &self,
-        params: FiatWithdrawParams,
-    ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>> {
-        let FiatWithdrawParams { recv_window } = params;
-
-        let mut query_params = BTreeMap::new();
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::FiatWithdrawResponse>(
-            &self.configuration,
-            "/sapi/v2/fiat/withdraw",
-            reqwest::Method::GET,
-            query_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
     async fn get_fiat_deposit_withdraw_history(
         &self,
         params: GetFiatDepositWithdrawHistoryParams,
@@ -356,38 +266,6 @@ impl FiatApi for FiatApiClient {
         )
         .await
     }
-
-    async fn get_order_detail(
-        &self,
-        params: GetOrderDetailParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>> {
-        let GetOrderDetailParams {
-            order_id,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-
-        query_params.insert("orderId".to_string(), json!(order_id));
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::GetOrderDetailResponse>(
-            &self.configuration,
-            "/sapi/v1/fiat/get-order-detail",
-            reqwest::Method::GET,
-            query_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
 }
 
 #[cfg(all(test, feature = "fiat"))]
@@ -422,34 +300,6 @@ mod tests {
 
     #[async_trait]
     impl FiatApi for MockFiatApiClient {
-        async fn fiat_withdraw(
-            &self,
-            _params: FiatWithdrawParams,
-        ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>> {
-            if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
-            }
-
-            let resp_json: Value = serde_json::from_str(
-                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
-            )
-            .unwrap();
-            let dummy_response: models::FiatWithdrawResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::FiatWithdrawResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
         async fn get_fiat_deposit_withdraw_history(
             &self,
             _params: GetFiatDepositWithdrawHistoryParams,
@@ -500,100 +350,6 @@ mod tests {
 
             Ok(dummy.into())
         }
-
-        async fn get_order_detail(
-            &self,
-            _params: GetOrderDetailParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>> {
-            if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"orderId":"036752*678","orderStatus":"ORDER_INITIAL","amount":"4.33","fee":"0.43","fiatCurrency":"***","errorCode":"","errorMessage":"","ext":{}}}"#).unwrap();
-            let dummy_response: models::GetOrderDetailResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::GetOrderDetailResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-    }
-
-    #[test]
-    fn fiat_withdraw_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockFiatApiClient { force_error: false };
-
-            let params = FiatWithdrawParams::builder().build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(
-                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
-            )
-            .unwrap();
-            let expected_response: models::FiatWithdrawResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::FiatWithdrawResponse");
-
-            let resp = client
-                .fiat_withdraw(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn fiat_withdraw_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockFiatApiClient { force_error: false };
-
-            let params = FiatWithdrawParams::builder()
-                .recv_window(5000)
-                .build()
-                .unwrap();
-
-            let resp_json: Value = serde_json::from_str(
-                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
-            )
-            .unwrap();
-            let expected_response: models::FiatWithdrawResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::FiatWithdrawResponse");
-
-            let resp = client
-                .fiat_withdraw(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn fiat_withdraw_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockFiatApiClient { force_error: true };
-
-            let params = FiatWithdrawParams::builder().build().unwrap();
-
-            match client.fiat_withdraw(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
     }
 
     #[test]
@@ -695,58 +451,6 @@ mod tests {
                     .unwrap();
 
             match client.get_fiat_payments_history(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn get_order_detail_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockFiatApiClient { force_error: false };
-
-            let params = GetOrderDetailParams::builder("1".to_string(),).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"orderId":"036752*678","orderStatus":"ORDER_INITIAL","amount":"4.33","fee":"0.43","fiatCurrency":"***","errorCode":"","errorMessage":"","ext":{}}}"#).unwrap();
-            let expected_response : models::GetOrderDetailResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOrderDetailResponse");
-
-            let resp = client.get_order_detail(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn get_order_detail_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockFiatApiClient { force_error: false };
-
-            let params = GetOrderDetailParams::builder("1".to_string(),).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"orderId":"036752*678","orderStatus":"ORDER_INITIAL","amount":"4.33","fee":"0.43","fiatCurrency":"***","errorCode":"","errorMessage":"","ext":{}}}"#).unwrap();
-            let expected_response : models::GetOrderDetailResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOrderDetailResponse");
-
-            let resp = client.get_order_detail(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn get_order_detail_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockFiatApiClient { force_error: true };
-
-            let params = GetOrderDetailParams::builder("1".to_string())
-                .build()
-                .unwrap();
-
-            match client.get_order_detail(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

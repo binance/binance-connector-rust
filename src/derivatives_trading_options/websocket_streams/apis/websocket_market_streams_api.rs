@@ -1979,7 +1979,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1591677941092,"s":"BTC-200630-9000-P","t":1,"p":"1000","q":"-2","b":4611781675939004000,"a":4611781675939004000,"T":1591677567872,"S":"-1","X":"MARKET"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1591677941092,"s":"BTC-200630-9000-P","t":"1","p":"1000","q":"-2","b":4611781675939004000,"a":4611781675939004000,"T":1591677567872,"S":"-1","X":"MARKET"}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2033,7 +2033,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1591677941092,"s":"BTC-200630-9000-P","t":1,"p":"1000","q":"-2","b":4611781675939004000,"a":4611781675939004000,"T":1591677567872,"S":"-1","X":"MARKET"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1591677941092,"s":"BTC-200630-9000-P","t":"1","p":"1000","q":"-2","b":4611781675939004000,"a":4611781675939004000,"T":1591677567872,"S":"-1","X":"MARKET"}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

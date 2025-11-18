@@ -244,6 +244,8 @@ pub enum NewAlgoOrderTimeInForceEnum {
     Gtx,
     #[serde(rename = "GTD")]
     Gtd,
+    #[serde(rename = "RPI")]
+    Rpi,
 }
 
 impl NewAlgoOrderTimeInForceEnum {
@@ -255,6 +257,7 @@ impl NewAlgoOrderTimeInForceEnum {
             Self::Fok => "FOK",
             Self::Gtx => "GTX",
             Self::Gtd => "GTD",
+            Self::Rpi => "RPI",
         }
     }
 }
@@ -269,6 +272,7 @@ impl std::str::FromStr for NewAlgoOrderTimeInForceEnum {
             "FOK" => Ok(Self::Fok),
             "GTX" => Ok(Self::Gtx),
             "GTD" => Ok(Self::Gtd),
+            "RPI" => Ok(Self::Rpi),
             other => Err(format!("invalid NewAlgoOrderTimeInForceEnum: {}", other).into()),
         }
     }
@@ -480,6 +484,8 @@ pub enum NewOrderTimeInForceEnum {
     Gtx,
     #[serde(rename = "GTD")]
     Gtd,
+    #[serde(rename = "RPI")]
+    Rpi,
 }
 
 impl NewOrderTimeInForceEnum {
@@ -491,6 +497,7 @@ impl NewOrderTimeInForceEnum {
             Self::Fok => "FOK",
             Self::Gtx => "GTX",
             Self::Gtd => "GTD",
+            Self::Rpi => "RPI",
         }
     }
 }
@@ -505,6 +512,7 @@ impl std::str::FromStr for NewOrderTimeInForceEnum {
             "FOK" => Ok(Self::Fok),
             "GTX" => Ok(Self::Gtx),
             "GTD" => Ok(Self::Gtd),
+            "RPI" => Ok(Self::Rpi),
             other => Err(format!("invalid NewOrderTimeInForceEnum: {}", other).into()),
         }
     }

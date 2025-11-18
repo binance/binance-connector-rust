@@ -467,6 +467,49 @@ impl RestApi {
             .await
     }
 
+    /// Index Price Ticker
+    ///
+    /// Get spot index price for option underlying.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`IndexPriceTickerParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::IndexPriceTickerResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/option/market-data/Index-Price-Ticker).
+    ///
+    pub async fn index_price_ticker(
+        &self,
+        params: IndexPriceTickerParams,
+    ) -> anyhow::Result<RestApiResponse<models::IndexPriceTickerResponse>> {
+        self.market_data_api_client.index_price_ticker(params).await
+    }
+
     /// Kline/Candlestick Data
     ///
     /// Kline/candlestick bars for an option symbol.
@@ -778,51 +821,6 @@ impl RestApi {
         params: RecentTradesListParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::RecentTradesListResponseInner>>> {
         self.market_data_api_client.recent_trades_list(params).await
-    }
-
-    /// Symbol Price Ticker
-    ///
-    /// Get spot index price for option underlying.
-    ///
-    /// Weight: 1
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`SymbolPriceTickerParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::SymbolPriceTickerResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/option/market-data/Symbol-Price-Ticker).
-    ///
-    pub async fn symbol_price_ticker(
-        &self,
-        params: SymbolPriceTickerParams,
-    ) -> anyhow::Result<RestApiResponse<models::SymbolPriceTickerResponse>> {
-        self.market_data_api_client
-            .symbol_price_ticker(params)
-            .await
     }
 
     /// Test Connectivity
@@ -1646,6 +1644,7 @@ impl RestApi {
     /// Cancel multiple orders.
     ///
     /// * At least one instance of `orderId` and `clientOrderId` must be sent.
+    /// * Max 10 orders can be deleted in one request
     ///
     /// Weight: 1
     ///

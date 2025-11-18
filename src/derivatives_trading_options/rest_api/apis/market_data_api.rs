@@ -41,6 +41,10 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: HistoricalExerciseRecordsParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalExerciseRecordsResponseInner>>>;
+    async fn index_price_ticker(
+        &self,
+        params: IndexPriceTickerParams,
+    ) -> anyhow::Result<RestApiResponse<models::IndexPriceTickerResponse>>;
     async fn kline_candlestick_data(
         &self,
         params: KlineCandlestickDataParams,
@@ -69,10 +73,6 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: RecentTradesListParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::RecentTradesListResponseInner>>>;
-    async fn symbol_price_ticker(
-        &self,
-        params: SymbolPriceTickerParams,
-    ) -> anyhow::Result<RestApiResponse<models::SymbolPriceTickerResponse>>;
     async fn test_connectivity(&self) -> anyhow::Result<RestApiResponse<Value>>;
     async fn ticker24hr_price_change_statistics(
         &self,
@@ -126,6 +126,32 @@ impl HistoricalExerciseRecordsParams {
     #[must_use]
     pub fn builder() -> HistoricalExerciseRecordsParamsBuilder {
         HistoricalExerciseRecordsParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`index_price_ticker`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`index_price_ticker`](#method.index_price_ticker).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct IndexPriceTickerParams {
+    /// Option underlying, e.g BTCUSDT
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub underlying: String,
+}
+
+impl IndexPriceTickerParams {
+    /// Create a builder for [`index_price_ticker`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `underlying` — Option underlying, e.g BTCUSDT
+    ///
+    #[must_use]
+    pub fn builder(underlying: String) -> IndexPriceTickerParamsBuilder {
+        IndexPriceTickerParamsBuilder::default().underlying(underlying)
     }
 }
 /// Request parameters for the [`kline_candlestick_data`] operation.
@@ -358,32 +384,6 @@ impl RecentTradesListParams {
         RecentTradesListParamsBuilder::default().symbol(symbol)
     }
 }
-/// Request parameters for the [`symbol_price_ticker`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`symbol_price_ticker`](#method.symbol_price_ticker).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct SymbolPriceTickerParams {
-    /// Option underlying, e.g BTCUSDT
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub underlying: String,
-}
-
-impl SymbolPriceTickerParams {
-    /// Create a builder for [`symbol_price_ticker`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `underlying` — Option underlying, e.g BTCUSDT
-    ///
-    #[must_use]
-    pub fn builder(underlying: String) -> SymbolPriceTickerParamsBuilder {
-        SymbolPriceTickerParamsBuilder::default().underlying(underlying)
-    }
-}
 /// Request parameters for the [`ticker24hr_price_change_statistics`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -481,6 +481,31 @@ impl MarketDataApi for MarketDataApiClient {
         send_request::<Vec<models::HistoricalExerciseRecordsResponseInner>>(
             &self.configuration,
             "/eapi/v1/exerciseHistory",
+            reqwest::Method::GET,
+            query_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
+    async fn index_price_ticker(
+        &self,
+        params: IndexPriceTickerParams,
+    ) -> anyhow::Result<RestApiResponse<models::IndexPriceTickerResponse>> {
+        let IndexPriceTickerParams { underlying } = params;
+
+        let mut query_params = BTreeMap::new();
+
+        query_params.insert("underlying".to_string(), json!(underlying));
+
+        send_request::<models::IndexPriceTickerResponse>(
+            &self.configuration,
+            "/eapi/v1/index",
             reqwest::Method::GET,
             query_params,
             if HAS_TIME_UNIT {
@@ -721,31 +746,6 @@ impl MarketDataApi for MarketDataApiClient {
         .await
     }
 
-    async fn symbol_price_ticker(
-        &self,
-        params: SymbolPriceTickerParams,
-    ) -> anyhow::Result<RestApiResponse<models::SymbolPriceTickerResponse>> {
-        let SymbolPriceTickerParams { underlying } = params;
-
-        let mut query_params = BTreeMap::new();
-
-        query_params.insert("underlying".to_string(), json!(underlying));
-
-        send_request::<models::SymbolPriceTickerResponse>(
-            &self.configuration,
-            "/eapi/v1/index",
-            reqwest::Method::GET,
-            query_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            false,
-        )
-        .await
-    }
-
     async fn test_connectivity(&self) -> anyhow::Result<RestApiResponse<Value>> {
         let query_params = BTreeMap::new();
 
@@ -889,6 +889,32 @@ mod tests {
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::HistoricalExerciseRecordsResponseInner>",
                 );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn index_price_ticker(
+            &self,
+            _params: IndexPriceTickerParams,
+        ) -> anyhow::Result<RestApiResponse<models::IndexPriceTickerResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
+            let dummy_response: models::IndexPriceTickerResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::IndexPriceTickerResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1069,32 +1095,6 @@ mod tests {
             let dummy_response: Vec<models::RecentTradesListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::RecentTradesListResponseInner>");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn symbol_price_ticker(
-            &self,
-            _params: SymbolPriceTickerParams,
-        ) -> anyhow::Result<RestApiResponse<models::SymbolPriceTickerResponse>> {
-            if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
-            }
-
-            let resp_json: Value =
-                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
-            let dummy_response: models::SymbolPriceTickerResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SymbolPriceTickerResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1296,6 +1296,74 @@ mod tests {
             let params = HistoricalExerciseRecordsParams::builder().build().unwrap();
 
             match client.historical_exercise_records(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn index_price_ticker_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = IndexPriceTickerParams::builder("underlying_example".to_string())
+                .build()
+                .unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
+            let expected_response: models::IndexPriceTickerResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::IndexPriceTickerResponse");
+
+            let resp = client
+                .index_price_ticker(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn index_price_ticker_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = IndexPriceTickerParams::builder("underlying_example".to_string())
+                .build()
+                .unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
+            let expected_response: models::IndexPriceTickerResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::IndexPriceTickerResponse");
+
+            let resp = client
+                .index_price_ticker(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn index_price_ticker_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            let params = IndexPriceTickerParams::builder("underlying_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.index_price_ticker(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1683,74 +1751,6 @@ mod tests {
                 .unwrap();
 
             match client.recent_trades_list(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn symbol_price_ticker_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: false };
-
-            let params = SymbolPriceTickerParams::builder("underlying_example".to_string())
-                .build()
-                .unwrap();
-
-            let resp_json: Value =
-                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
-            let expected_response: models::SymbolPriceTickerResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SymbolPriceTickerResponse");
-
-            let resp = client
-                .symbol_price_ticker(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn symbol_price_ticker_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: false };
-
-            let params = SymbolPriceTickerParams::builder("underlying_example".to_string())
-                .build()
-                .unwrap();
-
-            let resp_json: Value =
-                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
-            let expected_response: models::SymbolPriceTickerResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SymbolPriceTickerResponse");
-
-            let resp = client
-                .symbol_price_ticker(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn symbol_price_ticker_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: true };
-
-            let params = SymbolPriceTickerParams::builder("underlying_example".to_string())
-                .build()
-                .unwrap();
-
-            match client.symbol_price_ticker(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

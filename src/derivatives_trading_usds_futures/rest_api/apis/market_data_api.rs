@@ -3611,7 +3611,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"8000.00","time":1499865549590,"isBuyerMaker":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"8000.00","time":1499865549590,"isBuyerMaker":true,"isRPITrade":true}]"#).unwrap();
             let dummy_response: Vec<models::OldTradesLookupResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::OldTradesLookupResponseInner>");
@@ -3821,7 +3821,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"48.00","time":1499865549590,"isBuyerMaker":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"48.00","time":1499865549590,"isBuyerMaker":true,"isRPITrade":true}]"#).unwrap();
             let dummy_response: Vec<models::RecentTradesListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::RecentTradesListResponseInner>");
@@ -4787,7 +4787,7 @@ mod tests {
 
             let params = OldTradesLookupParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"8000.00","time":1499865549590,"isBuyerMaker":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"8000.00","time":1499865549590,"isBuyerMaker":true,"isRPITrade":true}]"#).unwrap();
             let expected_response : Vec<models::OldTradesLookupResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OldTradesLookupResponseInner>");
 
             let resp = client.old_trades_lookup(params).await.expect("Expected a response");
@@ -4804,7 +4804,7 @@ mod tests {
 
             let params = OldTradesLookupParams::builder("symbol_example".to_string(),).limit(100).from_id(1).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"8000.00","time":1499865549590,"isBuyerMaker":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"8000.00","time":1499865549590,"isBuyerMaker":true,"isRPITrade":true}]"#).unwrap();
             let expected_response : Vec<models::OldTradesLookupResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OldTradesLookupResponseInner>");
 
             let resp = client.old_trades_lookup(params).await.expect("Expected a response");
@@ -5230,7 +5230,7 @@ mod tests {
 
             let params = RecentTradesListParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"48.00","time":1499865549590,"isBuyerMaker":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"48.00","time":1499865549590,"isBuyerMaker":true,"isRPITrade":true}]"#).unwrap();
             let expected_response : Vec<models::RecentTradesListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::RecentTradesListResponseInner>");
 
             let resp = client.recent_trades_list(params).await.expect("Expected a response");
@@ -5247,7 +5247,7 @@ mod tests {
 
             let params = RecentTradesListParams::builder("symbol_example".to_string(),).limit(100).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"48.00","time":1499865549590,"isBuyerMaker":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":28457,"price":"4.00000100","qty":"12.00000000","quoteQty":"48.00","time":1499865549590,"isBuyerMaker":true,"isRPITrade":true}]"#).unwrap();
             let expected_response : Vec<models::RecentTradesListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::RecentTradesListResponseInner>");
 
             let resp = client.recent_trades_list(params).await.expect("Expected a response");

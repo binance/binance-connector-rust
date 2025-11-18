@@ -74,8 +74,6 @@ pub struct Executionreport {
     pub w: Option<bool>,
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
-    #[serde(rename = "M", skip_serializing_if = "Option::is_none")]
-    pub m_uppercase: Option<bool>,
     #[serde(rename = "O", skip_serializing_if = "Option::is_none")]
     pub o_uppercase: Option<i64>,
     #[serde(rename = "Z", skip_serializing_if = "Option::is_none")]
@@ -136,7 +134,6 @@ impl Executionreport {
             i_uppercase: None,
             w: None,
             m: None,
-            m_uppercase: None,
             o_uppercase: None,
             z_uppercase: None,
             y_uppercase: None,

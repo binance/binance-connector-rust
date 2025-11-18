@@ -126,6 +126,8 @@ pub enum TimeInForceEnum {
     Gtx,
     #[serde(rename = "GTD")]
     Gtd,
+    #[serde(rename = "RPI")]
+    Rpi,
 }
 
 impl Default for TimeInForceEnum {
