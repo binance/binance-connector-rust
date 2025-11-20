@@ -16,14 +16,14 @@ use crate::derivatives_trading_portfolio_margin_pro::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct TransferLdusdtForPortfolioMarginResponse {
+pub struct TransferLdusdtRwusdForPortfolioMarginResponse {
     #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
     pub msg: Option<String>,
 }
 
-impl TransferLdusdtForPortfolioMarginResponse {
+impl TransferLdusdtRwusdForPortfolioMarginResponse {
     #[must_use]
-    pub fn new() -> TransferLdusdtForPortfolioMarginResponse {
-        TransferLdusdtForPortfolioMarginResponse { msg: None }
+    pub fn new() -> TransferLdusdtRwusdForPortfolioMarginResponse {
+        TransferLdusdtRwusdForPortfolioMarginResponse { msg: None }
     }
 }

@@ -97,10 +97,10 @@ pub trait AccountApi: Send + Sync {
         &self,
         params: RepayFuturesNegativeBalanceParams,
     ) -> anyhow::Result<RestApiResponse<models::RepayFuturesNegativeBalanceResponse>>;
-    async fn transfer_ldusdt_for_portfolio_margin(
+    async fn transfer_ldusdt_rwusd_for_portfolio_margin(
         &self,
-        params: TransferLdusdtForPortfolioMarginParams,
-    ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtForPortfolioMarginResponse>>;
+        params: TransferLdusdtRwusdForPortfolioMarginParams,
+    ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtRwusdForPortfolioMarginResponse>>;
 }
 
 #[derive(Debug, Clone)]
@@ -220,7 +220,7 @@ impl FundAutoCollectionParams {
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FundCollectionByAssetParams {
-    /// `LDUSDT` only
+    /// `LDUSDT` and `RWUSD`
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -238,7 +238,7 @@ impl FundCollectionByAssetParams {
     ///
     /// Required parameters:
     ///
-    /// * `asset` — `LDUSDT` only
+    /// * `asset` — `LDUSDT` and `RWUSD`
     ///
     #[must_use]
     pub fn builder(asset: String) -> FundCollectionByAssetParamsBuilder {
@@ -350,7 +350,7 @@ impl GetPortfolioMarginProSpanAccountInfoParams {
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetTransferableEarnAssetBalanceForPortfolioMarginParams {
-    /// `LDUSDT` only
+    /// `LDUSDT` and `RWUSD`
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -373,7 +373,7 @@ impl GetTransferableEarnAssetBalanceForPortfolioMarginParams {
     ///
     /// Required parameters:
     ///
-    /// * `asset` — `LDUSDT` only
+    /// * `asset` — `LDUSDT` and `RWUSD`
     /// * `transfer_type` — `EARN_TO_FUTURE` /`FUTURE_TO_EARN`
     ///
     #[must_use]
@@ -556,14 +556,14 @@ impl RepayFuturesNegativeBalanceParams {
         RepayFuturesNegativeBalanceParamsBuilder::default()
     }
 }
-/// Request parameters for the [`transfer_ldusdt_for_portfolio_margin`] operation.
+/// Request parameters for the [`transfer_ldusdt_rwusd_for_portfolio_margin`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`transfer_ldusdt_for_portfolio_margin`](#method.transfer_ldusdt_for_portfolio_margin).
+/// [`transfer_ldusdt_rwusd_for_portfolio_margin`](#method.transfer_ldusdt_rwusd_for_portfolio_margin).
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct TransferLdusdtForPortfolioMarginParams {
-    /// `LDUSDT` only
+pub struct TransferLdusdtRwusdForPortfolioMarginParams {
+    /// `LDUSDT` and `RWUSD`
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -587,12 +587,12 @@ pub struct TransferLdusdtForPortfolioMarginParams {
     pub recv_window: Option<i64>,
 }
 
-impl TransferLdusdtForPortfolioMarginParams {
-    /// Create a builder for [`transfer_ldusdt_for_portfolio_margin`].
+impl TransferLdusdtRwusdForPortfolioMarginParams {
+    /// Create a builder for [`transfer_ldusdt_rwusd_for_portfolio_margin`].
     ///
     /// Required parameters:
     ///
-    /// * `asset` — `LDUSDT` only
+    /// * `asset` — `LDUSDT` and `RWUSD`
     /// * `transfer_type` — `EARN_TO_FUTURE` /`FUTURE_TO_EARN`
     /// * `amount` — `rust_decimal::Decimal`
     ///
@@ -601,8 +601,8 @@ impl TransferLdusdtForPortfolioMarginParams {
         asset: String,
         transfer_type: String,
         amount: rust_decimal::Decimal,
-    ) -> TransferLdusdtForPortfolioMarginParamsBuilder {
-        TransferLdusdtForPortfolioMarginParamsBuilder::default()
+    ) -> TransferLdusdtRwusdForPortfolioMarginParamsBuilder {
+        TransferLdusdtRwusdForPortfolioMarginParamsBuilder::default()
             .asset(asset)
             .transfer_type(transfer_type)
             .amount(amount)
@@ -1082,11 +1082,12 @@ impl AccountApi for AccountApiClient {
         .await
     }
 
-    async fn transfer_ldusdt_for_portfolio_margin(
+    async fn transfer_ldusdt_rwusd_for_portfolio_margin(
         &self,
-        params: TransferLdusdtForPortfolioMarginParams,
-    ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtForPortfolioMarginResponse>> {
-        let TransferLdusdtForPortfolioMarginParams {
+        params: TransferLdusdtRwusdForPortfolioMarginParams,
+    ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtRwusdForPortfolioMarginResponse>>
+    {
+        let TransferLdusdtRwusdForPortfolioMarginParams {
             asset,
             transfer_type,
             amount,
@@ -1105,7 +1106,7 @@ impl AccountApi for AccountApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::TransferLdusdtForPortfolioMarginResponse>(
+        send_request::<models::TransferLdusdtRwusdForPortfolioMarginResponse>(
             &self.configuration,
             "/sapi/v1/portfolio/earn-asset-transfer",
             reqwest::Method::POST,
@@ -1515,10 +1516,10 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn transfer_ldusdt_for_portfolio_margin(
+        async fn transfer_ldusdt_rwusd_for_portfolio_margin(
             &self,
-            _params: TransferLdusdtForPortfolioMarginParams,
-        ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtForPortfolioMarginResponse>>
+            _params: TransferLdusdtRwusdForPortfolioMarginParams,
+        ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtRwusdForPortfolioMarginResponse>>
         {
             if self.force_error {
                 return Err(
@@ -1527,9 +1528,10 @@ mod tests {
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
-            let dummy_response: models::TransferLdusdtForPortfolioMarginResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TransferLdusdtForPortfolioMarginResponse");
+            let dummy_response: models::TransferLdusdtRwusdForPortfolioMarginResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::TransferLdusdtRwusdForPortfolioMarginResponse",
+                );
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -2415,11 +2417,11 @@ mod tests {
     }
 
     #[test]
-    fn transfer_ldusdt_for_portfolio_margin_required_params_success() {
+    fn transfer_ldusdt_rwusd_for_portfolio_margin_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = TransferLdusdtForPortfolioMarginParams::builder(
+            let params = TransferLdusdtRwusdForPortfolioMarginParams::builder(
                 "asset_example".to_string(),
                 "transfer_type_example".to_string(),
                 dec!(1.0),
@@ -2428,12 +2430,13 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
-            let expected_response: models::TransferLdusdtForPortfolioMarginResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TransferLdusdtForPortfolioMarginResponse");
+            let expected_response: models::TransferLdusdtRwusdForPortfolioMarginResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::TransferLdusdtRwusdForPortfolioMarginResponse",
+                );
 
             let resp = client
-                .transfer_ldusdt_for_portfolio_margin(params)
+                .transfer_ldusdt_rwusd_for_portfolio_margin(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -2443,11 +2446,11 @@ mod tests {
     }
 
     #[test]
-    fn transfer_ldusdt_for_portfolio_margin_optional_params_success() {
+    fn transfer_ldusdt_rwusd_for_portfolio_margin_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = TransferLdusdtForPortfolioMarginParams::builder(
+            let params = TransferLdusdtRwusdForPortfolioMarginParams::builder(
                 "asset_example".to_string(),
                 "transfer_type_example".to_string(),
                 dec!(1.0),
@@ -2457,12 +2460,13 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
-            let expected_response: models::TransferLdusdtForPortfolioMarginResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TransferLdusdtForPortfolioMarginResponse");
+            let expected_response: models::TransferLdusdtRwusdForPortfolioMarginResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::TransferLdusdtRwusdForPortfolioMarginResponse",
+                );
 
             let resp = client
-                .transfer_ldusdt_for_portfolio_margin(params)
+                .transfer_ldusdt_rwusd_for_portfolio_margin(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -2472,11 +2476,11 @@ mod tests {
     }
 
     #[test]
-    fn transfer_ldusdt_for_portfolio_margin_response_error() {
+    fn transfer_ldusdt_rwusd_for_portfolio_margin_response_error() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = TransferLdusdtForPortfolioMarginParams::builder(
+            let params = TransferLdusdtRwusdForPortfolioMarginParams::builder(
                 "asset_example".to_string(),
                 "transfer_type_example".to_string(),
                 dec!(1.0),
@@ -2484,7 +2488,10 @@ mod tests {
             .build()
             .unwrap();
 
-            match client.transfer_ldusdt_for_portfolio_margin(params).await {
+            match client
+                .transfer_ldusdt_rwusd_for_portfolio_margin(params)
+                .await
+            {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

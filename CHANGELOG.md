@@ -1,5 +1,23 @@
 # Changelog
 
+## 32.0.0 - 2025-11-20
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Changed (1)
+
+#### REST API
+
+- Renamed `transfer_ldusdt_for_portfolio_margin()` to `transfer_ldusdt_rwusd_for_portfolio_margin()`.
+
+**Derivatives Trading Usds Futures**
+
+### Added (1)
+
+#### REST API
+
+- `adl_risk()` (`GET /fapi/v1/symbolAdlRisk`)
+
 ## 31.0.0 - 2025-11-18
 
 **Derivatives Trading Options**
@@ -16,7 +34,7 @@
 
 - Modified response for `trade_streams()` (`<symbol>@trade` method):
   - `t`: number -> string
- 
+
 **Derivatives Trading Portfolio Margin**
 
 ### Changed (1)

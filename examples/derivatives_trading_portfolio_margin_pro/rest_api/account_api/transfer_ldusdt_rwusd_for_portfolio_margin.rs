@@ -5,7 +5,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_portfolio_margin_pro::{
-    DerivativesTradingPortfolioMarginProRestApi, rest_api::TransferLdusdtForPortfolioMarginParams,
+    DerivativesTradingPortfolioMarginProRestApi,
+    rest_api::TransferLdusdtRwusdForPortfolioMarginParams,
 };
 
 #[tokio::main]
@@ -24,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginProRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = TransferLdusdtForPortfolioMarginParams::builder(
+    let params = TransferLdusdtRwusdForPortfolioMarginParams::builder(
         "asset_example".to_string(),
         "transfer_type_example".to_string(),
         dec!(1.0),
@@ -33,13 +34,13 @@ async fn main() -> Result<()> {
 
     // Make the API call
     let response = rest_client
-        .transfer_ldusdt_for_portfolio_margin(params)
+        .transfer_ldusdt_rwusd_for_portfolio_margin(params)
         .await
-        .context("transfer_ldusdt_for_portfolio_margin request failed")?;
+        .context("transfer_ldusdt_rwusd_for_portfolio_margin request failed")?;
 
-    info!(?response.rate_limits, "transfer_ldusdt_for_portfolio_margin rate limits");
+    info!(?response.rate_limits, "transfer_ldusdt_rwusd_for_portfolio_margin rate limits");
     let data = response.data().await?;
-    info!(?data, "transfer_ldusdt_for_portfolio_margin data");
+    info!(?data, "transfer_ldusdt_rwusd_for_portfolio_margin data");
 
     Ok(())
 }

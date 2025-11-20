@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "31.0.0"
+version = "32.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1150,11 +1150,6 @@ path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/g
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
-name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_mint_bfusd_for_portfolio_margin"
-path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/mint_bfusd_for_portfolio_margin.rs"
-required-features = [ "derivatives_trading_portfolio_margin_pro" ]
-
-[[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_portfolio_margin_pro_bankruptcy_loan_repay"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/portfolio_margin_pro_bankruptcy_loan_repay.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
@@ -1175,18 +1170,13 @@ path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/q
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
-name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_redeem_bfusd_for_portfolio_margin"
-path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/redeem_bfusd_for_portfolio_margin.rs"
-required-features = [ "derivatives_trading_portfolio_margin_pro" ]
-
-[[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_repay_futures_negative_balance"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/repay_futures_negative_balance.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
-name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_transfer_ldusdt_for_portfolio_margin"
-path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/transfer_ldusdt_for_portfolio_margin.rs"
+name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_transfer_ldusdt_rwusd_for_portfolio_margin"
+path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/transfer_ldusdt_rwusd_for_portfolio_margin.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
@@ -1842,6 +1832,11 @@ required-features = [ "derivatives_trading_usds_futures" ]
 [[example]]
 name = "derivatives_trading_usds_futures_rest_api_convert_api_send_quote_request"
 path = "examples/derivatives_trading_usds_futures/rest_api/convert_api/send_quote_request.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
+name = "derivatives_trading_usds_futures_rest_api_market_data_api_adl_risk"
+path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/adl_risk.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]

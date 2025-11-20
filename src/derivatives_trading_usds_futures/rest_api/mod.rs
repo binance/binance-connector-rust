@@ -1242,6 +1242,51 @@ impl RestApi {
         self.convert_api_client.send_quote_request(params).await
     }
 
+    /// ADL Risk
+    ///
+    /// Query the symbol-level ADL risk rating.
+    /// The ADL risk rating measures the likelihood of ADL during liquidation, and the rating takes into account the insurance fund balance, position concentration on the symbol, order book depth, price volatility, average leverage, unrealized `PnL`, and margin utilization at the symbol level.
+    /// The rating can be high, medium and low, and is updated every 30 minutes.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`AdlRiskParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::AdlRiskResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/ADL-Risk).
+    ///
+    pub async fn adl_risk(
+        &self,
+        params: AdlRiskParams,
+    ) -> anyhow::Result<RestApiResponse<models::AdlRiskResponse>> {
+        self.market_data_api_client.adl_risk(params).await
+    }
+
     /// Basis
     ///
     /// Query future basis

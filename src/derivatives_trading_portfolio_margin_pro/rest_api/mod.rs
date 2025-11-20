@@ -745,20 +745,20 @@ impl RestApi {
             .await
     }
 
-    /// Transfer LDUSDT for Portfolio Margin(TRADE)
+    /// Transfer LDUSDT/RWUSD for Portfolio Margin(TRADE)
     ///
-    /// Transfer LDUSDT as collateral for all types of Portfolio Margin account
+    /// Transfer LDUSDT/RWUSD as collateral for all types of Portfolio Margin account
     ///
     /// Weight: 1500
     ///
     /// # Arguments
     ///
-    /// - `params`: [`TransferLdusdtForPortfolioMarginParams`]
+    /// - `params`: [`TransferLdusdtRwusdForPortfolioMarginParams`]
     ///   The parameters for this operation.
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<models::TransferLdusdtForPortfolioMarginResponse>`] on success.
+    /// [`RestApiResponse<models::TransferLdusdtRwusdForPortfolioMarginResponse>`] on success.
     ///
     /// # Errors
     ///
@@ -781,12 +781,13 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Transfer-LDUSDT-Portfolio-Margin).
     ///
-    pub async fn transfer_ldusdt_for_portfolio_margin(
+    pub async fn transfer_ldusdt_rwusd_for_portfolio_margin(
         &self,
-        params: TransferLdusdtForPortfolioMarginParams,
-    ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtForPortfolioMarginResponse>> {
+        params: TransferLdusdtRwusdForPortfolioMarginParams,
+    ) -> anyhow::Result<RestApiResponse<models::TransferLdusdtRwusdForPortfolioMarginResponse>>
+    {
         self.account_api_client
-            .transfer_ldusdt_for_portfolio_margin(params)
+            .transfer_ldusdt_rwusd_for_portfolio_margin(params)
             .await
     }
 
