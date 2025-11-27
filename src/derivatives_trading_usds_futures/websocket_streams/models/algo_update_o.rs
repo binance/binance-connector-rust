@@ -66,6 +66,8 @@ pub struct AlgoUpdateO {
     pub tt: Option<i64>,
     #[serde(rename = "gtd", skip_serializing_if = "Option::is_none")]
     pub gtd: Option<i64>,
+    #[serde(rename = "rm", skip_serializing_if = "Option::is_none")]
+    pub rm: Option<String>,
 }
 
 impl AlgoUpdateO {
@@ -96,6 +98,7 @@ impl AlgoUpdateO {
             r_uppercase: None,
             tt: None,
             gtd: None,
+            rm: None,
         }
     }
 }

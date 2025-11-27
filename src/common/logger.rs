@@ -12,14 +12,18 @@ static INIT_LOG: Once = Once::new();
 /// The initialization is performed only once using a `Once` synchronization primitive
 /// to ensure thread-safe global subscriber setup.
 pub fn init() {
-    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
-
-    let fmt_layer = fmt::layer()
-        .with_target(false)
-        .with_thread_ids(true)
-        .with_thread_names(true);
-
     INIT_LOG.call_once(|| {
+        if tracing::dispatcher::has_been_set() {
+            return;
+        }
+
+        let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
+
+        let fmt_layer = fmt::layer()
+            .with_target(false)
+            .with_thread_ids(true)
+            .with_thread_names(true);
+
         let subscriber = Registry::default().with(filter).with(fmt_layer);
         let _ = tracing::subscriber::set_global_default(subscriber);
     });

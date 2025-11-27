@@ -1925,16 +1925,16 @@ impl WebsocketHandler for WebsocketApi {
             return;
         }
 
-        if let Some(event) = msg.get("event") {
-            if event.get("e").is_some() {
-                for callbacks in self.stream_callbacks.lock().await.values() {
-                    for callback in callbacks {
-                        callback(event);
-                    }
+        if let Some(event) = msg.get("event")
+            && event.get("e").is_some()
+        {
+            for callbacks in self.stream_callbacks.lock().await.values() {
+                for callback in callbacks {
+                    callback(event);
                 }
-
-                return;
             }
+
+            return;
         }
 
         warn!(
@@ -4007,10 +4007,10 @@ mod tests {
                         if let Ok((stream, _)) = listener.accept().await {
                             let mut ws = accept_async(stream).await.unwrap();
                             ws.send(Message::Ping(vec![1, 2, 3].into())).await.unwrap();
-                            if let Some(Ok(Message::Pong(payload))) = ws.next().await {
-                                if payload[..] == [1, 2, 3] {
-                                    *saw_pong2.lock().await = true;
-                                }
+                            if let Some(Ok(Message::Pong(payload))) = ws.next().await
+                                && payload[..] == [1, 2, 3]
+                            {
+                                *saw_pong2.lock().await = true;
                             }
                             let _ = ws.close(None).await;
                         }

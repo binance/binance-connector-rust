@@ -1238,7 +1238,7 @@ pub struct SubscribeLockedProductParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub source_account: Option<String>,
-    /// `SPOT`,`FLEXIBLE`, default `FLEXIBLE`
+    /// `SPOT`,`FLEXIBLE`, default `SPOT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -4394,7 +4394,7 @@ mod tests {
             let params = SubscribeLockedProductParams::builder("1".to_string(), dec!(1.0))
                 .auto_subscribe(true)
                 .source_account("SPOT".to_string())
-                .redeem_to(String::new())
+                .redeem_to("SPOT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();

@@ -15,6 +15,7 @@ This module provides the official Rust client for Binance's Wallet API, enabling
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [REST APIs](#rest-apis)
+- [Logging](#logging)
 - [Testing](#testing)
 - [Migration Guide](#migration-guide)
 - [Contributing](#contributing)
@@ -144,6 +145,26 @@ Errors are represented by the following types:
 - `BadRequestError`: Invalid request parameters
 
 See the [Error Handling example](./docs/rest_api/error-handling.md) for detailed usage. Refer to the [`error`](../common/errors.rs) module for more information.
+
+## Logging
+
+This crate ships with an optional default logger that you can enable with a single call:
+
+```rust
+use binance_sdk::logger;
+
+fn main() {
+    // Initialize the default logger once at the start of your application
+    logger::init();
+
+    // ... rest of your code
+}
+```
+
+The logger integrates with the Rust `tracing` ecosystem and behaves as follows:
+
+- If **another global subscriber is already set**, `logger::init()` is a no-op and does not override your existing logging setup.
+- If **no subscriber is set yet**, it installs the crate’s default global subscriber (with sensible defaults) so you immediately get structured logs from the connector.
 
 ## Testing
 

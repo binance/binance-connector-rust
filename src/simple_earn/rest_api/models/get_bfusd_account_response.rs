@@ -19,8 +19,10 @@ use serde::{Deserialize, Serialize};
 pub struct GetBfusdAccountResponse {
     #[serde(rename = "bfusdAmount", skip_serializing_if = "Option::is_none")]
     pub bfusd_amount: Option<String>,
-    #[serde(rename = "totalProfit", skip_serializing_if = "Option::is_none")]
-    pub total_profit: Option<String>,
+    #[serde(rename = "usdtProfit", skip_serializing_if = "Option::is_none")]
+    pub usdt_profit: Option<String>,
+    #[serde(rename = "bfusdProfit", skip_serializing_if = "Option::is_none")]
+    pub bfusd_profit: Option<String>,
 }
 
 impl GetBfusdAccountResponse {
@@ -28,7 +30,8 @@ impl GetBfusdAccountResponse {
     pub fn new() -> GetBfusdAccountResponse {
         GetBfusdAccountResponse {
             bfusd_amount: None,
-            total_profit: None,
+            usdt_profit: None,
+            bfusd_profit: None,
         }
     }
 }

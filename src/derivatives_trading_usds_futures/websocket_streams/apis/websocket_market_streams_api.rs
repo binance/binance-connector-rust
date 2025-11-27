@@ -101,6 +101,10 @@ pub trait WebsocketMarketStreamsApi: Send + Sync {
         &self,
         params: PartialBookDepthStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::PartialBookDepthStreamsResponse>>>;
+    async fn rpi_diff_book_depth_streams(
+        &self,
+        params: RpiDiffBookDepthStreamsParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>>;
 }
 
 pub struct WebsocketMarketStreamsApiClient {
@@ -665,6 +669,37 @@ impl PartialBookDepthStreamsParams {
             .levels(levels)
     }
 }
+/// Request parameters for the [`rpi_diff_book_depth_streams`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`rpi_diff_book_depth_streams`](#method.rpi_diff_book_depth_streams).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct RpiDiffBookDepthStreamsParams {
+    /// The symbol parameter
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+}
+
+impl RpiDiffBookDepthStreamsParams {
+    /// Create a builder for [`rpi_diff_book_depth_streams`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — The symbol parameter
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> RpiDiffBookDepthStreamsParamsBuilder {
+        RpiDiffBookDepthStreamsParamsBuilder::default().symbol(symbol)
+    }
+}
 
 #[async_trait]
 impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
@@ -1208,6 +1243,34 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
 
         Ok(
             create_stream_handler::<models::PartialBookDepthStreamsResponse>(
+                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
+                stream,
+                id_opt,
+            )
+            .await,
+        )
+    }
+
+    async fn rpi_diff_book_depth_streams(
+        &self,
+        params: RpiDiffBookDepthStreamsParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>> {
+        let RpiDiffBookDepthStreamsParams { symbol, id } = params;
+
+        let pairs: &[(&str, Option<String>)] =
+            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+
+        let vars: HashMap<_, _> = pairs
+            .iter()
+            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+            .collect();
+
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+
+        let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
+
+        Ok(
+            create_stream_handler::<models::RpiDiffBookDepthStreamsResponse>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
                 id_opt,
@@ -3824,6 +3887,147 @@ mod tests {
             ws_stream.unsubscribe().await;
 
             let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1571889248277,"T":1571889248276,"s":"BTCUSDT","U":390497796,"u":390497878,"pu":390497794,"b":[["7403.89","0.002"],["7403.90","3.906"],["7404.00","1.428"],["7404.85","5.239"],["7405.43","2.562"]],"a":[["7405.96","3.340"],["7406.63","4.525"],["7407.08","2.475"],["7407.15","4.800"],["7407.20","0.175"]]}"#).unwrap();
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+
+            yield_now().await;
+
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
+        });
+    }
+
+    #[test]
+    fn rpi_diff_book_depth_streams_should_execute_successfully() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, _) = make_streams_base().await;
+            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = RpiDiffBookDepthStreamsParams::builder("btcusdt".to_string())
+                .id(Some(id.clone()))
+                .build()
+                .unwrap();
+
+            let RpiDiffBookDepthStreamsParams { symbol, id } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] =
+                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
+            let ws_stream = api
+                .rpi_diff_book_depth_streams(params)
+                .await
+                .expect("rpi_diff_book_depth_streams should return a WebsocketStream");
+
+            assert!(
+                streams_base.is_subscribed(&stream).await,
+                "expected stream '{stream}' to be subscribed"
+            );
+            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+        });
+    }
+
+    #[test]
+    fn rpi_diff_book_depth_streams_should_handle_incoming_message() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = RpiDiffBookDepthStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+
+            let RpiDiffBookDepthStreamsParams {
+                symbol,id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
+
+            let ws_stream = api.rpi_diff_book_depth_streams(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_with_message = called.clone();
+            ws_stream.on_message(move |_payload: models::RpiDiffBookDepthStreamsResponse| {
+                called_with_message.store(true, Ordering::SeqCst);
+            });
+
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]]}"#).unwrap();
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+            yield_now().await;
+
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
+        });
+    }
+
+    #[test]
+    fn rpi_diff_book_depth_streams_should_not_fire_after_unsubscribe() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = RpiDiffBookDepthStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+
+            let RpiDiffBookDepthStreamsParams {
+                symbol,id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
+
+            let ws_stream = api.rpi_diff_book_depth_streams(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_clone = called.clone();
+            ws_stream.on_message(move |_payload: models::RpiDiffBookDepthStreamsResponse| {
+                called_clone.store(true, Ordering::SeqCst);
+            });
+
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
+
+            ws_stream.unsubscribe().await;
+
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]]}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

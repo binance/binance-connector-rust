@@ -1,5 +1,59 @@
 # Changelog
 
+## 33.0.0 - 2025-11-27
+
+### Changed (1)
+
+- The crate no longer auto-initializes a global `tracing` subscriber. Logging configuration is now opt-in and must be performed by the application. The existing helper `logger::init()` is still available, but it is no longer called automatically by the library.
+
+  - If you previously relied on the connector to set up logging for you, call this once in your application before creating any clients:
+
+    ```rust
+    use binance_sdk::logger;
+
+    fn main() {
+      logger::init();
+    }
+    ```
+
+  - If your application already configures a global `tracing` subscriber, nothing changes: `logger::init()` is not called by the library and if you call it yourself it will early-return when a subscriber is already set.
+
+**Derivatives Trading Usds Futures**
+
+### Added (2)
+
+#### REST API
+
+- `rpi_order_book()` (`GET /fapi/v1/rpiDepth`)
+
+#### WebSocket Streams
+
+- `rpi_diff_book_depth_streams()` (`<symbol>@rpiDepth@500ms` stream)
+
+### Changed (2)
+
+#### REST API
+
+- Modified response for `user_commission_rate()` (`GET /dapi/v1/commissionRate`):
+  - property `rpi_commission_rate` added
+
+#### WebSocket Streams
+
+- Modified `UserDataStreamEventsResponse` for `AlgoUpdate`:
+  - `o`: property `rm` added
+
+**Simple Earn**
+
+### Changed (2)
+
+- Modified response for `get_bfusd_account()` (`GET /sapi/v1/bfusd/account`):
+  - property `usdt_profit` added
+  - property `bfusd_profit` added
+  - property `total_profit` removed
+
+- Modified response for `get_bfusd_rewards_history()` (`GET /sapi/v1/bfusd/history/rewardsHistory`):
+  - `rows`.items: property `reward_asset` added
+
 ## 32.0.0 - 2025-11-20
 
 **Derivatives Trading Portfolio Margin Pro**

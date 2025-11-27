@@ -2016,7 +2016,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap();
             let dummy_response: models::UserCommissionRateResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::UserCommissionRateResponse");
@@ -3216,7 +3216,7 @@ mod tests {
 
             let params = UserCommissionRateParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap();
             let expected_response : models::UserCommissionRateResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::UserCommissionRateResponse");
 
             let resp = client.user_commission_rate(params).await.expect("Expected a response");
@@ -3233,7 +3233,7 @@ mod tests {
 
             let params = UserCommissionRateParams::builder("symbol_example".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap();
             let expected_response : models::UserCommissionRateResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::UserCommissionRateResponse");
 
             let resp = client.user_commission_rate(params).await.expect("Expected a response");

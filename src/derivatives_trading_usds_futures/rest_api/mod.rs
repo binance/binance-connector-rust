@@ -2400,6 +2400,54 @@ impl RestApi {
         self.market_data_api_client.recent_trades_list(params).await
     }
 
+    /// RPI Order Book
+    ///
+    /// Query symbol orderbook with RPI orders
+    ///
+    /// RPI(Retail Price Improvement) orders are included and aggreated in the response message. Crossed price levels are hidden and invisible.
+    ///
+    /// Weight: Adjusted based on the limit:
+    /// | Limit         | Weight |
+    /// | ------------- | ------ |
+    /// | 1000          | 20     |
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`RpiOrderBookParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::RpiOrderBookResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book-RPI).
+    ///
+    pub async fn rpi_order_book(
+        &self,
+        params: RpiOrderBookParams,
+    ) -> anyhow::Result<RestApiResponse<models::RpiOrderBookResponse>> {
+        self.market_data_api_client.rpi_order_book(params).await
+    }
+
     /// Symbol Order Book Ticker
     ///
     /// Best price/qty on the order book for a symbol or symbols.

@@ -2,6 +2,7 @@ pub mod common;
 pub use common::config;
 pub use common::constants;
 pub use common::errors;
+pub use common::logger;
 pub use common::models;
 
 #[cfg(feature = "algo")]

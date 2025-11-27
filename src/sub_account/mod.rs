@@ -1,8 +1,7 @@
 pub mod rest_api;
 
 use crate::common::{
-    config::ConfigurationRestApi, constants::SUB_ACCOUNT_REST_API_PROD_URL, logger,
-    utils::build_user_agent,
+    config::ConfigurationRestApi, constants::SUB_ACCOUNT_REST_API_PROD_URL, utils::build_user_agent,
 };
 
 /// Represents the `SubAccount` REST API client for interacting with the Binance `SubAccount` REST API.
@@ -24,8 +23,6 @@ impl SubAccountRestApi {
     /// A new REST API client configured with the provided settings
     #[must_use]
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
-        logger::init();
-
         config.user_agent = build_user_agent("sub-account");
         if config.base_path.is_none() {
             config.base_path = Some(SUB_ACCOUNT_REST_API_PROD_URL.to_string());

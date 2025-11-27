@@ -750,8 +750,10 @@ mod tests {
                 );
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"bfusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(
+                r#"{"bfusdAmount":"100","usdtProfit":"11.00","bfusdProfit":"1.81"}"#,
+            )
+            .unwrap();
             let dummy_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdAccountResponse");
@@ -854,7 +856,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
             let dummy_response: models::GetBfusdRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdRewardsHistoryResponse");
@@ -953,8 +955,10 @@ mod tests {
 
             let params = GetBfusdAccountParams::builder().build().unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"bfusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(
+                r#"{"bfusdAmount":"100","usdtProfit":"11.00","bfusdProfit":"1.81"}"#,
+            )
+            .unwrap();
             let expected_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdAccountResponse");
@@ -979,8 +983,10 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"bfusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(
+                r#"{"bfusdAmount":"100","usdtProfit":"11.00","bfusdProfit":"1.81"}"#,
+            )
+            .unwrap();
             let expected_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdAccountResponse");
@@ -1191,7 +1197,7 @@ mod tests {
 
             let params = GetBfusdRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
             let expected_response : models::GetBfusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRewardsHistoryResponse");
 
             let resp = client.get_bfusd_rewards_history(params).await.expect("Expected a response");
@@ -1208,7 +1214,7 @@ mod tests {
 
             let params = GetBfusdRewardsHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
             let expected_response : models::GetBfusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRewardsHistoryResponse");
 
             let resp = client.get_bfusd_rewards_history(params).await.expect("Expected a response");

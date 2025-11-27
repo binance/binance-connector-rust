@@ -19,6 +19,8 @@ use serde::{Deserialize, Serialize};
 pub struct GetBfusdRewardsHistoryResponseRowsInner {
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    #[serde(rename = "rewardAsset", skip_serializing_if = "Option::is_none")]
+    pub reward_asset: Option<String>,
     #[serde(rename = "rewardsAmount", skip_serializing_if = "Option::is_none")]
     pub rewards_amount: Option<String>,
     #[serde(rename = "BFUSDPosition", skip_serializing_if = "Option::is_none")]
@@ -35,6 +37,7 @@ impl GetBfusdRewardsHistoryResponseRowsInner {
     pub fn new() -> GetBfusdRewardsHistoryResponseRowsInner {
         GetBfusdRewardsHistoryResponseRowsInner {
             time: None,
+            reward_asset: None,
             rewards_amount: None,
             bfusd_position: None,
             annual_percentage_rate: None,

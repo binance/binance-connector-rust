@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "32.0.0"
+version = "33.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1955,6 +1955,11 @@ path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/recen
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_rest_api_market_data_api_rpi_order_book"
+path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/rpi_order_book.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_rest_api_market_data_api_symbol_order_book_ticker"
 path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/symbol_order_book_ticker.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2350,6 +2355,11 @@ path = "examples/derivatives_trading_usds_futures/websocket_streams/partial_book
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_websocket_streams_rpi_diff_book_depth_streams"
+path = "examples/derivatives_trading_usds_futures/websocket_streams/rpi_diff_book_depth_streams.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "dual_investment_rest_api_market_data_api_get_dual_investment_product_list"
 path = "examples/dual_investment/rest_api/market_data_api/get_dual_investment_product_list.rs"
 required-features = [ "dual_investment" ]
@@ -2692,36 +2702,6 @@ required-features = [ "margin_trading" ]
 [[example]]
 name = "margin_trading_rest_api_trade_api_small_liability_exchange"
 path = "examples/margin_trading/rest_api/trade_api/small_liability_exchange.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_trade_data_stream_api_close_isolated_margin_user_data_stream"
-path = "examples/margin_trading/rest_api/trade_data_stream_api/close_isolated_margin_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_trade_data_stream_api_close_margin_user_data_stream"
-path = "examples/margin_trading/rest_api/trade_data_stream_api/close_margin_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_trade_data_stream_api_keepalive_isolated_margin_user_data_stream"
-path = "examples/margin_trading/rest_api/trade_data_stream_api/keepalive_isolated_margin_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_trade_data_stream_api_keepalive_margin_user_data_stream"
-path = "examples/margin_trading/rest_api/trade_data_stream_api/keepalive_margin_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_trade_data_stream_api_start_isolated_margin_user_data_stream"
-path = "examples/margin_trading/rest_api/trade_data_stream_api/start_isolated_margin_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_trade_data_stream_api_start_margin_user_data_stream"
-path = "examples/margin_trading/rest_api/trade_data_stream_api/start_margin_user_data_stream.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]

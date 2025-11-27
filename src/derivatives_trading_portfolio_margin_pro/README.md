@@ -17,6 +17,7 @@ This module provides the official Rust client for Binance's Derivatives Trading 
 - [Documentation](#documentation)
 - [REST APIs](#rest-apis)
 - [Websocket Streams](#websocket-streams)
+- [Logging](#logging)
 - [Testing](#testing)
 - [Migration Guide](#migration-guide)
 - [Contributing](#contributing)
@@ -217,6 +218,26 @@ user_data_stream.unsubscribe().await;
 ### Automatic Connection Renewal
 
 The WebSocket connection is automatically renewed for WebSocket Streams connections, before the 24 hours expiration of the API key. This ensures continuous connectivity.
+
+## Logging
+
+This crate ships with an optional default logger that you can enable with a single call:
+
+```rust
+use binance_sdk::logger;
+
+fn main() {
+    // Initialize the default logger once at the start of your application
+    logger::init();
+
+    // ... rest of your code
+}
+```
+
+The logger integrates with the Rust `tracing` ecosystem and behaves as follows:
+
+- If **another global subscriber is already set**, `logger::init()` is a no-op and does not override your existing logging setup.
+- If **no subscriber is set yet**, it installs the crate’s default global subscriber (with sensible defaults) so you immediately get structured logs from the connector.
 
 ## Testing
 

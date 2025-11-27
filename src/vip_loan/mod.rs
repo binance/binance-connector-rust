@@ -1,8 +1,7 @@
 pub mod rest_api;
 
 use crate::common::{
-    config::ConfigurationRestApi, constants::VIP_LOAN_REST_API_PROD_URL, logger,
-    utils::build_user_agent,
+    config::ConfigurationRestApi, constants::VIP_LOAN_REST_API_PROD_URL, utils::build_user_agent,
 };
 
 /// Represents the `VIPLoan` REST API client for interacting with the Binance `VIPLoan` REST API.
@@ -24,8 +23,6 @@ impl VIPLoanRestApi {
     /// A new REST API client configured with the provided settings
     #[must_use]
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
-        logger::init();
-
         config.user_agent = build_user_agent("vip-loan");
         if config.base_path.is_none() {
             config.base_path = Some(VIP_LOAN_REST_API_PROD_URL.to_string());

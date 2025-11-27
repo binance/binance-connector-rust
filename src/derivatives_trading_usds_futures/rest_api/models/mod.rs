@@ -225,6 +225,8 @@ pub mod query_user_rate_limit_response_inner;
 pub use self::query_user_rate_limit_response_inner::QueryUserRateLimitResponseInner;
 pub mod recent_trades_list_response_inner;
 pub use self::recent_trades_list_response_inner::RecentTradesListResponseInner;
+pub mod rpi_order_book_response;
+pub use self::rpi_order_book_response::RpiOrderBookResponse;
 pub mod send_quote_request_response;
 pub use self::send_quote_request_response::SendQuoteRequestResponse;
 pub mod start_user_data_stream_response;

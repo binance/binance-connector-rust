@@ -5,7 +5,6 @@ pub mod websocket_streams;
 use crate::common::{
     config::{ConfigurationRestApi, ConfigurationWebsocketStreams},
     constants::{MARGIN_TRADING_REST_API_PROD_URL, MARGIN_TRADING_WS_STREAMS_PROD_URL},
-    logger,
     utils::build_user_agent,
 };
 
@@ -28,8 +27,6 @@ impl MarginTradingRestApi {
     /// A new REST API client configured with the provided settings
     #[must_use]
     pub fn from_config(mut config: ConfigurationRestApi) -> rest_api::RestApi {
-        logger::init();
-
         config.user_agent = build_user_agent("margin-trading");
         if config.base_path.is_none() {
             config.base_path = Some(MARGIN_TRADING_REST_API_PROD_URL.to_string());
@@ -74,8 +71,6 @@ impl MarginTradingWsStreams {
     pub fn from_config(
         mut config: ConfigurationWebsocketStreams,
     ) -> websocket_streams::WebsocketStreamsHandle {
-        logger::init();
-
         config.user_agent = build_user_agent("margin-trading");
         if config.ws_url.is_none() {
             config.ws_url = Some(MARGIN_TRADING_WS_STREAMS_PROD_URL.to_string());

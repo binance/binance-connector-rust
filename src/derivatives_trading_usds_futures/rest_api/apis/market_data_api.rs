@@ -130,6 +130,10 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: RecentTradesListParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::RecentTradesListResponseInner>>>;
+    async fn rpi_order_book(
+        &self,
+        params: RpiOrderBookParams,
+    ) -> anyhow::Result<RestApiResponse<models::RpiOrderBookResponse>>;
     async fn symbol_order_book_ticker(
         &self,
         params: SymbolOrderBookTickerParams,
@@ -1911,6 +1915,38 @@ impl RecentTradesListParams {
         RecentTradesListParamsBuilder::default().symbol(symbol)
     }
 }
+/// Request parameters for the [`rpi_order_book`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`rpi_order_book`](#method.rpi_order_book).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct RpiOrderBookParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    /// Default 100; max 1000
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub limit: Option<i64>,
+}
+
+impl RpiOrderBookParams {
+    /// Create a builder for [`rpi_order_book`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> RpiOrderBookParamsBuilder {
+        RpiOrderBookParamsBuilder::default().symbol(symbol)
+    }
+}
 /// Request parameters for the [`symbol_order_book_ticker`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -3002,6 +3038,35 @@ impl MarketDataApi for MarketDataApiClient {
         .await
     }
 
+    async fn rpi_order_book(
+        &self,
+        params: RpiOrderBookParams,
+    ) -> anyhow::Result<RestApiResponse<models::RpiOrderBookResponse>> {
+        let RpiOrderBookParams { symbol, limit } = params;
+
+        let mut query_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = limit {
+            query_params.insert("limit".to_string(), json!(rw));
+        }
+
+        send_request::<models::RpiOrderBookResponse>(
+            &self.configuration,
+            "/fapi/v1/rpiDepth",
+            reqwest::Method::GET,
+            query_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
     async fn symbol_order_book_ticker(
         &self,
         params: SymbolOrderBookTickerParams,
@@ -3906,6 +3971,31 @@ mod tests {
             let dummy_response: Vec<models::RecentTradesListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::RecentTradesListResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn rpi_order_book(
+            &self,
+            _params: RpiOrderBookParams,
+        ) -> anyhow::Result<RestApiResponse<models::RpiOrderBookResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"lastUpdateId":1027024,"E":1589436922972,"T":1589436922959,"bids":[["4.00000000","431.00000000"]],"asks":[["4.00000200","12.00000000"]]}"#).unwrap();
+            let dummy_response: models::RpiOrderBookResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::RpiOrderBookResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -5411,6 +5501,58 @@ mod tests {
                 .unwrap();
 
             match client.recent_trades_list(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn rpi_order_book_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = RpiOrderBookParams::builder("symbol_example".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"lastUpdateId":1027024,"E":1589436922972,"T":1589436922959,"bids":[["4.00000000","431.00000000"]],"asks":[["4.00000200","12.00000000"]]}"#).unwrap();
+            let expected_response : models::RpiOrderBookResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RpiOrderBookResponse");
+
+            let resp = client.rpi_order_book(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn rpi_order_book_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = RpiOrderBookParams::builder("symbol_example".to_string(),).limit(100).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"lastUpdateId":1027024,"E":1589436922972,"T":1589436922959,"bids":[["4.00000000","431.00000000"]],"asks":[["4.00000200","12.00000000"]]}"#).unwrap();
+            let expected_response : models::RpiOrderBookResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RpiOrderBookResponse");
+
+            let resp = client.rpi_order_book(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn rpi_order_book_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            let params = RpiOrderBookParams::builder("symbol_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.rpi_order_book(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

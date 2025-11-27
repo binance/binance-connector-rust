@@ -838,4 +838,37 @@ impl WebsocketStreams {
             .partial_book_depth_streams(params)
             .await
     }
+
+    /// RPI Diff. Book Depth Streams
+    ///
+    /// Bids and asks including RPI orders, pushed every 500 milliseconds
+    ///
+    /// RPI(Retail Price Improvement) orders are included and aggreated in the response message. When the quantity of a price level to be updated is equal to 0, it means either all quotations for this price have been filled/canceled, or the quantity of crossed RPI orders for this price are hidden
+    ///
+    /// Update Speed: 500ms
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`RpiDiffBookDepthStreamsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Diff-Book-Depth-Streams-RPI).
+    ///
+    pub async fn rpi_diff_book_depth_streams(
+        &self,
+        params: RpiDiffBookDepthStreamsParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>> {
+        self.websocket_market_streams_api_client
+            .rpi_diff_book_depth_streams(params)
+            .await
+    }
 }

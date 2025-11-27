@@ -29,6 +29,8 @@ pub struct UserCommissionRateResponse {
         skip_serializing_if = "Option::is_none"
     )]
     pub taker_commission_rate: Option<String>,
+    #[serde(rename = "rpiCommissionRate", skip_serializing_if = "Option::is_none")]
+    pub rpi_commission_rate: Option<String>,
 }
 
 impl UserCommissionRateResponse {
@@ -38,6 +40,7 @@ impl UserCommissionRateResponse {
             symbol: None,
             maker_commission_rate: None,
             taker_commission_rate: None,
+            rpi_commission_rate: None,
         }
     }
 }

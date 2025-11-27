@@ -93,6 +93,8 @@ pub mod order_trade_update_o;
 pub use self::order_trade_update_o::OrderTradeUpdateO;
 pub mod partial_book_depth_streams_response;
 pub use self::partial_book_depth_streams_response::PartialBookDepthStreamsResponse;
+pub mod rpi_diff_book_depth_streams_response;
+pub use self::rpi_diff_book_depth_streams_response::RpiDiffBookDepthStreamsResponse;
 pub mod strategy_update;
 pub use self::strategy_update::StrategyUpdate;
 pub mod strategy_update_su;
