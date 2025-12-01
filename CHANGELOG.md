@@ -1,5 +1,12 @@
 # Changelog
 
+## 33.0.1 - 2025-12-01
+
+### Changed (2)
+
+- Removed unstable `if let` chains on rust versions older than 1.90.0.
+- Added logger initialisation on examples.
+
 ## 33.0.0 - 2025-11-27
 
 ### Changed (1)

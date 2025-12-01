@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "33.0.0"
+version = "33.0.1"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -32,6 +32,8 @@ doc_lazy_continuation = "allow"
 default_trait_access = "allow"
 match_wild_err_arm = "allow"
 struct_excessive_bools = "allow"
+collapsible_if = "allow"
+unnecessary_unwrap = "allow"
 
   [lints.clippy.pedantic]
   level = "warn"

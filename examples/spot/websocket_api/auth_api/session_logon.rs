@@ -4,10 +4,14 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationWebsocketApi;
 use binance_sdk::config::PrivateKey;
+use binance_sdk::logger;
 use binance_sdk::spot::{SpotWsApi, websocket_api::SessionLogonParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // Initialise logging
+    logger::init();
+
     // Load credentials from env
     let api_key = env::var("API_KEY").expect("API_KEY must be set in the environment");
 

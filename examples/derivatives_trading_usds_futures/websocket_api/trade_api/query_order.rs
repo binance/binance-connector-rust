@@ -6,9 +6,13 @@ use binance_sdk::config::ConfigurationWebsocketApi;
 use binance_sdk::derivatives_trading_usds_futures::{
     DerivativesTradingUsdsFuturesWsApi, websocket_api::QueryOrderParams,
 };
+use binance_sdk::logger;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // Initialise logging
+    logger::init();
+
     // Load credentials from env
     let api_key = env::var("API_KEY").expect("API_KEY must be set in the environment");
     let api_secret = env::var("API_SECRET").expect("API_SECRET must be set in the environment");

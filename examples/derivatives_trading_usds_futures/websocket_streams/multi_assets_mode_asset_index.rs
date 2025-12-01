@@ -7,9 +7,13 @@ use binance_sdk::config::ConfigurationWebsocketStreams;
 use binance_sdk::derivatives_trading_usds_futures::{
     DerivativesTradingUsdsFuturesWsStreams, websocket_streams::MultiAssetsModeAssetIndexParams,
 };
+use binance_sdk::logger;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // Initialise logging
+    logger::init();
+
     // Build WebSocket Streams config
     let ws_streams_conf = ConfigurationWebsocketStreams::builder().build()?;
 
