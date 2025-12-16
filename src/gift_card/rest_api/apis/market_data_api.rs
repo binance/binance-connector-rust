@@ -301,6 +301,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("baseToken".to_string(), json!(base_token));
 
@@ -317,6 +318,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/giftcard/buyCode",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -338,6 +340,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("token".to_string(), json!(token));
 
@@ -352,6 +355,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/giftcard/createCode",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -369,6 +373,7 @@ impl MarketDataApi for MarketDataApiClient {
         let FetchRsaPublicKeyParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -379,6 +384,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/giftcard/cryptography/rsa-public-key",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -399,6 +405,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("baseToken".to_string(), json!(base_token));
 
@@ -411,6 +418,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/giftcard/buyCode/token-limit",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -432,6 +440,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("code".to_string(), json!(code));
 
@@ -448,6 +457,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/giftcard/redeemCode",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -469,6 +479,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("referenceNo".to_string(), json!(reference_no));
 
@@ -481,6 +492,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/giftcard/verify",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

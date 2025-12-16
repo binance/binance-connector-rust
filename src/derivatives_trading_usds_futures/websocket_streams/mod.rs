@@ -746,6 +746,10 @@ impl WebsocketStreams {
     ///
     /// Mark price and funding rate for all symbols pushed every 3 seconds or every second.
     ///
+    /// **Note**:
+    ///
+    /// This stream does not cover `TradFi` Perps.
+    ///
     /// Update Speed: 3000ms or 1000ms
     ///
     /// # Arguments
@@ -869,6 +873,37 @@ impl WebsocketStreams {
     ) -> anyhow::Result<Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>> {
         self.websocket_market_streams_api_client
             .rpi_diff_book_depth_streams(params)
+            .await
+    }
+
+    /// Trading Session Stream
+    ///
+    /// Trading session information for the underlying assets of `TradFi` Perpetual contracts—covering the U.S. equity market and the commodity market—is updated every second. Trading session information for different underlying markets is pushed in separate messages. Session types for the equity market include "`PRE_MARKET`", "REGULAR", "`AFTER_MARKET`", "OVERNIGHT", and "`NO_TRADING`". Session types for the commodity market include "REGULAR" and "`NO_TRADING`".
+    ///
+    /// Update Speed: 1s
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`TradingSessionStreamParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::TradingSessionStreamResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Trading-Session-Stream).
+    ///
+    pub async fn trading_session_stream(
+        &self,
+        params: TradingSessionStreamParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::TradingSessionStreamResponse>>> {
+        self.websocket_market_streams_api_client
+            .trading_session_stream(params)
             .await
     }
 }

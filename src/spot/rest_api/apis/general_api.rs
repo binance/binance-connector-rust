@@ -157,6 +157,7 @@ impl GeneralApi for GeneralApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -183,6 +184,7 @@ impl GeneralApi for GeneralApiClient {
             "/api/v3/exchangeInfo",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -195,12 +197,14 @@ impl GeneralApi for GeneralApiClient {
 
     async fn ping(&self) -> anyhow::Result<RestApiResponse<Value>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Value>(
             &self.configuration,
             "/api/v3/ping",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -213,12 +217,14 @@ impl GeneralApi for GeneralApiClient {
 
     async fn time(&self) -> anyhow::Result<RestApiResponse<models::TimeResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::TimeResponse>(
             &self.configuration,
             "/api/v3/time",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -272,7 +278,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
             let dummy_response: models::ExchangeInfoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ExchangeInfoResponse");
@@ -335,7 +341,7 @@ mod tests {
 
             let params = ExchangeInfoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
             let expected_response : models::ExchangeInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExchangeInfoResponse");
 
             let resp = client.exchange_info(params).await.expect("Expected a response");
@@ -352,7 +358,7 @@ mod tests {
 
             let params = ExchangeInfoParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).permissions(["null".to_string(),].to_vec()).show_permission_sets(true).symbol_status(ExchangeInfoSymbolStatusEnum::Trading).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
             let expected_response : models::ExchangeInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExchangeInfoResponse");
 
             let resp = client.exchange_info(params).await.expect("Expected a response");

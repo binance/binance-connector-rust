@@ -1,5 +1,201 @@
 # Changelog
 
+## 34.0.0 - 2025-12-16
+
+### Changed (1)
+
+- Support request body params on `send_request` and `send_signed_request` functions across all products.
+
+**Derivatives Trading Coin Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Modified parameter `batchOrders`:
+  - items.`orderId`: type `integer` → `string`
+  - items.`price`: type `number` → `string`
+  - items.`quantity`: type `number` → `string`
+  - items.`recvWindow`: type `integer` → `string`
+  - items.`orderId`: type `integer` → `string`
+  - items.`price`: type `number` → `string`
+  - items.`quantity`: type `number` → `string`
+  - items.`recvWindow`: type `integer` → `string`
+  - affected methods:
+    - `modify_multiple_orders()` (`PUT /dapi/v1/batchOrders`)
+
+**Derivatives Trading Options**
+
+### Changed (1)
+
+#### REST API
+
+- Modified parameter `orders`:
+  - items.`isMmp`: type `boolean` → `string`
+  - items.`postOnly`: type `boolean` → `string`
+  - items.`price`: type `number` → `string`
+  - items.`quantity`: type `number` → `string`
+  - items.`reduceOnly`: type `boolean` → `string`
+  - items.`isMmp`: type `boolean` → `string`
+  - items.`postOnly`: type `boolean` → `string`
+  - items.`price`: type `number` → `string`
+  - items.`quantity`: type `number` → `string`
+  - items.`reduceOnly`: type `boolean` → `string`
+  - affected methods:
+    - `place_multiple_orders()` (`POST /eapi/v1/batchOrders`)
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `um_position_adl_quantile_estimation()` (`GET /papi/v1/um/adlQuantile`):
+  - items.`adlQuantile`: property `HEDGE` deleted
+
+**Derivatives Trading Usds Futures**
+
+### Added (3)
+
+#### REST API
+
+- `futures_tradfi_perps_contract()` (`POST /fapi/v1/stock/contract`)
+- `trading_schedule()` (`GET /fapi/v1/tradingSchedule`)
+
+#### WebSocket Streams
+
+- `trading_session_stream()` (`tradingSession` stream)
+
+### Changed (11)
+
+#### REST API
+
+- Deleted parameter `activationPrice`
+  - affected methods:
+    - `new_order()` (`POST /fapi/v1/order`)
+- Deleted parameter `callbackRate`
+  - affected methods:
+    - `new_order()` (`POST /fapi/v1/order`)
+- Deleted parameter `closePosition`
+  - affected methods:
+    - `new_order()` (`POST /fapi/v1/order`)
+- Deleted parameter `priceProtect`
+  - affected methods:
+    - `new_order()` (`POST /fapi/v1/order`)
+- Deleted parameter `stopPrice`
+  - affected methods:
+    - `new_order()` (`POST /fapi/v1/order`)
+- Deleted parameter `workingType`
+  - affected methods:
+    - `new_order()` (`POST /fapi/v1/order`)
+- Modified parameter `batchOrders`:
+  - items: property `activationPrice` deleted
+  - items: property `callbackRate` deleted
+  - items: property `stopPrice` deleted
+  - items: property `workingType` deleted
+  - items: property `priceProtect` deleted
+  - items: item property `activationPrice` deleted
+  - items: item property `callbackRate` deleted
+  - items: item property `stopPrice` deleted
+  - items: item property `workingType` deleted
+  - items: item property `priceProtect` deleted
+  - affected methods:
+    - `place_multiple_orders()` (`POST /fapi/v1/batchOrders`)
+- Modified parameter `batchOrders`:
+  - items.`orderId`: type `integer` → `string`
+  - items.`price`: type `number` → `string`
+  - items.`quantity`: type `number` → `string`
+  - items.`recvWindow`: type `integer` → `string`
+  - items.`orderId`: type `integer` → `string`
+  - items.`price`: type `number` → `string`
+  - items.`quantity`: type `number` → `string`
+  - items.`recvWindow`: type `integer` → `string`
+  - affected methods:
+    - `modify_multiple_orders()` (`PUT /fapi/v1/batchOrders`)
+
+- Modified response for `place_multiple_orders()` (`POST /fapi/v1/batchOrders`):
+  - items: property `priceRate` deleted
+  - items: property `activatePrice` deleted
+  - items: item property `priceRate` deleted
+  - items: item property `activatePrice` deleted
+
+- Modified response for `new_order()` (`POST /fapi/v1/order`):
+  - property `activatePrice` deleted
+  - property `priceRate` deleted
+
+#### WebSocket API
+
+- Modified response for `cancel_algo_order()` (`algoOrder.cancel` method):
+  - `result`: property `msg` added
+  - `result`: property `code` added
+  - `result`: property `icebergQuantity` deleted
+  - `result`: property `orderType` deleted
+  - `result`: property `createTime` deleted
+  - `result`: property `algoStatus` deleted
+  - `result`: property `reduceOnly` deleted
+  - `result`: property `updateTime` deleted
+  - `result`: property `triggerPrice` deleted
+  - `result`: property `positionSide` deleted
+  - `result`: property `priceMatch` deleted
+  - `result`: property `closePosition` deleted
+  - `result`: property `timeInForce` deleted
+  - `result`: property `quantity` deleted
+  - `result`: property `goodTillDate` deleted
+  - `result`: property `triggerTime` deleted
+  - `result`: property `priceProtect` deleted
+  - `result`: property `workingType` deleted
+  - `result`: property `algoType` deleted
+  - `result`: property `price` deleted
+  - `result`: property `side` deleted
+  - `result`: property `selfTradePreventionMode` deleted
+  - `result`: property `symbol` deleted
+
+**Fiat**
+
+### Added (3)
+
+- `deposit()` (`POST /sapi/v1/fiat/deposit`)
+- `fiat_withdraw()` (`POST /sapi/v2/fiat/withdraw`)
+- `get_order_detail()` (`GET /sapi/v1/fiat/get-order-detail`)
+
+**Spot**
+
+### Added (4)
+
+#### REST API
+
+- `order_list_opo()` (`POST /api/v3/orderList/opo`)
+- `order_list_opoco()` (`POST /api/v3/orderList/opoco`)
+
+#### WebSocket API
+
+- `order_list_place_opo()` (`orderList.place.opo` method)
+- `order_list_place_opoco()` (`orderList.place.opoco` method)
+
+### Changed (2)
+
+#### REST API
+
+- Modified response for `exchange_info()` (`GET /api/v3/exchangeInfo`):
+  - `symbols`.items: property `opoAllowed` added
+  - `symbols`.items: item property `opoAllowed` added
+
+#### WebSocket API
+
+- Modified response for `exchange_info()` (`exchangeInfo` method):
+  - `result`.`symbols`.items: property `opoAllowed` added
+  - `result`.`symbols`.items: item property `opoAllowed` added
+
+### Removed (2)
+
+#### WebSocket API
+
+- `/order.amend.keep_priority()` (`order.amend.keepPriority` method)
+
+#### WebSocket Streams
+
+- `/!ticker@arr()` (`!ticker@arr` stream)
+
 ## 33.0.1 - 2025-12-01
 
 ### Changed (2)

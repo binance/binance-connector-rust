@@ -25,7 +25,7 @@ pub struct NewAlgoOrderResponse {
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
     pub result: Option<Box<models::NewAlgoOrderResponseResult>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::CancelAlgoOrderResponseRateLimitsInner>>,
+    pub rate_limits: Option<Vec<models::CancelOrderResponseRateLimitsInner>>,
 }
 
 impl NewAlgoOrderResponse {

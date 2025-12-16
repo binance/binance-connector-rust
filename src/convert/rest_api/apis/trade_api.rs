@@ -385,6 +385,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("quoteId".to_string(), json!(quote_id));
 
@@ -397,6 +398,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/convert/acceptQuote",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -417,6 +419,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("orderId".to_string(), json!(order_id));
 
@@ -429,6 +432,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/convert/limit/cancelOrder",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -451,6 +455,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("startTime".to_string(), json!(start_time));
 
@@ -469,6 +474,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/convert/tradeFlow",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -486,6 +492,7 @@ impl TradeApi for TradeApiClient {
         let OrderStatusParams { order_id, quote_id } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -500,6 +507,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/convert/orderStatus",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -527,16 +535,13 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("baseAsset".to_string(), json!(base_asset));
 
         query_params.insert("quoteAsset".to_string(), json!(quote_asset));
 
         query_params.insert("limitPrice".to_string(), json!(limit_price));
-
-        query_params.insert("side".to_string(), json!(side));
-
-        query_params.insert("expiredType".to_string(), json!(expired_type));
 
         if let Some(rw) = base_amount {
             query_params.insert("baseAmount".to_string(), json!(rw));
@@ -546,9 +551,13 @@ impl TradeApi for TradeApiClient {
             query_params.insert("quoteAmount".to_string(), json!(rw));
         }
 
+        query_params.insert("side".to_string(), json!(side));
+
         if let Some(rw) = wallet_type {
             query_params.insert("walletType".to_string(), json!(rw));
         }
+
+        query_params.insert("expiredType".to_string(), json!(expired_type));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -559,6 +568,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/convert/limit/placeOrder",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -576,6 +586,7 @@ impl TradeApi for TradeApiClient {
         let QueryLimitOpenOrdersParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -586,6 +597,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/convert/limit/queryOpenOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -611,6 +623,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("fromAsset".to_string(), json!(from_asset));
 
@@ -641,6 +654,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/convert/getQuote",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

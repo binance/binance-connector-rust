@@ -622,6 +622,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -636,6 +637,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/bnb-transfer",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -656,6 +658,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("autoRepay".to_string(), json!(auto_repay));
 
@@ -668,6 +671,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/repay-futures-switch",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -685,6 +689,7 @@ impl AccountApi for AccountApiClient {
         let FundAutoCollectionParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -695,6 +700,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/auto-collection",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -712,6 +718,7 @@ impl AccountApi for AccountApiClient {
         let FundCollectionByAssetParams { asset, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -724,6 +731,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/asset-collection",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -741,6 +749,7 @@ impl AccountApi for AccountApiClient {
         let GetAutoRepayFuturesStatusParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -751,6 +760,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/repay-futures-switch",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -770,6 +780,7 @@ impl AccountApi for AccountApiClient {
         let GetPortfolioMarginProAccountBalanceParams { asset, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -784,6 +795,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/balance",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -801,6 +813,7 @@ impl AccountApi for AccountApiClient {
         let GetPortfolioMarginProAccountInfoParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -811,6 +824,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -828,6 +842,7 @@ impl AccountApi for AccountApiClient {
         let GetPortfolioMarginProSpanAccountInfoParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -838,6 +853,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v2/portfolio/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -861,6 +877,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -875,6 +892,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/earn-asset-balance",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -893,6 +911,7 @@ impl AccountApi for AccountApiClient {
         let PortfolioMarginProBankruptcyLoanRepayParams { from, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = from {
             query_params.insert("from".to_string(), json!(rw));
@@ -907,6 +926,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/repay",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -925,6 +945,7 @@ impl AccountApi for AccountApiClient {
         let QueryPortfolioMarginProBankruptcyLoanAmountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -935,6 +956,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/pmLoan",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -960,6 +982,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -986,6 +1009,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/pmloan-history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1013,6 +1037,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -1041,6 +1066,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/interest-history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1058,6 +1084,7 @@ impl AccountApi for AccountApiClient {
         let RepayFuturesNegativeBalanceParams { from, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = from {
             query_params.insert("from".to_string(), json!(rw));
@@ -1072,6 +1099,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/repay-futures-negative-balance",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1095,6 +1123,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -1111,6 +1140,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/portfolio/earn-asset-transfer",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

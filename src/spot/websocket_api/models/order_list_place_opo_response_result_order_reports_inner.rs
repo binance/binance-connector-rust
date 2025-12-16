@@ -22,29 +22,30 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct OrderAmendKeepPriorityResponseResultAmendedOrder {
+pub struct OrderListPlaceOpoResponseResultOrderReportsInner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
-    #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
-    pub orig_client_order_id: Option<String>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    #[serde(rename = "transactTime", skip_serializing_if = "Option::is_none")]
+    pub transact_time: Option<i64>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
-    #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
-    pub qty: Option<String>,
+    #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
+    pub orig_qty: Option<String>,
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
-    #[serde(rename = "preventedQty", skip_serializing_if = "Option::is_none")]
-    pub prevented_qty: Option<String>,
-    #[serde(rename = "quoteOrderQty", skip_serializing_if = "Option::is_none")]
-    pub quote_order_qty: Option<String>,
-    #[serde(rename = "cumulativeQuoteQty", skip_serializing_if = "Option::is_none")]
-    pub cumulative_quote_qty: Option<String>,
+    #[serde(rename = "origQuoteOrderQty", skip_serializing_if = "Option::is_none")]
+    pub orig_quote_order_qty: Option<String>,
+    #[serde(
+        rename = "cummulativeQuoteQty",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub cummulative_quote_qty: Option<String>,
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
@@ -62,21 +63,20 @@ pub struct OrderAmendKeepPriorityResponseResultAmendedOrder {
     pub self_trade_prevention_mode: Option<String>,
 }
 
-impl OrderAmendKeepPriorityResponseResultAmendedOrder {
+impl OrderListPlaceOpoResponseResultOrderReportsInner {
     #[must_use]
-    pub fn new() -> OrderAmendKeepPriorityResponseResultAmendedOrder {
-        OrderAmendKeepPriorityResponseResultAmendedOrder {
+    pub fn new() -> OrderListPlaceOpoResponseResultOrderReportsInner {
+        OrderListPlaceOpoResponseResultOrderReportsInner {
             symbol: None,
             order_id: None,
             order_list_id: None,
-            orig_client_order_id: None,
             client_order_id: None,
+            transact_time: None,
             price: None,
-            qty: None,
+            orig_qty: None,
             executed_qty: None,
-            prevented_qty: None,
-            quote_order_qty: None,
-            cumulative_quote_qty: None,
+            orig_quote_order_qty: None,
+            cummulative_quote_qty: None,
             status: None,
             time_in_force: None,
             r#type: None,

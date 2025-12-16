@@ -115,6 +115,7 @@ impl C2CApi for C2CApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = trade_type {
             query_params.insert("tradeType".to_string(), json!(rw));
@@ -145,6 +146,7 @@ impl C2CApi for C2CApiClient {
             "/sapi/v1/c2c/orderMatch/listUserOrderHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

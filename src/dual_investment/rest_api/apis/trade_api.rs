@@ -228,6 +228,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
@@ -244,6 +245,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/dci/product/auto_compound/edit-status",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -261,6 +263,7 @@ impl TradeApi for TradeApiClient {
         let CheckDualInvestmentAccountsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -271,6 +274,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/dci/product/accounts",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -293,6 +297,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = status {
             query_params.insert("status".to_string(), json!(rw));
@@ -315,6 +320,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/dci/product/positions",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -338,6 +344,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("id".to_string(), json!(id));
 
@@ -356,6 +363,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/dci/product/subscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

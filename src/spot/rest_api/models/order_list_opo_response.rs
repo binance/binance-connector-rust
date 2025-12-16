@@ -1,11 +1,11 @@
 /*
- * Binance Spot WebSocket API
+ * Binance Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
+ * OpenAPI Specifications for the Binance Spot REST API
  *
  * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
+ * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
+ * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
  *
  *
  * The version of the OpenAPI document: 1.0.0
@@ -17,36 +17,44 @@
  */
 
 #![allow(unused_imports)]
-use crate::spot::websocket_api::models;
-use serde::{Deserialize, Deserializer, Serialize, de::Error};
-use serde_json::Value;
+use crate::spot::rest_api::models;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct OrderAmendKeepPriorityResponseResultListStatus {
+pub struct OrderListOpoResponse {
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
     #[serde(rename = "contingencyType", skip_serializing_if = "Option::is_none")]
     pub contingency_type: Option<String>,
+    #[serde(rename = "listStatusType", skip_serializing_if = "Option::is_none")]
+    pub list_status_type: Option<String>,
     #[serde(rename = "listOrderStatus", skip_serializing_if = "Option::is_none")]
     pub list_order_status: Option<String>,
     #[serde(rename = "listClientOrderId", skip_serializing_if = "Option::is_none")]
     pub list_client_order_id: Option<String>,
+    #[serde(rename = "transactionTime", skip_serializing_if = "Option::is_none")]
+    pub transaction_time: Option<i64>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "orders", skip_serializing_if = "Option::is_none")]
-    pub orders: Option<Vec<models::OrderAmendKeepPriorityResponseResultListStatusOrdersInner>>,
+    pub orders: Option<Vec<models::OrderListOpoResponseOrdersInner>>,
+    #[serde(rename = "orderReports", skip_serializing_if = "Option::is_none")]
+    pub order_reports: Option<Vec<models::OrderListOpoResponseOrderReportsInner>>,
 }
 
-impl OrderAmendKeepPriorityResponseResultListStatus {
+impl OrderListOpoResponse {
     #[must_use]
-    pub fn new() -> OrderAmendKeepPriorityResponseResultListStatus {
-        OrderAmendKeepPriorityResponseResultListStatus {
+    pub fn new() -> OrderListOpoResponse {
+        OrderListOpoResponse {
             order_list_id: None,
             contingency_type: None,
+            list_status_type: None,
             list_order_status: None,
             list_client_order_id: None,
+            transaction_time: None,
             symbol: None,
             orders: None,
+            order_reports: None,
         }
     }
 }

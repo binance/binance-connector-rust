@@ -256,6 +256,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("currency".to_string(), json!(currency));
 
@@ -284,6 +285,7 @@ impl AccountApi for AccountApiClient {
             "/eapi/v1/bill",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -306,6 +308,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("startTime".to_string(), json!(start_time));
 
@@ -320,6 +323,7 @@ impl AccountApi for AccountApiClient {
             "/eapi/v1/income/asyn",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -341,6 +345,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("downloadId".to_string(), json!(download_id));
 
@@ -353,6 +358,7 @@ impl AccountApi for AccountApiClient {
             "/eapi/v1/income/asyn/id",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -370,6 +376,7 @@ impl AccountApi for AccountApiClient {
         let OptionAccountInformationParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -380,6 +387,7 @@ impl AccountApi for AccountApiClient {
             "/eapi/v1/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -397,6 +405,7 @@ impl AccountApi for AccountApiClient {
         let OptionMarginAccountInformationParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -407,6 +416,7 @@ impl AccountApi for AccountApiClient {
             "/eapi/v1/marginAccount",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

@@ -58,6 +58,8 @@ pub struct ExchangeInfoResponseResultSymbolsInner {
     pub oco_allowed: Option<bool>,
     #[serde(rename = "otoAllowed", skip_serializing_if = "Option::is_none")]
     pub oto_allowed: Option<bool>,
+    #[serde(rename = "opoAllowed", skip_serializing_if = "Option::is_none")]
+    pub opo_allowed: Option<bool>,
     #[serde(
         rename = "quoteOrderQtyMarketAllowed",
         skip_serializing_if = "Option::is_none"
@@ -122,6 +124,7 @@ impl ExchangeInfoResponseResultSymbolsInner {
             iceberg_allowed: None,
             oco_allowed: None,
             oto_allowed: None,
+            opo_allowed: None,
             quote_order_qty_market_allowed: None,
             allow_trailing_stop: None,
             cancel_replace_allowed: None,

@@ -369,6 +369,7 @@ impl StableRateApi for StableRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
 
@@ -385,6 +386,7 @@ impl StableRateApi for StableRateApiClient {
             "/sapi/v1/loan/repay/collateral/rate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -410,6 +412,7 @@ impl StableRateApi for StableRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -440,6 +443,7 @@ impl StableRateApi for StableRateApiClient {
             "/sapi/v1/loan/income",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -466,6 +470,7 @@ impl StableRateApi for StableRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -504,6 +509,7 @@ impl StableRateApi for StableRateApiClient {
             "/sapi/v1/loan/borrow/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -530,6 +536,7 @@ impl StableRateApi for StableRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -568,6 +575,7 @@ impl StableRateApi for StableRateApiClient {
             "/sapi/v1/loan/ltv/adjustment/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -594,6 +602,7 @@ impl StableRateApi for StableRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -632,6 +641,7 @@ impl StableRateApi for StableRateApiClient {
             "/sapi/v1/loan/repay/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

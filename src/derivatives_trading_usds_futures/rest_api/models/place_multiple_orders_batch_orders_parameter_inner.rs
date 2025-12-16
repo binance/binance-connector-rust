@@ -28,23 +28,13 @@ pub struct PlaceMultipleOrdersBatchOrdersParameterInner {
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<TimeInForceEnum>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
-    pub quantity: Option<rust_decimal::Decimal>,
+    pub quantity: Option<String>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<rust_decimal::Decimal>,
+    pub price: Option<String>,
     #[serde(rename = "newClientOrderId", skip_serializing_if = "Option::is_none")]
     pub new_client_order_id: Option<String>,
-    #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
-    pub stop_price: Option<rust_decimal::Decimal>,
-    #[serde(rename = "activationPrice", skip_serializing_if = "Option::is_none")]
-    pub activation_price: Option<rust_decimal::Decimal>,
-    #[serde(rename = "callbackRate", skip_serializing_if = "Option::is_none")]
-    pub callback_rate: Option<rust_decimal::Decimal>,
-    #[serde(rename = "workingType", skip_serializing_if = "Option::is_none")]
-    pub working_type: Option<WorkingTypeEnum>,
-    #[serde(rename = "priceProtect", skip_serializing_if = "Option::is_none")]
-    pub price_protect: Option<String>,
     #[serde(rename = "newOrderRespType", skip_serializing_if = "Option::is_none")]
     pub new_order_resp_type: Option<NewOrderRespTypeEnum>,
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
@@ -55,7 +45,7 @@ pub struct PlaceMultipleOrdersBatchOrdersParameterInner {
     )]
     pub self_trade_prevention_mode: Option<SelfTradePreventionModeEnum>,
     #[serde(rename = "goodTillDate", skip_serializing_if = "Option::is_none")]
-    pub good_till_date: Option<i64>,
+    pub good_till_date: Option<String>,
 }
 
 impl PlaceMultipleOrdersBatchOrdersParameterInner {
@@ -71,11 +61,6 @@ impl PlaceMultipleOrdersBatchOrdersParameterInner {
             reduce_only: None,
             price: None,
             new_client_order_id: None,
-            stop_price: None,
-            activation_price: None,
-            callback_rate: None,
-            working_type: None,
-            price_protect: None,
             new_order_resp_type: None,
             price_match: None,
             self_trade_prevention_mode: None,
@@ -133,20 +118,6 @@ pub enum TimeInForceEnum {
 impl Default for TimeInForceEnum {
     fn default() -> TimeInForceEnum {
         Self::Gtc
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum WorkingTypeEnum {
-    #[serde(rename = "MARK_PRICE")]
-    MarkPrice,
-    #[serde(rename = "CONTRACT_PRICE")]
-    ContractPrice,
-}
-
-impl Default for WorkingTypeEnum {
-    fn default() -> WorkingTypeEnum {
-        Self::MarkPrice
     }
 }
 ///

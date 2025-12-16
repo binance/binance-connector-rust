@@ -63,7 +63,8 @@ impl RestApi {
     ///
     /// * `endpoint` - The API endpoint to send the request to
     /// * `method` - The HTTP method to use for the request
-    /// * `params` - A map of parameters to send with the request
+    /// * `query_params` - A map of query parameters to send with the request
+    /// * `body_params` - A map of body parameters to send with the request
     ///
     /// # Returns
     ///
@@ -76,9 +77,19 @@ impl RestApi {
         &self,
         endpoint: &str,
         method: Method,
-        params: BTreeMap<String, Value>,
+        query_params: BTreeMap<String, Value>,
+        body_params: BTreeMap<String, Value>,
     ) -> anyhow::Result<RestApiResponse<R>> {
-        send_request::<R>(&self.configuration, endpoint, method, params, None, false).await
+        send_request::<R>(
+            &self.configuration,
+            endpoint,
+            method,
+            query_params,
+            body_params,
+            None,
+            false,
+        )
+        .await
     }
 
     /// Send a signed request to the API
@@ -87,7 +98,8 @@ impl RestApi {
     ///
     /// * `endpoint` - The API endpoint to send the request to
     /// * `method` - The HTTP method to use for the request
-    /// * `params` - A map of parameters to send with the request
+    /// * `query_params` - A map of query parameters to send with the request
+    /// * `body_params` - A map of body parameters to send with the request
     ///
     /// # Returns
     ///
@@ -100,9 +112,19 @@ impl RestApi {
         &self,
         endpoint: &str,
         method: Method,
-        params: BTreeMap<String, Value>,
+        query_params: BTreeMap<String, Value>,
+        body_params: BTreeMap<String, Value>,
     ) -> anyhow::Result<RestApiResponse<R>> {
-        send_request::<R>(&self.configuration, endpoint, method, params, None, true).await
+        send_request::<R>(
+            &self.configuration,
+            endpoint,
+            method,
+            query_params,
+            body_params,
+            None,
+            true,
+        )
+        .await
     }
 
     /// Account Information `V2(USER_DATA)`
@@ -1487,6 +1509,7 @@ impl RestApi {
     /// * PERPETUAL
     /// * `CURRENT_QUARTER`
     /// * `NEXT_QUARTER`
+    /// * `TRADIFI_PERPETUAL`
     ///
     /// Weight: based on parameter LIMIT
     /// | LIMIT       | weight |
@@ -2269,6 +2292,11 @@ impl RestApi {
     ///
     /// Query index price constituents
     ///
+    ///
+    /// **Note**:
+    ///
+    /// Prices from constituents of `TradFi` perps will be hiden and displayed as -1.
+    ///
     /// Weight: 2
     ///
     /// # Arguments
@@ -2841,6 +2869,48 @@ impl RestApi {
         self.market_data_api_client
             .top_trader_long_short_ratio_positions(params)
             .await
+    }
+
+    /// Trading Schedule
+    ///
+    /// Trading session schedules for the underlying assets of `TradFi` Perps are provided for a one-week period starting from the day prior to the query time, covering both the U.S. equity and commodity markets. Equity market session types include "`PRE_MARKET`", "REGULAR", "`AFTER_MARKET`", "OVERNIGHT", and "`NO_TRADING`", while commodity market session types include "REGULAR" and "`NO_TRADING`".
+    ///
+    /// Weight: 5
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`TradingScheduleParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::TradingScheduleResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Trading-Schedule).
+    ///
+    pub async fn trading_schedule(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::TradingScheduleResponse>> {
+        self.market_data_api_client.trading_schedule().await
     }
 
     /// Classic Portfolio Margin Account Information (`USER_DATA`)
@@ -3532,6 +3602,51 @@ impl RestApi {
         self.trade_api_client.current_all_open_orders(params).await
     }
 
+    /// Futures `TradFi` Perps `Contract(USER_DATA)`
+    ///
+    /// Sign TradFi-Perps agreement contract
+    ///
+    /// Weight: 0
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`FuturesTradfiPerpsContractParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::FuturesTradfiPerpsContractResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Futures-TradFi-Perps-Contract).
+    ///
+    pub async fn futures_tradfi_perps_contract(
+        &self,
+        params: FuturesTradfiPerpsContractParams,
+    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+        self.trade_api_client
+            .futures_tradfi_perps_contract(params)
+            .await
+    }
+
     /// Get Order Modify History (`USER_DATA`)
     ///
     /// Get order modification history
@@ -3856,40 +3971,10 @@ impl RestApi {
     ///
     /// Send in a new order.
     ///
-    /// * Order with type `STOP`,  parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Order with type `TAKE_PROFIT`,  parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Condition orders will be triggered when:
-    ///
-    /// * If parameter`priceProtect`is sent as true:
-    /// * when price reaches the `stopPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
-    /// * "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
-    ///
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// * `TRAILING_STOP_MARKET`:
-    /// * BUY: the lowest price after order placed `<= `activationPrice`, and the latest price >`= the lowest price * (1 + `callbackRate`)
-    /// * SELL: the highest price after order placed >= `activationPrice`, and the latest price <= the highest price * (1 - `callbackRate`)
-    ///
-    /// * For `TRAILING_STOP_MARKET`, if you got such error code.
-    /// ``{"code": -2021, "msg": "Order would immediately trigger."}``
-    /// means that the parameters you send do not meet the following requirements:
-    /// * BUY: `activationPrice` should be smaller than latest price.
-    /// * SELL: `activationPrice` should be larger than latest price.
-    ///
     /// * If `newOrderRespType ` is sent as `RESULT` :
     /// * `MARKET` order: the final FILLED result of the order will be return directly.
     /// * `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
     ///
-    /// * `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
-    /// * Follow the same rules for condition orders.
-    /// * If triggered，**close all** current long position( if `SELL`) or current short position( if `BUY`).
-    /// * Cannot be used with `quantity` paremeter
-    /// * Cannot be used with `reduceOnly` parameter
-    /// * In Hedge Mode,cannot be used with `BUY` orders in `LONG` position side. and cannot be used with `SELL` orders in `SHORT` position side
     /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
     /// * In extreme market conditions, timeInForce `GTD` order auto cancel time might be delayed comparing to `goodTillDate`
     ///

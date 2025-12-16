@@ -5,7 +5,14 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationWebsocketApi;
 use binance_sdk::logger;
-use binance_sdk::spot::{SpotWsApi, websocket_api::OrderAmendKeepPriorityParams};
+use binance_sdk::spot::{
+    SpotWsApi,
+    websocket_api::{
+        OrderListPlaceOpocoParams, OrderListPlaceOpocoPendingAboveTypeEnum,
+        OrderListPlaceOpocoPendingSideEnum, OrderListPlaceOpocoWorkingSideEnum,
+        OrderListPlaceOpocoWorkingTypeEnum,
+    },
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -32,17 +39,26 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket API")?;
 
     // Setup the WS API parameters
-    let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), dec!(1.0)).build()?;
+    let params = OrderListPlaceOpocoParams::builder(
+        "BNBUSDT".to_string(),
+        OrderListPlaceOpocoWorkingTypeEnum::Limit,
+        OrderListPlaceOpocoWorkingSideEnum::Buy,
+        dec!(1.0),
+        dec!(1.0),
+        OrderListPlaceOpocoPendingSideEnum::Buy,
+        OrderListPlaceOpocoPendingAboveTypeEnum::StopLossLimit,
+    )
+    .build()?;
 
     // Make the WS API call
     let response = connection
-        .order_amend_keep_priority(params)
+        .order_list_place_opoco(params)
         .await
-        .context("order_amend_keep_priority request failed")?;
+        .context("order_list_place_opoco request failed")?;
 
-    info!(?response.rate_limits, "order_amend_keep_priority rate limits");
+    info!(?response.rate_limits, "order_list_place_opoco rate limits");
     let data = response.data()?;
-    info!(?data, "order_amend_keep_priority data");
+    info!(?data, "order_list_place_opoco data");
 
     // Cleanly disconnect
     connection

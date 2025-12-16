@@ -302,12 +302,14 @@ impl MarketDataApi for MarketDataApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<Vec<models::CrossMarginCollateralRatioResponseInner>>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Vec<models::CrossMarginCollateralRatioResponseInner>>(
             &self.configuration,
             "/sapi/v1/margin/crossMarginCollateralRatio",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -325,6 +327,7 @@ impl MarketDataApi for MarketDataApiClient {
         let GetAllCrossMarginPairsParams { symbol } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -335,6 +338,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/allPairs",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -355,6 +359,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -369,6 +374,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/isolated/allPairs",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -386,6 +392,7 @@ impl MarketDataApi for MarketDataApiClient {
         let GetAllMarginAssetsParams { asset } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -396,6 +403,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/allAssets",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -413,6 +421,7 @@ impl MarketDataApi for MarketDataApiClient {
         let GetDelistScheduleParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -423,6 +432,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/delist-schedule",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -437,12 +447,14 @@ impl MarketDataApi for MarketDataApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<models::GetLimitPricePairsResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::GetLimitPricePairsResponse>(
             &self.configuration,
             "/sapi/v1/margin/limit-price-pairs",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -460,6 +472,7 @@ impl MarketDataApi for MarketDataApiClient {
         let GetListScheduleParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -470,6 +483,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/list-schedule",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -492,6 +506,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -508,6 +523,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/isolatedMarginTier",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -526,6 +542,7 @@ impl MarketDataApi for MarketDataApiClient {
         >,
     > {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<
             Vec<models::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner>,
@@ -534,6 +551,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/leverageBracket",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -551,6 +569,7 @@ impl MarketDataApi for MarketDataApiClient {
         let QueryMarginAvailableInventoryParams { r#type } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("type".to_string(), json!(r#type));
 
@@ -559,6 +578,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/available-inventory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -576,6 +596,7 @@ impl MarketDataApi for MarketDataApiClient {
         let QueryMarginPriceindexParams { symbol } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -584,6 +605,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/margin/priceIndex",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

@@ -1754,6 +1754,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -1792,6 +1793,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/userTrades",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1817,6 +1819,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -1851,6 +1854,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/allOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1872,6 +1876,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -1886,6 +1891,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/countdownCancelAll",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1906,6 +1912,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -1918,6 +1925,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/allOpenOrders",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1940,6 +1948,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -1960,6 +1969,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/batchOrders",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1982,6 +1992,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2002,6 +2013,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/order",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2023,6 +2035,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2037,6 +2050,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/leverage",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2058,6 +2072,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2072,6 +2087,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/marginType",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2092,6 +2108,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("dualSidePosition".to_string(), json!(dual_side_position));
 
@@ -2104,6 +2121,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/positionSide/dual",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2125,6 +2143,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -2143,6 +2162,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/openOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2168,6 +2188,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2200,6 +2221,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/orderAmendment",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2225,6 +2247,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2253,6 +2276,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/positionMargin/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2276,16 +2300,17 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
-
-        query_params.insert("amount".to_string(), json!(amount));
-
-        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("amount".to_string(), json!(amount));
+
+        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -2296,6 +2321,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/positionMargin",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2316,6 +2342,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("batchOrders".to_string(), json!(batch_orders));
 
@@ -2328,6 +2355,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/batchOrders",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2354,10 +2382,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        query_params.insert("side".to_string(), json!(side));
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -2366,6 +2391,10 @@ impl TradeApi for TradeApiClient {
         if let Some(rw) = orig_client_order_id {
             query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        query_params.insert("side".to_string(), json!(side));
 
         if let Some(rw) = quantity {
             query_params.insert("quantity".to_string(), json!(rw));
@@ -2388,6 +2417,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/order",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2425,16 +2455,17 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("type".to_string(), json!(r#type));
-
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = time_in_force {
             query_params.insert("timeInForce".to_string(), json!(rw));
@@ -2501,6 +2532,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/order",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2522,6 +2554,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -2536,6 +2569,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/adlQuantile",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2557,6 +2591,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = margin_asset {
             query_params.insert("marginAsset".to_string(), json!(rw));
@@ -2575,6 +2610,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/positionRisk",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2597,6 +2633,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2617,6 +2654,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/openOrder",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2639,6 +2677,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2659,6 +2698,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/order",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2683,6 +2723,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -2713,6 +2754,7 @@ impl TradeApi for TradeApiClient {
             "/dapi/v1/forceOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

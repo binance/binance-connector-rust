@@ -53,12 +53,14 @@ impl UserDataStreamsApiClient {
 impl UserDataStreamsApi for UserDataStreamsApiClient {
     async fn close_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Value>(
             &self.configuration,
             "/papi/v1/listenKey",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -71,12 +73,14 @@ impl UserDataStreamsApi for UserDataStreamsApiClient {
 
     async fn keepalive_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Value>(
             &self.configuration,
             "/papi/v1/listenKey",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -91,12 +95,14 @@ impl UserDataStreamsApi for UserDataStreamsApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<models::StartUserDataStreamResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::StartUserDataStreamResponse>(
             &self.configuration,
             "/papi/v1/listenKey",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

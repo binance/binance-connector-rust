@@ -241,6 +241,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("loanAccountId".to_string(), json!(loan_account_id));
 
@@ -270,6 +271,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/loan/vip/borrow",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -291,6 +293,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("orderId".to_string(), json!(order_id));
 
@@ -305,6 +308,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/loan/vip/renew",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -326,6 +330,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("orderId".to_string(), json!(order_id));
 
@@ -340,6 +345,7 @@ impl TradeApi for TradeApiClient {
             "/sapi/v1/loan/vip/repay",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

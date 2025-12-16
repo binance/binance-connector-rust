@@ -675,6 +675,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("toEmail".to_string(), json!(to_email));
 
@@ -691,6 +692,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/deposit",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -714,6 +716,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -736,6 +739,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/deposit/address",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -754,6 +758,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         let QueryManagedSubAccountAssetDetailsParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -766,6 +771,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/asset",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -787,6 +793,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -799,6 +806,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/fetch-future-asset",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -821,6 +829,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = email {
             query_params.insert("email".to_string(), json!(rw));
@@ -843,6 +852,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/info",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -864,6 +874,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -876,6 +887,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/marginAsset",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -900,6 +912,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -926,6 +939,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/accountSnapshot",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -953,6 +967,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -977,6 +992,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/queryTransLogForInvestor",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1004,6 +1020,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1028,6 +1045,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/queryTransLogForTradeParent",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1055,6 +1073,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("startTime".to_string(), json!(start_time));
 
@@ -1081,6 +1100,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/query-trans-log",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1105,6 +1125,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("fromEmail".to_string(), json!(from_email));
 
@@ -1125,6 +1146,7 @@ impl ManagedSubAccountApi for ManagedSubAccountApiClient {
             "/sapi/v1/managed-subaccount/withdraw",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

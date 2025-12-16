@@ -61,7 +61,8 @@ impl RestApi {
     ///
     /// * `endpoint` - The API endpoint to send the request to
     /// * `method` - The HTTP method to use for the request
-    /// * `params` - A map of parameters to send with the request
+    /// * `query_params` - A map of query parameters to send with the request
+    /// * `body_params` - A map of body parameters to send with the request
     ///
     /// # Returns
     ///
@@ -74,9 +75,19 @@ impl RestApi {
         &self,
         endpoint: &str,
         method: Method,
-        params: BTreeMap<String, Value>,
+        query_params: BTreeMap<String, Value>,
+        body_params: BTreeMap<String, Value>,
     ) -> anyhow::Result<RestApiResponse<R>> {
-        send_request::<R>(&self.configuration, endpoint, method, params, None, false).await
+        send_request::<R>(
+            &self.configuration,
+            endpoint,
+            method,
+            query_params,
+            body_params,
+            None,
+            false,
+        )
+        .await
     }
 
     /// Send a signed request to the API
@@ -85,7 +96,8 @@ impl RestApi {
     ///
     /// * `endpoint` - The API endpoint to send the request to
     /// * `method` - The HTTP method to use for the request
-    /// * `params` - A map of parameters to send with the request
+    /// * `query_params` - A map of query parameters to send with the request
+    /// * `body_params` - A map of body parameters to send with the request
     ///
     /// # Returns
     ///
@@ -98,9 +110,19 @@ impl RestApi {
         &self,
         endpoint: &str,
         method: Method,
-        params: BTreeMap<String, Value>,
+        query_params: BTreeMap<String, Value>,
+        body_params: BTreeMap<String, Value>,
     ) -> anyhow::Result<RestApiResponse<R>> {
-        send_request::<R>(&self.configuration, endpoint, method, params, None, true).await
+        send_request::<R>(
+            &self.configuration,
+            endpoint,
+            method,
+            query_params,
+            body_params,
+            None,
+            true,
+        )
+        .await
     }
 
     /// Query Commission Rates
@@ -1743,6 +1765,96 @@ impl RestApi {
         params: OrderListOcoParams,
     ) -> anyhow::Result<RestApiResponse<models::OrderListOcoResponse>> {
         self.trade_api_client.order_list_oco(params).await
+    }
+
+    /// New Order List - OPO
+    ///
+    /// Place an [OPO](./faqs/opo.md).
+    ///
+    /// * OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
+    /// Weight: 1
+    ///
+    /// Unfilled Order Count: 2
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`OrderListOpoParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::OrderListOpoResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---opo-trade).
+    ///
+    pub async fn order_list_opo(
+        &self,
+        params: OrderListOpoParams,
+    ) -> anyhow::Result<RestApiResponse<models::OrderListOpoResponse>> {
+        self.trade_api_client.order_list_opo(params).await
+    }
+
+    /// New Order List - OPOCO
+    ///
+    /// Place an [OPOCO](./faqs/opo.md).
+    /// Weight: 1
+    ///
+    /// Unfilled Order Count: 3
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`OrderListOpocoParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::OrderListOpocoResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---opoco-trade).
+    ///
+    pub async fn order_list_opoco(
+        &self,
+        params: OrderListOpocoParams,
+    ) -> anyhow::Result<RestApiResponse<models::OrderListOpocoResponse>> {
+        self.trade_api_client.order_list_opoco(params).await
     }
 
     /// New Order list - OTO

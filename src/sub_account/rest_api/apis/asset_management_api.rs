@@ -1313,6 +1313,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1331,6 +1332,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/futures/transfer",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1348,6 +1350,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let GetDetailOnSubAccountsFuturesAccountParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1360,6 +1363,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/futures/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1382,6 +1386,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1396,6 +1401,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v2/sub-account/futures/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1413,6 +1419,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let GetDetailOnSubAccountsMarginAccountParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1425,6 +1432,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/margin/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1449,12 +1457,9 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
-
-        query_params.insert("page".to_string(), json!(page));
-
-        query_params.insert("row".to_string(), json!(row));
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -1463,6 +1468,10 @@ impl AssetManagementApi for AssetManagementApiClient {
         if let Some(rw) = end_time {
             query_params.insert("endTime".to_string(), json!(rw));
         }
+
+        query_params.insert("page".to_string(), json!(page));
+
+        query_params.insert("row".to_string(), json!(row));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1473,6 +1482,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/futures/move-position",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1496,6 +1506,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1518,6 +1529,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/capital/deposit/subAddress",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1546,6 +1558,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1586,6 +1599,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/capital/deposit/subHisrec",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1604,6 +1618,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let GetSummaryOfSubAccountsFuturesAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1614,6 +1629,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/futures/accountSummary",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1637,6 +1653,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("futuresType".to_string(), json!(futures_type));
 
@@ -1657,6 +1674,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v2/sub-account/futures/accountSummary",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1674,6 +1692,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let GetSummaryOfSubAccountsMarginAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1684,6 +1703,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/margin/accountSummary",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1707,6 +1727,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1725,6 +1746,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/margin/transfer",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1748,6 +1770,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("fromUserEmail".to_string(), json!(from_user_email));
 
@@ -1766,6 +1789,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/futures/move-position",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1783,6 +1807,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let QuerySubAccountAssetsParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1795,6 +1820,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v3/sub-account/assets",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1812,6 +1838,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let QuerySubAccountAssetsAssetManagementParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1824,6 +1851,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v4/sub-account/assets",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1850,6 +1878,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1880,6 +1909,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/futures/internalTransfer",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1907,6 +1937,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = from_email {
             query_params.insert("fromEmail".to_string(), json!(rw));
@@ -1941,6 +1972,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/sub/transfer/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1963,6 +1995,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = email {
             query_params.insert("email".to_string(), json!(rw));
@@ -1985,6 +2018,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/spotSummary",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2011,6 +2045,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = from_email {
             query_params.insert("fromEmail".to_string(), json!(rw));
@@ -2049,6 +2084,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/universalTransfer",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2073,6 +2109,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("fromEmail".to_string(), json!(from_email));
 
@@ -2093,6 +2130,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/futures/internalTransfer",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2118,6 +2156,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -2152,6 +2191,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/transfer/subUserHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2173,6 +2213,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -2187,6 +2228,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/transfer/subToMaster",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2209,6 +2251,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("toEmail".to_string(), json!(to_email));
 
@@ -2225,6 +2268,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/transfer/subToSub",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2252,14 +2296,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
-
-        query_params.insert("fromAccountType".to_string(), json!(from_account_type));
-
-        query_params.insert("toAccountType".to_string(), json!(to_account_type));
-
-        query_params.insert("asset".to_string(), json!(asset));
-
-        query_params.insert("amount".to_string(), json!(amount));
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = from_email {
             query_params.insert("fromEmail".to_string(), json!(rw));
@@ -2269,6 +2306,10 @@ impl AssetManagementApi for AssetManagementApiClient {
             query_params.insert("toEmail".to_string(), json!(rw));
         }
 
+        query_params.insert("fromAccountType".to_string(), json!(from_account_type));
+
+        query_params.insert("toAccountType".to_string(), json!(to_account_type));
+
         if let Some(rw) = client_tran_id {
             query_params.insert("clientTranId".to_string(), json!(rw));
         }
@@ -2276,6 +2317,10 @@ impl AssetManagementApi for AssetManagementApiClient {
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
         }
+
+        query_params.insert("asset".to_string(), json!(asset));
+
+        query_params.insert("amount".to_string(), json!(amount));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -2286,6 +2331,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             "/sapi/v1/sub-account/universalTransfer",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

@@ -1319,41 +1319,6 @@ impl WebsocketApi {
         self.trade_api_client.open_orders_cancel_all(params).await
     }
 
-    /// WebSocket Order Amend Keep Priority
-    ///
-    /// Reduce the quantity of an existing open order.
-    ///
-    /// This adds 0 orders to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-    ///
-    /// Read [Order Amend Keep Priority FAQ](faqs/order_amend_keep_priority.md) to learn more.
-    /// Weight: 4
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`OrderAmendKeepPriorityParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`WebsocketApiResponse<Box<models::OrderAmendKeepPriorityResponseResult>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#order-amend-keep-priority-trade).
-    ///
-    pub async fn order_amend_keep_priority(
-        &self,
-        params: OrderAmendKeepPriorityParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderAmendKeepPriorityResponseResult>>>
-    {
-        self.trade_api_client
-            .order_amend_keep_priority(params)
-            .await
-    }
-
     /// WebSocket Cancel order
     ///
     /// Cancel an active order.
@@ -1517,6 +1482,68 @@ impl WebsocketApi {
         params: OrderListPlaceOcoParams,
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderListPlaceOcoResponseResult>>> {
         self.trade_api_client.order_list_place_oco(params).await
+    }
+
+    /// WebSocket OPO
+    ///
+    /// Place an [OPO](./faqs/opo.md).
+    ///
+    /// * OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
+    /// Weight: 1
+    ///
+    /// Unfilled Order Count: 2
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`OrderListPlaceOpoParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Box<models::OrderListPlaceOpoResponseResult>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#opo-trade).
+    ///
+    pub async fn order_list_place_opo(
+        &self,
+        params: OrderListPlaceOpoParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderListPlaceOpoResponseResult>>> {
+        self.trade_api_client.order_list_place_opo(params).await
+    }
+
+    /// WebSocket OPOCO
+    ///
+    /// Place an [OPOCO](./faqs/opo.md).
+    /// Weight: 1
+    ///
+    /// Unfilled Order Count: 3
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`OrderListPlaceOpocoParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Box<models::OrderListPlaceOpocoResponseResult>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#opoco-trade).
+    ///
+    pub async fn order_list_place_opoco(
+        &self,
+        params: OrderListPlaceOpocoParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderListPlaceOpocoResponseResult>>> {
+        self.trade_api_client.order_list_place_opoco(params).await
     }
 
     /// WebSocket Place new Order list - OTO

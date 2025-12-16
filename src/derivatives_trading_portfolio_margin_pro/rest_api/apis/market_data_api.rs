@@ -116,12 +116,14 @@ impl MarketDataApi for MarketDataApiClient {
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetPortfolioMarginAssetLeverageResponseInner>>>
     {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Vec<models::GetPortfolioMarginAssetLeverageResponseInner>>(
             &self.configuration,
             "/sapi/v1/portfolio/margin-asset-leverage",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -137,12 +139,14 @@ impl MarketDataApi for MarketDataApiClient {
     ) -> anyhow::Result<RestApiResponse<Vec<models::PortfolioMarginCollateralRateResponseInner>>>
     {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Vec<models::PortfolioMarginCollateralRateResponseInner>>(
             &self.configuration,
             "/sapi/v1/portfolio/collateralRate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -162,6 +166,7 @@ impl MarketDataApi for MarketDataApiClient {
         let PortfolioMarginProTieredCollateralRateParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -172,6 +177,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v2/portfolio/collateralRate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -191,6 +197,7 @@ impl MarketDataApi for MarketDataApiClient {
         let QueryPortfolioMarginAssetIndexPriceParams { asset } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -201,6 +208,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/portfolio/asset-index-price",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

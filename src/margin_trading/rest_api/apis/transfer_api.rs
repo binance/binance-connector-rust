@@ -167,6 +167,7 @@ impl TransferApi for TransferApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -205,6 +206,7 @@ impl TransferApi for TransferApiClient {
             "/sapi/v1/margin/transfer",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -226,6 +228,7 @@ impl TransferApi for TransferApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -242,6 +245,7 @@ impl TransferApi for TransferApiClient {
             "/sapi/v1/margin/maxTransferable",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

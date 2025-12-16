@@ -445,6 +445,7 @@ impl CapitalApi for CapitalApiClient {
         let AllCoinsInformationParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -455,6 +456,7 @@ impl CapitalApi for CapitalApiClient {
             "/sapi/v1/capital/config/getall",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -477,6 +479,7 @@ impl CapitalApi for CapitalApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("coin".to_string(), json!(coin));
 
@@ -497,6 +500,7 @@ impl CapitalApi for CapitalApiClient {
             "/sapi/v1/capital/deposit/address",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -524,6 +528,7 @@ impl CapitalApi for CapitalApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = include_source {
             query_params.insert("includeSource".to_string(), json!(rw));
@@ -566,6 +571,7 @@ impl CapitalApi for CapitalApiClient {
             "/sapi/v1/capital/deposit/hisrec",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -584,6 +590,7 @@ impl CapitalApi for CapitalApiClient {
         let FetchDepositAddressListWithNetworkParams { coin, network } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("coin".to_string(), json!(coin));
 
@@ -596,6 +603,7 @@ impl CapitalApi for CapitalApiClient {
             "/sapi/v1/capital/deposit/address/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -610,12 +618,14 @@ impl CapitalApi for CapitalApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<Vec<models::FetchWithdrawAddressListResponseInner>>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Vec<models::FetchWithdrawAddressListResponseInner>>(
             &self.configuration,
             "/sapi/v1/capital/withdraw/address/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -630,12 +640,14 @@ impl CapitalApi for CapitalApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<models::FetchWithdrawQuotaResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::FetchWithdrawQuotaResponse>(
             &self.configuration,
             "/sapi/v1/capital/withdraw/quota",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -658,6 +670,7 @@ impl CapitalApi for CapitalApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = deposit_id {
             query_params.insert("depositId".to_string(), json!(rw));
@@ -680,6 +693,7 @@ impl CapitalApi for CapitalApiClient {
             "/sapi/v1/capital/deposit/credit-apply",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -708,12 +722,9 @@ impl CapitalApi for CapitalApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("coin".to_string(), json!(coin));
-
-        query_params.insert("address".to_string(), json!(address));
-
-        query_params.insert("amount".to_string(), json!(amount));
 
         if let Some(rw) = withdraw_order_id {
             query_params.insert("withdrawOrderId".to_string(), json!(rw));
@@ -723,9 +734,13 @@ impl CapitalApi for CapitalApiClient {
             query_params.insert("network".to_string(), json!(rw));
         }
 
+        query_params.insert("address".to_string(), json!(address));
+
         if let Some(rw) = address_tag {
             query_params.insert("addressTag".to_string(), json!(rw));
         }
+
+        query_params.insert("amount".to_string(), json!(amount));
 
         if let Some(rw) = transaction_fee_flag {
             query_params.insert("transactionFeeFlag".to_string(), json!(rw));
@@ -748,6 +763,7 @@ impl CapitalApi for CapitalApiClient {
             "/sapi/v1/capital/withdraw/apply",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -775,6 +791,7 @@ impl CapitalApi for CapitalApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = coin {
             query_params.insert("coin".to_string(), json!(rw));
@@ -817,6 +834,7 @@ impl CapitalApi for CapitalApiClient {
             "/sapi/v1/capital/withdraw/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

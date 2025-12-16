@@ -1,11 +1,11 @@
 /*
- * Binance Spot WebSocket API
+ * Binance Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
+ * OpenAPI Specifications for the Binance Spot REST API
  *
  * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
+ * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
+ * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
  *
  *
  * The version of the OpenAPI document: 1.0.0
@@ -17,12 +17,11 @@
  */
 
 #![allow(unused_imports)]
-use crate::spot::websocket_api::models;
-use serde::{Deserialize, Deserializer, Serialize, de::Error};
-use serde_json::Value;
+use crate::spot::rest_api::models;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct OrderAmendKeepPriorityResponseResultListStatusOrdersInner {
+pub struct OrderListOpoResponseOrdersInner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
@@ -31,10 +30,10 @@ pub struct OrderAmendKeepPriorityResponseResultListStatusOrdersInner {
     pub client_order_id: Option<String>,
 }
 
-impl OrderAmendKeepPriorityResponseResultListStatusOrdersInner {
+impl OrderListOpoResponseOrdersInner {
     #[must_use]
-    pub fn new() -> OrderAmendKeepPriorityResponseResultListStatusOrdersInner {
-        OrderAmendKeepPriorityResponseResultListStatusOrdersInner {
+    pub fn new() -> OrderListOpoResponseOrdersInner {
+        OrderListOpoResponseOrdersInner {
             symbol: None,
             order_id: None,
             client_order_id: None,

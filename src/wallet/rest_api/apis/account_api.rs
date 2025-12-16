@@ -270,6 +270,7 @@ impl AccountApi for AccountApiClient {
         let AccountApiTradingStatusParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -280,6 +281,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/account/apiTradingStatus",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -297,6 +299,7 @@ impl AccountApi for AccountApiClient {
         let AccountInfoParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -307,6 +310,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/account/info",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -324,6 +328,7 @@ impl AccountApi for AccountApiClient {
         let AccountStatusParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -334,6 +339,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/account/status",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -357,6 +363,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("type".to_string(), json!(r#type));
 
@@ -381,6 +388,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/accountSnapshot",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -398,6 +406,7 @@ impl AccountApi for AccountApiClient {
         let DisableFastWithdrawSwitchParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -408,6 +417,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/account/disableFastWithdrawSwitch",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -425,6 +435,7 @@ impl AccountApi for AccountApiClient {
         let EnableFastWithdrawSwitchParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -435,6 +446,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/account/enableFastWithdrawSwitch",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -452,6 +464,7 @@ impl AccountApi for AccountApiClient {
         let GetApiKeyPermissionParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -462,6 +475,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/account/apiRestrictions",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

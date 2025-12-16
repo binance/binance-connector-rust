@@ -389,6 +389,7 @@ impl BfusdApi for BfusdApiClient {
         let GetBfusdAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -399,6 +400,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -416,6 +418,7 @@ impl BfusdApi for BfusdApiClient {
         let GetBfusdQuotaDetailsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -426,6 +429,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/quota",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -449,6 +453,7 @@ impl BfusdApi for BfusdApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -475,6 +480,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/history/rateHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -498,6 +504,7 @@ impl BfusdApi for BfusdApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -524,6 +531,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/history/redemptionHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -547,6 +555,7 @@ impl BfusdApi for BfusdApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -573,6 +582,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/history/rewardsHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -597,6 +607,7 @@ impl BfusdApi for BfusdApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -627,6 +638,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/history/subscriptionHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -648,6 +660,7 @@ impl BfusdApi for BfusdApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -662,6 +675,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/redeem",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -683,6 +697,7 @@ impl BfusdApi for BfusdApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -697,6 +712,7 @@ impl BfusdApi for BfusdApiClient {
             "/sapi/v1/bfusd/subscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

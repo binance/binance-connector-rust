@@ -92,6 +92,7 @@ impl PortfolioMarginEndpointsApi for PortfolioMarginEndpointsApiClient {
         let ClassicPortfolioMarginAccountInformationParams { asset, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -104,6 +105,7 @@ impl PortfolioMarginEndpointsApi for PortfolioMarginEndpointsApiClient {
             "/fapi/v1/pmAccountInfo",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

@@ -365,6 +365,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("subAccountString".to_string(), json!(sub_account_string));
 
@@ -377,6 +378,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v1/sub-account/virtualSubAccount",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -394,6 +396,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         let EnableFuturesForSubAccountParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -406,6 +409,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v1/sub-account/futures/enable",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -423,6 +427,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         let EnableOptionsForSubAccountParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -435,6 +440,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v1/sub-account/eoptions/enable",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -456,6 +462,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         let GetFuturesPositionRiskOfSubAccountParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -470,6 +477,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v1/sub-account/futures/positionRisk",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -491,6 +499,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -505,6 +514,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v2/sub-account/futures/positionRisk",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -524,6 +534,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         let GetSubAccountsStatusOnMarginOrFuturesParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = email {
             query_params.insert("email".to_string(), json!(rw));
@@ -538,6 +549,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v1/sub-account/status",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -561,6 +573,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = email {
             query_params.insert("email".to_string(), json!(rw));
@@ -587,6 +600,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v1/sub-account/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -604,6 +618,7 @@ impl AccountManagementApi for AccountManagementApiClient {
         let QuerySubAccountTransactionStatisticsParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = email {
             query_params.insert("email".to_string(), json!(rw));
@@ -618,6 +633,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             "/sapi/v1/sub-account/transaction-statistics",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

@@ -44,10 +44,6 @@ pub trait WebSocketStreamsApi: Send + Sync {
         &self,
         params: AllMiniTickerParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllMiniTickerResponseInner>>>>;
-    async fn all_ticker(
-        &self,
-        params: AllTickerParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllTickerResponseInner>>>>;
     async fn avg_price(
         &self,
         params: AvgPriceParams,
@@ -470,28 +466,6 @@ impl AllMiniTickerParams {
     #[must_use]
     pub fn builder() -> AllMiniTickerParamsBuilder {
         AllMiniTickerParamsBuilder::default()
-    }
-}
-/// Request parameters for the [`all_ticker`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`all_ticker`](#method.all_ticker).
-#[derive(Clone, Debug, Builder, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct AllTickerParams {
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<String>,
-}
-
-impl AllTickerParams {
-    /// Create a builder for [`all_ticker`].
-    ///
-    #[must_use]
-    pub fn builder() -> AllTickerParamsBuilder {
-        AllTickerParamsBuilder::default()
     }
 }
 /// Request parameters for the [`avg_price`] operation.
@@ -935,33 +909,6 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
 
         Ok(
             create_stream_handler::<Vec<models::AllMiniTickerResponseInner>>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt,
-            )
-            .await,
-        )
-    }
-
-    async fn all_ticker(
-        &self,
-        params: AllTickerParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllTickerResponseInner>>>> {
-        let AllTickerParams { id } = params;
-
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream = replace_websocket_streams_placeholders("/!ticker@arr", &vars);
-
-        Ok(
-            create_stream_handler::<Vec<models::AllTickerResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
                 id_opt,
@@ -1702,140 +1649,6 @@ mod tests {
             ws_stream.unsubscribe().await;
 
             let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}]"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
-    fn all_ticker_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = WebSocketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = AllTickerParams::builder()
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
-
-            let AllTickerParams { id } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!ticker@arr", &vars);
-            let ws_stream = api
-                .all_ticker(params)
-                .await
-                .expect("all_ticker should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
-        });
-    }
-
-    #[test]
-    fn all_ticker_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebSocketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = AllTickerParams::builder().id(Some(id.clone())).build().unwrap();
-
-            let AllTickerParams {
-                id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!ticker@arr", &vars);
-
-            let ws_stream = api.all_ticker(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::AllTickerResponseInner>| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","w":"0.0018","x":"0.0009","c":"0.0025","Q":"10","b":"0.0024","B":"10","a":"0.0026","A":"100","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151}]"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn all_ticker_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebSocketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = AllTickerParams::builder().id(Some(id.clone())).build().unwrap();
-
-            let AllTickerParams {
-                id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!ticker@arr", &vars);
-
-            let ws_stream = api.all_ticker(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::AllTickerResponseInner>| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","w":"0.0018","x":"0.0009","c":"0.0025","Q":"10","b":"0.0024","B":"10","a":"0.0026","A":"100","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

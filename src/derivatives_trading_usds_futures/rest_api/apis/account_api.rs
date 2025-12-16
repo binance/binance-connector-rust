@@ -782,6 +782,7 @@ impl AccountApi for AccountApiClient {
         let AccountInformationV2Params { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -792,6 +793,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v2/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -809,6 +811,7 @@ impl AccountApi for AccountApiClient {
         let AccountInformationV3Params { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -819,6 +822,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v3/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -836,6 +840,7 @@ impl AccountApi for AccountApiClient {
         let FuturesAccountBalanceV2Params { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -846,6 +851,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v2/balance",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -863,6 +869,7 @@ impl AccountApi for AccountApiClient {
         let FuturesAccountBalanceV3Params { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -873,6 +880,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v3/balance",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -890,6 +898,7 @@ impl AccountApi for AccountApiClient {
         let FuturesAccountConfigurationParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -900,6 +909,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/accountConfig",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -921,6 +931,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -935,6 +946,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/apiTradingStatus",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -952,6 +964,7 @@ impl AccountApi for AccountApiClient {
         let GetBnbBurnStatusParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -962,6 +975,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/feeBurn",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -979,6 +993,7 @@ impl AccountApi for AccountApiClient {
         let GetCurrentMultiAssetsModeParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -989,6 +1004,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/multiAssetsMargin",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1006,6 +1022,7 @@ impl AccountApi for AccountApiClient {
         let GetCurrentPositionModeParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1016,6 +1033,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/positionSide/dual",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1037,6 +1055,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("startTime".to_string(), json!(start_time));
 
@@ -1051,6 +1070,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/order/asyn",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1072,6 +1092,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("startTime".to_string(), json!(start_time));
 
@@ -1086,6 +1107,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/trade/asyn",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1108,6 +1130,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("startTime".to_string(), json!(start_time));
 
@@ -1122,6 +1145,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/income/asyn",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1143,6 +1167,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("downloadId".to_string(), json!(download_id));
 
@@ -1155,6 +1180,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/order/asyn/id",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1175,6 +1201,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("downloadId".to_string(), json!(download_id));
 
@@ -1187,6 +1214,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/trade/asyn/id",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1208,6 +1236,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("downloadId".to_string(), json!(download_id));
 
@@ -1220,6 +1249,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/income/asyn/id",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1245,6 +1275,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -1279,6 +1310,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/income",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1299,6 +1331,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -1313,6 +1346,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/leverageBracket",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1330,6 +1364,7 @@ impl AccountApi for AccountApiClient {
         let QueryUserRateLimitParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1340,6 +1375,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/rateLimit/order",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1360,6 +1396,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -1374,6 +1411,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/symbolConfig",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1394,6 +1432,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("feeBurn".to_string(), json!(fee_burn));
 
@@ -1406,6 +1445,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/feeBurn",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1426,6 +1466,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -1438,6 +1479,7 @@ impl AccountApi for AccountApiClient {
             "/fapi/v1/commissionRate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

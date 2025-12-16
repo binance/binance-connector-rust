@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ModifyMultipleOrdersBatchOrdersParameterInner {
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
-    pub order_id: Option<i64>,
+    pub order_id: Option<String>,
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
@@ -26,13 +26,13 @@ pub struct ModifyMultipleOrdersBatchOrdersParameterInner {
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<SideEnum>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
-    pub quantity: Option<rust_decimal::Decimal>,
+    pub quantity: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<rust_decimal::Decimal>,
+    pub price: Option<String>,
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<PriceMatchEnum>,
     #[serde(rename = "recvWindow", skip_serializing_if = "Option::is_none")]
-    pub recv_window: Option<i64>,
+    pub recv_window: Option<String>,
 }
 
 impl ModifyMultipleOrdersBatchOrdersParameterInner {

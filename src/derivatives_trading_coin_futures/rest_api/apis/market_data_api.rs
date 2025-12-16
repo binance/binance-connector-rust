@@ -2148,6 +2148,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("pair".to_string(), json!(pair));
 
@@ -2172,6 +2173,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/futures/data/basis",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2186,12 +2188,14 @@ impl MarketDataApi for MarketDataApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<models::CheckServerTimeResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::CheckServerTimeResponse>(
             &self.configuration,
             "/dapi/v1/time",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2216,6 +2220,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2240,6 +2245,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/aggTrades",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2266,6 +2272,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("pair".to_string(), json!(pair));
 
@@ -2290,6 +2297,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/continuousKlines",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2304,12 +2312,14 @@ impl MarketDataApi for MarketDataApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<models::ExchangeInformationResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::ExchangeInformationResponse>(
             &self.configuration,
             "/dapi/v1/exchangeInfo",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2334,6 +2344,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2354,6 +2365,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/fundingRate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2368,12 +2380,14 @@ impl MarketDataApi for MarketDataApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetFundingRateInfoResponseInner>>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Vec<models::GetFundingRateInfoResponseInner>>(
             &self.configuration,
             "/dapi/v1/fundingInfo",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2391,6 +2405,7 @@ impl MarketDataApi for MarketDataApiClient {
         let IndexPriceAndMarkPriceParams { symbol, pair } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -2405,6 +2420,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/premiumIndex",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2430,6 +2446,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("pair".to_string(), json!(pair));
 
@@ -2452,6 +2469,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/indexPriceKlines",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2477,6 +2495,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2499,6 +2518,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/klines",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2522,6 +2542,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("pair".to_string(), json!(pair));
 
@@ -2544,6 +2565,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/futures/data/globalLongShortAccountRatio",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2569,6 +2591,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2591,6 +2614,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/markPriceKlines",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2612,6 +2636,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2628,6 +2653,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/historicalTrades",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2645,6 +2671,7 @@ impl MarketDataApi for MarketDataApiClient {
         let OpenInterestParams { symbol } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2653,6 +2680,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/openInterest",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2677,6 +2705,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("pair".to_string(), json!(pair));
 
@@ -2701,6 +2730,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/futures/data/openInterestHist",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2718,6 +2748,7 @@ impl MarketDataApi for MarketDataApiClient {
         let OrderBookParams { symbol, limit } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2730,6 +2761,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/depth",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2754,6 +2786,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2776,6 +2809,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/premiumIndexKlines",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2793,6 +2827,7 @@ impl MarketDataApi for MarketDataApiClient {
         let QueryIndexPriceConstituentsParams { symbol } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2801,6 +2836,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/constituents",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2818,6 +2854,7 @@ impl MarketDataApi for MarketDataApiClient {
         let RecentTradesListParams { symbol, limit } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2830,6 +2867,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/trades",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2847,6 +2885,7 @@ impl MarketDataApi for MarketDataApiClient {
         let SymbolOrderBookTickerParams { symbol, pair } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -2861,6 +2900,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/ticker/bookTicker",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2878,6 +2918,7 @@ impl MarketDataApi for MarketDataApiClient {
         let SymbolPriceTickerParams { symbol, pair } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -2892,6 +2933,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/ticker/price",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2916,6 +2958,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("pair".to_string(), json!(pair));
 
@@ -2940,6 +2983,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/futures/data/takerBuySellVol",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2952,12 +2996,14 @@ impl MarketDataApi for MarketDataApiClient {
 
     async fn test_connectivity(&self) -> anyhow::Result<RestApiResponse<Value>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Value>(
             &self.configuration,
             "/dapi/v1/ping",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2976,6 +3022,7 @@ impl MarketDataApi for MarketDataApiClient {
         let Ticker24hrPriceChangeStatisticsParams { symbol, pair } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -2990,6 +3037,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/dapi/v1/ticker/24hr",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3014,6 +3062,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -3036,6 +3085,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/futures/data/topLongShortAccountRatio",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3060,6 +3110,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("pair".to_string(), json!(pair));
 
@@ -3082,6 +3133,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/futures/data/topLongShortPositionRatio",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

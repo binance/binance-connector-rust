@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "33.0.1"
+version = "34.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2002,6 +2002,11 @@ path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/top_t
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_rest_api_market_data_api_trading_schedule"
+path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/trading_schedule.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_rest_api_portfolio_margin_endpoints_api_classic_portfolio_margin_account_information"
 path = "examples/derivatives_trading_usds_futures/rest_api/portfolio_margin_endpoints_api/classic_portfolio_margin_account_information.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2074,6 +2079,11 @@ required-features = [ "derivatives_trading_usds_futures" ]
 [[example]]
 name = "derivatives_trading_usds_futures_rest_api_trade_api_current_all_open_orders"
 path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/current_all_open_orders.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
+name = "derivatives_trading_usds_futures_rest_api_trade_api_futures_tradfi_perps_contract"
+path = "examples/derivatives_trading_usds_futures/rest_api/trade_api/futures_tradfi_perps_contract.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
@@ -2362,6 +2372,11 @@ path = "examples/derivatives_trading_usds_futures/websocket_streams/rpi_diff_boo
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_websocket_streams_trading_session_stream"
+path = "examples/derivatives_trading_usds_futures/websocket_streams/trading_session_stream.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "dual_investment_rest_api_market_data_api_get_dual_investment_product_list"
 path = "examples/dual_investment/rest_api/market_data_api/get_dual_investment_product_list.rs"
 required-features = [ "dual_investment" ]
@@ -2387,6 +2402,16 @@ path = "examples/dual_investment/rest_api/trade_api/subscribe_dual_investment_pr
 required-features = [ "dual_investment" ]
 
 [[example]]
+name = "fiat_rest_api_fiat_api_deposit"
+path = "examples/fiat/rest_api/fiat_api/deposit.rs"
+required-features = [ "fiat" ]
+
+[[example]]
+name = "fiat_rest_api_fiat_api_fiat_withdraw"
+path = "examples/fiat/rest_api/fiat_api/fiat_withdraw.rs"
+required-features = [ "fiat" ]
+
+[[example]]
 name = "fiat_rest_api_fiat_api_get_fiat_deposit_withdraw_history"
 path = "examples/fiat/rest_api/fiat_api/get_fiat_deposit_withdraw_history.rs"
 required-features = [ "fiat" ]
@@ -2394,6 +2419,11 @@ required-features = [ "fiat" ]
 [[example]]
 name = "fiat_rest_api_fiat_api_get_fiat_payments_history"
 path = "examples/fiat/rest_api/fiat_api/get_fiat_payments_history.rs"
+required-features = [ "fiat" ]
+
+[[example]]
+name = "fiat_rest_api_fiat_api_get_order_detail"
+path = "examples/fiat/rest_api/fiat_api/get_order_detail.rs"
 required-features = [ "fiat" ]
 
 [[example]]
@@ -3192,6 +3222,16 @@ path = "examples/spot/rest_api/trade_api/order_list_oco.rs"
 required-features = [ "spot" ]
 
 [[example]]
+name = "spot_rest_api_trade_api_order_list_opo"
+path = "examples/spot/rest_api/trade_api/order_list_opo.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_rest_api_trade_api_order_list_opoco"
+path = "examples/spot/rest_api/trade_api/order_list_opoco.rs"
+required-features = [ "spot" ]
+
+[[example]]
 name = "spot_rest_api_trade_api_order_list_oto"
 path = "examples/spot/rest_api/trade_api/order_list_oto.rs"
 required-features = [ "spot" ]
@@ -3387,11 +3427,6 @@ path = "examples/spot/websocket_api/trade_api/open_orders_cancel_all.rs"
 required-features = [ "spot" ]
 
 [[example]]
-name = "spot_websocket_api_trade_api_order_amend_keep_priority"
-path = "examples/spot/websocket_api/trade_api/order_amend_keep_priority.rs"
-required-features = [ "spot" ]
-
-[[example]]
 name = "spot_websocket_api_trade_api_order_cancel_replace"
 path = "examples/spot/websocket_api/trade_api/order_cancel_replace.rs"
 required-features = [ "spot" ]
@@ -3409,6 +3444,16 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_api_trade_api_order_list_place_oco"
 path = "examples/spot/websocket_api/trade_api/order_list_place_oco.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_api_trade_api_order_list_place_opo"
+path = "examples/spot/websocket_api/trade_api/order_list_place_opo.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_api_trade_api_order_list_place_opoco"
+path = "examples/spot/websocket_api/trade_api/order_list_place_opoco.rs"
 required-features = [ "spot" ]
 
 [[example]]
@@ -3479,11 +3524,6 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_streams_all_mini_ticker"
 path = "examples/spot/websocket_streams/all_mini_ticker.rs"
-required-features = [ "spot" ]
-
-[[example]]
-name = "spot_websocket_streams_all_ticker"
-path = "examples/spot/websocket_streams/all_ticker.rs"
 required-features = [ "spot" ]
 
 [[example]]
@@ -4210,4 +4250,3 @@ required-features = [ "wallet" ]
 name = "wallet_rest_api_travel_rule_api_withdraw_travel_rule"
 path = "examples/wallet/rest_api/travel_rule_api/withdraw_travel_rule.rs"
 required-features = [ "wallet" ]
-

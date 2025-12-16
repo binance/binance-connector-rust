@@ -290,6 +290,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algoId".to_string(), json!(algo_id));
 
@@ -302,6 +303,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
             "/sapi/v1/algo/spot/order",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -319,6 +321,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         let QueryCurrentAlgoOpenOrdersSpotAlgoParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -329,6 +332,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
             "/sapi/v1/algo/spot/openOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -354,6 +358,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -388,6 +393,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
             "/sapi/v1/algo/spot/historicalOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -410,6 +416,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algoId".to_string(), json!(algo_id));
 
@@ -430,6 +437,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
             "/sapi/v1/algo/spot/subOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -454,6 +462,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -476,6 +485,7 @@ impl SpotAlgoApi for SpotAlgoApiClient {
             "/sapi/v1/algo/spot/newOrderTwap",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

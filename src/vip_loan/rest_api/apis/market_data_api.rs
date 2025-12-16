@@ -165,6 +165,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
 
@@ -177,6 +178,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/loan/vip/request/interestRate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -197,6 +199,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = collateral_coin {
             query_params.insert("collateralCoin".to_string(), json!(rw));
@@ -211,6 +214,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/loan/vip/collateral/data",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -232,6 +236,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
             query_params.insert("loanCoin".to_string(), json!(rw));
@@ -250,6 +255,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/loan/vip/loanable/data",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

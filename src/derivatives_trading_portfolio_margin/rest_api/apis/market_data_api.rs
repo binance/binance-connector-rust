@@ -49,12 +49,14 @@ impl MarketDataApiClient {
 impl MarketDataApi for MarketDataApiClient {
     async fn test_connectivity(&self) -> anyhow::Result<RestApiResponse<Value>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Value>(
             &self.configuration,
             "/papi/v1/ping",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

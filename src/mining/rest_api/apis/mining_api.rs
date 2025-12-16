@@ -682,6 +682,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algo".to_string(), json!(algo));
 
@@ -696,6 +697,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/statistics/user/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -710,12 +712,14 @@ impl MiningApi for MiningApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<models::AcquiringAlgorithmResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::AcquiringAlgorithmResponse>(
             &self.configuration,
             "/sapi/v1/mining/pub/algoList",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -730,12 +734,14 @@ impl MiningApi for MiningApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<models::AcquiringCoinnameResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::AcquiringCoinnameResponse>(
             &self.configuration,
             "/sapi/v1/mining/pub/coinList",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -757,6 +763,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("configId".to_string(), json!(config_id));
 
@@ -771,6 +778,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/hash-transfer/config/cancel",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -797,6 +805,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algo".to_string(), json!(algo));
 
@@ -831,6 +840,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/payment/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -857,6 +867,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algo".to_string(), json!(algo));
 
@@ -891,6 +902,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/payment/other",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -914,6 +926,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("configId".to_string(), json!(config_id));
 
@@ -936,6 +949,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/hash-transfer/profit/details",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -957,6 +971,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = page_index {
             query_params.insert("pageIndex".to_string(), json!(rw));
@@ -975,6 +990,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/hash-transfer/config/details/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1000,6 +1016,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("userName".to_string(), json!(user_name));
 
@@ -1022,6 +1039,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/hash-transfer/config",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1046,6 +1064,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algo".to_string(), json!(algo));
 
@@ -1074,6 +1093,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/payment/uid",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1096,6 +1116,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algo".to_string(), json!(algo));
 
@@ -1112,6 +1133,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/worker/detail",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1137,6 +1159,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algo".to_string(), json!(algo));
 
@@ -1167,6 +1190,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/worker/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1188,6 +1212,7 @@ impl MiningApi for MiningApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algo".to_string(), json!(algo));
 
@@ -1202,6 +1227,7 @@ impl MiningApi for MiningApiClient {
             "/sapi/v1/mining/statistics/user/status",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

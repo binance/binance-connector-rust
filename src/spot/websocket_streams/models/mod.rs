@@ -22,8 +22,6 @@ pub mod all_market_rolling_window_ticker_response_inner;
 pub use self::all_market_rolling_window_ticker_response_inner::AllMarketRollingWindowTickerResponseInner;
 pub mod all_mini_ticker_response_inner;
 pub use self::all_mini_ticker_response_inner::AllMiniTickerResponseInner;
-pub mod all_ticker_response_inner;
-pub use self::all_ticker_response_inner::AllTickerResponseInner;
 pub mod asset_filters;
 pub use self::asset_filters::AssetFilters;
 pub mod avg_price_response;

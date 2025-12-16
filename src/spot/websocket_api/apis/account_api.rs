@@ -262,7 +262,7 @@ pub struct AllOrdersParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Cancel order by orderId
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -344,7 +344,7 @@ pub struct MyAllocationsParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub limit: Option<i32>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Cancel order by orderId
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -429,7 +429,7 @@ pub struct MyPreventedMatchesParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub prevented_match_id: Option<i64>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Cancel order by orderId
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -482,7 +482,7 @@ pub struct MyTradesParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Cancel order by orderId
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -656,7 +656,8 @@ pub struct OrderListStatusParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    ///
+    /// The `orig_client_order_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -699,12 +700,13 @@ pub struct OrderStatusParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Cancel order by orderId
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub order_id: Option<i64>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    ///
+    /// The `orig_client_order_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

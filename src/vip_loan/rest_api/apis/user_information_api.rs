@@ -195,6 +195,7 @@ impl UserInformationApi for UserInformationApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -213,6 +214,7 @@ impl UserInformationApi for UserInformationApiClient {
             "/sapi/v1/loan/vip/collateral/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -238,6 +240,7 @@ impl UserInformationApi for UserInformationApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -272,6 +275,7 @@ impl UserInformationApi for UserInformationApiClient {
             "/sapi/v1/loan/vip/ongoing/orders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -293,6 +297,7 @@ impl UserInformationApi for UserInformationApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = current {
             query_params.insert("current".to_string(), json!(rw));
@@ -311,6 +316,7 @@ impl UserInformationApi for UserInformationApiClient {
             "/sapi/v1/loan/vip/request/data",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

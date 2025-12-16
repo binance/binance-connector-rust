@@ -1,11 +1,13 @@
-// Class name: web_socket_streams_api
+// Class name: websocket_market_streams_api
 use anyhow::{Context, Result};
 use tokio::time::{Duration, sleep};
 use tracing::info;
 
 use binance_sdk::config::ConfigurationWebsocketStreams;
+use binance_sdk::derivatives_trading_usds_futures::{
+    DerivativesTradingUsdsFuturesWsStreams, websocket_streams::TradingSessionStreamParams,
+};
 use binance_sdk::logger;
-use binance_sdk::spot::{SpotWsStreams, websocket_streams::AllTickerParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -15,8 +17,8 @@ async fn main() -> Result<()> {
     // Build WebSocket Streams config
     let ws_streams_conf = ConfigurationWebsocketStreams::builder().build()?;
 
-    // Create the Spot WebSocket Streams client
-    let ws_streams_client = SpotWsStreams::production(ws_streams_conf);
+    // Create the DerivativesTradingUsdsFutures WebSocket Streams client
+    let ws_streams_client = DerivativesTradingUsdsFuturesWsStreams::production(ws_streams_conf);
 
     // Connect to WebSocket
     let connection = ws_streams_client
@@ -25,11 +27,11 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = AllTickerParams::default();
+    let params = TradingSessionStreamParams::default();
 
     // Subscribe to the stream
     let stream = connection
-        .all_ticker(params)
+        .trading_session_stream(params)
         .await
         .context("Failed to subscribe to the stream")?;
 

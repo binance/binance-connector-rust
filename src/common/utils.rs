@@ -34,6 +34,7 @@ use std::{
 };
 use tokio::time::sleep;
 use tracing::info;
+use url::form_urlencoded;
 use url::{Url, form_urlencoded::Serializer};
 
 use super::config::{
@@ -196,8 +197,22 @@ impl SignatureGenerator {
     /// - HMAC with API secret
     /// - RSA private key
     /// - ED25519 private key
-    pub fn get_signature(&self, query_params: &BTreeMap<String, Value>) -> Result<String> {
-        let params = build_query_string(query_params)?;
+    pub fn get_signature(
+        &self,
+        query_params: &BTreeMap<String, Value>,
+        body_params: Option<&BTreeMap<String, Value>>,
+    ) -> Result<String> {
+        let query_str = build_query_string(query_params)?;
+        let params = if let Some(body) = body_params {
+            if body.is_empty() {
+                query_str
+            } else {
+                let body_str = build_query_string(body)?;
+                format!("{query_str}{body_str}")
+            }
+        } else {
+            query_str
+        };
 
         if self.private_key.is_none() {
             if let Some(secret) = self.api_secret.as_ref() {
@@ -694,7 +709,8 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
 /// - `configuration`: REST API configuration containing client, base path, and authentication details
 /// - `endpoint`: The specific API endpoint path to send the request to
 /// - `method`: HTTP method for the request (GET, POST, etc.)
-/// - `params`: Parameters to be sent with the request, as a key-value map
+/// - `query_params`: Query parameters to be sent with the request, as a key-value map
+/// - `body_params`: Body parameters to be sent with the request, as a key-value map
 /// - `time_unit`: Optional time unit for the request header
 /// - `is_signed`: Optional flag to indicate whether the request requires authentication
 ///
@@ -716,7 +732,8 @@ pub async fn send_request<T: DeserializeOwned + Send + 'static>(
     configuration: &ConfigurationRestApi,
     endpoint: &str,
     method: Method,
-    mut params: BTreeMap<String, Value>,
+    mut query_params: BTreeMap<String, Value>,
+    body_params: BTreeMap<String, Value>,
     time_unit: Option<TimeUnit>,
     is_signed: bool,
 ) -> anyhow::Result<RestApiResponse<T>> {
@@ -726,26 +743,38 @@ pub async fn send_request<T: DeserializeOwned + Send + 'static>(
         .context("Failed to join base URL and endpoint")?
         .to_string();
 
-    let signature = is_signed
-        .then(|| {
-            let timestamp = get_timestamp();
-            params.insert("timestamp".to_string(), json!(timestamp));
-            configuration.signature_gen.get_signature(&params)
-        })
-        .transpose()?;
+    if is_signed {
+        let timestamp = get_timestamp();
+        query_params.insert("timestamp".to_string(), json!(timestamp));
+    }
+
+    let signature = if is_signed {
+        let body_ref = if body_params.is_empty() {
+            None
+        } else {
+            Some(&body_params)
+        };
+        Some(
+            configuration
+                .signature_gen
+                .get_signature(&query_params, body_ref)?,
+        )
+    } else {
+        None
+    };
 
     let mut url = Url::parse(&full_url)?;
     {
         let mut pairs = url.query_pairs_mut();
-        for (key, value) in &params {
+        for (key, value) in &query_params {
             let val_str = match value {
                 Value::String(s) => s.clone(),
                 _ => value.to_string(),
             };
             pairs.append_pair(key, &val_str);
         }
-        if let Some(signature) = signature {
-            pairs.append_pair("signature", &signature);
+        if let Some(signature) = &signature {
+            pairs.append_pair("signature", signature);
         }
     }
 
@@ -771,7 +800,15 @@ pub async fn send_request<T: DeserializeOwned + Send + 'static>(
         }
     }
 
-    headers.insert("Content-Type", HeaderValue::from_static("application/json"));
+    if body_params.is_empty() {
+        headers.insert("Content-Type", HeaderValue::from_static("application/json"));
+    } else {
+        headers.insert(
+            "Content-Type",
+            HeaderValue::from_static("application/x-www-form-urlencoded"),
+        );
+    }
+
     headers.insert("User-Agent", configuration.user_agent.parse().unwrap());
     if let Some(api_key) = &configuration.api_key {
         headers.insert("X-MBX-APIKEY", HeaderValue::from_str(api_key)?);
@@ -786,7 +823,21 @@ pub async fn send_request<T: DeserializeOwned + Send + 'static>(
         headers.insert("X-MBX-TIME-UNIT", time_unit.as_upper_str().parse()?);
     }
 
-    let req_builder = configuration.client.request(method, url).headers(headers);
+    let mut req_builder = configuration.client.request(method, url).headers(headers);
+
+    if !body_params.is_empty() {
+        let mut serializer = form_urlencoded::Serializer::new(String::new());
+        for (key, value) in body_params {
+            let val_str = match value {
+                Value::String(s) => s,
+                _ => value.to_string(),
+            };
+            serializer.append_pair(&key, &val_str);
+        }
+        let body_str = serializer.finish();
+        req_builder = req_builder.body(body_str);
+    }
+
     let req = req_builder.build()?;
 
     Ok(http_request::<T>(req, configuration).await?)
@@ -1014,7 +1065,7 @@ pub fn build_websocket_api_message(
         if !skip_auth {
             let sig = configuration
                 .signature_gen
-                .get_signature(&sorted)
+                .get_signature(&sorted, None)
                 .expect("signature generation");
             sorted.insert("signature".into(), Value::String(sig));
         }
@@ -1498,7 +1549,7 @@ mod tests {
 
             let signature_gen = SignatureGenerator::new(Some("test-secret".into()), None, None);
             let sig = signature_gen
-                .get_signature(&params)
+                .get_signature(&params, None)
                 .expect("HMAC signing failed");
 
             let mut mac = Hmac::<Sha256>::new_from_slice(b"test-secret").unwrap();
@@ -1510,12 +1561,39 @@ mod tests {
         }
 
         #[test]
+        fn hmac_sha256_signature_with_body() {
+            let mut query_params = BTreeMap::new();
+            query_params.insert("b".into(), Value::Number(2.into()));
+            query_params.insert("a".into(), Value::Number(1.into()));
+
+            let mut body_params = BTreeMap::new();
+            body_params.insert("d".into(), Value::Number(4.into()));
+            body_params.insert("c".into(), Value::Number(3.into()));
+
+            let signature_gen = SignatureGenerator::new(Some("test-secret".into()), None, None);
+            let sig = signature_gen
+                .get_signature(&query_params, Some(&body_params))
+                .expect("HMAC signing with body failed");
+
+            let query_str = "a=1&b=2";
+            let body_str = "c=3&d=4";
+
+            let payload = format!("{query_str}{body_str}");
+
+            let mut mac = Hmac::<Sha256>::new_from_slice(b"test-secret").unwrap();
+            mac.update(payload.as_bytes());
+            let expected = hex::encode(mac.finalize().into_bytes());
+
+            assert_eq!(sig, expected);
+        }
+
+        #[test]
         fn repeated_hmac_signature() {
             let mut params = BTreeMap::new();
             params.insert("x".into(), Value::String("y".into()));
             let signature_gen = SignatureGenerator::new(Some("abc".into()), None, None);
-            let s1 = signature_gen.get_signature(&params).unwrap();
-            let s2 = signature_gen.get_signature(&params).unwrap();
+            let s1 = signature_gen.get_signature(&params, None).unwrap();
+            let s2 = signature_gen.get_signature(&params, None).unwrap();
             assert_eq!(s1, s2);
         }
 
@@ -1532,13 +1610,40 @@ mod tests {
             let signature_gen =
                 SignatureGenerator::new(None, Some(PrivateKey::Raw(priv_pem.clone())), None);
             let sig = signature_gen
-                .get_signature(&params)
+                .get_signature(&params, None)
                 .expect("RSA signing failed");
 
             let sig_bytes = general_purpose::STANDARD.decode(&sig).unwrap();
             let pubkey = PKey::public_key_from_pem(&pub_pem).unwrap();
             let mut verifier = Verifier::new(MessageDigest::sha256(), &pubkey).unwrap();
             verifier.update(b"a=1&b=2").unwrap();
+            assert!(verifier.verify(&sig_bytes).unwrap());
+        }
+
+        #[test]
+        fn rsa_signature_verification_with_body() {
+            let mut query_params = BTreeMap::new();
+            query_params.insert("a".into(), Value::Number(1.into()));
+            query_params.insert("b".into(), Value::Number(2.into()));
+
+            let mut body_params = BTreeMap::new();
+            body_params.insert("c".into(), Value::Number(3.into()));
+            body_params.insert("d".into(), Value::Number(4.into()));
+
+            let rsa = Rsa::generate(2048).unwrap();
+            let priv_pem = rsa.private_key_to_pem().unwrap();
+            let pub_pem = rsa.public_key_to_pem_pkcs1().unwrap();
+
+            let signature_gen =
+                SignatureGenerator::new(None, Some(PrivateKey::Raw(priv_pem.clone())), None);
+            let sig = signature_gen
+                .get_signature(&query_params, Some(&body_params))
+                .expect("RSA signing with body failed");
+
+            let sig_bytes = general_purpose::STANDARD.decode(&sig).unwrap();
+            let pubkey = PKey::public_key_from_pem(&pub_pem).unwrap();
+            let mut verifier = Verifier::new(MessageDigest::sha256(), &pubkey).unwrap();
+            verifier.update(b"a=1&b=2c=3&d=4").unwrap();
             assert!(verifier.verify(&sig_bytes).unwrap());
         }
 
@@ -1550,8 +1655,8 @@ mod tests {
             let priv_pem = rsa.private_key_to_pem().unwrap();
             let signature_gen =
                 SignatureGenerator::new(None, Some(PrivateKey::Raw(priv_pem)), None);
-            let s1 = signature_gen.get_signature(&params).unwrap();
-            let s2 = signature_gen.get_signature(&params).unwrap();
+            let s1 = signature_gen.get_signature(&params, None).unwrap();
+            let s2 = signature_gen.get_signature(&params, None).unwrap();
             assert_eq!(s1, s2);
         }
 
@@ -1568,7 +1673,7 @@ mod tests {
             let signature_gen =
                 SignatureGenerator::new(None, Some(PrivateKey::Raw(priv_pem.clone())), None);
             let sig = signature_gen
-                .get_signature(&params)
+                .get_signature(&params, None)
                 .expect("Ed25519 signing failed");
 
             let pem_str = String::from_utf8(priv_pem).unwrap();
@@ -1584,6 +1689,40 @@ mod tests {
         }
 
         #[test]
+        fn ed25519_signature_verification_with_body() {
+            let mut query_params = BTreeMap::new();
+            query_params.insert("a".into(), Value::Number(1.into()));
+            query_params.insert("b".into(), Value::Number(2.into()));
+            let qs = "a=1&b=2";
+
+            let mut body_params = BTreeMap::new();
+            body_params.insert("c".into(), Value::Number(3.into()));
+            body_params.insert("d".into(), Value::Number(4.into()));
+            let body_qs = "c=3&d=4";
+
+            let ed = PKey::generate_ed25519().unwrap();
+            let priv_pem = ed.private_key_to_pem_pkcs8().unwrap();
+
+            let signature_gen =
+                SignatureGenerator::new(None, Some(PrivateKey::Raw(priv_pem.clone())), None);
+            let sig = signature_gen
+                .get_signature(&query_params, Some(&body_params))
+                .expect("Ed25519 signing with body failed");
+
+            let pem_str = String::from_utf8(priv_pem).unwrap();
+            let b64 = pem_str
+                .lines()
+                .filter(|l| !l.starts_with("-----"))
+                .collect::<String>();
+            let der = general_purpose::STANDARD.decode(b64).unwrap();
+            let mut sk = SigningKey::from_pkcs8_der(&der).unwrap();
+            let payload = format!("{qs}{body_qs}");
+            let expected_bytes = sk.sign(payload.as_bytes()).to_bytes();
+            let expected_sig = general_purpose::STANDARD.encode(expected_bytes);
+            assert_eq!(sig, expected_sig);
+        }
+
+        #[test]
         fn repeated_ed25519_signature() {
             let mut params = BTreeMap::new();
             params.insert("m".into(), Value::String("n".into()));
@@ -1591,8 +1730,8 @@ mod tests {
             let priv_pem = ed.private_key_to_pem_pkcs8().unwrap();
             let signature_gen =
                 SignatureGenerator::new(None, Some(PrivateKey::Raw(priv_pem.clone())), None);
-            let s1 = signature_gen.get_signature(&params).unwrap();
-            let s2 = signature_gen.get_signature(&params).unwrap();
+            let s1 = signature_gen.get_signature(&params, None).unwrap();
+            let s2 = signature_gen.get_signature(&params, None).unwrap();
             assert_eq!(s1, s2);
         }
 
@@ -1610,7 +1749,7 @@ mod tests {
             params.insert("z".into(), Value::Number(9.into()));
 
             let signature_gen = SignatureGenerator::new(None, Some(PrivateKey::File(path)), None);
-            let sig = signature_gen.get_signature(&params).unwrap();
+            let sig = signature_gen.get_signature(&params, None).unwrap();
 
             let sig_bytes = general_purpose::STANDARD.decode(&sig).unwrap();
             let pubkey = PKey::public_key_from_pem(&pub_pem).unwrap();
@@ -1632,7 +1771,7 @@ mod tests {
 
             let signature_gen = SignatureGenerator::new(None, Some(PrivateKey::Raw(raw)), None);
             let err = signature_gen
-                .get_signature(&params)
+                .get_signature(&params, None)
                 .unwrap_err()
                 .to_string();
             assert!(err.contains("Unsupported private key type"));
@@ -1646,7 +1785,7 @@ mod tests {
             let signature_gen =
                 SignatureGenerator::new(None, Some(PrivateKey::Raw(b"not a key".to_vec())), None);
             let err = signature_gen
-                .get_signature(&params)
+                .get_signature(&params, None)
                 .unwrap_err()
                 .to_string();
             assert!(err.contains("Failed to parse private key"));
@@ -1659,7 +1798,7 @@ mod tests {
 
             let signature_gen = SignatureGenerator::new(None, None, None);
             let err = signature_gen
-                .get_signature(&params)
+                .get_signature(&params, None)
                 .unwrap_err()
                 .to_string();
             assert!(err.contains("Either 'api_secret' or 'private_key' must be provided"));
@@ -2217,6 +2356,7 @@ mod tests {
                     "/api/v1/test",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     None,
                     false,
                 )
@@ -2260,6 +2400,53 @@ mod tests {
                     "/api/v3/order",
                     Method::POST,
                     params,
+                    BTreeMap::new(),
+                    None,
+                    true,
+                )
+                .await?;
+
+                let data = result.data().await.unwrap();
+                assert_eq!(data.message, "order placed");
+
+                Ok(())
+            })
+        }
+
+        #[test]
+        fn signed_post_request_with_body() -> Result<()> {
+            TOKIO_SHARED_RT.block_on(async {
+                let server = MockServer::start();
+
+                server.mock(|when, then| {
+                    when.method(POST).path("/api/v3/order");
+                    then.status(200)
+                        .header("content-type", "application/json")
+                        .body(r#"{"message": "order placed"}"#);
+                });
+
+                let configuration = ConfigurationRestApi::builder()
+                    .api_key("key")
+                    .api_secret("secret")
+                    .base_path(server.base_url())
+                    .compression(false)
+                    .build()
+                    .expect("Failed to build configuration");
+
+                let mut query_params = BTreeMap::new();
+                query_params.insert("symbol".to_string(), json!("ETHUSDT"));
+
+                let mut body_params = BTreeMap::new();
+                body_params.insert("side".to_string(), json!("BUY"));
+                body_params.insert("type".to_string(), json!("MARKET"));
+                body_params.insert("quantity".to_string(), json!("1"));
+
+                let result = send_request::<TestResponse>(
+                    &configuration,
+                    "/api/v3/order",
+                    Method::POST,
+                    query_params,
+                    body_params,
                     None,
                     true,
                 )
@@ -2304,6 +2491,7 @@ mod tests {
                     "/api/v1/data",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     None,
                     false,
                 )
@@ -2336,6 +2524,7 @@ mod tests {
                     "http://invalid",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     None,
                     false,
                 )
@@ -2367,6 +2556,7 @@ mod tests {
                     "/api/v3/order",
                     Method::POST,
                     params,
+                    BTreeMap::new(),
                     None,
                     true,
                 )
@@ -2404,6 +2594,7 @@ mod tests {
                     "/api/v1/test",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     None,
                     false,
                 )
@@ -2446,6 +2637,7 @@ mod tests {
                     "/api/v1/test",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     Some(TimeUnit::Millisecond),
                     false,
                 )
@@ -2490,6 +2682,7 @@ mod tests {
                     "/api/v1/test",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     None,
                     false,
                 )
@@ -2538,6 +2731,7 @@ mod tests {
                     "/api/v1/test",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     None,
                     false,
                 )
@@ -2583,6 +2777,7 @@ mod tests {
                     "/api/v1/test",
                     Method::GET,
                     params,
+                    BTreeMap::new(),
                     None,
                     false,
                 )

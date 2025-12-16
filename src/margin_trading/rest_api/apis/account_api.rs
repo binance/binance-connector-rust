@@ -429,6 +429,7 @@ impl AccountApi for AccountApiClient {
         let AdjustCrossMarginMaxLeverageParams { max_leverage } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("maxLeverage".to_string(), json!(max_leverage));
 
@@ -437,6 +438,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/max-leverage",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -457,6 +459,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -469,6 +472,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/isolated/account",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -489,6 +493,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -501,6 +506,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/isolated/account",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -518,6 +524,7 @@ impl AccountApi for AccountApiClient {
         let GetBnbBurnStatusParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -528,6 +535,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/bnbBurn",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -545,6 +553,7 @@ impl AccountApi for AccountApiClient {
         let GetSummaryOfMarginAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -555,6 +564,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/tradeCoeff",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -583,6 +593,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -621,6 +632,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/capital-flow",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -638,6 +650,7 @@ impl AccountApi for AccountApiClient {
         let QueryCrossMarginAccountDetailsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -648,6 +661,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -669,6 +683,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = vip_level {
             query_params.insert("vipLevel".to_string(), json!(rw));
@@ -687,6 +702,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/crossMarginData",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -705,6 +721,7 @@ impl AccountApi for AccountApiClient {
         let QueryEnabledIsolatedMarginAccountLimitParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -715,6 +732,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/isolated/accountLimit",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -735,6 +753,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbols {
             query_params.insert("symbols".to_string(), json!(rw));
@@ -749,6 +768,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/isolated/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -770,6 +790,7 @@ impl AccountApi for AccountApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = vip_level {
             query_params.insert("vipLevel".to_string(), json!(rw));
@@ -788,6 +809,7 @@ impl AccountApi for AccountApiClient {
             "/sapi/v1/margin/isolatedMarginData",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

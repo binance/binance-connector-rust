@@ -709,6 +709,7 @@ impl AssetApi for AssetApiClient {
         let AssetDetailParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -719,6 +720,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/assetDetail",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -742,6 +744,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -768,6 +771,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/assetDividend",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -789,6 +793,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -805,6 +810,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/dust",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -826,6 +832,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -844,6 +851,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/dribblet",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -865,6 +873,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -883,6 +892,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/get-funding-asset",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -903,6 +913,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = account_type {
             query_params.insert("accountType".to_string(), json!(rw));
@@ -917,6 +928,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/dust-btc",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -943,10 +955,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
-
-        query_params.insert("startTime".to_string(), json!(start_time));
-
-        query_params.insert("endTime".to_string(), json!(end_time));
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = tran_id {
             query_params.insert("tranId".to_string(), json!(rw));
@@ -959,6 +968,10 @@ impl AssetApi for AssetApiClient {
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
         }
+
+        query_params.insert("startTime".to_string(), json!(start_time));
+
+        query_params.insert("endTime".to_string(), json!(end_time));
 
         if let Some(rw) = current {
             query_params.insert("current".to_string(), json!(rw));
@@ -973,6 +986,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/ledger-transfer/cloud-mining/queryByPage",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -987,12 +1001,14 @@ impl AssetApi for AssetApiClient {
         &self,
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetOpenSymbolListResponseInner>>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<Vec<models::GetOpenSymbolListResponseInner>>(
             &self.configuration,
             "/sapi/v1/spot/open-symbol-list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1019,6 +1035,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -1051,6 +1068,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/custody/transfer-history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1077,6 +1095,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("type".to_string(), json!(r#type));
 
@@ -1113,6 +1132,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/transfer",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1133,6 +1153,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = quote_asset {
             query_params.insert("quoteAsset".to_string(), json!(rw));
@@ -1147,6 +1168,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/wallet/balance",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1169,6 +1191,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = spot_bnb_burn {
             query_params.insert("spotBNBBurn".to_string(), json!(rw));
@@ -1187,6 +1210,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/bnbBurn",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1207,6 +1231,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -1221,6 +1246,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/tradeFee",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1242,6 +1268,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -1260,6 +1287,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v3/asset/getUserAsset",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1284,6 +1312,7 @@ impl AssetApi for AssetApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("type".to_string(), json!(r#type));
 
@@ -1308,6 +1337,7 @@ impl AssetApi for AssetApiClient {
             "/sapi/v1/asset/transfer",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

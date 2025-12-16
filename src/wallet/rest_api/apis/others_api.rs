@@ -83,6 +83,7 @@ impl OthersApi for OthersApiClient {
         let GetSymbolsDelistScheduleForSpotParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -93,6 +94,7 @@ impl OthersApi for OthersApiClient {
             "/sapi/v1/spot/delist-schedule",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -105,12 +107,14 @@ impl OthersApi for OthersApiClient {
 
     async fn system_status(&self) -> anyhow::Result<RestApiResponse<models::SystemStatusResponse>> {
         let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         send_request::<models::SystemStatusResponse>(
             &self.configuration,
             "/sapi/v1/system/status",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

@@ -101,5 +101,7 @@ pub mod strategy_update_su;
 pub use self::strategy_update_su::StrategyUpdateSu;
 pub mod trade_lite;
 pub use self::trade_lite::TradeLite;
+pub mod trading_session_stream_response;
+pub use self::trading_session_stream_response::TradingSessionStreamResponse;
 pub mod user_data_stream_events_response;
 pub use self::user_data_stream_events_response::UserDataStreamEventsResponse;

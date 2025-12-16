@@ -22,25 +22,22 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct OrderAmendKeepPriorityResponse {
-    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i64>,
-    #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
-    pub result: Option<Box<models::OrderAmendKeepPriorityResponseResult>>,
-    #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::RateLimits>>,
+pub struct OrderListPlaceOpocoResponseResultOrdersInner {
+    #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
+    pub symbol: Option<String>,
+    #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
+    pub order_id: Option<i64>,
+    #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
+    pub client_order_id: Option<String>,
 }
 
-impl OrderAmendKeepPriorityResponse {
+impl OrderListPlaceOpocoResponseResultOrdersInner {
     #[must_use]
-    pub fn new() -> OrderAmendKeepPriorityResponse {
-        OrderAmendKeepPriorityResponse {
-            id: None,
-            status: None,
-            result: None,
-            rate_limits: None,
+    pub fn new() -> OrderListPlaceOpocoResponseResultOrdersInner {
+        OrderListPlaceOpocoResponseResultOrdersInner {
+            symbol: None,
+            order_id: None,
+            client_order_id: None,
         }
     }
 }

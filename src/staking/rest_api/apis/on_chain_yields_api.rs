@@ -677,6 +677,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
@@ -689,6 +690,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/personalLeftQuota",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -711,6 +713,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -733,6 +736,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -758,6 +762,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -788,6 +793,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/position",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -815,6 +821,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = position_id {
             query_params.insert("positionId".to_string(), json!(rw));
@@ -853,6 +860,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/history/redemptionRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -878,6 +886,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = position_id {
             query_params.insert("positionId".to_string(), json!(rw));
@@ -912,6 +921,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/history/rewardsRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -935,6 +945,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
@@ -953,6 +964,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/subscriptionPreview",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -980,6 +992,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = purchase_id {
             query_params.insert("purchaseId".to_string(), json!(rw));
@@ -1018,6 +1031,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/history/subscriptionRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1035,6 +1049,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         let OnChainYieldsAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1045,6 +1060,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1066,6 +1082,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
@@ -1082,6 +1099,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/redeem",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1103,6 +1121,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
@@ -1117,6 +1136,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/setAutoSubscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1139,6 +1159,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
@@ -1153,6 +1174,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/setRedeemOption",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1179,6 +1201,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
@@ -1213,6 +1236,7 @@ impl OnChainYieldsApi for OnChainYieldsApiClient {
             "/sapi/v1/onchain-yields/locked/subscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

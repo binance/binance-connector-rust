@@ -345,6 +345,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert(
             "blockOrderMatchingKey".to_string(),
@@ -360,6 +361,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
             "/eapi/v1/block/order/execute",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -382,6 +384,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = end_time {
             query_params.insert("endTime".to_string(), json!(rw));
@@ -404,6 +407,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
             "/eapi/v1/block/user-trades",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -424,6 +428,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert(
             "blockOrderMatchingKey".to_string(),
@@ -439,6 +444,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
             "/eapi/v1/block/order/create",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -459,6 +465,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert(
             "blockOrderMatchingKey".to_string(),
@@ -474,6 +481,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
             "/eapi/v1/block/order/create",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -495,6 +503,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("liquidity".to_string(), json!(liquidity));
 
@@ -509,6 +518,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
             "/eapi/v1/block/order/create",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -529,6 +539,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert(
             "blockOrderMatchingKey".to_string(),
@@ -544,6 +555,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
             "/eapi/v1/block/order/execute",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -567,6 +579,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = block_order_matching_key {
             query_params.insert("blockOrderMatchingKey".to_string(), json!(rw));
@@ -593,6 +606,7 @@ impl MarketMakerBlockTradeApi for MarketMakerBlockTradeApiClient {
             "/eapi/v1/block/order/orders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

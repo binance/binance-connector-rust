@@ -389,6 +389,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algoId".to_string(), json!(algo_id));
 
@@ -401,6 +402,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
             "/sapi/v1/algo/futures/order",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -418,6 +420,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
         let QueryCurrentAlgoOpenOrdersFutureAlgoParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -428,6 +431,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
             "/sapi/v1/algo/futures/openOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -453,6 +457,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -487,6 +492,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
             "/sapi/v1/algo/futures/historicalOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -509,6 +515,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algoId".to_string(), json!(algo_id));
 
@@ -529,6 +536,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
             "/sapi/v1/algo/futures/subOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -556,18 +564,19 @@ impl FutureAlgoApi for FutureAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
-
-        query_params.insert("duration".to_string(), json!(duration));
-
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("quantity".to_string(), json!(quantity));
+
+        query_params.insert("duration".to_string(), json!(duration));
 
         if let Some(rw) = client_algo_id {
             query_params.insert("clientAlgoId".to_string(), json!(rw));
@@ -590,6 +599,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
             "/sapi/v1/algo/futures/newOrderTwap",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -617,18 +627,19 @@ impl FutureAlgoApi for FutureAlgoApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("quantity".to_string(), json!(quantity));
-
-        query_params.insert("urgency".to_string(), json!(urgency));
-
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("quantity".to_string(), json!(quantity));
+
+        query_params.insert("urgency".to_string(), json!(urgency));
 
         if let Some(rw) = client_algo_id {
             query_params.insert("clientAlgoId".to_string(), json!(rw));
@@ -651,6 +662,7 @@ impl FutureAlgoApi for FutureAlgoApiClient {
             "/sapi/v1/algo/futures/newOrderVp",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

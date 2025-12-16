@@ -191,6 +191,7 @@ impl SoftStakingApi for SoftStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -213,6 +214,7 @@ impl SoftStakingApi for SoftStakingApiClient {
             "/sapi/v1/soft-staking/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -237,6 +239,7 @@ impl SoftStakingApi for SoftStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -267,6 +270,7 @@ impl SoftStakingApi for SoftStakingApiClient {
             "/sapi/v1/soft-staking/history/rewardsRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -287,6 +291,7 @@ impl SoftStakingApi for SoftStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("softStaking".to_string(), json!(soft_staking));
 
@@ -299,6 +304,7 @@ impl SoftStakingApi for SoftStakingApiClient {
             "/sapi/v1/soft-staking/set",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

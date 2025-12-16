@@ -37,6 +37,8 @@ pub mod cancel_algo_order_response_result;
 pub use self::cancel_algo_order_response_result::CancelAlgoOrderResponseResult;
 pub mod cancel_order_response;
 pub use self::cancel_order_response::CancelOrderResponse;
+pub mod cancel_order_response_rate_limits_inner;
+pub use self::cancel_order_response_rate_limits_inner::CancelOrderResponseRateLimitsInner;
 pub mod cancel_order_response_result;
 pub use self::cancel_order_response_result::CancelOrderResponseResult;
 pub mod close_user_data_stream_response;

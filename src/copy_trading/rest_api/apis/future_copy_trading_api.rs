@@ -108,6 +108,7 @@ impl FutureCopyTradingApi for FutureCopyTradingApiClient {
         let GetFuturesLeadTraderStatusParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -118,6 +119,7 @@ impl FutureCopyTradingApi for FutureCopyTradingApiClient {
             "/sapi/v1/copyTrading/futures/userStatus",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -135,6 +137,7 @@ impl FutureCopyTradingApi for FutureCopyTradingApiClient {
         let GetFuturesLeadTradingSymbolWhitelistParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -145,6 +148,7 @@ impl FutureCopyTradingApi for FutureCopyTradingApiClient {
             "/sapi/v1/copyTrading/futures/leadSymbol",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

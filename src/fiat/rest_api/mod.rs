@@ -47,7 +47,8 @@ impl RestApi {
     ///
     /// * `endpoint` - The API endpoint to send the request to
     /// * `method` - The HTTP method to use for the request
-    /// * `params` - A map of parameters to send with the request
+    /// * `query_params` - A map of query parameters to send with the request
+    /// * `body_params` - A map of body parameters to send with the request
     ///
     /// # Returns
     ///
@@ -60,9 +61,19 @@ impl RestApi {
         &self,
         endpoint: &str,
         method: Method,
-        params: BTreeMap<String, Value>,
+        query_params: BTreeMap<String, Value>,
+        body_params: BTreeMap<String, Value>,
     ) -> anyhow::Result<RestApiResponse<R>> {
-        send_request::<R>(&self.configuration, endpoint, method, params, None, false).await
+        send_request::<R>(
+            &self.configuration,
+            endpoint,
+            method,
+            query_params,
+            body_params,
+            None,
+            false,
+        )
+        .await
     }
 
     /// Send a signed request to the API
@@ -71,7 +82,8 @@ impl RestApi {
     ///
     /// * `endpoint` - The API endpoint to send the request to
     /// * `method` - The HTTP method to use for the request
-    /// * `params` - A map of parameters to send with the request
+    /// * `query_params` - A map of query parameters to send with the request
+    /// * `body_params` - A map of body parameters to send with the request
     ///
     /// # Returns
     ///
@@ -84,9 +96,117 @@ impl RestApi {
         &self,
         endpoint: &str,
         method: Method,
-        params: BTreeMap<String, Value>,
+        query_params: BTreeMap<String, Value>,
+        body_params: BTreeMap<String, Value>,
     ) -> anyhow::Result<RestApiResponse<R>> {
-        send_request::<R>(&self.configuration, endpoint, method, params, None, true).await
+        send_request::<R>(
+            &self.configuration,
+            endpoint,
+            method,
+            query_params,
+            body_params,
+            None,
+            true,
+        )
+        .await
+    }
+
+    /// Deposit(TRADE)
+    ///
+    /// Submit deposit request, in this version, we only support BRL deposit via pix.
+    ///
+    ///
+    ///
+    /// For BRL deposit via pix, you need to place an order before making a transfer from your bank.
+    ///
+    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your fiat service on our website.
+    ///
+    /// Weight: 45000
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`DepositParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::DepositResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Fiat-Deposit).
+    ///
+    pub async fn deposit(
+        &self,
+        params: DepositParams,
+    ) -> anyhow::Result<RestApiResponse<models::DepositResponse>> {
+        self.fiat_api_client.deposit(params).await
+    }
+
+    /// Fiat Withdraw(WITHDRAW)
+    ///
+    /// Submit withdraw request, in this version, we only support BRL withdrawal via `bank_transfer`.
+    ///
+    /// You need to call this api first, and call query order detail api in a loop to get the status of the order until this order is successful.
+    ///
+    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your fiat service on our website.
+    ///
+    /// you need to bind your bank account on web/app before using the corresponding account number
+    ///
+    /// Weight: 45000
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`FiatWithdrawParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::FiatWithdrawResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Fiat-Withdraw).
+    ///
+    pub async fn fiat_withdraw(
+        &self,
+        params: FiatWithdrawParams,
+    ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>> {
+        self.fiat_api_client.fiat_withdraw(params).await
     }
 
     /// Get Fiat Deposit/Withdraw History (`USER_DATA`)
@@ -184,5 +304,50 @@ impl RestApi {
         params: GetFiatPaymentsHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetFiatPaymentsHistoryResponse>> {
         self.fiat_api_client.get_fiat_payments_history(params).await
+    }
+
+    /// Get Order `Detail(USER_DATA)`
+    ///
+    /// Get Order Detail
+    ///
+    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your fiat service on our website.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetOrderDetailParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetOrderDetailResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Get-Order-Detail).
+    ///
+    pub async fn get_order_detail(
+        &self,
+        params: GetOrderDetailParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>> {
+        self.fiat_api_client.get_order_detail(params).await
     }
 }

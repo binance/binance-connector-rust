@@ -392,6 +392,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("assets".to_string(), json!(assets));
 
@@ -402,6 +403,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
             "/sapi/v1/margin/next-hourly-interest-rate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -427,6 +429,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -461,6 +464,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
             "/sapi/v1/margin/interestHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -485,6 +489,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -505,6 +510,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
             "/sapi/v1/margin/borrow-repay",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -533,8 +539,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
-
-        query_params.insert("type".to_string(), json!(r#type));
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -564,6 +569,8 @@ impl BorrowRepayApi for BorrowRepayApiClient {
             query_params.insert("size".to_string(), json!(rw));
         }
 
+        query_params.insert("type".to_string(), json!(r#type));
+
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
@@ -573,6 +580,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
             "/sapi/v1/margin/borrow-repay",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -597,6 +605,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -621,6 +630,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
             "/sapi/v1/margin/interestRateHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -642,6 +652,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
 
@@ -658,6 +669,7 @@ impl BorrowRepayApi for BorrowRepayApiClient {
             "/sapi/v1/margin/maxBorrowable",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

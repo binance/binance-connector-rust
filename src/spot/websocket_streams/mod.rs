@@ -316,37 +316,6 @@ impl WebsocketStreams {
             .await
     }
 
-    /// WebSocket All Market Tickers Stream (DEPRECATED)
-    ///
-    /// 24hr rolling window ticker statistics for all symbols that changed in an array. These are NOT the statistics of the UTC day, but a 24hr rolling window for the previous 24hrs. Note that only tickers that have changed will be present in the array.
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`AllTickerParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<Vec<models::AllTickerResponseInner>>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#all-market-tickers-stream-deprecated).
-    ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
-    pub async fn all_ticker(
-        &self,
-        params: AllTickerParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllTickerResponseInner>>>> {
-        self.web_socket_streams_api_client.all_ticker(params).await
-    }
-
     /// WebSocket Average Price
     ///
     /// Average price streams push changes in the average price over a fixed time interval.

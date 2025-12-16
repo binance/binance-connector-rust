@@ -31,6 +31,14 @@ const HAS_TIME_UNIT: bool = false;
 
 #[async_trait]
 pub trait FiatApi: Send + Sync {
+    async fn deposit(
+        &self,
+        params: DepositParams,
+    ) -> anyhow::Result<RestApiResponse<models::DepositResponse>>;
+    async fn fiat_withdraw(
+        &self,
+        params: FiatWithdrawParams,
+    ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>>;
     async fn get_fiat_deposit_withdraw_history(
         &self,
         params: GetFiatDepositWithdrawHistoryParams,
@@ -39,6 +47,10 @@ pub trait FiatApi: Send + Sync {
         &self,
         params: GetFiatPaymentsHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetFiatPaymentsHistoryResponse>>;
+    async fn get_order_detail(
+        &self,
+        params: GetOrderDetailParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>>;
 }
 
 #[derive(Debug, Clone)]
@@ -52,6 +64,135 @@ impl FiatApiClient {
     }
 }
 
+/// Request parameters for the [`deposit`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`deposit`](#method.deposit).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct DepositParams {
+    ///
+    /// The `currency` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub currency: String,
+    ///
+    /// The `api_payment_method` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub api_payment_method: String,
+    ///
+    /// The `amount` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub amount: i64,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+    ///
+    /// The `ext` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub ext: Option<serde_json::Value>,
+}
+
+impl DepositParams {
+    /// Create a builder for [`deposit`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `currency` — String
+    /// * `api_payment_method` — String
+    /// * `amount` — i64
+    ///
+    #[must_use]
+    pub fn builder(
+        currency: String,
+        api_payment_method: String,
+        amount: i64,
+    ) -> DepositParamsBuilder {
+        DepositParamsBuilder::default()
+            .currency(currency)
+            .api_payment_method(api_payment_method)
+            .amount(amount)
+    }
+}
+/// Request parameters for the [`fiat_withdraw`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`fiat_withdraw`](#method.fiat_withdraw).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct FiatWithdrawParams {
+    ///
+    /// The `currency` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub currency: String,
+    ///
+    /// The `api_payment_method` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub api_payment_method: String,
+    ///
+    /// The `amount` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub amount: i64,
+    ///
+    /// The `account_info` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub account_info: models::AccountInfo,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+    ///
+    /// The `ext` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub ext: Option<serde_json::Value>,
+}
+
+impl FiatWithdrawParams {
+    /// Create a builder for [`fiat_withdraw`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `currency` — String
+    /// * `api_payment_method` — String
+    /// * `amount` — i64
+    /// * `account_info` — `models::AccountInfo`
+    ///
+    #[must_use]
+    pub fn builder(
+        currency: String,
+        api_payment_method: String,
+        amount: i64,
+        account_info: models::AccountInfo,
+    ) -> FiatWithdrawParamsBuilder {
+        FiatWithdrawParamsBuilder::default()
+            .currency(currency)
+            .api_payment_method(api_payment_method)
+            .amount(amount)
+            .account_info(account_info)
+    }
+}
 /// Request parameters for the [`get_fiat_deposit_withdraw_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -160,9 +301,134 @@ impl GetFiatPaymentsHistoryParams {
         GetFiatPaymentsHistoryParamsBuilder::default().transaction_type(transaction_type)
     }
 }
+/// Request parameters for the [`get_order_detail`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_order_detail`](#method.get_order_detail).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetOrderDetailParams {
+    /// order id retrieved from the api call of withdrawal
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub order_no: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetOrderDetailParams {
+    /// Create a builder for [`get_order_detail`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `order_no` — order id retrieved from the api call of withdrawal
+    ///
+    #[must_use]
+    pub fn builder(order_no: String) -> GetOrderDetailParamsBuilder {
+        GetOrderDetailParamsBuilder::default().order_no(order_no)
+    }
+}
 
 #[async_trait]
 impl FiatApi for FiatApiClient {
+    async fn deposit(
+        &self,
+        params: DepositParams,
+    ) -> anyhow::Result<RestApiResponse<models::DepositResponse>> {
+        let DepositParams {
+            currency,
+            api_payment_method,
+            amount,
+            recv_window,
+            ext,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let mut body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        body_params.insert("currency".to_string(), json!(currency));
+
+        body_params.insert("apiPaymentMethod".to_string(), json!(api_payment_method));
+
+        body_params.insert("amount".to_string(), json!(amount));
+
+        if let Some(rw) = ext {
+            body_params.insert("ext".to_string(), json!(rw));
+        }
+
+        send_request::<models::DepositResponse>(
+            &self.configuration,
+            "/sapi/v1/fiat/deposit",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn fiat_withdraw(
+        &self,
+        params: FiatWithdrawParams,
+    ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>> {
+        let FiatWithdrawParams {
+            currency,
+            api_payment_method,
+            amount,
+            account_info,
+            recv_window,
+            ext,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let mut body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        body_params.insert("currency".to_string(), json!(currency));
+
+        body_params.insert("apiPaymentMethod".to_string(), json!(api_payment_method));
+
+        body_params.insert("amount".to_string(), json!(amount));
+
+        body_params.insert("accountInfo".to_string(), json!(account_info));
+
+        if let Some(rw) = ext {
+            body_params.insert("ext".to_string(), json!(rw));
+        }
+
+        send_request::<models::FiatWithdrawResponse>(
+            &self.configuration,
+            "/sapi/v2/fiat/withdraw",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn get_fiat_deposit_withdraw_history(
         &self,
         params: GetFiatDepositWithdrawHistoryParams,
@@ -177,6 +443,7 @@ impl FiatApi for FiatApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("transactionType".to_string(), json!(transaction_type));
 
@@ -205,6 +472,7 @@ impl FiatApi for FiatApiClient {
             "/sapi/v1/fiat/orders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -229,6 +497,7 @@ impl FiatApi for FiatApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("transactionType".to_string(), json!(transaction_type));
 
@@ -257,6 +526,41 @@ impl FiatApi for FiatApiClient {
             "/sapi/v1/fiat/payments",
             reqwest::Method::GET,
             query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_order_detail(
+        &self,
+        params: GetOrderDetailParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>> {
+        let GetOrderDetailParams {
+            order_no,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("orderNo".to_string(), json!(order_no));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetOrderDetailResponse>(
+            &self.configuration,
+            "/sapi/v1/fiat/get-order-detail",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -300,6 +604,61 @@ mod tests {
 
     #[async_trait]
     impl FiatApi for MockFiatApiClient {
+        async fn deposit(
+            &self,
+            _params: DepositParams,
+        ) -> anyhow::Result<RestApiResponse<models::DepositResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
+            )
+            .unwrap();
+            let dummy_response: models::DepositResponse = serde_json::from_value(resp_json.clone())
+                .expect("should parse into models::DepositResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn fiat_withdraw(
+            &self,
+            _params: FiatWithdrawParams,
+        ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
+            )
+            .unwrap();
+            let dummy_response: models::FiatWithdrawResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FiatWithdrawResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn get_fiat_deposit_withdraw_history(
             &self,
             _params: GetFiatDepositWithdrawHistoryParams,
@@ -350,6 +709,200 @@ mod tests {
 
             Ok(dummy.into())
         }
+
+        async fn get_order_detail(
+            &self,
+            _params: GetOrderDetailParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"orderId":"036752*678","orderStatus":"ORDER_INITIAL","amount":"4.33","fee":"0.43","fiatCurrency":"***","errorCode":"","errorMessage":"","ext":{}}}"#).unwrap();
+            let dummy_response: models::GetOrderDetailResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetOrderDetailResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+    }
+
+    #[test]
+    fn deposit_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: false };
+
+            let params = DepositParams::builder(
+                "currency_example".to_string(),
+                "api_payment_method_example".to_string(),
+                789,
+            )
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
+            )
+            .unwrap();
+            let expected_response: models::DepositResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::DepositResponse");
+
+            let resp = client.deposit(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn deposit_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: false };
+
+            let params = DepositParams::builder(
+                "currency_example".to_string(),
+                "api_payment_method_example".to_string(),
+                789,
+            )
+            .recv_window(5000)
+            .ext(serde_json::Value::Object(Default::default()))
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
+            )
+            .unwrap();
+            let expected_response: models::DepositResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::DepositResponse");
+
+            let resp = client.deposit(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn deposit_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: true };
+
+            let params = DepositParams::builder(
+                "currency_example".to_string(),
+                "api_payment_method_example".to_string(),
+                789,
+            )
+            .build()
+            .unwrap();
+
+            match client.deposit(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn fiat_withdraw_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: false };
+
+            let params = FiatWithdrawParams::builder(
+                "currency_example".to_string(),
+                "api_payment_method_example".to_string(),
+                789,
+                models::AccountInfo::new(),
+            )
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
+            )
+            .unwrap();
+            let expected_response: models::FiatWithdrawResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FiatWithdrawResponse");
+
+            let resp = client
+                .fiat_withdraw(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn fiat_withdraw_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: false };
+
+            let params = FiatWithdrawParams::builder(
+                "currency_example".to_string(),
+                "api_payment_method_example".to_string(),
+                789,
+                models::AccountInfo::new(),
+            )
+            .recv_window(5000)
+            .ext(serde_json::Value::Object(Default::default()))
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":"000000","message":"success","data":{"orderId":"04595xxxxxxxxx37"}}"#,
+            )
+            .unwrap();
+            let expected_response: models::FiatWithdrawResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FiatWithdrawResponse");
+
+            let resp = client
+                .fiat_withdraw(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn fiat_withdraw_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: true };
+
+            let params = FiatWithdrawParams::builder(
+                "currency_example".to_string(),
+                "api_payment_method_example".to_string(),
+                789,
+                models::AccountInfo::new(),
+            )
+            .build()
+            .unwrap();
+
+            match client.fiat_withdraw(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
     }
 
     #[test]
@@ -451,6 +1004,58 @@ mod tests {
                     .unwrap();
 
             match client.get_fiat_payments_history(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_order_detail_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: false };
+
+            let params = GetOrderDetailParams::builder("order_no_example".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"orderId":"036752*678","orderStatus":"ORDER_INITIAL","amount":"4.33","fee":"0.43","fiatCurrency":"***","errorCode":"","errorMessage":"","ext":{}}}"#).unwrap();
+            let expected_response : models::GetOrderDetailResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOrderDetailResponse");
+
+            let resp = client.get_order_detail(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_order_detail_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: false };
+
+            let params = GetOrderDetailParams::builder("order_no_example".to_string(),).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"orderId":"036752*678","orderStatus":"ORDER_INITIAL","amount":"4.33","fee":"0.43","fiatCurrency":"***","errorCode":"","errorMessage":"","ext":{}}}"#).unwrap();
+            let expected_response : models::GetOrderDetailResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOrderDetailResponse");
+
+            let resp = client.get_order_detail(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_order_detail_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockFiatApiClient { force_error: true };
+
+            let params = GetOrderDetailParams::builder("order_no_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.get_order_detail(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

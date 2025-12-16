@@ -20,7 +20,7 @@ pub struct UmPositionAdlQuantileEstimationResponseInner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "adlQuantile", skip_serializing_if = "Option::is_none")]
-    pub adl_quantile: Option<Box<models::CmPositionAdlQuantileEstimationResponseInnerAdlQuantile>>,
+    pub adl_quantile: Option<Box<models::UmPositionAdlQuantileEstimationResponseInnerAdlQuantile>>,
 }
 
 impl UmPositionAdlQuantileEstimationResponseInner {

@@ -225,6 +225,7 @@ impl ApiManagementApi for ApiManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -245,6 +246,7 @@ impl ApiManagementApi for ApiManagementApiClient {
             "/sapi/v2/sub-account/subAccountApi/ipRestriction",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -267,6 +269,7 @@ impl ApiManagementApi for ApiManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -283,6 +286,7 @@ impl ApiManagementApi for ApiManagementApiClient {
             "/sapi/v1/sub-account/subAccountApi/ipRestriction/ipList",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -304,6 +308,7 @@ impl ApiManagementApi for ApiManagementApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("email".to_string(), json!(email));
 
@@ -318,6 +323,7 @@ impl ApiManagementApi for ApiManagementApiClient {
             "/sapi/v1/sub-account/subAccountApi/ipRestriction",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

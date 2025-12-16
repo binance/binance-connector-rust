@@ -24,21 +24,21 @@ pub struct PlaceMultipleOrdersOrdersParameterInner {
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<TypeEnum>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
-    pub quantity: Option<rust_decimal::Decimal>,
+    pub quantity: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<rust_decimal::Decimal>,
+    pub price: Option<String>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<TimeInForceEnum>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
-    pub reduce_only: Option<bool>,
+    pub reduce_only: Option<String>,
     #[serde(rename = "postOnly", skip_serializing_if = "Option::is_none")]
-    pub post_only: Option<bool>,
+    pub post_only: Option<String>,
     #[serde(rename = "newOrderRespType", skip_serializing_if = "Option::is_none")]
     pub new_order_resp_type: Option<NewOrderRespTypeEnum>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     #[serde(rename = "isMmp", skip_serializing_if = "Option::is_none")]
-    pub is_mmp: Option<bool>,
+    pub is_mmp: Option<String>,
 }
 
 impl PlaceMultipleOrdersOrdersParameterInner {

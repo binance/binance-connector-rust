@@ -87,6 +87,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: CurrentAllOpenOrdersParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::AllOrdersResponseInner>>>;
+    async fn futures_tradfi_perps_contract(
+        &self,
+        params: FuturesTradfiPerpsContractParams,
+    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>>;
     async fn get_order_modify_history(
         &self,
         params: GetOrderModifyHistoryParams,
@@ -677,37 +681,6 @@ impl std::str::FromStr for NewOrderTimeInForceEnum {
             "GTD" => Ok(Self::Gtd),
             "RPI" => Ok(Self::Rpi),
             other => Err(format!("invalid NewOrderTimeInForceEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewOrderWorkingTypeEnum {
-    #[serde(rename = "MARK_PRICE")]
-    MarkPrice,
-    #[serde(rename = "CONTRACT_PRICE")]
-    ContractPrice,
-}
-
-impl NewOrderWorkingTypeEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::MarkPrice => "MARK_PRICE",
-            Self::ContractPrice => "CONTRACT_PRICE",
-        }
-    }
-}
-
-impl std::str::FromStr for NewOrderWorkingTypeEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "MARK_PRICE" => Ok(Self::MarkPrice),
-            "CONTRACT_PRICE" => Ok(Self::ContractPrice),
-            other => Err(format!("invalid NewOrderWorkingTypeEnum: {}", other).into()),
         }
     }
 }
@@ -1703,6 +1676,29 @@ impl CurrentAllOpenOrdersParams {
         CurrentAllOpenOrdersParamsBuilder::default()
     }
 }
+/// Request parameters for the [`futures_tradfi_perps_contract`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`futures_tradfi_perps_contract`](#method.futures_tradfi_perps_contract).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct FuturesTradfiPerpsContractParams {
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl FuturesTradfiPerpsContractParams {
+    /// Create a builder for [`futures_tradfi_perps_contract`].
+    ///
+    #[must_use]
+    pub fn builder() -> FuturesTradfiPerpsContractParamsBuilder {
+        FuturesTradfiPerpsContractParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`get_order_modify_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -2031,7 +2027,8 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub time_in_force: Option<NewAlgoOrderTimeInForceEnum>,
-    /// Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2068,7 +2065,7 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub price_protect: Option<String>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`
+    /// "true" or "false". default "false". Cannot be sent in Hedge Mode
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2078,7 +2075,7 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub activation_price: Option<rust_decimal::Decimal>,
-    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 10 where 1 for 1%
+    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 5 where 1 for 1%
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2165,12 +2162,13 @@ pub struct NewOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub time_in_force: Option<NewOrderTimeInForceEnum>,
-    /// Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub quantity: Option<rust_decimal::Decimal>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`
+    /// "true" or "false". default "false". Cannot be sent in Hedge Mode
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2186,36 +2184,6 @@ pub struct NewOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub new_client_order_id: Option<String>,
-    /// Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub stop_price: Option<rust_decimal::Decimal>,
-    /// `true`, `false`；Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub close_position: Option<String>,
-    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different `workingType`)
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub activation_price: Option<rust_decimal::Decimal>,
-    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 10 where 1 for 1%
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub callback_rate: Option<rust_decimal::Decimal>,
-    /// stopPrice triggered by: "`MARK_PRICE`", "`CONTRACT_PRICE`". Default "`CONTRACT_PRICE`"
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub working_type: Option<NewOrderWorkingTypeEnum>,
-    /// "TRUE" or "FALSE", default "FALSE". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub price_protect: Option<String>,
     /// "ACK", "RESULT", default "ACK"
     ///
     /// This field is **optional.
@@ -2607,12 +2575,13 @@ pub struct TestOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub time_in_force: Option<TestOrderTimeInForceEnum>,
-    /// Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub quantity: Option<rust_decimal::Decimal>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`
+    /// "true" or "false". default "false". Cannot be sent in Hedge Mode
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2643,7 +2612,7 @@ pub struct TestOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub activation_price: Option<rust_decimal::Decimal>,
-    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 10 where 1 for 1%
+    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 5 where 1 for 1%
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2776,6 +2745,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2808,6 +2778,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/userTrades",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2832,6 +2803,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2860,6 +2832,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/allOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2881,6 +2854,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2895,6 +2869,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/countdownCancelAll",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2916,6 +2891,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = algoid {
             query_params.insert("algoid".to_string(), json!(rw));
@@ -2934,6 +2910,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/algoOrder",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2954,6 +2931,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2966,6 +2944,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/algoOpenOrders",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2986,6 +2965,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -2998,6 +2978,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/allOpenOrders",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3020,6 +3001,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -3040,6 +3022,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/batchOrders",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3062,6 +3045,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -3082,6 +3066,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/order",
             reqwest::Method::DELETE,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3103,6 +3088,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -3117,6 +3103,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/leverage",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3138,6 +3125,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -3152,6 +3140,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/marginType",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3172,6 +3161,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("multiAssetsMargin".to_string(), json!(multi_assets_margin));
 
@@ -3184,6 +3174,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/multiAssetsMargin",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3204,6 +3195,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("dualSidePosition".to_string(), json!(dual_side_position));
 
@@ -3216,6 +3208,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/positionSide/dual",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3238,6 +3231,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = algo_type {
             query_params.insert("algoType".to_string(), json!(rw));
@@ -3260,6 +3254,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/openAlgoOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3280,6 +3275,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -3294,6 +3290,36 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/openOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn futures_tradfi_perps_contract(
+        &self,
+        params: FuturesTradfiPerpsContractParams,
+    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+        let FuturesTradfiPerpsContractParams { recv_window } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::FuturesTradfiPerpsContractResponse>(
+            &self.configuration,
+            "/fapi/v1/stock/contract",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3319,6 +3345,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -3351,6 +3378,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/orderAmendment",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3376,6 +3404,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -3404,6 +3433,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/positionMargin/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3427,16 +3457,17 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
-
-        query_params.insert("amount".to_string(), json!(amount));
-
-        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("amount".to_string(), json!(amount));
+
+        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -3447,6 +3478,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/positionMargin",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3467,6 +3499,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("batchOrders".to_string(), json!(batch_orders));
 
@@ -3479,6 +3512,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/batchOrders",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3505,14 +3539,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        query_params.insert("side".to_string(), json!(side));
-
-        query_params.insert("quantity".to_string(), json!(quantity));
-
-        query_params.insert("price".to_string(), json!(price));
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -3521,6 +3548,14 @@ impl TradeApi for TradeApiClient {
         if let Some(rw) = orig_client_order_id {
             query_params.insert("origClientOrderId".to_string(), json!(rw));
         }
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        query_params.insert("side".to_string(), json!(side));
+
+        query_params.insert("quantity".to_string(), json!(quantity));
+
+        query_params.insert("price".to_string(), json!(price));
 
         if let Some(rw) = price_match {
             query_params.insert("priceMatch".to_string(), json!(rw));
@@ -3535,6 +3570,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/order",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3573,6 +3609,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("algoType".to_string(), json!(algo_type));
 
@@ -3580,11 +3617,11 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("type".to_string(), json!(r#type));
-
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = time_in_force {
             query_params.insert("timeInForce".to_string(), json!(rw));
@@ -3651,6 +3688,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/algoOrder",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3675,12 +3713,6 @@ impl TradeApi for TradeApiClient {
             reduce_only,
             price,
             new_client_order_id,
-            stop_price,
-            close_position,
-            activation_price,
-            callback_rate,
-            working_type,
-            price_protect,
             new_order_resp_type,
             price_match,
             self_trade_prevention_mode,
@@ -3689,16 +3721,17 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("type".to_string(), json!(r#type));
-
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = time_in_force {
             query_params.insert("timeInForce".to_string(), json!(rw));
@@ -3718,30 +3751,6 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = new_client_order_id {
             query_params.insert("newClientOrderId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = stop_price {
-            query_params.insert("stopPrice".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = close_position {
-            query_params.insert("closePosition".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = activation_price {
-            query_params.insert("activationPrice".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = callback_rate {
-            query_params.insert("callbackRate".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = working_type {
-            query_params.insert("workingType".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = price_protect {
-            query_params.insert("priceProtect".to_string(), json!(rw));
         }
 
         if let Some(rw) = new_order_resp_type {
@@ -3769,6 +3778,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/order",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3789,6 +3799,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("batchOrders".to_string(), json!(batch_orders));
 
@@ -3801,6 +3812,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/batchOrders",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3822,6 +3834,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -3836,6 +3849,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/adlQuantile",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3856,6 +3870,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -3870,6 +3885,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v2/positionRisk",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3890,6 +3906,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -3904,6 +3921,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v3/positionRisk",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3925,6 +3943,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = algo_id {
             query_params.insert("algoId".to_string(), json!(rw));
@@ -3943,6 +3962,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/algoOrder",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -3968,6 +3988,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -4000,6 +4021,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/allAlgoOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -4022,6 +4044,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -4042,6 +4065,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/openOrder",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -4064,6 +4088,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
@@ -4084,6 +4109,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/order",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -4122,16 +4148,17 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
 
         query_params.insert("side".to_string(), json!(side));
 
-        query_params.insert("type".to_string(), json!(r#type));
-
         if let Some(rw) = position_side {
             query_params.insert("positionSide".to_string(), json!(rw));
         }
+
+        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = time_in_force {
             query_params.insert("timeInForce".to_string(), json!(rw));
@@ -4202,6 +4229,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/order/test",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -4226,6 +4254,7 @@ impl TradeApi for TradeApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = symbol {
             query_params.insert("symbol".to_string(), json!(rw));
@@ -4256,6 +4285,7 @@ impl TradeApi for TradeApiClient {
             "/fapi/v1/forceOrders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -4661,6 +4691,31 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn futures_tradfi_perps_contract(
+            &self,
+            _params: FuturesTradfiPerpsContractParams,
+        ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let dummy_response: models::FuturesTradfiPerpsContractResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn get_order_modify_history(
             &self,
             _params: GetOrderModifyHistoryParams,
@@ -4825,7 +4880,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTD","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTD","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000}"#).unwrap();
             let dummy_response: models::NewOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::NewOrderResponse");
@@ -4851,7 +4906,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"0","symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
             let dummy_response: Vec<models::PlaceMultipleOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
@@ -5959,6 +6014,69 @@ mod tests {
     }
 
     #[test]
+    fn futures_tradfi_perps_contract_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = FuturesTradfiPerpsContractParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let expected_response: models::FuturesTradfiPerpsContractResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+
+            let resp = client
+                .futures_tradfi_perps_contract(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn futures_tradfi_perps_contract_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = FuturesTradfiPerpsContractParams::builder()
+                .recv_window(5000)
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let expected_response: models::FuturesTradfiPerpsContractResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+
+            let resp = client
+                .futures_tradfi_perps_contract(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn futures_tradfi_perps_contract_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = FuturesTradfiPerpsContractParams::builder().build().unwrap();
+
+            match client.futures_tradfi_perps_contract(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn get_order_modify_history_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -6290,7 +6408,7 @@ mod tests {
 
             let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,"r#type_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTD","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTD","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
 
             let resp = client.new_order(params).await.expect("Expected a response");
@@ -6305,9 +6423,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,"r#type_example".to_string(),).position_side(NewOrderPositionSideEnum::Both).time_in_force(NewOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).reduce_only("false".to_string()).price(dec!(1.0)).new_client_order_id("1".to_string()).stop_price(dec!(1.0)).close_position("close_position_example".to_string()).activation_price(dec!(1.0)).callback_rate(dec!(1.0)).working_type(NewOrderWorkingTypeEnum::MarkPrice).price_protect("false".to_string()).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).price_match(NewOrderPriceMatchEnum::None).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::ExpireTaker).good_till_date(789).recv_window(5000).build().unwrap();
+            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,"r#type_example".to_string(),).position_side(NewOrderPositionSideEnum::Both).time_in_force(NewOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).reduce_only("false".to_string()).price(dec!(1.0)).new_client_order_id("1".to_string()).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).price_match(NewOrderPriceMatchEnum::None).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::ExpireTaker).good_till_date(789).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTD","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTD","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
 
             let resp = client.new_order(params).await.expect("Expected a response");
@@ -6346,7 +6464,7 @@ mod tests {
 
             let params = PlaceMultipleOrdersParams::builder(vec![],).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"0","symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
             let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
 
             let resp = client.place_multiple_orders(params).await.expect("Expected a response");
@@ -6363,7 +6481,7 @@ mod tests {
 
             let params = PlaceMultipleOrdersParams::builder(vec![],).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.00000","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"0","symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":1693207680000},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
             let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
 
             let resp = client.place_multiple_orders(params).await.expect("Expected a response");

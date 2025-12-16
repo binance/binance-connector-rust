@@ -515,6 +515,7 @@ impl EthStakingApi for EthStakingApiClient {
         let EthStakingAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -525,6 +526,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v2/eth-staking/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -542,6 +544,7 @@ impl EthStakingApi for EthStakingApiClient {
         let GetCurrentEthStakingQuotaParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -552,6 +555,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/eth/quota",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -575,6 +579,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -601,6 +606,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/eth/history/redemptionHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -624,6 +630,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -650,6 +657,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/eth/history/stakingHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -673,6 +681,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -699,6 +708,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/eth/history/rateHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -722,6 +732,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -748,6 +759,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/eth/history/wbethRewardsHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -771,6 +783,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -797,6 +810,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/wbeth/history/unwrapHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -820,6 +834,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -846,6 +861,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/wbeth/history/wrapHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -867,6 +883,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -883,6 +900,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/eth/redeem",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -903,6 +921,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -915,6 +934,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v2/eth-staking/eth/stake",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -935,6 +955,7 @@ impl EthStakingApi for EthStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -947,6 +968,7 @@ impl EthStakingApi for EthStakingApiClient {
             "/sapi/v1/eth-staking/wbeth/wrap",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

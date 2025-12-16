@@ -116,6 +116,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = from_asset {
             query_params.insert("fromAsset".to_string(), json!(rw));
@@ -130,6 +131,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/convert/exchangeInfo",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -149,6 +151,7 @@ impl MarketDataApi for MarketDataApiClient {
         let QueryOrderQuantityPrecisionPerAssetParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -159,6 +162,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/convert/assetInfo",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

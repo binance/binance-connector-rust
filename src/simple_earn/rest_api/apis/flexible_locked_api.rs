@@ -1285,6 +1285,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = product_id {
             query_params.insert("productId".to_string(), json!(rw));
@@ -1315,6 +1316,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/history/collateralRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1335,6 +1337,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("productId".to_string(), json!(product_id));
 
@@ -1347,6 +1350,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/personalLeftQuota",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1370,6 +1374,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -1396,6 +1401,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/position",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1422,6 +1428,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = product_id {
             query_params.insert("productId".to_string(), json!(rw));
@@ -1460,6 +1467,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/history/redemptionRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1486,8 +1494,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
-
-        query_params.insert("type".to_string(), json!(r#type));
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = product_id {
             query_params.insert("productId".to_string(), json!(rw));
@@ -1504,6 +1511,8 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         if let Some(rw) = end_time {
             query_params.insert("endTime".to_string(), json!(rw));
         }
+
+        query_params.insert("type".to_string(), json!(r#type));
 
         if let Some(rw) = current {
             query_params.insert("current".to_string(), json!(rw));
@@ -1522,6 +1531,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/history/rewardsRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1543,6 +1553,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("productId".to_string(), json!(product_id));
 
@@ -1557,6 +1568,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/subscriptionPreview",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1583,6 +1595,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = product_id {
             query_params.insert("productId".to_string(), json!(rw));
@@ -1621,6 +1634,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/history/subscriptionRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1641,6 +1655,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
@@ -1653,6 +1668,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/personalLeftQuota",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1677,6 +1693,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -1707,6 +1724,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/position",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1733,6 +1751,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = position_id {
             query_params.insert("positionId".to_string(), json!(rw));
@@ -1771,6 +1790,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/history/redemptionRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1796,6 +1816,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = position_id {
             query_params.insert("positionId".to_string(), json!(rw));
@@ -1830,6 +1851,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/history/rewardsRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1853,6 +1875,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
@@ -1871,6 +1894,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/subscriptionPreview",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1896,6 +1920,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = purchase_id {
             query_params.insert("purchaseId".to_string(), json!(rw));
@@ -1930,6 +1955,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/history/subscriptionRecord",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1955,6 +1981,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("productId".to_string(), json!(product_id));
 
@@ -1987,6 +2014,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/history/rateHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2009,6 +2037,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -2031,6 +2060,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2053,6 +2083,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = asset {
             query_params.insert("asset".to_string(), json!(rw));
@@ -2075,6 +2106,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2098,6 +2130,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("productId".to_string(), json!(product_id));
 
@@ -2122,6 +2155,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/redeem",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2142,6 +2176,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
@@ -2154,6 +2189,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/redeem",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2175,6 +2211,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("productId".to_string(), json!(product_id));
 
@@ -2189,6 +2226,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/setAutoSubscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2210,6 +2248,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
@@ -2224,6 +2263,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/setAutoSubscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2245,6 +2285,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
@@ -2259,6 +2300,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/setRedeemOption",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2276,6 +2318,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         let SimpleAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -2286,6 +2329,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2309,6 +2353,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("productId".to_string(), json!(product_id));
 
@@ -2331,6 +2376,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/flexible/subscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -2355,6 +2401,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("projectId".to_string(), json!(project_id));
 
@@ -2381,6 +2428,7 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             "/sapi/v1/simple-earn/locked/subscribe",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

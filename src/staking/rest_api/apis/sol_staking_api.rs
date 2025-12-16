@@ -488,6 +488,7 @@ impl SolStakingApi for SolStakingApiClient {
         let ClaimBoostRewardsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -498,6 +499,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/claim",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -521,6 +523,7 @@ impl SolStakingApi for SolStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -547,6 +550,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/history/rateHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -570,6 +574,7 @@ impl SolStakingApi for SolStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -596,6 +601,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/history/bnsolRewardsHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -620,6 +626,7 @@ impl SolStakingApi for SolStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("type".to_string(), json!(r#type));
 
@@ -648,6 +655,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/history/boostRewardsHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -671,6 +679,7 @@ impl SolStakingApi for SolStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -697,6 +706,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/history/redemptionHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -720,6 +730,7 @@ impl SolStakingApi for SolStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -746,6 +757,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/history/stakingHistory",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -763,6 +775,7 @@ impl SolStakingApi for SolStakingApiClient {
         let GetSolStakingQuotaDetailsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -773,6 +786,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/quota",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -790,6 +804,7 @@ impl SolStakingApi for SolStakingApiClient {
         let GetUnclaimedRewardsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -800,6 +815,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/history/unclaimedRewards",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -820,6 +836,7 @@ impl SolStakingApi for SolStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -832,6 +849,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/redeem",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -849,6 +867,7 @@ impl SolStakingApi for SolStakingApiClient {
         let SolStakingAccountParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -859,6 +878,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/account",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -879,6 +899,7 @@ impl SolStakingApi for SolStakingApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -891,6 +912,7 @@ impl SolStakingApi for SolStakingApiClient {
             "/sapi/v1/sol-staking/sol/stake",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

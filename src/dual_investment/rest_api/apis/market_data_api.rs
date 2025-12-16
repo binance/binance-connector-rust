@@ -125,6 +125,7 @@ impl MarketDataApi for MarketDataApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("optionType".to_string(), json!(option_type));
 
@@ -149,6 +150,7 @@ impl MarketDataApi for MarketDataApiClient {
             "/sapi/v1/dci/product/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

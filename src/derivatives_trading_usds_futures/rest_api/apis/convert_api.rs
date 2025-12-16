@@ -217,6 +217,7 @@ impl ConvertApi for ConvertApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("quoteId".to_string(), json!(quote_id));
 
@@ -229,6 +230,7 @@ impl ConvertApi for ConvertApiClient {
             "/fapi/v1/convert/acceptQuote",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -249,6 +251,7 @@ impl ConvertApi for ConvertApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = from_asset {
             query_params.insert("fromAsset".to_string(), json!(rw));
@@ -263,6 +266,7 @@ impl ConvertApi for ConvertApiClient {
             "/fapi/v1/convert/exchangeInfo",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -280,6 +284,7 @@ impl ConvertApi for ConvertApiClient {
         let OrderStatusParams { order_id, quote_id } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -294,6 +299,7 @@ impl ConvertApi for ConvertApiClient {
             "/fapi/v1/convert/orderStatus",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -318,6 +324,7 @@ impl ConvertApi for ConvertApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("fromAsset".to_string(), json!(from_asset));
 
@@ -344,6 +351,7 @@ impl ConvertApi for ConvertApiClient {
             "/fapi/v1/convert/getQuote",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

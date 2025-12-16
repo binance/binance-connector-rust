@@ -103,6 +103,7 @@ impl RebateApi for RebateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -125,6 +126,7 @@ impl RebateApi for RebateApiClient {
             "/sapi/v1/rebate/taxQuery",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

@@ -660,6 +660,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
 
@@ -674,6 +675,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/repay/rate",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -697,6 +699,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
 
@@ -715,6 +718,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/adjust/ltv",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -738,14 +742,15 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
-
-        query_params.insert("collateralCoin".to_string(), json!(collateral_coin));
 
         if let Some(rw) = loan_amount {
             query_params.insert("loanAmount".to_string(), json!(rw));
         }
+
+        query_params.insert("collateralCoin".to_string(), json!(collateral_coin));
 
         if let Some(rw) = collateral_amount {
             query_params.insert("collateralAmount".to_string(), json!(rw));
@@ -760,6 +765,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/borrow",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -785,6 +791,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("loanCoin".to_string(), json!(loan_coin));
 
@@ -813,6 +820,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/repay",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -833,6 +841,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
             query_params.insert("loanCoin".to_string(), json!(rw));
@@ -847,6 +856,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/loanable/data",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -872,6 +882,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
             query_params.insert("loanCoin".to_string(), json!(rw));
@@ -906,6 +917,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/borrow/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -926,6 +938,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = collateral_coin {
             query_params.insert("collateralCoin".to_string(), json!(rw));
@@ -940,6 +953,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/collateral/data",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -965,6 +979,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
             query_params.insert("loanCoin".to_string(), json!(rw));
@@ -999,6 +1014,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/liquidation/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1024,6 +1040,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
             query_params.insert("loanCoin".to_string(), json!(rw));
@@ -1058,6 +1075,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/ltv/adjustment/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1081,6 +1099,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
             query_params.insert("loanCoin".to_string(), json!(rw));
@@ -1107,6 +1126,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/ongoing/orders",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1132,6 +1152,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = loan_coin {
             query_params.insert("loanCoin".to_string(), json!(rw));
@@ -1166,6 +1187,7 @@ impl FlexibleRateApi for FlexibleRateApiClient {
             "/sapi/v2/loan/flexible/repay/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

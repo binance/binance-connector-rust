@@ -806,20 +806,9 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("address".to_string(), json!(address));
-
-        query_params.insert("coin".to_string(), json!(coin));
-
-        query_params.insert("amount".to_string(), json!(amount));
-
-        query_params.insert("withdrawOrderId".to_string(), json!(withdraw_order_id));
-
-        query_params.insert("questionnaire".to_string(), json!(questionnaire));
-
-        query_params.insert("originatorPii".to_string(), json!(originator_pii));
-
-        query_params.insert("signature".to_string(), json!(signature));
 
         if let Some(rw) = address_tag {
             query_params.insert("addressTag".to_string(), json!(rw));
@@ -829,9 +818,15 @@ impl TravelRuleApi for TravelRuleApiClient {
             query_params.insert("network".to_string(), json!(rw));
         }
 
+        query_params.insert("coin".to_string(), json!(coin));
+
         if let Some(rw) = address_name {
             query_params.insert("addressName".to_string(), json!(rw));
         }
+
+        query_params.insert("amount".to_string(), json!(amount));
+
+        query_params.insert("withdrawOrderId".to_string(), json!(withdraw_order_id));
 
         if let Some(rw) = transaction_fee_flag {
             query_params.insert("transactionFeeFlag".to_string(), json!(rw));
@@ -841,11 +836,18 @@ impl TravelRuleApi for TravelRuleApiClient {
             query_params.insert("walletType".to_string(), json!(rw));
         }
 
+        query_params.insert("questionnaire".to_string(), json!(questionnaire));
+
+        query_params.insert("originatorPii".to_string(), json!(originator_pii));
+
+        query_params.insert("signature".to_string(), json!(signature));
+
         send_request::<models::BrokerWithdrawResponse>(
             &self.configuration,
             "/sapi/v1/localentity/broker/withdraw/apply",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -863,6 +865,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         let CheckQuestionnaireRequirementsParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -873,6 +876,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v1/localentity/questionnaire-requirements",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -902,6 +906,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = tr_id {
             query_params.insert("trId".to_string(), json!(rw));
@@ -952,6 +957,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v1/localentity/deposit/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -979,6 +985,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = deposit_id {
             query_params.insert("depositId".to_string(), json!(rw));
@@ -1021,6 +1028,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v2/localentity/deposit/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1039,6 +1047,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         let FetchAddressVerificationListParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1049,6 +1058,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v1/addressVerify/list",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1077,6 +1087,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("subAccountId".to_string(), json!(sub_account_id));
 
@@ -1085,8 +1096,6 @@ impl TravelRuleApi for TravelRuleApiClient {
         query_params.insert("questionnaire".to_string(), json!(questionnaire));
 
         query_params.insert("beneficiaryPii".to_string(), json!(beneficiary_pii));
-
-        query_params.insert("signature".to_string(), json!(signature));
 
         if let Some(rw) = network {
             query_params.insert("network".to_string(), json!(rw));
@@ -1108,11 +1117,14 @@ impl TravelRuleApi for TravelRuleApiClient {
             query_params.insert("addressTag".to_string(), json!(rw));
         }
 
+        query_params.insert("signature".to_string(), json!(signature));
+
         send_request::<models::SubmitDepositQuestionnaireResponse>(
             &self.configuration,
             "/sapi/v1/localentity/broker/deposit/provide-info",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1133,6 +1145,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("tranId".to_string(), json!(tran_id));
 
@@ -1143,6 +1156,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v1/localentity/deposit/provide-info",
             reqwest::Method::PUT,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1160,6 +1174,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         let VaspListParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1170,6 +1185,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v1/localentity/vasp",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1199,6 +1215,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = tr_id {
             query_params.insert("trId".to_string(), json!(rw));
@@ -1249,6 +1266,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v1/localentity/withdraw/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1278,6 +1296,7 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         if let Some(rw) = tr_id {
             query_params.insert("trId".to_string(), json!(rw));
@@ -1328,6 +1347,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             "/sapi/v2/localentity/withdraw/history",
             reqwest::Method::GET,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {
@@ -1357,14 +1377,9 @@ impl TravelRuleApi for TravelRuleApiClient {
         } = params;
 
         let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
 
         query_params.insert("coin".to_string(), json!(coin));
-
-        query_params.insert("address".to_string(), json!(address));
-
-        query_params.insert("amount".to_string(), json!(amount));
-
-        query_params.insert("questionnaire".to_string(), json!(questionnaire));
 
         if let Some(rw) = withdraw_order_id {
             query_params.insert("withdrawOrderId".to_string(), json!(rw));
@@ -1374,9 +1389,13 @@ impl TravelRuleApi for TravelRuleApiClient {
             query_params.insert("network".to_string(), json!(rw));
         }
 
+        query_params.insert("address".to_string(), json!(address));
+
         if let Some(rw) = address_tag {
             query_params.insert("addressTag".to_string(), json!(rw));
         }
+
+        query_params.insert("amount".to_string(), json!(amount));
 
         if let Some(rw) = transaction_fee_flag {
             query_params.insert("transactionFeeFlag".to_string(), json!(rw));
@@ -1394,11 +1413,14 @@ impl TravelRuleApi for TravelRuleApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
+        query_params.insert("questionnaire".to_string(), json!(questionnaire));
+
         send_request::<models::WithdrawTravelRuleResponse>(
             &self.configuration,
             "/sapi/v1/localentity/withdraw/apply",
             reqwest::Method::POST,
             query_params,
+            body_params,
             if HAS_TIME_UNIT {
                 self.configuration.time_unit
             } else {

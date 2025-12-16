@@ -53,10 +53,6 @@ pub struct NewOrderResponse {
     pub r#type: Option<String>,
     #[serde(rename = "origType", skip_serializing_if = "Option::is_none")]
     pub orig_type: Option<String>,
-    #[serde(rename = "activatePrice", skip_serializing_if = "Option::is_none")]
-    pub activate_price: Option<String>,
-    #[serde(rename = "priceRate", skip_serializing_if = "Option::is_none")]
-    pub price_rate: Option<String>,
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
     #[serde(rename = "workingType", skip_serializing_if = "Option::is_none")]
@@ -96,8 +92,6 @@ impl NewOrderResponse {
             time_in_force: None,
             r#type: None,
             orig_type: None,
-            activate_price: None,
-            price_rate: None,
             update_time: None,
             working_type: None,
             price_protect: None,
