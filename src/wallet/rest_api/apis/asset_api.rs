@@ -39,6 +39,14 @@ pub trait AssetApi: Send + Sync {
         &self,
         params: AssetDividendRecordParams,
     ) -> anyhow::Result<RestApiResponse<models::AssetDividendRecordResponse>>;
+    async fn dust_convert(
+        &self,
+        params: DustConvertParams,
+    ) -> anyhow::Result<RestApiResponse<models::DustConvertResponse>>;
+    async fn dust_convertible_assets(
+        &self,
+        params: DustConvertibleAssetsParams,
+    ) -> anyhow::Result<RestApiResponse<models::DustConvertibleAssetsResponse>>;
     async fn dust_transfer(
         &self,
         params: DustTransferParams,
@@ -169,6 +177,89 @@ impl AssetDividendRecordParams {
     #[must_use]
     pub fn builder() -> AssetDividendRecordParamsBuilder {
         AssetDividendRecordParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`dust_convert`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`dust_convert`](#method.dust_convert).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct DustConvertParams {
+    ///
+    /// The `asset` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub asset: String,
+    /// A unique id for the request
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub client_id: Option<String>,
+    ///
+    /// The `target_asset` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub target_asset: Option<String>,
+    ///
+    /// The `third_party_client_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub third_party_client_id: Option<String>,
+    ///
+    /// The `dust_quota_asset_to_target_asset_price` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub dust_quota_asset_to_target_asset_price: Option<rust_decimal::Decimal>,
+}
+
+impl DustConvertParams {
+    /// Create a builder for [`dust_convert`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `asset` — String
+    ///
+    #[must_use]
+    pub fn builder(asset: String) -> DustConvertParamsBuilder {
+        DustConvertParamsBuilder::default().asset(asset)
+    }
+}
+/// Request parameters for the [`dust_convertible_assets`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`dust_convertible_assets`](#method.dust_convertible_assets).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct DustConvertibleAssetsParams {
+    ///
+    /// The `target_asset` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub target_asset: String,
+    ///
+    /// The `dust_quota_asset_to_target_asset_price` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub dust_quota_asset_to_target_asset_price: Option<rust_decimal::Decimal>,
+}
+
+impl DustConvertibleAssetsParams {
+    /// Create a builder for [`dust_convertible_assets`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `target_asset` — String
+    ///
+    #[must_use]
+    pub fn builder(target_asset: String) -> DustConvertibleAssetsParamsBuilder {
+        DustConvertibleAssetsParamsBuilder::default().target_asset(target_asset)
     }
 }
 /// Request parameters for the [`dust_transfer`] operation.
@@ -770,6 +861,89 @@ impl AssetApi for AssetApiClient {
             &self.configuration,
             "/sapi/v1/asset/assetDividend",
             reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn dust_convert(
+        &self,
+        params: DustConvertParams,
+    ) -> anyhow::Result<RestApiResponse<models::DustConvertResponse>> {
+        let DustConvertParams {
+            asset,
+            client_id,
+            target_asset,
+            third_party_client_id,
+            dust_quota_asset_to_target_asset_price,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("asset".to_string(), json!(asset));
+
+        if let Some(rw) = client_id {
+            query_params.insert("clientId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = target_asset {
+            query_params.insert("targetAsset".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = third_party_client_id {
+            query_params.insert("thirdPartyClientId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = dust_quota_asset_to_target_asset_price {
+            query_params.insert("dustQuotaAssetToTargetAssetPrice".to_string(), json!(rw));
+        }
+
+        send_request::<models::DustConvertResponse>(
+            &self.configuration,
+            "/sapi/v1/asset/dust-convert/convert",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn dust_convertible_assets(
+        &self,
+        params: DustConvertibleAssetsParams,
+    ) -> anyhow::Result<RestApiResponse<models::DustConvertibleAssetsResponse>> {
+        let DustConvertibleAssetsParams {
+            target_asset,
+            dust_quota_asset_to_target_asset_price,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("targetAsset".to_string(), json!(target_asset));
+
+        if let Some(rw) = dust_quota_asset_to_target_asset_price {
+            query_params.insert("dustQuotaAssetToTargetAssetPrice".to_string(), json!(rw));
+        }
+
+        send_request::<models::DustConvertibleAssetsResponse>(
+            &self.configuration,
+            "/sapi/v1/asset/dust-convert/query-convertible-assets",
+            reqwest::Method::POST,
             query_params,
             body_params,
             if HAS_TIME_UNIT {
@@ -1431,6 +1605,56 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn dust_convert(
+            &self,
+            _params: DustConvertParams,
+        ) -> anyhow::Result<RestApiResponse<models::DustConvertResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"totalTransfered":"3.5971223","totalServiceCharge":"0.0794964","transferResult":[{"tranId":2987331510,"fromAsset":"USDT","amount":"1","transferedAmount":"3.5971223","serviceChargeAmount":"0.0794964","operateTime":1765212029749}]}"#).unwrap();
+            let dummy_response: models::DustConvertResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::DustConvertResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn dust_convertible_assets(
+            &self,
+            _params: DustConvertibleAssetsParams,
+        ) -> anyhow::Result<RestApiResponse<models::DustConvertibleAssetsResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"dribbletPercentage":"0.02","totalTransferQuotaAssetAmount":"0.7899968","totalTransferTargetAssetAmount":"0.7899968","dribbletBase":"10","details":[{"asset":"AR","assetFullName":"AR","amountFree":"0.00856","exchange":"0.00073616","toQuotaAssetAmount":"0.036808","toTargetAssetAmount":"0.036808","toTargetAssetOffExchange":"0.03607184"},{"asset":"BNB","assetFullName":"BNB","amountFree":"0.00082768","exchange":"0.01506378","toQuotaAssetAmount":"0.7531888","toTargetAssetAmount":"0.7531888","toTargetAssetOffExchange":"0.73812502"}]}"#).unwrap();
+            let dummy_response: models::DustConvertibleAssetsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::DustConvertibleAssetsResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn dust_transfer(
             &self,
             _params: DustTransferParams,
@@ -1856,6 +2080,110 @@ mod tests {
             let params = AssetDividendRecordParams::builder().build().unwrap();
 
             match client.asset_dividend_record(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn dust_convert_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: false };
+
+            let params = DustConvertParams::builder("asset_example".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"totalTransfered":"3.5971223","totalServiceCharge":"0.0794964","transferResult":[{"tranId":2987331510,"fromAsset":"USDT","amount":"1","transferedAmount":"3.5971223","serviceChargeAmount":"0.0794964","operateTime":1765212029749}]}"#).unwrap();
+            let expected_response : models::DustConvertResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DustConvertResponse");
+
+            let resp = client.dust_convert(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn dust_convert_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: false };
+
+            let params = DustConvertParams::builder("asset_example".to_string(),).client_id("1".to_string()).target_asset("target_asset_example".to_string()).third_party_client_id("1".to_string()).dust_quota_asset_to_target_asset_price(dec!(1.0)).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"totalTransfered":"3.5971223","totalServiceCharge":"0.0794964","transferResult":[{"tranId":2987331510,"fromAsset":"USDT","amount":"1","transferedAmount":"3.5971223","serviceChargeAmount":"0.0794964","operateTime":1765212029749}]}"#).unwrap();
+            let expected_response : models::DustConvertResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DustConvertResponse");
+
+            let resp = client.dust_convert(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn dust_convert_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: true };
+
+            let params = DustConvertParams::builder("asset_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.dust_convert(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn dust_convertible_assets_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: false };
+
+            let params = DustConvertibleAssetsParams::builder("target_asset_example".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"dribbletPercentage":"0.02","totalTransferQuotaAssetAmount":"0.7899968","totalTransferTargetAssetAmount":"0.7899968","dribbletBase":"10","details":[{"asset":"AR","assetFullName":"AR","amountFree":"0.00856","exchange":"0.00073616","toQuotaAssetAmount":"0.036808","toTargetAssetAmount":"0.036808","toTargetAssetOffExchange":"0.03607184"},{"asset":"BNB","assetFullName":"BNB","amountFree":"0.00082768","exchange":"0.01506378","toQuotaAssetAmount":"0.7531888","toTargetAssetAmount":"0.7531888","toTargetAssetOffExchange":"0.73812502"}]}"#).unwrap();
+            let expected_response : models::DustConvertibleAssetsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DustConvertibleAssetsResponse");
+
+            let resp = client.dust_convertible_assets(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn dust_convertible_assets_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: false };
+
+            let params = DustConvertibleAssetsParams::builder("target_asset_example".to_string(),).dust_quota_asset_to_target_asset_price(dec!(1.0)).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"dribbletPercentage":"0.02","totalTransferQuotaAssetAmount":"0.7899968","totalTransferTargetAssetAmount":"0.7899968","dribbletBase":"10","details":[{"asset":"AR","assetFullName":"AR","amountFree":"0.00856","exchange":"0.00073616","toQuotaAssetAmount":"0.036808","toTargetAssetAmount":"0.036808","toTargetAssetOffExchange":"0.03607184"},{"asset":"BNB","assetFullName":"BNB","amountFree":"0.00082768","exchange":"0.01506378","toQuotaAssetAmount":"0.7531888","toTargetAssetAmount":"0.7531888","toTargetAssetOffExchange":"0.73812502"}]}"#).unwrap();
+            let expected_response : models::DustConvertibleAssetsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DustConvertibleAssetsResponse");
+
+            let resp = client.dust_convertible_assets(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn dust_convertible_assets_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: true };
+
+            let params = DustConvertibleAssetsParams::builder("target_asset_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.dust_convertible_assets(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

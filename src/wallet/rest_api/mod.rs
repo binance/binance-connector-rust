@@ -528,6 +528,92 @@ impl RestApi {
         self.asset_api_client.asset_dividend_record(params).await
     }
 
+    /// Dust Convert (`USER_DATA`)
+    ///
+    /// Convert dust assets
+    ///
+    /// Weight: 10
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`DustConvertParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::DustConvertResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Dust-Convert).
+    ///
+    pub async fn dust_convert(
+        &self,
+        params: DustConvertParams,
+    ) -> anyhow::Result<RestApiResponse<models::DustConvertResponse>> {
+        self.asset_api_client.dust_convert(params).await
+    }
+
+    /// Dust Convertible Assets (`USER_DATA`)
+    ///
+    /// Query dust convertible assets
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`DustConvertibleAssetsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::DustConvertibleAssetsResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Dust-Convertible-Assets).
+    ///
+    pub async fn dust_convertible_assets(
+        &self,
+        params: DustConvertibleAssetsParams,
+    ) -> anyhow::Result<RestApiResponse<models::DustConvertibleAssetsResponse>> {
+        self.asset_api_client.dust_convertible_assets(params).await
+    }
+
     /// Dust Transfer (`USER_DATA`)
     ///
     /// Convert dust assets to BNB.

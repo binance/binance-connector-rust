@@ -11,13 +11,14 @@ use http::HeaderValue;
 use http::header::ACCEPT_ENCODING;
 use once_cell::sync::OnceCell;
 use openssl::{hash::MessageDigest, pkey::PKey, sign::Signer as OpenSslSigner};
-use rand::RngCore;
+use rand::{RngCore, rngs::OsRng};
 use regex::Captures;
 use regex::Regex;
 use reqwest::Client;
 use reqwest::Proxy;
 use reqwest::{Method, Request};
 use serde::de::DeserializeOwned;
+use serde_json::Number;
 use serde_json::{Value, json};
 use sha2::Sha256;
 use std::fmt::Display;
@@ -41,7 +42,9 @@ use super::config::{
     ConfigurationRestApi, ConfigurationWebsocketApi, HttpAgent, PrivateKey, ProxyConfig,
 };
 use super::errors::ConnectorError;
-use super::models::{Interval, RateLimitType, RestApiRateLimit, RestApiResponse, TimeUnit};
+use super::models::{
+    Interval, RateLimitType, RestApiRateLimit, RestApiResponse, StreamId, TimeUnit,
+};
 use super::websocket::WebsocketMessageSendOptions;
 
 pub(crate) static ID_REGEX: LazyLock<Regex> =
@@ -856,6 +859,55 @@ pub fn random_string() -> String {
     let mut buf = [0u8; 16];
     rand::thread_rng().fill_bytes(&mut buf);
     hex::encode(buf)
+}
+
+/// Generates a cryptographically secure random 32-bit unsigned integer.
+///
+/// Uses the operating system RNG (CSPRNG) to generate a value between
+/// 0 and 4,294,967,295 (2^32 - 1).
+///
+/// # Returns
+///
+/// A random `u32`.
+#[must_use]
+pub fn random_integer() -> u32 {
+    let mut buf = [0u8; 4];
+    OsRng.fill_bytes(&mut buf);
+    u32::from_ne_bytes(buf)
+}
+
+/// Normalizes a stream ID to ensure it is valid, generating a random ID if needed.
+///
+/// Behavior:
+/// - If `stream_id_is_strictly_number == true`: always returns a number
+///   - keeps the input only if it's a valid number input
+///   - otherwise generates a new random integer
+/// - Otherwise:
+///   - string: returns it if it's a valid 32-char hex (case-insensitive), else random hex
+///   - number: returns it if valid, else random integer
+///   - none: random hex
+#[must_use]
+pub fn normalize_stream_id(id: Option<StreamId>, stream_id_is_strictly_number: bool) -> Value {
+    if stream_id_is_strictly_number {
+        let n = match id {
+            Some(StreamId::Number(n)) => n,
+            _ => random_integer(),
+        };
+        return Value::Number(Number::from(n));
+    }
+
+    match id {
+        Some(StreamId::Number(n)) => Value::Number(Number::from(n)),
+        Some(StreamId::Str(s)) => {
+            let out = if ID_REGEX.is_match(&s) {
+                s
+            } else {
+                random_string()
+            };
+            Value::String(out)
+        }
+        None => Value::String(random_string()),
+    }
 }
 
 /// Removes entries with empty or null values from an iterator of key-value pairs.
@@ -2838,6 +2890,152 @@ mod tests {
         }
     }
 
+    mod random_integer {
+        use crate::common::utils::random_integer;
+
+        #[test]
+        fn is_within_u32_range() {
+            let n = random_integer();
+            assert!(
+                n <= u32::MAX,
+                "random_integer() should be <= u32::MAX, got {n}"
+            );
+        }
+
+        #[test]
+        fn two_calls_can_differ() {
+            let a = random_integer();
+            let b = random_integer();
+            assert_ne!(
+                a, b,
+                "Two calls to random_integer() returned the same value: {a}"
+            );
+        }
+    }
+
+    mod normalize_stream_id {
+        use crate::common::utils::{StreamId, normalize_stream_id};
+        use serde_json::Value;
+
+        fn is_lower_hex32(s: &str) -> bool {
+            s.len() == 32 && s.chars().all(|c| matches!(c, '0'..='9' | 'a'..='f'))
+        }
+
+        #[test]
+        fn valid_hex_string_is_kept() {
+            let id = "0123456789abcdef0123456789abcdef".to_string();
+            let out = normalize_stream_id(Some(StreamId::Str(id.clone())), false);
+
+            match out {
+                Value::String(s) => assert_eq!(s, id, "Expected to keep the valid hex id"),
+                other => panic!("Expected Value::String, got {other:?}"),
+            }
+        }
+
+        #[test]
+        fn invalid_hex_string_generates_random_hex() {
+            let id = "not-hex".to_string();
+            let out = normalize_stream_id(Some(StreamId::Str(id.clone())), false);
+
+            match out {
+                Value::String(s) => {
+                    assert_eq!(s.len(), 32, "Expected 32-char hex, got {}", s.len());
+                    assert_ne!(s, id, "Expected generated id to differ from input");
+                    assert!(
+                        is_lower_hex32(&s),
+                        "Generated id contains invalid hex characters: {s}"
+                    );
+                }
+                other => panic!("Expected Value::String, got {other:?}"),
+            }
+        }
+
+        #[test]
+        fn none_generates_random_hex() {
+            let out = normalize_stream_id(None, false);
+
+            match out {
+                Value::String(s) => {
+                    assert_eq!(s.len(), 32, "Expected 32-char hex, got {}", s.len());
+                    assert!(
+                        is_lower_hex32(&s),
+                        "Generated id contains invalid hex characters: {s}"
+                    );
+                }
+                other => panic!("Expected Value::String, got {other:?}"),
+            }
+        }
+
+        #[test]
+        fn number_is_kept_when_not_strict() {
+            let out = normalize_stream_id(Some(StreamId::Number(42)), false);
+
+            match out {
+                Value::Number(n) => {
+                    assert_eq!(n.as_u64(), Some(42), "Expected to keep the numeric id");
+                }
+                other => panic!("Expected Value::Number, got {other:?}"),
+            }
+        }
+
+        #[test]
+        fn strict_number_forces_number_even_for_valid_hex_string() {
+            let id = "0123456789abcdef0123456789abcdef".to_string();
+            let out = normalize_stream_id(Some(StreamId::Str(id)), true);
+
+            match out {
+                Value::Number(n) => {
+                    assert!(
+                        n.as_u64().is_some(),
+                        "Expected unsigned integer JSON number, got {n}"
+                    );
+                }
+                other => panic!("Expected Value::Number, got {other:?}"),
+            }
+        }
+
+        #[test]
+        fn strict_number_keeps_number_if_provided() {
+            let out = normalize_stream_id(Some(StreamId::Number(7)), true);
+
+            match out {
+                Value::Number(n) => {
+                    assert_eq!(n.as_u64(), Some(7), "Expected to keep the numeric id");
+                }
+                other => panic!("Expected Value::Number, got {other:?}"),
+            }
+        }
+
+        #[test]
+        fn strict_number_generates_number_when_none() {
+            let out = normalize_stream_id(None, true);
+
+            match out {
+                Value::Number(n) => {
+                    assert!(
+                        n.as_u64().is_some(),
+                        "Expected unsigned integer JSON number, got {n}"
+                    );
+                }
+                other => panic!("Expected Value::Number, got {other:?}"),
+            }
+        }
+
+        #[test]
+        fn strict_number_generates_number_for_invalid_hex_string() {
+            let out = normalize_stream_id(Some(StreamId::Str("nope".to_string())), true);
+
+            match out {
+                Value::Number(n) => {
+                    assert!(
+                        n.as_u64().is_some(),
+                        "Expected unsigned integer JSON number, got {n}"
+                    );
+                }
+                other => panic!("Expected Value::Number, got {other:?}"),
+            }
+        }
+    }
     mod remove_empty_value {
         use crate::common::utils::remove_empty_value;
         use serde_json::{Map, Value};

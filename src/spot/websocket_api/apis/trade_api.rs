@@ -39,6 +39,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: OpenOrdersCancelAllParams,
     ) -> anyhow::Result<WebsocketApiResponse<Vec<models::OpenOrdersCancelAllResponseResultInner>>>;
+    async fn order_amend_keep_priority(
+        &self,
+        params: OrderAmendKeepPriorityParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderAmendKeepPriorityResponseResult>>>;
     async fn order_cancel(
         &self,
         params: OrderCancelParams,
@@ -4219,6 +4223,69 @@ impl OpenOrdersCancelAllParams {
         OpenOrdersCancelAllParamsBuilder::default().symbol(symbol)
     }
 }
+/// Request parameters for the [`order_amend_keep_priority`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`order_amend_keep_priority`](#method.order_amend_keep_priority).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct OrderAmendKeepPriorityParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    /// `newQty` must be greater than 0 and less than the order's quantity.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub new_qty: rust_decimal::Decimal,
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+    /// `orderId`or`origClientOrderId`mustbesent
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub order_id: Option<i64>,
+    /// `orderId`or`origClientOrderId`mustbesent
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub orig_client_order_id: Option<String>,
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub new_client_order_id: Option<String>,
+    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<rust_decimal::Decimal>,
+}
+
+impl OrderAmendKeepPriorityParams {
+    /// Create a builder for [`order_amend_keep_priority`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    /// * `new_qty` — `newQty` must be greater than 0 and less than the order's quantity.
+    ///
+    #[must_use]
+    pub fn builder(
+        symbol: String,
+        new_qty: rust_decimal::Decimal,
+    ) -> OrderAmendKeepPriorityParamsBuilder {
+        OrderAmendKeepPriorityParamsBuilder::default()
+            .symbol(symbol)
+            .new_qty(new_qty)
+    }
+}
 /// Request parameters for the [`order_cancel`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -4237,18 +4304,17 @@ pub struct OrderCancelParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Cancel order by orderId
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub orig_client_order_id: Option<String>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -4354,7 +4420,7 @@ pub struct OrderCancelReplaceParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub quote_order_qty: Option<rust_decimal::Decimal>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -4489,7 +4555,7 @@ pub struct OrderListCancelParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub list_client_order_id: Option<String>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -5939,7 +6005,7 @@ pub struct OrderPlaceParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub quote_order_qty: Option<rust_decimal::Decimal>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -6089,7 +6155,7 @@ pub struct OrderTestParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub quote_order_qty: Option<rust_decimal::Decimal>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -6228,7 +6294,7 @@ pub struct SorOrderPlaceParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub price: Option<rust_decimal::Decimal>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -6346,7 +6412,7 @@ pub struct SorOrderTestParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub price: Option<rust_decimal::Decimal>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -6438,6 +6504,55 @@ impl TradeApi for TradeApiClient {
         self.websocket_api_base
             .send_message::<Vec<models::OpenOrdersCancelAllResponseResultInner>>(
                 "/openOrders.cancelAll".trim_start_matches('/'),
+                payload,
+                WebsocketMessageSendOptions::new().signed(),
+            )
+            .await
+            .map_err(anyhow::Error::from)?
+            .into_iter()
+            .next()
+            .ok_or(WebsocketError::NoResponse)
+            .map_err(anyhow::Error::from)
+    }
+
+    async fn order_amend_keep_priority(
+        &self,
+        params: OrderAmendKeepPriorityParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderAmendKeepPriorityResponseResult>>>
+    {
+        let OrderAmendKeepPriorityParams {
+            symbol,
+            new_qty,
+            id,
+            order_id,
+            orig_client_order_id,
+            new_client_order_id,
+            recv_window,
+        } = params;
+
+        let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+        payload.insert("symbol".to_string(), serde_json::json!(symbol));
+        payload.insert("newQty".to_string(), serde_json::json!(new_qty));
+        if let Some(value) = id {
+            payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = order_id {
+            payload.insert("orderId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = orig_client_order_id {
+            payload.insert("origClientOrderId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = new_client_order_id {
+            payload.insert("newClientOrderId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = recv_window {
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
+        }
+        let payload = remove_empty_value(payload);
+
+        self.websocket_api_base
+            .send_message::<Box<models::OrderAmendKeepPriorityResponseResult>>(
+                "/order.amend.keepPriority".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new().signed(),
             )
@@ -8249,6 +8364,138 @@ mod tests {
                     .build()
                     .unwrap();
                 client.open_orders_cancel_all(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv())
+                .await
+                .expect("send should occur")
+                .expect("channel closed");
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
+            };
+
+            let _: Value = serde_json::from_str(&text).unwrap();
+
+            let result = handle.await.expect("task completed");
+            match result {
+                Err(e) => {
+                    if let Some(inner) = e.downcast_ref::<WebsocketError>() {
+                        assert!(matches!(inner, WebsocketError::Timeout));
+                    } else {
+                        panic!("Unexpected error type: {:?}", e);
+                    }
+                }
+                Ok(_) => panic!("Expected timeout error"),
+            }
+        });
+    }
+
+    #[test]
+    fn order_amend_keep_priority_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(),dec!(1.0),).build().unwrap();
+                client.order_amend_keep_priority(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap();
+            assert_eq!(v["method"], "/order.amend.keepPriority".trim_start_matches('/'));
+
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"56374b46-3061-486b-a311-89ee972eb648","status":200,"result":{"transactTime":1741924229819,"executionId":60,"amendedOrder":{"symbol":"BTUCSDT","orderId":23,"orderListId":4,"origClientOrderId":"my_pending_order","clientOrderId":"xbxXh5SSwaHS7oUEOCI88B","price":"1.00000000","qty":"5.00000000","executedQty":"0.00000000","preventedQty":"0.00000000","quoteOrderQty":"0.00000000","cumulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1741924204920,"selfTradePreventionMode":"NONE"},"listStatus":{"orderListId":4,"contingencyType":"OTO","listOrderStatus":"EXECUTING","listClientOrderId":"8nOGLLawudj1QoOiwbroRH","symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":23,"clientOrderId":"xbxXh5SSwaHS7oUEOCI88B"},{"symbol":"BTCUSDT","orderId":22,"clientOrderId":"g04EWsjaackzedjC9wRkWD"},{"symbol":"BTCUSDT","orderId":23,"clientOrderId":"xbxXh5SSwaHS7oUEOCI88B"},{"symbol":"BTCUSDT","orderId":22,"clientOrderId":"g04EWsjaackzedjC9wRkWD"}]}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            resp_json["id"] = id.into();
+
+            let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
+            let expected_data: Box<models::OrderAmendKeepPriorityResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let empty_array = Value::Array(vec![]);
+            let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
+            let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
+                match raw_rate_limits.as_array() {
+                    Some(arr) if arr.is_empty() => None,
+                    Some(_) => Some(serde_json::from_value(raw_rate_limits.clone()).expect("should parse rateLimits array")),
+                    None => None,
+                };
+
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let response = timeout(Duration::from_secs(1), handle).await.expect("task done").expect("no panic").expect("no error");
+
+
+            let response_rate_limits = response.rate_limits.clone();
+            let response_data = response.data().expect("deserialize data");
+
+            assert_eq!(response_rate_limits, expected_rate_limits);
+            assert_eq!(response_data, expected_data);
+        });
+    }
+
+    #[test]
+    fn order_amend_keep_priority_error_response() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = tokio::spawn(async move {
+                let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(),dec!(1.0),).build().unwrap();
+                client.order_amend_keep_priority(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap().to_string();
+
+            let resp_json = json!({
+                "id": id,
+                "status": 400,
+                    "error": {
+                        "code": -2010,
+                        "msg": "Account has insufficient balance for requested action.",
+                    },
+                    "rateLimits": [
+                        {
+                            "rateLimitType": "ORDERS",
+                            "interval": "SECOND",
+                            "intervalNum": 10,
+                            "limit": 50,
+                            "count": 13
+                        },
+                    ],
+            });
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let join = timeout(Duration::from_secs(1), handle).await.unwrap();
+            match join {
+                Ok(Err(e)) => {
+                    let msg = e.to_string();
+                    assert!(
+                        msg.contains("Server‐side response error (code -2010): Account has insufficient balance for requested action."),
+                        "Expected error msg to contain server error, got: {msg}"
+                    );
+                }
+                Ok(Ok(_)) => panic!("Expected error"),
+                Err(_) => panic!("Task panicked"),
+            }
+        });
+    }
+
+    #[test]
+    fn order_amend_keep_priority_request_timeout() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, _conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params =
+                    OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), dec!(1.0))
+                        .build()
+                        .unwrap();
+                client.order_amend_keep_priority(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv())

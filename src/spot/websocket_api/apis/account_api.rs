@@ -262,7 +262,7 @@ pub struct AllOrdersParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Cancel order by orderId
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -344,7 +344,7 @@ pub struct MyAllocationsParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub limit: Option<i32>,
-    /// Cancel order by orderId
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -429,7 +429,7 @@ pub struct MyPreventedMatchesParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub prevented_match_id: Option<i64>,
-    /// Cancel order by orderId
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -482,7 +482,7 @@ pub struct MyTradesParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Cancel order by orderId
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -656,8 +656,7 @@ pub struct OrderListStatusParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -700,13 +699,12 @@ pub struct OrderStatusParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Cancel order by orderId
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// `orderId`or`origClientOrderId`mustbesent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

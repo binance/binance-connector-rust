@@ -1,5 +1,58 @@
 # Changelog
 
+## 35.0.0 - 2025-12-19
+
+### Changed (1)
+
+- Support integer randomisation on WS streams subscription/unsubscription.
+
+**Derivatives Trading Options**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified parameter `id`:
+  - type `string` → `integer`
+  - affected methods:
+    - `partial_book_depth_streams()` (`<symbol>@depth<levels>@<updateSpeed>` stream)
+    - `index_price_streams()` (`<symbol>@index` stream)
+    - `kline_candlestick_streams()` (`<symbol>@kline_<interval>` stream)
+    - `ticker24_hour()` (`<symbol>@ticker` stream)
+    - `trade_streams()` (`<symbol>@trade` stream)
+    - `mark_price()` (`<underlyingAsset>@markPrice` stream)
+    - `open_interest()` (`<underlyingAsset>@openInterest@<expirationDate>` stream)
+    - `ticker24_hour_by_underlying_asset_and_expiration_data()` (`<underlyingAsset>@ticker@<expirationDate>` stream)
+    - `new_symbol_info()` (`option_pair` stream)
+
+**Derivatives Trading Usds Futures**
+
+### Changed (2)
+
+#### REST API
+
+- Added parameter `activatePrice`
+  - affected methods:
+    - `new_algo_order()` (`POST /fapi/v1/algoOrder`)
+- Deleted parameter `activationPrice`
+  - affected methods:
+    - `new_algo_order()` (`POST /fapi/v1/algoOrder`)
+
+**Spot**
+
+### Added (1)
+
+#### WebSocket API
+
+- `order_amend_keep_priority()` (`order.amend.keepPriority` method)
+
+**Wallet**
+
+### Added (2)
+
+- `dust_convert()` (`POST /sapi/v1/asset/dust-convert/convert`)
+- `dust_convertible_assets()` (`POST /sapi/v1/asset/dust-convert/query-convertible-assets`)
+
 ## 34.0.0 - 2025-12-16
 
 ### Changed (1)

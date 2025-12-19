@@ -24,6 +24,7 @@ use crate::common::{
     websocket::{WebsocketBase, WebsocketStream, WebsocketStreams, create_stream_handler},
 };
 use crate::derivatives_trading_options::websocket_streams::models;
+use crate::models::StreamId;
 
 #[async_trait]
 pub trait WebsocketMarketStreamsApi: Send + Sync {
@@ -99,7 +100,7 @@ pub struct IndexPriceStreamsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl IndexPriceStreamsParams {
@@ -135,7 +136,7 @@ pub struct KlineCandlestickStreamsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl KlineCandlestickStreamsParams {
@@ -169,7 +170,7 @@ pub struct MarkPriceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl MarkPriceParams {
@@ -195,7 +196,7 @@ pub struct NewSymbolInfoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl NewSymbolInfoParams {
@@ -227,7 +228,7 @@ pub struct OpenInterestParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl OpenInterestParams {
@@ -266,7 +267,7 @@ pub struct PartialBookDepthStreamsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
     /// WebSocket stream update speed
     ///
     /// This field is **optional.
@@ -305,7 +306,7 @@ pub struct Ticker24HourParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl Ticker24HourParams {
@@ -341,7 +342,7 @@ pub struct Ticker24HourByUnderlyingAssetAndExpirationDataParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl Ticker24HourByUnderlyingAssetAndExpirationDataParams {
@@ -378,7 +379,7 @@ pub struct TradeStreamsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl TradeStreamsParams {
@@ -402,8 +403,10 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::IndexPriceStreamsResponse>>> {
         let IndexPriceStreamsParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -417,7 +420,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         Ok(create_stream_handler::<models::IndexPriceStreamsResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -435,7 +445,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("interval", Some(interval.clone())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -451,7 +461,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
             create_stream_handler::<models::KlineCandlestickStreamsResponse>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
-                id_opt,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
             )
             .await,
         )
@@ -468,7 +485,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
 
         let pairs: &[(&str, Option<String>)] = &[
             ("underlyingAsset", Some(underlying_asset.clone())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -484,7 +501,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
             create_stream_handler::<Vec<models::MarkPriceResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
-                id_opt,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
             )
             .await,
         )
@@ -496,7 +520,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::NewSymbolInfoResponse>>> {
         let NewSymbolInfoParams { id } = params;
 
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -510,7 +534,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         Ok(create_stream_handler::<models::NewSymbolInfoResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -528,7 +559,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("underlyingAsset", Some(underlying_asset.clone())),
             ("expirationDate", Some(expiration_date.clone())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -547,7 +578,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
             create_stream_handler::<Vec<models::OpenInterestResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
-                id_opt,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
             )
             .await,
         )
@@ -567,7 +605,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("levels", Some(levels.to_string())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
             ("updateSpeed", update_speed.clone()),
         ];
 
@@ -585,7 +623,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
             create_stream_handler::<models::PartialBookDepthStreamsResponse>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
-                id_opt,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
             )
             .await,
         )
@@ -597,8 +642,10 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::Ticker24HourResponse>>> {
         let Ticker24HourParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -612,7 +659,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         Ok(create_stream_handler::<models::Ticker24HourResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -636,7 +690,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("underlyingAsset", Some(underlying_asset.clone())),
             ("expirationDate", Some(expiration_date.clone())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -656,7 +710,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         >(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -667,8 +728,10 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::TradeStreamsResponse>>> {
         let TradeStreamsParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -682,7 +745,14 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         Ok(create_stream_handler::<models::TradeStreamsResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -717,17 +787,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = IndexPriceStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let IndexPriceStreamsParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -743,7 +815,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -753,17 +825,19 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = IndexPriceStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let IndexPriceStreamsParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -804,17 +878,19 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = IndexPriceStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let IndexPriceStreamsParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -863,11 +939,11 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params =
                 KlineCandlestickStreamsParams::builder("btcusdt".to_string(), "1m".to_string())
-                    .id(Some(id.clone()))
+                    .id(Some(id))
                     .build()
                     .unwrap();
 
@@ -880,7 +956,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("interval", Some(interval.clone())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -898,7 +974,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -908,9 +984,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id)).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -924,7 +1000,7 @@ mod tests {
                         Some(interval.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -961,9 +1037,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id)).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -977,7 +1053,7 @@ mod tests {
                         Some(interval.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1019,10 +1095,10 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = MarkPriceParams::builder("ETH".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
@@ -1033,7 +1109,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("underlyingAsset", Some(underlying_asset.clone())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1051,7 +1127,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1061,9 +1137,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = MarkPriceParams::builder("ETH".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = MarkPriceParams::builder("ETH".to_string(),).id(Some(id)).build().unwrap();
 
             let MarkPriceParams {
                 underlying_asset,id,
@@ -1074,7 +1150,7 @@ mod tests {
                         Some(underlying_asset.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1111,9 +1187,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = MarkPriceParams::builder("ETH".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = MarkPriceParams::builder("ETH".to_string(),).id(Some(id)).build().unwrap();
 
             let MarkPriceParams {
                 underlying_asset,id,
@@ -1124,7 +1200,7 @@ mod tests {
                         Some(underlying_asset.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1166,16 +1242,13 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = NewSymbolInfoParams::builder()
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = NewSymbolInfoParams::builder().id(Some(id)).build().unwrap();
 
             let NewSymbolInfoParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1191,7 +1264,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1201,9 +1274,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = NewSymbolInfoParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = NewSymbolInfoParams::builder().id(Some(id)).build().unwrap();
 
             let NewSymbolInfoParams {
                 id,
@@ -1211,7 +1284,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1248,9 +1321,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = NewSymbolInfoParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = NewSymbolInfoParams::builder().id(Some(id)).build().unwrap();
 
             let NewSymbolInfoParams {
                 id,
@@ -1258,7 +1331,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1300,10 +1373,10 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = OpenInterestParams::builder("ETH".to_string(), "220930".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
@@ -1316,7 +1389,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("underlyingAsset", Some(underlying_asset.clone())),
                 ("expirationDate", Some(expiration_date.clone())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1336,7 +1409,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1346,9 +1419,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = OpenInterestParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = OpenInterestParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let OpenInterestParams {
                 underlying_asset,expiration_date,id,
@@ -1362,7 +1435,7 @@ mod tests {
                         Some(expiration_date.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1399,9 +1472,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = OpenInterestParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = OpenInterestParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let OpenInterestParams {
                 underlying_asset,expiration_date,id,
@@ -1415,7 +1488,7 @@ mod tests {
                         Some(expiration_date.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1457,10 +1530,10 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(), 10)
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
@@ -1474,7 +1547,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.to_string())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
                 ("updateSpeed", update_speed.clone()),
             ];
 
@@ -1495,7 +1568,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1505,9 +1578,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id.clone())).build().unwrap();
+            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id)).build().unwrap();
 
             let PartialBookDepthStreamsParams {
                 symbol,levels,id,update_speed,
@@ -1518,10 +1591,10 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("levels",
-                        Some(levels.to_string())
+                        Some(levels.to_string().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
                 ("updateSpeed",
                         update_speed.clone()
@@ -1561,9 +1634,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id.clone())).build().unwrap();
+            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id)).build().unwrap();
 
             let PartialBookDepthStreamsParams {
                 symbol,levels,id,update_speed,
@@ -1574,10 +1647,10 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("levels",
-                        Some(levels.to_string())
+                        Some(levels.to_string().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
                 ("updateSpeed",
                         update_speed.clone()
@@ -1622,17 +1695,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = Ticker24HourParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let Ticker24HourParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1648,7 +1723,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1658,9 +1733,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = Ticker24HourParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = Ticker24HourParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
 
             let Ticker24HourParams {
                 symbol,id,
@@ -1671,7 +1746,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1708,9 +1783,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = Ticker24HourParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = Ticker24HourParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
 
             let Ticker24HourParams {
                 symbol,id,
@@ -1721,7 +1796,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1763,9 +1838,9 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = Ticker24HourByUnderlyingAssetAndExpirationDataParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = Ticker24HourByUnderlyingAssetAndExpirationDataParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let Ticker24HourByUnderlyingAssetAndExpirationDataParams {
                 underlying_asset,expiration_date,id,
@@ -1779,7 +1854,7 @@ mod tests {
                         Some(expiration_date.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1791,7 +1866,7 @@ mod tests {
             let ws_stream = api.ticker24_hour_by_underlying_asset_and_expiration_data(params).await.expect("ticker24_hour_by_underlying_asset_and_expiration_data should return a WebsocketStream");
 
             assert!(streams_base.is_subscribed(&stream).await, "expected stream '{stream}' to be subscribed");
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1801,9 +1876,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = Ticker24HourByUnderlyingAssetAndExpirationDataParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = Ticker24HourByUnderlyingAssetAndExpirationDataParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let Ticker24HourByUnderlyingAssetAndExpirationDataParams {
                 underlying_asset,expiration_date,id,
@@ -1817,7 +1892,7 @@ mod tests {
                         Some(expiration_date.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1854,9 +1929,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = Ticker24HourByUnderlyingAssetAndExpirationDataParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = Ticker24HourByUnderlyingAssetAndExpirationDataParams::builder("ETH".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let Ticker24HourByUnderlyingAssetAndExpirationDataParams {
                 underlying_asset,expiration_date,id,
@@ -1870,7 +1945,7 @@ mod tests {
                         Some(expiration_date.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1912,17 +1987,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = TradeStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let TradeStreamsParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1938,7 +2015,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1948,9 +2025,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
 
             let TradeStreamsParams {
                 symbol,id,
@@ -1961,7 +2038,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1998,9 +2075,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
 
             let TradeStreamsParams {
                 symbol,id,
@@ -2011,7 +2088,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 

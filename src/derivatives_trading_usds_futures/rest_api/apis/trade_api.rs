@@ -2074,7 +2074,7 @@ pub struct NewAlgoOrderParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub activation_price: Option<rust_decimal::Decimal>,
+    pub activate_price: Option<rust_decimal::Decimal>,
     /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 5 where 1 for 1%
     ///
     /// This field is **optional.
@@ -3600,7 +3600,7 @@ impl TradeApi for TradeApiClient {
             close_position,
             price_protect,
             reduce_only,
-            activation_price,
+            activate_price,
             callback_rate,
             client_algo_id,
             self_trade_prevention_mode,
@@ -3659,8 +3659,8 @@ impl TradeApi for TradeApiClient {
             query_params.insert("reduceOnly".to_string(), json!(rw));
         }
 
-        if let Some(rw) = activation_price {
-            query_params.insert("activationPrice".to_string(), json!(rw));
+        if let Some(rw) = activate_price {
+            query_params.insert("activatePrice".to_string(), json!(rw));
         }
 
         if let Some(rw) = callback_rate {
@@ -6366,7 +6366,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewAlgoOrderSideEnum::Buy,"r#type_example".to_string(),).position_side(NewAlgoOrderPositionSideEnum::Both).time_in_force(NewAlgoOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewAlgoOrderPriceMatchEnum::None).close_position("close_position_example".to_string()).price_protect("false".to_string()).reduce_only("false".to_string()).activation_price(dec!(1.0)).callback_rate(dec!(1.0)).client_algo_id("1".to_string()).self_trade_prevention_mode(NewAlgoOrderSelfTradePreventionModeEnum::ExpireTaker).good_till_date(789).recv_window(5000).build().unwrap();
+            let params = NewAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewAlgoOrderSideEnum::Buy,"r#type_example".to_string(),).position_side(NewAlgoOrderPositionSideEnum::Both).time_in_force(NewAlgoOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewAlgoOrderPriceMatchEnum::None).close_position("close_position_example".to_string()).price_protect("false".to_string()).reduce_only("false".to_string()).activate_price(dec!(1.0)).callback_rate(dec!(1.0)).client_algo_id("1".to_string()).self_trade_prevention_mode(NewAlgoOrderSelfTradePreventionModeEnum::ExpireTaker).good_till_date(789).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
             let expected_response : models::NewAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewAlgoOrderResponse");

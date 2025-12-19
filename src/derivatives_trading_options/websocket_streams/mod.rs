@@ -13,7 +13,7 @@
 
 #![allow(unused_imports)]
 use serde_json::Value;
-use std::sync::Arc;
+use std::sync::{Arc, atomic::Ordering};
 use tokio::spawn;
 
 use crate::common::config::ConfigurationWebsocketStreams;
@@ -21,7 +21,7 @@ use crate::common::websocket::{
     Subscription, WebsocketBase, WebsocketStream, WebsocketStreams as WebsocketStreamsBase,
     create_stream_handler,
 };
-use crate::models::{WebsocketEvent, WebsocketMode};
+use crate::models::{StreamId, WebsocketEvent, WebsocketMode};
 
 mod apis;
 mod handle;
@@ -54,6 +54,9 @@ impl WebsocketStreams {
         }
 
         let websocket_streams_base = WebsocketStreamsBase::new(cfg, vec![]);
+        websocket_streams_base
+            .stream_id_is_strictly_number
+            .store(true, Ordering::Relaxed);
         websocket_streams_base.clone().connect(streams).await?;
 
         Ok(Self {
@@ -178,9 +181,9 @@ impl WebsocketStreams {
     ///
     /// This method initiates an asynchronous subscription to the specified WebSocket streams.
     /// The subscription is performed in a separate task using `spawn`.
-    pub fn subscribe(&self, streams: Vec<String>, id: Option<String>) {
+    pub fn subscribe(&self, streams: Vec<String>, id: Option<u32>) {
         let base = Arc::clone(&self.websocket_streams_base);
-        spawn(async move { base.subscribe(streams, id).await });
+        spawn(async move { base.subscribe(streams, id.map(StreamId::from)).await });
     }
 
     /// Unsubscribes from specified WebSocket streams.
@@ -198,9 +201,9 @@ impl WebsocketStreams {
     ///
     /// This method initiates an asynchronous unsubscription from the specified WebSocket streams.
     /// The unsubscription is performed in a separate task using `spawn`.
-    pub fn unsubscribe(&self, streams: Vec<String>, id: Option<String>) {
+    pub fn unsubscribe(&self, streams: Vec<String>, id: Option<u32>) {
         let base = Arc::clone(&self.websocket_streams_base);
-        spawn(async move { base.unsubscribe(streams, id).await });
+        spawn(async move { base.unsubscribe(streams, id.map(StreamId::from)).await });
     }
 
     /// Checks if the current WebSocket stream is subscribed to a specific stream.
@@ -254,7 +257,7 @@ impl WebsocketStreams {
         Ok(create_stream_handler::<UserDataStreamEventsResponse>(
             WebsocketBase::WebsocketStreams(self.websocket_streams_base.clone()),
             listen_key,
-            id,
+            id.map(StreamId::from),
         )
         .await)
     }

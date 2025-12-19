@@ -214,3 +214,20 @@ pub struct WebsocketStreamsConnectConfig {
     pub streams: Vec<String>,
     pub mode: Option<WebsocketMode>,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum StreamId {
+    Str(String),
+    Number(u32),
+}
+
+impl From<String> for StreamId {
+    fn from(v: String) -> Self {
+        StreamId::Str(v)
+    }
+}
+impl From<u32> for StreamId {
+    fn from(v: u32) -> Self {
+        StreamId::Number(v)
+    }
+}

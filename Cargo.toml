@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "34.0.0"
+version = "35.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -34,6 +34,8 @@ match_wild_err_arm = "allow"
 struct_excessive_bools = "allow"
 collapsible_if = "allow"
 unnecessary_unwrap = "allow"
+absurd_extreme_comparisons = "allow"
+needless_pass_by_value = "allow"
 
   [lints.clippy.pedantic]
   level = "warn"
@@ -3427,6 +3429,11 @@ path = "examples/spot/websocket_api/trade_api/open_orders_cancel_all.rs"
 required-features = [ "spot" ]
 
 [[example]]
+name = "spot_websocket_api_trade_api_order_amend_keep_priority"
+path = "examples/spot/websocket_api/trade_api/order_amend_keep_priority.rs"
+required-features = [ "spot" ]
+
+[[example]]
 name = "spot_websocket_api_trade_api_order_cancel_replace"
 path = "examples/spot/websocket_api/trade_api/order_cancel_replace.rs"
 required-features = [ "spot" ]
@@ -4077,6 +4084,16 @@ path = "examples/wallet/rest_api/asset_api/asset_dividend_record.rs"
 required-features = [ "wallet" ]
 
 [[example]]
+name = "wallet_rest_api_asset_api_dust_convert"
+path = "examples/wallet/rest_api/asset_api/dust_convert.rs"
+required-features = [ "wallet" ]
+
+[[example]]
+name = "wallet_rest_api_asset_api_dust_convertible_assets"
+path = "examples/wallet/rest_api/asset_api/dust_convertible_assets.rs"
+required-features = [ "wallet" ]
+
+[[example]]
 name = "wallet_rest_api_asset_api_dust_transfer"
 path = "examples/wallet/rest_api/asset_api/dust_transfer.rs"
 required-features = [ "wallet" ]
@@ -4250,3 +4267,4 @@ required-features = [ "wallet" ]
 name = "wallet_rest_api_travel_rule_api_withdraw_travel_rule"
 path = "examples/wallet/rest_api/travel_rule_api/withdraw_travel_rule.rs"
 required-features = [ "wallet" ]
+

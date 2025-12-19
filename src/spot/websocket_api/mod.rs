@@ -427,7 +427,7 @@ impl WebsocketApi {
 
     /// WebSocket Query Relevant Filters
     ///
-    /// Retrieves the list of [filters](filters.md) relevant to an account on a given symbol. This is the only endpoint that shows if an account has `MAX_ASSET` filters applied to it.
+    /// Retrieves the list of [filters](filters.md) relevant to an account on a given symbol. This is the only method that shows if an account has `MAX_ASSET` filters applied to it.
     /// Weight: 40
     ///
     /// # Arguments
@@ -1317,6 +1317,41 @@ impl WebsocketApi {
     ) -> anyhow::Result<WebsocketApiResponse<Vec<models::OpenOrdersCancelAllResponseResultInner>>>
     {
         self.trade_api_client.open_orders_cancel_all(params).await
+    }
+
+    /// WebSocket Order Amend Keep Priority
+    ///
+    /// Reduce the quantity of an existing open order.
+    ///
+    /// This adds 0 orders to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
+    ///
+    /// Read [Order Amend Keep Priority FAQ](faqs/order_amend_keep_priority.md) to learn more.
+    /// Weight: 4
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`OrderAmendKeepPriorityParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Box<models::OrderAmendKeepPriorityResponseResult>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#order-amend-keep-priority-trade).
+    ///
+    pub async fn order_amend_keep_priority(
+        &self,
+        params: OrderAmendKeepPriorityParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderAmendKeepPriorityResponseResult>>>
+    {
+        self.trade_api_client
+            .order_amend_keep_priority(params)
+            .await
     }
 
     /// WebSocket Cancel order

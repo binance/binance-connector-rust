@@ -28,6 +28,7 @@ use crate::common::{
     utils::replace_websocket_streams_placeholders,
     websocket::{WebsocketBase, WebsocketStream, WebsocketStreams, create_stream_handler},
 };
+use crate::models::StreamId;
 use crate::spot::websocket_streams::models;
 
 #[async_trait]
@@ -854,7 +855,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::AggTradeResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -884,7 +892,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
             create_stream_handler::<Vec<models::AllMarketRollingWindowTickerResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
-                id_opt,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
             )
             .await,
         )
@@ -911,7 +926,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
             create_stream_handler::<Vec<models::AllMiniTickerResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
-                id_opt,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
             )
             .await,
         )
@@ -938,7 +960,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::AvgPriceResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -964,7 +993,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::BookTickerResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -997,7 +1033,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::DiffBookDepthResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -1030,7 +1073,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::KlineResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -1064,7 +1114,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::KlineOffsetResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -1090,7 +1147,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::MiniTickerResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -1126,7 +1190,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::PartialBookDepthResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -1160,7 +1231,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
             create_stream_handler::<models::RollingWindowTickerResponse>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
-                id_opt,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
             )
             .await,
         )
@@ -1187,7 +1265,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::TickerResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -1213,7 +1298,14 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         Ok(create_stream_handler::<models::TradeResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
-            id_opt,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
         )
         .await)
     }
@@ -1274,7 +1366,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -1419,7 +1511,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -1559,7 +1651,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -1694,7 +1786,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -1835,7 +1927,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -1984,7 +2076,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -2139,7 +2231,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -2297,7 +2389,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -2444,7 +2536,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -2600,7 +2692,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -2787,7 +2879,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -2934,7 +3026,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 
@@ -3075,7 +3167,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id.as_deref(), Some("test-id-123"));
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
         });
     }
 

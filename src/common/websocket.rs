@@ -11,7 +11,7 @@ use std::{
     mem::take,
     sync::{
         Arc,
-        atomic::{AtomicUsize, Ordering},
+        atomic::{AtomicBool, AtomicUsize, Ordering},
     },
     time::Duration,
 };
@@ -40,8 +40,8 @@ use tracing::{debug, error, info, warn};
 use super::{
     config::{AgentConnector, ConfigurationWebsocketApi, ConfigurationWebsocketStreams},
     errors::{WebsocketConnectionFailureReason, WebsocketError},
-    models::{WebsocketApiResponse, WebsocketEvent, WebsocketMode},
-    utils::{ID_REGEX, build_websocket_api_message, random_string, validate_time_unit},
+    models::{StreamId, WebsocketApiResponse, WebsocketEvent, WebsocketMode},
+    utils::{build_websocket_api_message, normalize_stream_id, random_string, validate_time_unit},
 };
 
 pub type WebSocketClient = WebSocketStream<MaybeTlsStream<TcpStream>>;
@@ -1964,6 +1964,7 @@ impl WebsocketHandler for WebsocketApi {
 
 pub struct WebsocketStreams {
     pub common: Arc<WebsocketCommon>,
+    pub stream_id_is_strictly_number: AtomicBool,
     is_connecting: Mutex<bool>,
     connection_streams: Mutex<HashMap<String, Arc<WebsocketConnection>>>,
     configuration: ConfigurationWebsocketStreams,
@@ -2004,6 +2005,7 @@ impl WebsocketStreams {
             is_connecting: Mutex::new(false),
             connection_streams: Mutex::new(HashMap::new()),
             configuration,
+            stream_id_is_strictly_number: AtomicBool::new(false),
         })
     }
 
@@ -2122,7 +2124,7 @@ impl WebsocketStreams {
     ///
     /// - Sends subscription payloads for active connections
     /// - Adds pending subscriptions for inactive connections
-    pub async fn subscribe(self: Arc<Self>, streams: Vec<String>, id: Option<String>) {
+    pub async fn subscribe(self: Arc<Self>, streams: Vec<String>, id: Option<StreamId>) {
         let streams: Vec<String> = {
             let map = self.connection_streams.lock().await;
             streams
@@ -2173,10 +2175,11 @@ impl WebsocketStreams {
     ///
     /// This method may panic if the request identifier is not valid.
     ///
-    pub async fn unsubscribe(&self, streams: Vec<String>, id: Option<String>) {
-        let request_id = id
-            .filter(|s| ID_REGEX.is_match(s))
-            .unwrap_or_else(random_string);
+    pub async fn unsubscribe(&self, streams: Vec<String>, id: Option<StreamId>) {
+        let request_id = normalize_stream_id(
+            id.clone(),
+            self.stream_id_is_strictly_number.load(Ordering::Relaxed),
+        );
 
         for stream in streams {
             let maybe_conn = { self.connection_streams.lock().await.get(&stream).cloned() };
@@ -2388,11 +2391,12 @@ impl WebsocketStreams {
         &self,
         connection: &Arc<WebsocketConnection>,
         streams: &Vec<String>,
-        id: Option<String>,
+        id: Option<StreamId>,
     ) {
-        let request_id = id
-            .filter(|s| ID_REGEX.is_match(s))
-            .unwrap_or_else(random_string);
+        let request_id = normalize_stream_id(
+            id.clone(),
+            self.stream_id_is_strictly_number.load(Ordering::Relaxed),
+        );
 
         let payload = json!({
             "method": "SUBSCRIBE",
@@ -2536,7 +2540,7 @@ pub struct WebsocketStream<T> {
     websocket_base: WebsocketBase,
     stream_or_id: String,
     callback: Mutex<Option<Arc<dyn Fn(&Value) + Send + Sync>>>,
-    pub id: Option<String>,
+    pub id: Option<StreamId>,
     _phantom: PhantomData<T>,
 }
 
@@ -2721,7 +2725,7 @@ where
 pub async fn create_stream_handler<T>(
     websocket_base: WebsocketBase,
     stream_or_id: String,
-    id: Option<String>,
+    id: Option<StreamId>,
 ) -> Arc<WebsocketStream<T>>
 where
     T: DeserializeOwned + Send + 'static,
@@ -2757,7 +2761,7 @@ mod tests {
     };
     use crate::config::{ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey};
     use crate::errors::{WebsocketConnectionFailureReason, WebsocketError};
-    use crate::models::TimeUnit;
+    use crate::models::{StreamId, TimeUnit};
     use async_trait::async_trait;
     use futures::{SinkExt, StreamExt};
     use http::header::USER_AGENT;
@@ -6293,7 +6297,7 @@ mod tests {
                         state.ws_write_tx = Some(tx);
                         state.stream_callbacks.insert("foo".to_string(), Vec::new());
                     }
-                    ws.unsubscribe(vec!["foo".into()], Some("bad-id".into()))
+                    ws.unsubscribe(vec!["foo".into()], Some(StreamId::Str("bad-id".into())))
                         .await;
                     assert!(!ws.connection_streams.lock().await.contains_key("foo"));
                 });
@@ -6555,10 +6559,11 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
+                    let id = Some("badid".to_string());
                     ws.send_subscription_payload(
                         conn,
                         &vec!["s1".to_string()],
-                        Some("badid".to_string()),
+                        id.map(StreamId::from),
                     );
                     let msg = rx.recv().await.expect("no message sent");
                     if let Message::Text(txt) = msg {
@@ -6574,7 +6579,7 @@ mod tests {
             }
 
             #[test]
-            fn subscribe_payload_with_and_without_custom_id() {
+            fn subscribe_payload_with_and_without_custom_string_id() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
                         create_websocket_streams(Some("ws://unused"), None);
@@ -6584,10 +6589,11 @@ mod tests {
                         let mut st = conn.state.lock().await;
                         st.ws_write_tx = Some(tx);
                     }
+                    let id = Some("deadbeefdeadbeefdeadbeefdeadbeef".to_string());
                     ws.send_subscription_payload(
                         conn,
                         &vec!["a".to_string(), "b".to_string()],
-                        Some("deadbeefdeadbeefdeadbeefdeadbeef".to_string()),
+                        id.map(StreamId::from),
                     );
                     let msg1 = rx.recv().await.unwrap();
                     ws.send_subscription_payload(conn, &vec!["x".to_string()], None);
@@ -6614,6 +6620,65 @@ mod tests {
                         assert!(Regex::new(r"^[0-9a-fA-F]{32}$").unwrap().is_match(id2));
                     } else {
                         panic!()
+                    }
+                });
+            }
+
+            #[test]
+            fn subscribe_payload_with_and_without_custom_integer_id() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://unused"), None);
+                    ws.stream_id_is_strictly_number
+                        .store(true, Ordering::Relaxed);
+                    let conn = &ws.common.connection_pool[0];
+                    let (tx, mut rx) = unbounded_channel();
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.ws_write_tx = Some(tx);
+                    }
+
+                    let id = Some(123u32);
+
+                    ws.send_subscription_payload(
+                        conn,
+                        &vec!["a".to_string(), "b".to_string()],
+                        id.map(StreamId::from),
+                    );
+                    let msg1 = rx.recv().await.unwrap();
+
+                    ws.send_subscription_payload(conn, &vec!["x".to_string()], None);
+                    let msg2 = rx.recv().await.unwrap();
+
+                    if let Message::Text(txt1) = msg1 {
+                        let v1: serde_json::Value = serde_json::from_str(&txt1).unwrap();
+                        assert_eq!(v1["method"], "SUBSCRIBE");
+                        assert_eq!(v1["id"].as_u64(), Some(123));
+                        assert_eq!(
+                            v1["params"].as_array().unwrap(),
+                            &vec![serde_json::json!("a"), serde_json::json!("b")]
+                        );
+                    } else {
+                        panic!("Expected Message::Text for msg1");
+                    }
+
+                    if let Message::Text(txt2) = msg2 {
+                        let v2: serde_json::Value = serde_json::from_str(&txt2).unwrap();
+                        assert_eq!(v2["method"], "SUBSCRIBE");
+
+                        let params = v2["params"].as_array().unwrap();
+                        assert_eq!(params.len(), 1);
+                        assert_eq!(params[0], "x");
+
+                        let id2 = v2.get("id").expect("payload should contain id");
+                        assert!(
+                            id2.is_number(),
+                            "expected numeric id in strict-number mode, got: {id2:?}"
+                        );
+                        let n = id2.as_u64().unwrap();
+                        assert!(u32::try_from(n).is_ok(), "id should fit u32, got {n}");
+                    } else {
+                        panic!("Expected Message::Text for msg2");
                     }
                 });
             }
@@ -7342,19 +7407,38 @@ mod tests {
         }
 
         #[test]
-        fn create_stream_handler_with_custom_id_registers_stream_and_id() {
+        fn create_stream_handler_with_custom_string_id_registers_stream_and_id() {
             TOKIO_SHARED_RT.block_on(async {
                 let ws = create_websocket_streams(Some("ws://example.com"), None);
                 let stream_name = "bar".to_string();
-                let custom_id = Some("my-custom-id".to_string());
+                let custom_id = StreamId::from("my-custom-id".to_string());
                 let handler = create_stream_handler::<serde_json::Value>(
                     WebsocketBase::WebsocketStreams(ws.clone()),
                     stream_name.clone(),
-                    custom_id.clone(),
+                    Some(custom_id.clone()),
                 )
                 .await;
                 assert_eq!(handler.stream_or_id, stream_name);
-                assert_eq!(handler.id, custom_id);
+                assert_eq!(handler.id, Some(custom_id));
+                let map = ws.connection_streams.lock().await;
+                assert!(map.contains_key(&stream_name));
+            });
+        }
+
+        #[test]
+        fn create_stream_handler_with_custom_integer_id_registers_stream_and_id() {
+            TOKIO_SHARED_RT.block_on(async {
+                let ws = create_websocket_streams(Some("ws://example.com"), None);
+                let stream_name = "bar".to_string();
+                let custom_id = StreamId::from(123u32);
+                let handler = create_stream_handler::<serde_json::Value>(
+                    WebsocketBase::WebsocketStreams(ws.clone()),
+                    stream_name.clone(),
+                    Some(custom_id.clone()),
+                )
+                .await;
+                assert_eq!(handler.stream_or_id, stream_name);
+                assert_eq!(handler.id, Some(custom_id));
                 let map = ws.connection_streams.lock().await;
                 assert!(map.contains_key(&stream_name));
             });
@@ -7379,21 +7463,40 @@ mod tests {
         }
 
         #[test]
-        fn create_stream_handler_with_custom_id_registers_api_stream_and_id() {
+        fn create_stream_handler_with_custom_string_id_registers_api_stream_and_id() {
             TOKIO_SHARED_RT.block_on(async {
                 let ws_base = create_websocket_api(None, None, None);
                 let identifier = "bar-api".to_string();
-                let custom_id = Some("custom-123".to_string());
+                let custom_id = StreamId::from("custom-123".to_string());
 
                 let handler = create_stream_handler::<Value>(
                     WebsocketBase::WebsocketApi(ws_base.clone()),
                     identifier.clone(),
-                    custom_id.clone(),
+                    Some(custom_id.clone()),
                 )
                 .await;
 
                 assert_eq!(handler.stream_or_id, identifier);
-                assert_eq!(handler.id, custom_id);
+                assert_eq!(handler.id, Some(custom_id));
+            });
+        }
+
+        #[test]
+        fn create_stream_handler_with_custom_integer_id_registers_api_stream_and_id() {
+            TOKIO_SHARED_RT.block_on(async {
+                let ws_base = create_websocket_api(None, None, None);
+                let identifier = "bar-api".to_string();
+                let custom_id = StreamId::from(123u32);
+
+                let handler = create_stream_handler::<Value>(
+                    WebsocketBase::WebsocketApi(ws_base.clone()),
+                    identifier.clone(),
+                    Some(custom_id.clone()),
+                )
+                .await;
+
+                assert_eq!(handler.stream_or_id, identifier);
+                assert_eq!(handler.id, Some(custom_id));
             });
         }
     }
