@@ -22,7 +22,7 @@ pub struct SymbolConfigurationResponseInner {
     #[serde(rename = "marginType", skip_serializing_if = "Option::is_none")]
     pub margin_type: Option<String>,
     #[serde(rename = "isAutoAddMargin", skip_serializing_if = "Option::is_none")]
-    pub is_auto_add_margin: Option<String>,
+    pub is_auto_add_margin: Option<bool>,
     #[serde(rename = "leverage", skip_serializing_if = "Option::is_none")]
     pub leverage: Option<i64>,
     #[serde(rename = "maxNotionalValue", skip_serializing_if = "Option::is_none")]
