@@ -22,22 +22,24 @@ pub struct NewSymbolInfoResponse {
     pub e: Option<String>,
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
-    #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
-    pub u: Option<String>,
-    #[serde(rename = "qa", skip_serializing_if = "Option::is_none")]
-    pub qa: Option<String>,
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
-    #[serde(rename = "unit", skip_serializing_if = "Option::is_none")]
-    pub unit: Option<i64>,
-    #[serde(rename = "mq", skip_serializing_if = "Option::is_none")]
-    pub mq: Option<String>,
+    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
+    pub ps: Option<String>,
+    #[serde(rename = "qa", skip_serializing_if = "Option::is_none")]
+    pub qa: Option<String>,
     #[serde(rename = "d", skip_serializing_if = "Option::is_none")]
     pub d: Option<String>,
     #[serde(rename = "sp", skip_serializing_if = "Option::is_none")]
     pub sp: Option<String>,
-    #[serde(rename = "ed", skip_serializing_if = "Option::is_none")]
-    pub ed: Option<i64>,
+    #[serde(rename = "dt", skip_serializing_if = "Option::is_none")]
+    pub dt: Option<i64>,
+    #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
+    pub u: Option<i64>,
+    #[serde(rename = "ot", skip_serializing_if = "Option::is_none")]
+    pub ot: Option<i64>,
+    #[serde(rename = "cs", skip_serializing_if = "Option::is_none")]
+    pub cs: Option<String>,
 }
 
 impl NewSymbolInfoResponse {
@@ -46,14 +48,15 @@ impl NewSymbolInfoResponse {
         NewSymbolInfoResponse {
             e: None,
             e_uppercase: None,
-            u: None,
-            qa: None,
             s: None,
-            unit: None,
-            mq: None,
+            ps: None,
+            qa: None,
             d: None,
             sp: None,
-            ed: None,
+            dt: None,
+            u: None,
+            ot: None,
+            cs: None,
         }
     }
 }

@@ -17,28 +17,22 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AccountUpdatePInner {
-    #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
-    pub s: Option<String>,
-    #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
-    pub c: Option<String>,
-    #[serde(rename = "r", skip_serializing_if = "Option::is_none")]
-    pub r: Option<String>,
-    #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
-    pub p: Option<String>,
+pub struct BalancePositionUpdateBInner {
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
+    pub b: Option<String>,
+    #[serde(rename = "bc", skip_serializing_if = "Option::is_none")]
+    pub bc: Option<String>,
 }
 
-impl AccountUpdatePInner {
+impl BalancePositionUpdateBInner {
     #[must_use]
-    pub fn new() -> AccountUpdatePInner {
-        AccountUpdatePInner {
-            s: None,
-            c: None,
-            r: None,
-            p: None,
+    pub fn new() -> BalancePositionUpdateBInner {
+        BalancePositionUpdateBInner {
             a: None,
+            b: None,
+            bc: None,
         }
     }
 }

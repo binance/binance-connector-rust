@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "35.0.0"
+version = "36.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -36,6 +36,8 @@ collapsible_if = "allow"
 unnecessary_unwrap = "allow"
 absurd_extreme_comparisons = "allow"
 needless_pass_by_value = "allow"
+unused_self = "allow"
+struct_field_names = "allow"
 
   [lints.clippy.pedantic]
   level = "warn"
@@ -321,6 +323,11 @@ required-features = [ "crypto_loan" ]
 [[example]]
 name = "crypto_loan_rest_api_flexible_rate_api_get_flexible_loan_collateral_assets_data"
 path = "examples/crypto_loan/rest_api/flexible_rate_api/get_flexible_loan_collateral_assets_data.rs"
+required-features = [ "crypto_loan" ]
+
+[[example]]
+name = "crypto_loan_rest_api_flexible_rate_api_get_flexible_loan_interest_rate_history"
+path = "examples/crypto_loan/rest_api/flexible_rate_api/get_flexible_loan_interest_rate_history.rs"
 required-features = [ "crypto_loan" ]
 
 [[example]]
@@ -649,6 +656,11 @@ path = "examples/derivatives_trading_coin_futures/rest_api/trade_api/new_order.r
 required-features = [ "derivatives_trading_coin_futures" ]
 
 [[example]]
+name = "derivatives_trading_coin_futures_rest_api_trade_api_place_multiple_orders"
+path = "examples/derivatives_trading_coin_futures/rest_api/trade_api/place_multiple_orders.rs"
+required-features = [ "derivatives_trading_coin_futures" ]
+
+[[example]]
 name = "derivatives_trading_coin_futures_rest_api_trade_api_position_adl_quantile_estimation"
 path = "examples/derivatives_trading_coin_futures/rest_api/trade_api/position_adl_quantile_estimation.rs"
 required-features = [ "derivatives_trading_coin_futures" ]
@@ -839,21 +851,6 @@ path = "examples/derivatives_trading_options/rest_api/account_api/account_fundin
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
-name = "derivatives_trading_options_rest_api_account_api_get_download_id_for_option_transaction_history"
-path = "examples/derivatives_trading_options/rest_api/account_api/get_download_id_for_option_transaction_history.rs"
-required-features = [ "derivatives_trading_options" ]
-
-[[example]]
-name = "derivatives_trading_options_rest_api_account_api_get_option_transaction_history_download_link_by_id"
-path = "examples/derivatives_trading_options/rest_api/account_api/get_option_transaction_history_download_link_by_id.rs"
-required-features = [ "derivatives_trading_options" ]
-
-[[example]]
-name = "derivatives_trading_options_rest_api_account_api_option_account_information"
-path = "examples/derivatives_trading_options/rest_api/account_api/option_account_information.rs"
-required-features = [ "derivatives_trading_options" ]
-
-[[example]]
 name = "derivatives_trading_options_rest_api_account_api_option_margin_account_information"
 path = "examples/derivatives_trading_options/rest_api/account_api/option_margin_account_information.rs"
 required-features = [ "derivatives_trading_options" ]
@@ -874,18 +871,13 @@ path = "examples/derivatives_trading_options/rest_api/market_data_api/historical
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
-name = "derivatives_trading_options_rest_api_market_data_api_index_price_ticker"
-path = "examples/derivatives_trading_options/rest_api/market_data_api/index_price_ticker.rs"
+name = "derivatives_trading_options_rest_api_market_data_api_index_price"
+path = "examples/derivatives_trading_options/rest_api/market_data_api/index_price.rs"
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
 name = "derivatives_trading_options_rest_api_market_data_api_kline_candlestick_data"
 path = "examples/derivatives_trading_options/rest_api/market_data_api/kline_candlestick_data.rs"
-required-features = [ "derivatives_trading_options" ]
-
-[[example]]
-name = "derivatives_trading_options_rest_api_market_data_api_old_trades_lookup"
-path = "examples/derivatives_trading_options/rest_api/market_data_api/old_trades_lookup.rs"
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
@@ -1044,6 +1036,11 @@ path = "examples/derivatives_trading_options/rest_api/trade_api/query_single_ord
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
+name = "derivatives_trading_options_rest_api_trade_api_user_commission"
+path = "examples/derivatives_trading_options/rest_api/trade_api/user_commission.rs"
+required-features = [ "derivatives_trading_options" ]
+
+[[example]]
 name = "derivatives_trading_options_rest_api_trade_api_user_exercise_record"
 path = "examples/derivatives_trading_options/rest_api/trade_api/user_exercise_record.rs"
 required-features = [ "derivatives_trading_options" ]
@@ -1064,8 +1061,18 @@ path = "examples/derivatives_trading_options/rest_api/user_data_streams_api/star
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
+name = "derivatives_trading_options_websocket_streams_diff_book_depth_streams"
+path = "examples/derivatives_trading_options/websocket_streams/diff_book_depth_streams.rs"
+required-features = [ "derivatives_trading_options" ]
+
+[[example]]
 name = "derivatives_trading_options_websocket_streams_index_price_streams"
 path = "examples/derivatives_trading_options/websocket_streams/index_price_streams.rs"
+required-features = [ "derivatives_trading_options" ]
+
+[[example]]
+name = "derivatives_trading_options_websocket_streams_individual_symbol_book_ticker_streams"
+path = "examples/derivatives_trading_options/websocket_streams/individual_symbol_book_ticker_streams.rs"
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
@@ -1091,11 +1098,6 @@ required-features = [ "derivatives_trading_options" ]
 [[example]]
 name = "derivatives_trading_options_websocket_streams_partial_book_depth_streams"
 path = "examples/derivatives_trading_options/websocket_streams/partial_book_depth_streams.rs"
-required-features = [ "derivatives_trading_options" ]
-
-[[example]]
-name = "derivatives_trading_options_websocket_streams_ticker24_hour_by_underlying_asset_and_expiration_data"
-path = "examples/derivatives_trading_options/websocket_streams/ticker24_hour_by_underlying_asset_and_expiration_data.rs"
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
@@ -1131,6 +1133,11 @@ required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_get_auto_repay_futures_status"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/get_auto_repay_futures_status.rs"
+required-features = [ "derivatives_trading_portfolio_margin_pro" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_get_delta_mode_status"
+path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/get_delta_mode_status.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
@@ -1176,6 +1183,11 @@ required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_repay_futures_negative_balance"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/repay_futures_negative_balance.rs"
+required-features = [ "derivatives_trading_portfolio_margin_pro" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_switch_delta_mode"
+path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/switch_delta_mode.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
@@ -4009,6 +4021,11 @@ path = "examples/vip_loan/rest_api/market_data_api/get_loanable_assets_data.rs"
 required-features = [ "vip_loan" ]
 
 [[example]]
+name = "vip_loan_rest_api_market_data_api_get_vip_loan_interest_rate_history"
+path = "examples/vip_loan/rest_api/market_data_api/get_vip_loan_interest_rate_history.rs"
+required-features = [ "vip_loan" ]
+
+[[example]]
 name = "vip_loan_rest_api_trade_api_vip_loan_borrow"
 path = "examples/vip_loan/rest_api/trade_api/vip_loan_borrow.rs"
 required-features = [ "vip_loan" ]
@@ -4026,6 +4043,11 @@ required-features = [ "vip_loan" ]
 [[example]]
 name = "vip_loan_rest_api_user_information_api_check_vip_loan_collateral_account"
 path = "examples/vip_loan/rest_api/user_information_api/check_vip_loan_collateral_account.rs"
+required-features = [ "vip_loan" ]
+
+[[example]]
+name = "vip_loan_rest_api_user_information_api_get_vip_loan_accrued_interest"
+path = "examples/vip_loan/rest_api/user_information_api/get_vip_loan_accrued_interest.rs"
 required-features = [ "vip_loan" ]
 
 [[example]]
@@ -4244,6 +4266,11 @@ path = "examples/wallet/rest_api/travel_rule_api/submit_deposit_questionnaire_tr
 required-features = [ "wallet" ]
 
 [[example]]
+name = "wallet_rest_api_travel_rule_api_submit_deposit_questionnaire_v2"
+path = "examples/wallet/rest_api/travel_rule_api/submit_deposit_questionnaire_v2.rs"
+required-features = [ "wallet" ]
+
+[[example]]
 name = "wallet_rest_api_travel_rule_api_submit_deposit_questionnaire"
 path = "examples/wallet/rest_api/travel_rule_api/submit_deposit_questionnaire.rs"
 required-features = [ "wallet" ]
@@ -4267,4 +4294,3 @@ required-features = [ "wallet" ]
 name = "wallet_rest_api_travel_rule_api_withdraw_travel_rule"
 path = "examples/wallet/rest_api/travel_rule_api/withdraw_travel_rule.rs"
 required-features = [ "wallet" ]
-

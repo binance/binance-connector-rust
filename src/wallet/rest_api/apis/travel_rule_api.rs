@@ -59,6 +59,10 @@ pub trait TravelRuleApi: Send + Sync {
         &self,
         params: SubmitDepositQuestionnaireTravelRuleParams,
     ) -> anyhow::Result<RestApiResponse<models::SubmitDepositQuestionnaireTravelRuleResponse>>;
+    async fn submit_deposit_questionnaire_v2(
+        &self,
+        params: SubmitDepositQuestionnaireV2Params,
+    ) -> anyhow::Result<RestApiResponse<models::SubmitDepositQuestionnaireV2Response>>;
     async fn vasp_list(
         &self,
         params: VaspListParams,
@@ -396,11 +400,11 @@ pub struct SubmitDepositQuestionnaireParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub sub_account_id: String,
-    /// Wallet deposit ID.
+    /// Wallet deposit ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub deposit_id: String,
+    pub deposit_id: i64,
     /// JSON format questionnaire answers.
     ///
     /// This field is **required.
@@ -453,7 +457,7 @@ impl SubmitDepositQuestionnaireParams {
     /// Required parameters:
     ///
     /// * `sub_account_id` — External user ID.
-    /// * `deposit_id` — Wallet deposit ID.
+    /// * `deposit_id` — Wallet deposit ID
     /// * `questionnaire` — JSON format questionnaire answers.
     /// * `beneficiary_pii` — JSON format beneficiary Pii.
     /// * `signature` — Must be the last parameter.
@@ -461,7 +465,7 @@ impl SubmitDepositQuestionnaireParams {
     #[must_use]
     pub fn builder(
         sub_account_id: String,
-        deposit_id: String,
+        deposit_id: i64,
         questionnaire: String,
         beneficiary_pii: String,
         signature: String,
@@ -508,6 +512,43 @@ impl SubmitDepositQuestionnaireTravelRuleParams {
     ) -> SubmitDepositQuestionnaireTravelRuleParamsBuilder {
         SubmitDepositQuestionnaireTravelRuleParamsBuilder::default()
             .tran_id(tran_id)
+            .questionnaire(questionnaire)
+    }
+}
+/// Request parameters for the [`submit_deposit_questionnaire_v2`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`submit_deposit_questionnaire_v2`](#method.submit_deposit_questionnaire_v2).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct SubmitDepositQuestionnaireV2Params {
+    /// Wallet deposit ID
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub deposit_id: i64,
+    /// JSON format questionnaire answers.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub questionnaire: String,
+}
+
+impl SubmitDepositQuestionnaireV2Params {
+    /// Create a builder for [`submit_deposit_questionnaire_v2`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `deposit_id` — Wallet deposit ID
+    /// * `questionnaire` — JSON format questionnaire answers.
+    ///
+    #[must_use]
+    pub fn builder(
+        deposit_id: i64,
+        questionnaire: String,
+    ) -> SubmitDepositQuestionnaireV2ParamsBuilder {
+        SubmitDepositQuestionnaireV2ParamsBuilder::default()
+            .deposit_id(deposit_id)
             .questionnaire(questionnaire)
     }
 }
@@ -1167,6 +1208,38 @@ impl TravelRuleApi for TravelRuleApiClient {
         .await
     }
 
+    async fn submit_deposit_questionnaire_v2(
+        &self,
+        params: SubmitDepositQuestionnaireV2Params,
+    ) -> anyhow::Result<RestApiResponse<models::SubmitDepositQuestionnaireV2Response>> {
+        let SubmitDepositQuestionnaireV2Params {
+            deposit_id,
+            questionnaire,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("depositId".to_string(), json!(deposit_id));
+
+        query_params.insert("questionnaire".to_string(), json!(questionnaire));
+
+        send_request::<models::SubmitDepositQuestionnaireV2Response>(
+            &self.configuration,
+            "/sapi/v2/localentity/deposit/provide-info",
+            reqwest::Method::PUT,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn vasp_list(
         &self,
         params: VaspListParams,
@@ -1655,6 +1728,34 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn submit_deposit_questionnaire_v2(
+            &self,
+            _params: SubmitDepositQuestionnaireV2Params,
+        ) -> anyhow::Result<RestApiResponse<models::SubmitDepositQuestionnaireV2Response>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
+            )
+            .unwrap();
+            let dummy_response: models::SubmitDepositQuestionnaireV2Response =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::SubmitDepositQuestionnaireV2Response");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn vasp_list(
             &self,
             _params: VaspListParams,
@@ -2088,7 +2189,7 @@ mod tests {
 
             let params = SubmitDepositQuestionnaireParams::builder(
                 "1".to_string(),
-                "1".to_string(),
+                1,
                 "questionnaire_example".to_string(),
                 "beneficiary_pii_example".to_string(),
                 "signature_example".to_string(),
@@ -2121,7 +2222,7 @@ mod tests {
 
             let params = SubmitDepositQuestionnaireParams::builder(
                 "1".to_string(),
-                "1".to_string(),
+                1,
                 "questionnaire_example".to_string(),
                 "beneficiary_pii_example".to_string(),
                 "signature_example".to_string(),
@@ -2159,7 +2260,7 @@ mod tests {
 
             let params = SubmitDepositQuestionnaireParams::builder(
                 "1".to_string(),
-                "1".to_string(),
+                1,
                 "questionnaire_example".to_string(),
                 "beneficiary_pii_example".to_string(),
                 "signature_example".to_string(),
@@ -2254,6 +2355,81 @@ mod tests {
                 .submit_deposit_questionnaire_travel_rule(params)
                 .await
             {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn submit_deposit_questionnaire_v2_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params =
+                SubmitDepositQuestionnaireV2Params::builder(1, "questionnaire_example".to_string())
+                    .build()
+                    .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
+            )
+            .unwrap();
+            let expected_response: models::SubmitDepositQuestionnaireV2Response =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::SubmitDepositQuestionnaireV2Response");
+
+            let resp = client
+                .submit_deposit_questionnaire_v2(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn submit_deposit_questionnaire_v2_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params =
+                SubmitDepositQuestionnaireV2Params::builder(1, "questionnaire_example".to_string())
+                    .build()
+                    .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
+            )
+            .unwrap();
+            let expected_response: models::SubmitDepositQuestionnaireV2Response =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::SubmitDepositQuestionnaireV2Response");
+
+            let resp = client
+                .submit_deposit_questionnaire_v2(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn submit_deposit_questionnaire_v2_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: true };
+
+            let params =
+                SubmitDepositQuestionnaireV2Params::builder(1, "questionnaire_example".to_string())
+                    .build()
+                    .unwrap();
+
+            match client.submit_deposit_questionnaire_v2(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

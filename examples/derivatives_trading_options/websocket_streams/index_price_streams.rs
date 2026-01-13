@@ -1,4 +1,3 @@
-// Class name: websocket_market_streams_api
 use anyhow::{Context, Result};
 use tokio::time::{Duration, sleep};
 use tracing::info;
@@ -27,7 +26,7 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = IndexPriceStreamsParams::builder("btcusdt".to_string()).build()?;
+    let params = IndexPriceStreamsParams::default();
 
     // Subscribe to the stream
     let stream = connection

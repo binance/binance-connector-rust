@@ -6,14 +6,16 @@ use crate::common::{
     config::{ConfigurationRestApi, ConfigurationWebsocketStreams},
     constants::{
         DERIVATIVES_TRADING_OPTIONS_REST_API_PROD_URL,
+        DERIVATIVES_TRADING_OPTIONS_REST_API_TESTNET_URL,
         DERIVATIVES_TRADING_OPTIONS_WS_STREAMS_PROD_URL,
+        DERIVATIVES_TRADING_OPTIONS_WS_STREAMS_TESTNET_URL,
     },
     utils::build_user_agent,
 };
 
 /// Represents the `DerivativesTradingOptions` REST API client for interacting with the Binance `DerivativesTradingOptions` REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for both production and testnet environments.
 pub struct DerivativesTradingOptionsRestApi {}
 
 impl DerivativesTradingOptionsRestApi {
@@ -51,11 +53,26 @@ impl DerivativesTradingOptionsRestApi {
         config.base_path = Some(DERIVATIVES_TRADING_OPTIONS_REST_API_PROD_URL.to_string());
         DerivativesTradingOptionsRestApi::from_config(config)
     }
+
+    /// Creates a REST API client configured for the testnet environment.
+    ///
+    /// # Arguments
+    ///
+    /// * `config` - Configuration for the REST API client
+    ///
+    /// # Returns
+    ///
+    /// A new REST API client configured for the testnet environment
+    #[must_use]
+    pub fn testnet(mut config: ConfigurationRestApi) -> rest_api::RestApi {
+        config.base_path = Some(DERIVATIVES_TRADING_OPTIONS_REST_API_TESTNET_URL.to_string());
+        DerivativesTradingOptionsRestApi::from_config(config)
+    }
 }
 
 /// Represents the `DerivativesTradingOptions` WebSocket Streams client for interacting with the Binance `DerivativesTradingOptions` WebSocket Streams.
 ///
-/// This struct provides methods to create WebSocket Streams clients for the production environment.
+/// This struct provides methods to create WebSocket Streams clients for both production and testnet environments.
 pub struct DerivativesTradingOptionsWsStreams {}
 
 impl DerivativesTradingOptionsWsStreams {
@@ -95,6 +112,23 @@ impl DerivativesTradingOptionsWsStreams {
         mut config: ConfigurationWebsocketStreams,
     ) -> websocket_streams::WebsocketStreamsHandle {
         config.ws_url = Some(DERIVATIVES_TRADING_OPTIONS_WS_STREAMS_PROD_URL.to_string());
+        DerivativesTradingOptionsWsStreams::from_config(config)
+    }
+
+    /// Creates a WebSocket streams client configured for the testnet environment.
+    ///
+    /// # Arguments
+    ///
+    /// * `config` - Configuration for the WebSocket streams client
+    ///
+    /// # Returns
+    ///
+    /// A new WebSocket streams client configured for the testnet environment
+    #[must_use]
+    pub fn testnet(
+        mut config: ConfigurationWebsocketStreams,
+    ) -> websocket_streams::WebsocketStreamsHandle {
+        config.ws_url = Some(DERIVATIVES_TRADING_OPTIONS_WS_STREAMS_TESTNET_URL.to_string());
         DerivativesTradingOptionsWsStreams::from_config(config)
     }
 }

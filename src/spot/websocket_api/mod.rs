@@ -1855,6 +1855,7 @@ impl WebsocketApi {
             WebsocketBase::WebsocketApi(self.websocket_api_base.clone()),
             random_string(),
             None,
+            None,
         )
         .await;
 
@@ -1896,6 +1897,7 @@ impl WebsocketApi {
         let stream = create_stream_handler::<UserDataStreamEventsResponse>(
             WebsocketBase::WebsocketApi(self.websocket_api_base.clone()),
             random_string(),
+            None,
             None,
         )
         .await;

@@ -343,6 +343,49 @@ impl RestApi {
             .await
     }
 
+    /// Get Delta Mode `Status(USER_DATA)`
+    ///
+    /// Query the Delta mode status of current account.
+    ///
+    /// Weight: 1500
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetDeltaModeStatusParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetDeltaModeStatusResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Delta-Mode-Status).
+    ///
+    pub async fn get_delta_mode_status(
+        &self,
+        params: GetDeltaModeStatusParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDeltaModeStatusResponse>> {
+        self.account_api_client.get_delta_mode_status(params).await
+    }
+
     /// Get Portfolio Margin Pro Account `Balance(USER_DATA)`
     ///
     /// Query Portfolio Margin Pro account balance
@@ -530,6 +573,8 @@ impl RestApi {
     /// Portfolio Margin Pro Bankruptcy Loan Repay
     ///
     /// Repay Portfolio Margin Pro Bankruptcy Loan
+    ///
+    /// * Please note that the API Key has enabled Spot & Margin Trading permissions to access this endpoint.
     ///
     /// Weight: 3000
     ///
@@ -765,6 +810,49 @@ impl RestApi {
         self.account_api_client
             .repay_futures_negative_balance(params)
             .await
+    }
+
+    /// Switch Delta Mode(TRADE)
+    ///
+    /// Switch the Delta mode for existing PM PRO / PM RETAIL accounts.
+    ///
+    /// Weight: 1500
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`SwitchDeltaModeParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::SwitchDeltaModeResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Switch-Delta-Mode).
+    ///
+    pub async fn switch_delta_mode(
+        &self,
+        params: SwitchDeltaModeParams,
+    ) -> anyhow::Result<RestApiResponse<models::SwitchDeltaModeResponse>> {
+        self.account_api_client.switch_delta_mode(params).await
     }
 
     /// Transfer LDUSDT/RWUSD for Portfolio Margin(TRADE)

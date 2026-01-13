@@ -20,9 +20,17 @@ pub struct OptionMarginAccountInformationResponse {
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<Vec<models::OptionMarginAccountInformationResponseAssetInner>>,
     #[serde(rename = "greek", skip_serializing_if = "Option::is_none")]
-    pub greek: Option<Vec<models::OptionAccountInformationResponseGreekInner>>,
+    pub greek: Option<Vec<models::OptionMarginAccountInformationResponseGreekInner>>,
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]
+    pub can_trade: Option<bool>,
+    #[serde(rename = "canDeposit", skip_serializing_if = "Option::is_none")]
+    pub can_deposit: Option<bool>,
+    #[serde(rename = "canWithdraw", skip_serializing_if = "Option::is_none")]
+    pub can_withdraw: Option<bool>,
+    #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
+    pub reduce_only: Option<bool>,
 }
 
 impl OptionMarginAccountInformationResponse {
@@ -32,6 +40,10 @@ impl OptionMarginAccountInformationResponse {
             asset: None,
             greek: None,
             time: None,
+            can_trade: None,
+            can_deposit: None,
+            can_withdraw: None,
+            reduce_only: None,
         }
     }
 }

@@ -148,7 +148,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/dual_investment/market-data/Get-Dual-Investment-product-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/market-data/Get-Dual-Investment-product-list).
     ///
     pub async fn get_dual_investment_product_list(
         &self,
@@ -193,7 +193,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/dual_investment/trade/Change-Auto-Compound-status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Change-Auto-Compound-status).
     ///
     pub async fn change_auto_compound_status(
         &self,
@@ -238,7 +238,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/dual_investment/trade/Check-Dual-Investment-accounts).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Check-Dual-Investment-accounts).
     ///
     pub async fn check_dual_investment_accounts(
         &self,
@@ -283,7 +283,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/dual_investment/trade/Get-Dual-Investment-positions).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Get-Dual-Investment-positions).
     ///
     pub async fn get_dual_investment_positions(
         &self,
@@ -331,7 +331,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/dual_investment/trade/Subscribe-Dual-Investment-products).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Subscribe-Dual-Investment-products).
     ///
     pub async fn subscribe_dual_investment_products(
         &self,

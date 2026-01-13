@@ -125,6 +125,8 @@ pub mod submit_deposit_questionnaire_response;
 pub use self::submit_deposit_questionnaire_response::SubmitDepositQuestionnaireResponse;
 pub mod submit_deposit_questionnaire_travel_rule_response;
 pub use self::submit_deposit_questionnaire_travel_rule_response::SubmitDepositQuestionnaireTravelRuleResponse;
+pub mod submit_deposit_questionnaire_v2_response;
+pub use self::submit_deposit_questionnaire_v2_response::SubmitDepositQuestionnaireV2Response;
 pub mod system_status_response;
 pub use self::system_status_response::SystemStatusResponse;
 pub mod toggle_bnb_burn_on_spot_trade_and_margin_interest_response;

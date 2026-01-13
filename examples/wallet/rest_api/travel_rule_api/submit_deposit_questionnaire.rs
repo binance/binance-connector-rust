@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = SubmitDepositQuestionnaireParams::builder(
         "1".to_string(),
-        "1".to_string(),
+        1,
         "questionnaire_example".to_string(),
         "beneficiary_pii_example".to_string(),
         "signature_example".to_string(),

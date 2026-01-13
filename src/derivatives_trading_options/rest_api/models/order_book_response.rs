@@ -17,24 +17,24 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderBookResponse {
-    #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
-    pub t_uppercase: Option<i64>,
-    #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
-    pub u: Option<i64>,
     #[serde(rename = "bids", skip_serializing_if = "Option::is_none")]
     pub bids: Option<Vec<Vec<String>>>,
     #[serde(rename = "asks", skip_serializing_if = "Option::is_none")]
     pub asks: Option<Vec<Vec<String>>>,
+    #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
+    pub t_uppercase: Option<i64>,
+    #[serde(rename = "lastUpdateId", skip_serializing_if = "Option::is_none")]
+    pub last_update_id: Option<i64>,
 }
 
 impl OrderBookResponse {
     #[must_use]
     pub fn new() -> OrderBookResponse {
         OrderBookResponse {
-            t_uppercase: None,
-            u: None,
             bids: None,
             asks: None,
+            t_uppercase: None,
+            last_update_id: None,
         }
     }
 }

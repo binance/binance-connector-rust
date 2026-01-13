@@ -26,8 +26,8 @@ pub struct KlineCandlestickStreamsResponseK {
     pub s: Option<String>,
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
-    #[serde(rename = "F", skip_serializing_if = "Option::is_none")]
-    pub f_uppercase: Option<i64>,
+    #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
+    pub f: Option<i64>,
     #[serde(rename = "L", skip_serializing_if = "Option::is_none")]
     pub l_uppercase: Option<i64>,
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
@@ -60,7 +60,7 @@ impl KlineCandlestickStreamsResponseK {
             t_uppercase: None,
             s: None,
             i: None,
-            f_uppercase: None,
+            f: None,
             l_uppercase: None,
             o: None,
             c: None,

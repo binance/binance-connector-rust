@@ -760,6 +760,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -794,6 +795,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -829,6 +831,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -864,6 +867,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -899,6 +903,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -935,6 +940,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -984,6 +990,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1017,6 +1024,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                 }
                 StreamId::Str(s)
             }),
+            None,
         )
         .await)
     }
@@ -1058,6 +1066,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1094,6 +1103,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1130,6 +1140,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1165,6 +1176,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1207,6 +1219,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1242,6 +1255,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1284,6 +1298,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                 }
                 StreamId::Str(s)
             }),
+            None,
         )
         .await)
     }
@@ -1319,6 +1334,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1354,6 +1370,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1399,6 +1416,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1434,6 +1452,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1468,6 +1487,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1491,7 +1511,7 @@ mod tests {
         let config = ConfigurationWebsocketStreams::builder()
             .build()
             .expect("Failed to build configuration");
-        let streams_base = WebsocketStreams::new(config, vec![conn.clone()]);
+        let streams_base = WebsocketStreams::new(config, vec![conn.clone()], vec![]);
         conn.set_handler(streams_base.clone() as Arc<dyn WebsocketHandler>)
             .await;
         (streams_base, conn)
@@ -1570,7 +1590,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","f":100,"l":105,"T":123456785,"m":true}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1624,7 +1644,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","f":100,"l":105,"T":123456785,"m":true}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

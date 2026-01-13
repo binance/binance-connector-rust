@@ -3,8 +3,8 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsRestApi, rest_api::OptionAccountInformationParams,
+use binance_sdk::derivatives_trading_portfolio_margin_pro::{
+    DerivativesTradingPortfolioMarginProRestApi, rest_api::SwitchDeltaModeParams,
 };
 use binance_sdk::logger;
 
@@ -23,21 +23,21 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the DerivativesTradingOptions REST API client
-    let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
+    // Create the DerivativesTradingPortfolioMarginPro REST API client
+    let rest_client = DerivativesTradingPortfolioMarginProRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = OptionAccountInformationParams::default();
+    let params = SwitchDeltaModeParams::builder("delta_enabled_example".to_string()).build()?;
 
     // Make the API call
     let response = rest_client
-        .option_account_information(params)
+        .switch_delta_mode(params)
         .await
-        .context("option_account_information request failed")?;
+        .context("switch_delta_mode request failed")?;
 
-    info!(?response.rate_limits, "option_account_information rate limits");
+    info!(?response.rate_limits, "switch_delta_mode rate limits");
     let data = response.data().await?;
-    info!(?data, "option_account_information data");
+    info!(?data, "switch_delta_mode data");
 
     Ok(())
 }

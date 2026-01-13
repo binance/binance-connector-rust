@@ -17,28 +17,25 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AccountUpdate {
+pub struct IndexPriceStreamsResponseInner {
+    #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
+    pub e: Option<String>,
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
-    #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
-    pub b_uppercase: Option<Vec<models::AccountUpdateBInner>>,
-    #[serde(rename = "G", skip_serializing_if = "Option::is_none")]
-    pub g_uppercase: Option<Vec<models::AccountUpdateGInner>>,
-    #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
-    pub p_uppercase: Option<Vec<models::AccountUpdatePInner>>,
-    #[serde(rename = "uid", skip_serializing_if = "Option::is_none")]
-    pub uid: Option<i64>,
+    #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
+    pub s: Option<String>,
+    #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
+    pub p: Option<String>,
 }
 
-impl AccountUpdate {
+impl IndexPriceStreamsResponseInner {
     #[must_use]
-    pub fn new() -> AccountUpdate {
-        AccountUpdate {
+    pub fn new() -> IndexPriceStreamsResponseInner {
+        IndexPriceStreamsResponseInner {
+            e: None,
             e_uppercase: None,
-            b_uppercase: None,
-            g_uppercase: None,
-            p_uppercase: None,
-            uid: None,
+            s: None,
+            p: None,
         }
     }
 }

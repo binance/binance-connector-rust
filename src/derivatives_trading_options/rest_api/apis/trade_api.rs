@@ -75,6 +75,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QuerySingleOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::QuerySingleOrderResponse>>;
+    async fn user_commission(
+        &self,
+        params: UserCommissionParams,
+    ) -> anyhow::Result<RestApiResponse<models::UserCommissionResponse>>;
     async fn user_exercise_record(
         &self,
         params: UserExerciseRecordParams,
@@ -159,6 +163,8 @@ pub enum NewOrderTimeInForceEnum {
     Ioc,
     #[serde(rename = "FOK")]
     Fok,
+    #[serde(rename = "GTX")]
+    Gtx,
 }
 
 impl NewOrderTimeInForceEnum {
@@ -168,6 +174,7 @@ impl NewOrderTimeInForceEnum {
             Self::Gtc => "GTC",
             Self::Ioc => "IOC",
             Self::Fok => "FOK",
+            Self::Gtx => "GTX",
         }
     }
 }
@@ -180,6 +187,7 @@ impl std::str::FromStr for NewOrderTimeInForceEnum {
             "GTC" => Ok(Self::Gtc),
             "IOC" => Ok(Self::Ioc),
             "FOK" => Ok(Self::Fok),
+            "GTX" => Ok(Self::Gtx),
             other => Err(format!("invalid NewOrderTimeInForceEnum: {}", other).into()),
         }
     }
@@ -228,7 +236,7 @@ pub struct AccountTradeListParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub symbol: Option<String>,
-    /// The `UniqueId` ID from which to return. The latest deal record is returned by default
+    /// Trade id to fetch from. Default gets most recent trades, e.g 4611875134427365376
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -703,6 +711,29 @@ impl QuerySingleOrderParams {
     #[must_use]
     pub fn builder(symbol: String) -> QuerySingleOrderParamsBuilder {
         QuerySingleOrderParamsBuilder::default().symbol(symbol)
+    }
+}
+/// Request parameters for the [`user_commission`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`user_commission`](#method.user_commission).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct UserCommissionParams {
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl UserCommissionParams {
+    /// Create a builder for [`user_commission`].
+    ///
+    #[must_use]
+    pub fn builder() -> UserCommissionParamsBuilder {
+        UserCommissionParamsBuilder::default()
     }
 }
 /// Request parameters for the [`user_exercise_record`] operation.
@@ -1262,6 +1293,35 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn user_commission(
+        &self,
+        params: UserCommissionParams,
+    ) -> anyhow::Result<RestApiResponse<models::UserCommissionResponse>> {
+        let UserCommissionParams { recv_window } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::UserCommissionResponse>(
+            &self.configuration,
+            "/eapi/v1/commission",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn user_exercise_record(
         &self,
         params: UserExerciseRecordParams,
@@ -1356,7 +1416,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":4611875134427365000,"tradeId":239,"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","fee":"0","realizedProfit":"0.00000000","side":"BUY","type":"LIMIT","volatility":"0.9","liquidity":"TAKER","quoteAsset":"USDT","time":1592465880683,"priceScale":2,"quantityScale":2,"optionSide":"CALL"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":4611875134427365000,"tradeId":239,"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","fee":"0","realizedProfit":"0.00000000","side":"BUY","type":"LIMIT","liquidity":"TAKER","time":1592465880683,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}]"#).unwrap();
             let dummy_response: Vec<models::AccountTradeListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AccountTradeListResponseInner>");
@@ -1382,8 +1442,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"code":0,"msg":"success","data":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":0,"msg":"success"}"#).unwrap();
             let dummy_response: models::CancelAllOptionOrdersByUnderlyingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelAllOptionOrdersByUnderlyingResponse");
@@ -1436,7 +1495,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":0,"side":"BUY","type":"LIMIT","timeInForce":"GTC","createTime":1592465880683,"status":"ACCEPTED","avgPrice":"0","reduceOnly":false,"clientOrderId":"","updateTime":1566818724722}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":3,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let dummy_response: Vec<models::CancelMultipleOptionOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::CancelMultipleOptionOrdersResponseInner>",
@@ -1462,7 +1521,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createDate":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":4,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createDate":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":4,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let dummy_response: models::CancelOptionOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelOptionOrderResponse");
@@ -1487,7 +1546,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","side":"BUY","type":"LIMIT","createDate":1592465880683,"reduceOnly":false,"postOnly":false,"mmp":false,"executedQty":"0","fee":"0","timeInForce":"GTC","createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let dummy_response: models::NewOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::NewOrderResponse");
@@ -1513,7 +1572,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"1000","symbol":"BTC-200730-9000-C","side":"SHORT","quantity":"-0.1","reducibleQty":"0","markValue":"105.00138","ror":"-0.05","unrealizedPNL":"-5.00138","markPrice":"1050.0138","strikePrice":"9000","positionCost":"1000.0000","expiryDate":1593511200000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"1000","symbol":"BTC-200730-9000-C","side":"SHORT","quantity":"-0.1","markValue":"105.00138","unrealizedPNL":"-5.00138","markPrice":"1050.0138","strikePrice":"9000","expiryDate":1593511200000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","time":1762872654561,"bidQuantity":"0.0000","askQuantity":"0.0000"}]"#).unwrap();
             let dummy_response: Vec<models::OptionPositionInformationResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::OptionPositionInformationResponseInner>",
@@ -1540,7 +1599,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4612288550799409000,"symbol":"ETH-220826-1800-C","price":"100","quantity":"0.01","side":"BUY","type":"LIMIT","reduceOnly":false,"postOnly":false,"clientOrderId":"1001","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let dummy_response: Vec<models::PlaceMultipleOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
@@ -1566,7 +1625,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1592465880683,"updateTime":1592465880683,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1592465880683,"status":"NEW","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let dummy_response: Vec<models::QueryCurrentOpenOptionOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryCurrentOpenOptionOrdersResponseInner>",
@@ -1593,7 +1652,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611922413427360000,"symbol":"BTC-220715-2000-C","price":"18000.00000000","quantity":"-0.50000000","executedQty":"-0.50000000","fee":"3.00000000","side":"SELL","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1657867694244,"updateTime":1657867888216,"status":"FILLED","reason":"0","avgPrice":"18000.00000000","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611922413427360000,"symbol":"BTC-220715-2000-C","price":"18000.00000000","quantity":"-0.50000000","executedQty":"-0.50000000","side":"SELL","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1657867694244,"updateTime":1657867888216,"status":"FILLED","avgPrice":"18000.00000000","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let dummy_response: Vec<models::QueryOptionOrderHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::QueryOptionOrderHistoryResponseInner>");
@@ -1618,10 +1677,35 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let dummy_response: models::QuerySingleOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QuerySingleOrderResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn user_commission(
+            &self,
+            _params: UserCommissionParams,
+        ) -> anyhow::Result<RestApiResponse<models::UserCommissionResponse>> {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"commissions":[{"underlying":"BTCUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"ETHUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"BNBUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"SOLUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"XRPUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"DOGEUSDT","makerFee":"0.000240","takerFee":"0.000240"}]}"#).unwrap();
+            let dummy_response: models::UserCommissionResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::UserCommissionResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1643,7 +1727,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1125899906842624042","currency":"USDT","symbol":"BTC-220721-25000-C","exercisePrice":"25000.00000000","markPrice":"25000.00000000","quantity":"1.00000000","amount":"0.00000000","fee":"0.00000000","createDate":1658361600000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","positionSide":"LONG","quoteAsset":"USDT"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"1125899906842624042","currency":"USDT","symbol":"BTC-220721-25000-C","exercisePrice":"25000.00000000","quantity":"1.00000000","amount":"0.00000000","fee":"0.00000000","createDate":1658361600000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","positionSide":"LONG","quoteAsset":"USDT"}]"#).unwrap();
             let dummy_response: Vec<models::UserExerciseRecordResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::UserExerciseRecordResponseInner>");
@@ -1666,7 +1750,7 @@ mod tests {
 
             let params = AccountTradeListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":4611875134427365000,"tradeId":239,"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","fee":"0","realizedProfit":"0.00000000","side":"BUY","type":"LIMIT","volatility":"0.9","liquidity":"TAKER","quoteAsset":"USDT","time":1592465880683,"priceScale":2,"quantityScale":2,"optionSide":"CALL"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":4611875134427365000,"tradeId":239,"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","fee":"0","realizedProfit":"0.00000000","side":"BUY","type":"LIMIT","liquidity":"TAKER","time":1592465880683,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}]"#).unwrap();
             let expected_response : Vec<models::AccountTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountTradeListResponseInner>");
 
             let resp = client.account_trade_list(params).await.expect("Expected a response");
@@ -1683,7 +1767,7 @@ mod tests {
 
             let params = AccountTradeListParams::builder().symbol("symbol_example".to_string()).from_id(1).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":4611875134427365000,"tradeId":239,"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","fee":"0","realizedProfit":"0.00000000","side":"BUY","type":"LIMIT","volatility":"0.9","liquidity":"TAKER","quoteAsset":"USDT","time":1592465880683,"priceScale":2,"quantityScale":2,"optionSide":"CALL"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":4611875134427365000,"tradeId":239,"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","fee":"0","realizedProfit":"0.00000000","side":"BUY","type":"LIMIT","liquidity":"TAKER","time":1592465880683,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}]"#).unwrap();
             let expected_response : Vec<models::AccountTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountTradeListResponseInner>");
 
             let resp = client.account_trade_list(params).await.expect("Expected a response");
@@ -1719,8 +1803,7 @@ mod tests {
                     .build()
                     .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"code":0,"msg":"success","data":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":0,"msg":"success"}"#).unwrap();
             let expected_response: models::CancelAllOptionOrdersByUnderlyingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelAllOptionOrdersByUnderlyingResponse");
@@ -1746,8 +1829,7 @@ mod tests {
                     .build()
                     .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"code":0,"msg":"success","data":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":0,"msg":"success"}"#).unwrap();
             let expected_response: models::CancelAllOptionOrdersByUnderlyingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelAllOptionOrdersByUnderlyingResponse");
@@ -1863,7 +1945,7 @@ mod tests {
 
             let params = CancelMultipleOptionOrdersParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":0,"side":"BUY","type":"LIMIT","timeInForce":"GTC","createTime":1592465880683,"status":"ACCEPTED","avgPrice":"0","reduceOnly":false,"clientOrderId":"","updateTime":1566818724722}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":3,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::CancelMultipleOptionOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CancelMultipleOptionOrdersResponseInner>");
 
             let resp = client.cancel_multiple_option_orders(params).await.expect("Expected a response");
@@ -1880,7 +1962,7 @@ mod tests {
 
             let params = CancelMultipleOptionOrdersParams::builder("symbol_example".to_string(),).order_ids([4611875134427365000,].to_vec()).client_order_ids(["my_id_1".to_string(),].to_vec()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":0,"side":"BUY","type":"LIMIT","timeInForce":"GTC","createTime":1592465880683,"status":"ACCEPTED","avgPrice":"0","reduceOnly":false,"clientOrderId":"","updateTime":1566818724722}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":3,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::CancelMultipleOptionOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CancelMultipleOptionOrdersResponseInner>");
 
             let resp = client.cancel_multiple_option_orders(params).await.expect("Expected a response");
@@ -1915,7 +1997,7 @@ mod tests {
 
             let params = CancelOptionOrderParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createDate":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":4,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createDate":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":4,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let expected_response : models::CancelOptionOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelOptionOrderResponse");
 
             let resp = client.cancel_option_order(params).await.expect("Expected a response");
@@ -1932,7 +2014,7 @@ mod tests {
 
             let params = CancelOptionOrderParams::builder("symbol_example".to_string(),).order_id(1).client_order_id("1".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createDate":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":4,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createDate":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":4,"quantityScale":4,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let expected_response : models::CancelOptionOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelOptionOrderResponse");
 
             let resp = client.cancel_option_order(params).await.expect("Expected a response");
@@ -1967,7 +2049,7 @@ mod tests {
 
             let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","side":"BUY","type":"LIMIT","createDate":1592465880683,"reduceOnly":false,"postOnly":false,"mmp":false,"executedQty":"0","fee":"0","timeInForce":"GTC","createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
 
             let resp = client.new_order(params).await.expect("Expected a response");
@@ -1984,7 +2066,7 @@ mod tests {
 
             let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,dec!(1.0),).price(dec!(1.0)).time_in_force(NewOrderTimeInForceEnum::Gtc).reduce_only(false).post_only(false).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).client_order_id("1".to_string()).is_mmp(true).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","side":"BUY","type":"LIMIT","createDate":1592465880683,"reduceOnly":false,"postOnly":false,"mmp":false,"executedQty":"0","fee":"0","timeInForce":"GTC","createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
 
             let resp = client.new_order(params).await.expect("Expected a response");
@@ -2024,7 +2106,7 @@ mod tests {
 
             let params = OptionPositionInformationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"1000","symbol":"BTC-200730-9000-C","side":"SHORT","quantity":"-0.1","reducibleQty":"0","markValue":"105.00138","ror":"-0.05","unrealizedPNL":"-5.00138","markPrice":"1050.0138","strikePrice":"9000","positionCost":"1000.0000","expiryDate":1593511200000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"1000","symbol":"BTC-200730-9000-C","side":"SHORT","quantity":"-0.1","markValue":"105.00138","unrealizedPNL":"-5.00138","markPrice":"1050.0138","strikePrice":"9000","expiryDate":1593511200000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","time":1762872654561,"bidQuantity":"0.0000","askQuantity":"0.0000"}]"#).unwrap();
             let expected_response : Vec<models::OptionPositionInformationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OptionPositionInformationResponseInner>");
 
             let resp = client.option_position_information(params).await.expect("Expected a response");
@@ -2041,7 +2123,7 @@ mod tests {
 
             let params = OptionPositionInformationParams::builder().symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"1000","symbol":"BTC-200730-9000-C","side":"SHORT","quantity":"-0.1","reducibleQty":"0","markValue":"105.00138","ror":"-0.05","unrealizedPNL":"-5.00138","markPrice":"1050.0138","strikePrice":"9000","positionCost":"1000.0000","expiryDate":1593511200000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"1000","symbol":"BTC-200730-9000-C","side":"SHORT","quantity":"-0.1","markValue":"105.00138","unrealizedPNL":"-5.00138","markPrice":"1050.0138","strikePrice":"9000","expiryDate":1593511200000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","time":1762872654561,"bidQuantity":"0.0000","askQuantity":"0.0000"}]"#).unwrap();
             let expected_response : Vec<models::OptionPositionInformationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OptionPositionInformationResponseInner>");
 
             let resp = client.option_position_information(params).await.expect("Expected a response");
@@ -2074,7 +2156,7 @@ mod tests {
 
             let params = PlaceMultipleOrdersParams::builder(vec![],).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4612288550799409000,"symbol":"ETH-220826-1800-C","price":"100","quantity":"0.01","side":"BUY","type":"LIMIT","reduceOnly":false,"postOnly":false,"clientOrderId":"1001","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
 
             let resp = client.place_multiple_orders(params).await.expect("Expected a response");
@@ -2091,7 +2173,7 @@ mod tests {
 
             let params = PlaceMultipleOrdersParams::builder(vec![],).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4612288550799409000,"symbol":"ETH-220826-1800-C","price":"100","quantity":"0.01","side":"BUY","type":"LIMIT","reduceOnly":false,"postOnly":false,"clientOrderId":"1001","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
 
             let resp = client.place_multiple_orders(params).await.expect("Expected a response");
@@ -2124,7 +2206,7 @@ mod tests {
 
             let params = QueryCurrentOpenOptionOrdersParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1592465880683,"updateTime":1592465880683,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1592465880683,"status":"NEW","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::QueryCurrentOpenOptionOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCurrentOpenOptionOrdersResponseInner>");
 
             let resp = client.query_current_open_option_orders(params).await.expect("Expected a response");
@@ -2141,7 +2223,7 @@ mod tests {
 
             let params = QueryCurrentOpenOptionOrdersParams::builder().symbol("symbol_example".to_string()).order_id(1).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1592465880683,"updateTime":1592465880683,"status":"ACCEPTED","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1592465880683,"status":"NEW","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::QueryCurrentOpenOptionOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCurrentOpenOptionOrdersResponseInner>");
 
             let resp = client.query_current_open_option_orders(params).await.expect("Expected a response");
@@ -2176,7 +2258,7 @@ mod tests {
 
             let params = QueryOptionOrderHistoryParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611922413427360000,"symbol":"BTC-220715-2000-C","price":"18000.00000000","quantity":"-0.50000000","executedQty":"-0.50000000","fee":"3.00000000","side":"SELL","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1657867694244,"updateTime":1657867888216,"status":"FILLED","reason":"0","avgPrice":"18000.00000000","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611922413427360000,"symbol":"BTC-220715-2000-C","price":"18000.00000000","quantity":"-0.50000000","executedQty":"-0.50000000","side":"SELL","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1657867694244,"updateTime":1657867888216,"status":"FILLED","avgPrice":"18000.00000000","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::QueryOptionOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryOptionOrderHistoryResponseInner>");
 
             let resp = client.query_option_order_history(params).await.expect("Expected a response");
@@ -2193,7 +2275,7 @@ mod tests {
 
             let params = QueryOptionOrderHistoryParams::builder("symbol_example".to_string(),).order_id(1).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611922413427360000,"symbol":"BTC-220715-2000-C","price":"18000.00000000","quantity":"-0.50000000","executedQty":"-0.50000000","fee":"3.00000000","side":"SELL","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1657867694244,"updateTime":1657867888216,"status":"FILLED","reason":"0","avgPrice":"18000.00000000","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":4611922413427360000,"symbol":"BTC-220715-2000-C","price":"18000.00000000","quantity":"-0.50000000","executedQty":"-0.50000000","side":"SELL","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1657867694244,"updateTime":1657867888216,"status":"FILLED","avgPrice":"18000.00000000","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}]"#).unwrap();
             let expected_response : Vec<models::QueryOptionOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryOptionOrderHistoryResponseInner>");
 
             let resp = client.query_option_order_history(params).await.expect("Expected a response");
@@ -2228,7 +2310,7 @@ mod tests {
 
             let params = QuerySingleOrderParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let expected_response : models::QuerySingleOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySingleOrderResponse");
 
             let resp = client.query_single_order(params).await.expect("Expected a response");
@@ -2245,7 +2327,7 @@ mod tests {
 
             let params = QuerySingleOrderParams::builder("symbol_example".to_string(),).order_id(1).client_order_id("1".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","fee":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"postOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"ACCEPTED","avgPrice":"0","source":"API","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":4611875134427365000,"symbol":"BTC-200730-9000-C","price":"100","quantity":"1","executedQty":"0","side":"BUY","type":"LIMIT","timeInForce":"GTC","reduceOnly":false,"createTime":1592465880683,"updateTime":1566818724722,"status":"NEW","avgPrice":"0","clientOrderId":"","priceScale":2,"quantityScale":2,"optionSide":"CALL","quoteAsset":"USDT","mmp":false}"#).unwrap();
             let expected_response : models::QuerySingleOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySingleOrderResponse");
 
             let resp = client.query_single_order(params).await.expect("Expected a response");
@@ -2274,13 +2356,63 @@ mod tests {
     }
 
     #[test]
+    fn user_commission_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = UserCommissionParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"commissions":[{"underlying":"BTCUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"ETHUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"BNBUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"SOLUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"XRPUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"DOGEUSDT","makerFee":"0.000240","takerFee":"0.000240"}]}"#).unwrap();
+            let expected_response : models::UserCommissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::UserCommissionResponse");
+
+            let resp = client.user_commission(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn user_commission_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = UserCommissionParams::builder().recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"commissions":[{"underlying":"BTCUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"ETHUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"BNBUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"SOLUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"XRPUSDT","makerFee":"0.000240","takerFee":"0.000240"},{"underlying":"DOGEUSDT","makerFee":"0.000240","takerFee":"0.000240"}]}"#).unwrap();
+            let expected_response : models::UserCommissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::UserCommissionResponse");
+
+            let resp = client.user_commission(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn user_commission_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = UserCommissionParams::builder().build().unwrap();
+
+            match client.user_commission(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn user_exercise_record_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
             let params = UserExerciseRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1125899906842624042","currency":"USDT","symbol":"BTC-220721-25000-C","exercisePrice":"25000.00000000","markPrice":"25000.00000000","quantity":"1.00000000","amount":"0.00000000","fee":"0.00000000","createDate":1658361600000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","positionSide":"LONG","quoteAsset":"USDT"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"1125899906842624042","currency":"USDT","symbol":"BTC-220721-25000-C","exercisePrice":"25000.00000000","quantity":"1.00000000","amount":"0.00000000","fee":"0.00000000","createDate":1658361600000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","positionSide":"LONG","quoteAsset":"USDT"}]"#).unwrap();
             let expected_response : Vec<models::UserExerciseRecordResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::UserExerciseRecordResponseInner>");
 
             let resp = client.user_exercise_record(params).await.expect("Expected a response");
@@ -2297,7 +2429,7 @@ mod tests {
 
             let params = UserExerciseRecordParams::builder().symbol("symbol_example".to_string()).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1125899906842624042","currency":"USDT","symbol":"BTC-220721-25000-C","exercisePrice":"25000.00000000","markPrice":"25000.00000000","quantity":"1.00000000","amount":"0.00000000","fee":"0.00000000","createDate":1658361600000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","positionSide":"LONG","quoteAsset":"USDT"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"1125899906842624042","currency":"USDT","symbol":"BTC-220721-25000-C","exercisePrice":"25000.00000000","quantity":"1.00000000","amount":"0.00000000","fee":"0.00000000","createDate":1658361600000,"priceScale":2,"quantityScale":2,"optionSide":"CALL","positionSide":"LONG","quoteAsset":"USDT"}]"#).unwrap();
             let expected_response : Vec<models::UserExerciseRecordResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::UserExerciseRecordResponseInner>");
 
             let resp = client.user_exercise_record(params).await.expect("Expected a response");

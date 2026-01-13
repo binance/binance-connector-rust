@@ -27,8 +27,6 @@ pub struct CancelOptionOrderResponse {
     pub quantity: Option<String>,
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
-    #[serde(rename = "fee", skip_serializing_if = "Option::is_none")]
-    pub fee: Option<String>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -37,8 +35,6 @@ pub struct CancelOptionOrderResponse {
     pub time_in_force: Option<String>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
-    #[serde(rename = "postOnly", skip_serializing_if = "Option::is_none")]
-    pub post_only: Option<bool>,
     #[serde(rename = "createDate", skip_serializing_if = "Option::is_none")]
     pub create_date: Option<i64>,
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
@@ -72,12 +68,10 @@ impl CancelOptionOrderResponse {
             price: None,
             quantity: None,
             executed_qty: None,
-            fee: None,
             side: None,
             r#type: None,
             time_in_force: None,
             reduce_only: None,
-            post_only: None,
             create_date: None,
             update_time: None,
             status: None,

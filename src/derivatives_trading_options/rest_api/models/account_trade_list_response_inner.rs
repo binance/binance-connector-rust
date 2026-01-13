@@ -37,12 +37,8 @@ pub struct AccountTradeListResponseInner {
     pub side: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
-    #[serde(rename = "volatility", skip_serializing_if = "Option::is_none")]
-    pub volatility: Option<String>,
     #[serde(rename = "liquidity", skip_serializing_if = "Option::is_none")]
     pub liquidity: Option<String>,
-    #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
-    pub quote_asset: Option<String>,
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
     #[serde(rename = "priceScale", skip_serializing_if = "Option::is_none")]
@@ -51,6 +47,8 @@ pub struct AccountTradeListResponseInner {
     pub quantity_scale: Option<i64>,
     #[serde(rename = "optionSide", skip_serializing_if = "Option::is_none")]
     pub option_side: Option<String>,
+    #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
+    pub quote_asset: Option<String>,
 }
 
 impl AccountTradeListResponseInner {
@@ -67,13 +65,12 @@ impl AccountTradeListResponseInner {
             realized_profit: None,
             side: None,
             r#type: None,
-            volatility: None,
             liquidity: None,
-            quote_asset: None,
             time: None,
             price_scale: None,
             quantity_scale: None,
             option_side: None,
+            quote_asset: None,
         }
     }
 }

@@ -19,11 +19,16 @@ use serde::{Deserialize, Serialize};
 pub struct StartUserDataStreamResponse {
     #[serde(rename = "listenKey", skip_serializing_if = "Option::is_none")]
     pub listen_key: Option<String>,
+    #[serde(rename = "expiration", skip_serializing_if = "Option::is_none")]
+    pub expiration: Option<i64>,
 }
 
 impl StartUserDataStreamResponse {
     #[must_use]
     pub fn new() -> StartUserDataStreamResponse {
-        StartUserDataStreamResponse { listen_key: None }
+        StartUserDataStreamResponse {
+            listen_key: None,
+            expiration: None,
+        }
     }
 }

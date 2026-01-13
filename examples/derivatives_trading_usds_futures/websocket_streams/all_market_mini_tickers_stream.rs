@@ -1,4 +1,3 @@
-// Class name: websocket_market_streams_api
 use anyhow::{Context, Result};
 use tokio::time::{Duration, sleep};
 use tracing::info;

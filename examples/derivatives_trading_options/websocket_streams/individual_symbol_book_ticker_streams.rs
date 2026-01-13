@@ -1,12 +1,10 @@
-// Class name: websocket_market_streams_api
 use anyhow::{Context, Result};
 use tokio::time::{Duration, sleep};
 use tracing::info;
 
 use binance_sdk::config::ConfigurationWebsocketStreams;
 use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsWsStreams,
-    websocket_streams::Ticker24HourByUnderlyingAssetAndExpirationDataParams,
+    DerivativesTradingOptionsWsStreams, websocket_streams::IndividualSymbolBookTickerStreamsParams,
 };
 use binance_sdk::logger;
 
@@ -28,15 +26,11 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = Ticker24HourByUnderlyingAssetAndExpirationDataParams::builder(
-        "ETH".to_string(),
-        "220930".to_string(),
-    )
-    .build()?;
+    let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string()).build()?;
 
     // Subscribe to the stream
     let stream = connection
-        .ticker24_hour_by_underlying_asset_and_expiration_data(params)
+        .individual_symbol_book_ticker_streams(params)
         .await
         .context("Failed to subscribe to the stream")?;
 

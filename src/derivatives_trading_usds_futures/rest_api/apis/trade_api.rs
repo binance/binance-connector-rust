@@ -1276,17 +1276,17 @@ impl AutoCancelAllOpenOrdersParams {
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelAlgoOrderParams {
     ///
-    /// The `algoid` parameter.
+    /// The `algo_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub algoid: Option<i64>,
+    pub algo_id: Option<i64>,
     ///
-    /// The `clientalgoid` parameter.
+    /// The `client_algo_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub clientalgoid: Option<String>,
+    pub client_algo_id: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -2080,7 +2080,8 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub callback_rate: Option<rust_decimal::Decimal>,
-    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
+    ///
+    /// The `client_algo_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2367,7 +2368,8 @@ pub struct QueryAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub algo_id: Option<i64>,
-    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
+    ///
+    /// The `client_algo_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2885,20 +2887,20 @@ impl TradeApi for TradeApiClient {
         params: CancelAlgoOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::CancelAlgoOrderResponse>> {
         let CancelAlgoOrderParams {
-            algoid,
-            clientalgoid,
+            algo_id,
+            client_algo_id,
             recv_window,
         } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
-        if let Some(rw) = algoid {
-            query_params.insert("algoid".to_string(), json!(rw));
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
         }
 
-        if let Some(rw) = clientalgoid {
-            query_params.insert("clientalgoid".to_string(), json!(rw));
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -5346,7 +5348,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelAlgoOrderParams::builder().algoid(789).clientalgoid("clientalgoid_example".to_string()).recv_window(5000).build().unwrap();
+            let params = CancelAlgoOrderParams::builder().algo_id(1).client_algo_id("1".to_string()).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap();
             let expected_response : models::CancelAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelAlgoOrderResponse");

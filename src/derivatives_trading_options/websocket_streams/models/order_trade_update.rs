@@ -20,8 +20,10 @@ use serde_json::Value;
 pub struct OrderTradeUpdate {
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
+    pub t_uppercase: Option<i64>,
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
-    pub o: Option<Vec<models::OrderTradeUpdateOInner>>,
+    pub o: Option<Box<models::OrderTradeUpdateO>>,
 }
 
 impl OrderTradeUpdate {
@@ -29,6 +31,7 @@ impl OrderTradeUpdate {
     pub fn new() -> OrderTradeUpdate {
         OrderTradeUpdate {
             e_uppercase: None,
+            t_uppercase: None,
             o: None,
         }
     }

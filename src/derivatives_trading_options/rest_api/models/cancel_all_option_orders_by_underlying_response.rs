@@ -21,8 +21,6 @@ pub struct CancelAllOptionOrdersByUnderlyingResponse {
     pub code: Option<i64>,
     #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
     pub msg: Option<String>,
-    #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
-    pub data: Option<i64>,
 }
 
 impl CancelAllOptionOrdersByUnderlyingResponse {
@@ -31,7 +29,6 @@ impl CancelAllOptionOrdersByUnderlyingResponse {
         CancelAllOptionOrdersByUnderlyingResponse {
             code: None,
             msg: None,
-            data: None,
         }
     }
 }

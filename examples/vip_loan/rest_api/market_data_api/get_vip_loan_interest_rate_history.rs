@@ -3,10 +3,8 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsRestApi, rest_api::GetDownloadIdForOptionTransactionHistoryParams,
-};
 use binance_sdk::logger;
+use binance_sdk::vip_loan::{VIPLoanRestApi, rest_api::GetVipLoanInterestRateHistoryParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -23,23 +21,22 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the DerivativesTradingOptions REST API client
-    let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
+    // Create the VIPLoan REST API client
+    let rest_client = VIPLoanRestApi::production(rest_conf);
 
     // Setup the API parameters
     let params =
-        GetDownloadIdForOptionTransactionHistoryParams::builder(1623319461670, 1641782889000)
-            .build()?;
+        GetVipLoanInterestRateHistoryParams::builder("coin_example".to_string(), 5000).build()?;
 
     // Make the API call
     let response = rest_client
-        .get_download_id_for_option_transaction_history(params)
+        .get_vip_loan_interest_rate_history(params)
         .await
-        .context("get_download_id_for_option_transaction_history request failed")?;
+        .context("get_vip_loan_interest_rate_history request failed")?;
 
-    info!(?response.rate_limits, "get_download_id_for_option_transaction_history rate limits");
+    info!(?response.rate_limits, "get_vip_loan_interest_rate_history rate limits");
     let data = response.data().await?;
-    info!(?data, "get_download_id_for_option_transaction_history data");
+    info!(?data, "get_vip_loan_interest_rate_history data");
 
     Ok(())
 }

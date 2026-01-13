@@ -16,27 +16,27 @@ use crate::derivatives_trading_options::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct OptionAccountInformationResponseGreekInner {
+pub struct OptionMarginAccountInformationResponseGreekInner {
     #[serde(rename = "underlying", skip_serializing_if = "Option::is_none")]
     pub underlying: Option<String>,
     #[serde(rename = "delta", skip_serializing_if = "Option::is_none")]
     pub delta: Option<String>,
-    #[serde(rename = "gamma", skip_serializing_if = "Option::is_none")]
-    pub gamma: Option<String>,
     #[serde(rename = "theta", skip_serializing_if = "Option::is_none")]
     pub theta: Option<String>,
+    #[serde(rename = "gamma", skip_serializing_if = "Option::is_none")]
+    pub gamma: Option<String>,
     #[serde(rename = "vega", skip_serializing_if = "Option::is_none")]
     pub vega: Option<String>,
 }
 
-impl OptionAccountInformationResponseGreekInner {
+impl OptionMarginAccountInformationResponseGreekInner {
     #[must_use]
-    pub fn new() -> OptionAccountInformationResponseGreekInner {
-        OptionAccountInformationResponseGreekInner {
+    pub fn new() -> OptionMarginAccountInformationResponseGreekInner {
+        OptionMarginAccountInformationResponseGreekInner {
             underlying: None,
             delta: None,
-            gamma: None,
             theta: None,
+            gamma: None,
             vega: None,
         }
     }

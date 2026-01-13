@@ -2008,7 +2008,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":"false","leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
             let dummy_response: Vec<models::SymbolConfigurationResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::SymbolConfigurationResponseInner>");
@@ -3141,7 +3141,7 @@ mod tests {
 
             let params = SymbolConfigurationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":"false","leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
             let expected_response : Vec<models::SymbolConfigurationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::SymbolConfigurationResponseInner>");
 
             let resp = client.symbol_configuration(params).await.expect("Expected a response");
@@ -3158,7 +3158,7 @@ mod tests {
 
             let params = SymbolConfigurationParams::builder().symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":"false","leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
             let expected_response : Vec<models::SymbolConfigurationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::SymbolConfigurationResponseInner>");
 
             let resp = client.symbol_configuration(params).await.expect("Expected a response");

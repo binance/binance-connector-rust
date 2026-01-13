@@ -17,25 +17,28 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct IndexPriceStreamsResponse {
-    #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
-    pub e: Option<String>,
+pub struct BalancePositionUpdate {
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
-    #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
-    pub s: Option<String>,
-    #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
-    pub p: Option<String>,
+    #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
+    pub t_uppercase: Option<i64>,
+    #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
+    pub m: Option<String>,
+    #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
+    pub b_uppercase: Option<Vec<models::BalancePositionUpdateBInner>>,
+    #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
+    pub p_uppercase: Option<Vec<models::BalancePositionUpdatePInner>>,
 }
 
-impl IndexPriceStreamsResponse {
+impl BalancePositionUpdate {
     #[must_use]
-    pub fn new() -> IndexPriceStreamsResponse {
-        IndexPriceStreamsResponse {
-            e: None,
+    pub fn new() -> BalancePositionUpdate {
+        BalancePositionUpdate {
             e_uppercase: None,
-            s: None,
-            p: None,
+            t_uppercase: None,
+            m: None,
+            b_uppercase: None,
+            p_uppercase: None,
         }
     }
 }

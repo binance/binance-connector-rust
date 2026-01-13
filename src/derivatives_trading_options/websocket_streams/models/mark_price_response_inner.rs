@@ -18,24 +18,72 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarkPriceResponseInner {
-    #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
-    pub e: Option<String>,
-    #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
-    pub e_uppercase: Option<i64>,
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
     #[serde(rename = "mp", skip_serializing_if = "Option::is_none")]
     pub mp: Option<String>,
+    #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
+    pub e_uppercase: Option<i64>,
+    #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
+    pub e: Option<String>,
+    #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
+    pub i: Option<String>,
+    #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
+    pub p_uppercase: Option<String>,
+    #[serde(rename = "bo", skip_serializing_if = "Option::is_none")]
+    pub bo: Option<String>,
+    #[serde(rename = "ao", skip_serializing_if = "Option::is_none")]
+    pub ao: Option<String>,
+    #[serde(rename = "bq", skip_serializing_if = "Option::is_none")]
+    pub bq: Option<String>,
+    #[serde(rename = "aq", skip_serializing_if = "Option::is_none")]
+    pub aq: Option<String>,
+    #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
+    pub b: Option<String>,
+    #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
+    pub a: Option<String>,
+    #[serde(rename = "hl", skip_serializing_if = "Option::is_none")]
+    pub hl: Option<String>,
+    #[serde(rename = "ll", skip_serializing_if = "Option::is_none")]
+    pub ll: Option<String>,
+    #[serde(rename = "vo", skip_serializing_if = "Option::is_none")]
+    pub vo: Option<String>,
+    #[serde(rename = "rf", skip_serializing_if = "Option::is_none")]
+    pub rf: Option<String>,
+    #[serde(rename = "d", skip_serializing_if = "Option::is_none")]
+    pub d: Option<String>,
+    #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
+    pub t: Option<String>,
+    #[serde(rename = "g", skip_serializing_if = "Option::is_none")]
+    pub g: Option<String>,
+    #[serde(rename = "v", skip_serializing_if = "Option::is_none")]
+    pub v: Option<String>,
 }
 
 impl MarkPriceResponseInner {
     #[must_use]
     pub fn new() -> MarkPriceResponseInner {
         MarkPriceResponseInner {
-            e: None,
-            e_uppercase: None,
             s: None,
             mp: None,
+            e_uppercase: None,
+            e: None,
+            i: None,
+            p_uppercase: None,
+            bo: None,
+            ao: None,
+            bq: None,
+            aq: None,
+            b: None,
+            a: None,
+            hl: None,
+            ll: None,
+            vo: None,
+            rf: None,
+            d: None,
+            t: None,
+            g: None,
+            v: None,
         }
     }
 }

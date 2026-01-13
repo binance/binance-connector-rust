@@ -1,4 +1,3 @@
-// Class name: websocket_market_streams_api
 use anyhow::{Context, Result};
 use tokio::time::{Duration, sleep};
 use tracing::info;
@@ -27,7 +26,9 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(), 10).build()?;
+    let params =
+        PartialBookDepthStreamsParams::builder("btcusdt".to_string(), "example_value".to_string())
+            .build()?;
 
     // Subscribe to the stream
     let stream = connection

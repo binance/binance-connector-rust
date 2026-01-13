@@ -25,20 +25,14 @@ pub struct OptionPositionInformationResponseInner {
     pub side: Option<String>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<String>,
-    #[serde(rename = "reducibleQty", skip_serializing_if = "Option::is_none")]
-    pub reducible_qty: Option<String>,
     #[serde(rename = "markValue", skip_serializing_if = "Option::is_none")]
     pub mark_value: Option<String>,
-    #[serde(rename = "ror", skip_serializing_if = "Option::is_none")]
-    pub ror: Option<String>,
     #[serde(rename = "unrealizedPNL", skip_serializing_if = "Option::is_none")]
     pub unrealized_pnl: Option<String>,
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
     #[serde(rename = "strikePrice", skip_serializing_if = "Option::is_none")]
     pub strike_price: Option<String>,
-    #[serde(rename = "positionCost", skip_serializing_if = "Option::is_none")]
-    pub position_cost: Option<String>,
     #[serde(rename = "expiryDate", skip_serializing_if = "Option::is_none")]
     pub expiry_date: Option<i64>,
     #[serde(rename = "priceScale", skip_serializing_if = "Option::is_none")]
@@ -49,6 +43,12 @@ pub struct OptionPositionInformationResponseInner {
     pub option_side: Option<String>,
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
+    pub time: Option<i64>,
+    #[serde(rename = "bidQuantity", skip_serializing_if = "Option::is_none")]
+    pub bid_quantity: Option<String>,
+    #[serde(rename = "askQuantity", skip_serializing_if = "Option::is_none")]
+    pub ask_quantity: Option<String>,
 }
 
 impl OptionPositionInformationResponseInner {
@@ -59,18 +59,18 @@ impl OptionPositionInformationResponseInner {
             symbol: None,
             side: None,
             quantity: None,
-            reducible_qty: None,
             mark_value: None,
-            ror: None,
             unrealized_pnl: None,
             mark_price: None,
             strike_price: None,
-            position_cost: None,
             expiry_date: None,
             price_scale: None,
             quantity_scale: None,
             option_side: None,
             quote_asset: None,
+            time: None,
+            bid_quantity: None,
+            ask_quantity: None,
         }
     }
 }

@@ -22,24 +22,22 @@ pub struct TradeStreamsResponse {
     pub e: Option<String>,
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
+    pub t_uppercase: Option<i64>,
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
-    pub t: Option<String>,
+    pub t: Option<i64>,
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
-    #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
-    pub b: Option<i64>,
-    #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
-    pub a: Option<i64>,
-    #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
-    pub t_uppercase: Option<i64>,
-    #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
-    pub s_uppercase: Option<String>,
     #[serde(rename = "X", skip_serializing_if = "Option::is_none")]
     pub x_uppercase: Option<String>,
+    #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
+    pub s_uppercase: Option<String>,
+    #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
+    pub m: Option<bool>,
 }
 
 impl TradeStreamsResponse {
@@ -48,15 +46,14 @@ impl TradeStreamsResponse {
         TradeStreamsResponse {
             e: None,
             e_uppercase: None,
+            t_uppercase: None,
             s: None,
             t: None,
             p: None,
             q: None,
-            b: None,
-            a: None,
-            t_uppercase: None,
-            s_uppercase: None,
             x_uppercase: None,
+            s_uppercase: None,
+            m: None,
         }
     }
 }

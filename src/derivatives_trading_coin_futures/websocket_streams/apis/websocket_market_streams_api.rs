@@ -776,6 +776,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -810,6 +811,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -845,6 +847,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -880,6 +883,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -915,6 +919,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -964,6 +969,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -997,6 +1003,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                 }
                 StreamId::Str(s)
             }),
+            None,
         )
         .await)
     }
@@ -1038,6 +1045,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1077,6 +1085,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1119,6 +1128,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                 }
                 StreamId::Str(s)
             }),
+            None,
         )
         .await)
     }
@@ -1154,6 +1164,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1190,6 +1201,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1225,6 +1237,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1267,6 +1280,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1302,6 +1316,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1346,6 +1361,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1390,6 +1406,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1432,6 +1449,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                 }
                 StreamId::Str(s)
             }),
+            None,
         )
         .await)
     }
@@ -1476,6 +1494,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
+                None,
             )
             .await,
         )
@@ -1499,7 +1518,7 @@ mod tests {
         let config = ConfigurationWebsocketStreams::builder()
             .build()
             .expect("Failed to build configuration");
-        let streams_base = WebsocketStreams::new(config, vec![conn.clone()]);
+        let streams_base = WebsocketStreams::new(config, vec![conn.clone()], vec![]);
         conn.set_handler(streams_base.clone() as Arc<dyn WebsocketHandler>)
             .await;
         (streams_base, conn)

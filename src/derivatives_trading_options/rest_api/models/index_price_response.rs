@@ -16,17 +16,17 @@ use crate::derivatives_trading_options::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct IndexPriceTickerResponse {
+pub struct IndexPriceResponse {
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
     #[serde(rename = "indexPrice", skip_serializing_if = "Option::is_none")]
     pub index_price: Option<String>,
 }
 
-impl IndexPriceTickerResponse {
+impl IndexPriceResponse {
     #[must_use]
-    pub fn new() -> IndexPriceTickerResponse {
-        IndexPriceTickerResponse {
+    pub fn new() -> IndexPriceResponse {
+        IndexPriceResponse {
             time: None,
             index_price: None,
         }

@@ -3,10 +3,8 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsRestApi, rest_api::GetOptionTransactionHistoryDownloadLinkByIdParams,
-};
 use binance_sdk::logger;
+use binance_sdk::wallet::{WalletRestApi, rest_api::SubmitDepositQuestionnaireV2Params};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -23,25 +21,23 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the DerivativesTradingOptions REST API client
-    let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
+    // Create the Wallet REST API client
+    let rest_client = WalletRestApi::production(rest_conf);
 
     // Setup the API parameters
     let params =
-        GetOptionTransactionHistoryDownloadLinkByIdParams::builder("1".to_string()).build()?;
+        SubmitDepositQuestionnaireV2Params::builder(1, "questionnaire_example".to_string())
+            .build()?;
 
     // Make the API call
     let response = rest_client
-        .get_option_transaction_history_download_link_by_id(params)
+        .submit_deposit_questionnaire_v2(params)
         .await
-        .context("get_option_transaction_history_download_link_by_id request failed")?;
+        .context("submit_deposit_questionnaire_v2 request failed")?;
 
-    info!(?response.rate_limits, "get_option_transaction_history_download_link_by_id rate limits");
+    info!(?response.rate_limits, "submit_deposit_questionnaire_v2 rate limits");
     let data = response.data().await?;
-    info!(
-        ?data,
-        "get_option_transaction_history_download_link_by_id data"
-    );
+    info!(?data, "submit_deposit_questionnaire_v2 data");
 
     Ok(())
 }

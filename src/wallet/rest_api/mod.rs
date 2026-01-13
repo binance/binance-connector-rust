@@ -891,8 +891,6 @@ impl RestApi {
     ///
     /// Query User Delegation History
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint
-    ///
     /// Weight: 60
     ///
     /// # Arguments
@@ -2080,6 +2078,56 @@ impl RestApi {
     ) -> anyhow::Result<RestApiResponse<models::SubmitDepositQuestionnaireTravelRuleResponse>> {
         self.travel_rule_api_client
             .submit_deposit_questionnaire_travel_rule(params)
+            .await
+    }
+
+    /// Submit Deposit Questionnaire V2 (For local entities that require travel rule) (supporting network) (`USER_DATA`)
+    ///
+    /// Submit questionnaire for local entities that require travel rule.
+    /// The questionnaire is only applies to transactions from unhosted wallets or VASPs that are not
+    /// yet onboarded with GTR.
+    ///
+    /// * Questionnaire is different for each local entity, please refer
+    /// * If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`,
+    ///
+    /// Weight: 600
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`SubmitDepositQuestionnaireV2Params`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::SubmitDepositQuestionnaireV2Response>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/deposit-provide-info-v2).
+    ///
+    pub async fn submit_deposit_questionnaire_v2(
+        &self,
+        params: SubmitDepositQuestionnaireV2Params,
+    ) -> anyhow::Result<RestApiResponse<models::SubmitDepositQuestionnaireV2Response>> {
+        self.travel_rule_api_client
+            .submit_deposit_questionnaire_v2(params)
             .await
     }
 

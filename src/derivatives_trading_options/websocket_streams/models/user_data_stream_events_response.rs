@@ -19,18 +19,22 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(try_from = "Value")]
 pub enum UserDataStreamEventsResponse {
-    #[serde(rename = "ACCOUNT_UPDATE")]
-    AccountUpdate(Box<models::AccountUpdate>),
+    #[serde(rename = "BALANCE_POSITION_UPDATE")]
+    BalancePositionUpdate(Box<models::BalancePositionUpdate>),
+    #[serde(rename = "GREEK_UPDATE")]
+    GreekUpdate(Box<models::GreekUpdate>),
     #[serde(rename = "ORDER_TRADE_UPDATE")]
     OrderTradeUpdate(Box<models::OrderTradeUpdate>),
     #[serde(rename = "RISK_LEVEL_CHANGE")]
     RiskLevelChange(Box<models::RiskLevelChange>),
+    #[serde(rename = "listenKeyExpired")]
+    ListenKeyExpired(Box<models::Listenkeyexpired>),
     Other(serde_json::Value),
 }
 
 impl Default for UserDataStreamEventsResponse {
     fn default() -> Self {
-        Self::AccountUpdate(Default::default())
+        Self::BalancePositionUpdate(Default::default())
     }
 }
 
@@ -44,11 +48,16 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             .ok_or_else(|| serde_json::Error::custom("missing field `e`"))?;
 
         match tag {
-            "ACCOUNT_UPDATE" => {
+            "BALANCE_POSITION_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::AccountUpdate(Box::new(
-                    payload,
-                )))
+                Ok(UserDataStreamEventsResponse::BalancePositionUpdate(
+                    Box::new(payload),
+                ))
+            }
+
+            "GREEK_UPDATE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::GreekUpdate(Box::new(payload)))
             }
 
             "ORDER_TRADE_UPDATE" => {
@@ -61,6 +70,13 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             "RISK_LEVEL_CHANGE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::RiskLevelChange(Box::new(
+                    payload,
+                )))
+            }
+
+            "listenKeyExpired" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
                     payload,
                 )))
             }

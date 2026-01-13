@@ -41,18 +41,14 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: HistoricalExerciseRecordsParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalExerciseRecordsResponseInner>>>;
-    async fn index_price_ticker(
+    async fn index_price(
         &self,
-        params: IndexPriceTickerParams,
-    ) -> anyhow::Result<RestApiResponse<models::IndexPriceTickerResponse>>;
+        params: IndexPriceParams,
+    ) -> anyhow::Result<RestApiResponse<models::IndexPriceResponse>>;
     async fn kline_candlestick_data(
         &self,
         params: KlineCandlestickDataParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::KlineCandlestickDataResponseInner>>>;
-    async fn old_trades_lookup(
-        &self,
-        params: OldTradesLookupParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::OldTradesLookupResponseInner>>>;
+    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::KlineCandlestickDataResponseItemInner>>>>;
     async fn open_interest(
         &self,
         params: OpenInterestParams,
@@ -128,13 +124,13 @@ impl HistoricalExerciseRecordsParams {
         HistoricalExerciseRecordsParamsBuilder::default()
     }
 }
-/// Request parameters for the [`index_price_ticker`] operation.
+/// Request parameters for the [`index_price`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`index_price_ticker`](#method.index_price_ticker).
+/// [`index_price`](#method.index_price).
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct IndexPriceTickerParams {
+pub struct IndexPriceParams {
     /// Option underlying, e.g BTCUSDT
     ///
     /// This field is **required.
@@ -142,16 +138,16 @@ pub struct IndexPriceTickerParams {
     pub underlying: String,
 }
 
-impl IndexPriceTickerParams {
-    /// Create a builder for [`index_price_ticker`].
+impl IndexPriceParams {
+    /// Create a builder for [`index_price`].
     ///
     /// Required parameters:
     ///
     /// * `underlying` — Option underlying, e.g BTCUSDT
     ///
     #[must_use]
-    pub fn builder(underlying: String) -> IndexPriceTickerParamsBuilder {
-        IndexPriceTickerParamsBuilder::default().underlying(underlying)
+    pub fn builder(underlying: String) -> IndexPriceParamsBuilder {
+        IndexPriceParamsBuilder::default().underlying(underlying)
     }
 }
 /// Request parameters for the [`kline_candlestick_data`] operation.
@@ -201,42 +197,6 @@ impl KlineCandlestickDataParams {
         KlineCandlestickDataParamsBuilder::default()
             .symbol(symbol)
             .interval(interval)
-    }
-}
-/// Request parameters for the [`old_trades_lookup`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`old_trades_lookup`](#method.old_trades_lookup).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct OldTradesLookupParams {
-    /// Option trading pair, e.g BTC-200730-9000-C
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub symbol: String,
-    /// The `UniqueId` ID from which to return. The latest deal record is returned by default
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub from_id: Option<i64>,
-    /// Number of result sets returned Default:100 Max:1000
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub limit: Option<i64>,
-}
-
-impl OldTradesLookupParams {
-    /// Create a builder for [`old_trades_lookup`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — Option trading pair, e.g BTC-200730-9000-C
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> OldTradesLookupParamsBuilder {
-        OldTradesLookupParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`open_interest`] operation.
@@ -499,18 +459,18 @@ impl MarketDataApi for MarketDataApiClient {
         .await
     }
 
-    async fn index_price_ticker(
+    async fn index_price(
         &self,
-        params: IndexPriceTickerParams,
-    ) -> anyhow::Result<RestApiResponse<models::IndexPriceTickerResponse>> {
-        let IndexPriceTickerParams { underlying } = params;
+        params: IndexPriceParams,
+    ) -> anyhow::Result<RestApiResponse<models::IndexPriceResponse>> {
+        let IndexPriceParams { underlying } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
         query_params.insert("underlying".to_string(), json!(underlying));
 
-        send_request::<models::IndexPriceTickerResponse>(
+        send_request::<models::IndexPriceResponse>(
             &self.configuration,
             "/eapi/v1/index",
             reqwest::Method::GET,
@@ -529,7 +489,8 @@ impl MarketDataApi for MarketDataApiClient {
     async fn kline_candlestick_data(
         &self,
         params: KlineCandlestickDataParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::KlineCandlestickDataResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::KlineCandlestickDataResponseItemInner>>>>
+    {
         let KlineCandlestickDataParams {
             symbol,
             interval,
@@ -557,48 +518,9 @@ impl MarketDataApi for MarketDataApiClient {
             query_params.insert("limit".to_string(), json!(rw));
         }
 
-        send_request::<Vec<models::KlineCandlestickDataResponseInner>>(
+        send_request::<Vec<Vec<models::KlineCandlestickDataResponseItemInner>>>(
             &self.configuration,
             "/eapi/v1/klines",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            false,
-        )
-        .await
-    }
-
-    async fn old_trades_lookup(
-        &self,
-        params: OldTradesLookupParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::OldTradesLookupResponseInner>>> {
-        let OldTradesLookupParams {
-            symbol,
-            from_id,
-            limit,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        if let Some(rw) = from_id {
-            query_params.insert("fromId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = limit {
-            query_params.insert("limit".to_string(), json!(rw));
-        }
-
-        send_request::<Vec<models::OldTradesLookupResponseInner>>(
-            &self.configuration,
-            "/eapi/v1/historicalTrades",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -884,7 +806,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1592387337630,"optionContracts":[{"baseAsset":"BTC","quoteAsset":"USDT","underlying":"BTCUSDT","settleAsset":"USDT"}],"optionAssets":[{"name":"USDT"}],"optionSymbols":[{"expiryDate":1660521600000,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.02","maxPrice":"80000.01","tickSize":"0.01"},{"filterType":"LOT_SIZE","minQty":"0.01","maxQty":"100","stepSize":"0.01"}],"symbol":"BTC-220815-50000-C","side":"CALL","strikePrice":"50000","underlying":"BTCUSDT","unit":1,"makerFeeRate":"0.0002","takerFeeRate":"0.0002","liquidationFeeRate":"0.0019000","minQty":"0.01","maxQty":"100","initialMargin":"0.15","maintenanceMargin":"0.075","minInitialMargin":"0.1","minMaintenanceMargin":"0.05","priceScale":2,"quantityScale":2,"quoteAsset":"USDT"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1592387337630,"optionContracts":[{"baseAsset":"BTC","quoteAsset":"USDT","underlying":"BTCUSDT","settleAsset":"USDT"}],"optionAssets":[{"name":"USDT"}],"optionSymbols":[{"expiryDate":1660521600000,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.02","maxPrice":"80000.01","tickSize":"0.01"},{"filterType":"LOT_SIZE","minQty":"0.01","maxQty":"100","stepSize":"0.01"}],"symbol":"BTC-220815-50000-C","side":"CALL","strikePrice":"50000","underlying":"BTCUSDT","unit":1,"liquidationFeeRate":"0.0019000","minQty":"0.01","maxQty":"100","initialMargin":"0.15","maintenanceMargin":"0.075","minInitialMargin":"0.1","minMaintenanceMargin":"0.05","priceScale":2,"quantityScale":2,"quoteAsset":"USDT","status":"TRADING"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300}]}"#).unwrap();
             let dummy_response: models::ExchangeInformationResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ExchangeInformationResponse");
@@ -926,10 +848,10 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn index_price_ticker(
+        async fn index_price(
             &self,
-            _params: IndexPriceTickerParams,
-        ) -> anyhow::Result<RestApiResponse<models::IndexPriceTickerResponse>> {
+            _params: IndexPriceParams,
+        ) -> anyhow::Result<RestApiResponse<models::IndexPriceResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
@@ -937,10 +859,10 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
-            let dummy_response: models::IndexPriceTickerResponse =
+                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"105917.75"}"#).unwrap();
+            let dummy_response: models::IndexPriceResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::IndexPriceTickerResponse");
+                    .expect("should parse into models::IndexPriceResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -955,7 +877,7 @@ mod tests {
         async fn kline_candlestick_data(
             &self,
             _params: KlineCandlestickDataParams,
-        ) -> anyhow::Result<RestApiResponse<Vec<models::KlineCandlestickDataResponseInner>>>
+        ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::KlineCandlestickDataResponseItemInner>>>>
         {
             if self.force_error {
                 return Err(
@@ -963,35 +885,11 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"open":"950","high":"1100","low":"900","close":"1000","volume":"100","amount":"2","interval":"5m","tradeCount":10,"takerVolume":"100","takerAmount":"10000","openTime":1499040000000,"closeTime":1499644799999}]"#).unwrap();
-            let dummy_response: Vec<models::KlineCandlestickDataResponseInner> =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into Vec<models::KlineCandlestickDataResponseInner>");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn old_trades_lookup(
-            &self,
-            _params: OldTradesLookupParams,
-        ) -> anyhow::Result<RestApiResponse<Vec<models::OldTradesLookupResponseInner>>> {
-            if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+            let resp_json: Value = serde_json::from_str(r#"[[1762779600000,"1300.000","1300.000","1300.000","1300.000","0.1000",1762780499999,"130.0000000",1,"0.1000","130.0000000","0"]]"#).unwrap();
+            let dummy_response: Vec<Vec<models::KlineCandlestickDataResponseItemInner>> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<Vec<models::KlineCandlestickDataResponseItemInner>>",
                 );
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1","tradeId":"159244329455993","price":"1000","qty":"-0.1","quoteQty":"-100","side":-1,"time":1592449455993}]"#).unwrap();
-            let dummy_response: Vec<models::OldTradesLookupResponseInner> =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into Vec<models::OldTradesLookupResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1063,10 +961,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"T":1589436922972,"u":37461,"bids":[["1000","0.9"]],"asks":[["1100","0.1"]]}"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"bids":[["1000.000","0.1000"]],"asks":[["1900.000","0.1000"]],"T":1762780909676,"lastUpdateId":361}"#).unwrap();
             let dummy_response: models::OrderBookResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OrderBookResponse");
@@ -1117,7 +1012,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1","symbol":"BTC-220722-19000-C","price":"1000","qty":"-0.1","quoteQty":"-100","side":-1,"time":1592449455993}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":2323857420768529000,"tradeId":1,"symbol":"BTC-251123-126000-C","price":"1300","qty":"0.1","quoteQty":"130","side":-1,"time":1762780453623}]"#).unwrap();
             let dummy_response: Vec<models::RecentTradesListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::RecentTradesListResponseInner>");
@@ -1240,7 +1135,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1592387337630,"optionContracts":[{"baseAsset":"BTC","quoteAsset":"USDT","underlying":"BTCUSDT","settleAsset":"USDT"}],"optionAssets":[{"name":"USDT"}],"optionSymbols":[{"expiryDate":1660521600000,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.02","maxPrice":"80000.01","tickSize":"0.01"},{"filterType":"LOT_SIZE","minQty":"0.01","maxQty":"100","stepSize":"0.01"}],"symbol":"BTC-220815-50000-C","side":"CALL","strikePrice":"50000","underlying":"BTCUSDT","unit":1,"makerFeeRate":"0.0002","takerFeeRate":"0.0002","liquidationFeeRate":"0.0019000","minQty":"0.01","maxQty":"100","initialMargin":"0.15","maintenanceMargin":"0.075","minInitialMargin":"0.1","minMaintenanceMargin":"0.05","priceScale":2,"quantityScale":2,"quoteAsset":"USDT"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1592387337630,"optionContracts":[{"baseAsset":"BTC","quoteAsset":"USDT","underlying":"BTCUSDT","settleAsset":"USDT"}],"optionAssets":[{"name":"USDT"}],"optionSymbols":[{"expiryDate":1660521600000,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.02","maxPrice":"80000.01","tickSize":"0.01"},{"filterType":"LOT_SIZE","minQty":"0.01","maxQty":"100","stepSize":"0.01"}],"symbol":"BTC-220815-50000-C","side":"CALL","strikePrice":"50000","underlying":"BTCUSDT","unit":1,"liquidationFeeRate":"0.0019000","minQty":"0.01","maxQty":"100","initialMargin":"0.15","maintenanceMargin":"0.075","minInitialMargin":"0.1","minMaintenanceMargin":"0.05","priceScale":2,"quantityScale":2,"quoteAsset":"USDT","status":"TRADING"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300}]}"#).unwrap();
             let expected_response : models::ExchangeInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExchangeInformationResponse");
 
             let resp = client.exchange_information().await.expect("Expected a response");
@@ -1256,7 +1151,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1592387337630,"optionContracts":[{"baseAsset":"BTC","quoteAsset":"USDT","underlying":"BTCUSDT","settleAsset":"USDT"}],"optionAssets":[{"name":"USDT"}],"optionSymbols":[{"expiryDate":1660521600000,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.02","maxPrice":"80000.01","tickSize":"0.01"},{"filterType":"LOT_SIZE","minQty":"0.01","maxQty":"100","stepSize":"0.01"}],"symbol":"BTC-220815-50000-C","side":"CALL","strikePrice":"50000","underlying":"BTCUSDT","unit":1,"makerFeeRate":"0.0002","takerFeeRate":"0.0002","liquidationFeeRate":"0.0019000","minQty":"0.01","maxQty":"100","initialMargin":"0.15","maintenanceMargin":"0.075","minInitialMargin":"0.1","minMaintenanceMargin":"0.05","priceScale":2,"quantityScale":2,"quoteAsset":"USDT"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1592387337630,"optionContracts":[{"baseAsset":"BTC","quoteAsset":"USDT","underlying":"BTCUSDT","settleAsset":"USDT"}],"optionAssets":[{"name":"USDT"}],"optionSymbols":[{"expiryDate":1660521600000,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.02","maxPrice":"80000.01","tickSize":"0.01"},{"filterType":"LOT_SIZE","minQty":"0.01","maxQty":"100","stepSize":"0.01"}],"symbol":"BTC-220815-50000-C","side":"CALL","strikePrice":"50000","underlying":"BTCUSDT","unit":1,"liquidationFeeRate":"0.0019000","minQty":"0.01","maxQty":"100","initialMargin":"0.15","maintenanceMargin":"0.075","minInitialMargin":"0.1","minMaintenanceMargin":"0.05","priceScale":2,"quantityScale":2,"quoteAsset":"USDT","status":"TRADING"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300}]}"#).unwrap();
             let expected_response : models::ExchangeInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExchangeInformationResponse");
 
             let resp = client.exchange_information().await.expect("Expected a response");
@@ -1331,22 +1226,22 @@ mod tests {
     }
 
     #[test]
-    fn index_price_ticker_required_params_success() {
+    fn index_price_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = IndexPriceTickerParams::builder("underlying_example".to_string())
+            let params = IndexPriceParams::builder("underlying_example".to_string())
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
-            let expected_response: models::IndexPriceTickerResponse =
+                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"105917.75"}"#).unwrap();
+            let expected_response: models::IndexPriceResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::IndexPriceTickerResponse");
+                    .expect("should parse into models::IndexPriceResponse");
 
             let resp = client
-                .index_price_ticker(params)
+                .index_price(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -1356,22 +1251,22 @@ mod tests {
     }
 
     #[test]
-    fn index_price_ticker_optional_params_success() {
+    fn index_price_optional_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = IndexPriceTickerParams::builder("underlying_example".to_string())
+            let params = IndexPriceParams::builder("underlying_example".to_string())
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"9200"}"#).unwrap();
-            let expected_response: models::IndexPriceTickerResponse =
+                serde_json::from_str(r#"{"time":1656647305000,"indexPrice":"105917.75"}"#).unwrap();
+            let expected_response: models::IndexPriceResponse =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::IndexPriceTickerResponse");
+                    .expect("should parse into models::IndexPriceResponse");
 
             let resp = client
-                .index_price_ticker(params)
+                .index_price(params)
                 .await
                 .expect("Expected a response");
             let data_future = resp.data();
@@ -1381,15 +1276,15 @@ mod tests {
     }
 
     #[test]
-    fn index_price_ticker_response_error() {
+    fn index_price_response_error() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = IndexPriceTickerParams::builder("underlying_example".to_string())
+            let params = IndexPriceParams::builder("underlying_example".to_string())
                 .build()
                 .unwrap();
 
-            match client.index_price_ticker(params).await {
+            match client.index_price(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1405,8 +1300,8 @@ mod tests {
 
             let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),"interval_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"open":"950","high":"1100","low":"900","close":"1000","volume":"100","amount":"2","interval":"5m","tradeCount":10,"takerVolume":"100","takerAmount":"10000","openTime":1499040000000,"closeTime":1499644799999}]"#).unwrap();
-            let expected_response : Vec<models::KlineCandlestickDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::KlineCandlestickDataResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[[1762779600000,"1300.000","1300.000","1300.000","1300.000","0.1000",1762780499999,"130.0000000",1,"0.1000","130.0000000","0"]]"#).unwrap();
+            let expected_response : Vec<Vec<models::KlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlineCandlestickDataResponseItemInner>>");
 
             let resp = client.kline_candlestick_data(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -1422,8 +1317,8 @@ mod tests {
 
             let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),"interval_example".to_string(),).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"open":"950","high":"1100","low":"900","close":"1000","volume":"100","amount":"2","interval":"5m","tradeCount":10,"takerVolume":"100","takerAmount":"10000","openTime":1499040000000,"closeTime":1499644799999}]"#).unwrap();
-            let expected_response : Vec<models::KlineCandlestickDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::KlineCandlestickDataResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[[1762779600000,"1300.000","1300.000","1300.000","1300.000","0.1000",1762780499999,"130.0000000",1,"0.1000","130.0000000","0"]]"#).unwrap();
+            let expected_response : Vec<Vec<models::KlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlineCandlestickDataResponseItemInner>>");
 
             let resp = client.kline_candlestick_data(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -1445,58 +1340,6 @@ mod tests {
             .unwrap();
 
             match client.kline_candlestick_data(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn old_trades_lookup_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: false };
-
-            let params = OldTradesLookupParams::builder("symbol_example".to_string(),).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1","tradeId":"159244329455993","price":"1000","qty":"-0.1","quoteQty":"-100","side":-1,"time":1592449455993}]"#).unwrap();
-            let expected_response : Vec<models::OldTradesLookupResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OldTradesLookupResponseInner>");
-
-            let resp = client.old_trades_lookup(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn old_trades_lookup_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: false };
-
-            let params = OldTradesLookupParams::builder("symbol_example".to_string(),).from_id(1).limit(100).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1","tradeId":"159244329455993","price":"1000","qty":"-0.1","quoteQty":"-100","side":-1,"time":1592449455993}]"#).unwrap();
-            let expected_response : Vec<models::OldTradesLookupResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OldTradesLookupResponseInner>");
-
-            let resp = client.old_trades_lookup(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn old_trades_lookup_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: true };
-
-            let params = OldTradesLookupParams::builder("symbol_example".to_string())
-                .build()
-                .unwrap();
-
-            match client.old_trades_lookup(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1615,22 +1458,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = OrderBookParams::builder("symbol_example".to_string())
-                .build()
-                .unwrap();
+            let params = OrderBookParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"T":1589436922972,"u":37461,"bids":[["1000","0.9"]],"asks":[["1100","0.1"]]}"#,
-            )
-            .unwrap();
-            let expected_response: models::OrderBookResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::OrderBookResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"bids":[["1000.000","0.1000"]],"asks":[["1900.000","0.1000"]],"T":1762780909676,"lastUpdateId":361}"#).unwrap();
+            let expected_response : models::OrderBookResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderBookResponse");
 
-            let resp = client
-                .order_book(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.order_book(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1642,23 +1475,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = OrderBookParams::builder("symbol_example".to_string())
-                .limit(100)
-                .build()
-                .unwrap();
+            let params = OrderBookParams::builder("symbol_example".to_string(),).limit(100).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"T":1589436922972,"u":37461,"bids":[["1000","0.9"]],"asks":[["1100","0.1"]]}"#,
-            )
-            .unwrap();
-            let expected_response: models::OrderBookResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::OrderBookResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"bids":[["1000.000","0.1000"]],"asks":[["1900.000","0.1000"]],"T":1762780909676,"lastUpdateId":361}"#).unwrap();
+            let expected_response : models::OrderBookResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderBookResponse");
 
-            let resp = client
-                .order_book(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.order_book(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1740,7 +1562,7 @@ mod tests {
 
             let params = RecentTradesListParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1","symbol":"BTC-220722-19000-C","price":"1000","qty":"-0.1","quoteQty":"-100","side":-1,"time":1592449455993}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":2323857420768529000,"tradeId":1,"symbol":"BTC-251123-126000-C","price":"1300","qty":"0.1","quoteQty":"130","side":-1,"time":1762780453623}]"#).unwrap();
             let expected_response : Vec<models::RecentTradesListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::RecentTradesListResponseInner>");
 
             let resp = client.recent_trades_list(params).await.expect("Expected a response");
@@ -1757,7 +1579,7 @@ mod tests {
 
             let params = RecentTradesListParams::builder("symbol_example".to_string(),).limit(100).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"1","symbol":"BTC-220722-19000-C","price":"1000","qty":"-0.1","quoteQty":"-100","side":-1,"time":1592449455993}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":2323857420768529000,"tradeId":1,"symbol":"BTC-251123-126000-C","price":"1300","qty":"0.1","quoteQty":"130","side":-1,"time":1762780453623}]"#).unwrap();
             let expected_response : Vec<models::RecentTradesListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::RecentTradesListResponseInner>");
 
             let resp = client.recent_trades_list(params).await.expect("Expected a response");

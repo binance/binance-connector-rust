@@ -53,7 +53,7 @@ impl WebsocketStreams {
             cfg.time_unit = None;
         }
 
-        let websocket_streams_base = WebsocketStreamsBase::new(cfg, vec![]);
+        let websocket_streams_base = WebsocketStreamsBase::new(cfg, vec![], vec![]);
 
         websocket_streams_base.clone().connect(streams).await?;
 
@@ -181,7 +181,7 @@ impl WebsocketStreams {
     /// The subscription is performed in a separate task using `spawn`.
     pub fn subscribe(&self, streams: Vec<String>, id: Option<String>) {
         let base = Arc::clone(&self.websocket_streams_base);
-        spawn(async move { base.subscribe(streams, id.map(StreamId::from)).await });
+        spawn(async move { base.subscribe(streams, id.map(StreamId::from), None).await });
     }
 
     /// Unsubscribes from specified WebSocket streams.
@@ -201,7 +201,10 @@ impl WebsocketStreams {
     /// The unsubscription is performed in a separate task using `spawn`.
     pub fn unsubscribe(&self, streams: Vec<String>, id: Option<String>) {
         let base = Arc::clone(&self.websocket_streams_base);
-        spawn(async move { base.unsubscribe(streams, id.map(StreamId::from)).await });
+        spawn(async move {
+            base.unsubscribe(streams, id.map(StreamId::from), None)
+                .await;
+        });
     }
 
     /// Checks if the current WebSocket stream is subscribed to a specific stream.
@@ -256,6 +259,7 @@ impl WebsocketStreams {
             WebsocketBase::WebsocketStreams(self.websocket_streams_base.clone()),
             listen_key,
             id.map(StreamId::from),
+            None,
         )
         .await)
     }
@@ -265,7 +269,7 @@ impl WebsocketStreams {
     /// The Aggregate Trade Streams push market trade information that is aggregated for fills with same price and taking side every 100 milliseconds. Only market trades will be aggregated, which means the insurance fund trades and ADL trades won't be aggregated.
     ///
     ///
-    /// Retail Price Improvement(RPI) orders are aggregated and without special tags to be distinguished.
+    /// Retail Price Improvement(RPI) orders are aggregated into field `q` and without special tags to be distinguished.
     ///
     /// Update Speed: 100ms
     ///
@@ -749,7 +753,7 @@ impl WebsocketStreams {
     ///
     /// **Note**:
     ///
-    /// This stream does not cover `TradFi` Perps.
+    /// `TradFi` symbols will be pushed through a seperate message.
     ///
     /// Update Speed: 3000ms or 1000ms
     ///

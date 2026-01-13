@@ -25,8 +25,6 @@ pub struct UserExerciseRecordResponseInner {
     pub symbol: Option<String>,
     #[serde(rename = "exercisePrice", skip_serializing_if = "Option::is_none")]
     pub exercise_price: Option<String>,
-    #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
-    pub mark_price: Option<String>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<String>,
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
@@ -55,7 +53,6 @@ impl UserExerciseRecordResponseInner {
             currency: None,
             symbol: None,
             exercise_price: None,
-            mark_price: None,
             quantity: None,
             amount: None,
             fee: None,

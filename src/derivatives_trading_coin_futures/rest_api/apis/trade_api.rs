@@ -42,7 +42,7 @@ pub trait TradeApi: Send + Sync {
     async fn auto_cancel_all_open_orders(
         &self,
         params: AutoCancelAllOpenOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Value>>;
+    ) -> anyhow::Result<RestApiResponse<models::AutoCancelAllOpenOrdersResponse>>;
     async fn cancel_all_open_orders(
         &self,
         params: CancelAllOpenOrdersParams,
@@ -95,6 +95,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: NewOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::NewOrderResponse>>;
+    async fn place_multiple_orders(
+        &self,
+        params: PlaceMultipleOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::PlaceMultipleOrdersResponseInner>>>;
     async fn position_adl_quantile_estimation(
         &self,
         params: PositionAdlQuantileEstimationParams,
@@ -1530,6 +1534,40 @@ impl NewOrderParams {
             .r#type(r#type)
     }
 }
+/// Request parameters for the [`place_multiple_orders`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`place_multiple_orders`](#method.place_multiple_orders).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct PlaceMultipleOrdersParams {
+    /// order list. Max 5 orders
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub batch_orders: Vec<models::PlaceMultipleOrdersBatchOrdersParameterInner>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl PlaceMultipleOrdersParams {
+    /// Create a builder for [`place_multiple_orders`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `batch_orders` — order list. Max 5 orders
+    ///
+    #[must_use]
+    pub fn builder(
+        batch_orders: Vec<models::PlaceMultipleOrdersBatchOrdersParameterInner>,
+    ) -> PlaceMultipleOrdersParamsBuilder {
+        PlaceMultipleOrdersParamsBuilder::default().batch_orders(batch_orders)
+    }
+}
 /// Request parameters for the [`position_adl_quantile_estimation`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1868,7 +1906,7 @@ impl TradeApi for TradeApiClient {
     async fn auto_cancel_all_open_orders(
         &self,
         params: AutoCancelAllOpenOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Value>> {
+    ) -> anyhow::Result<RestApiResponse<models::AutoCancelAllOpenOrdersResponse>> {
         let AutoCancelAllOpenOrdersParams {
             symbol,
             countdown_time,
@@ -1886,7 +1924,7 @@ impl TradeApi for TradeApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<Value>(
+        send_request::<models::AutoCancelAllOpenOrdersResponse>(
             &self.configuration,
             "/dapi/v1/countdownCancelAll",
             reqwest::Method::POST,
@@ -2543,6 +2581,40 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn place_multiple_orders(
+        &self,
+        params: PlaceMultipleOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::PlaceMultipleOrdersResponseInner>>> {
+        let PlaceMultipleOrdersParams {
+            batch_orders,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("batchOrders".to_string(), json!(batch_orders));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::PlaceMultipleOrdersResponseInner>>(
+            &self.configuration,
+            "/dapi/v1/batchOrders",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn position_adl_quantile_estimation(
         &self,
         params: PositionAdlQuantileEstimationParams,
@@ -2851,14 +2923,19 @@ mod tests {
         async fn auto_cancel_all_open_orders(
             &self,
             _params: AutoCancelAllOpenOrdersParams,
-        ) -> anyhow::Result<RestApiResponse<Value>> {
+        ) -> anyhow::Result<RestApiResponse<models::AutoCancelAllOpenOrdersResponse>> {
             if self.force_error {
                 return Err(
                     ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
                 );
             }
 
-            let dummy_response = Value::Null;
+            let resp_json: Value =
+                serde_json::from_str(r#"{"symbol":"BTCUSD_200925","countdownTime":"100000"}"#)
+                    .unwrap();
+            let dummy_response: models::AutoCancelAllOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -3206,6 +3283,32 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn place_multiple_orders(
+            &self,
+            _params: PlaceMultipleOrdersParams,
+        ) -> anyhow::Result<RestApiResponse<Vec<models::PlaceMultipleOrdersResponseInner>>>
+        {
+            if self.force_error {
+                return Err(
+                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
+                );
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let dummy_response: Vec<models::PlaceMultipleOrdersResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn position_adl_quantile_estimation(
             &self,
             _params: PositionAdlQuantileEstimationParams,
@@ -3444,7 +3547,12 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let expected_response = Value::Null;
+            let resp_json: Value =
+                serde_json::from_str(r#"{"symbol":"BTCUSD_200925","countdownTime":"100000"}"#)
+                    .unwrap();
+            let expected_response: models::AutoCancelAllOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
 
             let resp = client
                 .auto_cancel_all_open_orders(params)
@@ -3466,7 +3574,12 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let expected_response = Value::Null;
+            let resp_json: Value =
+                serde_json::from_str(r#"{"symbol":"BTCUSD_200925","countdownTime":"100000"}"#)
+                    .unwrap();
+            let expected_response: models::AutoCancelAllOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
 
             let resp = client
                 .auto_cancel_all_open_orders(params)
@@ -4252,6 +4365,56 @@ mod tests {
             .unwrap();
 
             match client.new_order(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn place_multiple_orders_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = PlaceMultipleOrdersParams::builder(vec![],).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
+
+            let resp = client.place_multiple_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn place_multiple_orders_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = PlaceMultipleOrdersParams::builder(vec![],).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
+
+            let resp = client.place_multiple_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn place_multiple_orders_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = PlaceMultipleOrdersParams::builder(vec![]).build().unwrap();
+
+            match client.place_multiple_orders(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

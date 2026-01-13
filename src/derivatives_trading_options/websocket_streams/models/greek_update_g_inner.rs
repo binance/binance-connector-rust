@@ -17,27 +17,27 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AccountUpdateGInner {
-    #[serde(rename = "ui", skip_serializing_if = "Option::is_none")]
-    pub ui: Option<String>,
+pub struct GreekUpdateGInner {
+    #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
+    pub u: Option<String>,
     #[serde(rename = "d", skip_serializing_if = "Option::is_none")]
-    pub d: Option<rust_decimal::Decimal>,
-    #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
-    pub t: Option<rust_decimal::Decimal>,
+    pub d: Option<String>,
     #[serde(rename = "g", skip_serializing_if = "Option::is_none")]
-    pub g: Option<rust_decimal::Decimal>,
+    pub g: Option<String>,
+    #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
+    pub t: Option<String>,
     #[serde(rename = "v", skip_serializing_if = "Option::is_none")]
-    pub v: Option<rust_decimal::Decimal>,
+    pub v: Option<String>,
 }
 
-impl AccountUpdateGInner {
+impl GreekUpdateGInner {
     #[must_use]
-    pub fn new() -> AccountUpdateGInner {
-        AccountUpdateGInner {
-            ui: None,
+    pub fn new() -> GreekUpdateGInner {
+        GreekUpdateGInner {
+            u: None,
             d: None,
-            t: None,
             g: None,
+            t: None,
             v: None,
         }
     }

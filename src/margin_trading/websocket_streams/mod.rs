@@ -46,7 +46,7 @@ impl WebsocketStreams {
             cfg.mode = m;
         }
 
-        let websocket_streams_base = WebsocketStreamsBase::new(cfg, vec![]);
+        let websocket_streams_base = WebsocketStreamsBase::new(cfg, vec![], vec![]);
 
         websocket_streams_base.clone().connect(streams).await?;
 
@@ -171,7 +171,7 @@ impl WebsocketStreams {
     /// The subscription is performed in a separate task using `spawn`.
     pub fn subscribe(&self, streams: Vec<String>, id: Option<String>) {
         let base = Arc::clone(&self.websocket_streams_base);
-        spawn(async move { base.subscribe(streams, id.map(StreamId::from)).await });
+        spawn(async move { base.subscribe(streams, id.map(StreamId::from), None).await });
     }
 
     /// Unsubscribes from specified WebSocket streams.
@@ -191,7 +191,10 @@ impl WebsocketStreams {
     /// The unsubscription is performed in a separate task using `spawn`.
     pub fn unsubscribe(&self, streams: Vec<String>, id: Option<String>) {
         let base = Arc::clone(&self.websocket_streams_base);
-        spawn(async move { base.unsubscribe(streams, id.map(StreamId::from)).await });
+        spawn(async move {
+            base.unsubscribe(streams, id.map(StreamId::from), None)
+                .await;
+        });
     }
 
     /// Checks if the current WebSocket stream is subscribed to a specific stream.
@@ -246,6 +249,7 @@ impl WebsocketStreams {
             WebsocketBase::WebsocketStreams(self.websocket_streams_base.clone()),
             listen_key,
             id.map(StreamId::from),
+            None,
         )
         .await)
     }
@@ -281,6 +285,7 @@ impl WebsocketStreams {
             WebsocketBase::WebsocketStreams(self.websocket_streams_base.clone()),
             listen_key,
             id.map(StreamId::from),
+            None,
         )
         .await)
     }

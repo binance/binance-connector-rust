@@ -18,7 +18,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RecentTradesListResponseInner {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
+    pub id: Option<i64>,
+    #[serde(rename = "tradeId", skip_serializing_if = "Option::is_none")]
+    pub trade_id: Option<i64>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
@@ -38,6 +40,7 @@ impl RecentTradesListResponseInner {
     pub fn new() -> RecentTradesListResponseInner {
         RecentTradesListResponseInner {
             id: None,
+            trade_id: None,
             symbol: None,
             price: None,
             qty: None,

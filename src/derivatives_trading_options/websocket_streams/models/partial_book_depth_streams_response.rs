@@ -26,6 +26,8 @@ pub struct PartialBookDepthStreamsResponse {
     pub t_uppercase: Option<i64>,
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    #[serde(rename = "U", skip_serializing_if = "Option::is_none")]
+    pub u_uppercase: Option<i64>,
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
     #[serde(rename = "pu", skip_serializing_if = "Option::is_none")]
@@ -44,6 +46,7 @@ impl PartialBookDepthStreamsResponse {
             e_uppercase: None,
             t_uppercase: None,
             s: None,
+            u_uppercase: None,
             u: None,
             pu: None,
             b: None,

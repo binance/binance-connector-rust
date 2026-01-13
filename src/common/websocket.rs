@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use flate2::read::ZlibDecoder;
-use futures::{SinkExt, StreamExt, stream::FuturesUnordered};
+use futures::{SinkExt, StreamExt, future::try_join_all, stream::FuturesUnordered};
 use http::header::USER_AGENT;
 use serde::de::DeserializeOwned;
 use serde_json::{Value, json};
@@ -213,6 +213,7 @@ pub struct WebsocketConnectionState {
     pub stream_callbacks: HashMap<String, Vec<Arc<dyn Fn(&Value) + Send + Sync + 'static>>>,
     pub is_session_logged_on: bool,
     pub session_logon_req: Option<WebsocketSessionLogonReq>,
+    pub url_path: Option<String>,
     pub handler: Option<Arc<dyn WebsocketHandler>>,
     pub ws_write_tx: Option<UnboundedSender<Message>>,
 }
@@ -235,6 +236,7 @@ impl WebsocketConnectionState {
             stream_callbacks: HashMap::new(),
             is_session_logged_on: false,
             session_logon_req: None,
+            url_path: None,
             handler: None,
             ws_write_tx: None,
         }
@@ -488,6 +490,7 @@ impl WebsocketCommon {
     /// # Arguments
     ///
     /// * `allow_non_established` - If `true`, includes connections that are not fully established
+    /// * `url_path` - Optional URL path to filter connections
     ///
     /// # Returns
     ///
@@ -501,8 +504,9 @@ impl WebsocketCommon {
     async fn get_available_connections(
         &self,
         allow_non_established: bool,
+        url_path: Option<&str>,
     ) -> Vec<Arc<WebsocketConnection>> {
-        if let WebsocketMode::Single = self.mode {
+        if matches!(self.mode, WebsocketMode::Single) && url_path.is_none() {
             return vec![Arc::clone(&self.connection_pool[0])];
         }
 
@@ -521,6 +525,7 @@ impl WebsocketCommon {
     /// # Arguments
     ///
     /// * `allow_non_established` - If `true`, allows selecting a connection that is not fully established
+    /// * `url_path` - Optional URL path to filter connections
     ///
     /// # Returns
     ///
@@ -538,8 +543,22 @@ impl WebsocketCommon {
     async fn get_connection(
         &self,
         allow_non_established: bool,
+        url_path: Option<&str>,
     ) -> Result<Arc<WebsocketConnection>, WebsocketError> {
-        let ready = self.get_available_connections(allow_non_established).await;
+        let candidates = self
+            .get_available_connections(allow_non_established, url_path)
+            .await;
+
+        let mut ready = Vec::new();
+        for conn in candidates {
+            if let Some(path) = url_path {
+                let st = conn.state.lock().await;
+                if st.url_path.as_deref() != Some(path) {
+                    continue;
+                }
+            }
+            ready.push(conn);
+        }
 
         if ready.is_empty() {
             return Err(WebsocketError::NotConnected);
@@ -788,6 +807,7 @@ impl WebsocketCommon {
     /// # Arguments
     ///
     /// * `url` - The WebSocket server URL to connect to
+    /// * `connections` - Optional specific connections to use, otherwise uses the entire pool
     ///
     /// # Returns
     ///
@@ -801,16 +821,24 @@ impl WebsocketCommon {
     ///
     /// Attempts to initialize a WebSocket connection for each connection in the pool
     /// concurrently, logging successes and failures for each connection attempt
-    async fn connect_pool(self: Arc<Self>, url: &str) -> Result<(), WebsocketError> {
+    async fn connect_pool(
+        self: Arc<Self>,
+        url: &str,
+        connections: Option<Vec<Arc<WebsocketConnection>>>,
+    ) -> Result<(), WebsocketError> {
+        let pool: Vec<Arc<WebsocketConnection>> = match connections {
+            Some(v) => v,
+            None => self.connection_pool.clone(),
+        };
+
         let mut tasks = FuturesUnordered::new();
 
-        for conn in &self.connection_pool {
+        for conn in pool {
             let common = Arc::clone(&self);
             let url = url.to_owned();
-            let conn_clone = Arc::clone(conn);
 
             tasks.push(async move {
-                match common.init_connect(&url, false, Some(conn_clone)).await {
+                match common.init_connect(&url, false, Some(conn)).await {
                     Ok(()) => {
                         info!("Successfully connected to {}", url);
                         Ok(())
@@ -856,7 +884,7 @@ impl WebsocketCommon {
         is_renewal: bool,
         connection: Option<Arc<WebsocketConnection>>,
     ) -> Result<(), WebsocketError> {
-        let conn = connection.unwrap_or(self.get_connection(true).await?);
+        let conn = connection.unwrap_or(self.get_connection(true, None).await?);
 
         {
             let mut conn_state = conn.state.lock().await;
@@ -864,7 +892,7 @@ impl WebsocketCommon {
                 info!("Renewal in progress {}→{}", conn.id, url);
                 return Ok(());
             }
-            if conn_state.ws_write_tx.is_some() && !is_renewal {
+            if conn_state.ws_write_tx.is_some() && !is_renewal && !conn_state.reconnection_pending {
                 info!("Exists {}; skipping {}", conn.id, url);
                 return Ok(());
             }
@@ -893,6 +921,7 @@ impl WebsocketCommon {
 
         let old_writer = {
             let mut conn_state = conn.state.lock().await;
+            conn_state.reconnection_pending = false;
             conn_state.ws_write_tx.replace(tx.clone())
         };
 
@@ -1139,6 +1168,7 @@ impl WebsocketCommon {
                     );
                     conn_state.reconnection_pending = true;
                     conn_state.is_session_logged_on = false;
+                    conn_state.ws_write_tx = None;
                     drop(conn_state);
                     let reconnect_url = common
                         .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
@@ -1301,7 +1331,7 @@ impl WebsocketCommon {
         let conn = if let Some(c) = connection {
             c
         } else {
-            self.get_connection(false).await?
+            self.get_connection(false, None).await?
         };
 
         if !self.is_connected(Some(&conn)).await {
@@ -1507,7 +1537,7 @@ impl WebsocketApi {
 
         let result = select! {
             () = sleep(Duration::from_secs(10)) => Err(WebsocketError::Timeout),
-            r = self.common.clone().connect_pool(&url) => r,
+            r = self.common.clone().connect_pool(&url, None) => r,
         };
 
         {
@@ -1597,9 +1627,9 @@ impl WebsocketApi {
             options.is_session_logon.unwrap_or(false) || options.is_session_logout.unwrap_or(false);
 
         let connections = if do_multi {
-            self.common.get_available_connections(false).await
+            self.common.get_available_connections(false, None).await
         } else {
-            vec![self.common.get_connection(false).await?]
+            vec![self.common.get_connection(false, None).await?]
         };
 
         let skip_auth = if do_multi {
@@ -1965,6 +1995,7 @@ impl WebsocketHandler for WebsocketApi {
 pub struct WebsocketStreams {
     pub common: Arc<WebsocketCommon>,
     pub stream_id_is_strictly_number: AtomicBool,
+    url_paths: Vec<String>,
     is_connecting: Mutex<bool>,
     connection_streams: Mutex<HashMap<String, Arc<WebsocketConnection>>>,
     configuration: ConfigurationWebsocketStreams,
@@ -1977,6 +2008,7 @@ impl WebsocketStreams {
     ///
     /// * `configuration` - Configuration settings for the WebSocket streams
     /// * `connection_pool` - A vector of WebSocket connections to use
+    /// * `url_paths` - A vector of URL paths for the streams
     ///
     /// # Returns
     ///
@@ -1988,8 +2020,18 @@ impl WebsocketStreams {
     #[must_use]
     pub fn new(
         configuration: ConfigurationWebsocketStreams,
-        connection_pool: Vec<Arc<WebsocketConnection>>,
+        mut connection_pool: Vec<Arc<WebsocketConnection>>,
+        url_paths: Vec<String>,
     ) -> Arc<Self> {
+        if !url_paths.is_empty() {
+            let base_pool_size = configuration.mode.pool_size();
+            let expected = base_pool_size * url_paths.len();
+
+            while connection_pool.len() < expected {
+                connection_pool.push(WebsocketConnection::new(random_string()));
+            }
+        }
+
         let agent_clone = configuration.agent.clone();
         let user_agent_clone = configuration.user_agent.clone();
         let common = WebsocketCommon::new(
@@ -2006,6 +2048,7 @@ impl WebsocketStreams {
             connection_streams: Mutex::new(HashMap::new()),
             configuration,
             stream_id_is_strictly_number: AtomicBool::new(false),
+            url_paths,
         })
     }
 
@@ -2040,16 +2083,60 @@ impl WebsocketStreams {
             *flag = true;
         }
 
-        let url = self.prepare_url(&streams);
-
         let handler: Arc<dyn WebsocketHandler> = self.clone();
         for conn in &self.common.connection_pool {
             conn.set_handler(handler.clone()).await;
         }
 
+        let base_pool_size = self.configuration.mode.pool_size();
+
+        let connect_fut = async {
+            if self.url_paths.is_empty() {
+                let url = self.prepare_url(&streams, None);
+                self.common.clone().connect_pool(&url, None).await
+            } else {
+                let mut futures = Vec::with_capacity(self.url_paths.len());
+
+                for (i, path) in self.url_paths.iter().enumerate() {
+                    let start = i * base_pool_size;
+
+                    let subset: Vec<Arc<WebsocketConnection>> = self
+                        .common
+                        .connection_pool
+                        .iter()
+                        .skip(start)
+                        .take(base_pool_size)
+                        .cloned()
+                        .collect();
+
+                    if subset.len() != base_pool_size {
+                        return Err(WebsocketError::ServerError(format!(
+                            "connection_pool too small for url_paths: need {} per path, got {} for path index {}",
+                            base_pool_size,
+                            subset.len(),
+                            i
+                        )));
+                    }
+
+                    for c in &subset {
+                        let mut st = c.state.lock().await;
+                        st.url_path = Some(path.clone());
+                    }
+
+                    let url = self.prepare_url(&streams, Some(path.as_str()));
+                    let common = self.common.clone();
+
+                    futures.push(async move { common.connect_pool(&url, Some(subset)).await });
+                }
+
+                try_join_all(futures).await?;
+                Ok(())
+            }
+        };
+
         let connect_res = select! {
             () = sleep(Duration::from_secs(10)) => Err(WebsocketError::Timeout),
-            r = self.common.clone().connect_pool(&url) => r,
+            r = connect_fut => r,
         };
 
         {
@@ -2112,6 +2199,7 @@ impl WebsocketStreams {
     ///
     /// * `streams` - A vector of stream names to subscribe to
     /// * `id` - An optional request identifier for the subscription
+    /// * `url_path` - An optional URL path for the subscription
     ///
     /// # Behavior
     ///
@@ -2124,27 +2212,45 @@ impl WebsocketStreams {
     ///
     /// - Sends subscription payloads for active connections
     /// - Adds pending subscriptions for inactive connections
-    pub async fn subscribe(self: Arc<Self>, streams: Vec<String>, id: Option<StreamId>) {
+    pub async fn subscribe(
+        self: Arc<Self>,
+        streams: Vec<String>,
+        id: Option<StreamId>,
+        url_path: Option<&str>,
+    ) {
         let streams: Vec<String> = {
             let map = self.connection_streams.lock().await;
             streams
                 .into_iter()
-                .filter(|s| !map.contains_key(s))
+                .filter(|s| {
+                    let key = self.stream_key(s, url_path);
+                    !map.contains_key(&key)
+                })
                 .collect()
         };
-        let connection_streams = self.handle_stream_assignment(streams).await;
 
-        for (conn, streams) in connection_streams {
+        if streams.is_empty() {
+            return;
+        }
+
+        let connection_streams = self.handle_stream_assignment(streams, url_path).await;
+
+        for (conn, assigned_streams) in connection_streams {
             if !self.common.is_connected(Some(&conn)).await {
                 info!(
-                    "Connection is not ready. Queuing subscription for streams: {:?}",
-                    streams
+                    "Connection {} is not ready. Queuing subscription for streams: {:?}",
+                    conn.id, assigned_streams
                 );
+
                 let mut conn_state = conn.state.lock().await;
-                conn_state.pending_subscriptions.extend(streams.clone());
+                conn_state
+                    .pending_subscriptions
+                    .extend(assigned_streams.iter().cloned());
+
                 continue;
             }
-            self.send_subscription_payload(&conn, &streams, id.clone());
+
+            self.send_subscription_payload(&conn, &assigned_streams, id.clone());
         }
     }
 
@@ -2154,6 +2260,7 @@ impl WebsocketStreams {
     ///
     /// * `streams` - A vector of stream names to unsubscribe from
     /// * `id` - An optional request identifier for the unsubscription
+    /// * `url_path` - An optional URL path for the unsubscription
     ///
     /// # Behavior
     ///
@@ -2175,38 +2282,47 @@ impl WebsocketStreams {
     ///
     /// This method may panic if the request identifier is not valid.
     ///
-    pub async fn unsubscribe(&self, streams: Vec<String>, id: Option<StreamId>) {
+    pub async fn unsubscribe(
+        &self,
+        streams: Vec<String>,
+        id: Option<StreamId>,
+        url_path: Option<&str>,
+    ) {
         let request_id = normalize_stream_id(
             id.clone(),
             self.stream_id_is_strictly_number.load(Ordering::Relaxed),
         );
 
         for stream in streams {
-            let maybe_conn = { self.connection_streams.lock().await.get(&stream).cloned() };
+            let key = self.stream_key(&stream, url_path);
+            let maybe_conn = { self.connection_streams.lock().await.get(&key).cloned() };
 
-            let conn = if let Some(c) = maybe_conn {
-                if !self.common.is_connected(Some(&c)).await {
-                    warn!(
-                        "Stream {} not associated with an active connection.",
-                        stream
-                    );
+            let conn = match maybe_conn {
+                Some(c) => {
+                    if !self.common.is_connected(Some(&c)).await {
+                        warn!(
+                            "Stream {} not associated with an active connection.",
+                            stream
+                        );
+                        continue;
+                    }
+                    c
+                }
+                None => {
+                    warn!("Stream {} was not subscribed.", stream);
                     continue;
                 }
-                c
-            } else {
-                warn!("Stream {} was not subscribed.", stream);
-                continue;
             };
 
-            let callbacks = {
+            let has_callbacks = {
                 let conn_state = conn.state.lock().await;
                 conn_state
                     .stream_callbacks
-                    .get(&stream)
-                    .is_none_or(std::vec::Vec::is_empty)
+                    .get(&key)
+                    .is_some_and(|v| !v.is_empty())
             };
 
-            if !callbacks {
+            if has_callbacks {
                 continue;
             }
 
@@ -2229,11 +2345,11 @@ impl WebsocketStreams {
 
             {
                 let mut connection_streams = self.connection_streams.lock().await;
-                connection_streams.remove(&stream);
+                connection_streams.remove(&key);
             }
             {
                 let mut conn_state = conn.state.lock().await;
-                conn_state.stream_callbacks.remove(&stream);
+                conn_state.stream_callbacks.remove(&key);
             }
         }
     }
@@ -2252,7 +2368,32 @@ impl WebsocketStreams {
     ///
     /// This method is asynchronous and requires `.await` when called
     pub async fn is_subscribed(&self, stream: &str) -> bool {
-        self.connection_streams.lock().await.contains_key(stream)
+        let map = self.connection_streams.lock().await;
+
+        if map.contains_key(stream) {
+            return true;
+        }
+
+        let suffix = format!("::{}", stream);
+        map.keys().any(|k| k.ends_with(&suffix))
+    }
+
+    /// Generates a unique key for a stream based on its name and optional URL path.
+    ///
+    /// # Arguments
+    ///
+    /// * `stream` - The name of the stream
+    /// * `url_path` - An optional URL path associated with the stream
+    ///
+    /// # Returns
+    ///
+    /// A `String` representing the unique key for the stream
+    ///
+    fn stream_key(&self, stream: &str, url_path: Option<&str>) -> String {
+        match url_path {
+            Some(p) if !p.is_empty() => format!("{p}::{stream}"),
+            _ => stream.to_string(),
+        }
     }
 
     /// Prepares a WebSocket URL for streaming with optional stream names and time unit configuration.
@@ -2260,6 +2401,7 @@ impl WebsocketStreams {
     /// # Arguments
     ///
     /// * `streams` - A slice of stream names to be included in the URL
+    /// * `url_path` - An optional path to append to the base WebSocket URL
     ///
     /// # Returns
     ///
@@ -2270,10 +2412,22 @@ impl WebsocketStreams {
     /// - If no time unit is specified, the base URL is returned
     /// - Validates and appends the time unit parameter if provided and valid
     /// - Handles URL parameter separator based on existing query parameters
-    fn prepare_url(&self, streams: &[String]) -> String {
+    fn prepare_url(&self, streams: &[String], url_path: Option<&str>) -> String {
         let mut url = format!(
             "{}/stream?streams={}",
-            self.configuration.ws_url.as_deref().unwrap_or(""),
+            match url_path {
+                Some(path) => format!(
+                    "{}/{}",
+                    self.configuration.ws_url.as_deref().unwrap_or(""),
+                    path
+                ),
+                None => self
+                    .configuration
+                    .ws_url
+                    .as_deref()
+                    .unwrap_or("")
+                    .to_string(),
+            },
             streams.join("/")
         );
 
@@ -2307,6 +2461,7 @@ impl WebsocketStreams {
     /// # Arguments
     ///
     /// * `streams` - A vector of stream names to be assigned
+    /// * `url_path` - An optional URL path associated with the streams
     ///
     /// # Returns
     ///
@@ -2318,13 +2473,16 @@ impl WebsocketStreams {
     async fn handle_stream_assignment(
         &self,
         streams: Vec<String>,
+        url_path: Option<&str>,
     ) -> Vec<(Arc<WebsocketConnection>, Vec<String>)> {
         let mut connection_streams: Vec<(String, Arc<WebsocketConnection>)> = Vec::new();
 
         for stream in streams {
+            let key = self.stream_key(&stream, url_path);
+
             let mut conn_opt = {
                 let map = self.connection_streams.lock().await;
-                map.get(&stream).cloned()
+                map.get(&key).cloned()
             };
 
             let need_new = if let Some(conn) = &conn_opt {
@@ -2335,16 +2493,16 @@ impl WebsocketStreams {
             };
 
             if need_new {
-                match self.common.get_connection(true).await {
+                match self.common.get_connection(true, url_path).await {
                     Ok(new_conn) => {
                         let mut map = self.connection_streams.lock().await;
-                        map.insert(stream.clone(), new_conn.clone());
+                        map.insert(key.clone(), new_conn.clone());
                         conn_opt = Some(new_conn);
                     }
                     Err(err) => {
                         warn!(
-                            "No available WebSocket connection to subscribe stream `{}`: {:?}",
-                            stream, err
+                            "No available WebSocket connection to subscribe stream `{}` (key `{}`): {:?}",
+                            stream, key, err
                         );
                         continue;
                     }
@@ -2354,12 +2512,9 @@ impl WebsocketStreams {
             if let Some(conn) = conn_opt {
                 {
                     let mut conn_state = conn.state.lock().await;
-                    conn_state
-                        .stream_callbacks
-                        .entry(stream.clone())
-                        .or_default();
+                    conn_state.stream_callbacks.entry(key.clone()).or_default();
                 }
-                connection_streams.push((stream.clone(), conn));
+                connection_streams.push((stream, conn));
             }
         }
 
@@ -2494,9 +2649,10 @@ impl WebsocketHandler for WebsocketStreams {
 
         let callbacks = {
             let conn_state = connection.state.lock().await;
+            let key = self.stream_key(&stream_name, conn_state.url_path.as_deref());
             conn_state
                 .stream_callbacks
-                .get(&stream_name)
+                .get(&key)
                 .cloned()
                 .unwrap_or_else(Vec::new)
         };
@@ -2524,21 +2680,32 @@ impl WebsocketHandler for WebsocketStreams {
         let connection_streams = self.connection_streams.lock().await;
         let reconnect_streams = connection_streams
             .iter()
-            .filter_map(|(stream, conn_arc)| {
+            .filter_map(|(key, conn_arc)| {
                 if Arc::ptr_eq(conn_arc, &connection) {
-                    Some(stream.clone())
+                    let stream = match key.split_once("::") {
+                        Some((_prefix, rest)) => rest.to_string(),
+                        None => key.clone(),
+                    };
+                    Some(stream)
                 } else {
                     None
                 }
             })
             .collect::<Vec<_>>();
-        self.prepare_url(&reconnect_streams)
+
+        let url_path = {
+            let st = connection.state.lock().await;
+            st.url_path.as_deref().map(std::string::ToString::to_string)
+        };
+
+        self.prepare_url(&reconnect_streams, url_path.as_deref())
     }
 }
 
 pub struct WebsocketStream<T> {
     websocket_base: WebsocketBase,
     stream_or_id: String,
+    url_path: Option<String>,
     callback: Mutex<Option<Arc<dyn Fn(&Value) + Send + Sync>>>,
     pub id: Option<StreamId>,
     _phantom: PhantomData<T>,
@@ -2591,19 +2758,15 @@ where
 
         match &self.websocket_base {
             WebsocketBase::WebsocketStreams(ws_streams) => {
+                let key = ws_streams.stream_key(&self.stream_or_id, self.url_path.as_deref());
                 let conn = {
                     let map = ws_streams.connection_streams.lock().await;
-                    map.get(&self.stream_or_id)
-                        .cloned()
-                        .expect("stream must be subscribed")
+                    map.get(&key).cloned().expect("stream must be subscribed")
                 };
 
                 {
                     let mut conn_state = conn.state.lock().await;
-                    let entry = conn_state
-                        .stream_callbacks
-                        .entry(self.stream_or_id.clone())
-                        .or_default();
+                    let entry = conn_state.stream_callbacks.entry(key).or_default();
 
                     if !entry
                         .iter()
@@ -2689,26 +2852,29 @@ where
         if let Some(cb) = maybe_cb {
             match &self.websocket_base {
                 WebsocketBase::WebsocketStreams(ws_streams) => {
+                    let key = ws_streams.stream_key(&self.stream_or_id, self.url_path.as_deref());
                     let conn = {
                         let map = ws_streams.connection_streams.lock().await;
-                        map.get(&self.stream_or_id)
+                        map.get(&key)
                             .cloned()
                             .expect("stream must have been subscribed")
                     };
 
                     {
                         let mut conn_state = conn.state.lock().await;
-                        if let Some(list) = conn_state.stream_callbacks.get_mut(&self.stream_or_id)
-                        {
+                        if let Some(list) = conn_state.stream_callbacks.get_mut(&key) {
                             list.retain(|existing| !Arc::ptr_eq(existing, &cb));
                         }
                     }
 
                     let stream = self.stream_or_id.clone();
                     let id = self.id.clone();
+                    let url_path = self.url_path.clone();
                     let websocket_streams_base = Arc::clone(ws_streams);
                     spawn(async move {
-                        websocket_streams_base.unsubscribe(vec![stream], id).await;
+                        websocket_streams_base
+                            .unsubscribe(vec![stream], id, url_path.as_deref())
+                            .await;
                     });
                 }
                 WebsocketBase::WebsocketApi(ws_api) => {
@@ -2722,10 +2888,25 @@ where
     }
 }
 
+/// Creates a new WebSocket stream handler for the specified stream or ID.
+/// This function subscribes to the stream if the WebSocket base is of type `WebsocketStreams`.
+///
+/// # Arguments
+///
+/// * `websocket_base` - The base WebSocket instance (either `WebsocketStreams` or `WebsocketApi`)
+/// * `stream_or_id` - The stream name or identifier to subscribe to
+/// * `id` - An optional request identifier for the subscription
+/// * `url_path` - An optional URL path for the subscription
+///
+/// # Returns
+///
+/// A new `WebsocketStream` instance.
+///
 pub async fn create_stream_handler<T>(
     websocket_base: WebsocketBase,
     stream_or_id: String,
     id: Option<StreamId>,
+    url_path: Option<String>,
 ) -> Arc<WebsocketStream<T>>
 where
     T: DeserializeOwned + Send + 'static,
@@ -2734,7 +2915,7 @@ where
         WebsocketBase::WebsocketStreams(ws_streams) => {
             ws_streams
                 .clone()
-                .subscribe(vec![stream_or_id.clone()], id.clone())
+                .subscribe(vec![stream_or_id.clone()], id.clone(), url_path.as_deref())
                 .await;
         }
         WebsocketBase::WebsocketApi(_) => {}
@@ -2743,6 +2924,7 @@ where
     Arc::new(WebsocketStream {
         websocket_base,
         stream_or_id,
+        url_path,
         id,
         callback: Mutex::new(None),
         _phantom: PhantomData,
@@ -2853,8 +3035,10 @@ mod tests {
     fn create_websocket_streams(
         ws_url: Option<&str>,
         conns: Option<Vec<Arc<WebsocketConnection>>>,
+        url_paths: Option<Vec<String>>,
     ) -> Arc<WebsocketStreams> {
         let mut connections: Vec<Arc<WebsocketConnection>> = vec![];
+        let url_paths = url_paths.unwrap_or_default();
         if conns.is_none() {
             connections.push(WebsocketConnection::new("c1"));
             connections.push(WebsocketConnection::new("c2"));
@@ -2869,7 +3053,7 @@ mod tests {
             agent: None,
             user_agent: build_user_agent("product"),
         };
-        WebsocketStreams::new(config, connections)
+        WebsocketStreams::new(config, connections, url_paths)
     }
 
     fn subscribe_to_emitter(emitter: &WebsocketEventEmitter) -> Receiver<WebsocketEvent> {
@@ -2885,6 +3069,21 @@ mod tests {
             .await
             .expect("timed out waiting for event")
             .expect("subscriber channel closed")
+    }
+
+    async fn eventually_async<F, Fut>(max_wait: Duration, mut f: F) -> bool
+    where
+        F: FnMut() -> Fut,
+        Fut: std::future::Future<Output = bool>,
+    {
+        let start = tokio::time::Instant::now();
+        while start.elapsed() < max_wait {
+            if f().await {
+                return true;
+            }
+            sleep(Duration::from_millis(20)).await;
+        }
+        false
     }
 
     mod event_emitter {
@@ -3002,6 +3201,7 @@ mod tests {
                     tokio::spawn(async move {
                         if let Ok((stream, _)) = listener.accept().await {
                             let mut ws = accept_async(stream).await.unwrap();
+                            sleep(Duration::from_secs(5)).await;
                             let _ = ws.close(None).await;
                         }
                     });
@@ -3025,10 +3225,15 @@ mod tests {
                         .await
                         .unwrap();
 
-                    sleep(Duration::from_secs(2)).await;
-
-                    let st = conn.state.lock().await;
-                    assert!(st.ws_write_tx.is_some());
+                    let mut ok = false;
+                    for _ in 0..100 {
+                        if conn.state.lock().await.ws_write_tx.is_some() {
+                            ok = true;
+                            break;
+                        }
+                        sleep(Duration::from_millis(50)).await;
+                    }
+                    assert!(ok, "expected ws_write_tx to be Some after reconnect");
                 });
             }
 
@@ -3117,6 +3322,7 @@ mod tests {
                     tokio::spawn(async move {
                         if let Ok((stream, _)) = listener.accept().await {
                             let mut ws = accept_async(stream).await.unwrap();
+                            sleep(Duration::from_secs(2)).await;
                             let _ = ws.close(None).await;
                         }
                     });
@@ -3140,12 +3346,21 @@ mod tests {
                         .await
                         .unwrap();
 
-                    sleep(Duration::from_millis(100)).await;
+                    sleep(Duration::from_millis(50)).await;
                     assert!(conn.state.lock().await.ws_write_tx.is_none());
 
-                    sleep(Duration::from_secs(2)).await;
-
-                    assert!(conn.state.lock().await.ws_write_tx.is_some());
+                    let mut ok = false;
+                    for _ in 0..200 {
+                        if conn.state.lock().await.ws_write_tx.is_some() {
+                            ok = true;
+                            break;
+                        }
+                        sleep(Duration::from_millis(50)).await;
+                    }
+                    assert!(
+                        ok,
+                        "expected ws_write_tx to be Some after reconnect delay elapsed"
+                    );
                 });
             }
         }
@@ -3185,6 +3400,124 @@ mod tests {
                 advance(Duration::from_secs(23 * 60 * 60 + 1)).await;
 
                 resume();
+            }
+        }
+
+        mod reconnect_regressions {
+            use super::*;
+
+            #[test]
+            fn init_connect_is_not_skipped_when_reconnection_pending() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+
+                    tokio::spawn(async move {
+                        if let Ok((stream, _)) = listener.accept().await {
+                            tokio::spawn(async move {
+                                let mut ws = accept_async(stream).await.unwrap();
+                                sleep(Duration::from_millis(500)).await;
+                                let _ = ws.close(None).await;
+                            });
+                        }
+                    });
+
+                    let conn = WebsocketConnection::new("c-reconnect");
+                    {
+                        let mut st = conn.state.lock().await;
+                        let (tx, _) = unbounded_channel::<Message>();
+                        st.ws_write_tx = Some(tx);
+                        st.reconnection_pending = true;
+                    }
+
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
+
+                    let url = format!("ws://{addr}");
+                    common
+                        .clone()
+                        .init_connect(&url, false, Some(conn.clone()))
+                        .await
+                        .unwrap();
+
+                    let ok = eventually_async(Duration::from_secs(2), || {
+                        let conn = conn.clone();
+                        async move {
+                            let st = conn.state.lock().await;
+                            st.ws_write_tx.is_some() && !st.reconnection_pending
+                        }
+                    })
+                    .await;
+
+                    assert!(
+                        ok,
+                        "expected writer installed and reconnection_pending cleared"
+                    );
+                });
+            }
+
+            #[test]
+            fn pending_request_is_resolved_on_socket_drop() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+
+                    tokio::spawn(async move {
+                        if let Ok((stream, _)) = listener.accept().await {
+                            let mut ws = accept_async(stream).await.unwrap();
+                            let _ = ws.next().await;
+                            let _ = ws.close(None).await;
+                        }
+                    });
+
+                    let conn = WebsocketConnection::new("c1");
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
+
+                    let url = format!("ws://{addr}");
+                    common
+                        .clone()
+                        .init_connect(&url, false, Some(conn.clone()))
+                        .await
+                        .unwrap();
+
+                    let rx = common
+                        .send(
+                            "{\"id\":\"req-1\",\"method\":\"PING\"}".to_string(),
+                            Some("req-1".to_string()),
+                            true,
+                            Duration::from_millis(150),
+                            Some(conn.clone()),
+                        )
+                        .await
+                        .unwrap()
+                        .expect("expected oneshot receiver");
+
+                    let res = timeout(Duration::from_secs(2), rx)
+                        .await
+                        .expect("did not resolve pending request")
+                        .expect("oneshot cancelled");
+
+                    assert!(matches!(res, Err(WebsocketError::Timeout)));
+
+                    let ok = eventually_async(Duration::from_secs(1), || {
+                        let conn = conn.clone();
+                        async move { conn.state.lock().await.pending_requests.is_empty() }
+                    })
+                    .await;
+
+                    assert!(ok, "pending_requests should be drained");
+                });
             }
         }
 
@@ -3317,15 +3650,43 @@ mod tests {
             }
         }
 
-        mod get_available_connections_tests {
+        mod get_available_connections {
             use super::*;
 
             #[test]
             fn single_mode() {
                 TOKIO_SHARED_RT.block_on(async {
                     let common = WebsocketCommon::new(vec![], WebsocketMode::Single, 0, None, None);
-                    let connections = common.get_available_connections(false).await;
+                    let connections = common.get_available_connections(false, None).await;
                     assert_eq!(connections[0].id, common.connection_pool[0].id);
+                });
+            }
+
+            #[test]
+            fn single_mode_with_url_path_does_not_force_first_connection() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conn1 = WebsocketConnection::new("c1");
+                    let conn2 = WebsocketConnection::new("c2");
+
+                    let (tx2, _rx2) = unbounded_channel();
+                    {
+                        let mut s2 = conn2.state.lock().await;
+                        s2.ws_write_tx = Some(tx2);
+                        s2.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut s1 = conn1.state.lock().await;
+                        s1.url_path = Some("path1".to_string());
+                    }
+
+                    let pool = vec![conn1.clone(), conn2.clone()];
+                    let common = WebsocketCommon::new(pool, WebsocketMode::Single, 0, None, None);
+
+                    let connections = common.get_available_connections(false, Some("path1")).await;
+
+                    assert_eq!(connections.len(), 1);
+                    assert_eq!(connections[0].id, "c2");
                 });
             }
 
@@ -3334,7 +3695,7 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let common =
                         WebsocketCommon::new(vec![], WebsocketMode::Pool(2), 0, None, None);
-                    let connections = common.get_available_connections(false).await;
+                    let connections = common.get_available_connections(false, None).await;
                     assert!(connections.is_empty());
                 });
             }
@@ -3351,7 +3712,7 @@ mod tests {
                     }
                     let pool = vec![conn1.clone(), conn2.clone()];
                     let common = WebsocketCommon::new(pool, WebsocketMode::Pool(2), 0, None, None);
-                    let connections = common.get_available_connections(false).await;
+                    let connections = common.get_available_connections(false, None).await;
                     assert!(connections.len() == 1);
                 });
             }
@@ -3365,10 +3726,42 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let common = WebsocketCommon::new(vec![], WebsocketMode::Single, 0, None, None);
                     let conn = common
-                        .get_connection(false)
+                        .get_connection(false, None)
                         .await
                         .expect("should get connection");
                     assert_eq!(conn.id, common.connection_pool[0].id);
+                });
+            }
+
+            #[test]
+            fn single_mode_with_url_path_selects_matching_ready_connection() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conn1 = WebsocketConnection::new("c1");
+                    let conn2 = WebsocketConnection::new("c2");
+
+                    let (tx1, _rx1) = unbounded_channel();
+                    {
+                        let mut s1 = conn1.state.lock().await;
+                        s1.ws_write_tx = Some(tx1);
+                        s1.url_path = Some("path2".to_string());
+                    }
+
+                    let (tx2, _rx2) = unbounded_channel();
+                    {
+                        let mut s2 = conn2.state.lock().await;
+                        s2.ws_write_tx = Some(tx2);
+                        s2.url_path = Some("path1".to_string());
+                    }
+
+                    let pool = vec![conn1.clone(), conn2.clone()];
+                    let common = WebsocketCommon::new(pool, WebsocketMode::Single, 0, None, None);
+
+                    let chosen = common
+                        .get_connection(false, Some("path1"))
+                        .await
+                        .expect("should get connection");
+
+                    assert_eq!(chosen.id, "c2");
                 });
             }
 
@@ -3377,7 +3770,7 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let common =
                         WebsocketCommon::new(vec![], WebsocketMode::Pool(2), 0, None, None);
-                    let result = common.get_connection(false).await;
+                    let result = common.get_connection(false, None).await;
                     assert!(matches!(
                         result,
                         Err(crate::errors::WebsocketError::NotConnected)
@@ -3397,10 +3790,64 @@ mod tests {
                     }
                     let pool = vec![conn1.clone(), conn2.clone()];
                     let common = WebsocketCommon::new(pool, WebsocketMode::Pool(2), 0, None, None);
-                    let result = common.get_connection(false).await;
+                    let result = common.get_connection(false, None).await;
                     assert!(result.is_ok());
                     let chosen = result.unwrap();
                     assert_eq!(chosen.id, conn1.id);
+                });
+            }
+
+            #[test]
+            fn pool_mode_with_url_path_filters_connections() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conn1 = WebsocketConnection::new("c1");
+                    let conn2 = WebsocketConnection::new("c2");
+
+                    let (tx1, _rx1) = unbounded_channel();
+                    {
+                        let mut s1 = conn1.state.lock().await;
+                        s1.ws_write_tx = Some(tx1);
+                        s1.url_path = Some("path1".to_string());
+                    }
+
+                    let (tx2, _rx2) = unbounded_channel();
+                    {
+                        let mut s2 = conn2.state.lock().await;
+                        s2.ws_write_tx = Some(tx2);
+                        s2.url_path = Some("path2".to_string());
+                    }
+
+                    let pool = vec![conn1.clone(), conn2.clone()];
+                    let common = WebsocketCommon::new(pool, WebsocketMode::Pool(2), 0, None, None);
+
+                    let chosen = common
+                        .get_connection(false, Some("path2"))
+                        .await
+                        .expect("should pick ready connection for path2");
+
+                    assert_eq!(chosen.id, "c2");
+                });
+            }
+
+            #[test]
+            fn url_path_no_match_returns_not_connected() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conn1 = WebsocketConnection::new("c1");
+                    let (tx1, _rx1) = unbounded_channel();
+                    {
+                        let mut s1 = conn1.state.lock().await;
+                        s1.ws_write_tx = Some(tx1);
+                        s1.url_path = Some("path1".to_string());
+                    }
+
+                    let pool = vec![conn1.clone()];
+                    let common = WebsocketCommon::new(pool, WebsocketMode::Pool(1), 0, None, None);
+
+                    let result = common.get_connection(false, Some("path2")).await;
+                    assert!(matches!(
+                        result,
+                        Err(crate::errors::WebsocketError::NotConnected)
+                    ));
                 });
             }
         }
@@ -3762,8 +4209,11 @@ mod tests {
                     tokio::spawn(async move {
                         for _ in 0..pool_size {
                             if let Ok((stream, _)) = listener.accept().await {
-                                let mut ws = accept_async(stream).await.unwrap();
-                                let _ = ws.close(None).await;
+                                tokio::spawn(async move {
+                                    let mut ws = accept_async(stream).await.unwrap();
+                                    sleep(Duration::from_millis(500)).await;
+                                    let _ = ws.close(None).await;
+                                });
                             }
                         }
                     });
@@ -3778,10 +4228,17 @@ mod tests {
                         None,
                     );
                     let url = format!("ws://{addr}");
-                    common.clone().connect_pool(&url).await.unwrap();
+                    common.clone().connect_pool(&url, None).await.unwrap();
                     for conn in conns {
-                        let st = conn.state.lock().await;
-                        assert!(st.ws_write_tx.is_some());
+                        let mut ok = false;
+                        for _ in 0..100 {
+                            if conn.state.lock().await.ws_write_tx.is_some() {
+                                ok = true;
+                                break;
+                            }
+                            sleep(Duration::from_millis(50)).await;
+                        }
+                        assert!(ok, "expected ws_write_tx Some after connect");
                     }
                 });
             }
@@ -3813,7 +4270,7 @@ mod tests {
                         None,
                         None,
                     );
-                    let res = common.clone().connect_pool(&valid_url).await;
+                    let res = common.clone().connect_pool(&valid_url, None).await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
             }
@@ -3823,7 +4280,7 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let conns = vec![WebsocketConnection::new("c1")];
                     let common = WebsocketCommon::new(conns, WebsocketMode::Pool(1), 0, None, None);
-                    let res = common.connect_pool("not-a-url").await;
+                    let res = common.connect_pool("not-a-url", None).await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
             }
@@ -3849,7 +4306,7 @@ mod tests {
                         None,
                     );
                     let url = format!("ws://{addr}");
-                    let res = common.connect_pool(&url).await;
+                    let res = common.connect_pool(&url, None).await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
             }
@@ -3863,8 +4320,11 @@ mod tests {
                     tokio::spawn(async move {
                         for _ in 0..pool_size {
                             if let Ok((stream, _)) = listener.accept().await {
-                                let mut ws = accept_async(stream).await.unwrap();
-                                let _ = ws.close(None).await;
+                                tokio::spawn(async move {
+                                    let mut ws = accept_async(stream).await.unwrap();
+                                    sleep(Duration::from_millis(500)).await;
+                                    let _ = ws.close(None).await;
+                                });
                             }
                         }
                     });
@@ -3879,10 +4339,17 @@ mod tests {
                         None,
                     );
                     let url = format!("ws://{addr}");
-                    common.clone().connect_pool(&url).await.unwrap();
+                    common.clone().connect_pool(&url, None).await.unwrap();
                     for conn in conns {
-                        let st = conn.state.lock().await;
-                        assert!(st.ws_write_tx.is_some());
+                        let mut ok = false;
+                        for _ in 0..100 {
+                            if conn.state.lock().await.ws_write_tx.is_some() {
+                                ok = true;
+                                break;
+                            }
+                            sleep(Duration::from_millis(25)).await;
+                        }
+                        assert!(ok, "expected ws_write_tx Some for {}", conn.id);
                     }
                 });
             }
@@ -3907,9 +4374,96 @@ mod tests {
                         None,
                     );
                     let url = format!("ws://{addr}");
-                    common.connect_pool(&url).await.unwrap();
-                    let st = conn.state.lock().await;
-                    assert!(st.ws_write_tx.is_some());
+                    common.connect_pool(&url, None).await.unwrap();
+                    let ok = eventually_async(Duration::from_secs(5), || {
+                        let conn = conn.clone();
+                        async move { conn.state.lock().await.ws_write_tx.is_some() }
+                    })
+                    .await;
+
+                    assert!(ok, "single mode did not select first connection");
+                });
+            }
+
+            #[test]
+            fn uses_subset_when_connections_provided() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+
+                    tokio::spawn(async move {
+                        for _ in 0..2 {
+                            if let Ok((stream, _)) = listener.accept().await {
+                                let mut ws = accept_async(stream).await.unwrap();
+                                let _ = ws.close(None).await;
+                            }
+                        }
+                    });
+
+                    let c1 = WebsocketConnection::new("c1");
+                    let c2 = WebsocketConnection::new("c2");
+                    let c3 = WebsocketConnection::new("c3");
+
+                    let common = WebsocketCommon::new(
+                        vec![c1.clone(), c2.clone(), c3.clone()],
+                        WebsocketMode::Pool(3),
+                        0,
+                        None,
+                        None,
+                    );
+
+                    let url = format!("ws://{addr}");
+                    common
+                        .connect_pool(&url, Some(vec![c1.clone(), c3.clone()]))
+                        .await
+                        .unwrap();
+
+                    let ok = eventually_async(Duration::from_secs(5), || {
+                        let c1 = c1.clone();
+                        let c2 = c2.clone();
+                        let c3 = c3.clone();
+                        async move {
+                            c1.state.lock().await.ws_write_tx.is_some()
+                                && c3.state.lock().await.ws_write_tx.is_some()
+                                && c2.state.lock().await.ws_write_tx.is_none()
+                        }
+                    })
+                    .await;
+
+                    assert!(ok, "didn't use provided connections");
+                });
+            }
+
+            #[test]
+            fn empty_subset_is_ok_and_connects_none() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+
+                    tokio::spawn(async move {
+                        let _ = addr;
+                    });
+
+                    let c1 = WebsocketConnection::new("c1");
+                    let c2 = WebsocketConnection::new("c2");
+
+                    let common = WebsocketCommon::new(
+                        vec![c1.clone(), c2.clone()],
+                        WebsocketMode::Pool(2),
+                        0,
+                        None,
+                        None,
+                    );
+
+                    let url = format!("ws://{addr}");
+                    common
+                        .clone()
+                        .connect_pool(&url, Some(vec![]))
+                        .await
+                        .unwrap();
+
+                    assert!(c1.state.lock().await.ws_write_tx.is_none());
+                    assert!(c2.state.lock().await.ws_write_tx.is_none());
                 });
             }
         }
@@ -3947,11 +4501,15 @@ mod tests {
                         .init_connect(&url, false, None)
                         .await
                         .unwrap();
-                    let st1 = c1.state.lock().await;
-                    let st2 = c2.state.lock().await;
 
-                    assert!(st1.ws_write_tx.is_some());
-                    assert!(st2.ws_write_tx.is_none());
+                    let ok = eventually_async(Duration::from_secs(5), || {
+                        let conn1 = c1.clone();
+                        async move { conn1.state.lock().await.ws_write_tx.is_some() }
+                    })
+                    .await;
+
+                    assert!(ok, "first connection was never selected");
+                    assert!(c2.state.lock().await.ws_write_tx.is_none());
                 });
             }
 
@@ -3995,6 +4553,54 @@ mod tests {
 
                     let lock = received.lock().await;
                     assert_eq!(lock.as_deref(), Some("ping"));
+                });
+            }
+
+            #[test]
+            fn does_not_skip_when_reconnection_pending_even_if_writer_exists() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+
+                    tokio::spawn(async move {
+                        if let Ok((stream, _)) = listener.accept().await {
+                            let mut ws = accept_async(stream).await.unwrap();
+                            let _ = ws.close(None).await;
+                        }
+                    });
+
+                    let conn = WebsocketConnection::new("c-reconnect");
+                    {
+                        let mut st = conn.state.lock().await;
+                        let (tx, _) = unbounded_channel::<Message>();
+                        st.ws_write_tx = Some(tx);
+                        st.reconnection_pending = true;
+                    }
+
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
+
+                    let url = format!("ws://{addr}");
+                    common
+                        .clone()
+                        .init_connect(&url, false, Some(conn.clone()))
+                        .await
+                        .unwrap();
+
+                    let st = conn.state.lock().await;
+                    assert!(
+                        st.ws_write_tx.is_some(),
+                        "writer should be set after connect"
+                    );
+                    assert!(
+                        !st.reconnection_pending,
+                        "reconnection_pending should be cleared after successful connect"
+                    );
                 });
             }
 
@@ -4181,7 +4787,13 @@ mod tests {
                     let res = common.clone().init_connect(&url, false, None).await;
 
                     assert!(res.is_ok());
-                    assert!(conn.state.lock().await.ws_write_tx.is_some());
+                    let ok = eventually_async(Duration::from_secs(5), || {
+                        let conn = conn.clone();
+                        async move { conn.state.lock().await.ws_write_tx.is_some() }
+                    })
+                    .await;
+
+                    assert!(ok, "default connection was never selected");
                 });
             }
 
@@ -4205,7 +4817,7 @@ mod tests {
                     let common = WebsocketCommon::new(
                         vec![conn.clone()],
                         WebsocketMode::Single,
-                        10,
+                        5_000,
                         None,
                         None,
                     );
@@ -4222,6 +4834,10 @@ mod tests {
                     assert!(
                         st.reconnection_pending,
                         "expected reconnection_pending to be true after abnormal close"
+                    );
+                    assert!(
+                        st.ws_write_tx.is_none(),
+                        "ws_write_tx should be cleared when scheduling a reconnect"
                     );
                 });
             }
@@ -6010,8 +6626,11 @@ mod tests {
                     };
                     let conn1 = WebsocketConnection::new("c1");
                     let conn2 = WebsocketConnection::new("c2");
-                    let api =
-                        WebsocketStreams::new(config.clone(), vec![conn1.clone(), conn2.clone()]);
+                    let api = WebsocketStreams::new(
+                        config.clone(),
+                        vec![conn1.clone(), conn2.clone()],
+                        vec![],
+                    );
 
                     assert_eq!(api.common.connection_pool.len(), 2);
                     assert!(Arc::ptr_eq(&api.common.connection_pool[0], &conn1));
@@ -6019,6 +6638,65 @@ mod tests {
                     assert_eq!(api.configuration.ws_url, Some("wss://example".to_string()));
                     let flag = api.is_connecting.lock().await;
                     assert!(!*flag);
+                });
+            }
+
+            #[test]
+            fn new_expands_pool_when_url_paths_present() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let config = ConfigurationWebsocketStreams {
+                        ws_url: Some("wss://example".to_string()),
+                        mode: WebsocketMode::Pool(2),
+                        reconnect_delay: 500,
+                        time_unit: None,
+                        agent: None,
+                        user_agent: build_user_agent("product"),
+                    };
+
+                    let conn1 = WebsocketConnection::new("c1");
+                    let conn2 = WebsocketConnection::new("c2");
+
+                    let api = WebsocketStreams::new(
+                        config,
+                        vec![conn1.clone(), conn2.clone()],
+                        vec!["path1".to_string(), "path2".to_string()],
+                    );
+
+                    assert_eq!(api.common.connection_pool.len(), 4);
+                    assert!(Arc::ptr_eq(&api.common.connection_pool[0], &conn1));
+                    assert!(Arc::ptr_eq(&api.common.connection_pool[1], &conn2));
+                });
+            }
+
+            #[test]
+            fn new_does_not_expand_pool_when_already_sized_for_url_paths() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let config = ConfigurationWebsocketStreams {
+                        ws_url: Some("wss://example".to_string()),
+                        mode: WebsocketMode::Pool(2),
+                        reconnect_delay: 500,
+                        time_unit: None,
+                        agent: None,
+                        user_agent: build_user_agent("product"),
+                    };
+
+                    let conns = vec![
+                        WebsocketConnection::new("c1"),
+                        WebsocketConnection::new("c2"),
+                        WebsocketConnection::new("c3"),
+                        WebsocketConnection::new("c4"),
+                    ];
+
+                    let api = WebsocketStreams::new(
+                        config,
+                        conns.clone(),
+                        vec!["path1".to_string(), "path2".to_string()],
+                    );
+
+                    assert_eq!(api.common.connection_pool.len(), 4);
+                    for (i, c) in conns.iter().enumerate() {
+                        assert!(Arc::ptr_eq(&api.common.connection_pool[i], c));
+                    }
                 });
             }
         }
@@ -6052,7 +6730,7 @@ mod tests {
                             agent: None,
                             user_agent: build_user_agent("product"),
                         };
-                        WebsocketStreams::new(config, vec![c1, c2])
+                        WebsocketStreams::new(config, vec![c1, c2], vec![])
                     };
 
                     let url = format!("ws://127.0.0.1:{port}");
@@ -6064,9 +6742,87 @@ mod tests {
             }
 
             #[test]
+            fn establishes_successfully_with_url_paths() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+
+                    tokio::spawn(async move {
+                        for _ in 0..4 {
+                            if let Ok((stream, _)) = listener.accept().await {
+                                let mut ws = accept_async(stream).await.unwrap();
+                                ws.close(None).await.ok();
+                            }
+                        }
+                    });
+
+                    let config = ConfigurationWebsocketStreams {
+                        ws_url: Some(format!("ws://{}", addr)),
+                        mode: WebsocketMode::Pool(2),
+                        reconnect_delay: 500,
+                        time_unit: None,
+                        agent: None,
+                        user_agent: build_user_agent("product"),
+                    };
+
+                    let ws = WebsocketStreams::new(
+                        config,
+                        vec![],
+                        vec!["path1".to_string(), "path2".to_string()],
+                    );
+
+                    let res = ws.clone().connect(vec!["stream1".into()]).await;
+                    assert!(res.is_ok());
+                    assert_eq!(ws.common.connection_pool.len(), 4);
+                });
+            }
+
+            #[test]
+            fn connect_sets_url_path_on_connections_when_url_paths_present() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+
+                    tokio::spawn(async move {
+                        for _ in 0..4 {
+                            if let Ok((stream, _)) = listener.accept().await {
+                                let mut ws = accept_async(stream).await.unwrap();
+                                ws.close(None).await.ok();
+                            }
+                        }
+                    });
+
+                    let config = ConfigurationWebsocketStreams {
+                        ws_url: Some(format!("ws://{}", addr)),
+                        mode: WebsocketMode::Pool(2),
+                        reconnect_delay: 500,
+                        time_unit: None,
+                        agent: None,
+                        user_agent: build_user_agent("product"),
+                    };
+
+                    let ws = WebsocketStreams::new(
+                        config,
+                        vec![],
+                        vec!["path1".to_string(), "path2".to_string()],
+                    );
+
+                    ws.clone().connect(vec!["stream1".into()]).await.unwrap();
+
+                    let pool_size = ws.configuration.mode.pool_size();
+
+                    for (i, conn) in ws.common.connection_pool.iter().enumerate() {
+                        let expected = if i < pool_size { "path1" } else { "path2" };
+                        let st = conn.state.lock().await;
+                        assert_eq!(st.url_path.as_deref(), Some(expected));
+                    }
+                });
+            }
+
+            #[test]
             fn refused_returns_error() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(Some("ws://127.0.0.1:9"), None);
+                    let ws = create_websocket_streams(Some("ws://127.0.0.1:9"), None, None);
                     let res = ws.connect(vec!["stream1".into()]).await;
                     assert!(res.is_err());
                 });
@@ -6075,7 +6831,7 @@ mod tests {
             #[test]
             fn invalid_url_returns_error() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(Some("not-a-url"), None);
+                    let ws = create_websocket_streams(Some("not-a-url"), None, None);
                     let res = ws.connect(vec!["s".into()]).await;
                     assert!(res.is_err());
                 });
@@ -6088,7 +6844,7 @@ mod tests {
             #[test]
             fn disconnect_clears_state_and_streams() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = &ws.common.connection_pool[0];
                     {
                         let mut state = conn.state.lock().await;
@@ -6119,8 +6875,8 @@ mod tests {
             #[test]
             fn empty_list_does_nothing() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
-                    ws.clone().subscribe(Vec::new(), None).await;
+                    let ws = create_websocket_streams(None, None, None);
+                    ws.clone().subscribe(Vec::new(), None, None).await;
                     let map = ws.connection_streams.lock().await;
                     assert!(map.is_empty());
                 });
@@ -6129,9 +6885,9 @@ mod tests {
             #[test]
             fn queue_when_not_ready() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[0].clone();
-                    ws.clone().subscribe(vec!["s1".into()], None).await;
+                    ws.clone().subscribe(vec!["s1".into()], None, None).await;
                     let state = conn.state.lock().await;
                     let pending: Vec<String> =
                         state.pending_subscriptions.iter().cloned().collect();
@@ -6142,10 +6898,10 @@ mod tests {
             #[test]
             fn only_one_subscription_per_stream() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[0].clone();
-                    ws.clone().subscribe(vec!["s1".into()], None).await;
-                    ws.clone().subscribe(vec!["s1".into()], None).await;
+                    ws.clone().subscribe(vec!["s1".into()], None, None).await;
+                    ws.clone().subscribe(vec!["s1".into()], None, None).await;
                     let state = conn.state.lock().await;
                     let pending: Vec<String> =
                         state.pending_subscriptions.iter().cloned().collect();
@@ -6156,9 +6912,9 @@ mod tests {
             #[test]
             fn multiple_streams_assigned() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     ws.clone()
-                        .subscribe(vec!["s1".into(), "s2".into()], None)
+                        .subscribe(vec!["s1".into(), "s2".into()], None, None)
                         .await;
                     let map = ws.connection_streams.lock().await;
                     assert!(map.contains_key("s1"));
@@ -6169,19 +6925,108 @@ mod tests {
             #[test]
             fn existing_stream_not_reassigned() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
-                    ws.clone().subscribe(vec!["s1".into()], None).await;
+                    let ws = create_websocket_streams(None, None, None);
+                    ws.clone().subscribe(vec!["s1".into()], None, None).await;
                     let first_id = {
                         let map = ws.connection_streams.lock().await;
                         map.get("s1").unwrap().id.clone()
                     };
                     ws.clone()
-                        .subscribe(vec!["s1".into(), "s2".into()], None)
+                        .subscribe(vec!["s1".into(), "s2".into()], None, None)
                         .await;
                     let map = ws.connection_streams.lock().await;
                     let second_id = map.get("s1").unwrap().id.clone();
                     assert_eq!(first_id, second_id);
                     assert!(map.contains_key("s2"));
+                });
+            }
+
+            #[test]
+            fn queue_when_not_ready_with_url_path() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+
+                    let conn = ws.common.connection_pool[0].clone();
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.ws_write_tx = None;
+                        st.url_path = Some("path1".to_string());
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+
+                    ws.clone()
+                        .subscribe(vec!["s1".into()], None, Some("path1"))
+                        .await;
+
+                    let state = conn.state.lock().await;
+                    let pending: Vec<String> =
+                        state.pending_subscriptions.iter().cloned().collect();
+                    assert_eq!(pending, vec!["s1".to_string()]);
+                });
+            }
+
+            #[test]
+            fn only_one_subscription_per_stream_per_url_path() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+
+                    let conn = ws.common.connection_pool[0].clone();
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.ws_write_tx = None;
+                        st.url_path = Some("path1".to_string());
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+
+                    ws.clone()
+                        .subscribe(vec!["s1".into()], None, Some("path1"))
+                        .await;
+                    ws.clone()
+                        .subscribe(vec!["s1".into()], None, Some("path1"))
+                        .await;
+
+                    let state = conn.state.lock().await;
+                    let pending: Vec<String> =
+                        state.pending_subscriptions.iter().cloned().collect();
+                    assert_eq!(pending, vec!["s1".to_string()]);
+                });
+            }
+
+            #[test]
+            fn same_stream_can_be_subscribed_on_different_url_paths() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+
+                    let conn1 = ws.common.connection_pool[0].clone();
+                    let conn2 = ws.common.connection_pool[1].clone();
+
+                    {
+                        let mut st1 = conn1.state.lock().await;
+                        st1.ws_write_tx = None;
+                        st1.url_path = Some("path1".to_string());
+                        st1.reconnection_pending = false;
+                        st1.close_initiated = false;
+                    }
+                    {
+                        let mut st2 = conn2.state.lock().await;
+                        st2.ws_write_tx = None;
+                        st2.url_path = Some("path2".to_string());
+                        st2.reconnection_pending = false;
+                        st2.close_initiated = false;
+                    }
+
+                    ws.clone()
+                        .subscribe(vec!["s1".into()], None, Some("path1"))
+                        .await;
+                    ws.clone()
+                        .subscribe(vec!["s1".into()], None, Some("path2"))
+                        .await;
+
+                    let map = ws.connection_streams.lock().await;
+                    assert!(map.contains_key("path1::s1"));
+                    assert!(map.contains_key("path2::s1"));
                 });
             }
         }
@@ -6192,7 +7037,7 @@ mod tests {
             #[test]
             fn removes_stream_with_no_callbacks() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[0].clone();
 
                     {
@@ -6210,7 +7055,7 @@ mod tests {
                         st.stream_callbacks.insert("s1".to_string(), Vec::new());
                     }
 
-                    ws.unsubscribe(vec!["s1".to_string()], None).await;
+                    ws.unsubscribe(vec!["s1".to_string()], None, None).await;
 
                     assert!(!ws.connection_streams.lock().await.contains_key("s1"));
                     assert!(!conn.state.lock().await.stream_callbacks.contains_key("s1"));
@@ -6220,7 +7065,7 @@ mod tests {
             #[test]
             fn preserves_stream_with_callbacks() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[1].clone();
 
                     {
@@ -6234,7 +7079,7 @@ mod tests {
                             .insert("s2".to_string(), vec![Arc::new(|_: &Value| {})]);
                     }
 
-                    ws.unsubscribe(vec!["s2".to_string()], None).await;
+                    ws.unsubscribe(vec!["s2".to_string()], None, None).await;
 
                     assert!(ws.connection_streams.lock().await.contains_key("s2"));
                     assert!(conn.state.lock().await.stream_callbacks.contains_key("s2"));
@@ -6244,7 +7089,7 @@ mod tests {
             #[test]
             fn does_not_send_if_callbacks_exist() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[0].clone();
                     {
                         let mut map = ws.connection_streams.lock().await;
@@ -6257,7 +7102,7 @@ mod tests {
                             vec![Arc::new(|_: &Value| {}), Arc::new(|_: &Value| {})],
                         );
                     }
-                    ws.unsubscribe(vec!["s1".into()], None).await;
+                    ws.unsubscribe(vec!["s1".into()], None, None).await;
                     assert!(ws.connection_streams.lock().await.contains_key("s1"));
                     assert!(conn.state.lock().await.stream_callbacks.contains_key("s1"));
                 });
@@ -6266,17 +7111,17 @@ mod tests {
             #[test]
             fn warns_if_not_associated() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
-                    ws.unsubscribe(vec!["nope".into()], None).await;
+                    let ws = create_websocket_streams(None, None, None);
+                    ws.unsubscribe(vec!["nope".into()], None, None).await;
                 });
             }
 
             #[test]
             fn empty_list_does_nothing() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let before = ws.connection_streams.lock().await.len();
-                    ws.unsubscribe(Vec::<String>::new(), None).await;
+                    ws.unsubscribe(Vec::<String>::new(), None, None).await;
                     let after = ws.connection_streams.lock().await.len();
                     assert_eq!(before, after);
                 });
@@ -6285,7 +7130,7 @@ mod tests {
             #[test]
             fn invalid_custom_id_falls_back() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[0].clone();
                     {
                         let mut map = ws.connection_streams.lock().await;
@@ -6297,8 +7142,12 @@ mod tests {
                         state.ws_write_tx = Some(tx);
                         state.stream_callbacks.insert("foo".to_string(), Vec::new());
                     }
-                    ws.unsubscribe(vec!["foo".into()], Some(StreamId::Str("bad-id".into())))
-                        .await;
+                    ws.unsubscribe(
+                        vec!["foo".into()],
+                        Some(StreamId::Str("bad-id".into())),
+                        None,
+                    )
+                    .await;
                     assert!(!ws.connection_streams.lock().await.contains_key("foo"));
                 });
             }
@@ -6306,7 +7155,7 @@ mod tests {
             #[test]
             fn removes_even_without_write_channel() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[0].clone();
                     {
                         let mut map = ws.connection_streams.lock().await;
@@ -6318,8 +7167,121 @@ mod tests {
                         state.ws_write_tx = Some(tx);
                         state.stream_callbacks.insert("x".to_string(), Vec::new());
                     }
-                    ws.unsubscribe(vec!["x".into()], None).await;
+                    ws.unsubscribe(vec!["x".into()], None, None).await;
                     assert!(!ws.connection_streams.lock().await.contains_key("x"));
+                });
+            }
+
+            #[test]
+            fn removes_stream_with_no_callbacks_with_url_path() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    let conn = ws.common.connection_pool[0].clone();
+
+                    {
+                        let (tx, _rx) = unbounded_channel::<Message>();
+                        let mut st = conn.state.lock().await;
+                        st.ws_write_tx = Some(tx);
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::s1".to_string(), conn.clone());
+                    }
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.stream_callbacks
+                            .insert("path1::s1".to_string(), Vec::new());
+                    }
+
+                    ws.unsubscribe(vec!["s1".to_string()], None, Some("path1"))
+                        .await;
+
+                    assert!(!ws.connection_streams.lock().await.contains_key("path1::s1"));
+                    assert!(
+                        !conn
+                            .state
+                            .lock()
+                            .await
+                            .stream_callbacks
+                            .contains_key("path1::s1")
+                    );
+                });
+            }
+
+            #[test]
+            fn preserves_stream_with_callbacks_with_url_path() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    let conn = ws.common.connection_pool[0].clone();
+
+                    {
+                        let (tx, _rx) = unbounded_channel::<Message>();
+                        let mut st = conn.state.lock().await;
+                        st.ws_write_tx = Some(tx);
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::s2".to_string(), conn.clone());
+                    }
+                    {
+                        let mut state = conn.state.lock().await;
+                        state
+                            .stream_callbacks
+                            .insert("path1::s2".to_string(), vec![Arc::new(|_: &Value| {})]);
+                    }
+
+                    ws.unsubscribe(vec!["s2".to_string()], None, Some("path1"))
+                        .await;
+
+                    assert!(ws.connection_streams.lock().await.contains_key("path1::s2"));
+                    assert!(
+                        conn.state
+                            .lock()
+                            .await
+                            .stream_callbacks
+                            .contains_key("path1::s2")
+                    );
+                });
+            }
+
+            #[test]
+            fn url_path_mismatch_does_not_remove_other_path_subscription() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    let conn = ws.common.connection_pool[0].clone();
+
+                    {
+                        let (tx, _rx) = unbounded_channel::<Message>();
+                        let mut st = conn.state.lock().await;
+                        st.ws_write_tx = Some(tx);
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::s1".to_string(), conn.clone());
+                    }
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.stream_callbacks
+                            .insert("path1::s1".to_string(), Vec::new());
+                    }
+
+                    ws.unsubscribe(vec!["s1".to_string()], None, Some("path2"))
+                        .await;
+
+                    assert!(ws.connection_streams.lock().await.contains_key("path1::s1"));
+                    assert!(
+                        conn.state
+                            .lock()
+                            .await
+                            .stream_callbacks
+                            .contains_key("path1::s1")
+                    );
                 });
             }
         }
@@ -6330,7 +7292,7 @@ mod tests {
             #[test]
             fn returns_false_when_not_subscribed() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     assert!(!ws.is_subscribed("unknown").await);
                 });
             }
@@ -6338,13 +7300,91 @@ mod tests {
             #[test]
             fn returns_true_when_subscribed() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let conn = ws.common.connection_pool[0].clone();
                     {
                         let mut map = ws.connection_streams.lock().await;
                         map.insert("stream1".to_string(), conn);
                     }
                     assert!(ws.is_subscribed("stream1").await);
+                });
+            }
+
+            #[test]
+            fn returns_true_when_subscribed_with_url_path_key() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    let conn = ws.common.connection_pool[0].clone();
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::stream1".to_string(), conn);
+                    }
+                    assert!(ws.is_subscribed("stream1").await);
+                });
+            }
+
+            #[test]
+            fn returns_true_when_same_stream_subscribed_on_multiple_paths() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    let conn1 = ws.common.connection_pool[0].clone();
+                    let conn2 = ws.common.connection_pool[1].clone();
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::stream1".to_string(), conn1);
+                        map.insert("path2::stream1".to_string(), conn2);
+                    }
+                    assert!(ws.is_subscribed("stream1").await);
+                });
+            }
+
+            #[test]
+            fn returns_false_when_only_similar_suffix_exists() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    let conn = ws.common.connection_pool[0].clone();
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::stream10".to_string(), conn);
+                    }
+                    assert!(!ws.is_subscribed("stream1").await);
+                });
+            }
+        }
+
+        mod stream_key {
+            use super::*;
+
+            #[test]
+            fn stream_key_without_url_path_returns_stream() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    assert_eq!(ws.stream_key("s1", None), "s1");
+                });
+            }
+
+            #[test]
+            fn stream_key_with_empty_url_path_returns_stream() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    assert_eq!(ws.stream_key("s1", Some("")), "s1");
+                });
+            }
+
+            #[test]
+            fn stream_key_with_url_path_prefixes_stream() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    assert_eq!(ws.stream_key("s1", Some("path1")), "path1::s1");
+                });
+            }
+
+            #[test]
+            fn stream_key_distinguishes_paths() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+                    assert_eq!(ws.stream_key("s1", Some("path1")), "path1::s1");
+                    assert_eq!(ws.stream_key("s1", Some("path2")), "path2::s1");
                 });
             }
         }
@@ -6367,8 +7407,8 @@ mod tests {
                         agent: None,
                         user_agent: build_user_agent("product"),
                     };
-                    let ws = WebsocketStreams::new(config, conns);
-                    let url = ws.prepare_url(&["s1".into(), "s2".into()]);
+                    let ws = WebsocketStreams::new(config, conns, vec![]);
+                    let url = ws.prepare_url(&["s1".into(), "s2".into()], None);
                     assert_eq!(url, "wss://example/stream?streams=s1/s2");
                 });
             }
@@ -6385,8 +7425,8 @@ mod tests {
                         agent: None,
                         user_agent: build_user_agent("product"),
                     };
-                    let ws = WebsocketStreams::new(config, conns);
-                    let url = ws.prepare_url(&["a".into()]);
+                    let ws = WebsocketStreams::new(config, conns, vec![]);
+                    let url = ws.prepare_url(&["a".into()], None);
                     assert_eq!(url, "wss://example/stream?streams=a&timeUnit=millisecond");
                 });
             }
@@ -6403,12 +7443,71 @@ mod tests {
                         agent: None,
                         user_agent: build_user_agent("product"),
                     };
-                    let ws = WebsocketStreams::new(config, conns);
-                    let url = ws.prepare_url(&["x".into(), "y".into(), "z".into()]);
+                    let ws = WebsocketStreams::new(config, conns, vec![]);
+                    let url = ws.prepare_url(&["x".into(), "y".into(), "z".into()], None);
                     assert_eq!(
                         url,
                         "wss://example/stream?streams=x/y/z&timeUnit=microsecond"
                     );
+                });
+            }
+
+            #[test]
+            fn with_url_path_prefixes_base_url() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conns = vec![WebsocketConnection::new("c1")];
+                    let config = ConfigurationWebsocketStreams {
+                        ws_url: Some("wss://example".to_string()),
+                        mode: WebsocketMode::Single,
+                        reconnect_delay: 100,
+                        time_unit: None,
+                        agent: None,
+                        user_agent: build_user_agent("product"),
+                    };
+                    let ws = WebsocketStreams::new(config, conns, vec![]);
+                    let url = ws.prepare_url(["s1".into()].as_ref(), Some("path1"));
+                    assert_eq!(url, "wss://example/path1/stream?streams=s1");
+                });
+            }
+
+            #[test]
+            fn with_url_path_and_time_unit_appends_parameter() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conns = vec![WebsocketConnection::new("c1")];
+                    let config = ConfigurationWebsocketStreams {
+                        ws_url: Some("wss://example".to_string()),
+                        mode: WebsocketMode::Single,
+                        reconnect_delay: 100,
+                        time_unit: Some(TimeUnit::Millisecond),
+                        agent: None,
+                        user_agent: build_user_agent("product"),
+                    };
+                    let ws = WebsocketStreams::new(config, conns, vec![]);
+                    let url = ws.prepare_url(["a".into()].as_ref(), Some("path1"));
+                    assert_eq!(
+                        url,
+                        "wss://example/path1/stream?streams=a&timeUnit=millisecond"
+                    );
+                });
+            }
+
+            #[test]
+            fn url_path_distinguishes_urls_for_same_streams() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conns = vec![WebsocketConnection::new("c1")];
+                    let config = ConfigurationWebsocketStreams {
+                        ws_url: Some("wss://example".to_string()),
+                        mode: WebsocketMode::Single,
+                        reconnect_delay: 100,
+                        time_unit: None,
+                        agent: None,
+                        user_agent: build_user_agent("product"),
+                    };
+                    let ws = WebsocketStreams::new(config, conns, vec![]);
+                    let u1 = ws.prepare_url(["s1".into()].as_ref(), Some("path1"));
+                    let u2 = ws.prepare_url(["s1".into()].as_ref(), Some("path2"));
+                    assert_eq!(u1, "wss://example/path1/stream?streams=s1");
+                    assert_eq!(u2, "wss://example/path2/stream?streams=s1");
                 });
             }
         }
@@ -6419,10 +7518,10 @@ mod tests {
             #[test]
             fn assigns_new_streams_to_connections() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
+                    let ws = create_websocket_streams(None, None, None);
                     let groups = ws
                         .clone()
-                        .handle_stream_assignment(vec!["s1".into(), "s2".into()])
+                        .handle_stream_assignment(vec!["s1".into(), "s2".into()], None)
                         .await;
                     let mut seen_streams = HashSet::new();
                     for (_conn, streams) in &groups {
@@ -6441,11 +7540,14 @@ mod tests {
             #[test]
             fn reuses_existing_connection_for_duplicate_stream() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
-                    let _ = ws.clone().handle_stream_assignment(vec!["s1".into()]).await;
+                    let ws = create_websocket_streams(None, None, None);
+                    let _ = ws
+                        .clone()
+                        .handle_stream_assignment(vec!["s1".into()], None)
+                        .await;
                     let groups = ws
                         .clone()
-                        .handle_stream_assignment(vec!["s1".into(), "s3".into()])
+                        .handle_stream_assignment(vec!["s1".into(), "s3".into()], None)
                         .await;
                     let mut all_streams = Vec::new();
                     for (_conn, streams) in groups {
@@ -6459,8 +7561,8 @@ mod tests {
             #[test]
             fn empty_stream_list_returns_empty() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
-                    let groups = ws.clone().handle_stream_assignment(vec![]).await;
+                    let ws = create_websocket_streams(None, None, None);
+                    let groups = ws.clone().handle_stream_assignment(vec![], None).await;
                     assert!(groups.is_empty());
                 });
             }
@@ -6468,14 +7570,20 @@ mod tests {
             #[test]
             fn closed_or_reconnecting_forces_reassignment_of_stream() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, None);
-                    let mut groups = ws.clone().handle_stream_assignment(vec!["s1".into()]).await;
+                    let ws = create_websocket_streams(None, None, None);
+                    let mut groups = ws
+                        .clone()
+                        .handle_stream_assignment(vec!["s1".into()], None)
+                        .await;
                     let (conn, _) = groups.pop().unwrap();
                     {
                         let mut st = conn.state.lock().await;
                         st.close_initiated = true;
                     }
-                    let groups2 = ws.clone().handle_stream_assignment(vec!["s2".into()]).await;
+                    let groups2 = ws
+                        .clone()
+                        .handle_stream_assignment(vec!["s2".into()], None)
+                        .await;
                     assert_eq!(groups2.len(), 1);
                     let (_new_conn, streams) = &groups2[0];
                     assert_eq!(streams, &vec!["s2".to_string()]);
@@ -6485,8 +7593,8 @@ mod tests {
             #[test]
             fn no_available_connections_falls_back_to_one() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws = create_websocket_streams(None, Some(vec![]));
-                    let assigned = ws.handle_stream_assignment(vec!["foo".into()]).await;
+                    let ws = create_websocket_streams(None, Some(vec![]), None);
+                    let assigned = ws.handle_stream_assignment(vec!["foo".into()], None).await;
                     assert_eq!(assigned.len(), 1);
                     let (_conn, streams) = &assigned[0];
                     assert_eq!(streams.as_slice(), &["foo".to_string()]);
@@ -6497,9 +7605,9 @@ mod tests {
             fn single_connection_groups_multiple_streams() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c1");
-                    let ws = create_websocket_streams(None, Some(vec![conn.clone()]));
+                    let ws = create_websocket_streams(None, Some(vec![conn.clone()]), None);
                     let assigned = ws
-                        .handle_stream_assignment(vec!["s1".into(), "s2".into()])
+                        .handle_stream_assignment(vec!["s1".into(), "s2".into()], None)
                         .await;
                     assert_eq!(assigned.len(), 1);
                     let (assigned_conn, streams) = &assigned[0];
@@ -6514,9 +7622,9 @@ mod tests {
             fn reuse_existing_healthy_connection() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c");
-                    let ws = create_websocket_streams(None, Some(vec![conn.clone()]));
-                    let _ = ws.handle_stream_assignment(vec!["s1".into()]).await;
-                    let second = ws.handle_stream_assignment(vec!["s1".into()]).await;
+                    let ws = create_websocket_streams(None, Some(vec![conn.clone()]), None);
+                    let _ = ws.handle_stream_assignment(vec!["s1".into()], None).await;
+                    let second = ws.handle_stream_assignment(vec!["s1".into()], None).await;
                     assert_eq!(second.len(), 1);
                     let (assigned_conn, streams) = &second[0];
                     assert!(Arc::ptr_eq(assigned_conn, &conn));
@@ -6528,12 +7636,12 @@ mod tests {
             fn mix_new_and_assigned_streams() {
                 TOKIO_SHARED_RT.block_on(async {
                     let conn = WebsocketConnection::new("c");
-                    let ws = create_websocket_streams(None, Some(vec![conn.clone()]));
+                    let ws = create_websocket_streams(None, Some(vec![conn.clone()]), None);
                     let _ = ws
-                        .handle_stream_assignment(vec!["s1".into(), "s2".into()])
+                        .handle_stream_assignment(vec!["s1".into(), "s2".into()], None)
                         .await;
                     let mixed = ws
-                        .handle_stream_assignment(vec!["s2".into(), "s3".into()])
+                        .handle_stream_assignment(vec!["s2".into(), "s3".into()], None)
                         .await;
                     assert_eq!(mixed.len(), 1);
                     let (assigned_conn, streams) = &mixed[0];
@@ -6541,6 +7649,148 @@ mod tests {
                     let mut got = streams.clone();
                     got.sort();
                     assert_eq!(got, vec!["s2".to_string(), "s3".to_string()]);
+                });
+            }
+
+            #[test]
+            fn assigns_streams_with_url_path_keys() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+
+                    let conn = ws.common.connection_pool[0].clone();
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                        st.ws_write_tx = None;
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+
+                    let groups = ws
+                        .handle_stream_assignment(vec!["s1".into(), "s2".into()], Some("path1"))
+                        .await;
+
+                    let map = ws.connection_streams.lock().await;
+                    assert!(map.contains_key("path1::s1"));
+                    assert!(map.contains_key("path1::s2"));
+                    assert_eq!(groups.len(), 1);
+
+                    let (_assigned_conn, streams) = &groups[0];
+                    let mut got = streams.clone();
+                    got.sort();
+                    assert_eq!(got, vec!["s1".to_string(), "s2".to_string()]);
+                });
+            }
+
+            #[test]
+            fn same_stream_on_different_paths_creates_distinct_keys() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+
+                    let conn1 = ws.common.connection_pool[0].clone();
+                    let conn2 = ws.common.connection_pool[1].clone();
+
+                    {
+                        let mut st = conn1.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                        st.ws_write_tx = None;
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+                    {
+                        let mut st = conn2.state.lock().await;
+                        st.url_path = Some("path2".to_string());
+                        st.ws_write_tx = None;
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+
+                    let g1 = ws
+                        .handle_stream_assignment(vec!["s1".into()], Some("path1"))
+                        .await;
+                    let g2 = ws
+                        .handle_stream_assignment(vec!["s1".into()], Some("path2"))
+                        .await;
+
+                    assert_eq!(g1.len(), 1);
+                    assert_eq!(g2.len(), 1);
+
+                    let map = ws.connection_streams.lock().await;
+                    assert!(map.contains_key("path1::s1"));
+                    assert!(map.contains_key("path2::s1"));
+                });
+            }
+
+            #[test]
+            fn reuses_existing_connection_for_same_path_and_stream() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+
+                    let conn = ws.common.connection_pool[0].clone();
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                        st.ws_write_tx = None;
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+
+                    let first = ws
+                        .handle_stream_assignment(vec!["s1".into()], Some("path1"))
+                        .await;
+                    let second = ws
+                        .handle_stream_assignment(vec!["s1".into(), "s2".into()], Some("path1"))
+                        .await;
+
+                    assert_eq!(first.len(), 1);
+                    assert_eq!(second.len(), 1);
+
+                    let map = ws.connection_streams.lock().await;
+                    let c1 = map.get("path1::s1").unwrap().clone();
+                    let c2 = map.get("path1::s2").unwrap().clone();
+                    assert!(Arc::ptr_eq(&c1, &c2));
+                });
+            }
+
+            #[test]
+            fn closed_or_reconnecting_forces_reassignment_with_url_path() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws = create_websocket_streams(None, None, None);
+
+                    let conn1 = ws.common.connection_pool[0].clone();
+                    let conn2 = ws.common.connection_pool[1].clone();
+
+                    {
+                        let mut st = conn1.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                        st.ws_write_tx = None;
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+                    {
+                        let mut st = conn2.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                        st.ws_write_tx = None;
+                        st.reconnection_pending = false;
+                        st.close_initiated = false;
+                    }
+
+                    let _ = ws
+                        .handle_stream_assignment(vec!["s1".into()], Some("path1"))
+                        .await;
+
+                    {
+                        let mut st = conn1.state.lock().await;
+                        st.close_initiated = true;
+                    }
+
+                    let _ = ws
+                        .handle_stream_assignment(vec!["s1".into()], Some("path1"))
+                        .await;
+
+                    let map = ws.connection_streams.lock().await;
+                    let assigned = map.get("path1::s1").unwrap().clone();
+                    assert!(!Arc::ptr_eq(&assigned, &conn1));
                 });
             }
         }
@@ -6552,7 +7802,7 @@ mod tests {
             fn subscribe_payload_with_custom_id_fallbacks_if_invalid() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let (tx, mut rx) = unbounded_channel();
                     {
@@ -6582,7 +7832,7 @@ mod tests {
             fn subscribe_payload_with_and_without_custom_string_id() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://unused"), None);
+                        create_websocket_streams(Some("ws://unused"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let (tx, mut rx) = unbounded_channel();
                     {
@@ -6628,7 +7878,7 @@ mod tests {
             fn subscribe_payload_with_and_without_custom_integer_id() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://unused"), None);
+                        create_websocket_streams(Some("ws://unused"), None, None);
                     ws.stream_id_is_strictly_number
                         .store(true, Ordering::Relaxed);
                     let conn = &ws.common.connection_pool[0];
@@ -6691,7 +7941,7 @@ mod tests {
             fn sends_pending_subscriptions() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let (tx, mut rx) = unbounded_channel();
                     {
@@ -6723,7 +7973,7 @@ mod tests {
             fn with_no_pending_subscriptions_sends_nothing() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let (tx, mut rx) = unbounded_channel();
                     {
@@ -6740,7 +7990,7 @@ mod tests {
             fn clears_pending_without_write_channel() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     {
                         let mut st = conn.state.lock().await;
@@ -6761,7 +8011,7 @@ mod tests {
             fn invokes_registered_callback() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let called = Arc::new(AtomicBool::new(false));
                     let called_clone = called.clone();
@@ -6796,7 +8046,7 @@ mod tests {
             fn invokes_all_registered_callbacks() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let counter = Arc::new(AtomicUsize::new(0));
 
@@ -6830,7 +8080,7 @@ mod tests {
             fn handles_null_data_field() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let called = Arc::new(AtomicUsize::new(0));
                     {
@@ -6857,7 +8107,7 @@ mod tests {
             fn with_invalid_json_does_not_panic() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let bad = "not a json";
                     ws.on_message(bad.to_string(), conn.clone()).await;
@@ -6868,7 +8118,7 @@ mod tests {
             fn without_stream_field_does_nothing() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let msg = json!({ "data": { "foo": 1 } }).to_string();
                     ws.on_message(msg, conn.clone()).await;
@@ -6879,7 +8129,7 @@ mod tests {
             fn with_unregistered_stream_does_not_panic() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let conn = &ws.common.connection_pool[0];
                     let msg = json!({
                         "stream": "nope",
@@ -6887,6 +8137,139 @@ mod tests {
                     })
                     .to_string();
                     ws.on_message(msg, conn.clone()).await;
+                });
+            }
+
+            #[test]
+            fn invokes_registered_callback_with_url_path_key() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://example.com"), None, None);
+                    let conn = &ws.common.connection_pool[0];
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    let called = Arc::new(AtomicBool::new(false));
+                    let called_clone = called.clone();
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.stream_callbacks
+                            .entry("path1::stream1".to_string())
+                            .or_default()
+                            .push(
+                                (Box::new(move |_: &Value| {
+                                    called_clone.store(true, Ordering::SeqCst);
+                                })
+                                    as Box<dyn Fn(&Value) + Send + Sync>)
+                                    .into(),
+                            );
+                    }
+
+                    let msg = json!({
+                        "stream": "stream1",
+                        "data": { "key": "value" }
+                    })
+                    .to_string();
+
+                    ws.on_message(msg, conn.clone()).await;
+
+                    assert!(called.load(Ordering::SeqCst));
+                });
+            }
+
+            #[test]
+            fn does_not_invoke_callback_when_url_path_mismatch() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://example.com"), None, None);
+                    let conn = &ws.common.connection_pool[0];
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.url_path = Some("path2".to_string());
+                    }
+
+                    let called = Arc::new(AtomicBool::new(false));
+                    let called_clone = called.clone();
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.stream_callbacks
+                            .entry("path1::stream1".to_string())
+                            .or_default()
+                            .push(
+                                (Box::new(move |_: &Value| {
+                                    called_clone.store(true, Ordering::SeqCst);
+                                })
+                                    as Box<dyn Fn(&Value) + Send + Sync>)
+                                    .into(),
+                            );
+                    }
+
+                    let msg = json!({
+                        "stream": "stream1",
+                        "data": { "key": "value" }
+                    })
+                    .to_string();
+
+                    ws.on_message(msg, conn.clone()).await;
+
+                    assert!(!called.load(Ordering::SeqCst));
+                });
+            }
+
+            #[test]
+            fn invokes_only_callbacks_for_current_url_path_when_both_exist() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://example.com"), None, None);
+                    let conn = &ws.common.connection_pool[0];
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    let c1 = Arc::new(AtomicUsize::new(0));
+                    let c2 = Arc::new(AtomicUsize::new(0));
+
+                    {
+                        let mut st = conn.state.lock().await;
+
+                        let a = c1.clone();
+                        st.stream_callbacks
+                            .entry("path1::s".to_string())
+                            .or_default()
+                            .push(
+                                (Box::new(move |_: &Value| {
+                                    a.fetch_add(1, Ordering::SeqCst);
+                                })
+                                    as Box<dyn Fn(&Value) + Send + Sync>)
+                                    .into(),
+                            );
+
+                        let b = c2.clone();
+                        st.stream_callbacks
+                            .entry("path2::s".to_string())
+                            .or_default()
+                            .push(
+                                (Box::new(move |_: &Value| {
+                                    b.fetch_add(1, Ordering::SeqCst);
+                                })
+                                    as Box<dyn Fn(&Value) + Send + Sync>)
+                                    .into(),
+                            );
+                    }
+
+                    let msg = json!({"stream":"s","data":42}).to_string();
+                    ws.on_message(msg, conn.clone()).await;
+
+                    assert_eq!(c1.load(Ordering::SeqCst), 1);
+                    assert_eq!(c2.load(Ordering::SeqCst), 0);
                 });
             }
         }
@@ -6898,7 +8281,7 @@ mod tests {
             fn single_stream_reconnect_url() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let c0 = ws.common.connection_pool[0].clone();
                     {
                         let mut map = ws.connection_streams.lock().await;
@@ -6913,7 +8296,7 @@ mod tests {
             fn multiple_streams_same_connection() {
                 TOKIO_SHARED_RT.block_on(async {
                     let ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     let c0 = ws.common.connection_pool[0].clone();
                     {
                         let mut map = ws.connection_streams.lock().await;
@@ -6934,7 +8317,7 @@ mod tests {
             fn reconnect_url_with_time_unit() {
                 TOKIO_SHARED_RT.block_on(async {
                     let mut ws: Arc<WebsocketStreams> =
-                        create_websocket_streams(Some("ws://example.com"), None);
+                        create_websocket_streams(Some("ws://example.com"), None, None);
                     Arc::get_mut(&mut ws).unwrap().configuration.time_unit =
                         Some(TimeUnit::Microsecond);
                     let c0 = ws.common.connection_pool[0].clone();
@@ -6949,6 +8332,119 @@ mod tests {
                     );
                 });
             }
+
+            #[test]
+            fn reconnect_url_uses_url_path_from_connection_state() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://example.com"), None, None);
+                    let c0 = ws.common.connection_pool[0].clone();
+
+                    {
+                        let mut st = c0.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::s1".to_string(), c0.clone());
+                    }
+
+                    let url = ws.get_reconnect_url("default_url".into(), c0).await;
+                    assert_eq!(url, "ws://example.com/path1/stream?streams=s1");
+                });
+            }
+
+            #[test]
+            fn reconnect_url_strips_prefix_from_multiple_keys_with_url_path() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://example.com"), None, None);
+                    let c0 = ws.common.connection_pool[0].clone();
+
+                    {
+                        let mut st = c0.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::a".to_string(), c0.clone());
+                        map.insert("path1::b".to_string(), c0.clone());
+                    }
+
+                    let url = ws.get_reconnect_url("default_url".into(), c0).await;
+
+                    let suffix = url
+                        .strip_prefix("ws://example.com/path1/stream?streams=")
+                        .unwrap();
+                    let parts: Vec<_> = suffix.split('&').next().unwrap().split('/').collect();
+                    let set = parts.into_iter().collect::<std::collections::HashSet<_>>();
+                    assert_eq!(set, ["a", "b"].iter().copied().collect());
+                });
+            }
+
+            #[test]
+            fn reconnect_url_with_url_path_and_time_unit() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let mut ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://example.com"), None, None);
+                    Arc::get_mut(&mut ws).unwrap().configuration.time_unit =
+                        Some(TimeUnit::Microsecond);
+
+                    let c0 = ws.common.connection_pool[0].clone();
+
+                    {
+                        let mut st = c0.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::x".to_string(), c0.clone());
+                    }
+
+                    let url = ws.get_reconnect_url("default_url".into(), c0).await;
+                    assert_eq!(
+                        url,
+                        "ws://example.com/path1/stream?streams=x&timeUnit=microsecond"
+                    );
+                });
+            }
+
+            #[test]
+            fn reconnect_url_ignores_streams_from_other_connections_even_if_same_path_prefix() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws: Arc<WebsocketStreams> =
+                        create_websocket_streams(Some("ws://example.com"), None, None);
+                    let c0 = ws.common.connection_pool[0].clone();
+                    let c1 = ws.common.connection_pool[1].clone();
+
+                    {
+                        let mut st = c0.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                    }
+                    {
+                        let mut st = c1.state.lock().await;
+                        st.url_path = Some("path1".to_string());
+                    }
+
+                    {
+                        let mut map = ws.connection_streams.lock().await;
+                        map.insert("path1::a".to_string(), c0.clone());
+                        map.insert("path1::b".to_string(), c1.clone());
+                    }
+
+                    let url = ws.get_reconnect_url("default_url".into(), c0).await;
+
+                    let suffix = url
+                        .strip_prefix("ws://example.com/path1/stream?streams=")
+                        .unwrap();
+                    let parts: Vec<_> = suffix.split('&').next().unwrap().split('/').collect();
+                    let set = parts.into_iter().collect::<std::collections::HashSet<_>>();
+                    assert_eq!(set, ["a"].iter().copied().collect());
+                });
+            }
         }
     }
 
@@ -6961,39 +8457,38 @@ mod tests {
             #[test]
             fn registers_callback_and_stream_callback_for_websocket_streams() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws_base = create_websocket_streams(Some("example.com"), None);
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
                     let stream_name = "s1".to_string();
                     let conn = ws_base.common.connection_pool[0].clone();
+
+                    let key = ws_base.stream_key(&stream_name, None);
+
                     {
                         let mut map = ws_base.connection_streams.lock().await;
-                        map.insert(stream_name.clone(), conn.clone());
+                        map.insert(key.clone(), conn.clone());
                     }
                     {
                         let mut state = conn.state.lock().await;
-                        state
-                            .stream_callbacks
-                            .insert(stream_name.clone(), Vec::new());
+                        state.stream_callbacks.insert(key.clone(), Vec::new());
                     }
+
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
                         stream_or_id: stream_name.clone(),
                         callback: Mutex::new(None),
+                        url_path: None,
                         id: None,
                         _phantom: PhantomData,
                     });
-                    let called = Arc::new(Mutex::new(false));
-                    let called_clone = called.clone();
-                    stream
-                        .on("message", move |v: Value| {
-                            let mut lock = called_clone.blocking_lock();
-                            *lock = v == Value::String("x".into());
-                        })
-                        .await;
+
+                    stream.on("message", |_| {}).await;
+
                     let cb_guard = stream.callback.lock().await;
                     assert!(cb_guard.is_some());
+
                     let cbs = {
                         let state = conn.state.lock().await;
-                        state.stream_callbacks.get(&stream_name).unwrap().clone()
+                        state.stream_callbacks.get(&key).unwrap().clone()
                     };
                     assert_eq!(cbs.len(), 1);
                 });
@@ -7002,30 +8497,35 @@ mod tests {
             #[test]
             fn message_twice_registers_two_wrappers_for_websocket_streams() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws_base = create_websocket_streams(Some("example.com"), None);
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
                     let stream_name = "s2".to_string();
                     let conn = ws_base.common.connection_pool[0].clone();
+
+                    let key = ws_base.stream_key(&stream_name, None);
+
                     {
                         let mut map = ws_base.connection_streams.lock().await;
-                        map.insert(stream_name.clone(), conn.clone());
+                        map.insert(key.clone(), conn.clone());
                     }
                     {
                         let mut state = conn.state.lock().await;
-                        state
-                            .stream_callbacks
-                            .insert(stream_name.clone(), Vec::new());
+                        state.stream_callbacks.insert(key.clone(), Vec::new());
                     }
+
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
                         stream_or_id: stream_name.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
                     });
+
                     stream.on("message", |_| {}).await;
                     stream.on("message", |_| {}).await;
+
                     let state = conn.state.lock().await;
-                    let callbacks = state.stream_callbacks.get(&stream_name).unwrap();
+                    let callbacks = state.stream_callbacks.get(&key).unwrap();
                     assert_eq!(callbacks.len(), 2);
                 });
             }
@@ -7033,10 +8533,11 @@ mod tests {
             #[test]
             fn ignores_non_message_event_for_websocket_streams() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws_base = create_websocket_streams(Some("example.com"), None);
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
                         stream_or_id: "s".into(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7060,6 +8561,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketApi(ws_base.clone()),
                         stream_or_id: "id1".to_string(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7091,6 +8593,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketApi(ws_base.clone()),
                         stream_or_id: "id2".to_string(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7113,6 +8616,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketApi(ws_base.clone()),
                         stream_or_id: "id3".into(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7128,6 +8632,94 @@ mod tests {
                     assert!(stream_callbacks.is_empty());
                 });
             }
+
+            #[test]
+            fn registers_callback_for_websocket_streams_with_url_path() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
+                    let stream_name = "s1".to_string();
+                    let conn = ws_base.common.connection_pool[0].clone();
+
+                    let key = ws_base.stream_key(&stream_name, Some("path1"));
+
+                    {
+                        let mut map = ws_base.connection_streams.lock().await;
+                        map.insert(key.clone(), conn.clone());
+                    }
+                    {
+                        let mut state = conn.state.lock().await;
+                        state.stream_callbacks.insert(key.clone(), Vec::new());
+                    }
+
+                    let stream = Arc::new(WebsocketStream::<Value> {
+                        websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
+                        stream_or_id: stream_name.clone(),
+                        url_path: Some("path1".to_string()),
+                        callback: Mutex::new(None),
+                        id: None,
+                        _phantom: PhantomData,
+                    });
+
+                    stream.on("message", |_| {}).await;
+
+                    let cb_guard = stream.callback.lock().await;
+                    assert!(cb_guard.is_some());
+
+                    let callbacks = {
+                        let state = conn.state.lock().await;
+                        state.stream_callbacks.get(&key).unwrap().clone()
+                    };
+                    assert_eq!(callbacks.len(), 1);
+                });
+            }
+
+            #[test]
+            fn url_path_routes_callback_to_correct_key_when_same_stream_name_used() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
+                    let stream_name = "s1".to_string();
+                    let conn = ws_base.common.connection_pool[0].clone();
+
+                    let key1 = ws_base.stream_key(&stream_name, Some("path1"));
+                    let key2 = ws_base.stream_key(&stream_name, Some("path2"));
+
+                    {
+                        let mut map = ws_base.connection_streams.lock().await;
+                        map.insert(key1.clone(), conn.clone());
+                        map.insert(key2.clone(), conn.clone());
+                    }
+                    {
+                        let mut state = conn.state.lock().await;
+                        state.stream_callbacks.insert(key1.clone(), Vec::new());
+                        state.stream_callbacks.insert(key2.clone(), Vec::new());
+                    }
+
+                    let stream_path1 = Arc::new(WebsocketStream::<Value> {
+                        websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
+                        stream_or_id: stream_name.clone(),
+                        url_path: Some("path1".to_string()),
+                        callback: Mutex::new(None),
+                        id: None,
+                        _phantom: PhantomData,
+                    });
+
+                    let stream_path2 = Arc::new(WebsocketStream::<Value> {
+                        websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
+                        stream_or_id: stream_name.clone(),
+                        url_path: Some("path2".to_string()),
+                        callback: Mutex::new(None),
+                        id: None,
+                        _phantom: PhantomData,
+                    });
+
+                    stream_path1.on("message", |_| {}).await;
+                    stream_path2.on("message", |_| {}).await;
+
+                    let state = conn.state.lock().await;
+                    assert_eq!(state.stream_callbacks.get(&key1).unwrap().len(), 1);
+                    assert_eq!(state.stream_callbacks.get(&key2).unwrap().len(), 1);
+                });
+            }
         }
 
         mod on_message {
@@ -7136,7 +8728,7 @@ mod tests {
             #[test]
             fn on_message_registers_callback_for_websocket_streams() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws_base = create_websocket_streams(Some("example.com"), None);
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
                     let stream_name = "s".to_string();
                     let conn = ws_base.common.connection_pool[0].clone();
                     {
@@ -7152,6 +8744,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
                         stream_or_id: stream_name.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7165,7 +8758,7 @@ mod tests {
             #[test]
             fn on_message_twice_registers_two_callbacks_for_websocket_streams() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws_base = create_websocket_streams(Some("example.com"), None);
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
                     let stream_name = "s".to_string();
                     let conn = ws_base.common.connection_pool[0].clone();
                     {
@@ -7181,6 +8774,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
                         stream_or_id: stream_name.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7201,6 +8795,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketApi(ws_base.clone()),
                         stream_or_id: identifier.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7223,6 +8818,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketApi(ws_base.clone()),
                         stream_or_id: identifier.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7244,7 +8840,7 @@ mod tests {
             #[test]
             fn without_callback_does_nothing() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws_base = create_websocket_streams(Some("example.com"), None);
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
                     let stream_name = "s1".to_string();
                     let conn = ws_base.common.connection_pool[0].clone();
                     {
@@ -7257,6 +8853,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
                         stream_or_id: stream_name.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7270,7 +8867,7 @@ mod tests {
             #[test]
             fn removes_registered_callback_and_clears_state() {
                 TOKIO_SHARED_RT.block_on(async {
-                    let ws_base = create_websocket_streams(Some("example.com"), None);
+                    let ws_base = create_websocket_streams(Some("example.com"), None, None);
                     let stream_name = "s2".to_string();
                     let conn = ws_base.common.connection_pool[0].clone();
                     {
@@ -7286,6 +8883,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketStreams(ws_base.clone()),
                         stream_or_id: stream_name.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7323,6 +8921,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketApi(ws_base.clone()),
                         stream_or_id: identifier.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7351,6 +8950,7 @@ mod tests {
                     let stream = Arc::new(WebsocketStream::<Value> {
                         websocket_base: WebsocketBase::WebsocketApi(ws_base.clone()),
                         stream_or_id: identifier.clone(),
+                        url_path: None,
                         callback: Mutex::new(None),
                         id: None,
                         _phantom: PhantomData,
@@ -7391,11 +8991,12 @@ mod tests {
         #[test]
         fn create_stream_handler_without_id_registers_stream() {
             TOKIO_SHARED_RT.block_on(async {
-                let ws = create_websocket_streams(Some("ws://example.com"), None);
+                let ws = create_websocket_streams(Some("ws://example.com"), None, None);
                 let stream_name = "foo".to_string();
                 let handler = create_stream_handler::<serde_json::Value>(
                     WebsocketBase::WebsocketStreams(ws.clone()),
                     stream_name.clone(),
+                    None,
                     None,
                 )
                 .await;
@@ -7409,13 +9010,14 @@ mod tests {
         #[test]
         fn create_stream_handler_with_custom_string_id_registers_stream_and_id() {
             TOKIO_SHARED_RT.block_on(async {
-                let ws = create_websocket_streams(Some("ws://example.com"), None);
+                let ws = create_websocket_streams(Some("ws://example.com"), None, None);
                 let stream_name = "bar".to_string();
                 let custom_id = StreamId::from("my-custom-id".to_string());
                 let handler = create_stream_handler::<serde_json::Value>(
                     WebsocketBase::WebsocketStreams(ws.clone()),
                     stream_name.clone(),
                     Some(custom_id.clone()),
+                    None,
                 )
                 .await;
                 assert_eq!(handler.stream_or_id, stream_name);
@@ -7428,13 +9030,14 @@ mod tests {
         #[test]
         fn create_stream_handler_with_custom_integer_id_registers_stream_and_id() {
             TOKIO_SHARED_RT.block_on(async {
-                let ws = create_websocket_streams(Some("ws://example.com"), None);
+                let ws = create_websocket_streams(Some("ws://example.com"), None, None);
                 let stream_name = "bar".to_string();
                 let custom_id = StreamId::from(123u32);
                 let handler = create_stream_handler::<serde_json::Value>(
                     WebsocketBase::WebsocketStreams(ws.clone()),
                     stream_name.clone(),
                     Some(custom_id.clone()),
+                    None,
                 )
                 .await;
                 assert_eq!(handler.stream_or_id, stream_name);
@@ -7453,6 +9056,7 @@ mod tests {
                 let handler = create_stream_handler::<Value>(
                     WebsocketBase::WebsocketApi(ws_base.clone()),
                     identifier.clone(),
+                    None,
                     None,
                 )
                 .await;
@@ -7473,6 +9077,7 @@ mod tests {
                     WebsocketBase::WebsocketApi(ws_base.clone()),
                     identifier.clone(),
                     Some(custom_id.clone()),
+                    None,
                 )
                 .await;
 
@@ -7492,11 +9097,112 @@ mod tests {
                     WebsocketBase::WebsocketApi(ws_base.clone()),
                     identifier.clone(),
                     Some(custom_id.clone()),
+                    None,
                 )
                 .await;
 
                 assert_eq!(handler.stream_or_id, identifier);
                 assert_eq!(handler.id, Some(custom_id));
+            });
+        }
+
+        #[test]
+        fn websocket_streams_without_url_path_registers_stream_key() {
+            TOKIO_SHARED_RT.block_on(async {
+                let ws = create_websocket_streams(Some("ws://example.com"), None, None);
+                let stream_name = "foo".to_string();
+
+                let handler = create_stream_handler::<Value>(
+                    WebsocketBase::WebsocketStreams(ws.clone()),
+                    stream_name.clone(),
+                    None,
+                    None,
+                )
+                .await;
+
+                assert_eq!(handler.stream_or_id, stream_name);
+                assert!(handler.id.is_none());
+
+                let map = ws.connection_streams.lock().await;
+                assert!(map.contains_key("foo"));
+            });
+        }
+
+        #[test]
+        fn websocket_streams_with_url_path_registers_prefixed_stream_key() {
+            TOKIO_SHARED_RT.block_on(async {
+                let ws = create_websocket_streams(Some("ws://example.com"), None, None);
+
+                {
+                    let conn = ws.common.connection_pool[0].clone();
+                    let mut st = conn.state.lock().await;
+                    st.url_path = Some("path1".to_string());
+                }
+
+                let stream_name = "foo".to_string();
+
+                let handler = create_stream_handler::<Value>(
+                    WebsocketBase::WebsocketStreams(ws.clone()),
+                    stream_name.clone(),
+                    None,
+                    Some("path1".to_string()),
+                )
+                .await;
+
+                assert_eq!(handler.stream_or_id, stream_name);
+                assert!(handler.id.is_none());
+
+                let map = ws.connection_streams.lock().await;
+                assert!(map.contains_key("path1::foo"));
+            });
+        }
+
+        #[test]
+        fn websocket_streams_with_custom_id_preserves_id_and_registers_prefixed_key() {
+            TOKIO_SHARED_RT.block_on(async {
+                let ws = create_websocket_streams(Some("ws://example.com"), None, None);
+
+                {
+                    let conn = ws.common.connection_pool[0].clone();
+                    let mut st = conn.state.lock().await;
+                    st.url_path = Some("path1".to_string());
+                }
+
+                let stream_name = "bar".to_string();
+                let custom_id = StreamId::from("my-custom-id".to_string());
+
+                let handler = create_stream_handler::<Value>(
+                    WebsocketBase::WebsocketStreams(ws.clone()),
+                    stream_name.clone(),
+                    Some(custom_id.clone()),
+                    Some("path1".to_string()),
+                )
+                .await;
+
+                assert_eq!(handler.stream_or_id, stream_name);
+                assert_eq!(handler.id, Some(custom_id));
+
+                let map = ws.connection_streams.lock().await;
+                assert!(map.contains_key("path1::bar"));
+            });
+        }
+
+        #[test]
+        fn websocket_api_does_not_register_stream_in_connection_map() {
+            TOKIO_SHARED_RT.block_on(async {
+                let ws_base = create_websocket_api(None, None, None);
+                let identifier = "foo-api".to_string();
+
+                let handler = create_stream_handler::<Value>(
+                    WebsocketBase::WebsocketApi(ws_base.clone()),
+                    identifier.clone(),
+                    None,
+                    Some("path1".to_string()),
+                )
+                .await;
+
+                assert_eq!(handler.stream_or_id, identifier);
+                assert!(handler.id.is_none());
             });
         }
     }

@@ -94,6 +94,8 @@ pub enum TimeInForceEnum {
     Ioc,
     #[serde(rename = "FOK")]
     Fok,
+    #[serde(rename = "GTX")]
+    Gtx,
 }
 
 impl Default for TimeInForceEnum {

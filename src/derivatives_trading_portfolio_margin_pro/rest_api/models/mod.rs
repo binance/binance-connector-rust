@@ -21,6 +21,8 @@ pub mod fund_collection_by_asset_response;
 pub use self::fund_collection_by_asset_response::FundCollectionByAssetResponse;
 pub mod get_auto_repay_futures_status_response;
 pub use self::get_auto_repay_futures_status_response::GetAutoRepayFuturesStatusResponse;
+pub mod get_delta_mode_status_response;
+pub use self::get_delta_mode_status_response::GetDeltaModeStatusResponse;
 pub mod get_portfolio_margin_asset_leverage_response_inner;
 pub use self::get_portfolio_margin_asset_leverage_response_inner::GetPortfolioMarginAssetLeverageResponseInner;
 pub mod get_portfolio_margin_pro_account_balance_response_inner;
@@ -53,5 +55,7 @@ pub mod query_portfolio_margin_pro_negative_balance_interest_history_response_in
 pub use self::query_portfolio_margin_pro_negative_balance_interest_history_response_inner::QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner;
 pub mod repay_futures_negative_balance_response;
 pub use self::repay_futures_negative_balance_response::RepayFuturesNegativeBalanceResponse;
+pub mod switch_delta_mode_response;
+pub use self::switch_delta_mode_response::SwitchDeltaModeResponse;
 pub mod transfer_ldusdt_rwusd_for_portfolio_margin_response;
 pub use self::transfer_ldusdt_rwusd_for_portfolio_margin_response::TransferLdusdtRwusdForPortfolioMarginResponse;

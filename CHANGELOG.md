@@ -1,5 +1,108 @@
 # Changelog
 
+## 36.0.0 - 2026-01-13
+
+**Crypto Loan**
+
+### Added (1)
+
+- `get_flexible_loan_interest_rate_history()` (`GET /sapi/v2/loan/interestRateHistory`)
+
+**Derivatives Trading Coin Futures**
+
+### Added (1)
+
+#### REST API
+
+- `place_multiple_orders()` (`POST /dapi/v1/batchOrders`)
+
+**Derivatives Trading Options**
+
+- Update REST API and Websocket Streams to match latest API changes.
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Added (2)
+
+#### REST API
+
+- `get_delta_mode_status()` (`GET /sapi/v1/portfolio/delta-mode`)
+- `switch_delta_mode()` (`POST /sapi/v1/portfolio/delta-mode`)
+
+**Derivatives Trading Usds Futures**
+
+### Changed (12)
+
+#### REST API
+
+- Added parameter `algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`DELETE /fapi/v1/algoOrder`)
+- Added parameter `client_algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`DELETE /fapi/v1/algoOrder`)
+- Deleted parameter `algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`DELETE /fapi/v1/algoOrder`)
+- Deleted parameter `client_algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`DELETE /fapi/v1/algoOrder`)
+- Modified response for `symbol_configuration()` (`GET /fapi/v1/symbolConfig`):
+  - items.`is_auto_add_margin`: type `string` → `boolean`
+  - items.`is_auto_add_margin`: type `string` → `boolean`
+
+#### WebSocket API
+
+- Added parameter `algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`algoOrder.cancel` method)
+- Added parameter `client_algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`algoOrder.cancel` method)
+- Deleted parameter `algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`algoOrder.cancel` method)
+- Deleted parameter `client_algo_id`
+  - affected methods:
+    - `cancel_algo_order()` (`algoOrder.cancel` method)
+- Added parameter `activate_price`
+  - affected methods:
+    - `new_algo_order()` (`algoOrder.place` method)
+- Deleted parameter `activation_price`
+  - affected methods:
+    - `new_algo_order()` (`algoOrder.place` method)
+
+#### WebSocket Streams
+
+- Modified response for `aggregate_trade_streams()` (`<symbol>@aggTrade` stream):
+  - property `nq` added
+
+**Dual Investment**
+
+### Changed (1)
+
+- Update documentation URLs.
+
+**VIP Loan**
+
+### Added (2)
+
+- `get_vip_loan_accrued_interest()` (`GET /sapi/v1/loan/vip/accruedInterest`)
+- `get_vip_loan_interest_rate_history()` (`GET /sapi/v1/loan/vip/interestRateHistory`)
+
+**Wallet**
+
+### Added (1)
+
+- `submit_deposit_questionnaire_v2()` (`PUT /sapi/v2/localentity/deposit/provide-info`)
+
+### Changed (1)
+
+- Modified parameter `deposit_id`:
+  - type `string` → `integer`
+  - affected methods:
+    - `submit_deposit_questionnaire()` (`PUT /sapi/v1/localentity/broker/deposit/provide-info`)
+
 ## 35.0.0 - 2025-12-19
 
 ### Changed (1)

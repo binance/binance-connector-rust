@@ -17,31 +17,22 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct OrderTradeUpdateOInnerFiInner {
-    #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
-    pub t: Option<String>,
-    #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
-    pub p: Option<String>,
-    #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
-    pub q: Option<String>,
+pub struct GreekUpdate {
+    #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
+    pub e_uppercase: Option<i64>,
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
-    #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
-    pub m: Option<String>,
-    #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
-    pub f: Option<String>,
+    #[serde(rename = "G", skip_serializing_if = "Option::is_none")]
+    pub g_uppercase: Option<Vec<models::GreekUpdateGInner>>,
 }
 
-impl OrderTradeUpdateOInnerFiInner {
+impl GreekUpdate {
     #[must_use]
-    pub fn new() -> OrderTradeUpdateOInnerFiInner {
-        OrderTradeUpdateOInnerFiInner {
-            t: None,
-            p: None,
-            q: None,
+    pub fn new() -> GreekUpdate {
+        GreekUpdate {
+            e_uppercase: None,
             t_uppercase: None,
-            m: None,
-            f: None,
+            g_uppercase: None,
         }
     }
 }

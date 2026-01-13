@@ -440,6 +440,55 @@ impl RestApi {
             .await
     }
 
+    /// Get Flexible Loan Interest Rate History (`USER_DATA`)
+    ///
+    /// Check Flexible Loan interest rate history
+    ///
+    /// * If startTime and endTime are not sent, the recent 90-day data will be returned
+    /// * The max interval between startTime and endTime is 90 days.
+    /// * Time based on UTC+0.
+    ///
+    /// Weight: 400
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetFlexibleLoanInterestRateHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetFlexibleLoanInterestRateHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Interest-Rate-History).
+    ///
+    pub async fn get_flexible_loan_interest_rate_history(
+        &self,
+        params: GetFlexibleLoanInterestRateHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetFlexibleLoanInterestRateHistoryResponse>> {
+        self.flexible_rate_api_client
+            .get_flexible_loan_interest_rate_history(params)
+            .await
+    }
+
     /// Get Flexible Loan Liquidation History (`USER_DATA`)
     ///
     ///

@@ -3,10 +3,8 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsRestApi, rest_api::IndexPriceTickerParams,
-};
 use binance_sdk::logger;
+use binance_sdk::vip_loan::{VIPLoanRestApi, rest_api::GetVipLoanAccruedInterestParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -23,21 +21,21 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the DerivativesTradingOptions REST API client
-    let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
+    // Create the VIPLoan REST API client
+    let rest_client = VIPLoanRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = IndexPriceTickerParams::builder("underlying_example".to_string()).build()?;
+    let params = GetVipLoanAccruedInterestParams::default();
 
     // Make the API call
     let response = rest_client
-        .index_price_ticker(params)
+        .get_vip_loan_accrued_interest(params)
         .await
-        .context("index_price_ticker request failed")?;
+        .context("get_vip_loan_accrued_interest request failed")?;
 
-    info!(?response.rate_limits, "index_price_ticker rate limits");
+    info!(?response.rate_limits, "get_vip_loan_accrued_interest rate limits");
     let data = response.data().await?;
-    info!(?data, "index_price_ticker data");
+    info!(?data, "get_vip_loan_accrued_interest data");
 
     Ok(())
 }

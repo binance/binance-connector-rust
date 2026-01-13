@@ -2191,7 +2191,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Value>`] on success.
+    /// [`RestApiResponse<models::AutoCancelAllOpenOrdersResponse>`] on success.
     ///
     /// # Errors
     ///
@@ -2217,7 +2217,7 @@ impl RestApi {
     pub async fn auto_cancel_all_open_orders(
         &self,
         params: AutoCancelAllOpenOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Value>> {
+    ) -> anyhow::Result<RestApiResponse<models::AutoCancelAllOpenOrdersResponse>> {
         self.trade_api_client
             .auto_cancel_all_open_orders(params)
             .await
@@ -2851,6 +2851,53 @@ impl RestApi {
         self.trade_api_client.new_order(params).await
     }
 
+    /// Place Multiple Orders(TRADE)
+    ///
+    /// Place multiple orders
+    ///
+    /// * Parameter rules are same with `New Order`
+    /// * Batch orders are processed concurrently, and the order of matching is not guaranteed.
+    /// * The order of returned contents for batch orders is the same as the order of the order list.
+    ///
+    /// Weight: 5
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`PlaceMultipleOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::PlaceMultipleOrdersResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Place-Multiple-Orders).
+    ///
+    pub async fn place_multiple_orders(
+        &self,
+        params: PlaceMultipleOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::PlaceMultipleOrdersResponseInner>>> {
+        self.trade_api_client.place_multiple_orders(params).await
+    }
+
     /// Position ADL Quantile `Estimation(USER_DATA)`
     ///
     /// Query position ADL quantile estimation
@@ -3149,7 +3196,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Value>`] on success.
+    /// [`RestApiResponse<models::KeepaliveUserDataStreamResponse>`] on success.
     ///
     /// # Errors
     ///
@@ -3172,7 +3219,9 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams/Keepalive-User-Data-Stream).
     ///
-    pub async fn keepalive_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
+    pub async fn keepalive_user_data_stream(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::KeepaliveUserDataStreamResponse>> {
         self.user_data_streams_api_client
             .keepalive_user_data_stream()
             .await

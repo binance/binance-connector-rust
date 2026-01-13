@@ -687,17 +687,17 @@ pub struct CancelAlgoOrderParams {
     #[builder(setter(into), default)]
     pub id: Option<String>,
     ///
-    /// The `algoid` parameter.
+    /// The `algo_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub algoid: Option<i64>,
+    pub algo_id: Option<i64>,
     ///
-    /// The `clientalgoid` parameter.
+    /// The `client_algo_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub clientalgoid: Option<String>,
+    pub client_algo_id: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -938,13 +938,14 @@ pub struct NewAlgoOrderParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub activation_price: Option<rust_decimal::Decimal>,
+    pub activate_price: Option<rust_decimal::Decimal>,
     /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 10 where 1 for 1%
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub callback_rate: Option<rust_decimal::Decimal>,
-    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
+    ///
+    /// The `client_algo_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1258,8 +1259,8 @@ impl TradeApi for TradeApiClient {
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::CancelAlgoOrderResponseResult>>> {
         let CancelAlgoOrderParams {
             id,
-            algoid,
-            clientalgoid,
+            algo_id,
+            client_algo_id,
             recv_window,
         } = params;
 
@@ -1267,11 +1268,11 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
         }
-        if let Some(value) = algoid {
-            payload.insert("algoid".to_string(), serde_json::json!(value));
+        if let Some(value) = algo_id {
+            payload.insert("algoId".to_string(), serde_json::json!(value));
         }
-        if let Some(value) = clientalgoid {
-            payload.insert("clientalgoid".to_string(), serde_json::json!(value));
+        if let Some(value) = client_algo_id {
+            payload.insert("clientAlgoId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
@@ -1406,7 +1407,7 @@ impl TradeApi for TradeApiClient {
             close_position,
             price_protect,
             reduce_only,
-            activation_price,
+            activate_price,
             callback_rate,
             client_algo_id,
             self_trade_prevention_mode,
@@ -1452,8 +1453,8 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = reduce_only {
             payload.insert("reduceOnly".to_string(), serde_json::json!(value));
         }
-        if let Some(value) = activation_price {
-            payload.insert("activationPrice".to_string(), serde_json::json!(value));
+        if let Some(value) = activate_price {
+            payload.insert("activatePrice".to_string(), serde_json::json!(value));
         }
         if let Some(value) = callback_rate {
             payload.insert("callbackRate".to_string(), serde_json::json!(value));

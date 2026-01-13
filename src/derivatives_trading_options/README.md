@@ -141,6 +141,22 @@ Errors are represented by the following types:
 
 See the [Error Handling example](./docs/rest_api/error-handling.md) for detailed usage. Refer to the [`error`](../common/errors.rs) module for more information.
 
+#### Testnet
+
+For testing purposes, the REST APIs also supports a testnet environment:
+
+```rust
+use binance_sdk::config::ConfigurationRestApi;
+use binance_sdk::derivatives_trading_options;
+
+let configuration = ConfigurationRestApi::builder()
+  .api_key("YOUR_API_KEY")
+  .api_secret("YOUR_SECRET_KEY")
+  .build()?;
+
+let client = derivatives_trading_options::DerivativesTradingOptionsRestApi::testnet(configuration);
+```
+
 ### Websocket Streams
 
 The WebSocket Streams provide real-time data feeds for market trades, candlesticks, and more. Use the [`websocket_streams`](./websocket_streams/mod.rs) module to interact with these endpoints.
@@ -244,6 +260,19 @@ stream.on_message(|data| {
 sleep(Duration::from_secs(10)).await;
 
 stream.unsubscribe().await;
+```
+
+#### Testnet
+
+For testing purposes, the Websocket Streams also supports a testnet environment:
+
+```rust
+use binance_sdk::config::ConfigurationWebsocketStreams;
+use binance_sdk::derivatives_trading_options;
+
+let configuration = ConfigurationWebsocketStreams::builder().build()?;
+
+let client = derivatives_trading_options::DerivativesTradingOptionsWsStreams::testnet(configuration);
 ```
 
 ### Automatic Connection Renewal

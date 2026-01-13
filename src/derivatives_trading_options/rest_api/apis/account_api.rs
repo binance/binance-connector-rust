@@ -35,18 +35,6 @@ pub trait AccountApi: Send + Sync {
         &self,
         params: AccountFundingFlowParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::AccountFundingFlowResponseInner>>>;
-    async fn get_download_id_for_option_transaction_history(
-        &self,
-        params: GetDownloadIdForOptionTransactionHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForOptionTransactionHistoryResponse>>;
-    async fn get_option_transaction_history_download_link_by_id(
-        &self,
-        params: GetOptionTransactionHistoryDownloadLinkByIdParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetOptionTransactionHistoryDownloadLinkByIdResponse>>;
-    async fn option_account_information(
-        &self,
-        params: OptionAccountInformationParams,
-    ) -> anyhow::Result<RestApiResponse<models::OptionAccountInformationResponse>>;
     async fn option_margin_account_information(
         &self,
         params: OptionMarginAccountInformationParams,
@@ -116,106 +104,6 @@ impl AccountFundingFlowParams {
         AccountFundingFlowParamsBuilder::default().currency(currency)
     }
 }
-/// Request parameters for the [`get_download_id_for_option_transaction_history`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`get_download_id_for_option_transaction_history`](#method.get_download_id_for_option_transaction_history).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetDownloadIdForOptionTransactionHistoryParams {
-    /// Timestamp in ms
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub start_time: i64,
-    /// Timestamp in ms
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub end_time: i64,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub recv_window: Option<i64>,
-}
-
-impl GetDownloadIdForOptionTransactionHistoryParams {
-    /// Create a builder for [`get_download_id_for_option_transaction_history`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `start_time` — Timestamp in ms
-    /// * `end_time` — Timestamp in ms
-    ///
-    #[must_use]
-    pub fn builder(
-        start_time: i64,
-        end_time: i64,
-    ) -> GetDownloadIdForOptionTransactionHistoryParamsBuilder {
-        GetDownloadIdForOptionTransactionHistoryParamsBuilder::default()
-            .start_time(start_time)
-            .end_time(end_time)
-    }
-}
-/// Request parameters for the [`get_option_transaction_history_download_link_by_id`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`get_option_transaction_history_download_link_by_id`](#method.get_option_transaction_history_download_link_by_id).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetOptionTransactionHistoryDownloadLinkByIdParams {
-    /// get by download id api
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub download_id: String,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub recv_window: Option<i64>,
-}
-
-impl GetOptionTransactionHistoryDownloadLinkByIdParams {
-    /// Create a builder for [`get_option_transaction_history_download_link_by_id`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `download_id` — get by download id api
-    ///
-    #[must_use]
-    pub fn builder(
-        download_id: String,
-    ) -> GetOptionTransactionHistoryDownloadLinkByIdParamsBuilder {
-        GetOptionTransactionHistoryDownloadLinkByIdParamsBuilder::default().download_id(download_id)
-    }
-}
-/// Request parameters for the [`option_account_information`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`option_account_information`](#method.option_account_information).
-#[derive(Clone, Debug, Builder, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct OptionAccountInformationParams {
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub recv_window: Option<i64>,
-}
-
-impl OptionAccountInformationParams {
-    /// Create a builder for [`option_account_information`].
-    ///
-    #[must_use]
-    pub fn builder() -> OptionAccountInformationParamsBuilder {
-        OptionAccountInformationParamsBuilder::default()
-    }
-}
 /// Request parameters for the [`option_margin_account_information`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -283,108 +171,6 @@ impl AccountApi for AccountApiClient {
         send_request::<Vec<models::AccountFundingFlowResponseInner>>(
             &self.configuration,
             "/eapi/v1/bill",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
-    async fn get_download_id_for_option_transaction_history(
-        &self,
-        params: GetDownloadIdForOptionTransactionHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForOptionTransactionHistoryResponse>>
-    {
-        let GetDownloadIdForOptionTransactionHistoryParams {
-            start_time,
-            end_time,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("startTime".to_string(), json!(start_time));
-
-        query_params.insert("endTime".to_string(), json!(end_time));
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::GetDownloadIdForOptionTransactionHistoryResponse>(
-            &self.configuration,
-            "/eapi/v1/income/asyn",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
-    async fn get_option_transaction_history_download_link_by_id(
-        &self,
-        params: GetOptionTransactionHistoryDownloadLinkByIdParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetOptionTransactionHistoryDownloadLinkByIdResponse>>
-    {
-        let GetOptionTransactionHistoryDownloadLinkByIdParams {
-            download_id,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("downloadId".to_string(), json!(download_id));
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::GetOptionTransactionHistoryDownloadLinkByIdResponse>(
-            &self.configuration,
-            "/eapi/v1/income/asyn/id",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
-    async fn option_account_information(
-        &self,
-        params: OptionAccountInformationParams,
-    ) -> anyhow::Result<RestApiResponse<models::OptionAccountInformationResponse>> {
-        let OptionAccountInformationParams { recv_window } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::OptionAccountInformationResponse>(
-            &self.configuration,
-            "/eapi/v1/account",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -485,89 +271,6 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn get_download_id_for_option_transaction_history(
-            &self,
-            _params: GetDownloadIdForOptionTransactionHistoryParams,
-        ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForOptionTransactionHistoryResponse>>
-        {
-            if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
-            }
-
-            let resp_json: Value = serde_json::from_str(
-                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
-            )
-            .unwrap();
-            let dummy_response: models::GetDownloadIdForOptionTransactionHistoryResponse =
-                serde_json::from_value(resp_json.clone()).expect(
-                    "should parse into models::GetDownloadIdForOptionTransactionHistoryResponse",
-                );
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn get_option_transaction_history_download_link_by_id(
-            &self,
-            _params: GetOptionTransactionHistoryDownloadLinkByIdParams,
-        ) -> anyhow::Result<
-            RestApiResponse<models::GetOptionTransactionHistoryDownloadLinkByIdResponse>,
-        > {
-            if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
-            let dummy_response: models::GetOptionTransactionHistoryDownloadLinkByIdResponse =
-                serde_json::from_value(resp_json.clone()).expect(
-                    "should parse into models::GetOptionTransactionHistoryDownloadLinkByIdResponse",
-                );
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn option_account_information(
-            &self,
-            _params: OptionAccountInformationParams,
-        ) -> anyhow::Result<RestApiResponse<models::OptionAccountInformationResponse>> {
-            if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"1877.52214415","equity":"617.77711415","available":"0","locked":"2898.92389933","unrealizedPNL":"222.23697000"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1592449455993,"riskLevel":"NORMAL"}"#).unwrap();
-            let dummy_response: models::OptionAccountInformationResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::OptionAccountInformationResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
         async fn option_margin_account_information(
             &self,
             _params: OptionMarginAccountInformationParams,
@@ -579,7 +282,7 @@ mod tests {
                 );
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"10099.448","equity":"10094.44662","available":"8725.92524","initialMargin":"1084.52138","maintMargin":"151.00138","unrealizedPNL":"-5.00138","adjustedEquity":"34.13282285"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1592449455993}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false}"#).unwrap();
             let dummy_response: models::OptionMarginAccountInformationResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OptionMarginAccountInformationResponse");
@@ -648,206 +351,13 @@ mod tests {
     }
 
     #[test]
-    fn get_download_id_for_option_transaction_history_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: false };
-
-            let params = GetDownloadIdForOptionTransactionHistoryParams::builder(
-                1623319461670,
-                1641782889000,
-            )
-            .build()
-            .unwrap();
-
-            let resp_json: Value = serde_json::from_str(
-                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
-            )
-            .unwrap();
-            let expected_response: models::GetDownloadIdForOptionTransactionHistoryResponse =
-                serde_json::from_value(resp_json.clone()).expect(
-                    "should parse into models::GetDownloadIdForOptionTransactionHistoryResponse",
-                );
-
-            let resp = client
-                .get_download_id_for_option_transaction_history(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn get_download_id_for_option_transaction_history_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: false };
-
-            let params = GetDownloadIdForOptionTransactionHistoryParams::builder(
-                1623319461670,
-                1641782889000,
-            )
-            .recv_window(5000)
-            .build()
-            .unwrap();
-
-            let resp_json: Value = serde_json::from_str(
-                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
-            )
-            .unwrap();
-            let expected_response: models::GetDownloadIdForOptionTransactionHistoryResponse =
-                serde_json::from_value(resp_json.clone()).expect(
-                    "should parse into models::GetDownloadIdForOptionTransactionHistoryResponse",
-                );
-
-            let resp = client
-                .get_download_id_for_option_transaction_history(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn get_download_id_for_option_transaction_history_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: true };
-
-            let params = GetDownloadIdForOptionTransactionHistoryParams::builder(
-                1623319461670,
-                1641782889000,
-            )
-            .build()
-            .unwrap();
-
-            match client
-                .get_download_id_for_option_transaction_history(params)
-                .await
-            {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn get_option_transaction_history_download_link_by_id_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: false };
-
-            let params = GetOptionTransactionHistoryDownloadLinkByIdParams::builder("1".to_string(),).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
-            let expected_response : models::GetOptionTransactionHistoryDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOptionTransactionHistoryDownloadLinkByIdResponse");
-
-            let resp = client.get_option_transaction_history_download_link_by_id(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn get_option_transaction_history_download_link_by_id_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: false };
-
-            let params = GetOptionTransactionHistoryDownloadLinkByIdParams::builder("1".to_string(),).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
-            let expected_response : models::GetOptionTransactionHistoryDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOptionTransactionHistoryDownloadLinkByIdResponse");
-
-            let resp = client.get_option_transaction_history_download_link_by_id(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn get_option_transaction_history_download_link_by_id_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: true };
-
-            let params =
-                GetOptionTransactionHistoryDownloadLinkByIdParams::builder("1".to_string())
-                    .build()
-                    .unwrap();
-
-            match client
-                .get_option_transaction_history_download_link_by_id(params)
-                .await
-            {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn option_account_information_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: false };
-
-            let params = OptionAccountInformationParams::builder().build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"1877.52214415","equity":"617.77711415","available":"0","locked":"2898.92389933","unrealizedPNL":"222.23697000"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1592449455993,"riskLevel":"NORMAL"}"#).unwrap();
-            let expected_response : models::OptionAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionAccountInformationResponse");
-
-            let resp = client.option_account_information(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn option_account_information_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: false };
-
-            let params = OptionAccountInformationParams::builder().recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"1877.52214415","equity":"617.77711415","available":"0","locked":"2898.92389933","unrealizedPNL":"222.23697000"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1592449455993,"riskLevel":"NORMAL"}"#).unwrap();
-            let expected_response : models::OptionAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionAccountInformationResponse");
-
-            let resp = client.option_account_information(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn option_account_information_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockAccountApiClient { force_error: true };
-
-            let params = OptionAccountInformationParams::builder().build().unwrap();
-
-            match client.option_account_information(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
     fn option_margin_account_information_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
             let params = OptionMarginAccountInformationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"10099.448","equity":"10094.44662","available":"8725.92524","initialMargin":"1084.52138","maintMargin":"151.00138","unrealizedPNL":"-5.00138","adjustedEquity":"34.13282285"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1592449455993}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false}"#).unwrap();
             let expected_response : models::OptionMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionMarginAccountInformationResponse");
 
             let resp = client.option_margin_account_information(params).await.expect("Expected a response");
@@ -864,7 +374,7 @@ mod tests {
 
             let params = OptionMarginAccountInformationParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"10099.448","equity":"10094.44662","available":"8725.92524","initialMargin":"1084.52138","maintMargin":"151.00138","unrealizedPNL":"-5.00138","adjustedEquity":"34.13282285"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1592449455993}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false}"#).unwrap();
             let expected_response : models::OptionMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionMarginAccountInformationResponse");
 
             let resp = client.option_margin_account_information(params).await.expect("Expected a response");

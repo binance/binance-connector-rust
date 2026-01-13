@@ -27,8 +27,6 @@ pub struct QueryOptionOrderHistoryResponseInner {
     pub quantity: Option<String>,
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
-    #[serde(rename = "fee", skip_serializing_if = "Option::is_none")]
-    pub fee: Option<String>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -37,20 +35,14 @@ pub struct QueryOptionOrderHistoryResponseInner {
     pub time_in_force: Option<String>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
-    #[serde(rename = "postOnly", skip_serializing_if = "Option::is_none")]
-    pub post_only: Option<bool>,
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
     pub create_time: Option<i64>,
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
-    #[serde(rename = "reason", skip_serializing_if = "Option::is_none")]
-    pub reason: Option<String>,
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
-    #[serde(rename = "source", skip_serializing_if = "Option::is_none")]
-    pub source: Option<String>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     #[serde(rename = "priceScale", skip_serializing_if = "Option::is_none")]
@@ -74,18 +66,14 @@ impl QueryOptionOrderHistoryResponseInner {
             price: None,
             quantity: None,
             executed_qty: None,
-            fee: None,
             side: None,
             r#type: None,
             time_in_force: None,
             reduce_only: None,
-            post_only: None,
             create_time: None,
             update_time: None,
             status: None,
-            reason: None,
             avg_price: None,
-            source: None,
             client_order_id: None,
             price_scale: None,
             quantity_scale: None,
