@@ -761,9 +761,11 @@ mod tests {
             _params: GetBfusdAccountParams,
         ) -> anyhow::Result<RestApiResponse<models::GetBfusdAccountResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(
@@ -789,12 +791,14 @@ mod tests {
             _params: GetBfusdQuotaDetailsParams,
         ) -> anyhow::Result<RestApiResponse<models::GetBfusdQuotaDetailsResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
             let dummy_response: models::GetBfusdQuotaDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdQuotaDetailsResponse");
@@ -814,9 +818,11 @@ mod tests {
             _params: GetBfusdRateHistoryParams,
         ) -> anyhow::Result<RestApiResponse<models::GetBfusdRateHistoryResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(
@@ -842,9 +848,11 @@ mod tests {
             _params: GetBfusdRedemptionHistoryParams,
         ) -> anyhow::Result<RestApiResponse<models::GetBfusdRedemptionHistoryResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
@@ -867,9 +875,11 @@ mod tests {
             _params: GetBfusdRewardsHistoryParams,
         ) -> anyhow::Result<RestApiResponse<models::GetBfusdRewardsHistoryResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
@@ -892,9 +902,11 @@ mod tests {
             _params: GetBfusdSubscriptionHistoryParams,
         ) -> anyhow::Result<RestApiResponse<models::GetBfusdSubscriptionHistoryResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
@@ -917,9 +929,11 @@ mod tests {
             _params: RedeemBfusdParams,
         ) -> anyhow::Result<RestApiResponse<models::RedeemBfusdResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
@@ -942,9 +956,11 @@ mod tests {
             _params: SubscribeBfusdParams,
         ) -> anyhow::Result<RestApiResponse<models::SubscribeBfusdResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value =
@@ -1040,7 +1056,7 @@ mod tests {
 
             let params = GetBfusdQuotaDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
             let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
             let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");
@@ -1057,7 +1073,7 @@ mod tests {
 
             let params = GetBfusdQuotaDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
             let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
             let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");

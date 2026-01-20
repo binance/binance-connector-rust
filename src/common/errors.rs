@@ -90,20 +90,20 @@ impl WebsocketConnectionFailureReason {
 
 #[derive(Error, Debug)]
 pub enum ConnectorError {
-    #[error("Connector client error: {0}")]
-    ConnectorClientError(String),
+    #[error("Connector client error: {msg}")]
+    ConnectorClientError { msg: String, code: Option<i64> },
 
-    #[error("Unauthorized access. Authentication required. {0}")]
-    UnauthorizedError(String),
+    #[error("Unauthorized access. Authentication required. {msg}")]
+    UnauthorizedError { msg: String, code: Option<i64> },
 
-    #[error("Access to the requested resource is forbidden. {0}")]
-    ForbiddenError(String),
+    #[error("Access to the requested resource is forbidden. {msg}")]
+    ForbiddenError { msg: String, code: Option<i64> },
 
-    #[error("Too many requests. You are being rate-limited. {0}")]
-    TooManyRequestsError(String),
+    #[error("Too many requests. You are being rate-limited. {msg}")]
+    TooManyRequestsError { msg: String, code: Option<i64> },
 
-    #[error("The IP address has been banned for exceeding rate limits. {0}")]
-    RateLimitBanError(String),
+    #[error("The IP address has been banned for exceeding rate limits. {msg}")]
+    RateLimitBanError { msg: String, code: Option<i64> },
 
     #[error("Internal server error: {msg} (status code: {status_code:?})")]
     ServerError {
@@ -114,11 +114,11 @@ pub enum ConnectorError {
     #[error("Network error: {0}")]
     NetworkError(String),
 
-    #[error("The requested resource was not found. {0}")]
-    NotFoundError(String),
+    #[error("The requested resource was not found. {msg}")]
+    NotFoundError { msg: String, code: Option<i64> },
 
-    #[error("Bad request: {0}")]
-    BadRequestError(String),
+    #[error("Bad request: {msg}")]
+    BadRequestError { msg: String, code: Option<i64> },
 }
 
 #[derive(Debug, Error)]

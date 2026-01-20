@@ -120,7 +120,7 @@ pub struct GetInterestHistoryParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub isolated_symbol: Option<String>,
-    /// 只支持查询最近90天的数据
+    /// Only supports querying data from the past 90 days.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -253,7 +253,7 @@ pub struct QueryBorrowRepayRecordsInMarginAccountParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub tx_id: Option<i64>,
-    /// 只支持查询最近90天的数据
+    /// Only supports querying data from the past 90 days.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -311,7 +311,7 @@ pub struct QueryMarginInterestRateHistoryParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub vip_level: Option<i64>,
-    /// 只支持查询最近90天的数据
+    /// Only supports querying data from the past 90 days.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -719,9 +719,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<Vec<models::GetFutureHourlyInterestRateResponseInner>>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"},{"asset":"ETH","nextHourlyInterestRate":"0.00000578"}]"#).unwrap();
@@ -745,9 +747,11 @@ mod tests {
             _params: GetInterestHistoryParams,
         ) -> anyhow::Result<RestApiResponse<models::GetInterestHistoryResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"txId":1352286576452864800,"interestAccuredTime":1672160400000,"asset":"USDT","rawAsset":"USDT","principal":"45.3313","interest":"0.00024995","interestRate":"0.00013233","type":"ON_BORROW","isolatedSymbol":"BNBUSDT"}],"total":1}"#).unwrap();
@@ -770,9 +774,11 @@ mod tests {
             _params: MarginAccountBorrowRepayParams,
         ) -> anyhow::Result<RestApiResponse<models::MarginAccountBorrowRepayResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#).unwrap();
@@ -796,9 +802,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::QueryBorrowRepayRecordsInMarginAccountResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"type":"AUTO","isolatedSymbol":"BNBUSDT","amount":"14.00000000","asset":"BNB","interest":"0.01866667","principal":"13.98133333","status":"CONFIRMED","timestamp":1563438204000,"txId":2970933056}],"total":1}"#).unwrap();
@@ -823,9 +831,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<Vec<models::QueryMarginInterestRateHistoryResponseInner>>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","dailyInterestRate":"0.00025000","timestamp":1611544731000,"vipLevel":1},{"asset":"BTC","dailyInterestRate":"0.00035000","timestamp":1610248118000,"vipLevel":1}]"#).unwrap();
@@ -849,9 +859,11 @@ mod tests {
             _params: QueryMaxBorrowParams,
         ) -> anyhow::Result<RestApiResponse<models::QueryMaxBorrowResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value =

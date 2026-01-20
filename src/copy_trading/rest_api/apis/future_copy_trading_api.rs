@@ -197,9 +197,11 @@ mod tests {
             _params: GetFuturesLeadTraderStatusParams,
         ) -> anyhow::Result<RestApiResponse<models::GetFuturesLeadTraderStatusResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"isLeadTrader":true,"time":1717382310843},"success":true}"#).unwrap();
@@ -223,9 +225,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::GetFuturesLeadTradingSymbolWhitelistResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"symbol":"BTCUSDT","baseAsset":"BTC","quoteAsset":"USDT"},{"symbol":"ETHUSDT","baseAsset":"ETH","quoteAsset":"USDT"}]}"#).unwrap();

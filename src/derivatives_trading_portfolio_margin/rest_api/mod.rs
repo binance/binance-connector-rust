@@ -4045,7 +4045,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<models::QueryCurrentCmOpenOrderResponse>`] on success.
+    /// [`RestApiResponse<Vec<models::QueryAllCmOrdersResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -4071,7 +4071,7 @@ impl RestApi {
     pub async fn query_current_cm_open_order(
         &self,
         params: QueryCurrentCmOpenOrderParams,
-    ) -> anyhow::Result<RestApiResponse<models::QueryCurrentCmOpenOrderResponse>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllCmOrdersResponseInner>>> {
         self.trade_api_client
             .query_current_cm_open_order(params)
             .await

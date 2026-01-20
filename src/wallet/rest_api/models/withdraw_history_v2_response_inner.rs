@@ -33,8 +33,6 @@ pub struct WithdrawHistoryV2ResponseInner {
     pub travel_rule_status: Option<i64>,
     #[serde(rename = "address", skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
-    #[serde(rename = "addressTag", skip_serializing_if = "Option::is_none")]
-    pub address_tag: Option<String>,
     #[serde(rename = "txId", skip_serializing_if = "Option::is_none")]
     pub tx_id: Option<String>,
     #[serde(rename = "applyTime", skip_serializing_if = "Option::is_none")]
@@ -71,7 +69,6 @@ impl WithdrawHistoryV2ResponseInner {
             withdrawal_status: None,
             travel_rule_status: None,
             address: None,
-            address_tag: None,
             tx_id: None,
             apply_time: None,
             network: None,

@@ -165,9 +165,11 @@ mod tests {
             RestApiResponse<Vec<models::GetSymbolsDelistScheduleForSpotResponseInner>>,
         > {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"symbols":["ADAUSDT","BNBUSDT"]},{"delistTime":1686222232000,"symbols":["ETHUSDT"]}]"#).unwrap();
@@ -190,9 +192,11 @@ mod tests {
             &self,
         ) -> anyhow::Result<RestApiResponse<models::SystemStatusResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"status":0,"msg":"normal"}"#).unwrap();

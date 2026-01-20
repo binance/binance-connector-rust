@@ -23,6 +23,8 @@ pub struct GetVipLoanOngoingOrdersResponseRowsInner {
     pub loan_coin: Option<String>,
     #[serde(rename = "totalDebt", skip_serializing_if = "Option::is_none")]
     pub total_debt: Option<String>,
+    #[serde(rename = "loanRate", skip_serializing_if = "Option::is_none")]
+    pub loan_rate: Option<String>,
     #[serde(rename = "residualInterest", skip_serializing_if = "Option::is_none")]
     pub residual_interest: Option<String>,
     #[serde(
@@ -59,6 +61,7 @@ impl GetVipLoanOngoingOrdersResponseRowsInner {
             order_id: None,
             loan_coin: None,
             total_debt: None,
+            loan_rate: None,
             residual_interest: None,
             collateral_account_id: None,
             collateral_coin: None,

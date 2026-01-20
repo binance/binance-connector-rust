@@ -175,9 +175,11 @@ mod tests {
             _params: GetSpotRebateHistoryRecordsParams,
         ) -> anyhow::Result<RestApiResponse<models::GetSpotRebateHistoryRecordsResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"status":"OK","type":"GENERAL","code":"000000000","data":{"page":1,"totalRecords":2,"totalPageNum":1,"data":[{"asset":"USDT","type":1,"amount":"0.0001126","updateTime":1637651320000},{"asset":"ETH","type":1,"amount":"0.00000056","updateTime":1637928379000}]}}"#).unwrap();

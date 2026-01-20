@@ -33,6 +33,8 @@ pub struct HashrateResaleListResponseDataConfigDetailsInner {
     pub end_day: Option<i64>,
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<i64>,
 }
 
 impl HashrateResaleListResponseDataConfigDetailsInner {
@@ -47,6 +49,7 @@ impl HashrateResaleListResponseDataConfigDetailsInner {
             start_day: None,
             end_day: None,
             status: None,
+            r#type: None,
         }
     }
 }

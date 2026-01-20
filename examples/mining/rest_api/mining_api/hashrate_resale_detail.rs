@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = MiningRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = HashrateResaleDetailParams::builder(1, "user_name_example".to_string()).build()?;
+    let params = HashrateResaleDetailParams::builder(1).build()?;
 
     // Make the API call
     let response = rest_client

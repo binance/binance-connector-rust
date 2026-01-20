@@ -32,6 +32,7 @@ rustup default 1.86.0
 All connectors are bundled within the single `binance-sdk` crate. Enable only the modules you need by specifying feature flags. Available features are:
 
 * [`algo`](./src/algo) – Algo Trading connector
+* [`alpha`](./src/alpha) – Alpha connector
 * [`c2c`](./src/c2c) – C2C connector
 * [`convert`](./src/convert) – Convert connector
 * [`copy_trading`](./src/copy_trading) – Copy Trading connector

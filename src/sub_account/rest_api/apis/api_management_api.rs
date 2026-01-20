@@ -373,9 +373,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::AddIpRestrictionForSubAccountApiKeyResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"status":"2","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
@@ -400,9 +402,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::DeleteIpListForASubAccountApiKeyResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
@@ -426,9 +430,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::GetIpRestrictionForASubAccountApiKeyResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();

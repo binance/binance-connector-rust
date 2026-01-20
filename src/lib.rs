@@ -7,6 +7,8 @@ pub use common::models;
 
 #[cfg(feature = "algo")]
 pub mod algo;
+#[cfg(feature = "alpha")]
+pub mod alpha;
 #[cfg(feature = "c2c")]
 pub mod c2c;
 #[cfg(feature = "convert")]

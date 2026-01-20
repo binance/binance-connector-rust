@@ -28,10 +28,6 @@ pub struct GetBfusdQuotaDetailsResponse {
     )]
     pub standard_redemption_quota:
         Option<Box<models::GetBfusdQuotaDetailsResponseStandardRedemptionQuota>>,
-    #[serde(rename = "subscribeEnable", skip_serializing_if = "Option::is_none")]
-    pub subscribe_enable: Option<bool>,
-    #[serde(rename = "redeemEnable", skip_serializing_if = "Option::is_none")]
-    pub redeem_enable: Option<bool>,
 }
 
 impl GetBfusdQuotaDetailsResponse {
@@ -40,8 +36,6 @@ impl GetBfusdQuotaDetailsResponse {
         GetBfusdQuotaDetailsResponse {
             fast_redemption_quota: None,
             standard_redemption_quota: None,
-            subscribe_enable: None,
-            redeem_enable: None,
         }
     }
 }

@@ -1,6 +1,9 @@
 // Algo constants
 pub const ALGO_REST_API_PROD_URL: &str = "https://api.binance.com";
 
+// Alpha constants
+pub const ALPHA_REST_API_PROD_URL: &str = "https://www.binance.com";
+
 // C2C constants
 pub const C2C_REST_API_PROD_URL: &str = "https://api.binance.com";
 

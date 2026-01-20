@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "36.0.0"
+version = "37.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -125,6 +125,7 @@ tokio-test = "0.4"
 [features]
 default = [ ]
 algo = [ ]
+alpha = [ ]
 c2c = [ ]
 convert = [ ]
 copy_trading = [ ]
@@ -150,6 +151,7 @@ vip_loan = [ ]
 wallet = [ ]
 all = [
   "algo",
+  "alpha",
   "c2c",
   "convert",
   "copy_trading",
@@ -229,6 +231,31 @@ required-features = [ "algo" ]
 name = "algo_rest_api_spot_algo_api_time_weighted_average_price_spot_algo"
 path = "examples/algo/rest_api/spot_algo_api/time_weighted_average_price_spot_algo.rs"
 required-features = [ "algo" ]
+
+[[example]]
+name = "alpha_rest_api_market_data_api_aggregated_trades"
+path = "examples/alpha/rest_api/market_data_api/aggregated_trades.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_rest_api_market_data_api_get_exchange_info"
+path = "examples/alpha/rest_api/market_data_api/get_exchange_info.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_rest_api_market_data_api_klines"
+path = "examples/alpha/rest_api/market_data_api/klines.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_rest_api_market_data_api_ticker"
+path = "examples/alpha/rest_api/market_data_api/ticker.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_rest_api_market_data_api_token_list"
+path = "examples/alpha/rest_api/market_data_api/token_list.rs"
+required-features = [ "alpha" ]
 
 [[example]]
 name = "c2c_rest_api_c2_c_api_get_c2_c_trade_history"
@@ -4294,3 +4321,4 @@ required-features = [ "wallet" ]
 name = "wallet_rest_api_travel_rule_api_withdraw_travel_rule"
 path = "examples/wallet/rest_api/travel_rule_api/withdraw_travel_rule.rs"
 required-features = [ "wallet" ]
+

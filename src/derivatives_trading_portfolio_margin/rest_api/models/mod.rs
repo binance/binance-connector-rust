@@ -193,8 +193,6 @@ pub mod query_cm_position_information_response_inner;
 pub use self::query_cm_position_information_response_inner::QueryCmPositionInformationResponseInner;
 pub mod query_current_cm_open_conditional_order_response;
 pub use self::query_current_cm_open_conditional_order_response::QueryCurrentCmOpenConditionalOrderResponse;
-pub mod query_current_cm_open_order_response;
-pub use self::query_current_cm_open_order_response::QueryCurrentCmOpenOrderResponse;
 pub mod query_current_margin_open_order_response_inner;
 pub use self::query_current_margin_open_order_response_inner::QueryCurrentMarginOpenOrderResponseInner;
 pub mod query_current_um_open_conditional_order_response;

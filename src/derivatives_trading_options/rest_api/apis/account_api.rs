@@ -251,9 +251,11 @@ mod tests {
             _params: AccountFundingFlowParams,
         ) -> anyhow::Result<RestApiResponse<Vec<models::AccountFundingFlowResponseInner>>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"100","type":"CONTRACT","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"10000","type":"TRANSFER","createDate":1592448410000}]"#).unwrap();
@@ -277,9 +279,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::OptionMarginAccountInformationResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false}"#).unwrap();

@@ -155,9 +155,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::ClassicPortfolioMarginAccountInformationResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"maxWithdrawAmountUSD":"25347.92083245","asset":"BTC","maxWithdrawAmount":"1.33663654"}"#).unwrap();

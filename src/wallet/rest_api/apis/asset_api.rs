@@ -118,6 +118,11 @@ impl AssetApiClient {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AssetDetailParams {
+    /// If asset is blank, then query all positive assets user have.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub asset: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -307,6 +312,11 @@ impl DustTransferParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DustlogParams {
+    /// `SPOT` or `MARGIN`,default `SPOT`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub account_type: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
@@ -797,10 +807,14 @@ impl AssetApi for AssetApiClient {
         &self,
         params: AssetDetailParams,
     ) -> anyhow::Result<RestApiResponse<models::AssetDetailResponse>> {
-        let AssetDetailParams { recv_window } = params;
+        let AssetDetailParams { asset, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        if let Some(rw) = asset {
+            query_params.insert("asset".to_string(), json!(rw));
+        }
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1000,6 +1014,7 @@ impl AssetApi for AssetApiClient {
         params: DustlogParams,
     ) -> anyhow::Result<RestApiResponse<models::DustlogResponse>> {
         let DustlogParams {
+            account_type,
             start_time,
             end_time,
             recv_window,
@@ -1007,6 +1022,10 @@ impl AssetApi for AssetApiClient {
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        if let Some(rw) = account_type {
+            query_params.insert("accountType".to_string(), json!(rw));
+        }
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -1560,9 +1579,11 @@ mod tests {
             _params: AssetDetailParams,
         ) -> anyhow::Result<RestApiResponse<models::AssetDetailResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"CTR":{"minWithdrawAmount":"70.00000000","depositStatus":false,"withdrawFee":35,"withdrawStatus":true,"depositTip":"Delisted, Deposit Suspended"},"SKY":{"minWithdrawAmount":"0.02000000","depositStatus":true,"withdrawFee":0.01,"withdrawStatus":true}}"#).unwrap();
@@ -1585,9 +1606,11 @@ mod tests {
             _params: AssetDividendRecordParams,
         ) -> anyhow::Result<RestApiResponse<models::AssetDividendRecordResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"id":1637366104,"amount":"10.00000000","asset":"BHFT","divTime":1563189166000,"enInfo":"BHFT distribution","tranId":2968885920},{"id":1631750237,"amount":"10.00000000","asset":"BHFT","divTime":1563189165000,"enInfo":"BHFT distribution","tranId":2968885920}],"total":2}"#).unwrap();
@@ -1610,9 +1633,11 @@ mod tests {
             _params: DustConvertParams,
         ) -> anyhow::Result<RestApiResponse<models::DustConvertResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"totalTransfered":"3.5971223","totalServiceCharge":"0.0794964","transferResult":[{"tranId":2987331510,"fromAsset":"USDT","amount":"1","transferedAmount":"3.5971223","serviceChargeAmount":"0.0794964","operateTime":1765212029749}]}"#).unwrap();
@@ -1635,9 +1660,11 @@ mod tests {
             _params: DustConvertibleAssetsParams,
         ) -> anyhow::Result<RestApiResponse<models::DustConvertibleAssetsResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"dribbletPercentage":"0.02","totalTransferQuotaAssetAmount":"0.7899968","totalTransferTargetAssetAmount":"0.7899968","dribbletBase":"10","details":[{"asset":"AR","assetFullName":"AR","amountFree":"0.00856","exchange":"0.00073616","toQuotaAssetAmount":"0.036808","toTargetAssetAmount":"0.036808","toTargetAssetOffExchange":"0.03607184"},{"asset":"BNB","assetFullName":"BNB","amountFree":"0.00082768","exchange":"0.01506378","toQuotaAssetAmount":"0.7531888","toTargetAssetAmount":"0.7531888","toTargetAssetOffExchange":"0.73812502"}]}"#).unwrap();
@@ -1660,9 +1687,11 @@ mod tests {
             _params: DustTransferParams,
         ) -> anyhow::Result<RestApiResponse<models::DustTransferResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"totalServiceCharge":"0.02102542","totalTransfered":"1.05127099","transferResult":[{"amount":"0.03000000","fromAsset":"ETH","operateTime":1563368549307,"serviceChargeAmount":"0.00500000","tranId":2970932918,"transferedAmount":"0.25000000"},{"amount":"0.09000000","fromAsset":"LTC","operateTime":1563368549404,"serviceChargeAmount":"0.01548000","tranId":2970932918,"transferedAmount":"0.77400000"},{"amount":"248.61878453","fromAsset":"TRX","operateTime":1563368549489,"serviceChargeAmount":"0.00054542","tranId":2970932918,"transferedAmount":"0.02727099"}]}"#).unwrap();
@@ -1685,9 +1714,11 @@ mod tests {
             _params: DustlogParams,
         ) -> anyhow::Result<RestApiResponse<models::DustlogResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"total":8,"userAssetDribblets":[{"operateTime":1615985535000,"totalTransferedAmount":"0.00132256","totalServiceChargeAmount":"0.00002699","transId":45178372831,"userAssetDribbletDetails":[{"transId":4359321,"serviceChargeAmount":"0.000009","amount":"0.0009","operateTime":1615985535000,"transferedAmount":"0.000441","fromAsset":"USDT"},{"transId":4359321,"serviceChargeAmount":"0.00001799","amount":"0.0009","operateTime":1615985535000,"transferedAmount":"0.00088156","fromAsset":"ETH"}]},{"operateTime":1616203180000,"totalTransferedAmount":"0.00058795","totalServiceChargeAmount":"0.000012","transId":4357015,"userAssetDribbletDetails":[{"transId":4357015,"serviceChargeAmount":"0.00001","amount":"0.001","operateTime":1616203180000,"transferedAmount":"0.00049","fromAsset":"USDT"},{"transId":4357015,"serviceChargeAmount":"0.000002","amount":"0.0001","operateTime":1616203180000,"transferedAmount":"0.00009795","fromAsset":"ETH"}]}]}"#).unwrap();
@@ -1709,9 +1740,11 @@ mod tests {
             _params: FundingWalletParams,
         ) -> anyhow::Result<RestApiResponse<Vec<models::FundingWalletResponseInner>>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","free":"1","locked":"0","freeze":"0","withdrawing":"0","btcValuation":"0.00000091"}]"#).unwrap();
@@ -1735,9 +1768,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::GetAssetsThatCanBeConvertedIntoBnbResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"details":[{"asset":"ADA","assetFullName":"ADA","amountFree":"6.21","toBTC":"0.00016848","toBNB":"0.01777302","toBNBOffExchange":"0.01741756","exchange":"0.00035546"}],"totalTransferBtc":"0.00016848","totalTransferBNB":"0.01777302","dribbletPercentage":"0.02"}"#).unwrap();
@@ -1761,9 +1796,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::GetCloudMiningPaymentAndRefundHistoryResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"total":5,"rows":[{"createTime":1667880112000,"tranId":121230610120,"type":248,"asset":"USDT","amount":"25.0068","status":"S"},{"createTime":1666776366000,"tranId":119991507468,"type":249,"asset":"USDT","amount":"0.027","status":"S"},{"createTime":1666764505000,"tranId":119977966327,"type":248,"asset":"USDT","amount":"0.027","status":"S"},{"createTime":1666758189000,"tranId":119973601721,"type":248,"asset":"USDT","amount":"0.018","status":"S"},{"createTime":1666757278000,"tranId":119973028551,"type":248,"asset":"USDT","amount":"0.018","status":"S"}]}"#).unwrap();
@@ -1786,9 +1823,11 @@ mod tests {
             &self,
         ) -> anyhow::Result<RestApiResponse<Vec<models::GetOpenSymbolListResponseInner>>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"openTime":1686161202000,"symbols":["BNBBTC","BNBETH"]},{"openTime":1686222232000,"symbols":["BTCUSDT"]}]"#).unwrap();
@@ -1811,9 +1850,11 @@ mod tests {
             _params: QueryUserDelegationHistoryParams,
         ) -> anyhow::Result<RestApiResponse<models::QueryUserDelegationHistoryResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"total":3316,"rows":[{"clientTranId":"293915932290879488","transferType":"Undelegate","asset":"ETH","amount":"1","time":1695205406000},{"clientTranId":"293915892281413632","transferType":"Delegate","asset":"ETH","amount":"1","time":1695205396000}]}"#).unwrap();
@@ -1837,9 +1878,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<models::QueryUserUniversalTransferHistoryResponse>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"total":2,"rows":[{"asset":"USDT","amount":"1","type":"MAIN_UMFUTURE","status":"CONFIRMED","tranId":11415955596,"timestamp":1544433328000},{"asset":"USDT","amount":"2","type":"MAIN_UMFUTURE","status":"CONFIRMED","tranId":11366865406,"timestamp":1544433328000}]}"#).unwrap();
@@ -1863,9 +1906,11 @@ mod tests {
         ) -> anyhow::Result<RestApiResponse<Vec<models::QueryUserWalletBalanceResponseInner>>>
         {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"activate":true,"balance":"0","walletName":"Spot"},{"activate":true,"balance":"0","walletName":"Funding"},{"activate":true,"balance":"0","walletName":"Cross Margin"},{"activate":true,"balance":"0","walletName":"Isolated Margin"},{"activate":true,"balance":"0.71842752","walletName":"USDⓈ-M Futures"},{"activate":true,"balance":"0","walletName":"COIN-M Futures"},{"activate":true,"balance":"0","walletName":"Earn"},{"activate":false,"balance":"0","walletName":"Options"},{"activate":true,"balance":"0","walletName":"Trading Bots"},{"activate":true,"balance":"0","walletName":"Copy Trading"}]"#).unwrap();
@@ -1890,9 +1935,11 @@ mod tests {
             RestApiResponse<models::ToggleBnbBurnOnSpotTradeAndMarginInterestResponse>,
         > {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value =
@@ -1917,9 +1964,11 @@ mod tests {
             _params: TradeFeeParams,
         ) -> anyhow::Result<RestApiResponse<Vec<models::TradeFeeResponseInner>>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"ADABNB","makerCommission":"0.001","takerCommission":"0.001"},{"symbol":"BNBBTC","makerCommission":"0.001","takerCommission":"0.001"}]"#).unwrap();
@@ -1942,9 +1991,11 @@ mod tests {
             _params: UserAssetParams,
         ) -> anyhow::Result<RestApiResponse<Vec<models::UserAssetResponseInner>>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"[{"asset":"AVAX","free":"1","locked":"0","freeze":"0","withdrawing":"0","ipoable":"0","btcValuation":"0"},{"asset":"BCH","free":"0.9","locked":"0","freeze":"0","withdrawing":"0","ipoable":"0","btcValuation":"0"},{"asset":"BNB","free":"887.47061626","locked":"0","freeze":"10.52","withdrawing":"0.1","ipoable":"0","btcValuation":"0"},{"asset":"BUSD","free":"9999.7","locked":"0","freeze":"0","withdrawing":"0","ipoable":"0","btcValuation":"0"},{"asset":"SHIB","free":"532.32","locked":"0","freeze":"0","withdrawing":"0","ipoable":"0","btcValuation":"0"},{"asset":"USDT","free":"50300000001.44911105","locked":"0","freeze":"0","withdrawing":"0","ipoable":"0","btcValuation":"0"},{"asset":"WRZ","free":"1","locked":"0","freeze":"0","withdrawing":"0","ipoable":"0","btcValuation":"0"}]"#).unwrap();
@@ -1967,9 +2018,11 @@ mod tests {
             _params: UserUniversalTransferParams,
         ) -> anyhow::Result<RestApiResponse<models::UserUniversalTransferResponse>> {
             if self.force_error {
-                return Err(
-                    ConnectorError::ConnectorClientError("ResponseError".to_string()).into(),
-                );
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
             }
 
             let resp_json: Value = serde_json::from_str(r#"{"tranId":13526853623}"#).unwrap();
@@ -2010,7 +2063,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetApiClient { force_error: false };
 
-            let params = AssetDetailParams::builder().recv_window(5000).build().unwrap();
+            let params = AssetDetailParams::builder().asset("asset_example".to_string()).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"CTR":{"minWithdrawAmount":"70.00000000","depositStatus":false,"withdrawFee":35,"withdrawStatus":true,"depositTip":"Delisted, Deposit Suspended"},"SKY":{"minWithdrawAmount":"0.02000000","depositStatus":true,"withdrawFee":0.01,"withdrawStatus":true}}"#).unwrap();
             let expected_response : models::AssetDetailResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AssetDetailResponse");
@@ -2266,7 +2319,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetApiClient { force_error: false };
 
-            let params = DustlogParams::builder().start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
+            let params = DustlogParams::builder().account_type("SPOT".to_string()).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"total":8,"userAssetDribblets":[{"operateTime":1615985535000,"totalTransferedAmount":"0.00132256","totalServiceChargeAmount":"0.00002699","transId":45178372831,"userAssetDribbletDetails":[{"transId":4359321,"serviceChargeAmount":"0.000009","amount":"0.0009","operateTime":1615985535000,"transferedAmount":"0.000441","fromAsset":"USDT"},{"transId":4359321,"serviceChargeAmount":"0.00001799","amount":"0.0009","operateTime":1615985535000,"transferedAmount":"0.00088156","fromAsset":"ETH"}]},{"operateTime":1616203180000,"totalTransferedAmount":"0.00058795","totalServiceChargeAmount":"0.000012","transId":4357015,"userAssetDribbletDetails":[{"transId":4357015,"serviceChargeAmount":"0.00001","amount":"0.001","operateTime":1616203180000,"transferedAmount":"0.00049","fromAsset":"USDT"},{"transId":4357015,"serviceChargeAmount":"0.000002","amount":"0.0001","operateTime":1616203180000,"transferedAmount":"0.00009795","fromAsset":"ETH"}]}]}"#).unwrap();
             let expected_response : models::DustlogResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DustlogResponse");

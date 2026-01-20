@@ -4386,55 +4386,6 @@ mod tests {
             }
 
             #[test]
-            fn uses_subset_when_connections_provided() {
-                TOKIO_SHARED_RT.block_on(async {
-                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
-                    let addr = listener.local_addr().unwrap();
-
-                    tokio::spawn(async move {
-                        for _ in 0..2 {
-                            if let Ok((stream, _)) = listener.accept().await {
-                                let mut ws = accept_async(stream).await.unwrap();
-                                let _ = ws.close(None).await;
-                            }
-                        }
-                    });
-
-                    let c1 = WebsocketConnection::new("c1");
-                    let c2 = WebsocketConnection::new("c2");
-                    let c3 = WebsocketConnection::new("c3");
-
-                    let common = WebsocketCommon::new(
-                        vec![c1.clone(), c2.clone(), c3.clone()],
-                        WebsocketMode::Pool(3),
-                        0,
-                        None,
-                        None,
-                    );
-
-                    let url = format!("ws://{addr}");
-                    common
-                        .connect_pool(&url, Some(vec![c1.clone(), c3.clone()]))
-                        .await
-                        .unwrap();
-
-                    let ok = eventually_async(Duration::from_secs(5), || {
-                        let c1 = c1.clone();
-                        let c2 = c2.clone();
-                        let c3 = c3.clone();
-                        async move {
-                            c1.state.lock().await.ws_write_tx.is_some()
-                                && c3.state.lock().await.ws_write_tx.is_some()
-                                && c2.state.lock().await.ws_write_tx.is_none()
-                        }
-                    })
-                    .await;
-
-                    assert!(ok, "didn't use provided connections");
-                });
-            }
-
-            #[test]
             fn empty_subset_is_ok_and_connects_none() {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();

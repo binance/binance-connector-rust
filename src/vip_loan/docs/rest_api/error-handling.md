@@ -18,31 +18,31 @@ match client.get_collateral_asset_data(params).await {
     Err(e) => {
         if let Some(conn_err) = e.downcast_ref::<errors::ConnectorError>() {
             match conn_err {
-                errors::ConnectorError::ConnectorClientError(msg) => {
+                errors::ConnectorError::ConnectorClientError { msg, code } => {
                     eprintln!("Client error: Check your request parameters. {}", msg);
                 }
-                errors::ConnectorError::UnauthorizedError(msg) => {
+                errors::ConnectorError::UnauthorizedError { msg, code } => {
                     eprintln!("Unauthorized: Invalid API credentials. {}", msg);
                 }
-                errors::ConnectorError::ForbiddenError(msg) => {
+                errors::ConnectorError::ForbiddenError { msg, code } => {
                     eprintln!("Forbidden: Check your API key permissions. {}", msg);
                 }
-                errors::ConnectorError::TooManyRequestsError(msg) => {
+                errors::ConnectorError::TooManyRequestsError { msg, code } => {
                     eprintln!("Rate limit exceeded. Please wait and try again. {}", msg);
                 }
-                errors::ConnectorError::RateLimitBanError(msg) => {
+                errors::ConnectorError::RateLimitBanError { msg, code } => {
                     eprintln!("IP address banned due to excessive rate limits. {}", msg);
                 }
                 errors::ConnectorError::ServerError { msg, status_code } => {
                     eprintln!("Server error: {} (status code: {:?})", msg, status_code);
                 }
-                errors::ConnectorError::NetworkError(msg) => {
+                errors::ConnectorError::NetworkError { msg, code } => {
                     eprintln!("Network error: Check your internet connection. {}", msg);
                 }
-                errors::ConnectorError::NotFoundError(msg) => {
+                errors::ConnectorError::NotFoundError { msg, code } => {
                     eprintln!("Resource not found. {}", msg);
                 }
-                errors::ConnectorError::BadRequestError(msg) => {
+                errors::ConnectorError::BadRequestError { msg, code } => {
                     eprintln!("Bad request: Verify your input parameters. {}", msg);
                 }
                 other => {
