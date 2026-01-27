@@ -2501,7 +2501,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::CurrentAllOpenOrdersResponseInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::AllOrdersResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -2527,7 +2527,7 @@ impl RestApi {
     pub async fn current_all_open_orders(
         &self,
         params: CurrentAllOpenOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::CurrentAllOpenOrdersResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::AllOrdersResponseInner>>> {
         self.trade_api_client.current_all_open_orders(params).await
     }
 

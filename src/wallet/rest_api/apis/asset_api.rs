@@ -1613,7 +1613,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"id":1637366104,"amount":"10.00000000","asset":"BHFT","divTime":1563189166000,"enInfo":"BHFT distribution","tranId":2968885920},{"id":1631750237,"amount":"10.00000000","asset":"BHFT","divTime":1563189165000,"enInfo":"BHFT distribution","tranId":2968885920}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"id":1637366104,"amount":"10.00000000","asset":"BHFT","divTime":1563189166000,"enInfo":"BHFT distribution","tranId":2968885920,"direction":1},{"id":1631750237,"amount":"10.00000000","asset":"BHFT","divTime":1563189165000,"enInfo":"BHFT distribution","tranId":2968885920,"direction":1}],"total":2}"#).unwrap();
             let dummy_response: models::AssetDividendRecordResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AssetDividendRecordResponse");
@@ -2098,7 +2098,7 @@ mod tests {
 
             let params = AssetDividendRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"id":1637366104,"amount":"10.00000000","asset":"BHFT","divTime":1563189166000,"enInfo":"BHFT distribution","tranId":2968885920},{"id":1631750237,"amount":"10.00000000","asset":"BHFT","divTime":1563189165000,"enInfo":"BHFT distribution","tranId":2968885920}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"id":1637366104,"amount":"10.00000000","asset":"BHFT","divTime":1563189166000,"enInfo":"BHFT distribution","tranId":2968885920,"direction":1},{"id":1631750237,"amount":"10.00000000","asset":"BHFT","divTime":1563189165000,"enInfo":"BHFT distribution","tranId":2968885920,"direction":1}],"total":2}"#).unwrap();
             let expected_response : models::AssetDividendRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AssetDividendRecordResponse");
 
             let resp = client.asset_dividend_record(params).await.expect("Expected a response");
@@ -2115,7 +2115,7 @@ mod tests {
 
             let params = AssetDividendRecordParams::builder().asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).limit(7).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"id":1637366104,"amount":"10.00000000","asset":"BHFT","divTime":1563189166000,"enInfo":"BHFT distribution","tranId":2968885920},{"id":1631750237,"amount":"10.00000000","asset":"BHFT","divTime":1563189165000,"enInfo":"BHFT distribution","tranId":2968885920}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"id":1637366104,"amount":"10.00000000","asset":"BHFT","divTime":1563189166000,"enInfo":"BHFT distribution","tranId":2968885920,"direction":1},{"id":1631750237,"amount":"10.00000000","asset":"BHFT","divTime":1563189165000,"enInfo":"BHFT distribution","tranId":2968885920,"direction":1}],"total":2}"#).unwrap();
             let expected_response : models::AssetDividendRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AssetDividendRecordResponse");
 
             let resp = client.asset_dividend_record(params).await.expect("Expected a response");

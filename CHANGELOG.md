@@ -1,5 +1,120 @@
 # Changelog
 
+## 38.0.0 - 2026-01-27
+
+**Convert**
+
+### Changed (1)
+
+- Modified response for `place_limit_order()` (`POST /sapi/v1/convert/limit/placeOrder`):
+  - property `orderId` added
+  - property `status` added
+  - property `toAmount` deleted
+  - property `validTimestamp` deleted
+  - property `fromAmount` deleted
+  - property `inverseRatio` deleted
+  - property `quoteId` deleted
+  - property `ratio` deleted
+
+**Derivatives Trading Coin Futures**
+
+### Changed (2)
+
+#### REST API
+
+- Modified response for `cancel_multiple_orders()` (`DELETE /dapi/v1/batchOrders`):
+  - items: property `pair` added
+  - items: item property `pair` added
+
+- Modified response for `current_all_open_orders()` (`GET /dapi/v1/openOrders`):
+  - items: property `pair` added
+  - items: item property `pair` added
+
+**Derivatives Trading Usds Futures**
+
+### Changed (6)
+
+#### REST API
+
+- Added parameter `newOrderRespType`
+  - affected methods:
+    - `new_algo_order()` (`POST /fapi/v1/algoOrder`)
+- Modified parameter `batchOrders`:
+  - items: property `stopPrice` added
+  - items: item property `stopPrice` added
+  - affected methods:
+    - `modify_multiple_orders()` (`PUT /fapi/v1/batchOrders`)
+- Modified response for `place_multiple_orders()` (`POST /fapi/v1/batchOrders`):
+  - items: property `closePosition` added
+  - items: item property `closePosition` added
+
+- Modified response for `query_order()` (`GET /fapi/v1/order`):
+  - property `result` added
+  - property `id` added
+  - property `executedQty` deleted
+  - property `reduceOnly` deleted
+  - property `priceProtect` deleted
+  - property `closePosition` deleted
+  - property `type` deleted
+  - property `avgPrice` deleted
+  - property `orderId` deleted
+  - property `updateTime` deleted
+  - property `activatePrice` deleted
+  - property `timeInForce` deleted
+  - property `cumQuote` deleted
+  - property `workingType` deleted
+  - property `goodTillDate` deleted
+  - property `positionSide` deleted
+  - property `side` deleted
+  - property `origQty` deleted
+  - property `time` deleted
+  - property `selfTradePreventionMode` deleted
+  - property `clientOrderId` deleted
+  - property `origType` deleted
+  - property `price` deleted
+  - property `priceMatch` deleted
+  - property `stopPrice` deleted
+  - property `priceRate` deleted
+  - property `symbol` deleted
+  - `status`: type `string` → `integer`
+
+#### WebSocket API
+
+- Added parameter `newOrderRespType`
+  - affected methods:
+    - `new_algo_order()` (`algoOrder.place` method)
+- Modified response for `position_information_v2()` (`v2/account.position` method):
+  - `result`.items: property `unRealizedProfit` added
+  - `result`.items: property `unrealizedProfit` deleted
+  - `result`.items: item property `unRealizedProfit` added
+  - `result`.items: item property `unrealizedProfit` deleted
+
+**Margin Trading**
+
+### Added (1)
+
+#### REST API
+
+- `get_margin_asset_risk_based_liquidation_ratio()` (`GET /sapi/v1/margin/risk-based-liquidation-ratio`)
+
+**Spot**
+
+### Changed (1)
+
+#### WebSocket API
+
+- Added parameter `recvWindow`
+  - affected methods:
+    - `user_data_stream_subscribe_signature()` (`userDataStream.subscribe.signature` method)
+
+**Wallet**
+
+### Changed (1)
+
+- Modified response for `asset_dividend_record()` (`GET /sapi/v1/asset/assetDividend`):
+  - `rows`.items: property `direction` added
+  - `rows`.items: item property `direction` added
+
 ## 37.0.0 - 2026-01-20
 
 ### Added (1)

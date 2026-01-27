@@ -29,6 +29,8 @@ pub struct AssetDividendRecordResponseRowsInner {
     pub en_info: Option<String>,
     #[serde(rename = "tranId", skip_serializing_if = "Option::is_none")]
     pub tran_id: Option<i64>,
+    #[serde(rename = "direction", skip_serializing_if = "Option::is_none")]
+    pub direction: Option<i64>,
 }
 
 impl AssetDividendRecordResponseRowsInner {
@@ -41,6 +43,7 @@ impl AssetDividendRecordResponseRowsInner {
             div_time: None,
             en_info: None,
             tran_id: None,
+            direction: None,
         }
     }
 }

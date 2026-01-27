@@ -207,7 +207,7 @@ pub struct AllOrderListsParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Aggregate trade ID to begin at
+    /// Trade ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -499,7 +499,7 @@ pub struct MyTradesParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Aggregate trade ID to begin at
+    /// Trade ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -617,11 +617,11 @@ pub struct OrderAmendmentsParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub from_execution_id: Option<i64>,
-    /// Default: 100; Maximum: 5000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub limit: Option<i32>,
+    pub limit: Option<i64>,
     /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.

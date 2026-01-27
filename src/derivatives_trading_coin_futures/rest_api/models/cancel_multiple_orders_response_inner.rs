@@ -49,6 +49,8 @@ pub struct CancelMultipleOrdersResponseInner {
     pub close_position: Option<bool>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
+    pub pair: Option<String>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -96,6 +98,7 @@ impl CancelMultipleOrdersResponseInner {
             stop_price: None,
             close_position: None,
             symbol: None,
+            pair: None,
             time_in_force: None,
             r#type: None,
             activate_price: None,

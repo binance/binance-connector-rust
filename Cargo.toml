@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "37.0.0"
+version = "38.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2615,6 +2615,11 @@ required-features = [ "margin_trading" ]
 [[example]]
 name = "margin_trading_rest_api_market_data_api_get_list_schedule"
 path = "examples/margin_trading/rest_api/market_data_api/get_list_schedule.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_market_data_api_get_margin_asset_risk_based_liquidation_ratio"
+path = "examples/margin_trading/rest_api/market_data_api/get_margin_asset_risk_based_liquidation_ratio.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]

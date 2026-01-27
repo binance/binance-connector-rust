@@ -370,6 +370,37 @@ impl std::str::FromStr for NewAlgoOrderPriceMatchEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderNewOrderRespTypeEnum {
+    #[serde(rename = "ACK")]
+    Ack,
+    #[serde(rename = "RESULT")]
+    Result,
+}
+
+impl NewAlgoOrderNewOrderRespTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ack => "ACK",
+            Self::Result => "RESULT",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderNewOrderRespTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "ACK" => Ok(Self::Ack),
+            "RESULT" => Ok(Self::Result),
+            other => Err(format!("invalid NewAlgoOrderNewOrderRespTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewAlgoOrderSelfTradePreventionModeEnum {
     #[serde(rename = "EXPIRE_TAKER")]
     ExpireTaker,
@@ -950,6 +981,11 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub client_algo_id: Option<String>,
+    /// "ACK", "RESULT", default "ACK"
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub new_order_resp_type: Option<NewAlgoOrderNewOrderRespTypeEnum>,
     /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
     ///
     /// This field is **optional.
@@ -1410,6 +1446,7 @@ impl TradeApi for TradeApiClient {
             activate_price,
             callback_rate,
             client_algo_id,
+            new_order_resp_type,
             self_trade_prevention_mode,
             good_till_date,
             recv_window,
@@ -1461,6 +1498,9 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = client_algo_id {
             payload.insert("clientAlgoId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = new_order_resp_type {
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
         }
         if let Some(value) = self_trade_prevention_mode {
             payload.insert(
@@ -2564,7 +2604,7 @@ mod tests {
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/v2/account.position".trim_start_matches('/'));
 
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unrealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"LONG","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unrealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"SHORT","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unrealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unRealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"LONG","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unRealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"SHORT","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unRealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

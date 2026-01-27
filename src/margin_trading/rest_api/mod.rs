@@ -1234,6 +1234,52 @@ impl RestApi {
         self.market_data_api_client.get_list_schedule(params).await
     }
 
+    /// Get Margin Asset Risk-Based Liquidation Ratio (`MARKET_DATA`)
+    ///
+    /// Get Margin Asset Risk-Based Liquidation Ratio
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetMarginAssetRiskBasedLiquidationRatioParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-Margin-Asset-Risk-Based-Liquidation-Ratio).
+    ///
+    pub async fn get_margin_asset_risk_based_liquidation_ratio(
+        &self,
+    ) -> anyhow::Result<
+        RestApiResponse<Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner>>,
+    > {
+        self.market_data_api_client
+            .get_margin_asset_risk_based_liquidation_ratio()
+            .await
+    }
+
     /// Query Isolated Margin Tier Data (`USER_DATA`)
     ///
     /// Get isolated margin tier data collection with any tier as <https://www.binance.com/en/margin-data>

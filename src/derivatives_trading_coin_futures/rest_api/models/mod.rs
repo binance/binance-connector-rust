@@ -45,8 +45,6 @@ pub mod compressed_aggregate_trades_list_response_inner;
 pub use self::compressed_aggregate_trades_list_response_inner::CompressedAggregateTradesListResponseInner;
 pub mod continuous_contract_kline_candlestick_data_response_item_inner;
 pub use self::continuous_contract_kline_candlestick_data_response_item_inner::ContinuousContractKlineCandlestickDataResponseItemInner;
-pub mod current_all_open_orders_response_inner;
-pub use self::current_all_open_orders_response_inner::CurrentAllOpenOrdersResponseInner;
 pub mod exchange_information_response;
 pub use self::exchange_information_response::ExchangeInformationResponse;
 pub mod exchange_information_response_rate_limits_inner;

@@ -120,6 +120,11 @@ pub struct UserDataStreamSubscribeSignatureParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
+    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<rust_decimal::Decimal>,
 }
 
 impl UserDataStreamSubscribeSignatureParams {
@@ -219,11 +224,14 @@ impl UserDataStreamApi for UserDataStreamApiClient {
         params: UserDataStreamSubscribeSignatureParams,
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::UserDataStreamSubscribeResponseResult>>>
     {
-        let UserDataStreamSubscribeSignatureParams { id } = params;
+        let UserDataStreamSubscribeSignatureParams { id, recv_window } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = recv_window {
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 

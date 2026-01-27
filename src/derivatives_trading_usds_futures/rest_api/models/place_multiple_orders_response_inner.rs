@@ -43,6 +43,8 @@ pub struct PlaceMultipleOrdersResponseInner {
     pub status: Option<String>,
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
+    #[serde(rename = "closePosition", skip_serializing_if = "Option::is_none")]
+    pub close_position: Option<bool>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
@@ -89,6 +91,7 @@ impl PlaceMultipleOrdersResponseInner {
             position_side: None,
             status: None,
             stop_price: None,
+            close_position: None,
             symbol: None,
             time_in_force: None,
             r#type: None,

@@ -31,6 +31,8 @@ pub struct ModifyMultipleOrdersBatchOrdersParameterInner {
     pub price: Option<String>,
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<PriceMatchEnum>,
+    #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
+    pub stop_price: Option<String>,
     #[serde(rename = "recvWindow", skip_serializing_if = "Option::is_none")]
     pub recv_window: Option<String>,
 }
@@ -46,6 +48,7 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
             quantity: None,
             price: None,
             price_match: None,
+            stop_price: None,
             recv_window: None,
         }
     }

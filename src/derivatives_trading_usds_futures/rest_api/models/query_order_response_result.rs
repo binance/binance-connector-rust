@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Binance Derivatives Trading USDS Futures REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -12,17 +12,17 @@
  */
 
 #![allow(unused_imports)]
-use crate::derivatives_trading_coin_futures::rest_api::models;
+use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct CurrentAllOpenOrdersResponseInner {
+pub struct QueryOrderResponseResult {
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
-    #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
-    pub cum_base: Option<String>,
+    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
+    pub cum_quote: Option<String>,
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
@@ -63,22 +63,15 @@ pub struct CurrentAllOpenOrdersResponseInner {
     pub working_type: Option<String>,
     #[serde(rename = "priceProtect", skip_serializing_if = "Option::is_none")]
     pub price_protect: Option<bool>,
-    #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
-    pub price_match: Option<String>,
-    #[serde(
-        rename = "selfTradePreventionMode",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub self_trade_prevention_mode: Option<String>,
 }
 
-impl CurrentAllOpenOrdersResponseInner {
+impl QueryOrderResponseResult {
     #[must_use]
-    pub fn new() -> CurrentAllOpenOrdersResponseInner {
-        CurrentAllOpenOrdersResponseInner {
+    pub fn new() -> QueryOrderResponseResult {
+        QueryOrderResponseResult {
             avg_price: None,
             client_order_id: None,
-            cum_base: None,
+            cum_quote: None,
             executed_qty: None,
             order_id: None,
             orig_qty: None,
@@ -99,8 +92,6 @@ impl CurrentAllOpenOrdersResponseInner {
             update_time: None,
             working_type: None,
             price_protect: None,
-            price_match: None,
-            self_trade_prevention_mode: None,
         }
     }
 }

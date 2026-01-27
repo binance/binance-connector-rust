@@ -223,6 +223,8 @@ pub mod query_insurance_fund_balance_snapshot_response2_inner_assets_inner;
 pub use self::query_insurance_fund_balance_snapshot_response2_inner_assets_inner::QueryInsuranceFundBalanceSnapshotResponse2InnerAssetsInner;
 pub mod query_order_response;
 pub use self::query_order_response::QueryOrderResponse;
+pub mod query_order_response_result;
+pub use self::query_order_response_result::QueryOrderResponseResult;
 pub mod query_user_rate_limit_response_inner;
 pub use self::query_user_rate_limit_response_inner::QueryUserRateLimitResponseInner;
 pub mod recent_trades_list_response_inner;

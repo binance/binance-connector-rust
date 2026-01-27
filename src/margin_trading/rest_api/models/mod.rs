@@ -51,6 +51,8 @@ pub mod get_limit_price_pairs_response;
 pub use self::get_limit_price_pairs_response::GetLimitPricePairsResponse;
 pub mod get_list_schedule_response_inner;
 pub use self::get_list_schedule_response_inner::GetListScheduleResponseInner;
+pub mod get_margin_asset_risk_based_liquidation_ratio_response_inner;
+pub use self::get_margin_asset_risk_based_liquidation_ratio_response_inner::GetMarginAssetRiskBasedLiquidationRatioResponseInner;
 pub mod get_small_liability_exchange_coin_list_response_inner;
 pub use self::get_small_liability_exchange_coin_list_response_inner::GetSmallLiabilityExchangeCoinListResponseInner;
 pub mod get_small_liability_exchange_history_response;

@@ -1375,7 +1375,7 @@ pub struct TradesAggregateParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub from_id: Option<i32>,
+    pub from_id: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
@@ -1388,11 +1388,11 @@ pub struct TradesAggregateParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Default: 100; Maximum: 5000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub limit: Option<i32>,
+    pub limit: Option<i64>,
 }
 
 impl TradesAggregateParams {
@@ -1425,7 +1425,7 @@ pub struct TradesHistoricalParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// Aggregate trade ID to begin at
+    /// Trade ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

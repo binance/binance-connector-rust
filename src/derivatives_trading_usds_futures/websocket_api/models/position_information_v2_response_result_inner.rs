@@ -30,8 +30,8 @@ pub struct PositionInformationV2ResponseResultInner {
     pub break_even_price: Option<String>,
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
-    #[serde(rename = "unrealizedProfit", skip_serializing_if = "Option::is_none")]
-    pub unrealized_profit: Option<String>,
+    #[serde(rename = "unRealizedProfit", skip_serializing_if = "Option::is_none")]
+    pub un_realized_profit: Option<String>,
     #[serde(rename = "liquidationPrice", skip_serializing_if = "Option::is_none")]
     pub liquidation_price: Option<String>,
     #[serde(rename = "isolatedMargin", skip_serializing_if = "Option::is_none")]
@@ -76,7 +76,7 @@ impl PositionInformationV2ResponseResultInner {
             entry_price: None,
             break_even_price: None,
             mark_price: None,
-            unrealized_profit: None,
+            un_realized_profit: None,
             liquidation_price: None,
             isolated_margin: None,
             notional: None,

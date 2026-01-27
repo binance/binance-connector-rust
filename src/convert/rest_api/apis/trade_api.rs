@@ -820,7 +820,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
+            let resp_json: Value =
+                serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"PROCESS"}"#)
+                    .unwrap();
             let dummy_response: models::PlaceLimitOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::PlaceLimitOrderResponse");
@@ -1114,12 +1116,27 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = PlaceLimitOrderParams::builder("base_asset_example".to_string(),"quote_asset_example".to_string(),dec!(1.0),"BUY".to_string(),"expired_type_example".to_string(),).build().unwrap();
+            let params = PlaceLimitOrderParams::builder(
+                "base_asset_example".to_string(),
+                "quote_asset_example".to_string(),
+                dec!(1.0),
+                "BUY".to_string(),
+                "expired_type_example".to_string(),
+            )
+            .build()
+            .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
-            let expected_response : models::PlaceLimitOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::PlaceLimitOrderResponse");
+            let resp_json: Value =
+                serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"PROCESS"}"#)
+                    .unwrap();
+            let expected_response: models::PlaceLimitOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::PlaceLimitOrderResponse");
 
-            let resp = client.place_limit_order(params).await.expect("Expected a response");
+            let resp = client
+                .place_limit_order(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1131,12 +1148,31 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = PlaceLimitOrderParams::builder("base_asset_example".to_string(),"quote_asset_example".to_string(),dec!(1.0),"BUY".to_string(),"expired_type_example".to_string(),).base_amount(dec!(1.0)).quote_amount(dec!(1.0)).wallet_type(String::new()).recv_window(5000).build().unwrap();
+            let params = PlaceLimitOrderParams::builder(
+                "base_asset_example".to_string(),
+                "quote_asset_example".to_string(),
+                dec!(1.0),
+                "BUY".to_string(),
+                "expired_type_example".to_string(),
+            )
+            .base_amount(dec!(1.0))
+            .quote_amount(dec!(1.0))
+            .wallet_type(String::new())
+            .recv_window(5000)
+            .build()
+            .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
-            let expected_response : models::PlaceLimitOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::PlaceLimitOrderResponse");
+            let resp_json: Value =
+                serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"PROCESS"}"#)
+                    .unwrap();
+            let expected_response: models::PlaceLimitOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::PlaceLimitOrderResponse");
 
-            let resp = client.place_limit_order(params).await.expect("Expected a response");
+            let resp = client
+                .place_limit_order(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
