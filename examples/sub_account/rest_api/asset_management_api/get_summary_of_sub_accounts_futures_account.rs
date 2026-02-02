@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = SubAccountRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = GetSummaryOfSubAccountsFuturesAccountParams::default();
+    let params = GetSummaryOfSubAccountsFuturesAccountParams::builder(789, 789).build()?;
 
     // Make the API call
     let response = rest_client

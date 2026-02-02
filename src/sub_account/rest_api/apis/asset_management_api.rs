@@ -498,9 +498,19 @@ impl GetSubAccountDepositHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_summary_of_sub_accounts_futures_account`](#method.get_summary_of_sub_accounts_futures_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSummaryOfSubAccountsFuturesAccountParams {
+    /// Page
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub page: i64,
+    /// Limit (Max: 500)
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub limit: i64,
     ///
     /// The `recv_window` parameter.
     ///
@@ -512,9 +522,16 @@ pub struct GetSummaryOfSubAccountsFuturesAccountParams {
 impl GetSummaryOfSubAccountsFuturesAccountParams {
     /// Create a builder for [`get_summary_of_sub_accounts_futures_account`].
     ///
+    /// Required parameters:
+    ///
+    /// * `page` — Page
+    /// * `limit` — Limit (Max: 500)
+    ///
     #[must_use]
-    pub fn builder() -> GetSummaryOfSubAccountsFuturesAccountParamsBuilder {
+    pub fn builder(page: i64, limit: i64) -> GetSummaryOfSubAccountsFuturesAccountParamsBuilder {
         GetSummaryOfSubAccountsFuturesAccountParamsBuilder::default()
+            .page(page)
+            .limit(limit)
     }
 }
 /// Request parameters for the [`get_summary_of_sub_accounts_futures_account_v2`] operation.
@@ -1615,10 +1632,18 @@ impl AssetManagementApi for AssetManagementApiClient {
         params: GetSummaryOfSubAccountsFuturesAccountParams,
     ) -> anyhow::Result<RestApiResponse<models::GetSummaryOfSubAccountsFuturesAccountResponse>>
     {
-        let GetSummaryOfSubAccountsFuturesAccountParams { recv_window } = params;
+        let GetSummaryOfSubAccountsFuturesAccountParams {
+            page,
+            limit,
+            recv_window,
+        } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        query_params.insert("page".to_string(), json!(page));
+
+        query_params.insert("limit".to_string(), json!(limit));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -3453,7 +3478,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetManagementApiClient { force_error: false };
 
-            let params = GetSummaryOfSubAccountsFuturesAccountParams::builder().build().unwrap();
+            let params = GetSummaryOfSubAccountsFuturesAccountParams::builder(789,789,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"9.83137400","totalMaintenanceMargin":"0.41568700","totalMarginBalance":"23.03235621","totalOpenOrderInitialMargin":"9.00000000","totalPositionInitialMargin":"0.83137400","totalUnrealizedProfit":"0.03219710","totalWalletBalance":"22.15879444","asset":"USD","subAccountList":[{"email":"123@test.com","totalInitialMargin":"9.00000000","totalMaintenanceMargin":"0.00000000","totalMarginBalance":"22.12659734","totalOpenOrderInitialMargin":"9.00000000","totalPositionInitialMargin":"0.00000000","totalUnrealizedProfit":"0.00000000","totalWalletBalance":"22.12659734","asset":"USD"},{"email":"345@test.com","totalInitialMargin":"0.83137400","totalMaintenanceMargin":"0.41568700","totalMarginBalance":"0.90575887","totalOpenOrderInitialMargin":"0.00000000","totalPositionInitialMargin":"0.83137400","totalUnrealizedProfit":"0.03219710","totalWalletBalance":"0.87356177","asset":"USD"}]}"#).unwrap();
             let expected_response : models::GetSummaryOfSubAccountsFuturesAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSummaryOfSubAccountsFuturesAccountResponse");
@@ -3470,7 +3495,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetManagementApiClient { force_error: false };
 
-            let params = GetSummaryOfSubAccountsFuturesAccountParams::builder().recv_window(5000).build().unwrap();
+            let params = GetSummaryOfSubAccountsFuturesAccountParams::builder(789,789,).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"9.83137400","totalMaintenanceMargin":"0.41568700","totalMarginBalance":"23.03235621","totalOpenOrderInitialMargin":"9.00000000","totalPositionInitialMargin":"0.83137400","totalUnrealizedProfit":"0.03219710","totalWalletBalance":"22.15879444","asset":"USD","subAccountList":[{"email":"123@test.com","totalInitialMargin":"9.00000000","totalMaintenanceMargin":"0.00000000","totalMarginBalance":"22.12659734","totalOpenOrderInitialMargin":"9.00000000","totalPositionInitialMargin":"0.00000000","totalUnrealizedProfit":"0.00000000","totalWalletBalance":"22.12659734","asset":"USD"},{"email":"345@test.com","totalInitialMargin":"0.83137400","totalMaintenanceMargin":"0.41568700","totalMarginBalance":"0.90575887","totalOpenOrderInitialMargin":"0.00000000","totalPositionInitialMargin":"0.83137400","totalUnrealizedProfit":"0.03219710","totalWalletBalance":"0.87356177","asset":"USD"}]}"#).unwrap();
             let expected_response : models::GetSummaryOfSubAccountsFuturesAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSummaryOfSubAccountsFuturesAccountResponse");
@@ -3487,7 +3512,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetManagementApiClient { force_error: true };
 
-            let params = GetSummaryOfSubAccountsFuturesAccountParams::builder()
+            let params = GetSummaryOfSubAccountsFuturesAccountParams::builder(789, 789)
                 .build()
                 .unwrap();
 

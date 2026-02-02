@@ -632,6 +632,8 @@ pub enum NewCmConditionalOrderStrategyTypeEnum {
     Stop,
     #[serde(rename = "STOP_MARKET")]
     StopMarket,
+    #[serde(rename = "LIMIT_MAKER")]
+    LimitMaker,
     #[serde(rename = "TAKE_PROFIT")]
     TakeProfit,
     #[serde(rename = "TAKE_PROFIT_MARKET")]
@@ -646,6 +648,7 @@ impl NewCmConditionalOrderStrategyTypeEnum {
         match self {
             Self::Stop => "STOP",
             Self::StopMarket => "STOP_MARKET",
+            Self::LimitMaker => "LIMIT_MAKER",
             Self::TakeProfit => "TAKE_PROFIT",
             Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
             Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
@@ -660,6 +663,7 @@ impl std::str::FromStr for NewCmConditionalOrderStrategyTypeEnum {
         match s {
             "STOP" => Ok(Self::Stop),
             "STOP_MARKET" => Ok(Self::StopMarket),
+            "LIMIT_MAKER" => Ok(Self::LimitMaker),
             "TAKE_PROFIT" => Ok(Self::TakeProfit),
             "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
             "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
@@ -1247,6 +1251,8 @@ pub enum NewUmConditionalOrderStrategyTypeEnum {
     Stop,
     #[serde(rename = "STOP_MARKET")]
     StopMarket,
+    #[serde(rename = "LIMIT_MAKER")]
+    LimitMaker,
     #[serde(rename = "TAKE_PROFIT")]
     TakeProfit,
     #[serde(rename = "TAKE_PROFIT_MARKET")]
@@ -1261,6 +1267,7 @@ impl NewUmConditionalOrderStrategyTypeEnum {
         match self {
             Self::Stop => "STOP",
             Self::StopMarket => "STOP_MARKET",
+            Self::LimitMaker => "LIMIT_MAKER",
             Self::TakeProfit => "TAKE_PROFIT",
             Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
             Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
@@ -1275,6 +1282,7 @@ impl std::str::FromStr for NewUmConditionalOrderStrategyTypeEnum {
         match s {
             "STOP" => Ok(Self::Stop),
             "STOP_MARKET" => Ok(Self::StopMarket),
+            "LIMIT_MAKER" => Ok(Self::LimitMaker),
             "TAKE_PROFIT" => Ok(Self::TakeProfit),
             "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
             "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),

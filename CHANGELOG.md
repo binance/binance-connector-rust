@@ -1,5 +1,30 @@
 # Changelog
 
+## 39.0.0 - 2026-02-02
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (1)
+
+#### REST API
+
+- Modified parameter `strategyType`:
+  - enum added: `LIMIT_MAKER`
+  - affected methods:
+    - `new_cm_conditional_order()` (`POST /papi/v1/cm/conditional/order`)
+    - `new_um_conditional_order()` (`POST /papi/v1/um/conditional/order`)
+
+**Sub Account**
+
+### Changed (2)
+
+- Added parameter `limit`
+  - affected methods:
+    - `get_summary_of_sub_accounts_futures_account()` (`GET /sapi/v1/sub-account/futures/accountSummary`)
+- Added parameter `page`
+  - affected methods:
+    - `get_summary_of_sub_accounts_futures_account()` (`GET /sapi/v1/sub-account/futures/accountSummary`)
+
 ## 38.0.0 - 2026-01-27
 
 **Convert**

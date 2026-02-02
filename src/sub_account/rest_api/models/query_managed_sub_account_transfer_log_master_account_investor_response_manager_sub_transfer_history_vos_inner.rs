@@ -43,8 +43,7 @@ pub struct QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManager
 impl
     QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner
 {
-    #[must_use]
-    pub fn new() -> QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner{
+    #[must_use]    pub fn new() -> QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner{
         QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner {
             from_email: None,
             from_account_type: None,
