@@ -1,3 +1,8 @@
+#[cfg(all(feature = "openssl-tls", feature = "rustls-tls"))]
+compile_error!(
+    "Feature 'openssl-tls' and 'rustls-tls' cannot be enabled at the same time. Please use '--no-default-features' and enable only one backend."
+);
+
 pub mod common;
 pub use common::config;
 pub use common::constants;
