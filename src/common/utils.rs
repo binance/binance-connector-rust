@@ -1,7 +1,11 @@
 use anyhow::{Context, Result};
+#[cfg(feature = "openssl-tls")]
 use base64::{Engine as _, engine::general_purpose};
+#[cfg(feature = "openssl-tls")]
 use ed25519_dalek::Signer as Ed25519Signer;
+#[cfg(feature = "openssl-tls")]
 use ed25519_dalek::SigningKey;
+#[cfg(feature = "openssl-tls")]
 use ed25519_dalek::pkcs8::DecodePrivateKey;
 use flate2::read::GzDecoder;
 use hex;
@@ -10,6 +14,7 @@ use http::HeaderMap;
 use http::HeaderValue;
 use http::header::ACCEPT_ENCODING;
 use once_cell::sync::OnceCell;
+#[cfg(feature = "openssl-tls")]
 use openssl::{hash::MessageDigest, pkey::PKey, sign::Signer as OpenSslSigner};
 use rand::{RngCore, rngs::OsRng};
 use regex::Captures;
@@ -27,12 +32,12 @@ use std::sync::LazyLock;
 use std::{
     collections::BTreeMap,
     collections::HashMap,
-    fs,
     io::Read,
-    path::Path,
     time::Duration,
     time::{SystemTime, UNIX_EPOCH},
 };
+#[cfg(feature = "openssl-tls")]
+use std::{fs, path::Path};
 use tokio::time::sleep;
 use tracing::info;
 use url::form_urlencoded;
@@ -66,12 +71,15 @@ static PLACEHOLDER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(@)?<([^>
 /// * `key_object`: Lazily initialized OpenSSL private key
 /// * `ed25519_signing_key`: Lazily initialized Ed25519 signing key
 #[derive(Debug, Default, Clone)]
+#[allow(dead_code)]
 pub struct SignatureGenerator {
     api_secret: Option<String>,
     private_key: Option<PrivateKey>,
     private_key_passphrase: Option<String>,
     raw_key_data: OnceCell<String>,
+    #[cfg(feature = "openssl-tls")]
     key_object: OnceCell<PKey<openssl::pkey::Private>>,
+    #[cfg(feature = "openssl-tls")]
     ed25519_signing_key: OnceCell<SigningKey>,
 }
 
@@ -87,7 +95,9 @@ impl SignatureGenerator {
             private_key,
             private_key_passphrase,
             raw_key_data: OnceCell::new(),
+            #[cfg(feature = "openssl-tls")]
             key_object: OnceCell::new(),
+            #[cfg(feature = "openssl-tls")]
             ed25519_signing_key: OnceCell::new(),
         }
     }
@@ -106,6 +116,7 @@ impl SignatureGenerator {
     /// - No private key is provided
     /// - The private key file does not exist
     /// - The private key file cannot be read
+    #[cfg(feature = "openssl-tls")]
     fn get_raw_key_data(&self) -> Result<&String> {
         self.raw_key_data.get_or_try_init(|| {
             let pk = self
@@ -140,6 +151,7 @@ impl SignatureGenerator {
     /// - The key cannot be parsed from PEM format
     /// - A passphrase is required but incorrect
     /// - The key data is invalid
+    #[cfg(feature = "openssl-tls")]
     fn get_key_object(&self) -> Result<&PKey<openssl::pkey::Private>> {
         self.key_object.get_or_try_init(|| {
             let key_data = self.get_raw_key_data()?;
@@ -165,6 +177,7 @@ impl SignatureGenerator {
     /// Returns an error if:
     /// - The key cannot be base64 decoded
     /// - The key cannot be parsed from PKCS8 DER format
+    #[cfg(feature = "openssl-tls")]
     fn get_ed25519_signing_key(
         &self,
         key_obj: &PKey<openssl::pkey::Private>,
@@ -228,28 +241,38 @@ impl SignatureGenerator {
         }
 
         if self.private_key.is_some() {
-            let key_obj = self.get_key_object()?;
-            match key_obj.id() {
-                openssl::pkey::Id::RSA => {
-                    let mut signer = OpenSslSigner::new(MessageDigest::sha256(), key_obj)
-                        .context("Failed to create RSA signer")?;
-                    signer
-                        .update(params.as_bytes())
-                        .context("Failed to update RSA signer")?;
-                    let sig = signer.sign_to_vec().context("RSA signing failed")?;
-                    return Ok(general_purpose::STANDARD.encode(sig));
+            #[cfg(feature = "openssl-tls")]
+            {
+                let key_obj = self.get_key_object()?;
+                match key_obj.id() {
+                    openssl::pkey::Id::RSA => {
+                        let mut signer = OpenSslSigner::new(MessageDigest::sha256(), key_obj)
+                            .context("Failed to create RSA signer")?;
+                        signer
+                            .update(params.as_bytes())
+                            .context("Failed to update RSA signer")?;
+                        let sig = signer.sign_to_vec().context("RSA signing failed")?;
+                        return Ok(general_purpose::STANDARD.encode(sig));
+                    }
+                    openssl::pkey::Id::ED25519 => {
+                        let signing_key = self.get_ed25519_signing_key(key_obj)?;
+                        let signature = signing_key.sign(params.as_bytes());
+                        return Ok(general_purpose::STANDARD.encode(signature.to_bytes()));
+                    }
+                    other => {
+                        return Err(anyhow::anyhow!(
+                            "Unsupported private key type: {:?}. Must be RSA or ED25519.",
+                            other
+                        ));
+                    }
                 }
-                openssl::pkey::Id::ED25519 => {
-                    let signing_key = self.get_ed25519_signing_key(key_obj)?;
-                    let signature = signing_key.sign(params.as_bytes());
-                    return Ok(general_purpose::STANDARD.encode(signature.to_bytes()));
-                }
-                other => {
-                    return Err(anyhow::anyhow!(
-                        "Unsupported private key type: {:?}. Must be RSA or ED25519.",
-                        other
-                    ));
-                }
+            }
+
+            #[cfg(not(feature = "openssl-tls"))]
+            {
+                return Err(anyhow::anyhow!(
+                    "Private key signing requires the 'openssl-tls' feature to be enabled."
+                ));
             }
         }
 
@@ -640,7 +663,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                     decoder
                         .read_to_string(&mut decompressed)
                         .context("Failed to decompress gzip response")
-                        .map_err(|e| ConnectorError::ConnectorClientError {
+                        .map_err(|e: anyhow::Error| ConnectorError::ConnectorClientError {
                             msg: e.to_string(),
                             code: None,
                         })?;
