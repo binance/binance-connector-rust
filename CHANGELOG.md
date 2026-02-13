@@ -1,5 +1,16 @@
 # Changelog
 
+## 40.0.0 - 2026-02-13
+
+**Margin Trading**
+
+### Added (2)
+
+#### REST API
+
+- `get_margin_restricted_assets()` (`GET /sapi/v1/margin/restricted-asset`)
+- `query_prevented_matches()` (`GET /sapi/v1/margin/myPreventedMatches`)
+
 ## 39.0.0 - 2026-02-02
 
 **Derivatives Trading Portfolio Margin**

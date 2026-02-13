@@ -1280,6 +1280,50 @@ impl RestApi {
             .await
     }
 
+    /// Get Margin Restricted Assets (`MARKET_DATA`)
+    ///
+    /// Get Margin Restricted Assets
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetMarginRestrictedAssetsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetMarginRestrictedAssetsResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-Margin-Restricted-Assets).
+    ///
+    pub async fn get_margin_restricted_assets(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::GetMarginRestrictedAssetsResponse>> {
+        self.market_data_api_client
+            .get_margin_restricted_assets()
+            .await
+    }
+
     /// Query Isolated Margin Tier Data (`USER_DATA`)
     ///
     /// Get isolated margin tier data collection with any tier as <https://www.binance.com/en/margin-data>
@@ -2650,6 +2694,48 @@ impl RestApi {
         self.trade_api_client
             .query_margin_accounts_trade_list(params)
             .await
+    }
+
+    /// Query Prevented `Matches(USER_DATA)`
+    ///
+    ///
+    /// Weight: 10(IP)
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryPreventedMatchesParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::QueryPreventedMatchesResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Prevented-Matches).
+    ///
+    pub async fn query_prevented_matches(
+        &self,
+        params: QueryPreventedMatchesParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryPreventedMatchesResponseInner>>> {
+        self.trade_api_client.query_prevented_matches(params).await
     }
 
     /// Query Special key(Low Latency Trading)(TRADE)
