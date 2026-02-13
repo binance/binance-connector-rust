@@ -121,6 +121,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryMarginAccountsTradeListParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryMarginAccountsTradeListResponseInner>>>;
+    async fn query_prevented_matches(
+        &self,
+        params: QueryPreventedMatchesParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryPreventedMatchesResponseInner>>>;
     async fn query_special_key(
         &self,
         params: QuerySpecialKeyParams,
@@ -649,7 +653,7 @@ pub struct MarginAccountCancelAllOpenOrdersOnASymbolParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub symbol: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -686,7 +690,7 @@ pub struct MarginAccountCancelOcoParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub symbol: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -738,7 +742,7 @@ pub struct MarginAccountCancelOrderParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub symbol: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -816,7 +820,7 @@ pub struct MarginAccountNewOcoParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub stop_price: rust_decimal::Decimal,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -936,7 +940,7 @@ pub struct MarginAccountNewOrderParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub r#type: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1083,7 +1087,7 @@ pub struct MarginAccountNewOtoParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub pending_quantity: rust_decimal::Decimal,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1248,7 +1252,7 @@ pub struct MarginAccountNewOtocoParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub pending_above_type: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1447,7 +1451,7 @@ impl MarginManualLiquidationParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryCurrentMarginOrderCountUsageParams {
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1479,7 +1483,7 @@ impl QueryCurrentMarginOrderCountUsageParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMarginAccountsAllOcoParams {
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1538,7 +1542,7 @@ pub struct QueryMarginAccountsAllOrdersParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub symbol: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1591,7 +1595,7 @@ impl QueryMarginAccountsAllOrdersParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMarginAccountsOcoParams {
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1634,7 +1638,7 @@ impl QueryMarginAccountsOcoParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMarginAccountsOpenOcoParams {
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1671,7 +1675,7 @@ pub struct QueryMarginAccountsOpenOrdersParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub symbol: Option<String>,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1704,7 +1708,7 @@ pub struct QueryMarginAccountsOrderParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub symbol: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1753,7 +1757,7 @@ pub struct QueryMarginAccountsTradeListParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub symbol: String,
-    /// for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1802,6 +1806,61 @@ impl QueryMarginAccountsTradeListParams {
     #[must_use]
     pub fn builder(symbol: String) -> QueryMarginAccountsTradeListParamsBuilder {
         QueryMarginAccountsTradeListParamsBuilder::default().symbol(symbol)
+    }
+}
+/// Request parameters for the [`query_prevented_matches`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_prevented_matches`](#method.query_prevented_matches).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryPreventedMatchesParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    ///
+    /// The `prevented_match_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub prevented_match_id: Option<i64>,
+    ///
+    /// The `order_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub order_id: Option<i64>,
+    ///
+    /// The `from_prevented_match_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub from_prevented_match_id: Option<i64>,
+    /// No more than 60000
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+    /// For isolated margin or not, "TRUE", "FALSE", default "FALSE"
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub is_isolated: Option<String>,
+}
+
+impl QueryPreventedMatchesParams {
+    /// Create a builder for [`query_prevented_matches`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> QueryPreventedMatchesParamsBuilder {
+        QueryPreventedMatchesParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`query_special_key`] operation.
@@ -3247,6 +3306,60 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn query_prevented_matches(
+        &self,
+        params: QueryPreventedMatchesParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryPreventedMatchesResponseInner>>> {
+        let QueryPreventedMatchesParams {
+            symbol,
+            prevented_match_id,
+            order_id,
+            from_prevented_match_id,
+            recv_window,
+            is_isolated,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = prevented_match_id {
+            query_params.insert("preventedMatchId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = order_id {
+            query_params.insert("orderId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = from_prevented_match_id {
+            query_params.insert("fromPreventedMatchId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = is_isolated {
+            query_params.insert("isIsolated".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::QueryPreventedMatchesResponseInner>>(
+            &self.configuration,
+            "/sapi/v1/margin/myPreventedMatches",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn query_special_key(
         &self,
         params: QuerySpecialKeyParams,
@@ -3980,6 +4093,34 @@ mod tests {
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryMarginAccountsTradeListResponseInner>",
                 );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_prevented_matches(
+            &self,
+            _params: QueryPreventedMatchesParams,
+        ) -> anyhow::Result<RestApiResponse<Vec<models::QueryPreventedMatchesResponseInner>>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","preventedMatchId":1,"takerOrderId":5,"makerSymbol":"BTCUSDT","makerOrderId":3,"tradeGroupId":1,"selfTradePreventionMode":"EXPIRE_MAKER","price":"1.100000","makerPreventedQuantity":"1.300000","transactTime":1669101687094}]"#).unwrap();
+            let dummy_response: Vec<models::QueryPreventedMatchesResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::QueryPreventedMatchesResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -5250,6 +5391,58 @@ mod tests {
                 .unwrap();
 
             match client.query_margin_accounts_trade_list(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_prevented_matches_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryPreventedMatchesParams::builder("symbol_example".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","preventedMatchId":1,"takerOrderId":5,"makerSymbol":"BTCUSDT","makerOrderId":3,"tradeGroupId":1,"selfTradePreventionMode":"EXPIRE_MAKER","price":"1.100000","makerPreventedQuantity":"1.300000","transactTime":1669101687094}]"#).unwrap();
+            let expected_response : Vec<models::QueryPreventedMatchesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPreventedMatchesResponseInner>");
+
+            let resp = client.query_prevented_matches(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_prevented_matches_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryPreventedMatchesParams::builder("symbol_example".to_string(),).prevented_match_id(1).order_id(1).from_prevented_match_id(1).recv_window(5000).is_isolated("false".to_string()).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","preventedMatchId":1,"takerOrderId":5,"makerSymbol":"BTCUSDT","makerOrderId":3,"tradeGroupId":1,"selfTradePreventionMode":"EXPIRE_MAKER","price":"1.100000","makerPreventedQuantity":"1.300000","transactTime":1669101687094}]"#).unwrap();
+            let expected_response : Vec<models::QueryPreventedMatchesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPreventedMatchesResponseInner>");
+
+            let resp = client.query_prevented_matches(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_prevented_matches_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = QueryPreventedMatchesParams::builder("symbol_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.query_prevented_matches(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
