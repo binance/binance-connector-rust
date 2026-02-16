@@ -1653,11 +1653,13 @@ mod tests {
         }
     }
 
+    #[cfg(feature = "openssl-tls")]
     mod signature_generator {
         use base64::{Engine, engine::general_purpose};
         use ed25519_dalek::{SigningKey, ed25519::signature::SignerMut, pkcs8::DecodePrivateKey};
         use hex;
         use hmac::{Hmac, Mac};
+        #[cfg(feature = "openssl-tls")]
         use openssl::{hash::MessageDigest, pkey::PKey, rsa::Rsa, sign::Verifier};
         use serde_json::Value;
         use sha2::Sha256;
@@ -1884,6 +1886,7 @@ mod tests {
             assert!(verifier.verify(&sig_bytes).unwrap());
         }
 
+        #[cfg(feature = "openssl-tls")]
         #[test]
         fn unsupported_key_type_error() {
             let mut params = BTreeMap::new();

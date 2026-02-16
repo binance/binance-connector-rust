@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "40.0.0"
+version = "40.1.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -123,13 +123,18 @@ futures-util = "0.3"
 tokio-test = "0.4"
 
 [features]
+<<<<<<< feat/add-rustls-support
 default = ["openssl-tls"]
+=======
+default = [ "openssl-tls" ]
+>>>>>>> main
 openssl-tls = [
   "dep:openssl",
   "dep:tokio-native-tls",
   "reqwest/default-tls",
   "tokio-tungstenite/native-tls",
 ]
+<<<<<<< feat/add-rustls-support
 rustls-tls = ["reqwest/rustls-tls", "tokio-tungstenite/rustls-tls-native-roots"]
 algo = []
 alpha = []
@@ -156,6 +161,34 @@ staking = []
 sub_account = []
 vip_loan = []
 wallet = []
+=======
+rustls-tls = [ "reqwest/rustls-tls", "tokio-tungstenite/rustls-tls-native-roots" ]
+algo = [ ]
+alpha = [ ]
+c2c = [ ]
+convert = [ ]
+copy_trading = [ ]
+crypto_loan = [ ]
+derivatives_trading_coin_futures = [ ]
+derivatives_trading_options = [ ]
+derivatives_trading_portfolio_margin = [ ]
+derivatives_trading_portfolio_margin_pro = [ ]
+derivatives_trading_usds_futures = [ ]
+dual_investment = [ ]
+fiat = [ ]
+gift_card = [ ]
+margin_trading = [ ]
+mining = [ ]
+nft = [ ]
+pay = [ ]
+rebate = [ ]
+simple_earn = [ ]
+spot = [ ]
+staking = [ ]
+sub_account = [ ]
+vip_loan = [ ]
+wallet = [ ]
+>>>>>>> main
 all = [
   "algo",
   "alpha",

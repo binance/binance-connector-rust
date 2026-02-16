@@ -79,6 +79,7 @@ binance-sdk = { version = "1.0.0", features = ["all"] }
 ```
 
 ## TLS Backend Selection
+
 This library supports both **OpenSSL** (default) and **Rustls** backends.
 
 **Default (OpenSSL):** Standard installation uses OpenSSL. This requires OpenSSL development headers to be installed on your system.
@@ -88,7 +89,7 @@ This library supports both **OpenSSL** (default) and **Rustls** backends.
 binance-sdk = { version = "1.0.0", features = ["spot"] }
 ```
 
-Using Rustls (Pure Rust): To use rustls (useful for cross-compilation or avoiding C-dependencies), you must disable default features and enable rustls-tls.
+**Using Rustls (Pure Rust):** To use rustls (useful for cross-compilation or avoiding C-dependencies), you must disable default features and enable rustls-tls.
 
 Note: Private key signing features currently require the openssl-tls feature.
 

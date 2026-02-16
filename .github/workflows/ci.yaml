@@ -87,7 +87,23 @@ jobs:
           fi
       
       - name: Lint Check
-        run: cargo clippy --all-targets $( [ "${{ matrix.target }}" = "common" ] || echo "--features ${{ matrix.target }}" )
+        run: |
+          TARGET="${{ matrix.target }}"
+          if [ "$TARGET" = "common" ]; then
+            cargo clippy --all-targets --no-default-features --features "openssl-tls"
+            cargo clippy --all-targets --no-default-features --features "rustls-tls"
+          else
+            cargo clippy --all-targets --no-default-features --features "openssl-tls,$TARGET"
+            cargo clippy --all-targets --no-default-features --features "rustls-tls,$TARGET"
+          fi
 
       - name: Test
-        run: cargo test $( [ "${{ matrix.target }}" = "common" ] || echo "--features ${{ matrix.target }} ${{ matrix.target }}" )
+        run: |
+          TARGET="${{ matrix.target }}"
+          if [ "$TARGET" = "common" ]; then
+            cargo test --no-default-features --features "openssl-tls"
+            cargo test --no-default-features --features "rustls-tls"
+          else
+            cargo test --no-default-features --features "openssl-tls,$TARGET" "$TARGET"
+            cargo test --no-default-features --features "rustls-tls,$TARGET" "$TARGET"
+          fi

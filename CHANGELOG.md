@@ -1,5 +1,11 @@
 # Changelog
 
+## 40.1.0 - 2026-02-16
+
+### Added (1)
+
+- Support `rust-tls` backend for non-signed requests (`openssl-tls` remains the default selected option).
+
 ## 40.0.0 - 2026-02-13
 
 **Margin Trading**
