@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "40.0.0"
+version = "40.1.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -64,10 +64,10 @@ hmac = "^0.12"
 sha2 = "^0.10"
 hex = "^0.4"
 base64 = "^0.22"
-openssl = "^0.10"
+openssl = { version = "^0.10", optional = true }
 flate2 = "^1.0"
 derive_builder = "^0.10"
-tokio-native-tls = "^0.3"
+tokio-native-tls = { version = "^0.3", optional = true }
 tokio-stream = "0.1"
 rand = "0.8"
 futures = "0.3"
@@ -123,7 +123,14 @@ futures-util = "0.3"
 tokio-test = "0.4"
 
 [features]
-default = [ ]
+default = [ "openssl-tls" ]
+openssl-tls = [
+  "dep:openssl",
+  "dep:tokio-native-tls",
+  "reqwest/default-tls",
+  "tokio-tungstenite/native-tls",
+]
+rustls-tls = [ "reqwest/rustls-tls", "tokio-tungstenite/rustls-tls-native-roots" ]
 algo = [ ]
 alpha = [ ]
 c2c = [ ]
