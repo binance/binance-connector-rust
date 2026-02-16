@@ -46,8 +46,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
-      - name: Build (release)
-        run: cargo build --all-features --release
+      - name: Build (release, openssl-tls)
+        run: cargo build --release --no-default-features --features "openssl-tls,all"
+
+      - name: Build (release, rustls-tls)
+        run: cargo build --release --no-default-features --features "rustls-tls,all"
 
       - name: Publish to crates.io
         env:
