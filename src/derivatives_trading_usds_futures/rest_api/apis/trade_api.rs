@@ -17,7 +17,7 @@ use derive_builder::Builder;
 use reqwest;
 use rust_decimal::prelude::*;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
 use crate::common::{
