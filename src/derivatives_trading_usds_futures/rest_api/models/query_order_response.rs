@@ -88,7 +88,8 @@ mod tests {
     #[test]
     fn query_order_response_accepts_numeric_status() {
         let raw = r#"{"id":"abc","status":200,"result":{"status":"NEW"}}"#;
-        let parsed: QueryOrderResponse = serde_json::from_str(raw).expect("deserialize numeric status");
+        let parsed: QueryOrderResponse =
+            serde_json::from_str(raw).expect("deserialize numeric status");
         assert_eq!(parsed.status, Some(200));
         assert!(parsed.result.is_some());
     }
@@ -96,9 +97,13 @@ mod tests {
     #[test]
     fn query_order_response_rejects_string_status_in_wrapper() {
         let raw = r#"{"id":"abc","status":"FILLED","result":{"status":"FILLED"}}"#;
-        let err = serde_json::from_str::<QueryOrderResponse>(raw).expect_err("string top-level status must be rejected");
+        let err = serde_json::from_str::<QueryOrderResponse>(raw)
+            .expect_err("string top-level status must be rejected");
         let msg = err.to_string();
-        assert!(msg.contains("data did not match any variant"), "unexpected error: {msg}");
+        assert!(
+            msg.contains("data did not match any variant"),
+            "unexpected error: {msg}"
+        );
     }
 
     #[test]
@@ -111,7 +116,8 @@ mod tests {
             "executedQty":"0.001",
             "avgPrice":"63000.10"
         }"#;
-        let parsed: QueryOrderResponse = serde_json::from_str(raw).expect("deserialize legacy flat payload");
+        let parsed: QueryOrderResponse =
+            serde_json::from_str(raw).expect("deserialize legacy flat payload");
         assert_eq!(parsed.status, None);
         let result = parsed.result.expect("normalized result");
         assert_eq!(result.order_id, Some(123456));
