@@ -6973,6 +6973,37 @@ mod tests {
     }
 
     #[test]
+    fn query_order_accepts_flat_payload_shape() {
+        // Keep compatibility with environments that return flat order payload.
+        let resp_json: Value = serde_json::from_str(
+            r#"{"avgPrice":"63000.10","clientOrderId":"cid-1","cumQuote":"0","executedQty":"0.001","orderId":123456,"origQty":"0.001","origType":"LIMIT","price":"63000.10","reduceOnly":false,"side":"BUY","positionSide":"LONG","status":"FILLED","stopPrice":"0","closePosition":false,"symbol":"BTCUSDT","time":1579276756075,"timeInForce":"GTC","type":"LIMIT","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false}"#,
+        )
+        .unwrap();
+        let parsed: models::QueryOrderResponse =
+            serde_json::from_value(resp_json).expect("flat payload should deserialize");
+        assert_eq!(parsed.status, None);
+        let result = parsed.result.expect("result must be normalized");
+        assert_eq!(result.order_id, Some(123456));
+        assert_eq!(result.status.as_deref(), Some("FILLED"));
+    }
+
+    #[test]
+    fn query_order_rejects_wrapped_string_transport_status() {
+        // Official docs define top-level transport status as numeric code.
+        // https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Order
+        let resp_json: Value =
+            serde_json::from_str(r#"{"id":"abc","status":"FILLED","result":{"status":"FILLED"}}"#)
+                .unwrap();
+        let err = serde_json::from_value::<models::QueryOrderResponse>(resp_json)
+            .expect_err("wrapped top-level status must be numeric code");
+        let msg = err.to_string();
+        assert!(
+            msg.contains("expected i64") || msg.contains("data did not match any variant"),
+            "unexpected error: {msg}"
+        );
+    }
+
+    #[test]
     fn test_order_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
