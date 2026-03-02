@@ -1784,7 +1784,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vaspName":"Binance","vaspCode":"BINANCE"},{"vaspName":"HashKeyGlobal","vaspCode":"NVBH3Z_nNEHjvqbUfkaL"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vaspCode":"BINANCE","vaspName":"Binance","identifier":"I1QNLP"},{"vaspCode":"NVBH3Z_nNEHjvqbUfkaL","vaspName":"HashKeyGlobal","identifier":"ABC123"}]"#).unwrap();
             let dummy_response: Vec<models::VaspListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::VaspListResponseInner>");
@@ -2469,7 +2469,7 @@ mod tests {
 
             let params = VaspListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vaspName":"Binance","vaspCode":"BINANCE"},{"vaspName":"HashKeyGlobal","vaspCode":"NVBH3Z_nNEHjvqbUfkaL"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vaspCode":"BINANCE","vaspName":"Binance","identifier":"I1QNLP"},{"vaspCode":"NVBH3Z_nNEHjvqbUfkaL","vaspName":"HashKeyGlobal","identifier":"ABC123"}]"#).unwrap();
             let expected_response : Vec<models::VaspListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::VaspListResponseInner>");
 
             let resp = client.vasp_list(params).await.expect("Expected a response");
@@ -2486,7 +2486,7 @@ mod tests {
 
             let params = VaspListParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vaspName":"Binance","vaspCode":"BINANCE"},{"vaspName":"HashKeyGlobal","vaspCode":"NVBH3Z_nNEHjvqbUfkaL"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vaspCode":"BINANCE","vaspName":"Binance","identifier":"I1QNLP"},{"vaspCode":"NVBH3Z_nNEHjvqbUfkaL","vaspName":"HashKeyGlobal","identifier":"ABC123"}]"#).unwrap();
             let expected_response : Vec<models::VaspListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::VaspListResponseInner>");
 
             let resp = client.vasp_list(params).await.expect("Expected a response");

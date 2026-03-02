@@ -1,5 +1,15 @@
 # Changelog
 
+## 41.0.0 - 2026-03-02
+
+**Wallet**
+
+### Changed (1)
+
+- Modified response for `vasp_list()` (`GET /sapi/v1/localentity/vasp`):
+  - items: property `identifier` added
+  - items: item property `identifier` added
+
 ## 40.1.0 - 2026-02-16
 
 ### Added (1)
