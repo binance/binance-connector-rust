@@ -1,5 +1,34 @@
 # Changelog
 
+## 42.0.0 - 2026-03-05
+
+**Derivatives Trading Coin Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `exchange_information()` (`GET /dapi/v1/exchangeInfo`):
+  - `symbols`.items: property `orderTypes` added
+  - `symbols`.items: property `OrderType` deleted
+  - `symbols`.items: item property `orderTypes` added
+  - `symbols`.items: item property `OrderType` deleted
+
+**Derivatives Trading Usds Futures**
+
+### Changed (2)
+
+#### REST API
+
+- Modified response for `exchange_information()` (`GET /fapi/v1/exchangeInfo`):
+  - `symbols`.items: property `orderTypes` added
+  - `symbols`.items: property `OrderType` deleted
+  - `symbols`.items: item property `orderTypes` added
+  - `symbols`.items: item property `OrderType` deleted
+
+- Modified response for `cancel_order()` (`DELETE /fapi/v1/order`):
+  - property `avgPrice` added
+
 ## 41.0.0 - 2026-03-02
 
 **Wallet**

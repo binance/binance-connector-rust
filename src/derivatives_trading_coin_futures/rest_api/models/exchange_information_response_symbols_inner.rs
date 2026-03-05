@@ -19,8 +19,8 @@ use serde::{Deserialize, Serialize};
 pub struct ExchangeInformationResponseSymbolsInner {
     #[serde(rename = "filters", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<models::ExchangeInformationResponseSymbolsInnerFiltersInner>>,
-    #[serde(rename = "OrderType", skip_serializing_if = "Option::is_none")]
-    pub order_type: Option<Vec<String>>,
+    #[serde(rename = "orderTypes", skip_serializing_if = "Option::is_none")]
+    pub order_types: Option<Vec<String>>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<Vec<String>>,
     #[serde(rename = "liquidationFee", skip_serializing_if = "Option::is_none")]
@@ -77,7 +77,7 @@ impl ExchangeInformationResponseSymbolsInner {
     pub fn new() -> ExchangeInformationResponseSymbolsInner {
         ExchangeInformationResponseSymbolsInner {
             filters: None,
-            order_type: None,
+            order_types: None,
             time_in_force: None,
             liquidation_fee: None,
             market_take_bound: None,

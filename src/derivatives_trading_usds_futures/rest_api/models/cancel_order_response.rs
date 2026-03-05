@@ -33,6 +33,8 @@ pub struct CancelOrderResponse {
     pub orig_type: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
+    pub avg_price: Option<String>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
@@ -84,6 +86,7 @@ impl CancelOrderResponse {
             orig_qty: None,
             orig_type: None,
             price: None,
+            avg_price: None,
             reduce_only: None,
             side: None,
             position_side: None,
