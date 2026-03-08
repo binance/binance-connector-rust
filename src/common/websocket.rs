@@ -778,10 +778,25 @@ impl WebsocketCommon {
 
         let ws_config: Option<WebSocketConfig> = None;
         let disable_nagle = false;
-        let connector: Option<Connector> = agent.map(|dbg| dbg.0);
 
         let timeout_duration = Duration::from_secs(10);
-        let handshake = connect_async_tls_with_config(req, ws_config, disable_nagle, connector);
+        let handshake = match agent {
+            Some(agent) => match agent.handshake {
+                Some(handshake) => handshake(req, ws_config, disable_nagle, agent.connector),
+                None => Box::pin(connect_async_tls_with_config(
+                    req,
+                    ws_config,
+                    disable_nagle,
+                    agent.connector,
+                )),
+            },
+            None => Box::pin(connect_async_tls_with_config(
+                req,
+                ws_config,
+                disable_nagle,
+                None,
+            )),
+        };
         match timeout(timeout_duration, handshake).await {
             Ok(Ok((ws_stream, response))) => {
                 debug!("WebSocket connected: {:?}", response);

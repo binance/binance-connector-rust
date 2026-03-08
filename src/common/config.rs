@@ -3,17 +3,61 @@ use reqwest::{Client, ClientBuilder};
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::Arc;
-use tokio_tungstenite::Connector;
+use tokio_tungstenite::{Connector, tungstenite};
 
 use super::models::{ConfigBuildError, TimeUnit, WebsocketMode};
 use super::utils::{SignatureGenerator, build_client};
 
+pub type AgentConnectorHandshakeResult = Result<
+    (
+        tokio_tungstenite::WebSocketStream<
+            tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>,
+        >,
+        tungstenite::handshake::client::Response,
+    ),
+    tungstenite::Error,
+>;
+
+pub type AgentConnectorHandshakeFn = Arc<
+    dyn Fn(
+            tungstenite::handshake::client::Request,
+            Option<tungstenite::protocol::WebSocketConfig>,
+            bool,
+            Option<Connector>,
+        ) -> std::pin::Pin<Box<dyn Future<Output = AgentConnectorHandshakeResult> + Send>>
+        + Send
+        + Sync,
+>;
+
 #[derive(Clone)]
-pub struct AgentConnector(pub Connector);
+pub struct AgentConnector {
+    pub connector: Option<Connector>,
+    pub handshake: Option<AgentConnectorHandshakeFn>,
+}
 
 impl fmt::Debug for AgentConnector {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Connector(…)")
+    }
+}
+
+impl From<Connector> for AgentConnector {
+    fn from(c: Connector) -> Self {
+        Self::new(c)
+    }
+}
+
+impl AgentConnector {
+    pub fn new(connector: Connector) -> Self {
+        Self {
+            connector: Some(connector),
+            handshake: None,
+        }
+    }
+
+    pub fn with_handshake(mut self, f: AgentConnectorHandshakeFn) -> Self {
+        self.handshake = Some(f);
+        self
     }
 }
 
