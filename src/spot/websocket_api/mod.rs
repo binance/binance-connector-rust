@@ -808,6 +808,39 @@ impl WebsocketApi {
         self.general_api_client.exchange_info(params).await
     }
 
+    /// WebSocket Query Execution Rules
+    ///
+    ///
+    /// Weight: Parameter | Weight|
+    /// ---        | ---
+    /// `symbol`  | 2
+    /// `symbols` | 2 for each `symbol`, capped at a max of 40|
+    /// `symbolStatus` |40|
+    /// None            |40|
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ExecutionRulesParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Box<models::ExecutionRulesResponseResult>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/general-requests#query-execution-rules).
+    ///
+    pub async fn execution_rules(
+        &self,
+        params: ExecutionRulesParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ExecutionRulesResponseResult>>> {
+        self.general_api_client.execution_rules(params).await
+    }
+
     /// WebSocket Test connectivity
     ///
     /// Test connectivity to the WebSocket API.
@@ -971,6 +1004,65 @@ impl WebsocketApi {
         params: KlinesParams,
     ) -> anyhow::Result<WebsocketApiResponse<Vec<Vec<models::KlinesItemInner>>>> {
         self.market_api_client.klines(params).await
+    }
+
+    /// WebSocket Query Reference Price
+    ///
+    ///
+    /// Weight: 2
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ReferencePriceParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#query-reference-price).
+    ///
+    pub async fn reference_price(
+        &self,
+        params: ReferencePriceParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>> {
+        self.market_api_client.reference_price(params).await
+    }
+
+    /// WebSocket Query Reference Price Calculation
+    ///
+    /// Describes how reference price is calculated for a given symbol.
+    /// Weight: 2
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ReferencePriceCalculationParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Box<models::ReferencePriceCalculationResponseResult>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#query-reference-price-calculation).
+    ///
+    pub async fn reference_price_calculation(
+        &self,
+        params: ReferencePriceCalculationParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ReferencePriceCalculationResponseResult>>>
+    {
+        self.market_api_client
+            .reference_price_calculation(params)
+            .await
     }
 
     /// WebSocket Rolling window price change statistics
@@ -1384,9 +1476,9 @@ impl WebsocketApi {
 
     /// WebSocket Cancel and replace order
     ///
-    /// Cancel an existing order and immediately place a new order instead of the canceled one.
-    ///
-    /// A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
+    /// * Cancel an existing order and immediately place a new order instead of the canceled one.
+    /// * A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
+    /// * You can only cancel an individual order from an orderList using this method, but the result is the same as canceling the entire orderList.
     /// Weight: 1
     ///
     /// # Arguments

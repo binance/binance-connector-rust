@@ -15,7 +15,7 @@ use crate::common::{
 
 /// Represents the `DerivativesTradingPortfolioMargin` REST API client for interacting with the Binance `DerivativesTradingPortfolioMargin` REST API.
 ///
-/// This struct provides methods to create REST API clients for both production and testnet environments.
+/// This struct provides methods to create REST API clients for production  and testnet environments.
 pub struct DerivativesTradingPortfolioMarginRestApi {}
 
 impl DerivativesTradingPortfolioMarginRestApi {
@@ -74,7 +74,7 @@ impl DerivativesTradingPortfolioMarginRestApi {
 
 /// Represents the `DerivativesTradingPortfolioMargin` WebSocket Streams client for interacting with the Binance `DerivativesTradingPortfolioMargin` WebSocket Streams.
 ///
-/// This struct provides methods to create WebSocket Streams clients for both production and testnet environments.
+/// This struct provides methods to create WebSocket Streams clients for production  and testnet environments.
 pub struct DerivativesTradingPortfolioMarginWsStreams {}
 
 impl DerivativesTradingPortfolioMarginWsStreams {

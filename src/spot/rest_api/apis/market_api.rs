@@ -60,6 +60,14 @@ pub trait MarketApi: Send + Sync {
         &self,
         params: KlinesParams,
     ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::KlinesItemInner>>>>;
+    async fn reference_price(
+        &self,
+        params: ReferencePriceParams,
+    ) -> anyhow::Result<RestApiResponse<models::ReferencePriceResponse>>;
+    async fn reference_price_calculation(
+        &self,
+        params: ReferencePriceCalculationParams,
+    ) -> anyhow::Result<RestApiResponse<models::ReferencePriceCalculationResponse>>;
     async fn ticker(
         &self,
         params: TickerParams,
@@ -223,6 +231,53 @@ impl std::str::FromStr for KlinesIntervalEnum {
             "1w" => Ok(Self::Interval1w),
             "1M" => Ok(Self::Interval1M),
             other => Err(format!("invalid KlinesIntervalEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ReferencePriceCalculationSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl ReferencePriceCalculationSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for ReferencePriceCalculationSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!(
+                "invalid ReferencePriceCalculationSymbolStatusEnum: {}",
+                other
+            )
+            .into()),
         }
     }
 }
@@ -1234,6 +1289,66 @@ impl KlinesParams {
             .interval(interval)
     }
 }
+/// Request parameters for the [`reference_price`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`reference_price`](#method.reference_price).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct ReferencePriceParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+}
+
+impl ReferencePriceParams {
+    /// Create a builder for [`reference_price`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> ReferencePriceParamsBuilder {
+        ReferencePriceParamsBuilder::default().symbol(symbol)
+    }
+}
+/// Request parameters for the [`reference_price_calculation`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`reference_price_calculation`](#method.reference_price_calculation).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct ReferencePriceCalculationParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<ReferencePriceCalculationSymbolStatusEnum>,
+}
+
+impl ReferencePriceCalculationParams {
+    /// Create a builder for [`reference_price_calculation`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> ReferencePriceCalculationParamsBuilder {
+        ReferencePriceCalculationParamsBuilder::default().symbol(symbol)
+    }
+}
 /// Request parameters for the [`ticker`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1711,6 +1826,67 @@ impl MarketApi for MarketApiClient {
         send_request::<Vec<Vec<models::KlinesItemInner>>>(
             &self.configuration,
             "/api/v3/klines",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
+    async fn reference_price(
+        &self,
+        params: ReferencePriceParams,
+    ) -> anyhow::Result<RestApiResponse<models::ReferencePriceResponse>> {
+        let ReferencePriceParams { symbol } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        send_request::<models::ReferencePriceResponse>(
+            &self.configuration,
+            "/api/v3/referencePrice",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
+    async fn reference_price_calculation(
+        &self,
+        params: ReferencePriceCalculationParams,
+    ) -> anyhow::Result<RestApiResponse<models::ReferencePriceCalculationResponse>> {
+        let ReferencePriceCalculationParams {
+            symbol,
+            symbol_status,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
+        }
+
+        send_request::<models::ReferencePriceCalculationResponse>(
+            &self.configuration,
+            "/api/v3/referencePrice/calculation",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -2203,6 +2379,63 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn reference_price(
+            &self,
+            _params: ReferencePriceParams,
+        ) -> anyhow::Result<RestApiResponse<models::ReferencePriceResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"symbol":"BAZUSD","referencePrice":"10.00","timestamp":1770736694138}"#,
+            )
+            .unwrap();
+            let dummy_response: models::ReferencePriceResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ReferencePriceResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn reference_price_calculation(
+            &self,
+            _params: ReferencePriceCalculationParams,
+        ) -> anyhow::Result<RestApiResponse<models::ReferencePriceCalculationResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BAZUSD","calculationType":"EXTERNAL","bucketCount":10,"bucketWidthMs":1000,"externalCalculationId":42}"#).unwrap();
+            let dummy_response: models::ReferencePriceCalculationResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ReferencePriceCalculationResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn ticker(
             &self,
             _params: TickerParams,
@@ -2683,6 +2916,130 @@ mod tests {
                     .unwrap();
 
             match client.klines(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn reference_price_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: false };
+
+            let params = ReferencePriceParams::builder("BNBUSDT".to_string())
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"symbol":"BAZUSD","referencePrice":"10.00","timestamp":1770736694138}"#,
+            )
+            .unwrap();
+            let expected_response: models::ReferencePriceResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ReferencePriceResponse");
+
+            let resp = client
+                .reference_price(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn reference_price_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: false };
+
+            let params = ReferencePriceParams::builder("BNBUSDT".to_string())
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"symbol":"BAZUSD","referencePrice":"10.00","timestamp":1770736694138}"#,
+            )
+            .unwrap();
+            let expected_response: models::ReferencePriceResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ReferencePriceResponse");
+
+            let resp = client
+                .reference_price(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn reference_price_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: true };
+
+            let params = ReferencePriceParams::builder("BNBUSDT".to_string())
+                .build()
+                .unwrap();
+
+            match client.reference_price(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn reference_price_calculation_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: false };
+
+            let params = ReferencePriceCalculationParams::builder("BNBUSDT".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BAZUSD","calculationType":"EXTERNAL","bucketCount":10,"bucketWidthMs":1000,"externalCalculationId":42}"#).unwrap();
+            let expected_response : models::ReferencePriceCalculationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ReferencePriceCalculationResponse");
+
+            let resp = client.reference_price_calculation(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn reference_price_calculation_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: false };
+
+            let params = ReferencePriceCalculationParams::builder("BNBUSDT".to_string(),).symbol_status(ReferencePriceCalculationSymbolStatusEnum::Trading).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BAZUSD","calculationType":"EXTERNAL","bucketCount":10,"bucketWidthMs":1000,"externalCalculationId":42}"#).unwrap();
+            let expected_response : models::ReferencePriceCalculationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ReferencePriceCalculationResponse");
+
+            let resp = client.reference_price_calculation(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn reference_price_calculation_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: true };
+
+            let params = ReferencePriceCalculationParams::builder("BNBUSDT".to_string())
+                .build()
+                .unwrap();
+
+            match client.reference_price_calculation(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

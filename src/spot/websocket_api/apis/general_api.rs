@@ -39,6 +39,10 @@ pub trait GeneralApi: Send + Sync {
         &self,
         params: ExchangeInfoParams,
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::ExchangeInfoResponseResult>>>;
+    async fn execution_rules(
+        &self,
+        params: ExecutionRulesParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ExecutionRulesResponseResult>>>;
     async fn ping(
         &self,
         params: PingParams,
@@ -103,6 +107,49 @@ impl std::str::FromStr for ExchangeInfoSymbolStatusEnum {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ExecutionRulesSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl ExecutionRulesSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for ExecutionRulesSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid ExecutionRulesSymbolStatusEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`exchange_info`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -151,6 +198,44 @@ impl ExchangeInfoParams {
     #[must_use]
     pub fn builder() -> ExchangeInfoParamsBuilder {
         ExchangeInfoParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`execution_rules`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`execution_rules`](#method.execution_rules).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct ExecutionRulesParams {
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+    /// Describe a single symbol
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol: Option<String>,
+    /// List of symbols to query
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbols: Option<Vec<String>>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<ExecutionRulesSymbolStatusEnum>,
+}
+
+impl ExecutionRulesParams {
+    /// Create a builder for [`execution_rules`].
+    ///
+    #[must_use]
+    pub fn builder() -> ExecutionRulesParamsBuilder {
+        ExecutionRulesParamsBuilder::default()
     }
 }
 /// Request parameters for the [`ping`] operation.
@@ -237,6 +322,46 @@ impl GeneralApi for GeneralApiClient {
         self.websocket_api_base
             .send_message::<Box<models::ExchangeInfoResponseResult>>(
                 "/exchangeInfo".trim_start_matches('/'),
+                payload,
+                WebsocketMessageSendOptions::new(),
+            )
+            .await
+            .map_err(anyhow::Error::from)?
+            .into_iter()
+            .next()
+            .ok_or(WebsocketError::NoResponse)
+            .map_err(anyhow::Error::from)
+    }
+
+    async fn execution_rules(
+        &self,
+        params: ExecutionRulesParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ExecutionRulesResponseResult>>> {
+        let ExecutionRulesParams {
+            id,
+            symbol,
+            symbols,
+            symbol_status,
+        } = params;
+
+        let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+        if let Some(value) = id {
+            payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = symbol {
+            payload.insert("symbol".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = symbols {
+            payload.insert("symbols".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = symbol_status {
+            payload.insert("symbolStatus".to_string(), serde_json::json!(value));
+        }
+        let payload = remove_empty_value(payload);
+
+        self.websocket_api_base
+            .send_message::<Box<models::ExecutionRulesResponseResult>>(
+                "/executionRules".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new(),
             )
@@ -443,6 +568,135 @@ mod tests {
             let handle = spawn(async move {
                 let params = ExchangeInfoParams::builder().build().unwrap();
                 client.exchange_info(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv())
+                .await
+                .expect("send should occur")
+                .expect("channel closed");
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
+            };
+
+            let _: Value = serde_json::from_str(&text).unwrap();
+
+            let result = handle.await.expect("task completed");
+            match result {
+                Err(e) => {
+                    if let Some(inner) = e.downcast_ref::<WebsocketError>() {
+                        assert!(matches!(inner, WebsocketError::Timeout));
+                    } else {
+                        panic!("Unexpected error type: {:?}", e);
+                    }
+                }
+                Ok(_) => panic!("Expected timeout error"),
+            }
+        });
+    }
+
+    #[test]
+    fn execution_rules_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = GeneralApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = ExecutionRulesParams::builder().build().unwrap();
+                client.execution_rules(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap();
+            assert_eq!(v["method"], "/executionRules".trim_start_matches('/'));
+
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"5162affb-0aba-4821-b475-f2625006eb43","status":200,"result":{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}}"#).unwrap();
+            resp_json["id"] = id.into();
+
+            let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
+            let expected_data: Box<models::ExecutionRulesResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let empty_array = Value::Array(vec![]);
+            let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
+            let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
+                match raw_rate_limits.as_array() {
+                    Some(arr) if arr.is_empty() => None,
+                    Some(_) => Some(serde_json::from_value(raw_rate_limits.clone()).expect("should parse rateLimits array")),
+                    None => None,
+                };
+
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let response = timeout(Duration::from_secs(1), handle).await.expect("task done").expect("no panic").expect("no error");
+
+
+            let response_rate_limits = response.rate_limits.clone();
+            let response_data = response.data().expect("deserialize data");
+
+            assert_eq!(response_rate_limits, expected_rate_limits);
+            assert_eq!(response_data, expected_data);
+        });
+    }
+
+    #[test]
+    fn execution_rules_error_response() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = GeneralApiClient::new(ws_api.clone());
+
+            let handle = tokio::spawn(async move {
+                let params = ExecutionRulesParams::builder().build().unwrap();
+                client.execution_rules(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap().to_string();
+
+            let resp_json = json!({
+                "id": id,
+                "status": 400,
+                    "error": {
+                        "code": -2010,
+                        "msg": "Account has insufficient balance for requested action.",
+                    },
+                    "rateLimits": [
+                        {
+                            "rateLimitType": "ORDERS",
+                            "interval": "SECOND",
+                            "intervalNum": 10,
+                            "limit": 50,
+                            "count": 13
+                        },
+                    ],
+            });
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let join = timeout(Duration::from_secs(1), handle).await.unwrap();
+            match join {
+                Ok(Err(e)) => {
+                    let msg = e.to_string();
+                    assert!(
+                        msg.contains("Server‐side response error (code -2010): Account has insufficient balance for requested action."),
+                        "Expected error msg to contain server error, got: {msg}"
+                    );
+                }
+                Ok(Ok(_)) => panic!("Expected error"),
+                Err(_) => panic!("Task panicked"),
+            }
+        });
+    }
+
+    #[test]
+    fn execution_rules_request_timeout() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, _conn, mut rx) = setup().await;
+            let client = GeneralApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = ExecutionRulesParams::builder().build().unwrap();
+                client.execution_rules(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv())

@@ -771,6 +771,53 @@ impl RestApi {
         self.general_api_client.exchange_info(params).await
     }
 
+    /// Query Execution Rules
+    ///
+    ///
+    /// Weight: Parameter | Weight|
+    /// ---        | ---
+    /// `symbol`  | 2
+    /// `symbols` | 2 for each `symbol`, capped at a max of 40|
+    /// `symbolStatus` |40|
+    /// None            |40|
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ExecutionRulesParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::ExecutionRulesResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#query-execution-rules).
+    ///
+    pub async fn execution_rules(
+        &self,
+        params: ExecutionRulesParams,
+    ) -> anyhow::Result<RestApiResponse<models::ExecutionRulesResponse>> {
+        self.general_api_client.execution_rules(params).await
+    }
+
     /// Test connectivity
     ///
     /// Test connectivity to the Rest API.
@@ -1107,6 +1154,92 @@ impl RestApi {
         params: KlinesParams,
     ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::KlinesItemInner>>>> {
         self.market_api_client.klines(params).await
+    }
+
+    /// Query Reference Price
+    ///
+    ///
+    /// Weight: 2
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ReferencePriceParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::ReferencePriceResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#query-reference-price).
+    ///
+    pub async fn reference_price(
+        &self,
+        params: ReferencePriceParams,
+    ) -> anyhow::Result<RestApiResponse<models::ReferencePriceResponse>> {
+        self.market_api_client.reference_price(params).await
+    }
+
+    /// Query Reference Price Calculation
+    ///
+    /// Describes how reference price is calculated for a given symbol.
+    /// Weight: 2
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ReferencePriceCalculationParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::ReferencePriceCalculationResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#query-reference-price-calculation).
+    ///
+    pub async fn reference_price_calculation(
+        &self,
+        params: ReferencePriceCalculationParams,
+    ) -> anyhow::Result<RestApiResponse<models::ReferencePriceCalculationResponse>> {
+        self.market_api_client
+            .reference_price_calculation(params)
+            .await
     }
 
     /// Rolling window price change statistics
@@ -1668,11 +1801,10 @@ impl RestApi {
 
     /// Cancel an Existing Order and Send a New Order
     ///
-    /// Cancels an existing order and places a new order on the same symbol.
-    ///
-    /// Filters and Order Count are evaluated before the processing of the cancellation and order placement occurs.
-    ///
-    /// A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
+    /// * Cancels an existing order and places a new order on the same symbol.
+    /// * Filters and Order Count are evaluated before the processing of the cancellation and order placement occurs.
+    /// * A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
+    /// * You can only cancel an individual order from an orderList using this endpoint, but the result is the same as canceling the entire orderList.
     /// Weight: 1
     ///
     /// # Arguments

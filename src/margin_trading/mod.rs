@@ -10,7 +10,7 @@ use crate::common::{
 
 /// Represents the `MarginTrading` REST API client for interacting with the Binance `MarginTrading` REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct MarginTradingRestApi {}
 
 impl MarginTradingRestApi {
@@ -52,7 +52,7 @@ impl MarginTradingRestApi {
 
 /// Represents the `MarginTrading` WebSocket Streams client for interacting with the Binance `MarginTrading` WebSocket Streams.
 ///
-/// This struct provides methods to create WebSocket Streams clients for the production environment.
+/// This struct provides methods to create WebSocket Streams clients for production  environments.
 pub struct MarginTradingWsStreams {}
 
 impl MarginTradingWsStreams {

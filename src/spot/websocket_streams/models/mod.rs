@@ -82,6 +82,8 @@ pub mod price_filter;
 pub use self::price_filter::PriceFilter;
 pub mod rate_limits;
 pub use self::rate_limits::RateLimits;
+pub mod reference_price_response;
+pub use self::reference_price_response::ReferencePriceResponse;
 pub mod rolling_window_ticker_response;
 pub use self::rolling_window_ticker_response::RollingWindowTickerResponse;
 pub mod symbol_filters;

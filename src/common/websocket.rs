@@ -1956,6 +1956,42 @@ impl WebsocketHandler for WebsocketApi {
         }
 
         if let Some(event) = msg.get("event") {
+            if let Some(event_type) = event.get("e").and_then(Value::as_str) {
+                if event_type == "serverShutdown" {
+                    warn!(
+                        "Received serverShutdown event on connection {}",
+                        connection.id
+                    );
+
+                    let mut conn_state = connection.state.lock().await;
+
+                    if !conn_state.renewal_pending && !conn_state.close_initiated {
+                        conn_state.renewal_pending = true;
+
+                        let url = conn_state.url_path.clone().unwrap_or_default();
+
+                        drop(conn_state);
+
+                        if let Err(e) = self
+                            .common
+                            .reconnect_tx
+                            .send(ReconnectEntry {
+                                connection_id: connection.id.clone(),
+                                url,
+                                is_renewal: true,
+                            })
+                            .await
+                        {
+                            error!("Failed to enqueue serverShutdown renewal: {:?}", e);
+                        }
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        if let Some(event) = msg.get("event") {
             if event.get("e").is_some() {
                 for callbacks in self.stream_callbacks.lock().await.values() {
                     for callback in callbacks {
@@ -6553,6 +6589,94 @@ mod tests {
                     .await;
                     let st = conn.state.lock().await;
                     assert!(st.pending_requests.contains_key("keep"));
+                });
+            }
+
+            #[test]
+            fn server_shutdown_enqueues_reconnect() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let (api, conn) = create_websocket_api_and_conn();
+
+                    let msg = json!({
+                        "event": { "e": "serverShutdown" }
+                    });
+
+                    api.on_message(msg.to_string(), conn.clone()).await;
+
+                    let st = conn.state.lock().await;
+                    assert!(st.renewal_pending);
+                });
+            }
+
+            #[test]
+            fn server_shutdown_ignored_if_renewal_pending() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let (api, conn) = create_websocket_api_and_conn();
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.renewal_pending = true;
+                    }
+
+                    let msg = json!({
+                        "event": { "e": "serverShutdown" }
+                    });
+
+                    api.on_message(msg.to_string(), conn.clone()).await;
+
+                    let st = conn.state.lock().await;
+
+                    assert!(st.renewal_pending);
+                });
+            }
+
+            #[test]
+            fn server_shutdown_ignored_if_close_initiated() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let (api, conn) = create_websocket_api_and_conn();
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.close_initiated = true;
+                    }
+
+                    let msg = json!({
+                        "event": { "e": "serverShutdown" }
+                    });
+
+                    api.on_message(msg.to_string(), conn.clone()).await;
+
+                    let st = conn.state.lock().await;
+
+                    assert!(!st.renewal_pending);
+                });
+            }
+
+            #[test]
+            fn server_shutdown_does_not_touch_pending_requests() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let (api, conn) = create_websocket_api_and_conn();
+
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.pending_requests.insert(
+                            "keep".to_string(),
+                            PendingRequest {
+                                completion: oneshot::channel().0,
+                            },
+                        );
+                    }
+
+                    let msg = json!({
+                        "event": { "e": "serverShutdown" }
+                    });
+
+                    api.on_message(msg.to_string(), conn.clone()).await;
+
+                    let st = conn.state.lock().await;
+
+                    assert!(st.pending_requests.contains_key("keep"));
+                    assert!(st.renewal_pending);
                 });
             }
         }

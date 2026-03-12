@@ -6,7 +6,7 @@ use crate::common::{
 
 /// Represents the NFT REST API client for interacting with the Binance NFT REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct NFTRestApi {}
 
 impl NFTRestApi {

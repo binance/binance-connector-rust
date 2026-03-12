@@ -6,7 +6,7 @@ use crate::common::{
 
 /// Represents the Alpha REST API client for interacting with the Binance Alpha REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct AlphaRestApi {}
 
 impl AlphaRestApi {

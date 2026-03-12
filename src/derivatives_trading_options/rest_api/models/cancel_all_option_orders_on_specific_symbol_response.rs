@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CancelAllOptionOrdersOnSpecificSymbolResponse {
     #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
-    pub code: Option<i64>,
+    pub code: Option<String>,
     #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
     pub msg: Option<String>,
 }

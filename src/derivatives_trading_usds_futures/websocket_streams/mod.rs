@@ -35,7 +35,8 @@ const HAS_TIME_UNIT: bool = false;
 
 pub struct WebsocketStreams {
     websocket_streams_base: Arc<WebsocketStreamsBase>,
-    websocket_market_streams_api_client: WebsocketMarketStreamsApiClient,
+    market_api_client: MarketApiClient,
+    public_api_client: PublicApiClient,
 }
 
 impl WebsocketStreams {
@@ -53,15 +54,22 @@ impl WebsocketStreams {
             cfg.time_unit = None;
         }
 
-        let websocket_streams_base = WebsocketStreamsBase::new(cfg, vec![], vec![]);
+        let websocket_streams_base = WebsocketStreamsBase::new(
+            cfg,
+            vec![],
+            vec![
+                "market".to_string(),
+                "public".to_string(),
+                "private".to_string(),
+            ],
+        );
 
         websocket_streams_base.clone().connect(streams).await?;
 
         Ok(Self {
             websocket_streams_base: websocket_streams_base.clone(),
-            websocket_market_streams_api_client: WebsocketMarketStreamsApiClient::new(
-                websocket_streams_base.clone(),
-            ),
+            market_api_client: MarketApiClient::new(websocket_streams_base.clone()),
+            public_api_client: PublicApiClient::new(websocket_streams_base.clone()),
         })
     }
 
@@ -259,7 +267,7 @@ impl WebsocketStreams {
             WebsocketBase::WebsocketStreams(self.websocket_streams_base.clone()),
             listen_key,
             id.map(StreamId::from),
-            None,
+            Some("private".to_string()),
         )
         .await)
     }
@@ -267,7 +275,6 @@ impl WebsocketStreams {
     /// Aggregate Trade Streams
     ///
     /// The Aggregate Trade Streams push market trade information that is aggregated for fills with same price and taking side every 100 milliseconds. Only market trades will be aggregated, which means the insurance fund trades and ADL trades won't be aggregated.
-    ///
     ///
     /// Retail Price Improvement(RPI) orders are aggregated into field `q` and without special tags to be distinguished.
     ///
@@ -293,42 +300,7 @@ impl WebsocketStreams {
         &self,
         params: AggregateTradeStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::AggregateTradeStreamsResponse>>> {
-        self.websocket_market_streams_api_client
-            .aggregate_trade_streams(params)
-            .await
-    }
-
-    /// All Book Tickers Stream
-    ///
-    /// Pushes any update to the best bid or ask's price or quantity in real-time for all symbols.
-    ///
-    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
-    ///
-    /// Update Speed: 5s
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`AllBookTickersStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<models::AllBookTickersStreamResponse>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/All-Book-Tickers-Stream).
-    ///
-    pub async fn all_book_tickers_stream(
-        &self,
-        params: AllBookTickersStreamParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::AllBookTickersStreamResponse>>> {
-        self.websocket_market_streams_api_client
-            .all_book_tickers_stream(params)
-            .await
+        self.market_api_client.aggregate_trade_streams(params).await
     }
 
     /// All Market Liquidation Order Streams
@@ -359,7 +331,7 @@ impl WebsocketStreams {
         params: AllMarketLiquidationOrderStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::AllMarketLiquidationOrderStreamsResponse>>>
     {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .all_market_liquidation_order_streams(params)
             .await
     }
@@ -391,7 +363,7 @@ impl WebsocketStreams {
         params: AllMarketMiniTickersStreamParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllMarketMiniTickersStreamResponseInner>>>>
     {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .all_market_mini_tickers_stream(params)
             .await
     }
@@ -423,7 +395,7 @@ impl WebsocketStreams {
         params: AllMarketTickersStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllMarketTickersStreamsResponseInner>>>>
     {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .all_market_tickers_streams(params)
             .await
     }
@@ -455,7 +427,7 @@ impl WebsocketStreams {
         params: CompositeIndexSymbolInformationStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::CompositeIndexSymbolInformationStreamsResponse>>>
     {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .composite_index_symbol_information_streams(params)
             .await
     }
@@ -487,7 +459,7 @@ impl WebsocketStreams {
     ) -> anyhow::Result<
         Arc<WebsocketStream<models::ContinuousContractKlineCandlestickStreamsResponse>>,
     > {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .continuous_contract_kline_candlestick_streams(params)
             .await
     }
@@ -518,76 +490,7 @@ impl WebsocketStreams {
         &self,
         params: ContractInfoStreamParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::ContractInfoStreamResponse>>> {
-        self.websocket_market_streams_api_client
-            .contract_info_stream(params)
-            .await
-    }
-
-    /// Diff. Book Depth Streams
-    ///
-    /// Bids and asks, pushed every 250 milliseconds, 500 milliseconds, 100 milliseconds (if existing)
-    ///
-    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
-    ///
-    /// Update Speed: 250ms, 500ms, 100ms
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`DiffBookDepthStreamsParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<models::DiffBookDepthStreamsResponse>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Diff-Book-Depth-Streams).
-    ///
-    pub async fn diff_book_depth_streams(
-        &self,
-        params: DiffBookDepthStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::DiffBookDepthStreamsResponse>>> {
-        self.websocket_market_streams_api_client
-            .diff_book_depth_streams(params)
-            .await
-    }
-
-    /// Individual Symbol Book Ticker Streams
-    ///
-    /// Pushes any update to the best bid or ask's price or quantity in real-time for a specified symbol.
-    ///
-    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
-    ///
-    /// Update Speed: Real-time
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`IndividualSymbolBookTickerStreamsParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<models::IndividualSymbolBookTickerStreamsResponse>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Individual-Symbol-Book-Ticker-Streams).
-    ///
-    pub async fn individual_symbol_book_ticker_streams(
-        &self,
-        params: IndividualSymbolBookTickerStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::IndividualSymbolBookTickerStreamsResponse>>>
-    {
-        self.websocket_market_streams_api_client
-            .individual_symbol_book_ticker_streams(params)
-            .await
+        self.market_api_client.contract_info_stream(params).await
     }
 
     /// Individual Symbol Mini Ticker Stream
@@ -617,7 +520,7 @@ impl WebsocketStreams {
         params: IndividualSymbolMiniTickerStreamParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::IndividualSymbolMiniTickerStreamResponse>>>
     {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .individual_symbol_mini_ticker_stream(params)
             .await
     }
@@ -648,7 +551,7 @@ impl WebsocketStreams {
         &self,
         params: IndividualSymbolTickerStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::IndividualSymbolTickerStreamsResponse>>> {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .individual_symbol_ticker_streams(params)
             .await
     }
@@ -679,7 +582,7 @@ impl WebsocketStreams {
         &self,
         params: KlineCandlestickStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::KlineCandlestickStreamsResponse>>> {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .kline_candlestick_streams(params)
             .await
     }
@@ -711,7 +614,7 @@ impl WebsocketStreams {
         &self,
         params: LiquidationOrderStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::LiquidationOrderStreamsResponse>>> {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .liquidation_order_streams(params)
             .await
     }
@@ -742,9 +645,7 @@ impl WebsocketStreams {
         &self,
         params: MarkPriceStreamParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::MarkPriceStreamResponse>>> {
-        self.websocket_market_streams_api_client
-            .mark_price_stream(params)
-            .await
+        self.market_api_client.mark_price_stream(params).await
     }
 
     /// Mark Price Stream for All market
@@ -778,7 +679,7 @@ impl WebsocketStreams {
         params: MarkPriceStreamForAllMarketParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MarkPriceStreamForAllMarketResponseInner>>>>
     {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .mark_price_stream_for_all_market(params)
             .await
     }
@@ -810,8 +711,133 @@ impl WebsocketStreams {
         params: MultiAssetsModeAssetIndexParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MultiAssetsModeAssetIndexResponseInner>>>>
     {
-        self.websocket_market_streams_api_client
+        self.market_api_client
             .multi_assets_mode_asset_index(params)
+            .await
+    }
+
+    /// Trading Session Stream
+    ///
+    /// Trading session information for the underlying assets of `TradFi` Perpetual contracts—covering the U.S. equity market and the commodity market—is updated every second. Trading session information for different underlying markets is pushed in separate messages. Session types for the equity market include "`PRE_MARKET`", "REGULAR", "`AFTER_MARKET`", "OVERNIGHT", and "`NO_TRADING`". Session types for the commodity market include "REGULAR" and "`NO_TRADING`".
+    ///
+    /// Update Speed: 1s
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`TradingSessionStreamParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::TradingSessionStreamResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Trading-Session-Stream).
+    ///
+    pub async fn trading_session_stream(
+        &self,
+        params: TradingSessionStreamParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::TradingSessionStreamResponse>>> {
+        self.market_api_client.trading_session_stream(params).await
+    }
+
+    /// All Book Tickers Stream
+    ///
+    /// Pushes any update to the best bid or ask's price or quantity in real-time for all symbols.
+    ///
+    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
+    ///
+    /// Update Speed: 5s
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`AllBookTickersStreamParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::AllBookTickersStreamResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/All-Book-Tickers-Stream).
+    ///
+    pub async fn all_book_tickers_stream(
+        &self,
+        params: AllBookTickersStreamParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::AllBookTickersStreamResponse>>> {
+        self.public_api_client.all_book_tickers_stream(params).await
+    }
+
+    /// Diff. Book Depth Streams
+    ///
+    /// Bids and asks, pushed every 250 milliseconds, 500 milliseconds, 100 milliseconds (if existing)
+    ///
+    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
+    ///
+    /// Update Speed: 250ms, 500ms, 100ms
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`DiffBookDepthStreamsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::DiffBookDepthStreamsResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Diff-Book-Depth-Streams).
+    ///
+    pub async fn diff_book_depth_streams(
+        &self,
+        params: DiffBookDepthStreamsParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::DiffBookDepthStreamsResponse>>> {
+        self.public_api_client.diff_book_depth_streams(params).await
+    }
+
+    /// Individual Symbol Book Ticker Streams
+    ///
+    /// Pushes any update to the best bid or ask's price or quantity in real-time for a specified symbol.
+    ///
+    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
+    ///
+    /// Update Speed: Real-time
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`IndividualSymbolBookTickerStreamsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::IndividualSymbolBookTickerStreamsResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Individual-Symbol-Book-Ticker-Streams).
+    ///
+    pub async fn individual_symbol_book_ticker_streams(
+        &self,
+        params: IndividualSymbolBookTickerStreamsParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::IndividualSymbolBookTickerStreamsResponse>>>
+    {
+        self.public_api_client
+            .individual_symbol_book_ticker_streams(params)
             .await
     }
 
@@ -843,7 +869,7 @@ impl WebsocketStreams {
         &self,
         params: PartialBookDepthStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::PartialBookDepthStreamsResponse>>> {
-        self.websocket_market_streams_api_client
+        self.public_api_client
             .partial_book_depth_streams(params)
             .await
     }
@@ -876,39 +902,8 @@ impl WebsocketStreams {
         &self,
         params: RpiDiffBookDepthStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>> {
-        self.websocket_market_streams_api_client
+        self.public_api_client
             .rpi_diff_book_depth_streams(params)
-            .await
-    }
-
-    /// Trading Session Stream
-    ///
-    /// Trading session information for the underlying assets of `TradFi` Perpetual contracts—covering the U.S. equity market and the commodity market—is updated every second. Trading session information for different underlying markets is pushed in separate messages. Session types for the equity market include "`PRE_MARKET`", "REGULAR", "`AFTER_MARKET`", "OVERNIGHT", and "`NO_TRADING`". Session types for the commodity market include "REGULAR" and "`NO_TRADING`".
-    ///
-    /// Update Speed: 1s
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`TradingSessionStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<models::TradingSessionStreamResponse>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Trading-Session-Stream).
-    ///
-    pub async fn trading_session_stream(
-        &self,
-        params: TradingSessionStreamParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::TradingSessionStreamResponse>>> {
-        self.websocket_market_streams_api_client
-            .trading_session_stream(params)
             .await
     }
 }

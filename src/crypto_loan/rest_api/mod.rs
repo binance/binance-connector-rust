@@ -210,7 +210,7 @@ impl RestApi {
     /// Borrow Flexible Loan
     ///
     ///
-    /// * Only available for master account
+    /// * This API endpoint is available for both the master account and the sub-account.
     /// * You can customize LTV by entering loanAmount and collateralAmount.
     ///
     /// Weight: 6000

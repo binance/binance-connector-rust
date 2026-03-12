@@ -6,7 +6,7 @@ use crate::common::{
 
 /// Represents the C2C REST API client for interacting with the Binance C2C REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct C2CRestApi {}
 
 impl C2CRestApi {

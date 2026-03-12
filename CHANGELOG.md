@@ -1,5 +1,76 @@
 # Changelog
 
+## 43.0.0 - 2026-03-12
+
+**Derivatives Trading Options**
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `cancel_all_option_orders_on_specific_symbol()` (`DELETE /eapi/v1/allOpenOrders`):
+  - `code`: type `integer` → `string`
+
+**Derivatives Trading Usds Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `query_order()` (`GET /fapi/v1/order`):
+  - property `origQty` added
+  - property `symbol` added
+  - property `cumQuote` added
+  - property `priceRate` added
+  - property `type` added
+  - property `time` added
+  - property `orderId` added
+  - property `timeInForce` added
+  - property `priceProtect` added
+  - property `closePosition` added
+  - property `activatePrice` added
+  - property `stopPrice` added
+  - property `executedQty` added
+  - property `reduceOnly` added
+  - property `avgPrice` added
+  - property `price` added
+  - property `side` added
+  - property `positionSide` added
+  - property `updateTime` added
+  - property `workingType` added
+  - property `origType` added
+  - property `clientOrderId` added
+  - property `id` deleted
+  - property `result` deleted
+  - `status`: type `integer` → `string`
+
+**Simple Earn**
+
+### Changed (1)
+
+- Modified response for `get_bfusd_quota_details()` (`GET /sapi/v1/bfusd/quota`):
+  - property `subscriptionQuota` added
+
+**Spot**
+
+### Added (7)
+
+#### REST API
+
+- `execution_rules()` (`GET /api/v3/executionRules`)
+- `reference_price()` (`GET /api/v3/referencePrice`)
+- `reference_price_calculation()` (`GET /api/v3/referencePrice/calculation`)
+
+#### WebSocket API
+
+- `execution_rules()` (`executionRules` method)
+- `reference_price()` (`referencePrice` method)
+- `reference_price_calculation()` (`referencePrice.calculation` method)
+
+#### WebSocket Streams
+
+- `reference_price()` (`<symbol>@referencePrice` stream)
+
 ## 42.0.0 - 2026-03-05
 
 **Derivatives Trading Coin Futures**

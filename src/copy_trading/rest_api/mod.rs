@@ -114,6 +114,7 @@ impl RestApi {
     /// Get Futures Lead Trader Status(TRADE)
     ///
     /// Get Futures Lead Trader Status
+    ///
     /// Weight: 20
     ///
     /// # Arguments
@@ -158,6 +159,7 @@ impl RestApi {
     /// Get Futures Lead Trading Symbol `Whitelist(USER_DATA)`
     ///
     /// Get Futures Lead Trading Symbol Whitelist
+    ///
     /// Weight: 20
     ///
     /// # Arguments

@@ -17,6 +17,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetBfusdQuotaDetailsResponse {
+    #[serde(rename = "subscriptionQuota", skip_serializing_if = "Option::is_none")]
+    pub subscription_quota: Option<Box<models::GetBfusdQuotaDetailsResponseSubscriptionQuota>>,
     #[serde(
         rename = "fastRedemptionQuota",
         skip_serializing_if = "Option::is_none"
@@ -34,6 +36,7 @@ impl GetBfusdQuotaDetailsResponse {
     #[must_use]
     pub fn new() -> GetBfusdQuotaDetailsResponse {
         GetBfusdQuotaDetailsResponse {
+            subscription_quota: None,
             fast_redemption_quota: None,
             standard_redemption_quota: None,
         }

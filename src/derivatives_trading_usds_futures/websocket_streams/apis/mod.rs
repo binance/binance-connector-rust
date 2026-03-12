@@ -11,5 +11,7 @@
  * Do not edit the class manually.
  */
 
-pub mod websocket_market_streams_api;
-pub use websocket_market_streams_api::*;
+pub mod market_api;
+pub use market_api::*;
+pub mod public_api;
+pub use public_api::*;

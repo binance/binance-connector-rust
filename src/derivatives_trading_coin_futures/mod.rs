@@ -17,7 +17,7 @@ use crate::common::{
 
 /// Represents the `DerivativesTradingCoinFutures` REST API client for interacting with the Binance `DerivativesTradingCoinFutures` REST API.
 ///
-/// This struct provides methods to create REST API clients for both production and testnet environments.
+/// This struct provides methods to create REST API clients for production  and testnet environments.
 pub struct DerivativesTradingCoinFuturesRestApi {}
 
 impl DerivativesTradingCoinFuturesRestApi {
@@ -74,7 +74,7 @@ impl DerivativesTradingCoinFuturesRestApi {
 
 /// Represents the `DerivativesTradingCoinFutures` WebSocket API client for interacting with the Binance `DerivativesTradingCoinFutures` WebSocket API.
 ///
-/// This struct provides methods to create WebSocket API clients for both production and testnet environments.
+/// This struct provides methods to create WebSocket API clients for production  and testnet environments.
 pub struct DerivativesTradingCoinFuturesWsApi {}
 
 impl DerivativesTradingCoinFuturesWsApi {
@@ -131,7 +131,7 @@ impl DerivativesTradingCoinFuturesWsApi {
 
 /// Represents the `DerivativesTradingCoinFutures` WebSocket Streams client for interacting with the Binance `DerivativesTradingCoinFutures` WebSocket Streams.
 ///
-/// This struct provides methods to create WebSocket Streams clients for both production and testnet environments.
+/// This struct provides methods to create WebSocket Streams clients for production  and testnet environments.
 pub struct DerivativesTradingCoinFuturesWsStreams {}
 
 impl DerivativesTradingCoinFuturesWsStreams {

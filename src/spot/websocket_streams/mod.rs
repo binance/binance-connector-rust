@@ -518,6 +518,35 @@ impl WebsocketStreams {
             .await
     }
 
+    /// WebSocket Reference Price Streams
+    ///
+    ///
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ReferencePriceParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::ReferencePriceResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#reference-price-streams).
+    ///
+    pub async fn reference_price(
+        &self,
+        params: ReferencePriceParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::ReferencePriceResponse>>> {
+        self.web_socket_streams_api_client
+            .reference_price(params)
+            .await
+    }
+
     /// WebSocket Individual Symbol Rolling Window Statistics Streams
     ///
     /// Rolling window ticker statistics for a single symbol, computed over multiple windows.

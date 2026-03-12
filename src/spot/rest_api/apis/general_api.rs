@@ -40,6 +40,10 @@ pub trait GeneralApi: Send + Sync {
         &self,
         params: ExchangeInfoParams,
     ) -> anyhow::Result<RestApiResponse<models::ExchangeInfoResponse>>;
+    async fn execution_rules(
+        &self,
+        params: ExecutionRulesParams,
+    ) -> anyhow::Result<RestApiResponse<models::ExecutionRulesResponse>>;
     async fn ping(&self) -> anyhow::Result<RestApiResponse<Value>>;
     async fn time(&self) -> anyhow::Result<RestApiResponse<models::TimeResponse>>;
 }
@@ -98,6 +102,49 @@ impl std::str::FromStr for ExchangeInfoSymbolStatusEnum {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ExecutionRulesSymbolStatusEnum {
+    #[serde(rename = "TRADING")]
+    Trading,
+    #[serde(rename = "END_OF_DAY")]
+    EndOfDay,
+    #[serde(rename = "HALT")]
+    Halt,
+    #[serde(rename = "BREAK")]
+    Break,
+    #[serde(rename = "NON_REPRESENTABLE")]
+    NonRepresentable,
+}
+
+impl ExecutionRulesSymbolStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Trading => "TRADING",
+            Self::EndOfDay => "END_OF_DAY",
+            Self::Halt => "HALT",
+            Self::Break => "BREAK",
+            Self::NonRepresentable => "NON_REPRESENTABLE",
+        }
+    }
+}
+
+impl std::str::FromStr for ExecutionRulesSymbolStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRADING" => Ok(Self::Trading),
+            "END_OF_DAY" => Ok(Self::EndOfDay),
+            "HALT" => Ok(Self::Halt),
+            "BREAK" => Ok(Self::Break),
+            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
+            other => Err(format!("invalid ExecutionRulesSymbolStatusEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`exchange_info`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -141,6 +188,39 @@ impl ExchangeInfoParams {
         ExchangeInfoParamsBuilder::default()
     }
 }
+/// Request parameters for the [`execution_rules`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`execution_rules`](#method.execution_rules).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct ExecutionRulesParams {
+    /// Symbol to query
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol: Option<String>,
+    /// List of symbols to query
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbols: Option<Vec<String>>,
+    ///
+    /// The `symbol_status` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol_status: Option<ExecutionRulesSymbolStatusEnum>,
+}
+
+impl ExecutionRulesParams {
+    /// Create a builder for [`execution_rules`].
+    ///
+    #[must_use]
+    pub fn builder() -> ExecutionRulesParamsBuilder {
+        ExecutionRulesParamsBuilder::default()
+    }
+}
 
 #[async_trait]
 impl GeneralApi for GeneralApiClient {
@@ -182,6 +262,47 @@ impl GeneralApi for GeneralApiClient {
         send_request::<models::ExchangeInfoResponse>(
             &self.configuration,
             "/api/v3/exchangeInfo",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
+    async fn execution_rules(
+        &self,
+        params: ExecutionRulesParams,
+    ) -> anyhow::Result<RestApiResponse<models::ExecutionRulesResponse>> {
+        let ExecutionRulesParams {
+            symbol,
+            symbols,
+            symbol_status,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = symbol {
+            query_params.insert("symbol".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbols {
+            query_params.insert("symbols".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol_status {
+            query_params.insert("symbolStatus".to_string(), json!(rw));
+        }
+
+        send_request::<models::ExecutionRulesResponse>(
+            &self.configuration,
+            "/api/v3/executionRules",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -295,6 +416,33 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn execution_rules(
+            &self,
+            _params: ExecutionRulesParams,
+        ) -> anyhow::Result<RestApiResponse<models::ExecutionRulesResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap();
+            let dummy_response: models::ExecutionRulesResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ExecutionRulesResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn ping(&self) -> anyhow::Result<RestApiResponse<Value>> {
             if self.force_error {
                 return Err(ConnectorError::ConnectorClientError {
@@ -382,6 +530,56 @@ mod tests {
             let params = ExchangeInfoParams::builder().build().unwrap();
 
             match client.exchange_info(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn execution_rules_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockGeneralApiClient { force_error: false };
+
+            let params = ExecutionRulesParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap();
+            let expected_response : models::ExecutionRulesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExecutionRulesResponse");
+
+            let resp = client.execution_rules(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn execution_rules_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockGeneralApiClient { force_error: false };
+
+            let params = ExecutionRulesParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).symbol_status(ExecutionRulesSymbolStatusEnum::Trading).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap();
+            let expected_response : models::ExecutionRulesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExecutionRulesResponse");
+
+            let resp = client.execution_rules(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn execution_rules_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockGeneralApiClient { force_error: true };
+
+            let params = ExecutionRulesParams::builder().build().unwrap();
+
+            match client.execution_rules(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

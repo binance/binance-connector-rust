@@ -27,15 +27,11 @@ use crate::derivatives_trading_usds_futures::websocket_streams::models;
 use crate::models::StreamId;
 
 #[async_trait]
-pub trait WebsocketMarketStreamsApi: Send + Sync {
+pub trait MarketApi: Send + Sync {
     async fn aggregate_trade_streams(
         &self,
         params: AggregateTradeStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::AggregateTradeStreamsResponse>>>;
-    async fn all_book_tickers_stream(
-        &self,
-        params: AllBookTickersStreamParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::AllBookTickersStreamResponse>>>;
     async fn all_market_liquidation_order_streams(
         &self,
         params: AllMarketLiquidationOrderStreamsParams,
@@ -62,14 +58,6 @@ pub trait WebsocketMarketStreamsApi: Send + Sync {
         &self,
         params: ContractInfoStreamParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::ContractInfoStreamResponse>>>;
-    async fn diff_book_depth_streams(
-        &self,
-        params: DiffBookDepthStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::DiffBookDepthStreamsResponse>>>;
-    async fn individual_symbol_book_ticker_streams(
-        &self,
-        params: IndividualSymbolBookTickerStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::IndividualSymbolBookTickerStreamsResponse>>>;
     async fn individual_symbol_mini_ticker_stream(
         &self,
         params: IndividualSymbolMiniTickerStreamParams,
@@ -98,25 +86,17 @@ pub trait WebsocketMarketStreamsApi: Send + Sync {
         &self,
         params: MultiAssetsModeAssetIndexParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MultiAssetsModeAssetIndexResponseInner>>>>;
-    async fn partial_book_depth_streams(
-        &self,
-        params: PartialBookDepthStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::PartialBookDepthStreamsResponse>>>;
-    async fn rpi_diff_book_depth_streams(
-        &self,
-        params: RpiDiffBookDepthStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>>;
     async fn trading_session_stream(
         &self,
         params: TradingSessionStreamParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::TradingSessionStreamResponse>>>;
 }
 
-pub struct WebsocketMarketStreamsApiClient {
+pub struct MarketApiClient {
     websocket_streams_base: Arc<WebsocketStreams>,
 }
 
-impl WebsocketMarketStreamsApiClient {
+impl MarketApiClient {
     pub fn new(websocket_streams_base: Arc<WebsocketStreams>) -> Self {
         Self {
             websocket_streams_base,
@@ -153,28 +133,6 @@ impl AggregateTradeStreamsParams {
     #[must_use]
     pub fn builder(symbol: String) -> AggregateTradeStreamsParamsBuilder {
         AggregateTradeStreamsParamsBuilder::default().symbol(symbol)
-    }
-}
-/// Request parameters for the [`all_book_tickers_stream`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`all_book_tickers_stream`](#method.all_book_tickers_stream).
-#[derive(Clone, Debug, Builder, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct AllBookTickersStreamParams {
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<String>,
-}
-
-impl AllBookTickersStreamParams {
-    /// Create a builder for [`all_book_tickers_stream`].
-    ///
-    #[must_use]
-    pub fn builder() -> AllBookTickersStreamParamsBuilder {
-        AllBookTickersStreamParamsBuilder::default()
     }
 }
 /// Request parameters for the [`all_market_liquidation_order_streams`] operation.
@@ -344,73 +302,6 @@ impl ContractInfoStreamParams {
     #[must_use]
     pub fn builder() -> ContractInfoStreamParamsBuilder {
         ContractInfoStreamParamsBuilder::default()
-    }
-}
-/// Request parameters for the [`diff_book_depth_streams`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`diff_book_depth_streams`](#method.diff_book_depth_streams).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct DiffBookDepthStreamsParams {
-    /// The symbol parameter
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub symbol: String,
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<String>,
-    /// WebSocket stream update speed
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub update_speed: Option<String>,
-}
-
-impl DiffBookDepthStreamsParams {
-    /// Create a builder for [`diff_book_depth_streams`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — The symbol parameter
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> DiffBookDepthStreamsParamsBuilder {
-        DiffBookDepthStreamsParamsBuilder::default().symbol(symbol)
-    }
-}
-/// Request parameters for the [`individual_symbol_book_ticker_streams`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`individual_symbol_book_ticker_streams`](#method.individual_symbol_book_ticker_streams).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct IndividualSymbolBookTickerStreamsParams {
-    /// The symbol parameter
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub symbol: String,
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<String>,
-}
-
-impl IndividualSymbolBookTickerStreamsParams {
-    /// Create a builder for [`individual_symbol_book_ticker_streams`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — The symbol parameter
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> IndividualSymbolBookTickerStreamsParamsBuilder {
-        IndividualSymbolBookTickerStreamsParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`individual_symbol_mini_ticker_stream`] operation.
@@ -630,81 +521,6 @@ impl MultiAssetsModeAssetIndexParams {
         MultiAssetsModeAssetIndexParamsBuilder::default()
     }
 }
-/// Request parameters for the [`partial_book_depth_streams`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`partial_book_depth_streams`](#method.partial_book_depth_streams).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct PartialBookDepthStreamsParams {
-    /// The symbol parameter
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub symbol: String,
-    /// The levels parameter
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub levels: i64,
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<String>,
-    /// WebSocket stream update speed
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub update_speed: Option<String>,
-}
-
-impl PartialBookDepthStreamsParams {
-    /// Create a builder for [`partial_book_depth_streams`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — The symbol parameter
-    /// * `levels` — The levels parameter
-    ///
-    #[must_use]
-    pub fn builder(symbol: String, levels: i64) -> PartialBookDepthStreamsParamsBuilder {
-        PartialBookDepthStreamsParamsBuilder::default()
-            .symbol(symbol)
-            .levels(levels)
-    }
-}
-/// Request parameters for the [`rpi_diff_book_depth_streams`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`rpi_diff_book_depth_streams`](#method.rpi_diff_book_depth_streams).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct RpiDiffBookDepthStreamsParams {
-    /// The symbol parameter
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub symbol: String,
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<String>,
-}
-
-impl RpiDiffBookDepthStreamsParams {
-    /// Create a builder for [`rpi_diff_book_depth_streams`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — The symbol parameter
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> RpiDiffBookDepthStreamsParamsBuilder {
-        RpiDiffBookDepthStreamsParamsBuilder::default().symbol(symbol)
-    }
-}
 /// Request parameters for the [`trading_session_stream`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -729,7 +545,7 @@ impl TradingSessionStreamParams {
 }
 
 #[async_trait]
-impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
+impl MarketApi for MarketApiClient {
     async fn aggregate_trade_streams(
         &self,
         params: AggregateTradeStreamsParams,
@@ -760,42 +576,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
-            )
-            .await,
-        )
-    }
-
-    async fn all_book_tickers_stream(
-        &self,
-        params: AllBookTickersStreamParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::AllBookTickersStreamResponse>>> {
-        let AllBookTickersStreamParams { id } = params;
-
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream = replace_websocket_streams_placeholders("/!bookTicker", &vars);
-
-        Ok(
-            create_stream_handler::<models::AllBookTickersStreamResponse>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt.map(|s| {
-                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
-                        if let Ok(n) = s.parse::<u32>() {
-                            return StreamId::Number(n);
-                        }
-                    }
-                    StreamId::Str(s)
-                }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -831,7 +612,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -867,7 +648,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -903,7 +684,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -940,7 +721,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -990,7 +771,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1024,89 +805,9 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                 }
                 StreamId::Str(s)
             }),
-            None,
+            Some("market".to_string()),
         )
         .await)
-    }
-
-    async fn diff_book_depth_streams(
-        &self,
-        params: DiffBookDepthStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::DiffBookDepthStreamsResponse>>> {
-        let DiffBookDepthStreamsParams {
-            symbol,
-            id,
-            update_speed,
-        } = params;
-
-        let pairs: &[(&str, Option<String>)] = &[
-            ("symbol", Some(symbol.clone())),
-            ("id", id.clone()),
-            ("updateSpeed", update_speed.clone()),
-        ];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream = replace_websocket_streams_placeholders("/<symbol>@depth@<updateSpeed>", &vars);
-
-        Ok(
-            create_stream_handler::<models::DiffBookDepthStreamsResponse>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt.map(|s| {
-                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
-                        if let Ok(n) = s.parse::<u32>() {
-                            return StreamId::Number(n);
-                        }
-                    }
-                    StreamId::Str(s)
-                }),
-                None,
-            )
-            .await,
-        )
-    }
-
-    async fn individual_symbol_book_ticker_streams(
-        &self,
-        params: IndividualSymbolBookTickerStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::IndividualSymbolBookTickerStreamsResponse>>>
-    {
-        let IndividualSymbolBookTickerStreamsParams { symbol, id } = params;
-
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream = replace_websocket_streams_placeholders("/<symbol>@bookTicker", &vars);
-
-        Ok(
-            create_stream_handler::<models::IndividualSymbolBookTickerStreamsResponse>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt.map(|s| {
-                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
-                        if let Ok(n) = s.parse::<u32>() {
-                            return StreamId::Number(n);
-                        }
-                    }
-                    StreamId::Str(s)
-                }),
-                None,
-            )
-            .await,
-        )
     }
 
     async fn individual_symbol_mini_ticker_stream(
@@ -1140,7 +841,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1176,7 +877,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1219,7 +920,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1255,7 +956,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1298,7 +999,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                 }
                 StreamId::Str(s)
             }),
-            None,
+            Some("market".to_string()),
         )
         .await)
     }
@@ -1334,7 +1035,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1370,89 +1071,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
-            )
-            .await,
-        )
-    }
-
-    async fn partial_book_depth_streams(
-        &self,
-        params: PartialBookDepthStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::PartialBookDepthStreamsResponse>>> {
-        let PartialBookDepthStreamsParams {
-            symbol,
-            levels,
-            id,
-            update_speed,
-        } = params;
-
-        let pairs: &[(&str, Option<String>)] = &[
-            ("symbol", Some(symbol.clone())),
-            ("levels", Some(levels.to_string())),
-            ("id", id.clone()),
-            ("updateSpeed", update_speed.clone()),
-        ];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream =
-            replace_websocket_streams_placeholders("/<symbol>@depth<levels>@<updateSpeed>", &vars);
-
-        Ok(
-            create_stream_handler::<models::PartialBookDepthStreamsResponse>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt.map(|s| {
-                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
-                        if let Ok(n) = s.parse::<u32>() {
-                            return StreamId::Number(n);
-                        }
-                    }
-                    StreamId::Str(s)
-                }),
-                None,
-            )
-            .await,
-        )
-    }
-
-    async fn rpi_diff_book_depth_streams(
-        &self,
-        params: RpiDiffBookDepthStreamsParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::RpiDiffBookDepthStreamsResponse>>> {
-        let RpiDiffBookDepthStreamsParams { symbol, id } = params;
-
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
-
-        Ok(
-            create_stream_handler::<models::RpiDiffBookDepthStreamsResponse>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt.map(|s| {
-                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
-                        if let Ok(n) = s.parse::<u32>() {
-                            return StreamId::Number(n);
-                        }
-                    }
-                    StreamId::Str(s)
-                }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1487,7 +1106,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
                     }
                     StreamId::Str(s)
                 }),
-                None,
+                Some("market".to_string()),
             )
             .await,
         )
@@ -1511,7 +1130,12 @@ mod tests {
         let config = ConfigurationWebsocketStreams::builder()
             .build()
             .expect("Failed to build configuration");
-        let streams_base = WebsocketStreams::new(config, vec![conn.clone()], vec![]);
+        let streams_base =
+            WebsocketStreams::new(config, vec![conn.clone()], vec!["market".to_string()]);
+        {
+            let mut st = conn.state.lock().await;
+            st.url_path = Some("market".to_string());
+        }
         conn.set_handler(streams_base.clone() as Arc<dyn WebsocketHandler>)
             .await;
         (streams_base, conn)
@@ -1521,7 +1145,7 @@ mod tests {
     fn aggregate_trade_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -1557,7 +1181,7 @@ mod tests {
     fn aggregate_trade_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -1607,7 +1231,7 @@ mod tests {
     fn aggregate_trade_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -1659,144 +1283,10 @@ mod tests {
     }
 
     #[test]
-    fn all_book_tickers_stream_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = AllBookTickersStreamParams::builder()
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
-
-            let AllBookTickersStreamParams { id } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!bookTicker", &vars);
-            let ws_stream = api
-                .all_book_tickers_stream(params)
-                .await
-                .expect("all_book_tickers_stream should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
-        });
-    }
-
-    #[test]
-    fn all_book_tickers_stream_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = AllBookTickersStreamParams::builder().id(Some(id.clone())).build().unwrap();
-
-            let AllBookTickersStreamParams {
-                id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!bookTicker", &vars);
-
-            let ws_stream = api.all_book_tickers_stream(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: models::AllBookTickersStreamResponse| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000"}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn all_book_tickers_stream_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = AllBookTickersStreamParams::builder().id(Some(id.clone())).build().unwrap();
-
-            let AllBookTickersStreamParams {
-                id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!bookTicker", &vars);
-
-            let ws_stream = api.all_book_tickers_stream(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: models::AllBookTickersStreamResponse| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000"}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
     fn all_market_liquidation_order_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -1831,7 +1321,7 @@ mod tests {
     fn all_market_liquidation_order_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -1878,7 +1368,7 @@ mod tests {
     fn all_market_liquidation_order_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -1930,7 +1420,7 @@ mod tests {
     fn all_market_mini_tickers_stream_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -1965,7 +1455,7 @@ mod tests {
     fn all_market_mini_tickers_stream_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2012,7 +1502,7 @@ mod tests {
     fn all_market_mini_tickers_stream_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2064,7 +1554,7 @@ mod tests {
     fn all_market_tickers_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2099,7 +1589,7 @@ mod tests {
     fn all_market_tickers_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2146,7 +1636,7 @@ mod tests {
     fn all_market_tickers_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2198,7 +1688,7 @@ mod tests {
     fn composite_index_symbol_information_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2237,7 +1727,7 @@ mod tests {
     fn composite_index_symbol_information_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2287,7 +1777,7 @@ mod tests {
     fn composite_index_symbol_information_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2342,7 +1832,7 @@ mod tests {
     fn continuous_contract_kline_candlestick_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2396,7 +1886,7 @@ mod tests {
     fn continuous_contract_kline_candlestick_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2452,7 +1942,7 @@ mod tests {
     fn continuous_contract_kline_candlestick_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2513,7 +2003,7 @@ mod tests {
     fn contract_info_stream_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2548,7 +2038,7 @@ mod tests {
     fn contract_info_stream_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2595,7 +2085,7 @@ mod tests {
     fn contract_info_stream_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2644,306 +2134,10 @@ mod tests {
     }
 
     #[test]
-    fn diff_book_depth_streams_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = DiffBookDepthStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
-
-            let DiffBookDepthStreamsParams {
-                symbol,
-                id,
-                update_speed,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol", Some(symbol.clone())),
-                ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream =
-                replace_websocket_streams_placeholders("/<symbol>@depth@<updateSpeed>", &vars);
-            let ws_stream = api
-                .diff_book_depth_streams(params)
-                .await
-                .expect("diff_book_depth_streams should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
-        });
-    }
-
-    #[test]
-    fn diff_book_depth_streams_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = DiffBookDepthStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
-
-            let DiffBookDepthStreamsParams {
-                symbol,id,update_speed,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("id",
-                        id.clone()
-                ),
-                ("updateSpeed",
-                        update_speed.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@depth@<updateSpeed>", &vars);
-
-            let ws_stream = api.diff_book_depth_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: models::DiffBookDepthStreamsResponse| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]]}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn diff_book_depth_streams_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = DiffBookDepthStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
-
-            let DiffBookDepthStreamsParams {
-                symbol,id,update_speed,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("id",
-                        id.clone()
-                ),
-                ("updateSpeed",
-                        update_speed.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@depth@<updateSpeed>", &vars);
-
-            let ws_stream = api.diff_book_depth_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: models::DiffBookDepthStreamsResponse| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]]}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
-    fn individual_symbol_book_ticker_streams_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
-
-            let IndividualSymbolBookTickerStreamsParams { symbol, id } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@bookTicker", &vars);
-            let ws_stream = api
-                .individual_symbol_book_ticker_streams(params)
-                .await
-                .expect("individual_symbol_book_ticker_streams should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
-        });
-    }
-
-    #[test]
-    fn individual_symbol_book_ticker_streams_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
-
-            let IndividualSymbolBookTickerStreamsParams {
-                symbol,id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@bookTicker", &vars);
-
-            let ws_stream = api.individual_symbol_book_ticker_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: models::IndividualSymbolBookTickerStreamsResponse| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000"}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn individual_symbol_book_ticker_streams_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
-
-            let IndividualSymbolBookTickerStreamsParams {
-                symbol,id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@bookTicker", &vars);
-
-            let ws_stream = api.individual_symbol_book_ticker_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: models::IndividualSymbolBookTickerStreamsResponse| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000"}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
     fn individual_symbol_mini_ticker_stream_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -2979,7 +2173,7 @@ mod tests {
     fn individual_symbol_mini_ticker_stream_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3029,7 +2223,7 @@ mod tests {
     fn individual_symbol_mini_ticker_stream_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3084,7 +2278,7 @@ mod tests {
     fn individual_symbol_ticker_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3120,7 +2314,7 @@ mod tests {
     fn individual_symbol_ticker_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3170,7 +2364,7 @@ mod tests {
     fn individual_symbol_ticker_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3225,7 +2419,7 @@ mod tests {
     fn kline_candlestick_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3270,7 +2464,7 @@ mod tests {
     fn kline_candlestick_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3323,7 +2517,7 @@ mod tests {
     fn kline_candlestick_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3381,7 +2575,7 @@ mod tests {
     fn liquidation_order_streams_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3417,7 +2611,7 @@ mod tests {
     fn liquidation_order_streams_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3467,7 +2661,7 @@ mod tests {
     fn liquidation_order_streams_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3522,7 +2716,7 @@ mod tests {
     fn mark_price_stream_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3566,7 +2760,7 @@ mod tests {
     fn mark_price_stream_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3619,7 +2813,7 @@ mod tests {
     fn mark_price_stream_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3677,7 +2871,7 @@ mod tests {
     fn mark_price_stream_for_all_market_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3714,7 +2908,7 @@ mod tests {
     fn mark_price_stream_for_all_market_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3764,7 +2958,7 @@ mod tests {
     fn mark_price_stream_for_all_market_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3819,7 +3013,7 @@ mod tests {
     fn multi_assets_mode_asset_index_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3854,7 +3048,7 @@ mod tests {
     fn multi_assets_mode_asset_index_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3901,7 +3095,7 @@ mod tests {
     fn multi_assets_mode_asset_index_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -3950,316 +3144,10 @@ mod tests {
     }
 
     #[test]
-    fn partial_book_depth_streams_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(), 10)
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
-
-            let PartialBookDepthStreamsParams {
-                symbol,
-                levels,
-                id,
-                update_speed,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol", Some(symbol.clone())),
-                ("levels", Some(levels.to_string())),
-                ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders(
-                "/<symbol>@depth<levels>@<updateSpeed>",
-                &vars,
-            );
-            let ws_stream = api
-                .partial_book_depth_streams(params)
-                .await
-                .expect("partial_book_depth_streams should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
-        });
-    }
-
-    #[test]
-    fn partial_book_depth_streams_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id.clone())).build().unwrap();
-
-            let PartialBookDepthStreamsParams {
-                symbol,levels,id,update_speed,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("levels",
-                        Some(levels.to_string().to_string())
-                ),
-                ("id",
-                        id.clone()
-                ),
-                ("updateSpeed",
-                        update_speed.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@depth<levels>@<updateSpeed>", &vars);
-
-            let ws_stream = api.partial_book_depth_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: models::PartialBookDepthStreamsResponse| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1571889248277,"T":1571889248276,"s":"BTCUSDT","U":390497796,"u":390497878,"pu":390497794,"b":[["7403.89","0.002"],["7403.90","3.906"],["7404.00","1.428"],["7404.85","5.239"],["7405.43","2.562"]],"a":[["7405.96","3.340"],["7406.63","4.525"],["7407.08","2.475"],["7407.15","4.800"],["7407.20","0.175"]]}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn partial_book_depth_streams_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id.clone())).build().unwrap();
-
-            let PartialBookDepthStreamsParams {
-                symbol,levels,id,update_speed,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("levels",
-                        Some(levels.to_string().to_string())
-                ),
-                ("id",
-                        id.clone()
-                ),
-                ("updateSpeed",
-                        update_speed.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@depth<levels>@<updateSpeed>", &vars);
-
-            let ws_stream = api.partial_book_depth_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: models::PartialBookDepthStreamsResponse| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1571889248277,"T":1571889248276,"s":"BTCUSDT","U":390497796,"u":390497878,"pu":390497794,"b":[["7403.89","0.002"],["7403.90","3.906"],["7404.00","1.428"],["7404.85","5.239"],["7405.43","2.562"]],"a":[["7405.96","3.340"],["7406.63","4.525"],["7407.08","2.475"],["7407.15","4.800"],["7407.20","0.175"]]}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
-    fn rpi_diff_book_depth_streams_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = RpiDiffBookDepthStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
-
-            let RpiDiffBookDepthStreamsParams { symbol, id } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
-            let ws_stream = api
-                .rpi_diff_book_depth_streams(params)
-                .await
-                .expect("rpi_diff_book_depth_streams should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
-        });
-    }
-
-    #[test]
-    fn rpi_diff_book_depth_streams_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = RpiDiffBookDepthStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
-
-            let RpiDiffBookDepthStreamsParams {
-                symbol,id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
-
-            let ws_stream = api.rpi_diff_book_depth_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: models::RpiDiffBookDepthStreamsResponse| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]]}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn rpi_diff_book_depth_streams_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = RpiDiffBookDepthStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
-
-            let RpiDiffBookDepthStreamsParams {
-                symbol,id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("symbol",
-                        Some(symbol.clone())
-                ),
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
-
-            let ws_stream = api.rpi_diff_book_depth_streams(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: models::RpiDiffBookDepthStreamsResponse| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]]}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
     fn trading_session_stream_should_execute_successfully() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, _) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -4294,7 +3182,7 @@ mod tests {
     fn trading_session_stream_should_handle_incoming_message() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 
@@ -4341,7 +3229,7 @@ mod tests {
     fn trading_session_stream_should_not_fire_after_unsubscribe() {
         TOKIO_SHARED_RT.block_on(async {
             let (streams_base, conn) = make_streams_base().await;
-            let api = WebsocketMarketStreamsApiClient::new(streams_base.clone());
+            let api = MarketApiClient::new(streams_base.clone());
 
             let id = "test-id-123".to_string();
 

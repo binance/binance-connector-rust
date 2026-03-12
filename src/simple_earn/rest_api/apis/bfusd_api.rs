@@ -798,7 +798,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
             let dummy_response: models::GetBfusdQuotaDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdQuotaDetailsResponse");
@@ -1056,7 +1056,7 @@ mod tests {
 
             let params = GetBfusdQuotaDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
             let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
             let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");
@@ -1073,7 +1073,7 @@ mod tests {
 
             let params = GetBfusdQuotaDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
             let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
             let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");

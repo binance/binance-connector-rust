@@ -1474,7 +1474,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":0,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"0","msg":"success"}"#).unwrap();
             let dummy_response: models::CancelAllOptionOrdersOnSpecificSymbolResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::CancelAllOptionOrdersOnSpecificSymbolResponse",
@@ -1899,7 +1899,7 @@ mod tests {
                     .build()
                     .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":0,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"0","msg":"success"}"#).unwrap();
             let expected_response: models::CancelAllOptionOrdersOnSpecificSymbolResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::CancelAllOptionOrdersOnSpecificSymbolResponse",
@@ -1926,7 +1926,7 @@ mod tests {
                     .build()
                     .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":0,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"0","msg":"success"}"#).unwrap();
             let expected_response: models::CancelAllOptionOrdersOnSpecificSymbolResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::CancelAllOptionOrdersOnSpecificSymbolResponse",
