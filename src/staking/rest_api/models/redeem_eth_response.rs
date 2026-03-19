@@ -25,6 +25,8 @@ pub struct RedeemEthResponse {
     pub conversion_ratio: Option<String>,
     #[serde(rename = "arrivalTime", skip_serializing_if = "Option::is_none")]
     pub arrival_time: Option<i64>,
+    #[serde(rename = "redeemId", skip_serializing_if = "Option::is_none")]
+    pub redeem_id: Option<i64>,
 }
 
 impl RedeemEthResponse {
@@ -35,6 +37,7 @@ impl RedeemEthResponse {
             eth_amount: None,
             conversion_ratio: None,
             arrival_time: None,
+            redeem_id: None,
         }
     }
 }

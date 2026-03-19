@@ -2796,7 +2796,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2853,7 +2853,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2941,7 +2941,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2995,7 +2995,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

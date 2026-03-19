@@ -23,6 +23,8 @@ pub struct SubscribeSolStakingResponse {
     pub bnsol_amount: Option<String>,
     #[serde(rename = "exchangeRate", skip_serializing_if = "Option::is_none")]
     pub exchange_rate: Option<String>,
+    #[serde(rename = "purchaseId", skip_serializing_if = "Option::is_none")]
+    pub purchase_id: Option<i64>,
 }
 
 impl SubscribeSolStakingResponse {
@@ -32,6 +34,7 @@ impl SubscribeSolStakingResponse {
             success: None,
             bnsol_amount: None,
             exchange_rate: None,
+            purchase_id: None,
         }
     }
 }

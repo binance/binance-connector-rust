@@ -39,6 +39,11 @@ pub struct PlaceMultipleOrdersOrdersParameterInner {
     pub client_order_id: Option<String>,
     #[serde(rename = "isMmp", skip_serializing_if = "Option::is_none")]
     pub is_mmp: Option<String>,
+    #[serde(
+        rename = "selfTradePreventionMode",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub self_trade_prevention_mode: Option<SelfTradePreventionModeEnum>,
 }
 
 impl PlaceMultipleOrdersOrdersParameterInner {
@@ -56,6 +61,7 @@ impl PlaceMultipleOrdersOrdersParameterInner {
             new_order_resp_type: None,
             client_order_id: None,
             is_mmp: None,
+            self_trade_prevention_mode: None,
         }
     }
 }
@@ -115,5 +121,21 @@ pub enum NewOrderRespTypeEnum {
 impl Default for NewOrderRespTypeEnum {
     fn default() -> NewOrderRespTypeEnum {
         Self::Ack
+    }
+}
+///
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum SelfTradePreventionModeEnum {
+    #[serde(rename = "EXPIRE_TAKER")]
+    ExpireTaker,
+    #[serde(rename = "EXPIRE_BOTH")]
+    ExpireBoth,
+    #[serde(rename = "EXPIRE_MAKER")]
+    ExpireMaker,
+}
+
+impl Default for SelfTradePreventionModeEnum {
+    fn default() -> SelfTradePreventionModeEnum {
+        Self::ExpireTaker
     }
 }

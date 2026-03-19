@@ -57,6 +57,11 @@ pub struct CancelMultipleOptionOrdersResponseInner {
     pub quote_asset: Option<String>,
     #[serde(rename = "mmp", skip_serializing_if = "Option::is_none")]
     pub mmp: Option<bool>,
+    #[serde(
+        rename = "selfTradePreventionMode",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub self_trade_prevention_mode: Option<String>,
 }
 
 impl CancelMultipleOptionOrdersResponseInner {
@@ -83,6 +88,7 @@ impl CancelMultipleOptionOrdersResponseInner {
             option_side: None,
             quote_asset: None,
             mmp: None,
+            self_trade_prevention_mode: None,
         }
     }
 }

@@ -26,6 +26,8 @@ pub struct MarkPriceStreamResponse {
     pub s: Option<String>,
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    #[serde(rename = "ap", skip_serializing_if = "Option::is_none")]
+    pub ap: Option<String>,
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
@@ -44,6 +46,7 @@ impl MarkPriceStreamResponse {
             e_uppercase: None,
             s: None,
             p: None,
+            ap: None,
             i: None,
             p_uppercase: None,
             r: None,

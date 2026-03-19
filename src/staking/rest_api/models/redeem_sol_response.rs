@@ -25,6 +25,8 @@ pub struct RedeemSolResponse {
     pub exchange_rate: Option<String>,
     #[serde(rename = "arrivalTime", skip_serializing_if = "Option::is_none")]
     pub arrival_time: Option<i64>,
+    #[serde(rename = "redeemId", skip_serializing_if = "Option::is_none")]
+    pub redeem_id: Option<i64>,
 }
 
 impl RedeemSolResponse {
@@ -35,6 +37,7 @@ impl RedeemSolResponse {
             sol_amount: None,
             exchange_rate: None,
             arrival_time: None,
+            redeem_id: None,
         }
     }
 }

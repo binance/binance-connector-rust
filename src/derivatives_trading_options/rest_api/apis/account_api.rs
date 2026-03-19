@@ -286,7 +286,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap();
             let dummy_response: models::OptionMarginAccountInformationResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OptionMarginAccountInformationResponse");
@@ -361,7 +361,7 @@ mod tests {
 
             let params = OptionMarginAccountInformationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap();
             let expected_response : models::OptionMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionMarginAccountInformationResponse");
 
             let resp = client.option_margin_account_information(params).await.expect("Expected a response");
@@ -378,7 +378,7 @@ mod tests {
 
             let params = OptionMarginAccountInformationParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap();
             let expected_response : models::OptionMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionMarginAccountInformationResponse");
 
             let resp = client.option_margin_account_information(params).await.expect("Expected a response");

@@ -263,6 +263,12 @@ impl GetBoostRewardsHistoryParams {
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSolRedemptionHistoryParams {
     ///
+    /// The `redeem_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub redeem_id: Option<i64>,
+    ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
@@ -307,6 +313,12 @@ impl GetSolRedemptionHistoryParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSolStakingHistoryParams {
+    ///
+    /// The `purchase_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub purchase_id: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
@@ -671,6 +683,7 @@ impl SolStakingApi for SolStakingApiClient {
         params: GetSolRedemptionHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetSolRedemptionHistoryResponse>> {
         let GetSolRedemptionHistoryParams {
+            redeem_id,
             start_time,
             end_time,
             current,
@@ -680,6 +693,10 @@ impl SolStakingApi for SolStakingApiClient {
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        if let Some(rw) = redeem_id {
+            query_params.insert("redeemId".to_string(), json!(rw));
+        }
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -722,6 +739,7 @@ impl SolStakingApi for SolStakingApiClient {
         params: GetSolStakingHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetSolStakingHistoryResponse>> {
         let GetSolStakingHistoryParams {
+            purchase_id,
             start_time,
             end_time,
             current,
@@ -731,6 +749,10 @@ impl SolStakingApi for SolStakingApiClient {
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        if let Some(rw) = purchase_id {
+            query_params.insert("purchaseId".to_string(), json!(rw));
+        }
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -1185,7 +1207,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
             let dummy_response: models::RedeemSolResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemSolResponse");
@@ -1239,10 +1261,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342"}"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342","purchaseId":1234567}"#).unwrap();
             let dummy_response: models::SubscribeSolStakingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeSolStakingResponse");
@@ -1495,7 +1514,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = GetSolRedemptionHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSolRedemptionHistoryParams::builder().redeem_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"BNSOL","amount":"21312.23223","distributeAsset":"SOL","distributeAmount":"21338.0699","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
             let expected_response : models::GetSolRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolRedemptionHistoryResponse");
@@ -1545,7 +1564,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = GetSolStakingHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSolStakingHistoryParams::builder().purchase_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"SOL","amount":"21312.23223","distributeAsset":"BNSOL","distributeAmount":"21286.42584","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
             let expected_response : models::GetSolStakingHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolStakingHistoryResponse");
@@ -1680,7 +1699,7 @@ mod tests {
 
             let params = RedeemSolParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
             let expected_response : models::RedeemSolResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemSolResponse");
 
             let resp = client.redeem_sol(params).await.expect("Expected a response");
@@ -1697,7 +1716,7 @@ mod tests {
 
             let params = RedeemSolParams::builder(dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
             let expected_response : models::RedeemSolResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemSolResponse");
 
             let resp = client.redeem_sol(params).await.expect("Expected a response");
@@ -1778,22 +1797,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = SubscribeSolStakingParams::builder(dec!(1.0))
-                .build()
-                .unwrap();
+            let params = SubscribeSolStakingParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342"}"#,
-            )
-            .unwrap();
-            let expected_response: models::SubscribeSolStakingResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SubscribeSolStakingResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let expected_response : models::SubscribeSolStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeSolStakingResponse");
 
-            let resp = client
-                .subscribe_sol_staking(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.subscribe_sol_staking(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1805,23 +1814,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = SubscribeSolStakingParams::builder(dec!(1.0))
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = SubscribeSolStakingParams::builder(dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342"}"#,
-            )
-            .unwrap();
-            let expected_response: models::SubscribeSolStakingResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SubscribeSolStakingResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let expected_response : models::SubscribeSolStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeSolStakingResponse");
 
-            let resp = client
-                .subscribe_sol_staking(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.subscribe_sol_staking(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);

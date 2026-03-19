@@ -132,6 +132,9 @@ impl RestApi {
     ///
     /// Query account funding flows.
     ///
+    ///
+    /// * Only support querying data in the past 3 months
+    ///
     /// Weight: 1
     ///
     /// # Arguments
@@ -1346,6 +1349,8 @@ impl RestApi {
     /// Account Trade List (`USER_DATA`)
     ///
     /// Get trades for a specific account and symbol.
+    ///
+    /// * Only support querying trades in the past 3 months
     ///
     /// Weight: 5
     ///

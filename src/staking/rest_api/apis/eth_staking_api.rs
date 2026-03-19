@@ -142,6 +142,12 @@ impl GetCurrentEthStakingQuotaParams {
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetEthRedemptionHistoryParams {
     ///
+    /// The `redeem_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub redeem_id: Option<i64>,
+    ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
@@ -186,6 +192,12 @@ impl GetEthRedemptionHistoryParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetEthStakingHistoryParams {
+    ///
+    /// The `purchase_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub purchase_id: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
@@ -571,6 +583,7 @@ impl EthStakingApi for EthStakingApiClient {
         params: GetEthRedemptionHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetEthRedemptionHistoryResponse>> {
         let GetEthRedemptionHistoryParams {
+            redeem_id,
             start_time,
             end_time,
             current,
@@ -580,6 +593,10 @@ impl EthStakingApi for EthStakingApiClient {
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        if let Some(rw) = redeem_id {
+            query_params.insert("redeemId".to_string(), json!(rw));
+        }
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -622,6 +639,7 @@ impl EthStakingApi for EthStakingApiClient {
         params: GetEthStakingHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetEthStakingHistoryResponse>> {
         let GetEthStakingHistoryParams {
+            purchase_id,
             start_time,
             end_time,
             current,
@@ -631,6 +649,10 @@ impl EthStakingApi for EthStakingApiClient {
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        if let Some(rw) = purchase_id {
+            query_params.insert("purchaseId".to_string(), json!(rw));
+        }
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -1240,7 +1262,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
             let dummy_response: models::RedeemEthResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemEthResponse");
@@ -1267,10 +1289,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342"}"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342","purchaseId":1234567}"#).unwrap();
             let dummy_response: models::SubscribeEthStakingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeEthStakingResponse");
@@ -1438,7 +1457,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = GetEthRedemptionHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetEthRedemptionHistoryParams::builder().redeem_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"WBETH","amount":"21312.23223","distributeAsset":"ETH","distributeAmount":"21338.0699","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
             let expected_response : models::GetEthRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetEthRedemptionHistoryResponse");
@@ -1488,7 +1507,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = GetEthStakingHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetEthStakingHistoryParams::builder().purchase_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"ETH","amount":"21312.23223","distributeAsset":"WBETH","distributeAmount":"21286.42584","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
             let expected_response : models::GetEthStakingHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetEthStakingHistoryResponse");
@@ -1723,7 +1742,7 @@ mod tests {
 
             let params = RedeemEthParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
             let expected_response : models::RedeemEthResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemEthResponse");
 
             let resp = client.redeem_eth(params).await.expect("Expected a response");
@@ -1740,7 +1759,7 @@ mod tests {
 
             let params = RedeemEthParams::builder(dec!(1.0),).asset("BETH".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
             let expected_response : models::RedeemEthResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemEthResponse");
 
             let resp = client.redeem_eth(params).await.expect("Expected a response");
@@ -1771,22 +1790,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = SubscribeEthStakingParams::builder(dec!(1.0))
-                .build()
-                .unwrap();
+            let params = SubscribeEthStakingParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342"}"#,
-            )
-            .unwrap();
-            let expected_response: models::SubscribeEthStakingResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SubscribeEthStakingResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let expected_response : models::SubscribeEthStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeEthStakingResponse");
 
-            let resp = client
-                .subscribe_eth_staking(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.subscribe_eth_staking(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1798,23 +1807,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = SubscribeEthStakingParams::builder(dec!(1.0))
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = SubscribeEthStakingParams::builder(dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342"}"#,
-            )
-            .unwrap();
-            let expected_response: models::SubscribeEthStakingResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::SubscribeEthStakingResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let expected_response : models::SubscribeEthStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeEthStakingResponse");
 
-            let resp = client
-                .subscribe_eth_staking(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.subscribe_eth_staking(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);

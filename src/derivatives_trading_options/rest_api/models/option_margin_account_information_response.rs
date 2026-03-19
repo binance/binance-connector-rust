@@ -31,6 +31,8 @@ pub struct OptionMarginAccountInformationResponse {
     pub can_withdraw: Option<bool>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
+    #[serde(rename = "tradeGroupId", skip_serializing_if = "Option::is_none")]
+    pub trade_group_id: Option<i64>,
 }
 
 impl OptionMarginAccountInformationResponse {
@@ -44,6 +46,7 @@ impl OptionMarginAccountInformationResponse {
             can_deposit: None,
             can_withdraw: None,
             reduce_only: None,
+            trade_group_id: None,
         }
     }
 }

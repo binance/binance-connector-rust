@@ -23,6 +23,8 @@ pub struct SubscribeEthStakingResponse {
     pub wbeth_amount: Option<String>,
     #[serde(rename = "conversionRatio", skip_serializing_if = "Option::is_none")]
     pub conversion_ratio: Option<String>,
+    #[serde(rename = "purchaseId", skip_serializing_if = "Option::is_none")]
+    pub purchase_id: Option<i64>,
 }
 
 impl SubscribeEthStakingResponse {
@@ -32,6 +34,7 @@ impl SubscribeEthStakingResponse {
             success: None,
             wbeth_amount: None,
             conversion_ratio: None,
+            purchase_id: None,
         }
     }
 }

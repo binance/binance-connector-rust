@@ -1,5 +1,82 @@
 # Changelog
 
+## 44.0.0 - 2026-03-19
+
+**Derivatives Trading Options**
+
+### Changed (9)
+
+#### REST API
+
+- Added parameter `selfTradePreventionMode`
+  - affected methods:
+    - `new_order()` (`POST /eapi/v1/order`)
+- Modified parameter `orders`:
+  - items: property `selfTradePreventionMode` added
+  - items: item property `selfTradePreventionMode` added
+  - affected methods:
+    - `place_multiple_orders()` (`POST /eapi/v1/batchOrders`)
+- Modified response for `cancel_multiple_option_orders()` (`DELETE /eapi/v1/batchOrders`):
+  - items: property `selfTradePreventionMode` added
+  - items: item property `selfTradePreventionMode` added
+
+- Modified response for `place_multiple_orders()` (`POST /eapi/v1/batchOrders`):
+  - items: property `selfTradePreventionMode` added
+  - items: item property `selfTradePreventionMode` added
+
+- Modified response for `option_margin_account_information()` (`GET /eapi/v1/marginAccount`):
+  - property `tradeGroupId` added
+
+- Modified response for `query_current_open_option_orders()` (`GET /eapi/v1/openOrders`):
+  - items: property `selfTradePreventionMode` added
+  - items: item property `selfTradePreventionMode` added
+
+- Modified response for `cancel_option_order()` (`DELETE /eapi/v1/order`):
+  - property `selfTradePreventionMode` added
+
+- Modified response for `query_single_order()` (`GET /eapi/v1/order`):
+  - property `selfTradePreventionMode` added
+
+- Modified response for `new_order()` (`POST /eapi/v1/order`):
+  - property `selfTradePreventionMode` added
+
+**Derivatives Trading Usds Futures**
+
+### Changed (2)
+
+#### WebSocket Streams
+
+- Modified response for `mark_price_stream_for_all_market()` (`!markPrice@arr@<updateSpeed>` stream):
+  - items: property `ap` added
+  - items: item property `ap` added
+
+- Modified response for `mark_price_stream()` (`<symbol>@markPrice@<updateSpeed>` stream):
+  - property `ap` added
+
+**Staking**
+
+### Changed (6)
+
+- Added parameter `purchaseId`
+  - affected methods:
+    - `get_eth_staking_history()` (`GET /sapi/v1/eth-staking/eth/history/stakingHistory`)
+    - `get_sol_staking_history()` (`GET /sapi/v1/sol-staking/sol/history/stakingHistory`)
+- Added parameter `redeemId`
+  - affected methods:
+    - `get_eth_redemption_history()` (`GET /sapi/v1/eth-staking/eth/history/redemptionHistory`)
+    - `get_sol_redemption_history()` (`GET /sapi/v1/sol-staking/sol/history/redemptionHistory`)
+- Modified response for `redeem_eth()` (`POST /sapi/v1/eth-staking/eth/redeem`):
+  - property `redeemId` added
+
+- Modified response for `redeem_sol()` (`POST /sapi/v1/sol-staking/sol/redeem`):
+  - property `redeemId` added
+
+- Modified response for `subscribe_sol_staking()` (`POST /sapi/v1/sol-staking/sol/stake`):
+  - property `purchaseId` added
+
+- Modified response for `subscribe_eth_staking()` (`POST /sapi/v2/eth-staking/eth/stake`):
+  - property `purchaseId` added
+
 ## 43.0.0 - 2026-03-12
 
 **Derivatives Trading Options**

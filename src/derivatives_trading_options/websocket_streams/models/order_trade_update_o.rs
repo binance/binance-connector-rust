@@ -66,6 +66,8 @@ pub struct OrderTradeUpdateO {
     pub ot: Option<String>,
     #[serde(rename = "rp", skip_serializing_if = "Option::is_none")]
     pub rp: Option<String>,
+    #[serde(rename = "V", skip_serializing_if = "Option::is_none")]
+    pub v_uppercase: Option<String>,
 }
 
 impl OrderTradeUpdateO {
@@ -96,6 +98,7 @@ impl OrderTradeUpdateO {
             r_uppercase: None,
             ot: None,
             rp: None,
+            v_uppercase: None,
         }
     }
 }
