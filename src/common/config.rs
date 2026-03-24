@@ -26,7 +26,7 @@ impl fmt::Debug for HttpAgent {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct ProxyAuth {
     pub username: String,
     pub password: String,
@@ -40,13 +40,31 @@ pub struct ProxyConfig {
     pub auth: Option<ProxyAuth>,
 }
 
-#[derive(Debug, Clone)]
+impl fmt::Debug for ProxyAuth {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ProxyAuth")
+            .field("username", &self.username)
+            .field("password", &"[REDACTED]")
+            .finish()
+    }
+}
+
+#[derive(Clone)]
 pub enum PrivateKey {
     File(String),
     Raw(Vec<u8>),
 }
 
-#[derive(Debug, Clone, Builder)]
+impl fmt::Debug for PrivateKey {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            PrivateKey::File(_) => write!(f, "PrivateKey::File([REDACTED])"),
+            PrivateKey::Raw(_) => write!(f, "PrivateKey::Raw([REDACTED])"),
+        }
+    }
+}
+
+#[derive(Clone, Builder)]
 #[builder(
     pattern = "owned",
     build_fn(name = "try_build", error = "ConfigBuildError")
@@ -104,6 +122,39 @@ pub struct ConfigurationRestApi {
     pub(crate) signature_gen: SignatureGenerator,
 }
 
+impl fmt::Debug for ConfigurationRestApi {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ConfigurationRestApi")
+            .field("api_key", &self.api_key.as_ref().map(|_| "[REDACTED]"))
+            .field(
+                "api_secret",
+                &self.api_secret.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field("base_path", &self.base_path)
+            .field("timeout", &self.timeout)
+            .field("keep_alive", &self.keep_alive)
+            .field("compression", &self.compression)
+            .field("retries", &self.retries)
+            .field("backoff", &self.backoff)
+            .field("proxy", &self.proxy)
+            .field("custom_headers", &self.custom_headers)
+            .field("agent", &self.agent)
+            .field(
+                "private_key",
+                &self.private_key.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key_passphrase",
+                &self.private_key_passphrase.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field("time_unit", &self.time_unit)
+            .field("client", &"<reqwest::Client>")
+            .field("user_agent", &self.user_agent)
+            .field("signature_gen", &self.signature_gen)
+            .finish()
+    }
+}
+
 impl ConfigurationRestApi {
     #[must_use]
     pub fn builder() -> ConfigurationRestApiBuilder {
@@ -139,7 +190,7 @@ impl ConfigurationRestApiBuilder {
     }
 }
 
-#[derive(Debug, Clone, Builder)]
+#[derive(Clone, Builder)]
 #[builder(
     pattern = "owned",
     build_fn(name = "try_build", error = "ConfigBuildError")
@@ -183,6 +234,35 @@ pub struct ConfigurationWebsocketApi {
 
     #[builder(setter(skip))]
     pub(crate) signature_gen: SignatureGenerator,
+}
+
+impl fmt::Debug for ConfigurationWebsocketApi {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ConfigurationWebsocketApi")
+            .field("api_key", &self.api_key.as_ref().map(|_| "[REDACTED]"))
+            .field(
+                "api_secret",
+                &self.api_secret.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field("ws_url", &self.ws_url)
+            .field("timeout", &self.timeout)
+            .field("reconnect_delay", &self.reconnect_delay)
+            .field("mode", &self.mode)
+            .field("agent", &self.agent)
+            .field(
+                "private_key",
+                &self.private_key.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key_passphrase",
+                &self.private_key_passphrase.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field("time_unit", &self.time_unit)
+            .field("auto_session_relogon", &self.auto_session_relogon)
+            .field("user_agent", &self.user_agent)
+            .field("signature_gen", &self.signature_gen)
+            .finish()
+    }
 }
 
 impl ConfigurationWebsocketApi {

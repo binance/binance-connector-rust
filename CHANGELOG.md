@@ -1,5 +1,12 @@
 # Changelog
 
+## 44.0.1 - 2026-03-24
+
+### Changed (2)
+
+- Fix bug with exposed secrets via Debug Trait.
+- Mark NFT as Deprecated.
+
 ## 44.0.0 - 2026-03-19
 
 **Derivatives Trading Options**

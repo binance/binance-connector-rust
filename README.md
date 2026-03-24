@@ -47,7 +47,7 @@ All connectors are bundled within the single `binance-sdk` crate. Enable only th
 * [`gift_card`](./src/gift_card) – Gift Card connector
 * [`margin_trading`](./src/margin_trading) – Margin Trading connector
 * [`mining`](./src/mining) – Mining connector
-* [`nft`](./src/nft) – NFT connector
+* **Deprecated**: ~~[`nft`](./src/nft) – NFT connector~~
 * [`pay`](./src/pay) – Pay connector
 * [`rebate`](./src/rebate) – Rebate connector
 * [`simple_earn`](./src/simple_earn) – Simple Earn connector

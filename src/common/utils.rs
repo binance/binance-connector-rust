@@ -26,6 +26,7 @@ use serde::de::DeserializeOwned;
 use serde_json::Number;
 use serde_json::{Value, json};
 use sha2::Sha256;
+use std::fmt;
 use std::fmt::Display;
 use std::hash::BuildHasher;
 use std::sync::LazyLock;
@@ -39,7 +40,6 @@ use std::{
 #[cfg(feature = "openssl-tls")]
 use std::{fs, path::Path};
 use tokio::time::sleep;
-use tracing::info;
 use url::form_urlencoded;
 use url::{Url, form_urlencoded::Serializer};
 
@@ -70,7 +70,7 @@ static PLACEHOLDER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(@)?<([^>
 /// * `raw_key_data`: Lazily initialized raw key data as a string
 /// * `key_object`: Lazily initialized OpenSSL private key
 /// * `ed25519_signing_key`: Lazily initialized Ed25519 signing key
-#[derive(Debug, Default, Clone)]
+#[derive(Default, Clone)]
 #[allow(dead_code)]
 pub struct SignatureGenerator {
     api_secret: Option<String>,
@@ -81,6 +81,31 @@ pub struct SignatureGenerator {
     key_object: OnceCell<PKey<openssl::pkey::Private>>,
     #[cfg(feature = "openssl-tls")]
     ed25519_signing_key: OnceCell<SigningKey>,
+}
+
+impl fmt::Debug for SignatureGenerator {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("SignatureGenerator")
+            .field(
+                "api_secret",
+                &self.api_secret.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key",
+                &self.private_key.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key_passphrase",
+                &self.private_key_passphrase.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "raw_key_data",
+                &self.raw_key_data.get().map(|_| "[REDACTED]"),
+            )
+            .field("key_object", &"[REDACTED]")
+            .field("ed25519_signing_key", &"[REDACTED]")
+            .finish()
+    }
 }
 
 impl SignatureGenerator {
@@ -335,8 +360,6 @@ pub fn build_client(
     if let Some(HttpAgent(agent_fn)) = agent {
         builder = (agent_fn)(builder);
     }
-
-    info!("Client builder {:?}", builder);
 
     builder.build().expect("Failed to build reqwest client")
 }

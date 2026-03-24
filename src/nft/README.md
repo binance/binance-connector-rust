@@ -1,4 +1,6 @@
-# Binance Rust NFT Connector
+# **DEPRECATED** - Binance Rust NFT Connector
+
+## **This module is deprecated and will be removed, please do not use it.**
 
 [![Crates.io](https://img.shields.io/crates/v/binance-sdk)](https://crates.io/crates/binance-sdk)
 [![docs.rs](https://img.shields.io/docsrs/binance-sdk)](https://docs.rs/binance-sdk)
