@@ -2003,7 +2003,7 @@ impl RestApi {
     /// Get older market historical trades.
     ///
     /// * Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
-    /// * Only supports data from within the last three months
+    /// * Only supports data from within the last one month
     ///
     /// Weight: 20
     ///
@@ -3615,7 +3615,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<models::FuturesTradfiPerpsContractResponse>`] on success.
+    /// [`RestApiResponse<Value>`] on success.
     ///
     /// # Errors
     ///
@@ -3641,7 +3641,7 @@ impl RestApi {
     pub async fn futures_tradfi_perps_contract(
         &self,
         params: FuturesTradfiPerpsContractParams,
-    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+    ) -> anyhow::Result<RestApiResponse<Value>> {
         self.trade_api_client
             .futures_tradfi_perps_contract(params)
             .await
@@ -4496,6 +4496,7 @@ impl RestApi {
     ///
     /// * If "autoCloseType" is not sent, orders with both of the types will be returned
     /// * If "startTime" is not sent, data within 7 days before "endTime" can be queried
+    /// * Only support querying data in the past 90 days
     ///
     /// Weight: 20 with symbol, 50 without symbol
     ///

@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "44.0.1"
+version = "45.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1164,6 +1164,11 @@ path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/c
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
+name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_delete_margin_call_level"
+path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/delete_margin_call_level.rs"
+required-features = [ "derivatives_trading_portfolio_margin_pro" ]
+
+[[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_fund_auto_collection"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/fund_auto_collection.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
@@ -1181,6 +1186,11 @@ required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_get_delta_mode_status"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/get_delta_mode_status.rs"
+required-features = [ "derivatives_trading_portfolio_margin_pro" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_get_margin_call_level"
+path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/get_margin_call_level.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]
@@ -1226,6 +1236,11 @@ required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_repay_futures_negative_balance"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/repay_futures_negative_balance.rs"
+required-features = [ "derivatives_trading_portfolio_margin_pro" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_pro_rest_api_account_api_set_margin_call_level"
+path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/account_api/set_margin_call_level.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]

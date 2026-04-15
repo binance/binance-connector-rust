@@ -16,17 +16,17 @@ use crate::pay::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCostInner {
+pub struct GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCost {
     #[serde(rename = "1", skip_serializing_if = "Option::is_none")]
     pub param_1: Option<String>,
     #[serde(rename = "2", skip_serializing_if = "Option::is_none")]
     pub param_2: Option<String>,
 }
 
-impl GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCostInner {
+impl GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCost {
     #[must_use]
-    pub fn new() -> GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCostInner {
-        GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCostInner {
+    pub fn new() -> GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCost {
+        GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCost {
             param_1: None,
             param_2: None,
         }

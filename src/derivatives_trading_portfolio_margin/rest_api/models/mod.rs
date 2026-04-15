@@ -75,6 +75,8 @@ pub mod fund_auto_collection_response;
 pub use self::fund_auto_collection_response::FundAutoCollectionResponse;
 pub mod fund_collection_by_asset_response;
 pub use self::fund_collection_by_asset_response::FundCollectionByAssetResponse;
+pub mod futures_tradfi_perps_contract_response;
+pub use self::futures_tradfi_perps_contract_response::FuturesTradfiPerpsContractResponse;
 pub mod get_auto_repay_futures_status_response;
 pub use self::get_auto_repay_futures_status_response::GetAutoRepayFuturesStatusResponse;
 pub mod get_cm_account_detail_response;

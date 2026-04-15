@@ -100,6 +100,16 @@ pub struct Executionreport {
     pub a_uppercase: Option<String>,
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<String>,
+    #[serde(rename = "Cs", skip_serializing_if = "Option::is_none")]
+    pub cs: Option<String>,
+    #[serde(rename = "pl", skip_serializing_if = "Option::is_none")]
+    pub pl: Option<String>,
+    #[serde(rename = "pL", skip_serializing_if = "Option::is_none")]
+    pub p_l: Option<String>,
+    #[serde(rename = "pY", skip_serializing_if = "Option::is_none")]
+    pub p_y: Option<String>,
+    #[serde(rename = "eR", skip_serializing_if = "Option::is_none")]
+    pub e_r: Option<String>,
 }
 
 impl Executionreport {
@@ -147,6 +157,11 @@ impl Executionreport {
             u_uppercase: None,
             a_uppercase: None,
             b_uppercase: None,
+            cs: None,
+            pl: None,
+            p_l: None,
+            p_y: None,
+            e_r: None,
         }
     }
 }

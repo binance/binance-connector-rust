@@ -39,6 +39,10 @@ pub trait AccountApi: Send + Sync {
         &self,
         params: ChangeAutoRepayFuturesStatusParams,
     ) -> anyhow::Result<RestApiResponse<models::ChangeAutoRepayFuturesStatusResponse>>;
+    async fn delete_margin_call_level(
+        &self,
+        params: DeleteMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::DeleteMarginCallLevelResponse>>;
     async fn fund_auto_collection(
         &self,
         params: FundAutoCollectionParams,
@@ -55,6 +59,10 @@ pub trait AccountApi: Send + Sync {
         &self,
         params: GetDeltaModeStatusParams,
     ) -> anyhow::Result<RestApiResponse<models::GetDeltaModeStatusResponse>>;
+    async fn get_margin_call_level(
+        &self,
+        params: GetMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetMarginCallLevelResponse>>;
     async fn get_portfolio_margin_pro_account_balance(
         &self,
         params: GetPortfolioMarginProAccountBalanceParams,
@@ -101,6 +109,10 @@ pub trait AccountApi: Send + Sync {
         &self,
         params: RepayFuturesNegativeBalanceParams,
     ) -> anyhow::Result<RestApiResponse<models::RepayFuturesNegativeBalanceResponse>>;
+    async fn set_margin_call_level(
+        &self,
+        params: SetMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::SetMarginCallLevelResponse>>;
     async fn switch_delta_mode(
         &self,
         params: SwitchDeltaModeParams,
@@ -196,6 +208,29 @@ impl ChangeAutoRepayFuturesStatusParams {
     #[must_use]
     pub fn builder(auto_repay: String) -> ChangeAutoRepayFuturesStatusParamsBuilder {
         ChangeAutoRepayFuturesStatusParamsBuilder::default().auto_repay(auto_repay)
+    }
+}
+/// Request parameters for the [`delete_margin_call_level`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`delete_margin_call_level`](#method.delete_margin_call_level).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct DeleteMarginCallLevelParams {
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl DeleteMarginCallLevelParams {
+    /// Create a builder for [`delete_margin_call_level`].
+    ///
+    #[must_use]
+    pub fn builder() -> DeleteMarginCallLevelParamsBuilder {
+        DeleteMarginCallLevelParamsBuilder::default()
     }
 }
 /// Request parameters for the [`fund_auto_collection`] operation.
@@ -297,6 +332,29 @@ impl GetDeltaModeStatusParams {
     #[must_use]
     pub fn builder() -> GetDeltaModeStatusParamsBuilder {
         GetDeltaModeStatusParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`get_margin_call_level`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_margin_call_level`](#method.get_margin_call_level).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetMarginCallLevelParams {
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetMarginCallLevelParams {
+    /// Create a builder for [`get_margin_call_level`].
+    ///
+    #[must_use]
+    pub fn builder() -> GetMarginCallLevelParamsBuilder {
+        GetMarginCallLevelParamsBuilder::default()
     }
 }
 /// Request parameters for the [`get_portfolio_margin_pro_account_balance`] operation.
@@ -587,6 +645,38 @@ impl RepayFuturesNegativeBalanceParams {
         RepayFuturesNegativeBalanceParamsBuilder::default()
     }
 }
+/// Request parameters for the [`set_margin_call_level`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`set_margin_call_level`](#method.set_margin_call_level).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct SetMarginCallLevelParams {
+    /// The value of marginCallLevel must be within the range [1.1, 2.0].
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub margin_call_level: rust_decimal::Decimal,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl SetMarginCallLevelParams {
+    /// Create a builder for [`set_margin_call_level`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `margin_call_level` — The value of marginCallLevel must be within the range [1.1, 2.0].
+    ///
+    #[must_use]
+    pub fn builder(margin_call_level: rust_decimal::Decimal) -> SetMarginCallLevelParamsBuilder {
+        SetMarginCallLevelParamsBuilder::default().margin_call_level(margin_call_level)
+    }
+}
 /// Request parameters for the [`switch_delta_mode`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -745,6 +835,35 @@ impl AccountApi for AccountApiClient {
         .await
     }
 
+    async fn delete_margin_call_level(
+        &self,
+        params: DeleteMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::DeleteMarginCallLevelResponse>> {
+        let DeleteMarginCallLevelParams { recv_window } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::DeleteMarginCallLevelResponse>(
+            &self.configuration,
+            "/sapi/v1/portfolio/margin-call-level",
+            reqwest::Method::DELETE,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn fund_auto_collection(
         &self,
         params: FundAutoCollectionParams,
@@ -850,6 +969,35 @@ impl AccountApi for AccountApiClient {
         send_request::<models::GetDeltaModeStatusResponse>(
             &self.configuration,
             "/sapi/v1/portfolio/delta-mode",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_margin_call_level(
+        &self,
+        params: GetMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetMarginCallLevelResponse>> {
+        let GetMarginCallLevelParams { recv_window } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetMarginCallLevelResponse>(
+            &self.configuration,
+            "/sapi/v1/portfolio/margin-call-level",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -1202,6 +1350,40 @@ impl AccountApi for AccountApiClient {
         .await
     }
 
+    async fn set_margin_call_level(
+        &self,
+        params: SetMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::SetMarginCallLevelResponse>> {
+        let SetMarginCallLevelParams {
+            margin_call_level,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("marginCallLevel".to_string(), json!(margin_call_level));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::SetMarginCallLevelResponse>(
+            &self.configuration,
+            "/sapi/v1/portfolio/margin-call-level",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn switch_delta_mode(
         &self,
         params: SwitchDeltaModeParams,
@@ -1364,6 +1546,33 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn delete_margin_call_level(
+            &self,
+            _params: DeleteMarginCallLevelParams,
+        ) -> anyhow::Result<RestApiResponse<models::DeleteMarginCallLevelResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let dummy_response: models::DeleteMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::DeleteMarginCallLevelResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn fund_auto_collection(
             &self,
             _params: FundAutoCollectionParams,
@@ -1461,6 +1670,34 @@ mod tests {
             let dummy_response: models::GetDeltaModeStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetDeltaModeStatusResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_margin_call_level(
+            &self,
+            _params: GetMarginCallLevelParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetMarginCallLevelResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let dummy_response: models::GetMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetMarginCallLevelResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1727,6 +1964,34 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn set_margin_call_level(
+            &self,
+            _params: SetMarginCallLevelParams,
+        ) -> anyhow::Result<RestApiResponse<models::SetMarginCallLevelResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let dummy_response: models::SetMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::SetMarginCallLevelResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn switch_delta_mode(
             &self,
             _params: SwitchDeltaModeParams,
@@ -1910,6 +2175,69 @@ mod tests {
                 .unwrap();
 
             match client.change_auto_repay_futures_status(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn delete_margin_call_level_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = DeleteMarginCallLevelParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let expected_response: models::DeleteMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::DeleteMarginCallLevelResponse");
+
+            let resp = client
+                .delete_margin_call_level(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn delete_margin_call_level_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = DeleteMarginCallLevelParams::builder()
+                .recv_window(5000)
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let expected_response: models::DeleteMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::DeleteMarginCallLevelResponse");
+
+            let resp = client
+                .delete_margin_call_level(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn delete_margin_call_level_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params = DeleteMarginCallLevelParams::builder().build().unwrap();
+
+            match client.delete_margin_call_level(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -2166,6 +2494,71 @@ mod tests {
             let params = GetDeltaModeStatusParams::builder().build().unwrap();
 
             match client.get_delta_mode_status(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_margin_call_level_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetMarginCallLevelParams::builder().build().unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let expected_response: models::GetMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetMarginCallLevelResponse");
+
+            let resp = client
+                .get_margin_call_level(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_margin_call_level_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetMarginCallLevelParams::builder()
+                .recv_window(5000)
+                .build()
+                .unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let expected_response: models::GetMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetMarginCallLevelResponse");
+
+            let resp = client
+                .get_margin_call_level(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_margin_call_level_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params = GetMarginCallLevelParams::builder().build().unwrap();
+
+            match client.get_margin_call_level(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -2711,6 +3104,75 @@ mod tests {
                 .unwrap();
 
             match client.repay_futures_negative_balance(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn set_margin_call_level_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = SetMarginCallLevelParams::builder(dec!(5000.0))
+                .build()
+                .unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let expected_response: models::SetMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::SetMarginCallLevelResponse");
+
+            let resp = client
+                .set_margin_call_level(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn set_margin_call_level_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = SetMarginCallLevelParams::builder(dec!(5000.0))
+                .recv_window(5000)
+                .build()
+                .unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let expected_response: models::SetMarginCallLevelResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::SetMarginCallLevelResponse");
+
+            let resp = client
+                .set_margin_call_level(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn set_margin_call_level_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params = SetMarginCallLevelParams::builder(dec!(5000.0))
+                .build()
+                .unwrap();
+
+            match client.set_margin_call_level(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

@@ -30,7 +30,7 @@ pub struct GetUmIncomeHistoryResponseInner {
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
     #[serde(rename = "tranId", skip_serializing_if = "Option::is_none")]
-    pub tran_id: Option<String>,
+    pub tran_id: Option<i64>,
     #[serde(rename = "tradeId", skip_serializing_if = "Option::is_none")]
     pub trade_id: Option<String>,
 }

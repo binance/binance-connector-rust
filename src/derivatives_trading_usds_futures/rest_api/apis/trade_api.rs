@@ -90,7 +90,7 @@ pub trait TradeApi: Send + Sync {
     async fn futures_tradfi_perps_contract(
         &self,
         params: FuturesTradfiPerpsContractParams,
-    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>>;
+    ) -> anyhow::Result<RestApiResponse<Value>>;
     async fn get_order_modify_history(
         &self,
         params: GetOrderModifyHistoryParams,
@@ -3342,7 +3342,7 @@ impl TradeApi for TradeApiClient {
     async fn futures_tradfi_perps_contract(
         &self,
         params: FuturesTradfiPerpsContractParams,
-    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+    ) -> anyhow::Result<RestApiResponse<Value>> {
         let FuturesTradfiPerpsContractParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
@@ -3352,7 +3352,7 @@ impl TradeApi for TradeApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<models::FuturesTradfiPerpsContractResponse>(
+        send_request::<Value>(
             &self.configuration,
             "/fapi/v1/stock/contract",
             reqwest::Method::POST,
@@ -4765,7 +4765,7 @@ mod tests {
         async fn futures_tradfi_perps_contract(
             &self,
             _params: FuturesTradfiPerpsContractParams,
-        ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+        ) -> anyhow::Result<RestApiResponse<Value>> {
             if self.force_error {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
@@ -4774,10 +4774,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
-            let dummy_response: models::FuturesTradfiPerpsContractResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+            let dummy_response = Value::Null;
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -6127,10 +6124,7 @@ mod tests {
 
             let params = FuturesTradfiPerpsContractParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
-            let expected_response: models::FuturesTradfiPerpsContractResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+            let expected_response = Value::Null;
 
             let resp = client
                 .futures_tradfi_perps_contract(params)
@@ -6152,10 +6146,7 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
-            let expected_response: models::FuturesTradfiPerpsContractResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+            let expected_response = Value::Null;
 
             let resp = client
                 .futures_tradfi_perps_contract(params)

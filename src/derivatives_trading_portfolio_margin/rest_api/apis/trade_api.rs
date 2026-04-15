@@ -85,6 +85,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: CmPositionAdlQuantileEstimationParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::CmPositionAdlQuantileEstimationResponseInner>>>;
+    async fn futures_tradfi_perps_contract(
+        &self,
+        params: FuturesTradfiPerpsContractParams,
+    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>>;
     async fn get_um_futures_bnb_burn_status(
         &self,
         params: GetUmFuturesBnbBurnStatusParams,
@@ -2360,6 +2364,29 @@ impl CmPositionAdlQuantileEstimationParams {
     #[must_use]
     pub fn builder() -> CmPositionAdlQuantileEstimationParamsBuilder {
         CmPositionAdlQuantileEstimationParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`futures_tradfi_perps_contract`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`futures_tradfi_perps_contract`](#method.futures_tradfi_perps_contract).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct FuturesTradfiPerpsContractParams {
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl FuturesTradfiPerpsContractParams {
+    /// Create a builder for [`futures_tradfi_perps_contract`].
+    ///
+    #[must_use]
+    pub fn builder() -> FuturesTradfiPerpsContractParamsBuilder {
+        FuturesTradfiPerpsContractParamsBuilder::default()
     }
 }
 /// Request parameters for the [`get_um_futures_bnb_burn_status`] operation.
@@ -5257,6 +5284,35 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn futures_tradfi_perps_contract(
+        &self,
+        params: FuturesTradfiPerpsContractParams,
+    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+        let FuturesTradfiPerpsContractParams { recv_window } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::FuturesTradfiPerpsContractResponse>(
+            &self.configuration,
+            "/papi/v1/um/stock/contract",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn get_um_futures_bnb_burn_status(
         &self,
         params: GetUmFuturesBnbBurnStatusParams,
@@ -7930,6 +7986,33 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn futures_tradfi_perps_contract(
+            &self,
+            _params: FuturesTradfiPerpsContractParams,
+        ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let dummy_response: models::FuturesTradfiPerpsContractResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn get_um_futures_bnb_burn_status(
             &self,
             _params: GetUmFuturesBnbBurnStatusParams,
@@ -9838,6 +9921,69 @@ mod tests {
                 .unwrap();
 
             match client.cm_position_adl_quantile_estimation(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn futures_tradfi_perps_contract_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = FuturesTradfiPerpsContractParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let expected_response: models::FuturesTradfiPerpsContractResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+
+            let resp = client
+                .futures_tradfi_perps_contract(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn futures_tradfi_perps_contract_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = FuturesTradfiPerpsContractParams::builder()
+                .recv_window(5000)
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let expected_response: models::FuturesTradfiPerpsContractResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FuturesTradfiPerpsContractResponse");
+
+            let resp = client
+                .futures_tradfi_perps_contract(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn futures_tradfi_perps_contract_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = FuturesTradfiPerpsContractParams::builder().build().unwrap();
+
+            match client.futures_tradfi_perps_contract(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

@@ -205,6 +205,51 @@ impl RestApi {
             .await
     }
 
+    /// Delete Margin Call Level (`USER_DATA`)
+    ///
+    /// Delete the margin call level for a Portfolio Margin account.
+    ///
+    /// Weight: 1500
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`DeleteMarginCallLevelParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::DeleteMarginCallLevelResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Delete-Margin-Call-Level).
+    ///
+    pub async fn delete_margin_call_level(
+        &self,
+        params: DeleteMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::DeleteMarginCallLevelResponse>> {
+        self.account_api_client
+            .delete_margin_call_level(params)
+            .await
+    }
+
     /// Fund Auto-collection(USER_DATA)
     ///
     /// Transfers all assets from Futures Account to Margin account
@@ -384,6 +429,49 @@ impl RestApi {
         params: GetDeltaModeStatusParams,
     ) -> anyhow::Result<RestApiResponse<models::GetDeltaModeStatusResponse>> {
         self.account_api_client.get_delta_mode_status(params).await
+    }
+
+    /// Get Margin Call Level (`USER_DATA`)
+    ///
+    /// Get the margin call level for a Portfolio Margin account.
+    ///
+    /// Weight: 1500
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetMarginCallLevelParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetMarginCallLevelResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Margin-Call-Level).
+    ///
+    pub async fn get_margin_call_level(
+        &self,
+        params: GetMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetMarginCallLevelResponse>> {
+        self.account_api_client.get_margin_call_level(params).await
     }
 
     /// Get Portfolio Margin Pro Account `Balance(USER_DATA)`
@@ -810,6 +898,49 @@ impl RestApi {
         self.account_api_client
             .repay_futures_negative_balance(params)
             .await
+    }
+
+    /// Set Margin Call Level (`USER_DATA`)
+    ///
+    /// Set the margin call level for a Portfolio Margin account. When the account's uniMMR drops to the specified level, a notification will be sent via email and SMS.
+    ///
+    /// Weight: 1500
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`SetMarginCallLevelParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::SetMarginCallLevelResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Set-Margin-Call-Level).
+    ///
+    pub async fn set_margin_call_level(
+        &self,
+        params: SetMarginCallLevelParams,
+    ) -> anyhow::Result<RestApiResponse<models::SetMarginCallLevelResponse>> {
+        self.account_api_client.set_margin_call_level(params).await
     }
 
     /// Switch Delta Mode(TRADE)

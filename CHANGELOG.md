@@ -1,5 +1,51 @@
 # Changelog
 
+## 45.0.0 - 2026-04-15
+
+**Derivatives Trading Portfolio Margin**
+
+### Added (1)
+
+#### REST API
+
+- `futures_tradfi_perps_contract()` (`POST /papi/v1/um/stock/contract`)
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `get_um_income_history()` (`GET /papi/v1/um/income`):
+  - items.`tranId`: type `string` → `integer`
+  - items.`tranId`: type `string` → `integer`
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Added (3)
+
+#### REST API
+
+- `delete_margin_call_level()` (`DELETE /sapi/v1/portfolio/margin-call-level`)
+- `get_margin_call_level()` (`GET /sapi/v1/portfolio/margin-call-level`)
+- `set_margin_call_level()` (`POST /sapi/v1/portfolio/margin-call-level`)
+
+**Pay**
+
+### Changed (1)
+
+- Modified response for `get_pay_trade_history()` (`GET /sapi/v1/pay/transactions`):
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: type `array` → `object`
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `2` added
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `1` added
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: type `array` → `object`
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `2` added
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `1` added
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: type `array` → `object`
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `2` added
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `1` added
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: type `array` → `object`
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `2` added
+  - `data`.items.`fundsDetail`.items.`walletAssetCost`: property `1` added
+
 ## 44.0.1 - 2026-03-24
 
 ### Changed (2)

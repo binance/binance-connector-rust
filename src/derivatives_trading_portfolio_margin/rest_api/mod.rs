@@ -2730,6 +2730,51 @@ impl RestApi {
             .await
     }
 
+    /// Futures `TradFi` Perps `Contract(USER_DATA)`
+    ///
+    /// Sign TradFi-Perps agreement contract
+    ///
+    /// Weight: 5
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`FuturesTradfiPerpsContractParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::FuturesTradfiPerpsContractResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Futures-TradFi-Perps-Contract).
+    ///
+    pub async fn futures_tradfi_perps_contract(
+        &self,
+        params: FuturesTradfiPerpsContractParams,
+    ) -> anyhow::Result<RestApiResponse<models::FuturesTradfiPerpsContractResponse>> {
+        self.trade_api_client
+            .futures_tradfi_perps_contract(params)
+            .await
+    }
+
     /// Get UM Futures BNB Burn Status (`USER_DATA`)
     ///
     /// Get user's BNB Fee Discount for UM Futures (Fee Discount On or Fee Discount Off )
@@ -4554,6 +4599,7 @@ impl RestApi {
     ///
     /// * If "autoCloseType" is not sent, orders with both of the types will be returned
     /// * If "startTime" is not sent, data within 7 days before "endTime" can be queried
+    /// * Only support querying data in the past 90 days
     ///
     /// Weight: 20 with symbol, 50 without symbol
     ///
@@ -4647,6 +4693,7 @@ impl RestApi {
     ///
     /// * If `autoCloseType` is not sent, orders with both of the types will be returned
     /// * If `startTime` is not sent, data within 7 days before `endTime` can be queried
+    /// * Only support querying data in the past 90 days
     ///
     /// Weight: 20 with symbol, 50 without symbol
     ///

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Binance Derivatives Trading Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -12,7 +12,7 @@
  */
 
 #![allow(unused_imports)]
-use crate::derivatives_trading_usds_futures::rest_api::models;
+use crate::derivatives_trading_portfolio_margin::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]

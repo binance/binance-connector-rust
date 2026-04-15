@@ -22,9 +22,8 @@ pub struct GetPayTradeHistoryResponseDataInnerFundsDetailInner {
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
     #[serde(rename = "walletAssetCost", skip_serializing_if = "Option::is_none")]
-    pub wallet_asset_cost: Option<
-        Vec<models::GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCostInner>,
-    >,
+    pub wallet_asset_cost:
+        Option<Box<models::GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCost>>,
 }
 
 impl GetPayTradeHistoryResponseDataInnerFundsDetailInner {

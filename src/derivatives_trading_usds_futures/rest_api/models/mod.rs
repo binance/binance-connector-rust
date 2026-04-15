@@ -85,8 +85,6 @@ pub mod futures_account_balance_v2_response_inner;
 pub use self::futures_account_balance_v2_response_inner::FuturesAccountBalanceV2ResponseInner;
 pub mod futures_account_configuration_response;
 pub use self::futures_account_configuration_response::FuturesAccountConfigurationResponse;
-pub mod futures_tradfi_perps_contract_response;
-pub use self::futures_tradfi_perps_contract_response::FuturesTradfiPerpsContractResponse;
 pub mod futures_trading_quantitative_rules_indicators_response;
 pub use self::futures_trading_quantitative_rules_indicators_response::FuturesTradingQuantitativeRulesIndicatorsResponse;
 pub mod futures_trading_quantitative_rules_indicators_response_indicators;
