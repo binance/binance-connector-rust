@@ -11,7 +11,8 @@ license = "MIT"
 include = [ "**/*.rs" ]
 
 [package.metadata.docs.rs]
-all-features = true
+features = ["rustls-tls", "all"]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [lints.clippy]
 uninlined_format_args = "allow"

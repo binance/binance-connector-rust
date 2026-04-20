@@ -4,7 +4,7 @@
 [![Open Issues](https://img.shields.io/github/issues/binance/binance-connector-rust)](https://github.com/binance/binance-connector-rust/issues)
 [![Crates.io](https://img.shields.io/crates/v/binance-sdk)](https://crates.io/crates/binance-sdk)
 [![docs.rs](https://img.shields.io/docsrs/binance-sdk)](https://docs.rs/binance-sdk)
-[![Known Vulnerabilities](https://snyk.io/test/github/binance/binance-connector-rust/badge.svg)](https://snyk.io/test/github/binance/binance-connector-rust)
+[![Dependency Status](https://deps.rs/repo/github/binance/binance-connector-rust/status.svg)](https://deps.rs/repo/github/binance/binance-connector-rust)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official collection of auto-generated Rust SDK modules for Binance APIs.
