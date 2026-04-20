@@ -1,5 +1,105 @@
 # Changelog
 
+## 46.0.0 - 2026-04-20
+
+**C2c**
+
+### Changed (1)
+
+- Modified response for `get_c2_c_trade_history()` (`GET /sapi/v1/c2c/orderMatch/listUserOrderHistory`):
+  - property `commission` added
+  - property `tradeType` added
+  - property `unitPrice` added
+  - property `advNo` added
+  - property `fiat` added
+  - property `takerCommission` added
+  - property `payMethodName` added
+  - property `asset` added
+  - property `fiatSymbol` added
+  - property `createTime` added
+  - property `takerAmount` added
+  - property `amount` added
+  - property `orderNumber` added
+  - property `totalPrice` added
+  - property `additionalKycVerify` added
+  - property `takerCommissionRate` added
+  - property `counterPartNickName` added
+  - property `orderStatus` added
+  - property `code` deleted
+  - property `data` deleted
+  - property `message` deleted
+  - property `success` deleted
+  - property `total` deleted
+
+**Derivatives Trading Portfolio Margin**
+
+### Added (7)
+
+#### REST API
+
+- `cancel_all_um_algo_open_orders()` (`DELETE /papi/v1/um/algo/allOpenOrders`)
+- `cancel_um_algo_order()` (`DELETE /papi/v1/um/algo/order`)
+- `new_um_algo_order()` (`POST /papi/v1/um/algo/order`)
+- `query_all_current_um_open_algo_orders()` (`GET /papi/v1/um/algo/openAlgoOrders`)
+- `query_current_um_open_algo_order()` (`GET /papi/v1/um/algo/algoOrder`)
+- `query_um_algo_order_history()` (`GET /papi/v1/um/algo/allAlgoOrders`)
+
+#### WebSocket Streams
+
+- Added `AlgoUpdate` on `UserDataStreamEventsResponse` list.
+
+### Changed (7)
+
+#### REST API
+
+- Marked `cancel_all_um_open_conditional_orders()` (`DELETE /papi/v1/um/conditional/allOpenOrders`) as deprecated.
+- Marked `cancel_um_conditional_order()` (`DELETE /papi/v1/um/conditional/order`) as deprecated.
+- Marked `new_um_conditional_order()` (`POST /papi/v1/um/conditional/order`) as deprecated.
+- Marked `query_all_current_um_open_conditional_orders()` (`GET /papi/v1/um/conditional/openOrders`) as deprecated.
+- Marked `query_all_um_conditional_orders()` (`GET /papi/v1/um/conditional/allOrders`) as deprecated.
+- Marked `query_current_um_open_conditional_order()` (`GET /papi/v1/um/conditional/openOrder`) as deprecated.
+- Marked `query_um_conditional_order_history()` (`GET /papi/v1/um/conditional/orderHistory`) as deprecated.
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Added (1)
+
+#### WebSocket Streams
+
+- Added `PmProAccountUpdate` on `UserDataStreamEventsResponse` list.
+
+**Derivatives Trading Usds Futures**
+
+### Changed (3)
+
+#### REST API
+
+- Deleted parameter `page`
+  - affected methods:
+    - `query_all_algo_orders()` (`GET /fapi/v1/allAlgoOrders`)
+- Modified parameter `interval`:
+  - enum added: `1s`
+  - affected methods:
+    - `continuous_contract_kline_candlestick_data()` (`GET /fapi/v1/continuousKlines`)
+    - `index_price_kline_candlestick_data()` (`GET /fapi/v1/indexPriceKlines`)
+    - `kline_candlestick_data()` (`GET /fapi/v1/klines`)
+    - `mark_price_kline_candlestick_data()` (`GET /fapi/v1/markPriceKlines`)
+    - `premium_index_kline_data()` (`GET /fapi/v1/premiumIndexKlines`)
+- Modified parameter `limit`:
+  - required: `true` → `false`
+  - affected methods:
+    - `basis()` (`GET /futures/data/basis`)
+
+**Spot**
+
+### Changed (1)
+
+#### WebSocket API
+
+- Modified response for `reference_price()` (`referencePrice` method):
+  - `result`: property `msg` added
+  - `result`: property `code` added
+
 ## 45.0.0 - 2026-04-15
 
 **Derivatives Trading Portfolio Margin**

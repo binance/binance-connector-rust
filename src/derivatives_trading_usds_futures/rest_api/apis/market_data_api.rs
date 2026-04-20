@@ -339,6 +339,8 @@ impl std::str::FromStr for ContinuousContractKlineCandlestickDataContractTypeEnu
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ContinuousContractKlineCandlestickDataIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
     #[serde(rename = "1m")]
     Interval1m,
     #[serde(rename = "3m")]
@@ -375,6 +377,7 @@ impl ContinuousContractKlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::Interval1s => "1s",
             Self::Interval1m => "1m",
             Self::Interval3m => "3m",
             Self::Interval5m => "5m",
@@ -399,6 +402,7 @@ impl std::str::FromStr for ContinuousContractKlineCandlestickDataIntervalEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "1s" => Ok(Self::Interval1s),
             "1m" => Ok(Self::Interval1m),
             "3m" => Ok(Self::Interval3m),
             "5m" => Ok(Self::Interval5m),
@@ -426,6 +430,8 @@ impl std::str::FromStr for ContinuousContractKlineCandlestickDataIntervalEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum IndexPriceKlineCandlestickDataIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
     #[serde(rename = "1m")]
     Interval1m,
     #[serde(rename = "3m")]
@@ -462,6 +468,7 @@ impl IndexPriceKlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::Interval1s => "1s",
             Self::Interval1m => "1m",
             Self::Interval3m => "3m",
             Self::Interval5m => "5m",
@@ -486,6 +493,7 @@ impl std::str::FromStr for IndexPriceKlineCandlestickDataIntervalEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "1s" => Ok(Self::Interval1s),
             "1m" => Ok(Self::Interval1m),
             "3m" => Ok(Self::Interval3m),
             "5m" => Ok(Self::Interval5m),
@@ -513,6 +521,8 @@ impl std::str::FromStr for IndexPriceKlineCandlestickDataIntervalEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KlineCandlestickDataIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
     #[serde(rename = "1m")]
     Interval1m,
     #[serde(rename = "3m")]
@@ -549,6 +559,7 @@ impl KlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::Interval1s => "1s",
             Self::Interval1m => "1m",
             Self::Interval3m => "3m",
             Self::Interval5m => "5m",
@@ -573,6 +584,7 @@ impl std::str::FromStr for KlineCandlestickDataIntervalEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "1s" => Ok(Self::Interval1s),
             "1m" => Ok(Self::Interval1m),
             "3m" => Ok(Self::Interval3m),
             "5m" => Ok(Self::Interval5m),
@@ -655,6 +667,8 @@ impl std::str::FromStr for LongShortRatioPeriodEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarkPriceKlineCandlestickDataIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
     #[serde(rename = "1m")]
     Interval1m,
     #[serde(rename = "3m")]
@@ -691,6 +705,7 @@ impl MarkPriceKlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::Interval1s => "1s",
             Self::Interval1m => "1m",
             Self::Interval3m => "3m",
             Self::Interval5m => "5m",
@@ -715,6 +730,7 @@ impl std::str::FromStr for MarkPriceKlineCandlestickDataIntervalEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "1s" => Ok(Self::Interval1s),
             "1m" => Ok(Self::Interval1m),
             "3m" => Ok(Self::Interval3m),
             "5m" => Ok(Self::Interval5m),
@@ -801,6 +817,8 @@ impl std::str::FromStr for OpenInterestStatisticsPeriodEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum PremiumIndexKlineDataIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
     #[serde(rename = "1m")]
     Interval1m,
     #[serde(rename = "3m")]
@@ -837,6 +855,7 @@ impl PremiumIndexKlineDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::Interval1s => "1s",
             Self::Interval1m => "1m",
             Self::Interval3m => "3m",
             Self::Interval5m => "5m",
@@ -861,6 +880,7 @@ impl std::str::FromStr for PremiumIndexKlineDataIntervalEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "1s" => Ok(Self::Interval1s),
             "1m" => Ok(Self::Interval1m),
             "3m" => Ok(Self::Interval3m),
             "5m" => Ok(Self::Interval5m),
@@ -1113,11 +1133,11 @@ pub struct BasisParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub period: BasisPeriodEnum,
-    /// Default 30,Max 500
+    /// Default 100; max 1000
     ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub limit: i64,
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub limit: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
@@ -1140,20 +1160,17 @@ impl BasisParams {
     /// * `pair` — String
     /// * `contract_type` — String
     /// * `period` — \"5m\",\"15m\",\"30m\",\"1h\",\"2h\",\"4h\",\"6h\",\"12h\",\"1d\"
-    /// * `limit` — Default 30,Max 500
     ///
     #[must_use]
     pub fn builder(
         pair: String,
         contract_type: BasisContractTypeEnum,
         period: BasisPeriodEnum,
-        limit: i64,
     ) -> BasisParamsBuilder {
         BasisParamsBuilder::default()
             .pair(pair)
             .contract_type(contract_type)
             .period(period)
-            .limit(limit)
     }
 }
 /// Request parameters for the [`composite_index_symbol_information`] operation.
@@ -2261,7 +2278,9 @@ impl MarketDataApi for MarketDataApiClient {
 
         query_params.insert("period".to_string(), json!(period));
 
-        query_params.insert("limit".to_string(), json!(limit));
+        if let Some(rw) = limit {
+            query_params.insert("limit".to_string(), json!(rw));
+        }
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -4466,7 +4485,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::Perpetual,BasisPeriodEnum::Period5m,30,).build().unwrap();
+            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::Perpetual,BasisPeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"indexPrice":"34400.15945055","contractType":"PERPETUAL","basisRate":"0.0004","futuresPrice":"34414.10","annualizedBasisRate":"","basis":"13.94054945","pair":"BTCUSDT","timestamp":1698742800000}]"#).unwrap();
             let expected_response : Vec<models::BasisResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::BasisResponseInner>");
@@ -4483,7 +4502,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::Perpetual,BasisPeriodEnum::Period5m,30,).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = BasisParams::builder("pair_example".to_string(),BasisContractTypeEnum::Perpetual,BasisPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"indexPrice":"34400.15945055","contractType":"PERPETUAL","basisRate":"0.0004","futuresPrice":"34414.10","annualizedBasisRate":"","basis":"13.94054945","pair":"BTCUSDT","timestamp":1698742800000}]"#).unwrap();
             let expected_response : Vec<models::BasisResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::BasisResponseInner>");
@@ -4504,7 +4523,6 @@ mod tests {
                 "pair_example".to_string(),
                 BasisContractTypeEnum::Perpetual,
                 BasisPeriodEnum::Period5m,
-                30,
             )
             .build()
             .unwrap();
@@ -4681,7 +4699,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
+            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1607444700000,"18879.99","18900.00","18878.98","18896.13","492.363",1607444759999,"9302145.66080",1874,"385.983","7292402.33267","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>");
@@ -4698,7 +4716,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = ContinuousContractKlineCandlestickDataParams::builder("pair_example".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1607444700000,"18879.99","18900.00","18878.98","18896.13","492.363",1607444759999,"9302145.66080",1874,"385.983","7292402.33267","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>");
@@ -4718,7 +4736,7 @@ mod tests {
             let params = ContinuousContractKlineCandlestickDataParams::builder(
                 "pair_example".to_string(),
                 ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,
-                ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,
+                ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,
             )
             .build()
             .unwrap();
@@ -4882,7 +4900,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
+            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256400000,"9653.69440000","9653.69640000","9651.38600000","9651.55200000","0",1591256459999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>>");
@@ -4899,7 +4917,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = IndexPriceKlineCandlestickDataParams::builder("pair_example".to_string(),IndexPriceKlineCandlestickDataIntervalEnum::Interval1s,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256400000,"9653.69440000","9653.69640000","9651.38600000","9651.55200000","0",1591256459999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>>");
@@ -4918,7 +4936,7 @@ mod tests {
 
             let params = IndexPriceKlineCandlestickDataParams::builder(
                 "pair_example".to_string(),
-                IndexPriceKlineCandlestickDataIntervalEnum::Interval1m,
+                IndexPriceKlineCandlestickDataIntervalEnum::Interval1s,
             )
             .build()
             .unwrap();
@@ -4937,7 +4955,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
+            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","17928899.62484339"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlineCandlestickDataResponseItemInner>>");
@@ -4954,7 +4972,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = KlineCandlestickDataParams::builder("symbol_example".to_string(),KlineCandlestickDataIntervalEnum::Interval1s,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1499040000000,"0.01634790","0.80000000","0.01575800","0.01577100","148976.11427815",1499644799999,"2434.19055334",308,"1756.87402397","28.46694368","17928899.62484339"]]"#).unwrap();
             let expected_response : Vec<Vec<models::KlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::KlineCandlestickDataResponseItemInner>>");
@@ -4973,7 +4991,7 @@ mod tests {
 
             let params = KlineCandlestickDataParams::builder(
                 "symbol_example".to_string(),
-                KlineCandlestickDataIntervalEnum::Interval1m,
+                KlineCandlestickDataIntervalEnum::Interval1s,
             )
             .build()
             .unwrap();
@@ -5097,7 +5115,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
+            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256460000,"9653.29201333","9654.56401333","9653.07367333","9653.07367333","0",1591256519999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>");
@@ -5114,7 +5132,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = MarkPriceKlineCandlestickDataParams::builder("symbol_example".to_string(),MarkPriceKlineCandlestickDataIntervalEnum::Interval1s,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256460000,"9653.29201333","9654.56401333","9653.07367333","9653.07367333","0",1591256519999,"0",60,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>");
@@ -5133,7 +5151,7 @@ mod tests {
 
             let params = MarkPriceKlineCandlestickDataParams::builder(
                 "symbol_example".to_string(),
-                MarkPriceKlineCandlestickDataIntervalEnum::Interval1m,
+                MarkPriceKlineCandlestickDataIntervalEnum::Interval1s,
             )
             .build()
             .unwrap();
@@ -5433,7 +5451,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::Interval1m,).build().unwrap();
+            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1691603820000,"-0.00042931","-0.00023641","-0.00059406","-0.00043659","0",1691603879999,"0",12,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>>");
@@ -5450,7 +5468,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
+            let params = PremiumIndexKlineDataParams::builder("symbol_example".to_string(),PremiumIndexKlineDataIntervalEnum::Interval1s,).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[[1691603820000,"-0.00042931","-0.00023641","-0.00059406","-0.00043659","0",1691603879999,"0",12,"0","0","0"]]"#).unwrap();
             let expected_response : Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>>");
@@ -5469,7 +5487,7 @@ mod tests {
 
             let params = PremiumIndexKlineDataParams::builder(
                 "symbol_example".to_string(),
-                PremiumIndexKlineDataIntervalEnum::Interval1m,
+                PremiumIndexKlineDataIntervalEnum::Interval1s,
             )
             .build()
             .unwrap();

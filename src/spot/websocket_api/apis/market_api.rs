@@ -2685,7 +2685,7 @@ mod tests {
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/referencePrice".trim_start_matches('/'));
 
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"5132affb-0aba-4821-b475-f262504556b43","status":200,"result":{"symbol":"BAZUSD","referencePrice":"0.00501900","timestamp":1770946889251}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"5132affa-0aba-4831-b475-f262504556b41","status":200,"result":{"symbol":"BAZUSD","referencePrice":"0.00501900","timestamp":1770946889251,"code":-2043,"msg":"This symbol doesn't have a reference price."}}"#).unwrap();
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

@@ -29,6 +29,10 @@ pub struct ReferencePriceResponseResult {
     pub reference_price: Option<String>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
+    #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
+    pub code: Option<i64>,
+    #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
+    pub msg: Option<String>,
 }
 
 impl ReferencePriceResponseResult {
@@ -38,6 +42,8 @@ impl ReferencePriceResponseResult {
             symbol: None,
             reference_price: None,
             timestamp: None,
+            code: None,
+            msg: None,
         }
     }
 }

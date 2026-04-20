@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "45.0.0"
+version = "46.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1499,6 +1499,11 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_all_um_algo_open_orders"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_all_um_algo_open_orders.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_all_um_open_conditional_orders"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_all_um_open_conditional_orders.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1534,6 +1539,11 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_um_algo_order"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_um_algo_order.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_um_conditional_order"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_um_conditional_order.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1551,6 +1561,11 @@ required-features = [ "derivatives_trading_portfolio_margin" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cm_position_adl_quantile_estimation"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cm_position_adl_quantile_estimation.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_trade_api_futures_tradfi_perps_contract"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/futures_tradfi_perps_contract.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
@@ -1609,6 +1624,11 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/new_mar
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_trade_api_new_um_algo_order"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/new_um_algo_order.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_new_um_conditional_order"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/new_um_conditional_order.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1636,6 +1656,11 @@ required-features = [ "derivatives_trading_portfolio_margin" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_all_current_cm_open_orders"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_all_current_cm_open_orders.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_all_current_um_open_algo_orders"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_all_current_um_open_algo_orders.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
@@ -1694,6 +1719,11 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_c
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_current_um_open_algo_order"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_current_um_open_algo_order.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_current_um_open_conditional_order"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_current_um_open_conditional_order.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1721,6 +1751,11 @@ required-features = [ "derivatives_trading_portfolio_margin" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_margin_accounts_open_oco"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_margin_accounts_open_oco.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_um_algo_order_history"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_um_algo_order_history.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
@@ -3204,6 +3239,11 @@ path = "examples/spot/rest_api/general_api/exchange_info.rs"
 required-features = [ "spot" ]
 
 [[example]]
+name = "spot_rest_api_general_api_execution_rules"
+path = "examples/spot/rest_api/general_api/execution_rules.rs"
+required-features = [ "spot" ]
+
+[[example]]
 name = "spot_rest_api_general_api_ping"
 path = "examples/spot/rest_api/general_api/ping.rs"
 required-features = [ "spot" ]
@@ -3241,6 +3281,16 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_rest_api_market_api_klines"
 path = "examples/spot/rest_api/market_api/klines.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_rest_api_market_api_reference_price_calculation"
+path = "examples/spot/rest_api/market_api/reference_price_calculation.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_rest_api_market_api_reference_price"
+path = "examples/spot/rest_api/market_api/reference_price.rs"
 required-features = [ "spot" ]
 
 [[example]]
@@ -3439,6 +3489,11 @@ path = "examples/spot/websocket_api/general_api/exchange_info.rs"
 required-features = [ "spot" ]
 
 [[example]]
+name = "spot_websocket_api_general_api_execution_rules"
+path = "examples/spot/websocket_api/general_api/execution_rules.rs"
+required-features = [ "spot" ]
+
+[[example]]
 name = "spot_websocket_api_general_api_ping"
 path = "examples/spot/websocket_api/general_api/ping.rs"
 required-features = [ "spot" ]
@@ -3461,6 +3516,16 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_api_market_api_klines"
 path = "examples/spot/websocket_api/market_api/klines.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_api_market_api_reference_price_calculation"
+path = "examples/spot/websocket_api/market_api/reference_price_calculation.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_api_market_api_reference_price"
+path = "examples/spot/websocket_api/market_api/reference_price.rs"
 required-features = [ "spot" ]
 
 [[example]]
@@ -3651,6 +3716,11 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_streams_partial_book_depth"
 path = "examples/spot/websocket_streams/partial_book_depth.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_streams_reference_price"
+path = "examples/spot/websocket_streams/reference_price.rs"
 required-features = [ "spot" ]
 
 [[example]]

@@ -39,6 +39,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: CancelAllCmOpenOrdersParams,
     ) -> anyhow::Result<RestApiResponse<models::CancelAllCmOpenOrdersResponse>>;
+    async fn cancel_all_um_algo_open_orders(
+        &self,
+        params: CancelAllUmAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAllUmAlgoOpenOrdersResponse>>;
     async fn cancel_all_um_open_conditional_orders(
         &self,
         params: CancelAllUmOpenConditionalOrdersParams,
@@ -69,6 +73,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: CancelMarginAccountOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::CancelMarginAccountOrderResponse>>;
+    async fn cancel_um_algo_order(
+        &self,
+        params: CancelUmAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelUmAlgoOrderResponse>>;
     async fn cancel_um_conditional_order(
         &self,
         params: CancelUmConditionalOrderParams,
@@ -133,6 +141,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: NewMarginOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::NewMarginOrderResponse>>;
+    async fn new_um_algo_order(
+        &self,
+        params: NewUmAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::NewUmAlgoOrderResponse>>;
     async fn new_um_conditional_order(
         &self,
         params: NewUmConditionalOrderParams,
@@ -159,6 +171,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryAllCurrentCmOpenOrdersParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllCmOrdersResponseInner>>>;
+    async fn query_all_current_um_open_algo_orders(
+        &self,
+        params: QueryAllCurrentUmOpenAlgoOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>>>;
     async fn query_all_current_um_open_conditional_orders(
         &self,
         params: QueryAllCurrentUmOpenConditionalOrdersParams,
@@ -205,6 +221,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryCurrentMarginOpenOrderParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryCurrentMarginOpenOrderResponseInner>>>;
+    async fn query_current_um_open_algo_order(
+        &self,
+        params: QueryCurrentUmOpenAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenAlgoOrderResponse>>;
     async fn query_current_um_open_conditional_order(
         &self,
         params: QueryCurrentUmOpenConditionalOrderParams,
@@ -229,6 +249,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryMarginAccountsOpenOcoParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryMarginAccountsOpenOcoResponseInner>>>;
+    async fn query_um_algo_order_history(
+        &self,
+        params: QueryUmAlgoOrderHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>>;
     async fn query_um_conditional_order_history(
         &self,
         params: QueryUmConditionalOrderHistoryParams,
@@ -1219,6 +1243,302 @@ impl std::str::FromStr for NewMarginOrderSelfTradePreventionModeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderSideEnum {
+    #[serde(rename = "BUY")]
+    Buy,
+    #[serde(rename = "SELL")]
+    Sell,
+}
+
+impl NewUmAlgoOrderSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Buy => "BUY",
+            Self::Sell => "SELL",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BUY" => Ok(Self::Buy),
+            "SELL" => Ok(Self::Sell),
+            other => Err(format!("invalid NewUmAlgoOrderSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderTypeEnum {
+    #[serde(rename = "LIMIT")]
+    Limit,
+    #[serde(rename = "MARKET")]
+    Market,
+}
+
+impl NewUmAlgoOrderTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Limit => "LIMIT",
+            Self::Market => "MARKET",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "LIMIT" => Ok(Self::Limit),
+            "MARKET" => Ok(Self::Market),
+            other => Err(format!("invalid NewUmAlgoOrderTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderPositionSideEnum {
+    #[serde(rename = "BOTH")]
+    Both,
+    #[serde(rename = "LONG")]
+    Long,
+    #[serde(rename = "SHORT")]
+    Short,
+}
+
+impl NewUmAlgoOrderPositionSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Both => "BOTH",
+            Self::Long => "LONG",
+            Self::Short => "SHORT",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderPositionSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BOTH" => Ok(Self::Both),
+            "LONG" => Ok(Self::Long),
+            "SHORT" => Ok(Self::Short),
+            other => Err(format!("invalid NewUmAlgoOrderPositionSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderTimeInForceEnum {
+    #[serde(rename = "GTC")]
+    Gtc,
+    #[serde(rename = "IOC")]
+    Ioc,
+    #[serde(rename = "FOK")]
+    Fok,
+    #[serde(rename = "GTX")]
+    Gtx,
+}
+
+impl NewUmAlgoOrderTimeInForceEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Gtc => "GTC",
+            Self::Ioc => "IOC",
+            Self::Fok => "FOK",
+            Self::Gtx => "GTX",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderTimeInForceEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "GTC" => Ok(Self::Gtc),
+            "IOC" => Ok(Self::Ioc),
+            "FOK" => Ok(Self::Fok),
+            "GTX" => Ok(Self::Gtx),
+            other => Err(format!("invalid NewUmAlgoOrderTimeInForceEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderWorkingTypeEnum {
+    #[serde(rename = "MARK_PRICE")]
+    MarkPrice,
+}
+
+impl NewUmAlgoOrderWorkingTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::MarkPrice => "MARK_PRICE",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderWorkingTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MARK_PRICE" => Ok(Self::MarkPrice),
+            other => Err(format!("invalid NewUmAlgoOrderWorkingTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderPriceMatchEnum {
+    #[serde(rename = "NONE")]
+    None,
+    #[serde(rename = "OPPONENT")]
+    Opponent,
+    #[serde(rename = "OPPONENT_5")]
+    Opponent5,
+    #[serde(rename = "OPPONENT_10")]
+    Opponent10,
+    #[serde(rename = "OPPONENT_20")]
+    Opponent20,
+    #[serde(rename = "QUEUE")]
+    Queue,
+    #[serde(rename = "QUEUE_5")]
+    Queue5,
+    #[serde(rename = "QUEUE_10")]
+    Queue10,
+    #[serde(rename = "QUEUE_20")]
+    Queue20,
+}
+
+impl NewUmAlgoOrderPriceMatchEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::None => "NONE",
+            Self::Opponent => "OPPONENT",
+            Self::Opponent5 => "OPPONENT_5",
+            Self::Opponent10 => "OPPONENT_10",
+            Self::Opponent20 => "OPPONENT_20",
+            Self::Queue => "QUEUE",
+            Self::Queue5 => "QUEUE_5",
+            Self::Queue10 => "QUEUE_10",
+            Self::Queue20 => "QUEUE_20",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderPriceMatchEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "NONE" => Ok(Self::None),
+            "OPPONENT" => Ok(Self::Opponent),
+            "OPPONENT_5" => Ok(Self::Opponent5),
+            "OPPONENT_10" => Ok(Self::Opponent10),
+            "OPPONENT_20" => Ok(Self::Opponent20),
+            "QUEUE" => Ok(Self::Queue),
+            "QUEUE_5" => Ok(Self::Queue5),
+            "QUEUE_10" => Ok(Self::Queue10),
+            "QUEUE_20" => Ok(Self::Queue20),
+            other => Err(format!("invalid NewUmAlgoOrderPriceMatchEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderNewOrderRespTypeEnum {
+    #[serde(rename = "ACK")]
+    Ack,
+    #[serde(rename = "RESULT")]
+    Result,
+}
+
+impl NewUmAlgoOrderNewOrderRespTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ack => "ACK",
+            Self::Result => "RESULT",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderNewOrderRespTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "ACK" => Ok(Self::Ack),
+            "RESULT" => Ok(Self::Result),
+            other => Err(format!("invalid NewUmAlgoOrderNewOrderRespTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderSelfTradePreventionModeEnum {
+    #[serde(rename = "NONE")]
+    None,
+    #[serde(rename = "EXPIRE_TAKER")]
+    ExpireTaker,
+    #[serde(rename = "EXPIRE_BOTH")]
+    ExpireBoth,
+    #[serde(rename = "EXPIRE_MAKER")]
+    ExpireMaker,
+}
+
+impl NewUmAlgoOrderSelfTradePreventionModeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::None => "NONE",
+            Self::ExpireTaker => "EXPIRE_TAKER",
+            Self::ExpireBoth => "EXPIRE_BOTH",
+            Self::ExpireMaker => "EXPIRE_MAKER",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderSelfTradePreventionModeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "NONE" => Ok(Self::None),
+            "EXPIRE_TAKER" => Ok(Self::ExpireTaker),
+            "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
+            "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
+            other => Err(format!(
+                "invalid NewUmAlgoOrderSelfTradePreventionModeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewUmConditionalOrderSideEnum {
     #[serde(rename = "BUY")]
     Buy,
@@ -1905,6 +2225,39 @@ impl CancelAllCmOpenOrdersParams {
         CancelAllCmOpenOrdersParamsBuilder::default().symbol(symbol)
     }
 }
+/// Request parameters for the [`cancel_all_um_algo_open_orders`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`cancel_all_um_algo_open_orders`](#method.cancel_all_um_algo_open_orders).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CancelAllUmAlgoOpenOrdersParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CancelAllUmAlgoOpenOrdersParams {
+    /// Create a builder for [`cancel_all_um_algo_open_orders`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> CancelAllUmAlgoOpenOrdersParamsBuilder {
+        CancelAllUmAlgoOpenOrdersParamsBuilder::default().symbol(symbol)
+    }
+}
 /// Request parameters for the [`cancel_all_um_open_conditional_orders`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -2190,6 +2543,41 @@ impl CancelMarginAccountOrderParams {
     #[must_use]
     pub fn builder(symbol: String) -> CancelMarginAccountOrderParamsBuilder {
         CancelMarginAccountOrderParamsBuilder::default().symbol(symbol)
+    }
+}
+/// Request parameters for the [`cancel_um_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`cancel_um_algo_order`](#method.cancel_um_algo_order).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CancelUmAlgoOrderParams {
+    ///
+    /// The `algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub algo_id: Option<i64>,
+    ///
+    /// The `client_algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub client_algo_id: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CancelUmAlgoOrderParams {
+    /// Create a builder for [`cancel_um_algo_order`].
+    ///
+    #[must_use]
+    pub fn builder() -> CancelUmAlgoOrderParamsBuilder {
+        CancelUmAlgoOrderParamsBuilder::default()
     }
 }
 /// Request parameters for the [`cancel_um_conditional_order`] operation.
@@ -3201,6 +3589,152 @@ impl NewMarginOrderParams {
             .r#type(r#type)
     }
 }
+/// Request parameters for the [`new_um_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`new_um_algo_order`](#method.new_um_algo_order).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct NewUmAlgoOrderParams {
+    /// Only support `CONDITIONAL`
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub algo_type: String,
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    ///
+    /// The `side` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub side: NewUmAlgoOrderSideEnum,
+    /// `LIMIT`, `MARKET`
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub r#type: NewUmAlgoOrderTypeEnum,
+    /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub position_side: Option<NewUmAlgoOrderPositionSideEnum>,
+    ///
+    /// The `time_in_force` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub time_in_force: Option<NewUmAlgoOrderTimeInForceEnum>,
+    ///
+    /// The `quantity` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub quantity: Option<rust_decimal::Decimal>,
+    ///
+    /// The `price` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub price: Option<rust_decimal::Decimal>,
+    ///
+    /// The `trigger_price` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub trigger_price: Option<rust_decimal::Decimal>,
+    /// stopPrice triggered by: "`MARK_PRICE`", "`CONTRACT_PRICE`". Default "`CONTRACT_PRICE`"
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub working_type: Option<NewUmAlgoOrderWorkingTypeEnum>,
+    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`: /`QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub price_match: Option<NewUmAlgoOrderPriceMatchEnum>,
+    /// true, false; Close-All, used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub close_position: Option<String>,
+    /// "TRUE" or "FALSE", default "FALSE". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub price_protect: Option<String>,
+    /// "true" or "false". default "false". Cannot be sent in Hedge Mode .
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub reduce_only: Option<String>,
+    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different `workingType`)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub activate_price: Option<rust_decimal::Decimal>,
+    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 5 where 1 for 1%
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub callback_rate: Option<rust_decimal::Decimal>,
+    ///
+    /// The `client_algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub client_algo_id: Option<String>,
+    /// "ACK", "RESULT", default "ACK"
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub new_order_resp_type: Option<NewUmAlgoOrderNewOrderRespTypeEnum>,
+    /// `NONE`:No STP / `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub self_trade_prevention_mode: Option<NewUmAlgoOrderSelfTradePreventionModeEnum>,
+    /// order cancel time for timeInForce `GTD`, mandatory when `timeInforce` set to `GTD`; order the timestamp only retains second-level precision, ms part will be ignored; The goodTillDate timestamp must be greater than the current time plus 600 seconds and smaller than 253402300799000Mode. It must be sent in Hedge Mode.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub good_till_date: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl NewUmAlgoOrderParams {
+    /// Create a builder for [`new_um_algo_order`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `algo_type` — Only support `CONDITIONAL`
+    /// * `symbol` — String
+    /// * `side` — String
+    /// * `r#type` — `LIMIT`, `MARKET`
+    ///
+    #[must_use]
+    pub fn builder(
+        algo_type: String,
+        symbol: String,
+        side: NewUmAlgoOrderSideEnum,
+        r#type: NewUmAlgoOrderTypeEnum,
+    ) -> NewUmAlgoOrderParamsBuilder {
+        NewUmAlgoOrderParamsBuilder::default()
+            .algo_type(algo_type)
+            .symbol(symbol)
+            .side(side)
+            .r#type(r#type)
+    }
+}
 /// Request parameters for the [`new_um_conditional_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -3606,6 +4140,47 @@ impl QueryAllCurrentCmOpenOrdersParams {
     #[must_use]
     pub fn builder() -> QueryAllCurrentCmOpenOrdersParamsBuilder {
         QueryAllCurrentCmOpenOrdersParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`query_all_current_um_open_algo_orders`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_all_current_um_open_algo_orders`](#method.query_all_current_um_open_algo_orders).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryAllCurrentUmOpenAlgoOrdersParams {
+    ///
+    /// The `algo_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub algo_type: Option<String>,
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol: Option<String>,
+    ///
+    /// The `algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub algo_id: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryAllCurrentUmOpenAlgoOrdersParams {
+    /// Create a builder for [`query_all_current_um_open_algo_orders`].
+    ///
+    #[must_use]
+    pub fn builder() -> QueryAllCurrentUmOpenAlgoOrdersParamsBuilder {
+        QueryAllCurrentUmOpenAlgoOrdersParamsBuilder::default()
     }
 }
 /// Request parameters for the [`query_all_current_um_open_conditional_orders`] operation.
@@ -4097,6 +4672,41 @@ impl QueryCurrentMarginOpenOrderParams {
         QueryCurrentMarginOpenOrderParamsBuilder::default().symbol(symbol)
     }
 }
+/// Request parameters for the [`query_current_um_open_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_current_um_open_algo_order`](#method.query_current_um_open_algo_order).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryCurrentUmOpenAlgoOrderParams {
+    ///
+    /// The `algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub algo_id: Option<i64>,
+    ///
+    /// The `client_algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub client_algo_id: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryCurrentUmOpenAlgoOrderParams {
+    /// Create a builder for [`query_current_um_open_algo_order`].
+    ///
+    #[must_use]
+    pub fn builder() -> QueryCurrentUmOpenAlgoOrderParamsBuilder {
+        QueryCurrentUmOpenAlgoOrderParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`query_current_um_open_conditional_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -4330,6 +4940,60 @@ impl QueryMarginAccountsOpenOcoParams {
     #[must_use]
     pub fn builder() -> QueryMarginAccountsOpenOcoParamsBuilder {
         QueryMarginAccountsOpenOcoParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`query_um_algo_order_history`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_um_algo_order_history`](#method.query_um_algo_order_history).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryUmAlgoOrderHistoryParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    ///
+    /// The `algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub algo_id: Option<i64>,
+    /// Timestamp in ms to get funding from INCLUSIVE.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub start_time: Option<i64>,
+    /// Timestamp in ms to get funding until INCLUSIVE.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub end_time: Option<i64>,
+    /// Default 100; max 1000
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub limit: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryUmAlgoOrderHistoryParams {
+    /// Create a builder for [`query_um_algo_order_history`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> QueryUmAlgoOrderHistoryParamsBuilder {
+        QueryUmAlgoOrderHistoryParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`query_um_conditional_order_history`] operation.
@@ -4808,6 +5472,40 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn cancel_all_um_algo_open_orders(
+        &self,
+        params: CancelAllUmAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAllUmAlgoOpenOrdersResponse>> {
+        let CancelAllUmAlgoOpenOrdersParams {
+            symbol,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::CancelAllUmAlgoOpenOrdersResponse>(
+            &self.configuration,
+            "/papi/v1/um/algo/allOpenOrders",
+            reqwest::Method::DELETE,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn cancel_all_um_open_conditional_orders(
         &self,
         params: CancelAllUmOpenConditionalOrdersParams,
@@ -5085,6 +5783,47 @@ impl TradeApi for TradeApiClient {
         send_request::<models::CancelMarginAccountOrderResponse>(
             &self.configuration,
             "/papi/v1/margin/order",
+            reqwest::Method::DELETE,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn cancel_um_algo_order(
+        &self,
+        params: CancelUmAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelUmAlgoOrderResponse>> {
+        let CancelUmAlgoOrderParams {
+            algo_id,
+            client_algo_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::CancelUmAlgoOrderResponse>(
+            &self.configuration,
+            "/papi/v1/um/algo/order",
             reqwest::Method::DELETE,
             query_params,
             body_params,
@@ -5996,6 +6735,129 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn new_um_algo_order(
+        &self,
+        params: NewUmAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::NewUmAlgoOrderResponse>> {
+        let NewUmAlgoOrderParams {
+            algo_type,
+            symbol,
+            side,
+            r#type,
+            position_side,
+            time_in_force,
+            quantity,
+            price,
+            trigger_price,
+            working_type,
+            price_match,
+            close_position,
+            price_protect,
+            reduce_only,
+            activate_price,
+            callback_rate,
+            client_algo_id,
+            new_order_resp_type,
+            self_trade_prevention_mode,
+            good_till_date,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("algoType".to_string(), json!(algo_type));
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        query_params.insert("side".to_string(), json!(side));
+
+        if let Some(rw) = position_side {
+            query_params.insert("positionSide".to_string(), json!(rw));
+        }
+
+        query_params.insert("type".to_string(), json!(r#type));
+
+        if let Some(rw) = time_in_force {
+            query_params.insert("timeInForce".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = quantity {
+            query_params.insert("quantity".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = price {
+            query_params.insert("price".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = trigger_price {
+            query_params.insert("triggerPrice".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = working_type {
+            query_params.insert("workingType".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = price_match {
+            query_params.insert("priceMatch".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = close_position {
+            query_params.insert("closePosition".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = price_protect {
+            query_params.insert("priceProtect".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = reduce_only {
+            query_params.insert("reduceOnly".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = activate_price {
+            query_params.insert("activatePrice".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = callback_rate {
+            query_params.insert("callbackRate".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = new_order_resp_type {
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = self_trade_prevention_mode {
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = good_till_date {
+            query_params.insert("goodTillDate".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::NewUmAlgoOrderResponse>(
+            &self.configuration,
+            "/papi/v1/um/algo/order",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn new_um_conditional_order(
         &self,
         params: NewUmConditionalOrderParams,
@@ -6378,6 +7240,53 @@ impl TradeApi for TradeApiClient {
         send_request::<Vec<models::QueryAllCmOrdersResponseInner>>(
             &self.configuration,
             "/papi/v1/cm/openOrders",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn query_all_current_um_open_algo_orders(
+        &self,
+        params: QueryAllCurrentUmOpenAlgoOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>>>
+    {
+        let QueryAllCurrentUmOpenAlgoOrdersParams {
+            algo_type,
+            symbol,
+            algo_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = algo_type {
+            query_params.insert("algoType".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol {
+            query_params.insert("symbol".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>>(
+            &self.configuration,
+            "/papi/v1/um/algo/openAlgoOrders",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -6903,6 +7812,47 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn query_current_um_open_algo_order(
+        &self,
+        params: QueryCurrentUmOpenAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenAlgoOrderResponse>> {
+        let QueryCurrentUmOpenAlgoOrderParams {
+            algo_id,
+            client_algo_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::QueryCurrentUmOpenAlgoOrderResponse>(
+            &self.configuration,
+            "/papi/v1/um/algo/algoOrder",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn query_current_um_open_conditional_order(
         &self,
         params: QueryCurrentUmOpenConditionalOrderParams,
@@ -7143,6 +8093,60 @@ impl TradeApi for TradeApiClient {
         send_request::<Vec<models::QueryMarginAccountsOpenOcoResponseInner>>(
             &self.configuration,
             "/papi/v1/margin/openOrderList",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn query_um_algo_order_history(
+        &self,
+        params: QueryUmAlgoOrderHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>> {
+        let QueryUmAlgoOrderHistoryParams {
+            symbol,
+            algo_id,
+            start_time,
+            end_time,
+            limit,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = start_time {
+            query_params.insert("startTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = end_time {
+            query_params.insert("endTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = limit {
+            query_params.insert("limit".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>(
+            &self.configuration,
+            "/papi/v1/um/algo/allAlgoOrders",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -7682,6 +8686,36 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn cancel_all_um_algo_open_orders(
+            &self,
+            _params: CancelAllUmAlgoOpenOrdersParams,
+        ) -> anyhow::Result<RestApiResponse<models::CancelAllUmAlgoOpenOrdersResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
+            )
+            .unwrap();
+            let dummy_response: models::CancelAllUmAlgoOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelAllUmAlgoOpenOrdersResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn cancel_all_um_open_conditional_orders(
             &self,
             _params: CancelAllUmOpenConditionalOrdersParams,
@@ -7864,6 +8898,33 @@ mod tests {
             let dummy_response: models::CancelMarginAccountOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelMarginAccountOrderResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn cancel_um_algo_order(
+            &self,
+            _params: CancelUmAlgoOrderParams,
+        ) -> anyhow::Result<RestApiResponse<models::CancelUmAlgoOrderResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap();
+            let dummy_response: models::CancelUmAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelUmAlgoOrderResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -8311,6 +9372,33 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn new_um_algo_order(
+            &self,
+            _params: NewUmAlgoOrderParams,
+        ) -> anyhow::Result<RestApiResponse<models::NewUmAlgoOrderResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let dummy_response: models::NewUmAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::NewUmAlgoOrderResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn new_um_conditional_order(
             &self,
             _params: NewUmConditionalOrderParams,
@@ -8464,6 +9552,36 @@ mod tests {
             let dummy_response: Vec<models::QueryAllCmOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::QueryAllCmOrdersResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_all_current_um_open_algo_orders(
+            &self,
+            _params: QueryAllCurrentUmOpenAlgoOrdersParams,
+        ) -> anyhow::Result<
+            RestApiResponse<Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>>,
+        > {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2148627,"clientAlgoId":"MRumok0dkhrP4kCm12AHaB","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750514941540,"updateTime":1750514941540,"triggerTime":0,"goodTillDate":0}]"#).unwrap();
+            let dummy_response: Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>",
+                );
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -8786,6 +9904,33 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn query_current_um_open_algo_order(
+            &self,
+            _params: QueryCurrentUmOpenAlgoOrderParams,
+        ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenAlgoOrderResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let dummy_response: models::QueryCurrentUmOpenAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::QueryCurrentUmOpenAlgoOrderResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn query_current_um_open_conditional_order(
             &self,
             _params: QueryCurrentUmOpenConditionalOrderParams,
@@ -8942,6 +10087,34 @@ mod tests {
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryMarginAccountsOpenOcoResponseInner>",
                 );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_um_algo_order_history(
+            &self,
+            _params: QueryUmAlgoOrderHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}]"#).unwrap();
+            let dummy_response: Vec<models::QueryUmAlgoOrderHistoryResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::QueryUmAlgoOrderHistoryResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -9333,6 +10506,79 @@ mod tests {
     }
 
     #[test]
+    fn cancel_all_um_algo_open_orders_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelAllUmAlgoOpenOrdersParams::builder("symbol_example".to_string())
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
+            )
+            .unwrap();
+            let expected_response: models::CancelAllUmAlgoOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelAllUmAlgoOpenOrdersResponse");
+
+            let resp = client
+                .cancel_all_um_algo_open_orders(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_all_um_algo_open_orders_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelAllUmAlgoOpenOrdersParams::builder("symbol_example".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
+            )
+            .unwrap();
+            let expected_response: models::CancelAllUmAlgoOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelAllUmAlgoOpenOrdersResponse");
+
+            let resp = client
+                .cancel_all_um_algo_open_orders(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_all_um_algo_open_orders_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = CancelAllUmAlgoOpenOrdersParams::builder("symbol_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.cancel_all_um_algo_open_orders(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn cancel_all_um_open_conditional_orders_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -9715,6 +10961,56 @@ mod tests {
                 .unwrap();
 
             match client.cancel_margin_account_order(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn cancel_um_algo_order_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelUmAlgoOrderParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap();
+            let expected_response : models::CancelUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelUmAlgoOrderResponse");
+
+            let resp = client.cancel_um_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_um_algo_order_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelUmAlgoOrderParams::builder().algo_id(1).client_algo_id("1".to_string()).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap();
+            let expected_response : models::CancelUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelUmAlgoOrderResponse");
+
+            let resp = client.cancel_um_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_um_algo_order_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = CancelUmAlgoOrderParams::builder().build().unwrap();
+
+            match client.cancel_um_algo_order(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -10634,6 +11930,63 @@ mod tests {
     }
 
     #[test]
+    fn new_um_algo_order_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
+
+            let resp = client.new_um_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn new_um_algo_order_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,).position_side(NewUmAlgoOrderPositionSideEnum::Both).time_in_force(NewUmAlgoOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewUmAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewUmAlgoOrderPriceMatchEnum::None).close_position("close_position_example".to_string()).price_protect("false".to_string()).reduce_only("false".to_string()).activate_price(dec!(1.0)).callback_rate(dec!(1.0)).client_algo_id("1".to_string()).new_order_resp_type(NewUmAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewUmAlgoOrderSelfTradePreventionModeEnum::None).good_till_date(789).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
+
+            let resp = client.new_um_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn new_um_algo_order_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = NewUmAlgoOrderParams::builder(
+                "algo_type_example".to_string(),
+                "symbol_example".to_string(),
+                NewUmAlgoOrderSideEnum::Buy,
+                NewUmAlgoOrderTypeEnum::Limit,
+            )
+            .build()
+            .unwrap();
+
+            match client.new_um_algo_order(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn new_um_conditional_order_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -10948,6 +12301,58 @@ mod tests {
                 .unwrap();
 
             match client.query_all_current_cm_open_orders(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_all_current_um_open_algo_orders_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryAllCurrentUmOpenAlgoOrdersParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2148627,"clientAlgoId":"MRumok0dkhrP4kCm12AHaB","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750514941540,"updateTime":1750514941540,"triggerTime":0,"goodTillDate":0}]"#).unwrap();
+            let expected_response : Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>");
+
+            let resp = client.query_all_current_um_open_algo_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_all_current_um_open_algo_orders_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryAllCurrentUmOpenAlgoOrdersParams::builder().algo_type("algo_type_example".to_string()).symbol("symbol_example".to_string()).algo_id(1).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2148627,"clientAlgoId":"MRumok0dkhrP4kCm12AHaB","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750514941540,"updateTime":1750514941540,"triggerTime":0,"goodTillDate":0}]"#).unwrap();
+            let expected_response : Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>");
+
+            let resp = client.query_all_current_um_open_algo_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_all_current_um_open_algo_orders_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = QueryAllCurrentUmOpenAlgoOrdersParams::builder()
+                .build()
+                .unwrap();
+
+            match client.query_all_current_um_open_algo_orders(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -11534,6 +12939,58 @@ mod tests {
     }
 
     #[test]
+    fn query_current_um_open_algo_order_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryCurrentUmOpenAlgoOrderParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let expected_response : models::QueryCurrentUmOpenAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentUmOpenAlgoOrderResponse");
+
+            let resp = client.query_current_um_open_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_current_um_open_algo_order_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryCurrentUmOpenAlgoOrderParams::builder().algo_id(1).client_algo_id("1".to_string()).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let expected_response : models::QueryCurrentUmOpenAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentUmOpenAlgoOrderResponse");
+
+            let resp = client.query_current_um_open_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_current_um_open_algo_order_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = QueryCurrentUmOpenAlgoOrderParams::builder()
+                .build()
+                .unwrap();
+
+            match client.query_current_um_open_algo_order(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn query_current_um_open_conditional_order_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -11832,6 +13289,58 @@ mod tests {
             let params = QueryMarginAccountsOpenOcoParams::builder().build().unwrap();
 
             match client.query_margin_accounts_open_oco(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_um_algo_order_history_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryUmAlgoOrderHistoryParams::builder("symbol_example".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}]"#).unwrap();
+            let expected_response : Vec<models::QueryUmAlgoOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUmAlgoOrderHistoryResponseInner>");
+
+            let resp = client.query_um_algo_order_history(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_um_algo_order_history_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryUmAlgoOrderHistoryParams::builder("symbol_example".to_string(),).algo_id(1).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}]"#).unwrap();
+            let expected_response : Vec<models::QueryUmAlgoOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUmAlgoOrderHistoryResponseInner>");
+
+            let resp = client.query_um_algo_order_history(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_um_algo_order_history_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = QueryUmAlgoOrderHistoryParams::builder("symbol_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.query_um_algo_order_history(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

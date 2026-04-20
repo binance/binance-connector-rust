@@ -2211,7 +2211,52 @@ impl RestApi {
             .await
     }
 
-    /// Cancel All UM Open Conditional Orders (TRADE)
+    /// Cancel All UM Algo Open Orders (TRADE)
+    ///
+    /// Cancel All UM Algo Open Orders
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CancelAllUmAlgoOpenOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CancelAllUmAlgoOpenOrdersResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-UM-Algo-Open-Orders).
+    ///
+    pub async fn cancel_all_um_algo_open_orders(
+        &self,
+        params: CancelAllUmAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAllUmAlgoOpenOrdersResponse>> {
+        self.trade_api_client
+            .cancel_all_um_algo_open_orders(params)
+            .await
+    }
+
+    /// Cancel All UM Open Conditional Orders
     ///
     /// Cancel All UM Open Conditional Orders
     ///
@@ -2247,6 +2292,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-UM-Open-Conditional-Orders).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn cancel_all_um_open_conditional_orders(
         &self,
         params: CancelAllUmOpenConditionalOrdersParams,
@@ -2534,7 +2583,52 @@ impl RestApi {
             .await
     }
 
-    /// Cancel UM Conditional Order(TRADE)
+    /// Cancel UM Algo Order (TRADE)
+    ///
+    /// Cancel an active UM algo order.
+    ///
+    /// * Either `algoId` or `clientAlgoId` must be sent.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CancelUmAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CancelUmAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-UM-Algo-Order).
+    ///
+    pub async fn cancel_um_algo_order(
+        &self,
+        params: CancelUmAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelUmAlgoOrderResponse>> {
+        self.trade_api_client.cancel_um_algo_order(params).await
+    }
+
+    /// Cancel UM Conditional Order
     ///
     /// Cancel UM Conditional Order
     ///
@@ -2572,6 +2666,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-UM-Conditional-Order).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn cancel_um_conditional_order(
         &self,
         params: CancelUmConditionalOrderParams,
@@ -3311,7 +3409,82 @@ impl RestApi {
         self.trade_api_client.new_margin_order(params).await
     }
 
-    /// New UM Conditional Order (TRADE)
+    /// New UM Algo Order (TRADE)
+    ///
+    /// Place new UM conditional order
+    ///
+    /// * Algo order with type `STOP`,  parameter `timeInForce` can be sent ( default `GTC`).
+    /// * Algo order with type `TAKE_PROFIT`,  parameter `timeInForce` can be sent ( default `GTC`).
+    /// * Condition orders will be triggered when:
+    ///
+    /// * If parameter`priceProtect`is sent as true:
+    /// * when price reaches the `triggerPrice` , the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
+    /// * "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
+    ///
+    /// * `STOP`, `STOP_MARKET`:
+    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
+    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
+    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
+    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
+    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
+    /// * `TRAILING_STOP_MARKET`:
+    /// * BUY: the lowest price after order placed <= `activatePrice`, and the latest price >= the lowest price * (1 + `callbackRate`)
+    /// * SELL: the highest price after order placed >= `activatePrice`, and the latest price <= the highest price * (1 - `callbackRate`)
+    ///
+    /// * For `TRAILING_STOP_MARKET`, if you got such error code.
+    /// ``{"code": -2021, "msg": "Order would immediately trigger."}``
+    /// means that the parameters you send do not meet the following requirements:
+    /// * BUY: `activatePrice` should be smaller than latest price.
+    /// * SELL: `activatePrice` should be larger than latest price.
+    ///
+    /// * `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
+    /// * Follow the same rules for condition orders.
+    /// * If triggered, **close all** current long position( if `SELL`) or current short position( if `BUY`).
+    /// * Cannot be used with `quantity` paremeter
+    /// * Cannot be used with `reduceOnly` parameter
+    /// * In Hedge Mode,cannot be used with `BUY` orders in `LONG` position side. and cannot be used with `SELL` orders in `SHORT` position side
+    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`NewUmAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::NewUmAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Algo-Order).
+    ///
+    pub async fn new_um_algo_order(
+        &self,
+        params: NewUmAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::NewUmAlgoOrderResponse>> {
+        self.trade_api_client.new_um_algo_order(params).await
+    }
+
+    /// New UM Conditional Order
     ///
     /// Place new UM conditional order
     ///
@@ -3374,6 +3547,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Conditional-Order).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn new_um_conditional_order(
         &self,
         params: NewUmConditionalOrderParams,
@@ -3629,7 +3806,56 @@ impl RestApi {
             .await
     }
 
-    /// Query All Current UM Open Conditional `Orders(USER_DATA)`
+    /// Query All Current UM Open Algo Orders (`USER_DATA`)
+    ///
+    /// Get all UM open algo orders on a symbol.
+    ///
+    /// * If the symbol is not sent, orders for all symbols will be returned in an array.
+    ///
+    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+    /// Careful when accessing this with no symbol.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryAllCurrentUmOpenAlgoOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-UM-Open-Algo-Orders).
+    ///
+    pub async fn query_all_current_um_open_algo_orders(
+        &self,
+        params: QueryAllCurrentUmOpenAlgoOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>>>
+    {
+        self.trade_api_client
+            .query_all_current_um_open_algo_orders(params)
+            .await
+    }
+
+    /// Query All Current UM Open Conditional Orders
     ///
     /// Get all open conditional orders on a symbol.
     ///
@@ -3668,6 +3894,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-UM-Open-Conditional-Orders).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_all_current_um_open_conditional_orders(
         &self,
         params: QueryAllCurrentUmOpenConditionalOrdersParams,
@@ -3774,7 +4004,7 @@ impl RestApi {
             .await
     }
 
-    /// Query All UM Conditional `Orders(USER_DATA)`
+    /// Query All UM Conditional Orders
     ///
     /// Query All UM Conditional Orders
     ///
@@ -3816,6 +4046,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-UM-Conditional-Orders).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_all_um_conditional_orders(
         &self,
         params: QueryAllUmConditionalOrdersParams,
@@ -4168,7 +4402,59 @@ impl RestApi {
             .await
     }
 
-    /// Query Current UM Open Conditional `Order(USER_DATA)`
+    /// Query Current UM Open Algo Order (`USER_DATA`)
+    ///
+    /// Check an UM algo order's status.
+    ///
+    /// * These orders will not be found:
+    /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time
+    /// * order create time + 90 days < current time
+    ///
+    /// * Either `algoId` or `clientAlgoId` must be sent.
+    /// * `algoId` is self-increment for each specific `symbol`
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryCurrentUmOpenAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::QueryCurrentUmOpenAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-UM-Open-Algo-Order).
+    ///
+    pub async fn query_current_um_open_algo_order(
+        &self,
+        params: QueryCurrentUmOpenAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenAlgoOrderResponse>> {
+        self.trade_api_client
+            .query_current_um_open_algo_order(params)
+            .await
+    }
+
+    /// Query Current UM Open Conditional Order
     ///
     /// Query Current UM Open Conditional Order
     ///
@@ -4207,6 +4493,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-UM-Open-Conditional-Order).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_current_um_open_conditional_order(
         &self,
         params: QueryCurrentUmOpenConditionalOrderParams,
@@ -4445,7 +4735,55 @@ impl RestApi {
             .await
     }
 
-    /// Query UM Conditional Order `History(USER_DATA)`
+    /// Query UM Algo Order History (`USER_DATA`)
+    ///
+    /// Get all algo orders; ACTIVE, CANCELED, TRIGGERED or FINISHED .
+    ///
+    /// * If `algoId` is set, it will get orders >= that `algoId`. Otherwise most recent orders are returned.
+    /// * The query time period must be less then 7 days( default as the recent 7 days).
+    ///
+    /// Weight: 5
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryUmAlgoOrderHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Algo-Order-History).
+    ///
+    pub async fn query_um_algo_order_history(
+        &self,
+        params: QueryUmAlgoOrderHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>> {
+        self.trade_api_client
+            .query_um_algo_order_history(params)
+            .await
+    }
+
+    /// Query UM Conditional Order History
     ///
     /// Query UM Conditional Order History
     ///
@@ -4488,6 +4826,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Conditional-Order-History).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_um_conditional_order_history(
         &self,
         params: QueryUmConditionalOrderHistoryParams,

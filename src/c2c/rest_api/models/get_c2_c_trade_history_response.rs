@@ -17,27 +17,75 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetC2CTradeHistoryResponse {
-    #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
-    pub code: Option<String>,
-    #[serde(rename = "message", skip_serializing_if = "Option::is_none")]
-    pub message: Option<String>,
-    #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
-    pub data: Option<Vec<models::GetC2CTradeHistoryResponseDataInner>>,
-    #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
-    pub total: Option<i64>,
-    #[serde(rename = "success", skip_serializing_if = "Option::is_none")]
-    pub success: Option<bool>,
+    #[serde(rename = "orderNumber", skip_serializing_if = "Option::is_none")]
+    pub order_number: Option<String>,
+    #[serde(rename = "advNo", skip_serializing_if = "Option::is_none")]
+    pub adv_no: Option<String>,
+    #[serde(rename = "tradeType", skip_serializing_if = "Option::is_none")]
+    pub trade_type: Option<String>,
+    #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
+    pub asset: Option<String>,
+    #[serde(rename = "fiat", skip_serializing_if = "Option::is_none")]
+    pub fiat: Option<String>,
+    #[serde(rename = "fiatSymbol", skip_serializing_if = "Option::is_none")]
+    pub fiat_symbol: Option<String>,
+    #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
+    pub amount: Option<String>,
+    #[serde(rename = "totalPrice", skip_serializing_if = "Option::is_none")]
+    pub total_price: Option<String>,
+    #[serde(rename = "unitPrice", skip_serializing_if = "Option::is_none")]
+    pub unit_price: Option<String>,
+    #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
+    pub order_status: Option<String>,
+    #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
+    pub create_time: Option<i64>,
+    #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
+    pub commission: Option<String>,
+    #[serde(
+        rename = "takerCommissionRate",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub taker_commission_rate: Option<String>,
+    #[serde(rename = "takerCommission", skip_serializing_if = "Option::is_none")]
+    pub taker_commission: Option<String>,
+    #[serde(rename = "takerAmount", skip_serializing_if = "Option::is_none")]
+    pub taker_amount: Option<String>,
+    #[serde(
+        rename = "counterPartNickName",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub counter_part_nick_name: Option<String>,
+    #[serde(rename = "payMethodName", skip_serializing_if = "Option::is_none")]
+    pub pay_method_name: Option<String>,
+    #[serde(
+        rename = "additionalKycVerify",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub additional_kyc_verify: Option<i64>,
 }
 
 impl GetC2CTradeHistoryResponse {
     #[must_use]
     pub fn new() -> GetC2CTradeHistoryResponse {
         GetC2CTradeHistoryResponse {
-            code: None,
-            message: None,
-            data: None,
-            total: None,
-            success: None,
+            order_number: None,
+            adv_no: None,
+            trade_type: None,
+            asset: None,
+            fiat: None,
+            fiat_symbol: None,
+            amount: None,
+            total_price: None,
+            unit_price: None,
+            order_status: None,
+            create_time: None,
+            commission: None,
+            taker_commission_rate: None,
+            taker_commission: None,
+            taker_amount: None,
+            counter_part_nick_name: None,
+            pay_method_name: None,
+            additional_kyc_verify: None,
         }
     }
 }

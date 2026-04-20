@@ -19,6 +19,8 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(try_from = "Value")]
 pub enum UserDataStreamEventsResponse {
+    #[serde(rename = "ALGO_UPDATE")]
+    AlgoUpdate(Box<models::AlgoUpdate>),
     #[serde(rename = "CONDITIONAL_ORDER_TRADE_UPDATE")]
     ConditionalOrderTradeUpdate(Box<models::ConditionalOrderTradeUpdate>),
     #[serde(rename = "ACCOUNT_CONFIG_UPDATE")]
@@ -46,7 +48,7 @@ pub enum UserDataStreamEventsResponse {
 
 impl Default for UserDataStreamEventsResponse {
     fn default() -> Self {
-        Self::ConditionalOrderTradeUpdate(Default::default())
+        Self::AlgoUpdate(Default::default())
     }
 }
 
@@ -60,6 +62,11 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             .ok_or_else(|| serde_json::Error::custom("missing field `e`"))?;
 
         match tag {
+            "ALGO_UPDATE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::AlgoUpdate(Box::new(payload)))
+            }
+
             "CONDITIONAL_ORDER_TRADE_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::ConditionalOrderTradeUpdate(

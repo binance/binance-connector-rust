@@ -35,7 +35,7 @@ async fn main() -> Result<()> {
     let params = ContinuousContractKlineCandlestickDataParams::builder(
         "pair_example".to_string(),
         ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,
-        ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,
+        ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,
     )
     .build()?;
 

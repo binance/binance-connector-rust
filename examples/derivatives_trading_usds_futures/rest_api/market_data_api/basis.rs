@@ -32,7 +32,6 @@ async fn main() -> Result<()> {
         "pair_example".to_string(),
         BasisContractTypeEnum::Perpetual,
         BasisPeriodEnum::Period5m,
-        30,
     )
     .build()?;
 

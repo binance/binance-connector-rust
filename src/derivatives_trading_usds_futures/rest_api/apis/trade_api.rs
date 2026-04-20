@@ -2457,12 +2457,6 @@ pub struct QueryAllAlgoOrdersParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    ///
-    /// The `page` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub page: Option<i64>,
     /// Default 100; max 1000
     ///
     /// This field is **optional.
@@ -4025,7 +4019,6 @@ impl TradeApi for TradeApiClient {
             algo_id,
             start_time,
             end_time,
-            page,
             limit,
             recv_window,
         } = params;
@@ -4045,10 +4038,6 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = end_time {
             query_params.insert("endTime".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = page {
-            query_params.insert("page".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -6829,7 +6818,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = QueryAllAlgoOrdersParams::builder("symbol_example".to_string(),).algo_id(1).start_time(1623319461670).end_time(1641782889000).page(789).limit(100).recv_window(5000).build().unwrap();
+            let params = QueryAllAlgoOrdersParams::builder("symbol_example".to_string(),).algo_id(1).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}]"#).unwrap();
             let expected_response : Vec<models::QueryAllAlgoOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllAlgoOrdersResponseInner>");

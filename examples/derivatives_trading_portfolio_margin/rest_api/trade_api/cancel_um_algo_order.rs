@@ -3,9 +3,8 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::derivatives_trading_usds_futures::{
-    DerivativesTradingUsdsFuturesRestApi,
-    rest_api::{KlineCandlestickDataIntervalEnum, KlineCandlestickDataParams},
+use binance_sdk::derivatives_trading_portfolio_margin::{
+    DerivativesTradingPortfolioMarginRestApi, rest_api::CancelUmAlgoOrderParams,
 };
 use binance_sdk::logger;
 
@@ -24,25 +23,21 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the DerivativesTradingUsdsFutures REST API client
-    let rest_client = DerivativesTradingUsdsFuturesRestApi::production(rest_conf);
+    // Create the DerivativesTradingPortfolioMargin REST API client
+    let rest_client = DerivativesTradingPortfolioMarginRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = KlineCandlestickDataParams::builder(
-        "symbol_example".to_string(),
-        KlineCandlestickDataIntervalEnum::Interval1s,
-    )
-    .build()?;
+    let params = CancelUmAlgoOrderParams::default();
 
     // Make the API call
     let response = rest_client
-        .kline_candlestick_data(params)
+        .cancel_um_algo_order(params)
         .await
-        .context("kline_candlestick_data request failed")?;
+        .context("cancel_um_algo_order request failed")?;
 
-    info!(?response.rate_limits, "kline_candlestick_data rate limits");
+    info!(?response.rate_limits, "cancel_um_algo_order rate limits");
     let data = response.data().await?;
-    info!(?data, "kline_candlestick_data data");
+    info!(?data, "cancel_um_algo_order data");
 
     Ok(())
 }

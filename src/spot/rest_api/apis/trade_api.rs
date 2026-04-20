@@ -4703,7 +4703,7 @@ pub struct OrderListOcoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub below_price: Option<rust_decimal::Decimal>,
-    /// Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT, TAKE_PROFIT` or `TAKE_PROFIT_LIMIT` <br>Either belowStopPrice or belowTrailingDelta or both, must be specified.
+    /// Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` or `TAKE_PROFIT_LIMIT` <br>Either `belowStopPrice` or `belowTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

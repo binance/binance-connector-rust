@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = IndexPriceKlineCandlestickDataParams::builder(
         "pair_example".to_string(),
-        IndexPriceKlineCandlestickDataIntervalEnum::Interval1m,
+        IndexPriceKlineCandlestickDataIntervalEnum::Interval1s,
     )
     .build()?;
 

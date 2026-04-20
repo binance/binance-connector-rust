@@ -13,5 +13,3 @@
 
 pub mod get_c2_c_trade_history_response;
 pub use self::get_c2_c_trade_history_response::GetC2CTradeHistoryResponse;
-pub mod get_c2_c_trade_history_response_data_inner;
-pub use self::get_c2_c_trade_history_response_data_inner::GetC2CTradeHistoryResponseDataInner;

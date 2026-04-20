@@ -11,6 +11,8 @@
  * Do not edit the class manually.
  */
 
+pub mod pm_pro_account_update;
+pub use self::pm_pro_account_update::PmProAccountUpdate;
 pub mod risklevelchange;
 pub use self::risklevelchange::Risklevelchange;
 pub mod user_data_stream_events_response;

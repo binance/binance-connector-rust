@@ -202,7 +202,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"orderNumber":"20219644646554779648","advNo":"11218246497340923904","tradeType":"SELL","asset":"BUSD","fiat":"CNY","fiatSymbol":"￥","amount":"5000.00000000","totalPrice":"33400.00000000","unitPrice":"6.68","orderStatus":"COMPLETED","createTime":1619361369000,"commission":"0","counterPartNickName":"ab***","advertisementRole":"TAKER"}],"total":1,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderNumber":"20219644646554779648","advNo":"11218246497340923904","tradeType":"SELL","asset":"USDT","fiat":"CNY","fiatSymbol":"¥","amount":"343.40000000","totalPrice":"2500.00000000","unitPrice":"7.28","orderStatus":"COMPLETED","createTime":1722997599534,"commission":"0","takerCommissionRate":"0","takerCommission":"0","takerAmount":"343.4","counterPartNickName":"aaa-***","payMethodName":"BANK","additionalKycVerify":0}"#).unwrap();
             let dummy_response: models::GetC2CTradeHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetC2CTradeHistoryResponse");
@@ -225,7 +225,7 @@ mod tests {
 
             let params = GetC2CTradeHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"orderNumber":"20219644646554779648","advNo":"11218246497340923904","tradeType":"SELL","asset":"BUSD","fiat":"CNY","fiatSymbol":"￥","amount":"5000.00000000","totalPrice":"33400.00000000","unitPrice":"6.68","orderStatus":"COMPLETED","createTime":1619361369000,"commission":"0","counterPartNickName":"ab***","advertisementRole":"TAKER"}],"total":1,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderNumber":"20219644646554779648","advNo":"11218246497340923904","tradeType":"SELL","asset":"USDT","fiat":"CNY","fiatSymbol":"¥","amount":"343.40000000","totalPrice":"2500.00000000","unitPrice":"7.28","orderStatus":"COMPLETED","createTime":1722997599534,"commission":"0","takerCommissionRate":"0","takerCommission":"0","takerAmount":"343.4","counterPartNickName":"aaa-***","payMethodName":"BANK","additionalKycVerify":0}"#).unwrap();
             let expected_response : models::GetC2CTradeHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetC2CTradeHistoryResponse");
 
             let resp = client.get_c2_c_trade_history(params).await.expect("Expected a response");
@@ -242,7 +242,7 @@ mod tests {
 
             let params = GetC2CTradeHistoryParams::builder().trade_type("trade_type_example".to_string()).start_timestamp(789).end_timestamp(789).page(1).rows(100).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"orderNumber":"20219644646554779648","advNo":"11218246497340923904","tradeType":"SELL","asset":"BUSD","fiat":"CNY","fiatSymbol":"￥","amount":"5000.00000000","totalPrice":"33400.00000000","unitPrice":"6.68","orderStatus":"COMPLETED","createTime":1619361369000,"commission":"0","counterPartNickName":"ab***","advertisementRole":"TAKER"}],"total":1,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderNumber":"20219644646554779648","advNo":"11218246497340923904","tradeType":"SELL","asset":"USDT","fiat":"CNY","fiatSymbol":"¥","amount":"343.40000000","totalPrice":"2500.00000000","unitPrice":"7.28","orderStatus":"COMPLETED","createTime":1722997599534,"commission":"0","takerCommissionRate":"0","takerCommission":"0","takerAmount":"343.4","counterPartNickName":"aaa-***","payMethodName":"BANK","additionalKycVerify":0}"#).unwrap();
             let expected_response : models::GetC2CTradeHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetC2CTradeHistoryResponse");
 
             let resp = client.get_c2_c_trade_history(params).await.expect("Expected a response");
