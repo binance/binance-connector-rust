@@ -22,8 +22,10 @@ pub struct AlgoUpdate {
     pub t_uppercase: Option<i64>,
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
-    #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
-    pub o: Option<Box<models::AlgoUpdateO>>,
+    #[serde(rename = "fs", skip_serializing_if = "Option::is_none")]
+    pub fs: Option<String>,
+    #[serde(rename = "ao", skip_serializing_if = "Option::is_none")]
+    pub ao: Option<Box<models::AlgoUpdateAo>>,
 }
 
 impl AlgoUpdate {
@@ -32,7 +34,8 @@ impl AlgoUpdate {
         AlgoUpdate {
             t_uppercase: None,
             e_uppercase: None,
-            o: None,
+            fs: None,
+            ao: None,
         }
     }
 }

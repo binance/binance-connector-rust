@@ -3326,7 +3326,7 @@ pub struct NewCmConditionalOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub working_type: Option<NewCmConditionalOrderWorkingTypeEnum>,
-    /// "TRUE" or "FALSE", default "FALSE". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
+    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -3618,6 +3618,11 @@ pub struct NewUmAlgoOrderParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub r#type: NewUmAlgoOrderTypeEnum,
+    /// Order quantity
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub quantity: rust_decimal::Decimal,
     /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.
     ///
     /// This field is **optional.
@@ -3629,12 +3634,6 @@ pub struct NewUmAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub time_in_force: Option<NewUmAlgoOrderTimeInForceEnum>,
-    ///
-    /// The `quantity` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub quantity: Option<rust_decimal::Decimal>,
     ///
     /// The `price` parameter.
     ///
@@ -3657,12 +3656,7 @@ pub struct NewUmAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub price_match: Option<NewUmAlgoOrderPriceMatchEnum>,
-    /// true, false; Close-All, used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub close_position: Option<String>,
-    /// "TRUE" or "FALSE", default "FALSE". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
+    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -3720,6 +3714,7 @@ impl NewUmAlgoOrderParams {
     /// * `symbol` — String
     /// * `side` — String
     /// * `r#type` — `LIMIT`, `MARKET`
+    /// * `quantity` — Order quantity
     ///
     #[must_use]
     pub fn builder(
@@ -3727,12 +3722,14 @@ impl NewUmAlgoOrderParams {
         symbol: String,
         side: NewUmAlgoOrderSideEnum,
         r#type: NewUmAlgoOrderTypeEnum,
+        quantity: rust_decimal::Decimal,
     ) -> NewUmAlgoOrderParamsBuilder {
         NewUmAlgoOrderParamsBuilder::default()
             .algo_type(algo_type)
             .symbol(symbol)
             .side(side)
             .r#type(r#type)
+            .quantity(quantity)
     }
 }
 /// Request parameters for the [`new_um_conditional_order`] operation.
@@ -3792,7 +3789,7 @@ pub struct NewUmConditionalOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub working_type: Option<NewUmConditionalOrderWorkingTypeEnum>,
-    /// "TRUE" or "FALSE", default "FALSE". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
+    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -6744,14 +6741,13 @@ impl TradeApi for TradeApiClient {
             symbol,
             side,
             r#type,
+            quantity,
             position_side,
             time_in_force,
-            quantity,
             price,
             trigger_price,
             working_type,
             price_match,
-            close_position,
             price_protect,
             reduce_only,
             activate_price,
@@ -6782,9 +6778,7 @@ impl TradeApi for TradeApiClient {
             query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
-        if let Some(rw) = quantity {
-            query_params.insert("quantity".to_string(), json!(rw));
-        }
+        query_params.insert("quantity".to_string(), json!(quantity));
 
         if let Some(rw) = price {
             query_params.insert("price".to_string(), json!(rw));
@@ -6800,10 +6794,6 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = price_match {
             query_params.insert("priceMatch".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = close_position {
-            query_params.insert("closePosition".to_string(), json!(rw));
         }
 
         if let Some(rw) = price_protect {
@@ -8921,7 +8911,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"complete":true}"#).unwrap();
             let dummy_response: models::CancelUmAlgoOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelUmAlgoOrderResponse");
@@ -9384,7 +9374,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
             let dummy_response: models::NewUmAlgoOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::NewUmAlgoOrderResponse");
@@ -10333,7 +10323,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","id":67880589,"orderId":270093109,"side":"SELL","price":"28511.00","qty":"0.010","realizedPnl":"2.58500000","quoteQty":"285.11000","commission":"-0.11404400","commissionAsset":"USDT","time":1680688557875,"buyer":false,"maker":false,"positionSide":"BOTH"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","id":67880589,"orderId":270093109,"side":"SELL","price":"28511.00","qty":"0.010","realizedPnl":"2.58500000","quoteQty":"285.11000","commission":"0.11404400","commissionAsset":"USDT","time":1680688557875,"buyer":false,"maker":false,"positionSide":"BOTH"}]"#).unwrap();
             let dummy_response: Vec<models::UmAccountTradeListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::UmAccountTradeListResponseInner>");
@@ -10976,10 +10966,15 @@ mod tests {
 
             let params = CancelUmAlgoOrderParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap();
-            let expected_response : models::CancelUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelUmAlgoOrderResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"complete":true}"#).unwrap();
+            let expected_response: models::CancelUmAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelUmAlgoOrderResponse");
 
-            let resp = client.cancel_um_algo_order(params).await.expect("Expected a response");
+            let resp = client
+                .cancel_um_algo_order(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -10991,12 +10986,22 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelUmAlgoOrderParams::builder().algo_id(1).client_algo_id("1".to_string()).recv_window(5000).build().unwrap();
+            let params = CancelUmAlgoOrderParams::builder()
+                .algo_id(1)
+                .client_algo_id("1".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap();
-            let expected_response : models::CancelUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelUmAlgoOrderResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"complete":true}"#).unwrap();
+            let expected_response: models::CancelUmAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelUmAlgoOrderResponse");
 
-            let resp = client.cancel_um_algo_order(params).await.expect("Expected a response");
+            let resp = client
+                .cancel_um_algo_order(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -11934,9 +11939,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,).build().unwrap();
+            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
             let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
 
             let resp = client.new_um_algo_order(params).await.expect("Expected a response");
@@ -11951,9 +11956,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,).position_side(NewUmAlgoOrderPositionSideEnum::Both).time_in_force(NewUmAlgoOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewUmAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewUmAlgoOrderPriceMatchEnum::None).close_position("close_position_example".to_string()).price_protect("false".to_string()).reduce_only("false".to_string()).activate_price(dec!(1.0)).callback_rate(dec!(1.0)).client_algo_id("1".to_string()).new_order_resp_type(NewUmAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewUmAlgoOrderSelfTradePreventionModeEnum::None).good_till_date(789).recv_window(5000).build().unwrap();
+            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,dec!(1.0),).position_side(NewUmAlgoOrderPositionSideEnum::Both).time_in_force(NewUmAlgoOrderTimeInForceEnum::Gtc).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewUmAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewUmAlgoOrderPriceMatchEnum::None).price_protect("false".to_string()).reduce_only("false".to_string()).activate_price(dec!(1.0)).callback_rate(dec!(1.0)).client_algo_id("1".to_string()).new_order_resp_type(NewUmAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewUmAlgoOrderSelfTradePreventionModeEnum::None).good_till_date(789).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
             let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
 
             let resp = client.new_um_algo_order(params).await.expect("Expected a response");
@@ -11973,6 +11978,7 @@ mod tests {
                 "symbol_example".to_string(),
                 NewUmAlgoOrderSideEnum::Buy,
                 NewUmAlgoOrderTypeEnum::Limit,
+                dec!(1.0),
             )
             .build()
             .unwrap();
@@ -13735,7 +13741,7 @@ mod tests {
 
             let params = UmAccountTradeListParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","id":67880589,"orderId":270093109,"side":"SELL","price":"28511.00","qty":"0.010","realizedPnl":"2.58500000","quoteQty":"285.11000","commission":"-0.11404400","commissionAsset":"USDT","time":1680688557875,"buyer":false,"maker":false,"positionSide":"BOTH"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","id":67880589,"orderId":270093109,"side":"SELL","price":"28511.00","qty":"0.010","realizedPnl":"2.58500000","quoteQty":"285.11000","commission":"0.11404400","commissionAsset":"USDT","time":1680688557875,"buyer":false,"maker":false,"positionSide":"BOTH"}]"#).unwrap();
             let expected_response : Vec<models::UmAccountTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::UmAccountTradeListResponseInner>");
 
             let resp = client.um_account_trade_list(params).await.expect("Expected a response");
@@ -13752,7 +13758,7 @@ mod tests {
 
             let params = UmAccountTradeListParams::builder("symbol_example".to_string(),).start_time(1623319461670).end_time(1641782889000).from_id(1).limit(100).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","id":67880589,"orderId":270093109,"side":"SELL","price":"28511.00","qty":"0.010","realizedPnl":"2.58500000","quoteQty":"285.11000","commission":"-0.11404400","commissionAsset":"USDT","time":1680688557875,"buyer":false,"maker":false,"positionSide":"BOTH"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","id":67880589,"orderId":270093109,"side":"SELL","price":"28511.00","qty":"0.010","realizedPnl":"2.58500000","quoteQty":"285.11000","commission":"0.11404400","commissionAsset":"USDT","time":1680688557875,"buyer":false,"maker":false,"positionSide":"BOTH"}]"#).unwrap();
             let expected_response : Vec<models::UmAccountTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::UmAccountTradeListResponseInner>");
 
             let resp = client.um_account_trade_list(params).await.expect("Expected a response");

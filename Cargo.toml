@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "46.0.0"
+version = "47.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -11,8 +11,8 @@ license = "MIT"
 include = [ "**/*.rs" ]
 
 [package.metadata.docs.rs]
-features = ["rustls-tls", "all"]
-rustdoc-args = ["--cfg", "docsrs"]
+features = [ "rustls-tls", "all" ]
+rustdoc-args = [ "--cfg", "docsrs" ]
 
 [lints.clippy]
 uninlined_format_args = "allow"

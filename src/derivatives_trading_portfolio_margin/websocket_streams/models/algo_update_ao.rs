@@ -17,7 +17,7 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AlgoUpdateO {
+pub struct AlgoUpdateAo {
     #[serde(rename = "caid", skip_serializing_if = "Option::is_none")]
     pub caid: Option<String>,
     #[serde(rename = "aid", skip_serializing_if = "Option::is_none")]
@@ -70,10 +70,10 @@ pub struct AlgoUpdateO {
     pub rm: Option<String>,
 }
 
-impl AlgoUpdateO {
+impl AlgoUpdateAo {
     #[must_use]
-    pub fn new() -> AlgoUpdateO {
-        AlgoUpdateO {
+    pub fn new() -> AlgoUpdateAo {
+        AlgoUpdateAo {
             caid: None,
             aid: None,
             at: None,

@@ -17,24 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CancelUmAlgoOrderResponse {
-    #[serde(rename = "algoId", skip_serializing_if = "Option::is_none")]
-    pub algo_id: Option<i64>,
-    #[serde(rename = "clientAlgoId", skip_serializing_if = "Option::is_none")]
-    pub client_algo_id: Option<String>,
-    #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
-    pub code: Option<String>,
-    #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
-    pub msg: Option<String>,
+    #[serde(rename = "complete", skip_serializing_if = "Option::is_none")]
+    pub complete: Option<bool>,
 }
 
 impl CancelUmAlgoOrderResponse {
     #[must_use]
     pub fn new() -> CancelUmAlgoOrderResponse {
-        CancelUmAlgoOrderResponse {
-            algo_id: None,
-            client_algo_id: None,
-            code: None,
-            msg: None,
-        }
+        CancelUmAlgoOrderResponse { complete: None }
     }
 }

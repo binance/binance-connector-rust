@@ -1,5 +1,29 @@
 # Changelog
 
+## 47.0.0 - 2026-05-05
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (4)
+
+#### REST API
+
+- Deleted parameter `closePosition`
+  - affected methods:
+    - `new_um_algo_order()` (`POST /papi/v1/um/algo/order`)
+- Modified parameter `quantity`:
+  - required: `false` → `true`
+  - affected methods:
+    - `new_um_algo_order()` (`POST /papi/v1/um/algo/order`)
+- Modified response for `new_um_algo_order()` (`POST /papi/v1/um/algo/order`):
+  - property `closePosition` deleted
+- Modified response for `cancel_um_algo_order()` (`DELETE /papi/v1/um/algo/order`):
+  - property `complete` added
+  - property `clientAlgoId` deleted
+  - property `code` deleted
+  - property `msg` deleted
+  - property `algoId` deleted
+
 ## 46.0.0 - 2026-04-20
 
 **C2c**

@@ -52,8 +52,6 @@ pub struct NewUmAlgoOrderResponse {
     pub working_type: Option<String>,
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<String>,
-    #[serde(rename = "closePosition", skip_serializing_if = "Option::is_none")]
-    pub close_position: Option<bool>,
     #[serde(rename = "priceProtect", skip_serializing_if = "Option::is_none")]
     pub price_protect: Option<bool>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
@@ -92,7 +90,6 @@ impl NewUmAlgoOrderResponse {
             self_trade_prevention_mode: None,
             working_type: None,
             price_match: None,
-            close_position: None,
             price_protect: None,
             reduce_only: None,
             activate_price: None,
