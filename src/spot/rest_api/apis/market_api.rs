@@ -52,6 +52,10 @@ pub trait MarketApi: Send + Sync {
         &self,
         params: GetTradesParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalTradesResponseInner>>>;
+    async fn historical_block_trades(
+        &self,
+        params: HistoricalBlockTradesParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalBlockTradesResponseInner>>>;
     async fn historical_trades(
         &self,
         params: HistoricalTradesParams,
@@ -1196,6 +1200,46 @@ impl GetTradesParams {
         GetTradesParamsBuilder::default().symbol(symbol)
     }
 }
+/// Request parameters for the [`historical_block_trades`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`historical_block_trades`](#method.historical_block_trades).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct HistoricalBlockTradesParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    /// Block trade ID to fetch from
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub from_id: i64,
+    /// Default: 500; Maximum: 1000
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub limit: Option<i64>,
+}
+
+impl HistoricalBlockTradesParams {
+    /// Create a builder for [`historical_block_trades`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    /// * `from_id` — Block trade ID to fetch from
+    ///
+    #[must_use]
+    pub fn builder(symbol: String, from_id: i64) -> HistoricalBlockTradesParamsBuilder {
+        HistoricalBlockTradesParamsBuilder::default()
+            .symbol(symbol)
+            .from_id(from_id)
+    }
+}
 /// Request parameters for the [`historical_trades`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1735,6 +1779,43 @@ impl MarketApi for MarketApiClient {
         send_request::<Vec<models::HistoricalTradesResponseInner>>(
             &self.configuration,
             "/api/v3/trades",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
+    async fn historical_block_trades(
+        &self,
+        params: HistoricalBlockTradesParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalBlockTradesResponseInner>>> {
+        let HistoricalBlockTradesParams {
+            symbol,
+            from_id,
+            limit,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        query_params.insert("fromId".to_string(), json!(from_id));
+
+        if let Some(rw) = limit {
+            query_params.insert("limit".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::HistoricalBlockTradesResponseInner>>(
+            &self.configuration,
+            "/api/v3/historicalBlockTrades",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -2325,6 +2406,34 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn historical_block_trades(
+            &self,
+            _params: HistoricalBlockTradesParams,
+        ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalBlockTradesResponseInner>>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"id":582,"price":"0.052","qty":"5838","quoteQty":"303.576","time":1772506983321,"isBuyerMaker":true}]"#).unwrap();
+            let dummy_response: Vec<models::HistoricalBlockTradesResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::HistoricalBlockTradesResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn historical_trades(
             &self,
             _params: HistoricalTradesParams,
@@ -2811,6 +2920,58 @@ mod tests {
                 .unwrap();
 
             match client.get_trades(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn historical_block_trades_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: false };
+
+            let params = HistoricalBlockTradesParams::builder("BNBUSDT".to_string(),1,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"id":582,"price":"0.052","qty":"5838","quoteQty":"303.576","time":1772506983321,"isBuyerMaker":true}]"#).unwrap();
+            let expected_response : Vec<models::HistoricalBlockTradesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::HistoricalBlockTradesResponseInner>");
+
+            let resp = client.historical_block_trades(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn historical_block_trades_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: false };
+
+            let params = HistoricalBlockTradesParams::builder("BNBUSDT".to_string(),1,).limit(500).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"id":582,"price":"0.052","qty":"5838","quoteQty":"303.576","time":1772506983321,"isBuyerMaker":true}]"#).unwrap();
+            let expected_response : Vec<models::HistoricalBlockTradesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::HistoricalBlockTradesResponseInner>");
+
+            let resp = client.historical_block_trades(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn historical_block_trades_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketApiClient { force_error: true };
+
+            let params = HistoricalBlockTradesParams::builder("BNBUSDT".to_string(), 1)
+                .build()
+                .unwrap();
+
+            match client.historical_block_trades(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

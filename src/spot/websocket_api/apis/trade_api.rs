@@ -363,6 +363,8 @@ pub enum OrderCancelReplaceSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -376,6 +378,7 @@ impl OrderCancelReplaceSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -391,6 +394,7 @@ impl std::str::FromStr for OrderCancelReplaceSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderCancelReplaceSelfTradePreventionModeEnum: {}",
@@ -669,6 +673,8 @@ pub enum OrderListPlaceSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -682,6 +688,7 @@ impl OrderListPlaceSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -697,6 +704,7 @@ impl std::str::FromStr for OrderListPlaceSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceSelfTradePreventionModeEnum: {}",
@@ -1076,6 +1084,8 @@ pub enum OrderListPlaceOcoSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -1089,6 +1099,7 @@ impl OrderListPlaceOcoSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -1104,6 +1115,7 @@ impl std::str::FromStr for OrderListPlaceOcoSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOcoSelfTradePreventionModeEnum: {}",
@@ -1316,6 +1328,8 @@ pub enum OrderListPlaceOpoSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -1329,6 +1343,7 @@ impl OrderListPlaceOpoSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -1344,6 +1359,7 @@ impl std::str::FromStr for OrderListPlaceOpoSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOpoSelfTradePreventionModeEnum: {}",
@@ -1756,6 +1772,8 @@ pub enum OrderListPlaceOpocoSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -1769,6 +1787,7 @@ impl OrderListPlaceOpocoSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -1784,6 +1803,7 @@ impl std::str::FromStr for OrderListPlaceOpocoSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOpocoSelfTradePreventionModeEnum: {}",
@@ -2352,6 +2372,8 @@ pub enum OrderListPlaceOtoSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -2365,6 +2387,7 @@ impl OrderListPlaceOtoSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -2380,6 +2403,7 @@ impl std::str::FromStr for OrderListPlaceOtoSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOtoSelfTradePreventionModeEnum: {}",
@@ -2792,6 +2816,8 @@ pub enum OrderListPlaceOtocoSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -2805,6 +2831,7 @@ impl OrderListPlaceOtocoSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -2820,6 +2847,7 @@ impl std::str::FromStr for OrderListPlaceOtocoSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOtocoSelfTradePreventionModeEnum: {}",
@@ -3367,6 +3395,8 @@ pub enum OrderPlaceSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -3380,6 +3410,7 @@ impl OrderPlaceSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -3395,6 +3426,7 @@ impl std::str::FromStr for OrderPlaceSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => {
                 Err(format!("invalid OrderPlaceSelfTradePreventionModeEnum: {}", other).into())
@@ -3650,6 +3682,8 @@ pub enum OrderTestSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -3663,6 +3697,7 @@ impl OrderTestSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -3678,6 +3713,7 @@ impl std::str::FromStr for OrderTestSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderTestSelfTradePreventionModeEnum: {}", other).into()),
         }
@@ -3931,6 +3967,8 @@ pub enum SorOrderPlaceSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -3944,6 +3982,7 @@ impl SorOrderPlaceSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -3959,6 +3998,7 @@ impl std::str::FromStr for SorOrderPlaceSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid SorOrderPlaceSelfTradePreventionModeEnum: {}",
@@ -4150,6 +4190,8 @@ pub enum SorOrderTestSelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "DECREMENT")]
     Decrement,
+    #[serde(rename = "TRANSFER")]
+    Transfer,
     #[serde(rename = "NON_REPRESENTABLE")]
     NonRepresentable,
 }
@@ -4163,6 +4205,7 @@ impl SorOrderTestSelfTradePreventionModeEnum {
             Self::ExpireMaker => "EXPIRE_MAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
+            Self::Transfer => "TRANSFER",
             Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
@@ -4178,6 +4221,7 @@ impl std::str::FromStr for SorOrderTestSelfTradePreventionModeEnum {
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
+            "TRANSFER" => Ok(Self::Transfer),
             "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => {
                 Err(format!("invalid SorOrderTestSelfTradePreventionModeEnum: {}", other).into())

@@ -325,11 +325,11 @@ pub struct GetMovePositionHistoryForSubAccountParams {
     #[builder(setter(into))]
     pub page: i64,
     ///
-    /// The `row` parameter.
+    /// The `rows` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub row: i64,
+    pub rows: i64,
     ///
     /// The `start_time` parameter.
     ///
@@ -357,18 +357,18 @@ impl GetMovePositionHistoryForSubAccountParams {
     ///
     /// * `symbol` — String
     /// * `page` — Page
-    /// * `row` — i64
+    /// * `rows` — i64
     ///
     #[must_use]
     pub fn builder(
         symbol: String,
         page: i64,
-        row: i64,
+        rows: i64,
     ) -> GetMovePositionHistoryForSubAccountParamsBuilder {
         GetMovePositionHistoryForSubAccountParamsBuilder::default()
             .symbol(symbol)
             .page(page)
-            .row(row)
+            .rows(rows)
     }
 }
 /// Request parameters for the [`get_sub_account_deposit_address`] operation.
@@ -1467,7 +1467,7 @@ impl AssetManagementApi for AssetManagementApiClient {
         let GetMovePositionHistoryForSubAccountParams {
             symbol,
             page,
-            row,
+            rows,
             start_time,
             end_time,
             recv_window,
@@ -1488,7 +1488,7 @@ impl AssetManagementApi for AssetManagementApiClient {
 
         query_params.insert("page".to_string(), json!(page));
 
-        query_params.insert("row".to_string(), json!(row));
+        query_params.insert("rows".to_string(), json!(rows));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));

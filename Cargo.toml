@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "47.0.0"
+version = "48.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -3275,6 +3275,11 @@ path = "examples/spot/rest_api/market_api/get_trades.rs"
 required-features = [ "spot" ]
 
 [[example]]
+name = "spot_rest_api_market_api_historical_block_trades"
+path = "examples/spot/rest_api/market_api/historical_block_trades.rs"
+required-features = [ "spot" ]
+
+[[example]]
 name = "spot_rest_api_market_api_historical_trades"
 path = "examples/spot/rest_api/market_api/historical_trades.rs"
 required-features = [ "spot" ]
@@ -3507,6 +3512,11 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_api_market_api_avg_price"
 path = "examples/spot/websocket_api/market_api/avg_price.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_api_market_api_block_trades_historical"
+path = "examples/spot/websocket_api/market_api/block_trades_historical.rs"
 required-features = [ "spot" ]
 
 [[example]]

@@ -1071,6 +1071,48 @@ impl RestApi {
         self.market_api_client.get_trades(params).await
     }
 
+    /// Historical Block Trades
+    ///
+    /// Get block trades.
+    /// Weight: 25
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`HistoricalBlockTradesParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::HistoricalBlockTradesResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#historical-block-trades).
+    ///
+    pub async fn historical_block_trades(
+        &self,
+        params: HistoricalBlockTradesParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalBlockTradesResponseInner>>> {
+        self.market_api_client.historical_block_trades(params).await
+    }
+
     /// Old trade lookup
     ///
     /// Get older trades.

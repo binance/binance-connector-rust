@@ -925,6 +925,35 @@ impl WebsocketApi {
         self.market_api_client.avg_price(params).await
     }
 
+    /// WebSocket Historical Block Trades
+    ///
+    /// Get block trades.
+    /// Weight: 25
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`BlockTradesHistoricalParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`WebsocketApiResponse<Vec<models::BlockTradesHistoricalResponseResultInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#historical-block-trades).
+    ///
+    pub async fn block_trades_historical(
+        &self,
+        params: BlockTradesHistoricalParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::BlockTradesHistoricalResponseResultInner>>>
+    {
+        self.market_api_client.block_trades_historical(params).await
+    }
+
     /// WebSocket Order book
     ///
     /// Get current order book.

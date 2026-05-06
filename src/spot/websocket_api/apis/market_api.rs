@@ -39,6 +39,10 @@ pub trait MarketApi: Send + Sync {
         &self,
         params: AvgPriceParams,
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::AvgPriceResponseResult>>>;
+    async fn block_trades_historical(
+        &self,
+        params: BlockTradesHistoricalParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::BlockTradesHistoricalResponseResultInner>>>;
     async fn depth(
         &self,
         params: DepthParams,
@@ -1083,6 +1087,51 @@ impl AvgPriceParams {
         AvgPriceParamsBuilder::default().symbol(symbol)
     }
 }
+/// Request parameters for the [`block_trades_historical`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`block_trades_historical`](#method.block_trades_historical).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct BlockTradesHistoricalParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    /// Block trade ID to fetch from
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub from_id: i64,
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+    /// Default: 500; Maximum: 1000
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub limit: Option<i64>,
+}
+
+impl BlockTradesHistoricalParams {
+    /// Create a builder for [`block_trades_historical`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    /// * `from_id` — Block trade ID to fetch from
+    ///
+    #[must_use]
+    pub fn builder(symbol: String, from_id: i64) -> BlockTradesHistoricalParamsBuilder {
+        BlockTradesHistoricalParamsBuilder::default()
+            .symbol(symbol)
+            .from_id(from_id)
+    }
+}
 /// Request parameters for the [`depth`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1693,6 +1742,43 @@ impl MarketApi for MarketApiClient {
         self.websocket_api_base
             .send_message::<Box<models::AvgPriceResponseResult>>(
                 "/avgPrice".trim_start_matches('/'),
+                payload,
+                WebsocketMessageSendOptions::new(),
+            )
+            .await
+            .map_err(anyhow::Error::from)?
+            .into_iter()
+            .next()
+            .ok_or(WebsocketError::NoResponse)
+            .map_err(anyhow::Error::from)
+    }
+
+    async fn block_trades_historical(
+        &self,
+        params: BlockTradesHistoricalParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::BlockTradesHistoricalResponseResultInner>>>
+    {
+        let BlockTradesHistoricalParams {
+            symbol,
+            from_id,
+            id,
+            limit,
+        } = params;
+
+        let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+        payload.insert("symbol".to_string(), serde_json::json!(symbol));
+        payload.insert("fromId".to_string(), serde_json::json!(from_id));
+        if let Some(value) = id {
+            payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = limit {
+            payload.insert("limit".to_string(), serde_json::json!(value));
+        }
+        let payload = remove_empty_value(payload);
+
+        self.websocket_api_base
+            .send_message::<Vec<models::BlockTradesHistoricalResponseResultInner>>(
+                "/blockTrades.historical".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new(),
             )
@@ -2381,6 +2467,137 @@ mod tests {
                     .build()
                     .unwrap();
                 client.avg_price(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv())
+                .await
+                .expect("send should occur")
+                .expect("channel closed");
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
+            };
+
+            let _: Value = serde_json::from_str(&text).unwrap();
+
+            let result = handle.await.expect("task completed");
+            match result {
+                Err(e) => {
+                    if let Some(inner) = e.downcast_ref::<WebsocketError>() {
+                        assert!(matches!(inner, WebsocketError::Timeout));
+                    } else {
+                        panic!("Unexpected error type: {:?}", e);
+                    }
+                }
+                Ok(_) => panic!("Expected timeout error"),
+            }
+        });
+    }
+
+    #[test]
+    fn block_trades_historical_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = MarketApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = BlockTradesHistoricalParams::builder("BNBUSDT".to_string(),1,).build().unwrap();
+                client.block_trades_historical(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap();
+            assert_eq!(v["method"], "/blockTrades.historical".trim_start_matches('/'));
+
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"cffc9c7d-4efc-4ce0-b587-6b87448f052a","status":200,"result":[{"id":582,"price":"0.052","qty":"5838","quoteQty":"303.576","time":1772506983321,"isBuyerMaker":true}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":10}]}"#).unwrap();
+            resp_json["id"] = id.into();
+
+            let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
+            let expected_data: Vec<models::BlockTradesHistoricalResponseResultInner> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let empty_array = Value::Array(vec![]);
+            let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
+            let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
+                match raw_rate_limits.as_array() {
+                    Some(arr) if arr.is_empty() => None,
+                    Some(_) => Some(serde_json::from_value(raw_rate_limits.clone()).expect("should parse rateLimits array")),
+                    None => None,
+                };
+
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let response = timeout(Duration::from_secs(1), handle).await.expect("task done").expect("no panic").expect("no error");
+
+
+            let response_rate_limits = response.rate_limits.clone();
+            let response_data = response.data().expect("deserialize data");
+
+            assert_eq!(response_rate_limits, expected_rate_limits);
+            assert_eq!(response_data, expected_data);
+        });
+    }
+
+    #[test]
+    fn block_trades_historical_error_response() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = MarketApiClient::new(ws_api.clone());
+
+            let handle = tokio::spawn(async move {
+                let params = BlockTradesHistoricalParams::builder("BNBUSDT".to_string(),1,).build().unwrap();
+                client.block_trades_historical(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap().to_string();
+
+            let resp_json = json!({
+                "id": id,
+                "status": 400,
+                    "error": {
+                        "code": -2010,
+                        "msg": "Account has insufficient balance for requested action.",
+                    },
+                    "rateLimits": [
+                        {
+                            "rateLimitType": "ORDERS",
+                            "interval": "SECOND",
+                            "intervalNum": 10,
+                            "limit": 50,
+                            "count": 13
+                        },
+                    ],
+            });
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let join = timeout(Duration::from_secs(1), handle).await.unwrap();
+            match join {
+                Ok(Err(e)) => {
+                    let msg = e.to_string();
+                    assert!(
+                        msg.contains("Server‐side response error (code -2010): Account has insufficient balance for requested action."),
+                        "Expected error msg to contain server error, got: {msg}"
+                    );
+                }
+                Ok(Ok(_)) => panic!("Expected error"),
+                Err(_) => panic!("Task panicked"),
+            }
+        });
+    }
+
+    #[test]
+    fn block_trades_historical_request_timeout() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, _conn, mut rx) = setup().await;
+            let client = MarketApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = BlockTradesHistoricalParams::builder("BNBUSDT".to_string(), 1)
+                    .build()
+                    .unwrap();
+                client.block_trades_historical(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv())

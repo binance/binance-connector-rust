@@ -609,7 +609,7 @@ pub struct OrderAmendmentsParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub from_execution_id: Option<i64>,
-    /// Default:500; Maximum: 1000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

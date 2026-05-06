@@ -82,6 +82,8 @@ pub mod get_order_list_response_orders_inner;
 pub use self::get_order_list_response_orders_inner::GetOrderListResponseOrdersInner;
 pub mod get_order_response;
 pub use self::get_order_response::GetOrderResponse;
+pub mod historical_block_trades_response_inner;
+pub use self::historical_block_trades_response_inner::HistoricalBlockTradesResponseInner;
 pub mod historical_trades_response_inner;
 pub use self::historical_trades_response_inner::HistoricalTradesResponseInner;
 pub mod iceberg_parts_filter;
