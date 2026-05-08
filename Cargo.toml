@@ -11,6 +11,7 @@ license = "MIT"
 include = [ "**/*.rs" ]
 
 [package.metadata.docs.rs]
+no-default-features = true
 features = [ "rustls-tls", "all" ]
 rustdoc-args = [ "--cfg", "docsrs" ]
 
