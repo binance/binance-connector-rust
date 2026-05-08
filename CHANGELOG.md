@@ -1,5 +1,11 @@
 # Changelog
 
+## 48.0.1 - 2026-05-08
+
+### Changed (1)
+
+- Fix bug with unordered WS Streams events.
+
 ## 48.0.0 - 2026-05-06
 
 **Spot**

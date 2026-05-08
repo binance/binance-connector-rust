@@ -727,16 +727,14 @@ impl WebsocketCommon {
     ///
     /// # Behavior
     ///
-    /// - If a connection handler exists, spawns an async task to call its `on_message` method
+    /// - If a connection handler exists, awaits its `on_message` method
     /// - Emits a `WebsocketEvent::Message` event with the received message
     async fn on_message(&self, msg: String, connection: Arc<WebsocketConnection>) {
-        if let Some(handler) = connection.state.lock().await.handler.clone() {
-            let handler_clone = handler.clone();
-            let data = msg.clone();
-            let conn_clone = connection.clone();
-            spawn(async move {
-                handler_clone.on_message(data, conn_clone).await;
-            });
+        let handler = connection.state.lock().await.handler.clone();
+        if let Some(handler) = handler {
+            handler
+                .on_message(msg.clone(), Arc::clone(&connection))
+                .await;
         }
         self.events.emit(&WebsocketEvent::Message(msg));
     }
@@ -4175,6 +4173,102 @@ mod tests {
                     );
                     let msgs = called.lock().await;
                     assert_eq!(msgs.as_slice(), &["msg".to_string()]);
+                });
+            }
+
+            #[test]
+            fn preserves_message_order() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let conn = WebsocketConnection::new("c3");
+                    let called = Arc::new(Mutex::new(Vec::new()));
+                    let handler = Arc::new(DummyHandler {
+                        called_with: called.clone(),
+                    });
+                    conn.set_handler(handler.clone()).await;
+
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
+
+                    for i in 0..20 {
+                        common.on_message(format!("msg_{i}"), conn.clone()).await;
+                    }
+
+                    let msgs = called.lock().await;
+                    let expected: Vec<String> = (0..20).map(|i| format!("msg_{i}")).collect();
+                    assert_eq!(msgs.as_slice(), expected.as_slice());
+                });
+            }
+
+            #[test]
+            fn preserves_order_with_slow_handler() {
+                use std::sync::atomic::{AtomicU32, Ordering};
+
+                struct SlowHandler {
+                    received: Arc<Mutex<Vec<String>>>,
+                    concurrent_count: Arc<AtomicU32>,
+                    max_concurrent: Arc<AtomicU32>,
+                }
+
+                #[async_trait]
+                impl WebsocketHandler for SlowHandler {
+                    async fn on_open(&self, _url: String, _connection: Arc<WebsocketConnection>) {}
+                    async fn on_message(
+                        &self,
+                        data: String,
+                        _connection: Arc<WebsocketConnection>,
+                    ) {
+                        let prev = self.concurrent_count.fetch_add(1, Ordering::SeqCst);
+                        self.max_concurrent.fetch_max(prev + 1, Ordering::SeqCst);
+                        sleep(Duration::from_millis(1)).await;
+                        self.received.lock().await.push(data);
+                        self.concurrent_count.fetch_sub(1, Ordering::SeqCst);
+                    }
+                    async fn get_reconnect_url(
+                        &self,
+                        default_url: String,
+                        _connection: Arc<WebsocketConnection>,
+                    ) -> String {
+                        default_url
+                    }
+                }
+
+                TOKIO_SHARED_RT.block_on(async {
+                    let conn = WebsocketConnection::new("c4");
+                    let received = Arc::new(Mutex::new(Vec::new()));
+                    let concurrent_count = Arc::new(AtomicU32::new(0));
+                    let max_concurrent = Arc::new(AtomicU32::new(0));
+                    let handler = Arc::new(SlowHandler {
+                        received: received.clone(),
+                        concurrent_count: concurrent_count.clone(),
+                        max_concurrent: max_concurrent.clone(),
+                    });
+                    conn.set_handler(handler.clone()).await;
+
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
+
+                    for i in 0..10 {
+                        common.on_message(format!("msg_{i}"), conn.clone()).await;
+                    }
+
+                    let msgs = received.lock().await;
+                    let expected: Vec<String> = (0..10).map(|i| format!("msg_{i}")).collect();
+                    assert_eq!(msgs.as_slice(), expected.as_slice());
+                    assert_eq!(
+                        max_concurrent.load(Ordering::SeqCst),
+                        1,
+                        "messages must be processed sequentially, not concurrently"
+                    );
                 });
             }
         }
