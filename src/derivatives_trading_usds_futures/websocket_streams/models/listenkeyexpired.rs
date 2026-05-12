@@ -19,7 +19,7 @@ use serde_json::Value;
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Listenkeyexpired {
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
-    pub e_uppercase: Option<String>,
+    pub e_uppercase: Option<i64>,
     #[serde(rename = "listenKey", skip_serializing_if = "Option::is_none")]
     pub listen_key: Option<String>,
 }

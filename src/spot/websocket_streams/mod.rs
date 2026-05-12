@@ -347,6 +347,33 @@ impl WebsocketStreams {
         self.web_socket_streams_api_client.avg_price(params).await
     }
 
+    /// WebSocket Block Trade Streams
+    ///
+    ///
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`BlockTradeParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::BlockTradeResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#block-trade-streams).
+    ///
+    pub async fn block_trade(
+        &self,
+        params: BlockTradeParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::BlockTradeResponse>>> {
+        self.web_socket_streams_api_client.block_trade(params).await
+    }
+
     /// WebSocket Individual Symbol Book Ticker Streams
     ///
     /// Pushes any update to the best bid or ask's price or quantity in real-time for a specified symbol.

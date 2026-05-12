@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "48.0.1"
+version = "49.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -3698,6 +3698,11 @@ required-features = [ "spot" ]
 [[example]]
 name = "spot_websocket_streams_avg_price"
 path = "examples/spot/websocket_streams/avg_price.rs"
+required-features = [ "spot" ]
+
+[[example]]
+name = "spot_websocket_streams_block_trade"
+path = "examples/spot/websocket_streams/block_trade.rs"
 required-features = [ "spot" ]
 
 [[example]]

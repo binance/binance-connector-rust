@@ -26,6 +26,8 @@ pub mod asset_filters;
 pub use self::asset_filters::AssetFilters;
 pub mod avg_price_response;
 pub use self::avg_price_response::AvgPriceResponse;
+pub mod block_trade_response;
+pub use self::block_trade_response::BlockTradeResponse;
 pub mod book_ticker_response;
 pub use self::book_ticker_response::BookTickerResponse;
 pub mod diff_book_depth_response;

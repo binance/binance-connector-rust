@@ -49,6 +49,10 @@ pub trait WebSocketStreamsApi: Send + Sync {
         &self,
         params: AvgPriceParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::AvgPriceResponse>>>;
+    async fn block_trade(
+        &self,
+        params: BlockTradeParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::BlockTradeResponse>>>;
     async fn book_ticker(
         &self,
         params: BookTickerParams,
@@ -502,6 +506,37 @@ impl AvgPriceParams {
     #[must_use]
     pub fn builder(symbol: String) -> AvgPriceParamsBuilder {
         AvgPriceParamsBuilder::default().symbol(symbol)
+    }
+}
+/// Request parameters for the [`block_trade`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`block_trade`](#method.block_trade).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct BlockTradeParams {
+    /// Symbol to query
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub symbol: String,
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+}
+
+impl BlockTradeParams {
+    /// Create a builder for [`block_trade`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — Symbol to query
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> BlockTradeParamsBuilder {
+        BlockTradeParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`book_ticker`] operation.
@@ -996,6 +1031,40 @@ impl WebSocketStreamsApi for WebSocketStreamsApiClient {
         let stream = replace_websocket_streams_placeholders("/<symbol>@avgPrice", &vars);
 
         Ok(create_stream_handler::<models::AvgPriceResponse>(
+            WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
+            stream,
+            id_opt.map(|s| {
+                if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                    if let Ok(n) = s.parse::<u32>() {
+                        return StreamId::Number(n);
+                    }
+                }
+                StreamId::Str(s)
+            }),
+            None,
+        )
+        .await)
+    }
+
+    async fn block_trade(
+        &self,
+        params: BlockTradeParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::BlockTradeResponse>>> {
+        let BlockTradeParams { symbol, id } = params;
+
+        let pairs: &[(&str, Option<String>)] =
+            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+
+        let vars: HashMap<_, _> = pairs
+            .iter()
+            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+            .collect();
+
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+
+        let stream = replace_websocket_streams_placeholders("/<symbol>@blockTrade", &vars);
+
+        Ok(create_stream_handler::<models::BlockTradeResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
             stream,
             id_opt.map(|s| {
@@ -1964,6 +2033,147 @@ mod tests {
             ws_stream.unsubscribe().await;
 
             let payload: Value = serde_json::from_str(r#"{"e":"avgPrice","E":1693907033000,"s":"BTCUSDT","i":"5m","w":"25776.86000000","T":1693907032213}"#).unwrap();
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+
+            yield_now().await;
+
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
+        });
+    }
+
+    #[test]
+    fn block_trade_should_execute_successfully() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, _) = make_streams_base().await;
+            let api = WebSocketStreamsApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = BlockTradeParams::builder("bnbusdt".to_string())
+                .id(Some(id.clone()))
+                .build()
+                .unwrap();
+
+            let BlockTradeParams { symbol, id } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] =
+                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<symbol>@blockTrade", &vars);
+            let ws_stream = api
+                .block_trade(params)
+                .await
+                .expect("block_trade should return a WebsocketStream");
+
+            assert!(
+                streams_base.is_subscribed(&stream).await,
+                "expected stream '{stream}' to be subscribed"
+            );
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+        });
+    }
+
+    #[test]
+    fn block_trade_should_handle_incoming_message() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = WebSocketStreamsApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = BlockTradeParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+
+            let BlockTradeParams {
+                symbol,id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<symbol>@blockTrade", &vars);
+
+            let ws_stream = api.block_trade(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_with_message = called.clone();
+            ws_stream.on_message(move |_payload: models::BlockTradeResponse| {
+                called_with_message.store(true, Ordering::SeqCst);
+            });
+
+            let payload: Value = serde_json::from_str(r#"{"e":"blockTrade","E":1772506983582,"s":"BNBBTC","t":582,"p":"0.052","q":"5838","T":1772506983321,"m":true}"#).unwrap();
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+            yield_now().await;
+
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
+        });
+    }
+
+    #[test]
+    fn block_trade_should_not_fire_after_unsubscribe() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = WebSocketStreamsApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = BlockTradeParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+
+            let BlockTradeParams {
+                symbol,id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<symbol>@blockTrade", &vars);
+
+            let ws_stream = api.block_trade(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_clone = called.clone();
+            ws_stream.on_message(move |_payload: models::BlockTradeResponse| {
+                called_clone.store(true, Ordering::SeqCst);
+            });
+
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
+
+            ws_stream.unsubscribe().await;
+
+            let payload: Value = serde_json::from_str(r#"{"e":"blockTrade","E":1772506983582,"s":"BNBBTC","t":582,"p":"0.052","q":"5838","T":1772506983321,"m":true}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

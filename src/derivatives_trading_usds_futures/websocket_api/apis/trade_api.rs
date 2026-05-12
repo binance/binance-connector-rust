@@ -955,7 +955,7 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub close_position: Option<String>,
-    /// "TRUE" or "FALSE", default "FALSE". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
+    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1114,7 +1114,7 @@ pub struct NewOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub working_type: Option<NewOrderWorkingTypeEnum>,
-    /// "TRUE" or "FALSE", default "FALSE". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
+    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

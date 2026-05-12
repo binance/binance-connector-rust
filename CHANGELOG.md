@@ -1,5 +1,24 @@
 # Changelog
 
+## 49.0.0 - 2026-05-12
+
+**Derivatives Trading Usds Futures**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified response for `Listenkeyexpired`:
+  - `E`: type `string` → `integer`
+
+**Spot**
+
+### Added (1)
+
+#### WebSocket Streams
+
+- `block_trade()` (`<symbol>@blockTrade` stream)
+
 ## 48.0.1 - 2026-05-08
 
 ### Changed (1)
