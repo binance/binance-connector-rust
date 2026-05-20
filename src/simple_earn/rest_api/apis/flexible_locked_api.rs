@@ -2702,7 +2702,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":"1651536000000","canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
             let dummy_response: models::GetLockedProductPositionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedProductPositionResponse");
@@ -2729,7 +2729,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
             let dummy_response: models::GetLockedRedemptionRecordResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedRedemptionRecordResponse");
@@ -2784,7 +2784,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap();
             let dummy_response: Vec<models::GetLockedSubscriptionPreviewResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetLockedSubscriptionPreviewResponseInner>",
@@ -3581,7 +3581,7 @@ mod tests {
 
             let params = GetLockedProductPositionParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":"1651536000000","canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
             let expected_response : models::GetLockedProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedProductPositionResponse");
 
             let resp = client.get_locked_product_position(params).await.expect("Expected a response");
@@ -3598,7 +3598,7 @@ mod tests {
 
             let params = GetLockedProductPositionParams::builder().asset("asset_example".to_string()).position_id(1).project_id("1".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":"1651536000000","canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
             let expected_response : models::GetLockedProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedProductPositionResponse");
 
             let resp = client.get_locked_product_position(params).await.expect("Expected a response");
@@ -3631,7 +3631,7 @@ mod tests {
 
             let params = GetLockedRedemptionRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
             let expected_response : models::GetLockedRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedRedemptionRecordResponse");
 
             let resp = client.get_locked_redemption_record(params).await.expect("Expected a response");
@@ -3648,7 +3648,7 @@ mod tests {
 
             let params = GetLockedRedemptionRecordParams::builder().position_id(1).redeem_id("1".to_string()).asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
             let expected_response : models::GetLockedRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedRedemptionRecordResponse");
 
             let resp = client.get_locked_redemption_record(params).await.expect("Expected a response");
@@ -3731,7 +3731,7 @@ mod tests {
 
             let params = GetLockedSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap();
             let expected_response : Vec<models::GetLockedSubscriptionPreviewResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetLockedSubscriptionPreviewResponseInner>");
 
             let resp = client.get_locked_subscription_preview(params).await.expect("Expected a response");
@@ -3748,7 +3748,7 @@ mod tests {
 
             let params = GetLockedSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).auto_subscribe(true).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap();
             let expected_response : Vec<models::GetLockedSubscriptionPreviewResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetLockedSubscriptionPreviewResponseInner>");
 
             let resp = client.get_locked_subscription_preview(params).await.expect("Expected a response");

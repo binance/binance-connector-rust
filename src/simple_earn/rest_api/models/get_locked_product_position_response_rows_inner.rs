@@ -28,7 +28,7 @@ pub struct GetLockedProductPositionResponseRowsInner {
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
     #[serde(rename = "purchaseTime", skip_serializing_if = "Option::is_none")]
-    pub purchase_time: Option<String>,
+    pub purchase_time: Option<i64>,
     #[serde(rename = "duration", skip_serializing_if = "Option::is_none")]
     pub duration: Option<String>,
     #[serde(rename = "accrualDays", skip_serializing_if = "Option::is_none")]
@@ -57,15 +57,15 @@ pub struct GetLockedProductPositionResponseRowsInner {
     #[serde(rename = "nextPay", skip_serializing_if = "Option::is_none")]
     pub next_pay: Option<String>,
     #[serde(rename = "nextPayDate", skip_serializing_if = "Option::is_none")]
-    pub next_pay_date: Option<String>,
+    pub next_pay_date: Option<i64>,
     #[serde(rename = "payPeriod", skip_serializing_if = "Option::is_none")]
     pub pay_period: Option<String>,
     #[serde(rename = "redeemAmountEarly", skip_serializing_if = "Option::is_none")]
     pub redeem_amount_early: Option<String>,
     #[serde(rename = "rewardsEndDate", skip_serializing_if = "Option::is_none")]
-    pub rewards_end_date: Option<String>,
+    pub rewards_end_date: Option<i64>,
     #[serde(rename = "deliverDate", skip_serializing_if = "Option::is_none")]
-    pub deliver_date: Option<String>,
+    pub deliver_date: Option<i64>,
     #[serde(rename = "redeemPeriod", skip_serializing_if = "Option::is_none")]
     pub redeem_period: Option<String>,
     #[serde(rename = "redeemingAmt", skip_serializing_if = "Option::is_none")]
@@ -76,7 +76,7 @@ pub struct GetLockedProductPositionResponseRowsInner {
         rename = "partialAmtDeliverDate",
         skip_serializing_if = "Option::is_none"
     )]
-    pub partial_amt_deliver_date: Option<String>,
+    pub partial_amt_deliver_date: Option<i64>,
     #[serde(rename = "canRedeemEarly", skip_serializing_if = "Option::is_none")]
     pub can_redeem_early: Option<bool>,
     #[serde(rename = "canFastRedemption", skip_serializing_if = "Option::is_none")]
