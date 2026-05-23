@@ -994,6 +994,7 @@ impl WebsocketCommon {
             let read_url = url.to_string();
 
             spawn(async move {
+                let mut stream_end_reason = None;
                 while let Some(item) = read_half.next().await {
                     match item {
                         Ok(Message::Text(msg)) => {
@@ -1046,6 +1047,7 @@ impl WebsocketCommon {
                                 code,
                                 user_initiated,
                             );
+                            stream_end_reason = Some(failure_reason);
 
                             info!(
                                 "Connection {} received close frame: code={}, reason='{}', classified as {:?}",
@@ -1095,7 +1097,7 @@ impl WebsocketCommon {
                             // Classify the error type for reconnection decision
                             let failure_reason =
                                 WebsocketConnectionFailureReason::from_tungstenite_error(&e);
-
+                            stream_end_reason = Some(failure_reason);
                             error!(
                                 "WebSocket error on {}: {:?}, classified as {:?}",
                                 reader_conn.id, e, failure_reason
@@ -1150,8 +1152,9 @@ impl WebsocketCommon {
                 // Handle case where stream ends unexpectedly (e.g., network disconnection)
                 info!("WebSocket stream ended for connection {}", reader_conn.id);
 
-                // Handle unexpected stream end with same logic as other errors
-                let failure_reason = WebsocketConnectionFailureReason::StreamEnded;
+                // Handle possibly unexpected stream end with same logic as other errors
+                let failure_reason =
+                    stream_end_reason.unwrap_or(WebsocketConnectionFailureReason::StreamEnded);
 
                 info!(
                     "WebSocket stream ended for connection {}, classified as {:?}",
@@ -4550,6 +4553,10 @@ mod tests {
         }
 
         mod init_connect {
+            use std::panic;
+
+            use tokio::sync::mpsc::{channel, error::TryRecvError};
+
             use super::*;
 
             #[test]
@@ -4842,6 +4849,67 @@ mod tests {
                         !st.renewal_pending,
                         "renewal_pending should be cleared in on_open"
                     );
+                });
+            }
+
+            #[test]
+            fn does_not_schedule_reconnect_on_renewal() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let server_handle = tokio::spawn(async move {
+                        if let Ok((stream, _)) = listener.accept().await {
+                            let _ws = accept_async(stream).await.unwrap();
+                            if let Ok((stream, _)) = listener.accept().await {
+                                let _ws = accept_async(stream).await.unwrap();
+                            }
+                            sleep(Duration::from_secs(10)).await;
+                        }
+                    });
+
+                    let conn = WebsocketConnection::new("c-needs-renew");
+                    let (reconnect_tx, mut reconnect_rx) = channel::<ReconnectEntry>(1);
+                    let (renewal_tx, _renewal_rx) = channel::<(String, String)>(1);
+                    let common = Arc::new(WebsocketCommon {
+                        events: WebsocketEventEmitter::new(),
+                        mode: WebsocketMode::Single,
+                        round_robin_index: AtomicUsize::new(0),
+                        connection_pool: vec![conn.clone()],
+                        reconnect_tx,
+                        renewal_tx,
+                        reconnect_delay: 0,
+                        agent: None,
+                        user_agent: None,
+                    });
+                    let url = format!("ws://{addr}");
+                    let res = common
+                        .clone()
+                        .init_connect(&url, false, Some(conn.clone()))
+                        .await;
+
+                    assert!(res.is_ok());
+
+                    {
+                        let st = conn.state.lock().await;
+                        assert!(st.ws_write_tx.is_some(), "writer should be set");
+                    }
+
+                    common
+                        .clone()
+                        .init_connect(&url, true, Some(conn.clone()))
+                        .await
+                        .expect("Renewal init_connect should succeed");
+
+                    sleep(Duration::from_millis(1000)).await;
+
+                    match reconnect_rx.try_recv() {
+                        Err(TryRecvError::Empty) => {}
+                        Ok(_) => panic!("Received reconnection request on renewal"),
+                        Err(TryRecvError::Disconnected) => {
+                            panic!("Sender for reconnection_rx disconnected")
+                        }
+                    }
+                    server_handle.abort();
                 });
             }
 
