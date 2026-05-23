@@ -1,11 +1,12 @@
 use thiserror::Error;
+use tokio_tungstenite::tungstenite::error::ProtocolError;
 
 /// Represents different types of WebSocket connection failures and their reconnection eligibility
 #[derive(Debug, Clone, Copy)]
 pub enum WebsocketConnectionFailureReason {
     /// Network-level interruption (should reconnect)
     NetworkInterruption,
-    /// Connection reset by peer (should reconnect)  
+    /// Connection reset by peer (should reconnect)
     ConnectionReset,
     /// Server temporary error (should reconnect)
     ServerTemporaryError,
@@ -17,7 +18,7 @@ pub enum WebsocketConnectionFailureReason {
     AuthenticationFailure,
     /// Protocol violation (should not reconnect)
     ProtocolViolation,
-    /// Configuration error (should not reconnect)  
+    /// Configuration error (should not reconnect)
     ConfigurationError,
     /// User initiated close (should not reconnect)
     UserInitiatedClose,
@@ -45,6 +46,7 @@ impl WebsocketConnectionFailureReason {
                 }
             }
             Error::Tls(_) | Error::Capacity(_) | Error::Url(_) => Self::ConfigurationError,
+            Error::Protocol(ProtocolError::ResetWithoutClosingHandshake) => Self::UnexpectedClose,
             Error::Protocol(_) | Error::Utf8 | Error::HttpFormat(_) => Self::ProtocolViolation,
             Error::Http(_) => Self::ServerTemporaryError,
             _ => Self::NetworkInterruption,

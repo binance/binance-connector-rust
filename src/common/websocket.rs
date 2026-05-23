@@ -4953,13 +4953,14 @@ mod tests {
                     let addr = listener.local_addr().unwrap();
                     tokio::spawn(async move {
                         if let Ok((stream, _)) = listener.accept().await {
-                            let mut ws = accept_async(stream).await.unwrap();
-                            ws.close(Some(tungstenite::protocol::CloseFrame {
-                                code: tungstenite::protocol::frame::coding::CloseCode::Abnormal,
-                                reason: "oops".into(),
-                            }))
-                            .await
-                            .ok();
+                            let ws = accept_async(stream).await.unwrap();
+
+                            // Explicitly sending an AbnormalClose (1006) is not allowed by the websocket
+                            // protocol and will be converted into Protocol (1002), which the client receives.
+                            //
+                            // Abruptly dropping the connection simulates a real abnormal close, which is
+                            // handled as an error in the websocket protocol
+                            drop(ws);
                         }
                     });
                     let conn = WebsocketConnection::new("c-close");
@@ -9543,9 +9544,9 @@ mod tests {
             let reason = WebsocketConnectionFailureReason::from_tungstenite_error(&error);
             assert!(matches!(
                 reason,
-                WebsocketConnectionFailureReason::ProtocolViolation
+                WebsocketConnectionFailureReason::UnexpectedClose
             ));
-            assert!(!reason.should_reconnect());
+            assert!(reason.should_reconnect());
 
             // UTF8 error -> ProtocolViolation
             let error = TungsteniteError::Utf8;
