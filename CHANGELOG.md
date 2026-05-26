@@ -1,5 +1,22 @@
 # Changelog
 
+## 51.0.0 - 2026-05-26
+
+### Changed (3)
+
+- Fix race in WebSocket API `send` where a fast response could be dropped before the pending request was registered.
+- Fix duplicate subscription events caused by spurious reconnect after WebSocket connection renewal.
+- Fix flaky WebSocket unit tests.
+
+**Wallet**
+
+### Changed (1)
+
+- Added parameter `accountType`
+  - affected methods:
+    - `dust_convert()` (`POST /sapi/v1/asset/dust-convert/convert`)
+    - `dust_convertible_assets()` (`POST /sapi/v1/asset/dust-convert/query-convertible-assets`)
+
 ## 50.0.0 - 2026-05-20
 
 **Simple Earn**

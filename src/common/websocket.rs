@@ -1097,6 +1097,7 @@ impl WebsocketCommon {
                             // Classify the error type for reconnection decision
                             let failure_reason =
                                 WebsocketConnectionFailureReason::from_tungstenite_error(&e);
+
                             stream_end_reason = Some(failure_reason);
                             error!(
                                 "WebSocket error on {}: {:?}, classified as {:?}",
@@ -1348,39 +1349,54 @@ impl WebsocketCommon {
                 .ok_or(WebsocketError::NotConnected)?
         };
 
+        let pending_setup = if wait_for_reply {
+            let request_id = id.ok_or_else(|| {
+                error!("id is required when waiting for a reply");
+                WebsocketError::NotConnected
+            })?;
+
+            let (tx, rx) = oneshot::channel();
+            {
+                let mut conn_state = conn.state.lock().await;
+                conn_state
+                    .pending_requests
+                    .insert(request_id.clone(), PendingRequest { completion: tx });
+            }
+
+            Some((request_id, rx))
+        } else {
+            None
+        };
+
         debug!("Sending message to WebSocket on connection {}", conn.id);
 
-        ws_write_tx
+        if ws_write_tx
             .send(Message::Text(payload.clone().into()))
-            .map_err(|_| WebsocketError::NotConnected)?;
-
-        if !wait_for_reply {
-            return Ok(None);
-        }
-
-        let request_id = id.ok_or_else(|| {
-            error!("id is required when waiting for a reply");
-            WebsocketError::NotConnected
-        })?;
-
-        let (tx, rx) = oneshot::channel();
+            .is_err()
         {
-            let mut conn_state = conn.state.lock().await;
-            conn_state
-                .pending_requests
-                .insert(request_id.clone(), PendingRequest { completion: tx });
+            if let Some((request_id, _)) = &pending_setup {
+                let mut conn_state = conn.state.lock().await;
+                conn_state.pending_requests.remove(request_id);
+            }
+            return Err(WebsocketError::NotConnected);
         }
 
-        let conn_clone = Arc::clone(&conn);
-        spawn(async move {
-            sleep(timeout).await;
-            let mut conn_state = conn_clone.state.lock().await;
-            if let Some(pending_req) = conn_state.pending_requests.remove(&request_id) {
-                let _ = pending_req.completion.send(Err(WebsocketError::Timeout));
-            }
-        });
+        let rx = if let Some((request_id, rx)) = pending_setup {
+            let conn_clone = Arc::clone(&conn);
+            let timeout_id = request_id.clone();
+            spawn(async move {
+                sleep(timeout).await;
+                let mut conn_state = conn_clone.state.lock().await;
+                if let Some(pending_req) = conn_state.pending_requests.remove(&timeout_id) {
+                    let _ = pending_req.completion.send(Err(WebsocketError::Timeout));
+                }
+            });
+            Some(rx)
+        } else {
+            None
+        };
 
-        Ok(Some(rx))
+        Ok(rx)
     }
 }
 
@@ -3003,6 +3019,33 @@ mod tests {
     use tokio_tungstenite::{accept_async, accept_hdr_async, tungstenite, tungstenite::Message};
     use tungstenite::handshake::server::Request;
 
+    /// RAII guard that aborts a spawned task when dropped.
+    ///
+    /// Used by tests to bound the lifetime of mock listener / spawned helper tasks
+    /// to the scope of the test, so they don't leak into `TOKIO_SHARED_RT` and
+    /// add nondeterministic background load to subsequent tests.
+    struct AbortOnDrop(tokio::task::JoinHandle<()>);
+
+    impl Drop for AbortOnDrop {
+        fn drop(&mut self) {
+            self.0.abort();
+        }
+    }
+
+    /// Spawn a mock WebSocket listener that accepts a single connection and
+    /// holds it open until the client disconnects, then exits. The returned
+    /// guard aborts the task when dropped.
+    fn spawn_mock_ws_listener(listener: TcpListener) -> AbortOnDrop {
+        AbortOnDrop(tokio::spawn(async move {
+            if let Ok((stream, _)) = listener.accept().await {
+                let Ok(mut ws) = accept_async(stream).await else {
+                    return;
+                };
+                while ws.next().await.is_some() {}
+            }
+        }))
+    }
+
     fn subscribe_events(common: &WebsocketCommon) -> Arc<Mutex<Vec<WebsocketEvent>>> {
         let events = Arc::new(Mutex::new(Vec::new()));
         let events_clone = events.clone();
@@ -3356,23 +3399,19 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr = listener.local_addr().unwrap();
-                    tokio::spawn(async move {
-                        if let Ok((stream, _)) = listener.accept().await {
-                            let mut ws = accept_async(stream).await.unwrap();
-                            sleep(Duration::from_secs(2)).await;
-                            let _ = ws.close(None).await;
-                        }
-                    });
+                    let _listener_guard = spawn_mock_ws_listener(listener);
 
+                    let reconnect_delay_ms = 1500;
                     let conn = WebsocketConnection::new("nonrenew");
                     let common = WebsocketCommon::new(
                         vec![conn.clone()],
                         WebsocketMode::Single,
-                        200,
+                        reconnect_delay_ms,
                         None,
                         None,
                     );
                     let url = format!("ws://{addr}");
+                    let queued_at = tokio::time::Instant::now();
                     common
                         .reconnect_tx
                         .send(ReconnectEntry {
@@ -3383,8 +3422,13 @@ mod tests {
                         .await
                         .unwrap();
 
-                    sleep(Duration::from_millis(50)).await;
-                    assert!(conn.state.lock().await.ws_write_tx.is_none());
+                    sleep(Duration::from_millis(100)).await;
+                    if queued_at.elapsed()
+                        < Duration::from_millis(reconnect_delay_ms as u64)
+                            .saturating_sub(Duration::from_millis(200))
+                    {
+                        assert!(conn.state.lock().await.ws_write_tx.is_none());
+                    }
 
                     let mut ok = false;
                     for _ in 0..200 {
@@ -4492,12 +4536,7 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr = listener.local_addr().unwrap();
-                    tokio::spawn(async move {
-                        if let Ok((stream, _)) = listener.accept().await {
-                            let mut ws = accept_async(stream).await.unwrap();
-                            let _ = ws.close(None).await;
-                        }
-                    });
+                    let _listener_guard = spawn_mock_ws_listener(listener);
                     let conn = WebsocketConnection::new("c1");
                     let common = WebsocketCommon::new(
                         vec![conn.clone()],
@@ -4558,6 +4597,8 @@ mod tests {
             use tokio::sync::mpsc::{channel, error::TryRecvError};
 
             use super::*;
+            use std::panic;
+            use tokio::sync::mpsc::{channel, error::TryRecvError};
 
             #[test]
             fn pool_mode_none_connection_uses_first() {
@@ -4649,13 +4690,7 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr = listener.local_addr().unwrap();
-
-                    tokio::spawn(async move {
-                        if let Ok((stream, _)) = listener.accept().await {
-                            let mut ws = accept_async(stream).await.unwrap();
-                            let _ = ws.close(None).await;
-                        }
-                    });
+                    let _listener_guard = spawn_mock_ws_listener(listener);
 
                     let conn = WebsocketConnection::new("c-reconnect");
                     {
@@ -4807,17 +4842,43 @@ mod tests {
 
             #[test]
             fn is_renewal_true_sets_and_clears_flag() {
+                struct GatedHandler {
+                    gate: Mutex<Option<oneshot::Receiver<()>>>,
+                }
+                #[async_trait]
+                impl WebsocketHandler for GatedHandler {
+                    async fn on_open(&self, _url: String, _connection: Arc<WebsocketConnection>) {
+                        if let Some(rx) = self.gate.lock().await.take() {
+                            let _ = rx.await;
+                        }
+                    }
+                    async fn on_message(
+                        &self,
+                        _data: String,
+                        _connection: Arc<WebsocketConnection>,
+                    ) {
+                    }
+                    async fn get_reconnect_url(
+                        &self,
+                        url: String,
+                        _connection: Arc<WebsocketConnection>,
+                    ) -> String {
+                        url
+                    }
+                }
+
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr = listener.local_addr().unwrap();
-                    tokio::spawn(async move {
-                        if let Ok((stream, _)) = listener.accept().await {
-                            let mut ws = accept_async(stream).await.unwrap();
-                            let _ = ws.close(None).await;
-                        }
-                    });
+                    let _listener_guard = spawn_mock_ws_listener(listener);
 
                     let conn = WebsocketConnection::new("c-new-renew");
+                    let (gate_tx, gate_rx) = oneshot::channel();
+                    conn.set_handler(Arc::new(GatedHandler {
+                        gate: Mutex::new(Some(gate_rx)),
+                    }))
+                    .await;
+
                     let common = WebsocketCommon::new(
                         vec![conn.clone()],
                         WebsocketMode::Single,
@@ -4842,8 +4903,14 @@ mod tests {
                         );
                     }
 
-                    common.on_open(url.clone(), conn.clone(), None).await;
+                    let _ = gate_tx.send(());
 
+                    let ok = eventually_async(Duration::from_secs(2), || {
+                        let conn = conn.clone();
+                        async move { !conn.state.lock().await.renewal_pending }
+                    })
+                    .await;
+                    assert!(ok, "renewal_pending should be cleared in on_open");
                     let st = conn.state.lock().await;
                     assert!(
                         !st.renewal_pending,
@@ -4918,12 +4985,7 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr = listener.local_addr().unwrap();
-                    tokio::spawn(async move {
-                        if let Ok((stream, _)) = listener.accept().await {
-                            let mut ws = accept_async(stream).await.unwrap();
-                            let _ = ws.close(None).await;
-                        }
-                    });
+                    let _listener_guard = spawn_mock_ws_listener(listener);
                     let conn = WebsocketConnection::new("c-default");
                     let common = WebsocketCommon::new(
                         vec![conn.clone()],
@@ -5499,6 +5561,48 @@ mod tests {
                     }
                     let resp = fut.await.unwrap().unwrap();
                     assert_eq!(resp, serde_json::json!(123));
+                });
+            }
+
+            #[test]
+            fn async_send_failure_removes_pending_entry() {
+                // Regression test: when wait_for_reply=true, send() registers a
+                // pending_requests entry BEFORE writing to ws_write_tx so that a
+                // racing response can never be lost. If the write itself fails
+                // afterwards, the pending entry must be removed so it doesn't
+                // leak (otherwise close_connection_gracefully would block on it
+                // until the 30s drain timeout, and on_message could match a
+                // future request that reuses the id).
+                TOKIO_SHARED_RT.block_on(async {
+                    let conn = WebsocketConnection::new("c1");
+                    let (tx, rx) = unbounded_channel::<Message>();
+                    drop(rx);
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.ws_write_tx = Some(tx);
+                    }
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        0,
+                        None,
+                        None,
+                    );
+                    let err = common
+                        .send(
+                            "msg".into(),
+                            Some("id".into()),
+                            true,
+                            Duration::from_secs(1),
+                            Some(conn.clone()),
+                        )
+                        .await
+                        .unwrap_err();
+                    assert!(matches!(err, WebsocketError::NotConnected));
+                    assert!(
+                        conn.state.lock().await.pending_requests.is_empty(),
+                        "pending_requests must be empty after a failed send"
+                    );
                 });
             }
 

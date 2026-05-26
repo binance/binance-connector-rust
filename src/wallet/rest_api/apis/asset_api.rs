@@ -197,6 +197,11 @@ pub struct DustConvertParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub asset: String,
+    /// `SPOT` or `MARGIN`,default `SPOT`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub account_type: Option<String>,
     /// A unique id for the request
     ///
     /// This field is **optional.
@@ -247,6 +252,11 @@ pub struct DustConvertibleAssetsParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub target_asset: String,
+    /// `SPOT` or `MARGIN`,default `SPOT`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub account_type: Option<String>,
     ///
     /// The `dust_quota_asset_to_target_asset_price` parameter.
     ///
@@ -893,6 +903,7 @@ impl AssetApi for AssetApiClient {
     ) -> anyhow::Result<RestApiResponse<models::DustConvertResponse>> {
         let DustConvertParams {
             asset,
+            account_type,
             client_id,
             target_asset,
             third_party_client_id,
@@ -903,6 +914,10 @@ impl AssetApi for AssetApiClient {
         let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
+
+        if let Some(rw) = account_type {
+            query_params.insert("accountType".to_string(), json!(rw));
+        }
 
         if let Some(rw) = client_id {
             query_params.insert("clientId".to_string(), json!(rw));
@@ -942,11 +957,16 @@ impl AssetApi for AssetApiClient {
     ) -> anyhow::Result<RestApiResponse<models::DustConvertibleAssetsResponse>> {
         let DustConvertibleAssetsParams {
             target_asset,
+            account_type,
             dust_quota_asset_to_target_asset_price,
         } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
+
+        if let Some(rw) = account_type {
+            query_params.insert("accountType".to_string(), json!(rw));
+        }
 
         query_params.insert("targetAsset".to_string(), json!(target_asset));
 
@@ -2163,7 +2183,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetApiClient { force_error: false };
 
-            let params = DustConvertParams::builder("asset_example".to_string(),).client_id("1".to_string()).target_asset("target_asset_example".to_string()).third_party_client_id("1".to_string()).dust_quota_asset_to_target_asset_price(dec!(1.0)).build().unwrap();
+            let params = DustConvertParams::builder("asset_example".to_string(),).account_type("SPOT".to_string()).client_id("1".to_string()).target_asset("target_asset_example".to_string()).third_party_client_id("1".to_string()).dust_quota_asset_to_target_asset_price(dec!(1.0)).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"totalTransfered":"3.5971223","totalServiceCharge":"0.0794964","transferResult":[{"tranId":2987331510,"fromAsset":"USDT","amount":"1","transferedAmount":"3.5971223","serviceChargeAmount":"0.0794964","operateTime":1765212029749}]}"#).unwrap();
             let expected_response : models::DustConvertResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DustConvertResponse");
@@ -2215,7 +2235,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetApiClient { force_error: false };
 
-            let params = DustConvertibleAssetsParams::builder("target_asset_example".to_string(),).dust_quota_asset_to_target_asset_price(dec!(1.0)).build().unwrap();
+            let params = DustConvertibleAssetsParams::builder("target_asset_example".to_string(),).account_type("SPOT".to_string()).dust_quota_asset_to_target_asset_price(dec!(1.0)).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"dribbletPercentage":"0.02","totalTransferQuotaAssetAmount":"0.7899968","totalTransferTargetAssetAmount":"0.7899968","dribbletBase":"10","details":[{"asset":"AR","assetFullName":"AR","amountFree":"0.00856","exchange":"0.00073616","toQuotaAssetAmount":"0.036808","toTargetAssetAmount":"0.036808","toTargetAssetOffExchange":"0.03607184"},{"asset":"BNB","assetFullName":"BNB","amountFree":"0.00082768","exchange":"0.01506378","toQuotaAssetAmount":"0.7531888","toTargetAssetAmount":"0.7531888","toTargetAssetOffExchange":"0.73812502"}]}"#).unwrap();
             let expected_response : models::DustConvertibleAssetsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DustConvertibleAssetsResponse");
