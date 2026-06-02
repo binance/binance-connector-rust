@@ -31,6 +31,7 @@ pub struct RestApi {
     bfusd_api_client: BfusdApiClient,
     flexible_locked_api_client: FlexibleLockedApiClient,
     rwusd_api_client: RwusdApiClient,
+    yield_arena_api_client: YieldArenaApiClient,
 }
 
 impl RestApi {
@@ -38,12 +39,14 @@ impl RestApi {
         let bfusd_api_client = BfusdApiClient::new(configuration.clone());
         let flexible_locked_api_client = FlexibleLockedApiClient::new(configuration.clone());
         let rwusd_api_client = RwusdApiClient::new(configuration.clone());
+        let yield_arena_api_client = YieldArenaApiClient::new(configuration.clone());
 
         Self {
             configuration,
             bfusd_api_client,
             flexible_locked_api_client,
             rwusd_api_client,
+            yield_arena_api_client,
         }
     }
 
@@ -1992,5 +1995,52 @@ impl RestApi {
         params: SubscribeRwusdParams,
     ) -> anyhow::Result<RestApiResponse<models::SubscribeRwusdResponse>> {
         self.rwusd_api_client.subscribe_rwusd(params).await
+    }
+
+    /// Get Yield Arena Activities (`USER_DATA`)
+    ///
+    /// Get the list of Earn Yield Arena giveaway activities currently available to the user.
+    ///
+    /// Supported locales: `en`, `en-GB`, `en-AU`, `cn`, `zh`, `zh-CN`, `tw`, `zh-TW`, `zh-HK`, `ja`, `ja-JP`, `ru`, `ru-RU`, `es`, `es-ES`, `es-LA`, `pt`, `pt-BR`, `pt-PT`, `fr`, `fr-FR`, `de`, `de-DE`, `it`, `it-IT`, `id`, `id-ID`, `vi`, `vi-VN`, `ar`, `ar-SA`, `pl`, `pl-PL`, `uk`, `uk-UA`, `cs`, `cs-CZ`, `ro`, `ro-RO`, `sv`, `sv-SE`, `bg`, `bg-BG`, `da`, `da-DK`, `el`, `el-GR`, `hu`, `hu-HU`, `lv`, `lv-LV`, `sk`, `sk-SK`, `sl`, `sl-SI`.
+    ///
+    /// Weight: 150
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetYieldArenaActivitiesParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetYieldArenaActivitiesResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/yield-arena/earn/Get-Yield-Arena-Activities).
+    ///
+    pub async fn get_yield_arena_activities(
+        &self,
+        params: GetYieldArenaActivitiesParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetYieldArenaActivitiesResponse>> {
+        self.yield_arena_api_client
+            .get_yield_arena_activities(params)
+            .await
     }
 }

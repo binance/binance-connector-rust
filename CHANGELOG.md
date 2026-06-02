@@ -1,5 +1,20 @@
 # Changelog
 
+## 52.0.0 - 2026-06-02
+
+**Simple Earn**
+
+### Added (1)
+
+- `get_yield_arena_activities()` (`GET /sapi/v1/earn/arena/activities`)
+
+**Wallet**
+
+### Added (2)
+
+- `get_country_list()` (`GET /sapi/v1/localentity/country/list`)
+- `get_region_list()` (`GET /sapi/v1/localentity/region/list`)
+
 ## 51.0.0 - 2026-05-26
 
 ### Changed (3)

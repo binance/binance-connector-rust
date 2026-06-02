@@ -51,6 +51,13 @@ pub trait TravelRuleApi: Send + Sync {
         &self,
         params: FetchAddressVerificationListParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::FetchAddressVerificationListResponseInner>>>;
+    async fn get_country_list(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>>;
+    async fn get_region_list(
+        &self,
+        params: GetRegionListParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetRegionListResponse>>;
     async fn submit_deposit_questionnaire(
         &self,
         params: SubmitDepositQuestionnaireParams,
@@ -386,6 +393,32 @@ impl FetchAddressVerificationListParams {
     #[must_use]
     pub fn builder() -> FetchAddressVerificationListParamsBuilder {
         FetchAddressVerificationListParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`get_region_list`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_region_list`](#method.get_region_list).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetRegionListParams {
+    /// ISO 2-digit country code (from `Country List` API).
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub country_code: String,
+}
+
+impl GetRegionListParams {
+    /// Create a builder for [`get_region_list`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `country_code` — ISO 2-digit country code (from `Country List` API).
+    ///
+    #[must_use]
+    pub fn builder(country_code: String) -> GetRegionListParamsBuilder {
+        GetRegionListParamsBuilder::default().country_code(country_code)
     }
 }
 /// Request parameters for the [`submit_deposit_questionnaire`] operation.
@@ -1110,6 +1143,55 @@ impl TravelRuleApi for TravelRuleApiClient {
         .await
     }
 
+    async fn get_country_list(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>> {
+        let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        send_request::<models::GetCountryListResponse>(
+            &self.configuration,
+            "/sapi/v1/localentity/country/list",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_region_list(
+        &self,
+        params: GetRegionListParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetRegionListResponse>> {
+        let GetRegionListParams { country_code } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("countryCode".to_string(), json!(country_code));
+
+        send_request::<models::GetRegionListResponse>(
+            &self.configuration,
+            "/sapi/v1/localentity/region/list",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn submit_deposit_questionnaire(
         &self,
         params: SubmitDepositQuestionnaireParams,
@@ -1680,6 +1762,59 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn get_country_list(
+            &self,
+        ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let dummy_response: models::GetCountryListResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetCountryListResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_region_list(
+            &self,
+            _params: GetRegionListParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetRegionListResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"countryCode":"au","regions":[{"regionName":"New South Wales","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let dummy_response: models::GetRegionListResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetRegionListResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn submit_deposit_questionnaire(
             &self,
             _params: SubmitDepositQuestionnaireParams,
@@ -2198,6 +2333,104 @@ mod tests {
                 .unwrap();
 
             match client.fetch_address_verification_list(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_country_list_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let expected_response : models::GetCountryListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCountryListResponse");
+
+            let resp = client.get_country_list().await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_country_list_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let expected_response : models::GetCountryListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCountryListResponse");
+
+            let resp = client.get_country_list().await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_country_list_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: true };
+
+            match client.get_country_list().await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_region_list_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params = GetRegionListParams::builder("country_code_example".to_string()).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"countryCode":"au","regions":[{"regionName":"New South Wales","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let expected_response : models::GetRegionListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRegionListResponse");
+
+            let resp = client.get_region_list(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_region_list_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params = GetRegionListParams::builder("country_code_example".to_string()).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"countryCode":"au","regions":[{"regionName":"New South Wales","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let expected_response : models::GetRegionListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRegionListResponse");
+
+            let resp = client.get_region_list(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_region_list_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: true };
+
+            let params = GetRegionListParams::builder("country_code_example".to_string())
+                .build()
+                .unwrap();
+
+            match client.get_region_list(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

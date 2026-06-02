@@ -17,3 +17,5 @@ pub mod flexible_locked_api;
 pub use flexible_locked_api::*;
 pub mod rwusd_api;
 pub use rwusd_api::*;
+pub mod yield_arena_api;
+pub use yield_arena_api::*;

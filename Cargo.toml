@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "51.0.0"
+version = "52.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -3166,6 +3166,11 @@ path = "examples/simple_earn/rest_api/rwusd_api/subscribe_rwusd.rs"
 required-features = [ "simple_earn" ]
 
 [[example]]
+name = "simple_earn_rest_api_yield_arena_api_get_yield_arena_activities"
+path = "examples/simple_earn/rest_api/yield_arena_api/get_yield_arena_activities.rs"
+required-features = [ "simple_earn" ]
+
+[[example]]
 name = "spot_rest_api_account_api_account_commission"
 path = "examples/spot/rest_api/account_api/account_commission.rs"
 required-features = [ "spot" ]
@@ -4418,6 +4423,16 @@ required-features = [ "wallet" ]
 [[example]]
 name = "wallet_rest_api_travel_rule_api_fetch_address_verification_list"
 path = "examples/wallet/rest_api/travel_rule_api/fetch_address_verification_list.rs"
+required-features = [ "wallet" ]
+
+[[example]]
+name = "wallet_rest_api_travel_rule_api_get_country_list"
+path = "examples/wallet/rest_api/travel_rule_api/get_country_list.rs"
+required-features = [ "wallet" ]
+
+[[example]]
+name = "wallet_rest_api_travel_rule_api_get_region_list"
+path = "examples/wallet/rest_api/travel_rule_api/get_region_list.rs"
 required-features = [ "wallet" ]
 
 [[example]]

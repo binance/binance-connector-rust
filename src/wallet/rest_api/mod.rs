@@ -1986,6 +1986,91 @@ impl RestApi {
             .await
     }
 
+    /// Get Country List (`USER_DATA`)
+    ///
+    /// Query the active country list for travel rule questionnaires.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetCountryListParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetCountryListResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/country-list).
+    ///
+    pub async fn get_country_list(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>> {
+        self.travel_rule_api_client.get_country_list().await
+    }
+
+    /// Get Region List (`USER_DATA`)
+    ///
+    /// Query the active region/city list for a given country.
+    ///
+    /// Weight: 1
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetRegionListParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetRegionListResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/region-list).
+    ///
+    pub async fn get_region_list(
+        &self,
+        params: GetRegionListParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetRegionListResponse>> {
+        self.travel_rule_api_client.get_region_list(params).await
+    }
+
     /// Submit Deposit Questionnaire (For local entities that require travel rule) (supporting network) (`USER_DATA`)
     ///
     /// Submit questionnaire for brokers of local entities that require travel rule.
