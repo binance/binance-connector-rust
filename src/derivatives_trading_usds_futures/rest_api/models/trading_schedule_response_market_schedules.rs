@@ -21,6 +21,8 @@ pub struct TradingScheduleResponseMarketSchedules {
     pub equity: Option<Box<models::TradingScheduleResponseMarketSchedulesEquity>>,
     #[serde(rename = "COMMODITY", skip_serializing_if = "Option::is_none")]
     pub commodity: Option<Box<models::TradingScheduleResponseMarketSchedulesCommodity>>,
+    #[serde(rename = "KR_EQUITY", skip_serializing_if = "Option::is_none")]
+    pub kr_equity: Option<Box<models::TradingScheduleResponseMarketSchedulesKrEquity>>,
 }
 
 impl TradingScheduleResponseMarketSchedules {
@@ -29,6 +31,7 @@ impl TradingScheduleResponseMarketSchedules {
         TradingScheduleResponseMarketSchedules {
             equity: None,
             commodity: None,
+            kr_equity: None,
         }
     }
 }

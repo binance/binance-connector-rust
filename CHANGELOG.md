@@ -1,5 +1,57 @@
 # Changelog
 
+## 53.0.0 - 2026-06-05
+
+**Derivatives Trading Usds Futures**
+
+### Changed (9)
+
+#### REST API
+
+- Modified response for `compressed_aggregate_trades_list()` (`GET /fapi/v1/aggTrades`):
+  - items: property `nq` added
+  - items: item property `nq` added
+ 
+- Modified response for `query_algo_order()` (`GET /fapi/v1/algoOrder`):
+  - property `actualQty` added
+  - property `actualType` added
+  - property `tpPrice` deleted
+  - property `tpTriggerPrice` deleted
+  - property `slPrice` deleted
+  - property `slTriggerPrice` deleted
+
+- Modified response for `trading_schedule()` (`GET /fapi/v1/tradingSchedule`):
+  - `marketSchedules`: property `KR_EQUITY` added
+
+#### WebSocket API
+
+- Deleted parameter `activationPrice`
+  - affected methods:
+    - `new_order()` (`order.place` method)
+- Deleted parameter `callbackRate`
+  - affected methods:
+    - `new_order()` (`order.place` method)
+- Deleted parameter `closePosition`
+  - affected methods:
+    - `new_order()` (`order.place` method)
+- Deleted parameter `priceProtect`
+  - affected methods:
+    - `new_order()` (`order.place` method)
+- Deleted parameter `stopPrice`
+  - affected methods:
+    - `new_order()` (`order.place` method)
+- Deleted parameter `workingType`
+  - affected methods:
+    - `new_order()` (`order.place` method)
+
+**Sub Account**
+
+### Changed (1)
+
+- Added parameter `includeSource`
+  - affected methods:
+    - `get_sub_account_deposit_history()` (`GET /sapi/v1/capital/deposit/subHisrec`)
+
 ## 52.0.0 - 2026-06-02
 
 **Simple Earn**

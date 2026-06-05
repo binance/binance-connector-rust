@@ -3598,7 +3598,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"a":26129,"p":"0.01633102","q":"4.70443515","f":27781,"l":27781,"T":1498793709153,"m":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"a":26129,"p":"0.01633102","q":"4.70443515","nq":"100","f":27781,"l":27781,"T":1498793709153,"m":true}]"#).unwrap();
             let dummy_response: Vec<models::CompressedAggregateTradesListResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::CompressedAggregateTradesListResponseInner>",
@@ -4401,7 +4401,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"updateTime":1761286643918,"marketSchedules":{"EQUITY":{"sessions":[{"startTime":1761177600000,"endTime":1761206400000,"type":"OVERNIGHT"},{"startTime":1761206400000,"endTime":1761226200000,"type":"PRE_MARKET"}]},"COMMODITY":{"sessions":[{"startTime":1761724800000,"endTime":1761744600000,"type":"NO_TRADING"},{"startTime":1761744600000,"endTime":1761768000000,"type":"REGULAR"}]}}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"updateTime":1761286643918,"marketSchedules":{"EQUITY":{"sessions":[{"startTime":1761177600000,"endTime":1761206400000,"type":"OVERNIGHT"},{"startTime":1761206400000,"endTime":1761226200000,"type":"PRE_MARKET"}]},"COMMODITY":{"sessions":[{"startTime":1761724800000,"endTime":1761744600000,"type":"NO_TRADING"},{"startTime":1761744600000,"endTime":1761768000000,"type":"REGULAR"}]},"KR_EQUITY":{"sessions":[{"startTime":1779958800000,"endTime":1780009200000,"type":"NO_TRADING"},{"startTime":1780009200000,"endTime":1780030800000,"type":"REGULAR"}]}}}"#).unwrap();
             let dummy_response: models::TradingScheduleResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TradingScheduleResponse");
@@ -4649,7 +4649,7 @@ mod tests {
 
             let params = CompressedAggregateTradesListParams::builder("symbol_example".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"a":26129,"p":"0.01633102","q":"4.70443515","f":27781,"l":27781,"T":1498793709153,"m":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"a":26129,"p":"0.01633102","q":"4.70443515","nq":"100","f":27781,"l":27781,"T":1498793709153,"m":true}]"#).unwrap();
             let expected_response : Vec<models::CompressedAggregateTradesListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CompressedAggregateTradesListResponseInner>");
 
             let resp = client.compressed_aggregate_trades_list(params).await.expect("Expected a response");
@@ -4666,7 +4666,7 @@ mod tests {
 
             let params = CompressedAggregateTradesListParams::builder("symbol_example".to_string(),).from_id(1).start_time(1623319461670).end_time(1641782889000).limit(100).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"a":26129,"p":"0.01633102","q":"4.70443515","f":27781,"l":27781,"T":1498793709153,"m":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"a":26129,"p":"0.01633102","q":"4.70443515","nq":"100","f":27781,"l":27781,"T":1498793709153,"m":true}]"#).unwrap();
             let expected_response : Vec<models::CompressedAggregateTradesListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CompressedAggregateTradesListResponseInner>");
 
             let resp = client.compressed_aggregate_trades_list(params).await.expect("Expected a response");
@@ -6221,7 +6221,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"updateTime":1761286643918,"marketSchedules":{"EQUITY":{"sessions":[{"startTime":1761177600000,"endTime":1761206400000,"type":"OVERNIGHT"},{"startTime":1761206400000,"endTime":1761226200000,"type":"PRE_MARKET"}]},"COMMODITY":{"sessions":[{"startTime":1761724800000,"endTime":1761744600000,"type":"NO_TRADING"},{"startTime":1761744600000,"endTime":1761768000000,"type":"REGULAR"}]}}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"updateTime":1761286643918,"marketSchedules":{"EQUITY":{"sessions":[{"startTime":1761177600000,"endTime":1761206400000,"type":"OVERNIGHT"},{"startTime":1761206400000,"endTime":1761226200000,"type":"PRE_MARKET"}]},"COMMODITY":{"sessions":[{"startTime":1761724800000,"endTime":1761744600000,"type":"NO_TRADING"},{"startTime":1761744600000,"endTime":1761768000000,"type":"REGULAR"}]},"KR_EQUITY":{"sessions":[{"startTime":1779958800000,"endTime":1780009200000,"type":"NO_TRADING"},{"startTime":1780009200000,"endTime":1780030800000,"type":"REGULAR"}]}}}"#).unwrap();
             let expected_response : models::TradingScheduleResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TradingScheduleResponse");
 
             let resp = client.trading_schedule().await.expect("Expected a response");
@@ -6237,7 +6237,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"updateTime":1761286643918,"marketSchedules":{"EQUITY":{"sessions":[{"startTime":1761177600000,"endTime":1761206400000,"type":"OVERNIGHT"},{"startTime":1761206400000,"endTime":1761226200000,"type":"PRE_MARKET"}]},"COMMODITY":{"sessions":[{"startTime":1761724800000,"endTime":1761744600000,"type":"NO_TRADING"},{"startTime":1761744600000,"endTime":1761768000000,"type":"REGULAR"}]}}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"updateTime":1761286643918,"marketSchedules":{"EQUITY":{"sessions":[{"startTime":1761177600000,"endTime":1761206400000,"type":"OVERNIGHT"},{"startTime":1761206400000,"endTime":1761226200000,"type":"PRE_MARKET"}]},"COMMODITY":{"sessions":[{"startTime":1761724800000,"endTime":1761744600000,"type":"NO_TRADING"},{"startTime":1761744600000,"endTime":1761768000000,"type":"REGULAR"}]},"KR_EQUITY":{"sessions":[{"startTime":1779958800000,"endTime":1780009200000,"type":"NO_TRADING"},{"startTime":1780009200000,"endTime":1780030800000,"type":"REGULAR"}]}}}"#).unwrap();
             let expected_response : models::TradingScheduleResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TradingScheduleResponse");
 
             let resp = client.trading_schedule().await.expect("Expected a response");

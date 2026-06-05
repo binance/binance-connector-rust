@@ -41,20 +41,16 @@ pub struct QueryAlgoOrderResponse {
     pub actual_order_id: Option<String>,
     #[serde(rename = "actualPrice", skip_serializing_if = "Option::is_none")]
     pub actual_price: Option<String>,
+    #[serde(rename = "actualType", skip_serializing_if = "Option::is_none")]
+    pub actual_type: Option<String>,
+    #[serde(rename = "actualQty", skip_serializing_if = "Option::is_none")]
+    pub actual_qty: Option<String>,
     #[serde(rename = "triggerPrice", skip_serializing_if = "Option::is_none")]
     pub trigger_price: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
     #[serde(rename = "icebergQuantity", skip_serializing_if = "Option::is_none")]
     pub iceberg_quantity: Option<String>,
-    #[serde(rename = "tpTriggerPrice", skip_serializing_if = "Option::is_none")]
-    pub tp_trigger_price: Option<String>,
-    #[serde(rename = "tpPrice", skip_serializing_if = "Option::is_none")]
-    pub tp_price: Option<String>,
-    #[serde(rename = "slTriggerPrice", skip_serializing_if = "Option::is_none")]
-    pub sl_trigger_price: Option<String>,
-    #[serde(rename = "slPrice", skip_serializing_if = "Option::is_none")]
-    pub sl_price: Option<String>,
     #[serde(rename = "tpOrderType", skip_serializing_if = "Option::is_none")]
     pub tp_order_type: Option<String>,
     #[serde(
@@ -98,13 +94,11 @@ impl QueryAlgoOrderResponse {
             algo_status: None,
             actual_order_id: None,
             actual_price: None,
+            actual_type: None,
+            actual_qty: None,
             trigger_price: None,
             price: None,
             iceberg_quantity: None,
-            tp_trigger_price: None,
-            tp_price: None,
-            sl_trigger_price: None,
-            sl_price: None,
             tp_order_type: None,
             self_trade_prevention_mode: None,
             working_type: None,

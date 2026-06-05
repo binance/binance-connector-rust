@@ -551,37 +551,6 @@ impl std::str::FromStr for NewOrderTimeInForceEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewOrderWorkingTypeEnum {
-    #[serde(rename = "MARK_PRICE")]
-    MarkPrice,
-    #[serde(rename = "CONTRACT_PRICE")]
-    ContractPrice,
-}
-
-impl NewOrderWorkingTypeEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::MarkPrice => "MARK_PRICE",
-            Self::ContractPrice => "CONTRACT_PRICE",
-        }
-    }
-}
-
-impl std::str::FromStr for NewOrderWorkingTypeEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "MARK_PRICE" => Ok(Self::MarkPrice),
-            "CONTRACT_PRICE" => Ok(Self::ContractPrice),
-            other => Err(format!("invalid NewOrderWorkingTypeEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
     Ack,
@@ -841,7 +810,7 @@ pub struct ModifyOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub orig_client_order_id: Option<String>,
-    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`: /`QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only available for `LIMIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`/ `QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -923,7 +892,8 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub time_in_force: Option<NewAlgoOrderTimeInForceEnum>,
-    /// Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -940,27 +910,27 @@ pub struct NewAlgoOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub trigger_price: Option<rust_decimal::Decimal>,
-    /// stopPrice triggered by: "`MARK_PRICE`", "`CONTRACT_PRICE`". Default "`CONTRACT_PRICE`"
+    /// triggerPrice triggered by: `MARK_PRICE`, `CONTRACT_PRICE`. Default `CONTRACT_PRICE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub working_type: Option<NewAlgoOrderWorkingTypeEnum>,
-    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`: /`QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only available for `LIMIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`/ `QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub price_match: Option<NewAlgoOrderPriceMatchEnum>,
-    /// `true`, `false`；Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
+    /// true, false；Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub close_position: Option<String>,
-    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
+    /// "true" or "false", default "false". Used with `STOP_MARKET` or `TAKE_PROFIT_MARKET` order. when price reaches the triggerPrice ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the Price Protection Threshold of the symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub price_protect: Option<String>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`
+    /// "true" or "false". default "false". Cannot be sent in Hedge Mode
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1068,12 +1038,13 @@ pub struct NewOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub time_in_force: Option<NewOrderTimeInForceEnum>,
-    /// Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub quantity: Option<rust_decimal::Decimal>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`
+    /// "true" or "false". default "false". Cannot be sent in Hedge Mode
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1089,42 +1060,12 @@ pub struct NewOrderParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub new_client_order_id: Option<String>,
-    /// Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub stop_price: Option<rust_decimal::Decimal>,
-    /// `true`, `false`；Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub close_position: Option<String>,
-    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different `workingType`)
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub activation_price: Option<rust_decimal::Decimal>,
-    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 10 where 1 for 1%
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub callback_rate: Option<rust_decimal::Decimal>,
-    /// stopPrice triggered by: "`MARK_PRICE`", "`CONTRACT_PRICE`". Default "`CONTRACT_PRICE`"
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub working_type: Option<NewOrderWorkingTypeEnum>,
-    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub price_protect: Option<String>,
     /// "ACK", "RESULT", default "ACK"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub new_order_resp_type: Option<NewOrderNewOrderRespTypeEnum>,
-    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`: /`QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only available for `LIMIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`/ `QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1545,12 +1486,6 @@ impl TradeApi for TradeApiClient {
             reduce_only,
             price,
             new_client_order_id,
-            stop_price,
-            close_position,
-            activation_price,
-            callback_rate,
-            working_type,
-            price_protect,
             new_order_resp_type,
             price_match,
             self_trade_prevention_mode,
@@ -1582,24 +1517,6 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = new_client_order_id {
             payload.insert("newClientOrderId".to_string(), serde_json::json!(value));
-        }
-        if let Some(value) = stop_price {
-            payload.insert("stopPrice".to_string(), serde_json::json!(value));
-        }
-        if let Some(value) = close_position {
-            payload.insert("closePosition".to_string(), serde_json::json!(value));
-        }
-        if let Some(value) = activation_price {
-            payload.insert("activationPrice".to_string(), serde_json::json!(value));
-        }
-        if let Some(value) = callback_rate {
-            payload.insert("callbackRate".to_string(), serde_json::json!(value));
-        }
-        if let Some(value) = working_type {
-            payload.insert("workingType".to_string(), serde_json::json!(value));
-        }
-        if let Some(value) = price_protect {
-            payload.insert("priceProtect".to_string(), serde_json::json!(value));
         }
         if let Some(value) = new_order_resp_type {
             payload.insert("newOrderRespType".to_string(), serde_json::json!(value));

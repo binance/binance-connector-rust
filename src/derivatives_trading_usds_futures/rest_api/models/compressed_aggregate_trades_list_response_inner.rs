@@ -23,6 +23,8 @@ pub struct CompressedAggregateTradesListResponseInner {
     pub p: Option<String>,
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    #[serde(rename = "nq", skip_serializing_if = "Option::is_none")]
+    pub nq: Option<String>,
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<i64>,
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
@@ -40,6 +42,7 @@ impl CompressedAggregateTradesListResponseInner {
             a: None,
             p: None,
             q: None,
+            nq: None,
             f: None,
             l: None,
             t_uppercase: None,

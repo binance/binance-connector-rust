@@ -421,7 +421,7 @@ pub struct QueryManagedSubAccountTransferLogMasterAccountInvestorParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub limit: i64,
-    /// Transfer Direction (FROM/TO)
+    /// Transfer Direction (from/to)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -492,7 +492,7 @@ pub struct QueryManagedSubAccountTransferLogMasterAccountTradingParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub limit: i64,
-    /// Transfer Direction (FROM/TO)
+    /// Transfer Direction (from/to)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -558,7 +558,7 @@ pub struct QueryManagedSubAccountTransferLogSubAccountTradingParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub limit: i64,
-    /// Transfer Direction (FROM/TO)
+    /// Transfer Direction (from/to)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
