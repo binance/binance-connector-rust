@@ -1,5 +1,15 @@
 # Changelog
 
+## 54.0.0 - 2026-06-08
+
+**Fiat**
+
+### Changed (1)
+
+- Added parameters `account_type`, `agency` and `bank_code_for_pix` on `AccountInfo`
+  - affected methods:
+    - `fiat_withdraw()` (`POST /sapi/v2/fiat/withdraw`)
+
 ## 53.0.0 - 2026-06-05
 
 **Derivatives Trading Usds Futures**
@@ -11,7 +21,7 @@
 - Modified response for `compressed_aggregate_trades_list()` (`GET /fapi/v1/aggTrades`):
   - items: property `nq` added
   - items: item property `nq` added
- 
+
 - Modified response for `query_algo_order()` (`GET /fapi/v1/algoOrder`):
   - property `actualQty` added
   - property `actualType` added

@@ -19,6 +19,12 @@ use serde::{Deserialize, Serialize};
 pub struct AccountInfo {
     #[serde(rename = "accountNumber", skip_serializing_if = "Option::is_none")]
     pub account_number: Option<String>,
+    #[serde(rename = "agency", skip_serializing_if = "Option::is_none")]
+    pub agency: Option<String>,
+    #[serde(rename = "bankCodeForPix", skip_serializing_if = "Option::is_none")]
+    pub bank_code_for_pix: Option<String>,
+    #[serde(rename = "accountType", skip_serializing_if = "Option::is_none")]
+    pub account_type: Option<String>,
 }
 
 impl AccountInfo {
@@ -26,6 +32,9 @@ impl AccountInfo {
     pub fn new() -> AccountInfo {
         AccountInfo {
             account_number: None,
+            agency: None,
+            bank_code_for_pix: None,
+            account_type: None,
         }
     }
 }
