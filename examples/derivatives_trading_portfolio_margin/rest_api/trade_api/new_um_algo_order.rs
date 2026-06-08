@@ -30,10 +30,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = NewUmAlgoOrderParams::builder(
-        "algo_type_example".to_string(),
+        "CONDITIONAL".to_string(),
         "symbol_example".to_string(),
         NewUmAlgoOrderSideEnum::Buy,
-        NewUmAlgoOrderTypeEnum::Limit,
+        NewUmAlgoOrderTypeEnum::StopMarket,
         dec!(1.0),
     )
     .build()?;

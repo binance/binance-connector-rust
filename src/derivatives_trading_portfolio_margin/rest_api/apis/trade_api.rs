@@ -1275,18 +1275,27 @@ impl std::str::FromStr for NewUmAlgoOrderSideEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewUmAlgoOrderTypeEnum {
-    #[serde(rename = "LIMIT")]
-    Limit,
-    #[serde(rename = "MARKET")]
-    Market,
+    #[serde(rename = "STOP")]
+    Stop,
+    #[serde(rename = "STOP_MARKET")]
+    StopMarket,
+    #[serde(rename = "TAKE_PROFIT")]
+    TakeProfit,
+    #[serde(rename = "TAKE_PROFIT_MARKET")]
+    TakeProfitMarket,
+    #[serde(rename = "TRAILING_STOP_MARKET")]
+    TrailingStopMarket,
 }
 
 impl NewUmAlgoOrderTypeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::Limit => "LIMIT",
-            Self::Market => "MARKET",
+            Self::Stop => "STOP",
+            Self::StopMarket => "STOP_MARKET",
+            Self::TakeProfit => "TAKE_PROFIT",
+            Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
+            Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
         }
     }
 }
@@ -1296,8 +1305,11 @@ impl std::str::FromStr for NewUmAlgoOrderTypeEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "LIMIT" => Ok(Self::Limit),
-            "MARKET" => Ok(Self::Market),
+            "STOP" => Ok(Self::Stop),
+            "STOP_MARKET" => Ok(Self::StopMarket),
+            "TAKE_PROFIT" => Ok(Self::TakeProfit),
+            "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
+            "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
             other => Err(format!("invalid NewUmAlgoOrderTypeEnum: {}", other).into()),
         }
     }
@@ -3613,7 +3625,7 @@ pub struct NewUmAlgoOrderParams {
     /// This field is **required.
     #[builder(setter(into))]
     pub side: NewUmAlgoOrderSideEnum,
-    /// `LIMIT`, `MARKET`
+    /// `STOP`, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`, `TRAILING_STOP_MARKET`
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -11939,7 +11951,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,dec!(1.0),).build().unwrap();
+            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::StopMarket,dec!(1.0),).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
             let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
@@ -11956,7 +11968,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Limit,dec!(1.0),).position_side(NewUmAlgoOrderPositionSideEnum::Both).time_in_force(NewUmAlgoOrderTimeInForceEnum::Gtc).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewUmAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewUmAlgoOrderPriceMatchEnum::None).price_protect("false".to_string()).reduce_only("false".to_string()).activate_price(dec!(1.0)).callback_rate(dec!(1.0)).client_algo_id("1".to_string()).new_order_resp_type(NewUmAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewUmAlgoOrderSelfTradePreventionModeEnum::None).good_till_date(789).recv_window(5000).build().unwrap();
+            let params = NewUmAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::StopMarket,dec!(1.0),).position_side(NewUmAlgoOrderPositionSideEnum::Both).time_in_force(NewUmAlgoOrderTimeInForceEnum::Gtc).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewUmAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewUmAlgoOrderPriceMatchEnum::None).price_protect("false".to_string()).reduce_only("false".to_string()).activate_price(dec!(1.0)).callback_rate(dec!(1.0)).client_algo_id("1".to_string()).new_order_resp_type(NewUmAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewUmAlgoOrderSelfTradePreventionModeEnum::None).good_till_date(789).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap();
             let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
@@ -11977,7 +11989,7 @@ mod tests {
                 "algo_type_example".to_string(),
                 "symbol_example".to_string(),
                 NewUmAlgoOrderSideEnum::Buy,
-                NewUmAlgoOrderTypeEnum::Limit,
+                NewUmAlgoOrderTypeEnum::StopMarket,
                 dec!(1.0),
             )
             .build()
