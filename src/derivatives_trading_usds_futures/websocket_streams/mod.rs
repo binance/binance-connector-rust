@@ -400,6 +400,35 @@ impl WebsocketStreams {
             .await
     }
 
+    /// Asset Index
+    ///
+    /// Asset index price.
+    ///
+    /// Update Speed: 1s
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`AssetIndexParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<Vec<models::AssetIndexResponseInner>>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Asset-Index).
+    ///
+    pub async fn asset_index(
+        &self,
+        params: AssetIndexParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AssetIndexResponseInner>>>> {
+        self.market_api_client.asset_index(params).await
+    }
+
     /// Composite Index Symbol Information Streams
     ///
     /// Composite index information for index symbols pushed every second.
@@ -681,38 +710,6 @@ impl WebsocketStreams {
     {
         self.market_api_client
             .mark_price_stream_for_all_market(params)
-            .await
-    }
-
-    /// Multi-Assets Mode Asset Index
-    ///
-    /// Asset index for multi-assets mode user
-    ///
-    /// Update Speed: 1s
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`MultiAssetsModeAssetIndexParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<Vec<models::MultiAssetsModeAssetIndexResponseInner>>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Multi-Assets-Mode-Asset-Index).
-    ///
-    pub async fn multi_assets_mode_asset_index(
-        &self,
-        params: MultiAssetsModeAssetIndexParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MultiAssetsModeAssetIndexResponseInner>>>>
-    {
-        self.market_api_client
-            .multi_assets_mode_asset_index(params)
             .await
     }
 

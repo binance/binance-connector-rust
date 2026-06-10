@@ -16,7 +16,7 @@ use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct MultiAssetsModeAssetIndexResponse1 {
+pub struct AssetIndexResponse2Inner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
@@ -53,10 +53,10 @@ pub struct MultiAssetsModeAssetIndexResponse1 {
     pub auto_exchange_ask_rate: Option<String>,
 }
 
-impl MultiAssetsModeAssetIndexResponse1 {
+impl AssetIndexResponse2Inner {
     #[must_use]
-    pub fn new() -> MultiAssetsModeAssetIndexResponse1 {
-        MultiAssetsModeAssetIndexResponse1 {
+    pub fn new() -> AssetIndexResponse2Inner {
+        AssetIndexResponse2Inner {
             symbol: None,
             time: None,
             index: None,

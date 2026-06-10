@@ -4,7 +4,7 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationWebsocketStreams;
 use binance_sdk::derivatives_trading_usds_futures::{
-    DerivativesTradingUsdsFuturesWsStreams, websocket_streams::MultiAssetsModeAssetIndexParams,
+    DerivativesTradingUsdsFuturesWsStreams, websocket_streams::AssetIndexParams,
 };
 use binance_sdk::logger;
 
@@ -26,11 +26,11 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = MultiAssetsModeAssetIndexParams::default();
+    let params = AssetIndexParams::default();
 
     // Subscribe to the stream
     let stream = connection
-        .multi_assets_mode_asset_index(params)
+        .asset_index(params)
         .await
         .context("Failed to subscribe to the stream")?;
 

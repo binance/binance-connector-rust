@@ -36,6 +36,10 @@ pub struct AllBookTickersStreamResponse {
     pub a: Option<String>,
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
+    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
+    pub ps: Option<String>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl AllBookTickersStreamResponse {
@@ -51,6 +55,8 @@ impl AllBookTickersStreamResponse {
             b_uppercase: None,
             a: None,
             a_uppercase: None,
+            ps: None,
+            st: None,
         }
     }
 }

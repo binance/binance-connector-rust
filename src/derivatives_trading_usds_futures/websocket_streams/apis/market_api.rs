@@ -44,6 +44,10 @@ pub trait MarketApi: Send + Sync {
         &self,
         params: AllMarketTickersStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllMarketTickersStreamsResponseInner>>>>;
+    async fn asset_index(
+        &self,
+        params: AssetIndexParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AssetIndexResponseInner>>>>;
     async fn composite_index_symbol_information_streams(
         &self,
         params: CompositeIndexSymbolInformationStreamsParams,
@@ -82,10 +86,6 @@ pub trait MarketApi: Send + Sync {
         &self,
         params: MarkPriceStreamForAllMarketParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MarkPriceStreamForAllMarketResponseInner>>>>;
-    async fn multi_assets_mode_asset_index(
-        &self,
-        params: MultiAssetsModeAssetIndexParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MultiAssetsModeAssetIndexResponseInner>>>>;
     async fn trading_session_stream(
         &self,
         params: TradingSessionStreamParams,
@@ -199,6 +199,28 @@ impl AllMarketTickersStreamsParams {
     #[must_use]
     pub fn builder() -> AllMarketTickersStreamsParamsBuilder {
         AllMarketTickersStreamsParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`asset_index`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`asset_index`](#method.asset_index).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct AssetIndexParams {
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub id: Option<String>,
+}
+
+impl AssetIndexParams {
+    /// Create a builder for [`asset_index`].
+    ///
+    #[must_use]
+    pub fn builder() -> AssetIndexParamsBuilder {
+        AssetIndexParamsBuilder::default()
     }
 }
 /// Request parameters for the [`composite_index_symbol_information_streams`] operation.
@@ -499,28 +521,6 @@ impl MarkPriceStreamForAllMarketParams {
         MarkPriceStreamForAllMarketParamsBuilder::default()
     }
 }
-/// Request parameters for the [`multi_assets_mode_asset_index`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`multi_assets_mode_asset_index`](#method.multi_assets_mode_asset_index).
-#[derive(Clone, Debug, Builder, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct MultiAssetsModeAssetIndexParams {
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<String>,
-}
-
-impl MultiAssetsModeAssetIndexParams {
-    /// Create a builder for [`multi_assets_mode_asset_index`].
-    ///
-    #[must_use]
-    pub fn builder() -> MultiAssetsModeAssetIndexParamsBuilder {
-        MultiAssetsModeAssetIndexParamsBuilder::default()
-    }
-}
 /// Request parameters for the [`trading_session_stream`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -674,6 +674,41 @@ impl MarketApi for MarketApiClient {
 
         Ok(
             create_stream_handler::<Vec<models::AllMarketTickersStreamsResponseInner>>(
+                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
+                stream,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
+                Some("market".to_string()),
+            )
+            .await,
+        )
+    }
+
+    async fn asset_index(
+        &self,
+        params: AssetIndexParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AssetIndexResponseInner>>>> {
+        let AssetIndexParams { id } = params;
+
+        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+
+        let vars: HashMap<_, _> = pairs
+            .iter()
+            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+            .collect();
+
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+
+        let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
+
+        Ok(
+            create_stream_handler::<Vec<models::AssetIndexResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
                 id_opt.map(|s| {
@@ -1041,42 +1076,6 @@ impl MarketApi for MarketApiClient {
         )
     }
 
-    async fn multi_assets_mode_asset_index(
-        &self,
-        params: MultiAssetsModeAssetIndexParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MultiAssetsModeAssetIndexResponseInner>>>>
-    {
-        let MultiAssetsModeAssetIndexParams { id } = params;
-
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
-
-        Ok(
-            create_stream_handler::<Vec<models::MultiAssetsModeAssetIndexResponseInner>>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt.map(|s| {
-                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
-                        if let Ok(n) = s.parse::<u32>() {
-                            return StreamId::Number(n);
-                        }
-                    }
-                    StreamId::Str(s)
-                }),
-                Some("market".to_string()),
-            )
-            .await,
-        )
-    }
-
     async fn trading_session_stream(
         &self,
         params: TradingSessionStreamParams,
@@ -1214,7 +1213,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true,"st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1268,7 +1267,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true,"st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1351,7 +1350,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893},"ps":"BTCUSDT","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1402,7 +1401,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893},"ps":"BTCUSDT","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1485,7 +1484,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1536,7 +1535,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1619,7 +1618,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1670,7 +1669,141 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}]"#).unwrap();
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+
+            yield_now().await;
+
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
+        });
+    }
+
+    #[test]
+    fn asset_index_should_execute_successfully() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, _) = make_streams_base().await;
+            let api = MarketApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = AssetIndexParams::builder()
+                .id(Some(id.clone()))
+                .build()
+                .unwrap();
+
+            let AssetIndexParams { id } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
+            let ws_stream = api
+                .asset_index(params)
+                .await
+                .expect("asset_index should return a WebsocketStream");
+
+            assert!(
+                streams_base.is_subscribed(&stream).await,
+                "expected stream '{stream}' to be subscribed"
+            );
+            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+        });
+    }
+
+    #[test]
+    fn asset_index_should_handle_incoming_message() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = MarketApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = AssetIndexParams::builder().id(Some(id.clone())).build().unwrap();
+
+            let AssetIndexParams {
+                id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("id",
+                        id.clone()
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
+
+            let ws_stream = api.asset_index(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_with_message = called.clone();
+            ws_stream.on_message(move |_payload: Vec<models::AssetIndexResponseInner>| {
+                called_with_message.store(true, Ordering::SeqCst);
+            });
+
+            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"},{"e":"assetIndexUpdate","E":1686749230000,"s":"USDTUSD","i":"0.99987691","b":"0.00010000","a":"0.00010000","B":"0.99977692","A":"0.99997689","q":"0.00010000","g":"0.00010000","Q":"0.99977692","G":"0.99997689"}]"#).unwrap();
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+            yield_now().await;
+
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
+        });
+    }
+
+    #[test]
+    fn asset_index_should_not_fire_after_unsubscribe() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = MarketApiClient::new(streams_base.clone());
+
+            let id = "test-id-123".to_string();
+
+            let params = AssetIndexParams::builder().id(Some(id.clone())).build().unwrap();
+
+            let AssetIndexParams {
+                id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("id",
+                        id.clone()
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
+
+            let ws_stream = api.asset_index(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_clone = called.clone();
+            ws_stream.on_message(move |_payload: Vec<models::AssetIndexResponseInner>| {
+                called_clone.store(true, Ordering::SeqCst);
+            });
+
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
+
+            ws_stream.unsubscribe().await;
+
+            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"},{"e":"assetIndexUpdate","E":1686749230000,"s":"USDTUSD","i":"0.99987691","b":"0.00010000","a":"0.00010000","B":"0.99977692","A":"0.99997689","q":"0.00010000","g":"0.00010000","Q":"0.99977692","G":"0.99997689"}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2068,7 +2201,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ps":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50},{"bs":2,"bnf":5000,"bnc":25000,"mmr":0.025,"cf":75,"mi":11,"ma":20}]}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50},{"bs":2,"bnf":5000,"bnc":25000,"mmr":0.025,"cf":75,"mi":11,"ma":20}],"st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2119,7 +2252,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ps":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50},{"bs":2,"bnf":5000,"bnc":25000,"mmr":0.025,"cf":75,"mi":11,"ma":20}]}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50},{"bs":2,"bnf":5000,"bnc":25000,"mmr":0.025,"cf":75,"mi":11,"ma":20}],"st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2206,7 +2339,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2260,7 +2393,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2347,7 +2480,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2401,7 +2534,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2796,7 +2929,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000,"st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2853,7 +2986,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000,"st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2941,7 +3074,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000,"st":1}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2995,141 +3128,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000}]"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
-    fn multi_assets_mode_asset_index_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = MarketApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = MultiAssetsModeAssetIndexParams::builder()
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
-
-            let MultiAssetsModeAssetIndexParams { id } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
-            let ws_stream = api
-                .multi_assets_mode_asset_index(params)
-                .await
-                .expect("multi_assets_mode_asset_index should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
-        });
-    }
-
-    #[test]
-    fn multi_assets_mode_asset_index_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = MarketApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = MultiAssetsModeAssetIndexParams::builder().id(Some(id.clone())).build().unwrap();
-
-            let MultiAssetsModeAssetIndexParams {
-                id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
-
-            let ws_stream = api.multi_assets_mode_asset_index(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::MultiAssetsModeAssetIndexResponseInner>| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"},{"e":"assetIndexUpdate","E":1686749230000,"s":"USDTUSD","i":"0.99987691","b":"0.00010000","a":"0.00010000","B":"0.99977692","A":"0.99997689","q":"0.00010000","g":"0.00010000","Q":"0.99977692","G":"0.99997689"}]"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn multi_assets_mode_asset_index_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = MarketApiClient::new(streams_base.clone());
-
-            let id = "test-id-123".to_string();
-
-            let params = MultiAssetsModeAssetIndexParams::builder().id(Some(id.clone())).build().unwrap();
-
-            let MultiAssetsModeAssetIndexParams {
-                id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.clone()
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
-
-            let ws_stream = api.multi_assets_mode_asset_index(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::MultiAssetsModeAssetIndexResponseInner>| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"},{"e":"assetIndexUpdate","E":1686749230000,"s":"USDTUSD","i":"0.99987691","b":"0.00010000","a":"0.00010000","B":"0.99977692","A":"0.99997689","q":"0.00010000","g":"0.00010000","Q":"0.99977692","G":"0.99997689"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000,"st":1}]"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

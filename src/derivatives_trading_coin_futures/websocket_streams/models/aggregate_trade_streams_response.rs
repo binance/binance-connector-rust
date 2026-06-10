@@ -38,6 +38,8 @@ pub struct AggregateTradeStreamsResponse {
     pub t_uppercase: Option<i64>,
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl AggregateTradeStreamsResponse {
@@ -54,6 +56,7 @@ impl AggregateTradeStreamsResponse {
             l: None,
             t_uppercase: None,
             m: None,
+            st: None,
         }
     }
 }

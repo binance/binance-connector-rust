@@ -24,8 +24,6 @@ pub struct AllMarketTickersStreamsResponseInner {
     pub e_uppercase: Option<i64>,
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
-    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
-    pub ps: Option<String>,
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
@@ -56,6 +54,10 @@ pub struct AllMarketTickersStreamsResponseInner {
     pub l_uppercase: Option<i64>,
     #[serde(rename = "n", skip_serializing_if = "Option::is_none")]
     pub n: Option<i64>,
+    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
+    pub ps: Option<String>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl AllMarketTickersStreamsResponseInner {
@@ -65,7 +67,6 @@ impl AllMarketTickersStreamsResponseInner {
             e: None,
             e_uppercase: None,
             s: None,
-            ps: None,
             p: None,
             p_uppercase: None,
             w: None,
@@ -81,6 +82,8 @@ impl AllMarketTickersStreamsResponseInner {
             f_uppercase: None,
             l_uppercase: None,
             n: None,
+            ps: None,
+            st: None,
         }
     }
 }

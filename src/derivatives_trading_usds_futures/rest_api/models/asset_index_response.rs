@@ -17,14 +17,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum MultiAssetsModeAssetIndexResponse {
-    MultiAssetsModeAssetIndexResponse1(Box<models::MultiAssetsModeAssetIndexResponse1>),
-    MultiAssetsModeAssetIndexResponse2(Vec<models::MultiAssetsModeAssetIndexResponse2Inner>),
+pub enum AssetIndexResponse {
+    AssetIndexResponse1(Box<models::AssetIndexResponse1>),
+    AssetIndexResponse2(Vec<models::AssetIndexResponse2Inner>),
     Other(serde_json::Value),
 }
 
-impl Default for MultiAssetsModeAssetIndexResponse {
+impl Default for AssetIndexResponse {
     fn default() -> Self {
-        Self::MultiAssetsModeAssetIndexResponse1(Default::default())
+        Self::AssetIndexResponse1(Default::default())
     }
 }

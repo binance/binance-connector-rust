@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "54.0.0"
+version = "55.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1951,6 +1951,11 @@ path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/adl_r
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_rest_api_market_data_api_asset_index"
+path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/asset_index.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_rest_api_market_data_api_basis"
 path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/basis.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2013,11 +2018,6 @@ required-features = [ "derivatives_trading_usds_futures" ]
 [[example]]
 name = "derivatives_trading_usds_futures_rest_api_market_data_api_mark_price"
 path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/mark_price.rs"
-required-features = [ "derivatives_trading_usds_futures" ]
-
-[[example]]
-name = "derivatives_trading_usds_futures_rest_api_market_data_api_multi_assets_mode_asset_index"
-path = "examples/derivatives_trading_usds_futures/rest_api/market_data_api/multi_assets_mode_asset_index.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
@@ -2411,6 +2411,11 @@ path = "examples/derivatives_trading_usds_futures/websocket_streams/all_market_t
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]
+name = "derivatives_trading_usds_futures_websocket_streams_asset_index"
+path = "examples/derivatives_trading_usds_futures/websocket_streams/asset_index.rs"
+required-features = [ "derivatives_trading_usds_futures" ]
+
+[[example]]
 name = "derivatives_trading_usds_futures_websocket_streams_composite_index_symbol_information_streams"
 path = "examples/derivatives_trading_usds_futures/websocket_streams/composite_index_symbol_information_streams.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
@@ -2463,11 +2468,6 @@ required-features = [ "derivatives_trading_usds_futures" ]
 [[example]]
 name = "derivatives_trading_usds_futures_websocket_streams_mark_price_stream"
 path = "examples/derivatives_trading_usds_futures/websocket_streams/mark_price_stream.rs"
-required-features = [ "derivatives_trading_usds_futures" ]
-
-[[example]]
-name = "derivatives_trading_usds_futures_websocket_streams_multi_assets_mode_asset_index"
-path = "examples/derivatives_trading_usds_futures/websocket_streams/multi_assets_mode_asset_index.rs"
 required-features = [ "derivatives_trading_usds_futures" ]
 
 [[example]]

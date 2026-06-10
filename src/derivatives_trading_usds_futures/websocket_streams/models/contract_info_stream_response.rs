@@ -24,8 +24,6 @@ pub struct ContractInfoStreamResponse {
     pub e_uppercase: Option<i64>,
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
-    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
-    pub ps: Option<String>,
     #[serde(rename = "ct", skip_serializing_if = "Option::is_none")]
     pub ct: Option<String>,
     #[serde(rename = "dt", skip_serializing_if = "Option::is_none")]
@@ -36,6 +34,8 @@ pub struct ContractInfoStreamResponse {
     pub cs: Option<String>,
     #[serde(rename = "bks", skip_serializing_if = "Option::is_none")]
     pub bks: Option<Vec<models::ContractInfoStreamResponseBksInner>>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl ContractInfoStreamResponse {
@@ -45,12 +45,12 @@ impl ContractInfoStreamResponse {
             e: None,
             e_uppercase: None,
             s: None,
-            ps: None,
             ct: None,
             dt: None,
             ot: None,
             cs: None,
             bks: None,
+            st: None,
         }
     }
 }

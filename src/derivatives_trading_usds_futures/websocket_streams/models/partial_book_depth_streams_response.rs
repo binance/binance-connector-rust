@@ -36,6 +36,10 @@ pub struct PartialBookDepthStreamsResponse {
     pub b: Option<Vec<Vec<String>>>,
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<Vec<Vec<String>>>,
+    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
+    pub ps: Option<String>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl PartialBookDepthStreamsResponse {
@@ -51,6 +55,8 @@ impl PartialBookDepthStreamsResponse {
             pu: None,
             b: None,
             a: None,
+            ps: None,
+            st: None,
         }
     }
 }

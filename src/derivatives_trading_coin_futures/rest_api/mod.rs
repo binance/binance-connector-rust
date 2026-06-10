@@ -264,10 +264,11 @@ impl RestApi {
     ///
     /// Get Download Id For Futures Order History
     ///
-    /// * Request Limitation is 10 times per month, shared by front end download page and rest api
+    /// * Request Limitation is 8 times per month, shared by front end download page and rest api
+    /// * This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
     /// * The time between `startTime` and `endTime` can not be longer than 1 year
     ///
-    /// Weight: 5
+    /// Weight: 1000
     ///
     /// # Arguments
     ///
@@ -312,10 +313,11 @@ impl RestApi {
     ///
     /// Get download id for futures trade history
     ///
-    /// * Request Limitation is 5 times per month, shared by front end download page and rest api
+    /// * Request Limitation is 8 times per month, shared by front end download page and rest api
+    /// * This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
     /// * The time between `startTime` and `endTime` can not be longer than 1 year
     ///
-    /// Weight: 5
+    /// Weight: 1000
     ///
     /// # Arguments
     ///
@@ -360,10 +362,11 @@ impl RestApi {
     ///
     /// Get download id for futures transaction history
     ///
-    /// * Request Limitation is 5 times per month, shared by front end download page and rest api
+    /// * Request Limitation is 8 times per month, shared by front end download page and rest api
+    /// * This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
     /// * The time between `startTime` and `endTime` can not be longer than 1 year
     ///
-    /// Weight: 5
+    /// Weight: 1000
     ///
     /// # Arguments
     ///
@@ -409,7 +412,7 @@ impl RestApi {
     ///
     /// Get futures order history download link by Id
     ///
-    /// * Download link expiration: 24h
+    /// * Download link expiration: 7 days
     ///
     /// Weight: 5
     ///
@@ -457,7 +460,7 @@ impl RestApi {
     ///
     /// Get futures trade download link by Id
     ///
-    /// * Download link expiration: 24h
+    /// * Download link expiration: 7 days
     ///
     /// Weight: 5
     ///
@@ -504,7 +507,7 @@ impl RestApi {
     ///
     /// Get futures transaction history download link by Id
     ///
-    /// * Download link expiration: 24h
+    /// * Download link expiration: 7 days
     ///
     /// Weight: 5
     ///
@@ -646,7 +649,7 @@ impl RestApi {
     ///
     /// Get the symbol's notional bracket list.
     ///
-    /// Weight: 1
+    /// Weight: 1 (after CM migration: 1 with symbol / 2 without symbol)
     ///
     /// # Arguments
     ///
@@ -822,7 +825,7 @@ impl RestApi {
     ///
     /// Get compressed, aggregate trades. Market trades that fill in 100ms with the same price and the same taking side will have the quantity aggregated.
     ///
-    /// * support querying futures trade histories that are not older than one year
+    /// * support querying futures trade histories that are not older than 24 hours
     /// * If both `startTime` and `endTime` are sent, time between `startTime` and `endTime` must be less than 1 hour.
     /// * If `fromId`, `startTime`, and `endTime` are not sent, the most recent aggregate trades will be returned.
     /// * Only market trades will be aggregated and returned, which means the insurance fund trades and ADL trades won't be aggregated.
@@ -879,7 +882,6 @@ impl RestApi {
     /// * PERPETUAL
     /// * `CURRENT_QUARTER`
     /// * `NEXT_QUARTER`
-    ///
     ///
     /// 1000 | 10
     /// * The difference between `startTime` and `endTime` can only be up to 200 days
@@ -1119,7 +1121,6 @@ impl RestApi {
     ///
     /// Kline/candlestick bars for the index price of a pair. Klines are uniquely identified by their open time.
     ///
-    ///
     /// 1000 | 10
     /// * The difference between `startTime` and `endTime` can only be up to 200 days
     /// * Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
@@ -1288,7 +1289,6 @@ impl RestApi {
     /// Kline/candlestick bars for the mark price of a symbol.
     /// Klines are uniquely identified by their open time.
     ///
-    ///
     /// 1000 | 10
     /// * The difference between `startTime` and `endTime` can only be up to 200 days
     /// * Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
@@ -1350,6 +1350,7 @@ impl RestApi {
     /// Get older market historical trades.
     ///
     /// * Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
+    /// * Only supports data from within the last one month
     ///
     /// Weight: 20
     ///
@@ -2080,7 +2081,7 @@ impl RestApi {
     /// * If startTime and endTime are both not sent, then the last 7 days' data will be returned.
     /// * The time between startTime and endTime cannot be longer than 7 days.
     ///
-    /// Weight: 20 with symbol，40 with pair
+    /// Weight: 20 with symbol，40 with pair (after CM migration: 5 flat)
     ///
     /// # Arguments
     ///
@@ -2134,7 +2135,7 @@ impl RestApi {
     /// * If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
     /// * The query time period must be less then 7 days( default as the recent 7 days).
     ///
-    /// Weight: 20 with symbol, 40 with pair
+    /// Weight: 20 with symbol, 40 with pair (after CM migration: 5 flat)
     ///
     /// # Arguments
     ///
@@ -2315,7 +2316,6 @@ impl RestApi {
     ///
     /// Cancel an active order.
     ///
-    ///
     /// * Either `orderId` or `origClientOrderId` must be sent.
     ///
     /// Weight: 1
@@ -2447,7 +2447,11 @@ impl RestApi {
 
     /// Change Position Mode(TRADE)
     ///
-    /// Change user's position mode (Hedge Mode or One-way Mode ) on ***EVERY symbol***
+    /// Change user's position mode (Hedge Mode or One-way Mode ) on ***EVERY symbol***.
+    ///
+    /// **After CM migration**, UM and CM share the **same** `dualSidePosition` setting. Calling this endpoint flips both UM and CM at once. If either side has any open order or open position, the change is rejected:
+    /// - `-4067` (open orders exist)
+    /// - `-4068` (open position exists)
     ///
     /// Weight: 1
     ///
@@ -2724,7 +2728,7 @@ impl RestApi {
     /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
     ///
     /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
-    /// * Either `quantity` or `price` must be sent.
+    /// * Either `quantity` or `price` must be sent. *(After CM migration, both `quantity` and `price` are required.)*
     /// * When the new `quantity` or `price` doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
     /// * However the order will be cancelled by the amendment in the following situations:
     /// * when the order is in partially filled status and the new `quantity` <= `executedQty`
@@ -2773,7 +2777,6 @@ impl RestApi {
     /// New Order (TRADE)
     ///
     /// Send in a new order.
-    ///
     ///
     /// * Order with type `STOP`,  parameter `timeInForce` can be sent ( default `GTC`).
     /// * Order with type `TAKE_PROFIT`,  parameter `timeInForce` can be sent ( default `GTC`).
@@ -3100,9 +3103,9 @@ impl RestApi {
     /// User's Force Orders
     ///
     /// * If "autoCloseType" is not sent, orders with both of the types will be returned
-    /// * If "startTime" is not sent, data within 200 days before "endTime" can be queried
+    /// * Only support querying data in the past 90 days
     ///
-    /// Weight: 20 with symbol, 50 without symbol
+    /// Weight: 20 (after CM migration: 20 with symbol / 50 without symbol)
     ///
     /// # Arguments
     ///

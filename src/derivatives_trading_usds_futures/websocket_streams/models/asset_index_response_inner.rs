@@ -17,7 +17,7 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct MultiAssetsModeAssetIndexResponseInner {
+pub struct AssetIndexResponseInner {
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
@@ -44,10 +44,10 @@ pub struct MultiAssetsModeAssetIndexResponseInner {
     pub g_uppercase: Option<String>,
 }
 
-impl MultiAssetsModeAssetIndexResponseInner {
+impl AssetIndexResponseInner {
     #[must_use]
-    pub fn new() -> MultiAssetsModeAssetIndexResponseInner {
-        MultiAssetsModeAssetIndexResponseInner {
+    pub fn new() -> AssetIndexResponseInner {
+        AssetIndexResponseInner {
             e: None,
             e_uppercase: None,
             s: None,

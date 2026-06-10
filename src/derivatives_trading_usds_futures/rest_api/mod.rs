@@ -1309,6 +1309,49 @@ impl RestApi {
         self.market_data_api_client.adl_risk(params).await
     }
 
+    /// Asset Index
+    ///
+    /// Asset index price.
+    ///
+    /// Weight: 1 for a single symbol; 10 when the symbol parameter is omitted
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`AssetIndexParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::AssetIndexResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Asset-Index).
+    ///
+    pub async fn asset_index(
+        &self,
+        params: AssetIndexParams,
+    ) -> anyhow::Result<RestApiResponse<models::AssetIndexResponse>> {
+        self.market_data_api_client.asset_index(params).await
+    }
+
     /// Basis
     ///
     /// Query future basis
@@ -1700,7 +1743,6 @@ impl RestApi {
     /// Kline/candlestick bars for the index price of a pair.
     /// Klines are uniquely identified by their open time.
     ///
-    ///
     /// * If startTime and endTime are not sent, the most recent klines are returned.
     ///
     /// Weight: based on parameter LIMIT
@@ -1950,51 +1992,6 @@ impl RestApi {
     > {
         self.market_data_api_client
             .mark_price_kline_candlestick_data(params)
-            .await
-    }
-
-    /// Multi-Assets Mode Asset Index
-    ///
-    /// asset index for Multi-Assets mode
-    ///
-    /// Weight: 1 for a single symbol; 10 when the symbol parameter is omitted
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`MultiAssetsModeAssetIndexParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::MultiAssetsModeAssetIndexResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Multi-Assets-Mode-Asset-Index).
-    ///
-    pub async fn multi_assets_mode_asset_index(
-        &self,
-        params: MultiAssetsModeAssetIndexParams,
-    ) -> anyhow::Result<RestApiResponse<models::MultiAssetsModeAssetIndexResponse>> {
-        self.market_data_api_client
-            .multi_assets_mode_asset_index(params)
             .await
     }
 
@@ -3472,7 +3469,11 @@ impl RestApi {
 
     /// Change Position Mode(TRADE)
     ///
-    /// Change user's position mode (Hedge Mode or One-way Mode ) on ***EVERY symbol***
+    /// Change user's position mode (Hedge Mode or One-way Mode ) on ***EVERY symbol***.
+    ///
+    /// **After CM migration**, UM and CM share the **same** `dualSidePosition` setting. Calling this endpoint flips both UM and CM at once. If either side has any open order or open position, the change is rejected:
+    /// - `-4067` (open orders exist)
+    /// - `-4068` (open position exists)
     ///
     /// Weight: 1
     ///
@@ -3848,7 +3849,6 @@ impl RestApi {
     /// Modify Order (TRADE)
     ///
     /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
-    ///
     ///
     /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
     /// * Both `quantity` and `price` must be sent, which is different from dapi modify order endpoint.

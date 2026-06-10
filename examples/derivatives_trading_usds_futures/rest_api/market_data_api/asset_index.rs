@@ -4,7 +4,7 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_usds_futures::{
-    DerivativesTradingUsdsFuturesRestApi, rest_api::MultiAssetsModeAssetIndexParams,
+    DerivativesTradingUsdsFuturesRestApi, rest_api::AssetIndexParams,
 };
 use binance_sdk::logger;
 
@@ -27,17 +27,17 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingUsdsFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = MultiAssetsModeAssetIndexParams::default();
+    let params = AssetIndexParams::default();
 
     // Make the API call
     let response = rest_client
-        .multi_assets_mode_asset_index(params)
+        .asset_index(params)
         .await
-        .context("multi_assets_mode_asset_index request failed")?;
+        .context("asset_index request failed")?;
 
-    info!(?response.rate_limits, "multi_assets_mode_asset_index rate limits");
+    info!(?response.rate_limits, "asset_index rate limits");
     let data = response.data().await?;
-    info!(?data, "multi_assets_mode_asset_index data");
+    info!(?data, "asset_index data");
 
     Ok(())
 }

@@ -36,6 +36,10 @@ pub struct AllMarketMiniTickersStreamResponseInner {
     pub v: Option<String>,
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
+    pub ps: Option<String>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl AllMarketMiniTickersStreamResponseInner {
@@ -51,6 +55,8 @@ impl AllMarketMiniTickersStreamResponseInner {
             l: None,
             v: None,
             q: None,
+            ps: None,
+            st: None,
         }
     }
 }

@@ -35,6 +35,10 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: AdlRiskParams,
     ) -> anyhow::Result<RestApiResponse<models::AdlRiskResponse>>;
+    async fn asset_index(
+        &self,
+        params: AssetIndexParams,
+    ) -> anyhow::Result<RestApiResponse<models::AssetIndexResponse>>;
     async fn basis(
         &self,
         params: BasisParams,
@@ -90,10 +94,6 @@ pub trait MarketDataApi: Send + Sync {
     ) -> anyhow::Result<
         RestApiResponse<Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>>,
     >;
-    async fn multi_assets_mode_asset_index(
-        &self,
-        params: MultiAssetsModeAssetIndexParams,
-    ) -> anyhow::Result<RestApiResponse<models::MultiAssetsModeAssetIndexResponse>>;
     async fn old_trades_lookup(
         &self,
         params: OldTradesLookupParams,
@@ -1109,6 +1109,29 @@ impl AdlRiskParams {
         AdlRiskParamsBuilder::default()
     }
 }
+/// Request parameters for the [`asset_index`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`asset_index`](#method.asset_index).
+#[derive(Clone, Debug, Builder, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct AssetIndexParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub symbol: Option<String>,
+}
+
+impl AssetIndexParams {
+    /// Create a builder for [`asset_index`].
+    ///
+    #[must_use]
+    pub fn builder() -> AssetIndexParamsBuilder {
+        AssetIndexParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`basis`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1116,8 +1139,7 @@ impl AdlRiskParams {
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct BasisParams {
-    ///
-    /// The `pair` parameter.
+    /// After CM migration, accepts both UM and CM pair values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -1157,7 +1179,7 @@ impl BasisParams {
     ///
     /// Required parameters:
     ///
-    /// * `pair` — String
+    /// * `pair` — After CM migration, accepts both UM and CM pair values.
     /// * `contract_type` — String
     /// * `period` — \"5m\",\"15m\",\"30m\",\"1h\",\"2h\",\"4h\",\"6h\",\"12h\",\"1d\"
     ///
@@ -1252,8 +1274,7 @@ impl CompressedAggregateTradesListParams {
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ContinuousContractKlineCandlestickDataParams {
-    ///
-    /// The `pair` parameter.
+    /// After CM migration, accepts both UM and CM pair values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -1294,7 +1315,7 @@ impl ContinuousContractKlineCandlestickDataParams {
     ///
     /// Required parameters:
     ///
-    /// * `pair` — String
+    /// * `pair` — After CM migration, accepts both UM and CM pair values.
     /// * `contract_type` — String
     /// * `interval` — String
     ///
@@ -1357,8 +1378,7 @@ impl GetFundingRateHistoryParams {
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct IndexPriceKlineCandlestickDataParams {
-    ///
-    /// The `pair` parameter.
+    /// After CM migration, accepts both UM and CM pair values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -1393,7 +1413,7 @@ impl IndexPriceKlineCandlestickDataParams {
     ///
     /// Required parameters:
     ///
-    /// * `pair` — String
+    /// * `pair` — After CM migration, accepts both UM and CM pair values.
     /// * `interval` — String
     ///
     #[must_use]
@@ -1594,29 +1614,6 @@ impl MarkPriceKlineCandlestickDataParams {
         MarkPriceKlineCandlestickDataParamsBuilder::default()
             .symbol(symbol)
             .interval(interval)
-    }
-}
-/// Request parameters for the [`multi_assets_mode_asset_index`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`multi_assets_mode_asset_index`](#method.multi_assets_mode_asset_index).
-#[derive(Clone, Debug, Builder, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct MultiAssetsModeAssetIndexParams {
-    ///
-    /// The `symbol` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub symbol: Option<String>,
-}
-
-impl MultiAssetsModeAssetIndexParams {
-    /// Create a builder for [`multi_assets_mode_asset_index`].
-    ///
-    #[must_use]
-    pub fn builder() -> MultiAssetsModeAssetIndexParamsBuilder {
-        MultiAssetsModeAssetIndexParamsBuilder::default()
     }
 }
 /// Request parameters for the [`old_trades_lookup`] operation.
@@ -1833,8 +1830,7 @@ impl PremiumIndexKlineDataParams {
 #[derive(Clone, Debug, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QuarterlyContractSettlementPriceParams {
-    ///
-    /// The `pair` parameter.
+    /// After CM migration, accepts both UM and CM pair values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -1846,7 +1842,7 @@ impl QuarterlyContractSettlementPriceParams {
     ///
     /// Required parameters:
     ///
-    /// * `pair` — String
+    /// * `pair` — After CM migration, accepts both UM and CM pair values.
     ///
     #[must_use]
     pub fn builder(pair: String) -> QuarterlyContractSettlementPriceParamsBuilder {
@@ -2243,6 +2239,35 @@ impl MarketDataApi for MarketDataApiClient {
         send_request::<models::AdlRiskResponse>(
             &self.configuration,
             "/fapi/v1/symbolAdlRisk",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
+    async fn asset_index(
+        &self,
+        params: AssetIndexParams,
+    ) -> anyhow::Result<RestApiResponse<models::AssetIndexResponse>> {
+        let AssetIndexParams { symbol } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = symbol {
+            query_params.insert("symbol".to_string(), json!(rw));
+        }
+
+        send_request::<models::AssetIndexResponse>(
+            &self.configuration,
+            "/fapi/v1/assetIndex",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -2759,35 +2784,6 @@ impl MarketDataApi for MarketDataApiClient {
         send_request::<Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>>(
             &self.configuration,
             "/fapi/v1/markPriceKlines",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            false,
-        )
-        .await
-    }
-
-    async fn multi_assets_mode_asset_index(
-        &self,
-        params: MultiAssetsModeAssetIndexParams,
-    ) -> anyhow::Result<RestApiResponse<models::MultiAssetsModeAssetIndexResponse>> {
-        let MultiAssetsModeAssetIndexParams { symbol } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        if let Some(rw) = symbol {
-            query_params.insert("symbol".to_string(), json!(rw));
-        }
-
-        send_request::<models::MultiAssetsModeAssetIndexResponse>(
-            &self.configuration,
-            "/fapi/v1/assetIndex",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -3502,6 +3498,33 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn asset_index(
+            &self,
+            _params: AssetIndexParams,
+        ) -> anyhow::Result<RestApiResponse<models::AssetIndexResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"ADAUSD","time":1635740268004,"index":"1.92957370","bidBuffer":"0.10000000","askBuffer":"0.10000000","bidRate":"1.73661633","askRate":"2.12253107","autoExchangeBidBuffer":"0.05000000","autoExchangeAskBuffer":"0.05000000","autoExchangeBidRate":"1.83309501","autoExchangeAskRate":"2.02605238"}"#).unwrap();
+            let dummy_response: models::AssetIndexResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::AssetIndexResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn basis(
             &self,
             _params: BasisParams,
@@ -3849,33 +3872,6 @@ mod tests {
 
             let resp_json: Value = serde_json::from_str(r#"[[1591256460000,"9653.29201333","9654.56401333","9653.07367333","9653.07367333","0",1591256519999,"0",60,"0","0","0"]]"#).unwrap();
             let dummy_response : Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn multi_assets_mode_asset_index(
-            &self,
-            _params: MultiAssetsModeAssetIndexParams,
-        ) -> anyhow::Result<RestApiResponse<models::MultiAssetsModeAssetIndexResponse>> {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"ADAUSD","time":1635740268004,"index":"1.92957370","bidBuffer":"0.10000000","askBuffer":"0.10000000","bidRate":"1.73661633","askRate":"2.12253107","autoExchangeBidBuffer":"0.05000000","autoExchangeAskBuffer":"0.05000000","autoExchangeBidRate":"1.83309501","autoExchangeAskRate":"2.02605238"}"#).unwrap();
-            let dummy_response: models::MultiAssetsModeAssetIndexResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::MultiAssetsModeAssetIndexResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -4472,6 +4468,56 @@ mod tests {
             let params = AdlRiskParams::builder().build().unwrap();
 
             match client.adl_risk(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn asset_index_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = AssetIndexParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"ADAUSD","time":1635740268004,"index":"1.92957370","bidBuffer":"0.10000000","askBuffer":"0.10000000","bidRate":"1.73661633","askRate":"2.12253107","autoExchangeBidBuffer":"0.05000000","autoExchangeAskBuffer":"0.05000000","autoExchangeBidRate":"1.83309501","autoExchangeAskRate":"2.02605238"}"#).unwrap();
+            let expected_response : models::AssetIndexResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AssetIndexResponse");
+
+            let resp = client.asset_index(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn asset_index_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = AssetIndexParams::builder().symbol("symbol_example".to_string()).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"ADAUSD","time":1635740268004,"index":"1.92957370","bidBuffer":"0.10000000","askBuffer":"0.10000000","bidRate":"1.73661633","askRate":"2.12253107","autoExchangeBidBuffer":"0.05000000","autoExchangeAskBuffer":"0.05000000","autoExchangeBidRate":"1.83309501","autoExchangeAskRate":"2.02605238"}"#).unwrap();
+            let expected_response : models::AssetIndexResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AssetIndexResponse");
+
+            let resp = client.asset_index(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn asset_index_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            let params = AssetIndexParams::builder().build().unwrap();
+
+            match client.asset_index(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -5157,56 +5203,6 @@ mod tests {
             .unwrap();
 
             match client.mark_price_kline_candlestick_data(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn multi_assets_mode_asset_index_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: false };
-
-            let params = MultiAssetsModeAssetIndexParams::builder().build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"ADAUSD","time":1635740268004,"index":"1.92957370","bidBuffer":"0.10000000","askBuffer":"0.10000000","bidRate":"1.73661633","askRate":"2.12253107","autoExchangeBidBuffer":"0.05000000","autoExchangeAskBuffer":"0.05000000","autoExchangeBidRate":"1.83309501","autoExchangeAskRate":"2.02605238"}"#).unwrap();
-            let expected_response : models::MultiAssetsModeAssetIndexResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MultiAssetsModeAssetIndexResponse");
-
-            let resp = client.multi_assets_mode_asset_index(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn multi_assets_mode_asset_index_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: false };
-
-            let params = MultiAssetsModeAssetIndexParams::builder().symbol("symbol_example".to_string()).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"ADAUSD","time":1635740268004,"index":"1.92957370","bidBuffer":"0.10000000","askBuffer":"0.10000000","bidRate":"1.73661633","askRate":"2.12253107","autoExchangeBidBuffer":"0.05000000","autoExchangeAskBuffer":"0.05000000","autoExchangeBidRate":"1.83309501","autoExchangeAskRate":"2.02605238"}"#).unwrap();
-            let expected_response : models::MultiAssetsModeAssetIndexResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::MultiAssetsModeAssetIndexResponse");
-
-            let resp = client.multi_assets_mode_asset_index(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn multi_assets_mode_asset_index_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockMarketDataApiClient { force_error: true };
-
-            let params = MultiAssetsModeAssetIndexParams::builder().build().unwrap();
-
-            match client.multi_assets_mode_asset_index(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

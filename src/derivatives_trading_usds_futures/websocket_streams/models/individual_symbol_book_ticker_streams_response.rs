@@ -36,6 +36,8 @@ pub struct IndividualSymbolBookTickerStreamsResponse {
     pub a: Option<String>,
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl IndividualSymbolBookTickerStreamsResponse {
@@ -51,6 +53,7 @@ impl IndividualSymbolBookTickerStreamsResponse {
             b_uppercase: None,
             a: None,
             a_uppercase: None,
+            st: None,
         }
     }
 }

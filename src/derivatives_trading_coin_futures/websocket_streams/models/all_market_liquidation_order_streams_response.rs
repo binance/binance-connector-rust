@@ -24,6 +24,8 @@ pub struct AllMarketLiquidationOrderStreamsResponse {
     pub e_uppercase: Option<i64>,
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<Box<models::AllMarketLiquidationOrderStreamsResponseO>>,
+    #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
+    pub st: Option<i64>,
 }
 
 impl AllMarketLiquidationOrderStreamsResponse {
@@ -33,6 +35,7 @@ impl AllMarketLiquidationOrderStreamsResponse {
             e: None,
             e_uppercase: None,
             o: None,
+            st: None,
         }
     }
 }
