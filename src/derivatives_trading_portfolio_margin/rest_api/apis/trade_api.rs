@@ -1275,10 +1275,28 @@ impl std::str::FromStr for NewUmAlgoOrderSideEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewUmAlgoOrderTypeEnum {
+    #[deprecated(
+        since = "1.0.0",
+        note = "Binance API returns -1130 for LIMIT/MARKET in conditional algo orders. Use Stop or StopMarket instead."
+    )]
     #[serde(rename = "LIMIT")]
     Limit,
+    #[deprecated(
+        since = "1.0.0",
+        note = "Binance API returns -1130 for LIMIT/MARKET in conditional algo orders. Use Stop or StopMarket instead."
+    )]
     #[serde(rename = "MARKET")]
     Market,
+    #[serde(rename = "STOP")]
+    Stop,
+    #[serde(rename = "STOP_MARKET")]
+    StopMarket,
+    #[serde(rename = "TAKE_PROFIT")]
+    TakeProfit,
+    #[serde(rename = "TAKE_PROFIT_MARKET")]
+    TakeProfitMarket,
+    #[serde(rename = "TRAILING_STOP_MARKET")]
+    TrailingStopMarket,
 }
 
 impl NewUmAlgoOrderTypeEnum {
@@ -1287,6 +1305,11 @@ impl NewUmAlgoOrderTypeEnum {
         match self {
             Self::Limit => "LIMIT",
             Self::Market => "MARKET",
+            Self::Stop => "STOP",
+            Self::StopMarket => "STOP_MARKET",
+            Self::TakeProfit => "TAKE_PROFIT",
+            Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
+            Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
         }
     }
 }
@@ -1298,6 +1321,11 @@ impl std::str::FromStr for NewUmAlgoOrderTypeEnum {
         match s {
             "LIMIT" => Ok(Self::Limit),
             "MARKET" => Ok(Self::Market),
+            "STOP" => Ok(Self::Stop),
+            "STOP_MARKET" => Ok(Self::StopMarket),
+            "TAKE_PROFIT" => Ok(Self::TakeProfit),
+            "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
+            "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
             other => Err(format!("invalid NewUmAlgoOrderTypeEnum: {}", other).into()),
         }
     }
