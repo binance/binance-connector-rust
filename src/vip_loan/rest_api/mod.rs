@@ -301,6 +301,51 @@ impl RestApi {
             .await
     }
 
+    /// Query VIP Loan Fixed Rate `Market(USER_DATA)`
+    ///
+    /// Query the VIP Loan fixed rate market. Returns a paginated list of fixed-rate supply orders.
+    ///
+    /// Weight: 6000
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryVipLoanFixedRateMarketParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/market-data/Query-VIP-Loan-Fixed-Rate-Market).
+    ///
+    pub async fn query_vip_loan_fixed_rate_market(
+        &self,
+        params: QueryVipLoanFixedRateMarketParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>> {
+        self.market_data_api_client
+            .query_vip_loan_fixed_rate_market(params)
+            .await
+    }
+
     /// VIP Loan Borrow(TRADE)
     ///
     /// VIP loan is available for VIP users only.
@@ -347,6 +392,54 @@ impl RestApi {
         params: VipLoanBorrowParams,
     ) -> anyhow::Result<RestApiResponse<models::VipLoanBorrowResponse>> {
         self.trade_api_client.vip_loan_borrow(params).await
+    }
+
+    /// VIP Loan Fixed Rate Borrow(TRADE)
+    ///
+    /// Submit a fixed rate borrow request by matching market supply orders.
+    ///
+    /// * **Rate limit:** 2 requests per second per account.
+    /// * When multiple `supplyRequest` entries are provided, all `requestId` values must correspond to the same `borrowCoin` and `loanTerm` (validated by collateral facade).
+    ///
+    /// Weight: 6000
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`VipLoanFixedRateBorrowParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::VipLoanFixedRateBorrowResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/trade/VIP-Loan-Fixed-Rate-Borrow).
+    ///
+    pub async fn vip_loan_fixed_rate_borrow(
+        &self,
+        params: VipLoanFixedRateBorrowParams,
+    ) -> anyhow::Result<RestApiResponse<models::VipLoanFixedRateBorrowResponse>> {
+        self.trade_api_client
+            .vip_loan_fixed_rate_borrow(params)
+            .await
     }
 
     /// VIP Loan Renew(TRADE)

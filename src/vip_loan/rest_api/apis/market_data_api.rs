@@ -47,6 +47,10 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: GetVipLoanInterestRateHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetVipLoanInterestRateHistoryResponse>>;
+    async fn query_vip_loan_fixed_rate_market(
+        &self,
+        params: QueryVipLoanFixedRateMarketParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>>;
 }
 
 #[derive(Debug, Clone)]
@@ -187,7 +191,7 @@ pub struct GetVipLoanInterestRateHistoryParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Page number, default 1, minimum 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -212,6 +216,54 @@ impl GetVipLoanInterestRateHistoryParams {
         GetVipLoanInterestRateHistoryParamsBuilder::default()
             .coin(coin)
             .recv_window(recv_window)
+    }
+}
+/// Request parameters for the [`query_vip_loan_fixed_rate_market`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_vip_loan_fixed_rate_market`](#method.query_vip_loan_fixed_rate_market).
+#[derive(Clone, Debug, Builder)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryVipLoanFixedRateMarketParams {
+    ///
+    /// The `loan_coin` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    pub loan_coin: String,
+    /// Duration in days, minimum 1
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub duration: Option<i64>,
+    /// Page number, default 1, minimum 1
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub current: Option<i64>,
+    /// Page size, default 10, range [1, 100]
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub size: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryVipLoanFixedRateMarketParams {
+    /// Create a builder for [`query_vip_loan_fixed_rate_market`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `loan_coin` — String
+    ///
+    #[must_use]
+    pub fn builder(loan_coin: String) -> QueryVipLoanFixedRateMarketParamsBuilder {
+        QueryVipLoanFixedRateMarketParamsBuilder::default().loan_coin(loan_coin)
     }
 }
 
@@ -379,6 +431,55 @@ impl MarketDataApi for MarketDataApiClient {
         )
         .await
     }
+
+    async fn query_vip_loan_fixed_rate_market(
+        &self,
+        params: QueryVipLoanFixedRateMarketParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>> {
+        let QueryVipLoanFixedRateMarketParams {
+            loan_coin,
+            duration,
+            current,
+            size,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("loanCoin".to_string(), json!(loan_coin));
+
+        if let Some(rw) = duration {
+            query_params.insert("duration".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = current {
+            query_params.insert("current".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = size {
+            query_params.insert("size".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::QueryVipLoanFixedRateMarketResponse>(
+            &self.configuration,
+            "/sapi/v1/loan/vip/fixed/market",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
 }
 
 #[cfg(all(test, feature = "vip_loan"))]
@@ -512,6 +613,33 @@ mod tests {
             let dummy_response: models::GetVipLoanInterestRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetVipLoanInterestRateHistoryResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_vip_loan_fixed_rate_market(
+            &self,
+            _params: QueryVipLoanFixedRateMarketParams,
+        ) -> anyhow::Result<RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":25,"rows":[{"requestId":1234567890,"requestNo":100001,"coin":"USDT","interestRate":"0.05","duration":30,"minimumAmount":"100","availableAmount":"1000000","estimatedInterest":"4109.59"}]}"#).unwrap();
+            let dummy_response: models::QueryVipLoanFixedRateMarketResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::QueryVipLoanFixedRateMarketResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -721,6 +849,59 @@ mod tests {
                     .unwrap();
 
             match client.get_vip_loan_interest_rate_history(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_vip_loan_fixed_rate_market_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = QueryVipLoanFixedRateMarketParams::builder("loan_coin_example".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":25,"rows":[{"requestId":1234567890,"requestNo":100001,"coin":"USDT","interestRate":"0.05","duration":30,"minimumAmount":"100","availableAmount":"1000000","estimatedInterest":"4109.59"}]}"#).unwrap();
+            let expected_response : models::QueryVipLoanFixedRateMarketResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryVipLoanFixedRateMarketResponse");
+
+            let resp = client.query_vip_loan_fixed_rate_market(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_vip_loan_fixed_rate_market_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = QueryVipLoanFixedRateMarketParams::builder("loan_coin_example".to_string(),).duration(789).current(1).size(5000).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":25,"rows":[{"requestId":1234567890,"requestNo":100001,"coin":"USDT","interestRate":"0.05","duration":30,"minimumAmount":"100","availableAmount":"1000000","estimatedInterest":"4109.59"}]}"#).unwrap();
+            let expected_response : models::QueryVipLoanFixedRateMarketResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryVipLoanFixedRateMarketResponse");
+
+            let resp = client.query_vip_loan_fixed_rate_market(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_vip_loan_fixed_rate_market_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            let params =
+                QueryVipLoanFixedRateMarketParams::builder("loan_coin_example".to_string())
+                    .build()
+                    .unwrap();
+
+            match client.query_vip_loan_fixed_rate_market(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

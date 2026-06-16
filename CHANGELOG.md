@@ -1,5 +1,14 @@
 # Changelog
 
+## 56.0.0 - 2026-06-16
+
+**Vip Loan**
+
+### Added (2)
+
+- `query_vip_loan_fixed_rate_market()` (`GET /sapi/v1/loan/vip/fixed/market`)
+- `vip_loan_fixed_rate_borrow()` (`POST /sapi/v1/loan/vip/fixed/borrow`)
+
 ## 55.0.0 - 2026-06-10
 
 **Derivatives Trading Coin Futures**

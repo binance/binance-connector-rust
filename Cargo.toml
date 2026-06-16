@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "55.0.0"
+version = "56.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -4191,8 +4191,18 @@ path = "examples/vip_loan/rest_api/market_data_api/get_vip_loan_interest_rate_hi
 required-features = [ "vip_loan" ]
 
 [[example]]
+name = "vip_loan_rest_api_market_data_api_query_vip_loan_fixed_rate_market"
+path = "examples/vip_loan/rest_api/market_data_api/query_vip_loan_fixed_rate_market.rs"
+required-features = [ "vip_loan" ]
+
+[[example]]
 name = "vip_loan_rest_api_trade_api_vip_loan_borrow"
 path = "examples/vip_loan/rest_api/trade_api/vip_loan_borrow.rs"
+required-features = [ "vip_loan" ]
+
+[[example]]
+name = "vip_loan_rest_api_trade_api_vip_loan_fixed_rate_borrow"
+path = "examples/vip_loan/rest_api/trade_api/vip_loan_fixed_rate_borrow.rs"
 required-features = [ "vip_loan" ]
 
 [[example]]

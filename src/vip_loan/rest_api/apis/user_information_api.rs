@@ -126,7 +126,7 @@ pub struct GetVipLoanAccruedInterestParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Page number, default 1, minimum 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -183,7 +183,7 @@ pub struct GetVipLoanOngoingOrdersParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub collateral_coin: Option<String>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Page number, default 1, minimum 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -216,7 +216,7 @@ impl GetVipLoanOngoingOrdersParams {
 #[derive(Clone, Debug, Builder, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryApplicationStatusParams {
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Page number, default 1, minimum 1
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
