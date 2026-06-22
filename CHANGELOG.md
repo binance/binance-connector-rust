@@ -1,5 +1,16 @@
 # Changelog
 
+## 57.0.0 - 2026-06-22
+
+**Derivatives Trading Usds Futures**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified response for `individual_symbol_book_ticker_streams()` (`<symbol>@bookTicker` stream):
+  - property `ps` added
+
 ## 56.0.0 - 2026-06-16
 
 **Vip Loan**

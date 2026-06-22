@@ -817,7 +817,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"s":"BNBUSDT","ps":"BNBUSDT","E":1568014460893,"T":1568014460891,"b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -871,7 +871,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"s":"BNBUSDT","ps":"BNBUSDT","E":1568014460893,"T":1568014460891,"b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
