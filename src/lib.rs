@@ -58,6 +58,8 @@ pub mod staking;
 pub mod sub_account;
 #[cfg(feature = "vip_loan")]
 pub mod vip_loan;
+#[cfg(feature = "w3w_prediction")]
+pub mod w3w_prediction;
 #[cfg(feature = "wallet")]
 pub mod wallet;
 

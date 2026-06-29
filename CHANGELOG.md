@@ -1,5 +1,11 @@
 # Changelog
 
+## 58.0.0 - 2026-06-29
+
+### Added (1)
+
+- Added W3W Prediction REST API (`w3w_prediction` module).
+
 ## 57.0.0 - 2026-06-22
 
 **Derivatives Trading Usds Futures**

@@ -55,6 +55,7 @@ All connectors are bundled within the single `binance-sdk` crate. Enable only th
 * [`staking`](./src/staking) – Staking connector
 * [`sub_account`](./src/sub_account) – Sub Account connector
 * [`vip_loan`](./src/vip_loan) – VIP Loan connector
+* [`w3w_prediction`](./src/w3w_prediction) – W3W Prediction connector
 * [`wallet`](./src/wallet) – Wallet connector
 
 ## Documentation
