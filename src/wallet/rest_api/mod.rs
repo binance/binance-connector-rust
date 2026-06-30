@@ -1988,7 +1988,7 @@ impl RestApi {
 
     /// Get Country List (`USER_DATA`)
     ///
-    /// Query the active country list for travel rule questionnaires.
+    /// Query the active country list for travel rule questionnaires. Currently, only supports AU entity.
     ///
     /// Weight: 1
     ///
@@ -2030,7 +2030,7 @@ impl RestApi {
 
     /// Get Region List (`USER_DATA`)
     ///
-    /// Query the active region/city list for a given country.
+    /// Query the active region/city list for a given country. Currently, only supports AU entity.
     ///
     /// Weight: 1
     ///

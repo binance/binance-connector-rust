@@ -1632,7 +1632,7 @@ mod tests {
             }
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
             .unwrap();
             let dummy_response: models::BrokerWithdrawResponse =
@@ -1773,7 +1773,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":false}],"lastUpdated":1716300000000}"#).unwrap();
             let dummy_response: models::GetCountryListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCountryListResponse");
@@ -2001,7 +2001,7 @@ mod tests {
             }
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
             .unwrap();
             let dummy_response: models::WithdrawTravelRuleResponse =
@@ -2037,7 +2037,7 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
             .unwrap();
             let expected_response: models::BrokerWithdrawResponse =
@@ -2077,7 +2077,7 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
             .unwrap();
             let expected_response: models::BrokerWithdrawResponse =
@@ -2347,7 +2347,7 @@ mod tests {
             let client = MockTravelRuleApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":false}],"lastUpdated":1716300000000}"#).unwrap();
             let expected_response : models::GetCountryListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCountryListResponse");
 
             let resp = client.get_country_list().await.expect("Expected a response");
@@ -2363,7 +2363,7 @@ mod tests {
             let client = MockTravelRuleApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":true}],"lastUpdated":1716300000000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":false}],"lastUpdated":1716300000000}"#).unwrap();
             let expected_response : models::GetCountryListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCountryListResponse");
 
             let resp = client.get_country_list().await.expect("Expected a response");
@@ -2860,7 +2860,7 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
             .unwrap();
             let expected_response: models::WithdrawTravelRuleResponse =
@@ -2899,7 +2899,7 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
             .unwrap();
             let expected_response: models::WithdrawTravelRuleResponse =

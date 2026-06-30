@@ -3058,7 +3058,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":17242169,"s":"BTCUSD_200626","b":"9548.1","B":"52","a":"9548.5","A":"11","T":1591268628155,"E":1591268628166,"ps":"BTCUSD","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":17242169,"s":"BTCUSD_200626","ps":"BTCUSD","b":"9548.1","B":"52","a":"9548.5","A":"11","T":1591268628155,"E":1591268628166,"st":2}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3112,7 +3112,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":17242169,"s":"BTCUSD_200626","b":"9548.1","B":"52","a":"9548.5","A":"11","T":1591268628155,"E":1591268628166,"ps":"BTCUSD","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":17242169,"s":"BTCUSD_200626","ps":"BTCUSD","b":"9548.1","B":"52","a":"9548.5","A":"11","T":1591268628155,"E":1591268628166,"st":2}"#).unwrap();
             let msg = json!({
                 "stream": stream,
                 "data": payload,

@@ -1,5 +1,31 @@
 # Changelog
 
+## 59.0.0 - 2026-06-30
+
+**Derivatives Trading Coin Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `query_index_price_constituents()` (`GET /dapi/v1/constituents`):
+  - `constituents`.items: property `price` added
+  - `constituents`.items: property `weight` added
+  - `constituents`.items: item property `price` added
+  - `constituents`.items: item property `weight` added
+
+**Wallet**
+
+### Changed (2)
+
+- Modified response for `broker_withdraw()` (`POST /sapi/v1/localentity/broker/withdraw/apply`):
+  - property `accepted` added
+  - property `accpted` deleted
+
+- Modified response for `withdraw_travel_rule()` (`POST /sapi/v1/localentity/withdraw/apply`):
+  - property `accepted` added
+  - property `accpted` deleted
+
 ## 58.0.0 - 2026-06-29
 
 ### Added (1)

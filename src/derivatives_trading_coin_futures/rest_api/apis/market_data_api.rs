@@ -3655,7 +3655,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSD","time":1697422647853,"constituents":[{"exchange":"bitstamp","symbol":"btcusd"},{"exchange":"coinbase","symbol":"BTC-USD"},{"exchange":"kraken","symbol":"XBT/USD"},{"exchange":"binance_cross","symbol":"BTCUSDC*index(USDCUSD)"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSD","time":1697422647853,"constituents":[{"exchange":"bitstamp","symbol":"btcusd","price":"94057.03000000","weight":"0.25000000"},{"exchange":"coinbase","symbol":"BTC-USD","price":"94140.58000000","weight":"0.25000000"},{"exchange":"kraken","symbol":"XBT/USD","price":"94060.10000000","weight":"0.25000000"},{"exchange":"binance_cross","symbol":"BTCUSDC*index(USDCUSD)","price":"94096.70000000","weight":"0.25000000"}]}"#).unwrap();
             let dummy_response: models::QueryIndexPriceConstituentsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryIndexPriceConstituentsResponse");
@@ -4805,7 +4805,7 @@ mod tests {
 
             let params = QueryIndexPriceConstituentsParams::builder("symbol_example".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSD","time":1697422647853,"constituents":[{"exchange":"bitstamp","symbol":"btcusd"},{"exchange":"coinbase","symbol":"BTC-USD"},{"exchange":"kraken","symbol":"XBT/USD"},{"exchange":"binance_cross","symbol":"BTCUSDC*index(USDCUSD)"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSD","time":1697422647853,"constituents":[{"exchange":"bitstamp","symbol":"btcusd","price":"94057.03000000","weight":"0.25000000"},{"exchange":"coinbase","symbol":"BTC-USD","price":"94140.58000000","weight":"0.25000000"},{"exchange":"kraken","symbol":"XBT/USD","price":"94060.10000000","weight":"0.25000000"},{"exchange":"binance_cross","symbol":"BTCUSDC*index(USDCUSD)","price":"94096.70000000","weight":"0.25000000"}]}"#).unwrap();
             let expected_response : models::QueryIndexPriceConstituentsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryIndexPriceConstituentsResponse");
 
             let resp = client.query_index_price_constituents(params).await.expect("Expected a response");
@@ -4822,7 +4822,7 @@ mod tests {
 
             let params = QueryIndexPriceConstituentsParams::builder("symbol_example".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSD","time":1697422647853,"constituents":[{"exchange":"bitstamp","symbol":"btcusd"},{"exchange":"coinbase","symbol":"BTC-USD"},{"exchange":"kraken","symbol":"XBT/USD"},{"exchange":"binance_cross","symbol":"BTCUSDC*index(USDCUSD)"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSD","time":1697422647853,"constituents":[{"exchange":"bitstamp","symbol":"btcusd","price":"94057.03000000","weight":"0.25000000"},{"exchange":"coinbase","symbol":"BTC-USD","price":"94140.58000000","weight":"0.25000000"},{"exchange":"kraken","symbol":"XBT/USD","price":"94060.10000000","weight":"0.25000000"},{"exchange":"binance_cross","symbol":"BTCUSDC*index(USDCUSD)","price":"94096.70000000","weight":"0.25000000"}]}"#).unwrap();
             let expected_response : models::QueryIndexPriceConstituentsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryIndexPriceConstituentsResponse");
 
             let resp = client.query_index_price_constituents(params).await.expect("Expected a response");
