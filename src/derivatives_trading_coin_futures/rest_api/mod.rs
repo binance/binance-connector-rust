@@ -30,7 +30,6 @@ pub struct RestApi {
     configuration: ConfigurationRestApi,
     account_api_client: AccountApiClient,
     market_data_api_client: MarketDataApiClient,
-    portfolio_margin_endpoints_api_client: PortfolioMarginEndpointsApiClient,
     trade_api_client: TradeApiClient,
     user_data_streams_api_client: UserDataStreamsApiClient,
 }
@@ -39,8 +38,6 @@ impl RestApi {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
         let account_api_client = AccountApiClient::new(configuration.clone());
         let market_data_api_client = MarketDataApiClient::new(configuration.clone());
-        let portfolio_margin_endpoints_api_client =
-            PortfolioMarginEndpointsApiClient::new(configuration.clone());
         let trade_api_client = TradeApiClient::new(configuration.clone());
         let user_data_streams_api_client = UserDataStreamsApiClient::new(configuration.clone());
 
@@ -48,7 +45,6 @@ impl RestApi {
             configuration,
             account_api_client,
             market_data_api_client,
-            portfolio_margin_endpoints_api_client,
             trade_api_client,
             user_data_streams_api_client,
         }
@@ -2016,54 +2012,6 @@ impl RestApi {
     {
         self.market_data_api_client
             .top_trader_long_short_ratio_positions(params)
-            .await
-    }
-
-    /// Classic Portfolio Margin Account Information (`USER_DATA`)
-    ///
-    /// Get Classic Portfolio Margin current account information.
-    ///
-    /// * maxWithdrawAmount is for asset transfer out to the spot wallet.
-    ///
-    /// Weight: 5
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`ClassicPortfolioMarginAccountInformationParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::ClassicPortfolioMarginAccountInformationResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/portfolio-margin-endpoints/Classic-Portfolio-Margin-Account-Information).
-    ///
-    pub async fn classic_portfolio_margin_account_information(
-        &self,
-        params: ClassicPortfolioMarginAccountInformationParams,
-    ) -> anyhow::Result<RestApiResponse<models::ClassicPortfolioMarginAccountInformationResponse>>
-    {
-        self.portfolio_margin_endpoints_api_client
-            .classic_portfolio_margin_account_information(params)
             .await
     }
 

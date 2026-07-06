@@ -403,11 +403,6 @@ pub struct IndexPriceStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     pub id: Option<String>,
-    /// WebSocket stream update speed
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub update_speed: Option<String>,
 }
 
 impl IndexPriceStreamParams {
@@ -1095,17 +1090,9 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
         &self,
         params: IndexPriceStreamParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::IndexPriceStreamResponse>>> {
-        let IndexPriceStreamParams {
-            pair,
-            id,
-            update_speed,
-        } = params;
+        let IndexPriceStreamParams { pair, id } = params;
 
-        let pairs: &[(&str, Option<String>)] = &[
-            ("pair", Some(pair.clone())),
-            ("id", id.clone()),
-            ("updateSpeed", update_speed.clone()),
-        ];
+        let pairs: &[(&str, Option<String>)] = &[("pair", Some(pair.clone())), ("id", id.clone())];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -1114,8 +1101,7 @@ impl WebsocketMarketStreamsApi for WebsocketMarketStreamsApiClient {
 
         let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
-        let stream =
-            replace_websocket_streams_placeholders("/<pair>@indexPrice@<updateSpeed>", &vars);
+        let stream = replace_websocket_streams_placeholders("/<pair>@indexPrice", &vars);
 
         Ok(create_stream_handler::<models::IndexPriceStreamResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
@@ -2828,24 +2814,16 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let IndexPriceStreamParams {
-                pair,
-                id,
-                update_speed,
-            } = params.clone();
+            let IndexPriceStreamParams { pair, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[
-                ("pair", Some(pair.clone())),
-                ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
-            ];
+            let pairs: &[(&str, Option<String>)] =
+                &[("pair", Some(pair.clone())), ("id", id.clone())];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream =
-                replace_websocket_streams_placeholders("/<pair>@indexPrice@<updateSpeed>", &vars);
+            let stream = replace_websocket_streams_placeholders("/<pair>@indexPrice", &vars);
             let ws_stream = api
                 .index_price_stream(params)
                 .await
@@ -2872,24 +2850,16 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let IndexPriceStreamParams {
-                pair,
-                id,
-                update_speed,
-            } = params.clone();
+            let IndexPriceStreamParams { pair, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[
-                ("pair", Some(pair.clone())),
-                ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
-            ];
+            let pairs: &[(&str, Option<String>)] =
+                &[("pair", Some(pair.clone())), ("id", id.clone())];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream =
-                replace_websocket_streams_placeholders("/<pair>@indexPrice@<updateSpeed>", &vars);
+            let stream = replace_websocket_streams_placeholders("/<pair>@indexPrice", &vars);
 
             let ws_stream = api.index_price_stream(params).await.unwrap();
 
@@ -2900,7 +2870,7 @@ mod tests {
             });
 
             let payload: Value = serde_json::from_str(
-                r#"{"e":"indexPriceUpdate","E":1591261236000,"i":"BTCUSD","p":"9636.57860000"}"#,
+                r#"{"e":"indexPriceUpdate","E":1591261236000,"s":"BTCUSD","p":"9636.57860000"}"#,
             )
             .unwrap();
             let msg = json!({
@@ -2931,24 +2901,16 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let IndexPriceStreamParams {
-                pair,
-                id,
-                update_speed,
-            } = params.clone();
+            let IndexPriceStreamParams { pair, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[
-                ("pair", Some(pair.clone())),
-                ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
-            ];
+            let pairs: &[(&str, Option<String>)] =
+                &[("pair", Some(pair.clone())), ("id", id.clone())];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream =
-                replace_websocket_streams_placeholders("/<pair>@indexPrice@<updateSpeed>", &vars);
+            let stream = replace_websocket_streams_placeholders("/<pair>@indexPrice", &vars);
 
             let ws_stream = api.index_price_stream(params).await.unwrap();
 
@@ -2966,7 +2928,7 @@ mod tests {
             ws_stream.unsubscribe().await;
 
             let payload: Value = serde_json::from_str(
-                r#"{"e":"indexPriceUpdate","E":1591261236000,"i":"BTCUSD","p":"9636.57860000"}"#,
+                r#"{"e":"indexPriceUpdate","E":1591261236000,"s":"BTCUSD","p":"9636.57860000"}"#,
             )
             .unwrap();
             let msg = json!({

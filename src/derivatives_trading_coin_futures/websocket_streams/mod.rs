@@ -553,7 +553,7 @@ impl WebsocketStreams {
     ///
     /// Index Price Stream
     ///
-    /// Update Speed: 3000ms OR 1000ms
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///

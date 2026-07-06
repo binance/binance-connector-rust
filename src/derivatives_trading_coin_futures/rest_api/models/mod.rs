@@ -39,8 +39,6 @@ pub mod change_position_mode_response;
 pub use self::change_position_mode_response::ChangePositionModeResponse;
 pub mod check_server_time_response;
 pub use self::check_server_time_response::CheckServerTimeResponse;
-pub mod classic_portfolio_margin_account_information_response;
-pub use self::classic_portfolio_margin_account_information_response::ClassicPortfolioMarginAccountInformationResponse;
 pub mod compressed_aggregate_trades_list_response_inner;
 pub use self::compressed_aggregate_trades_list_response_inner::CompressedAggregateTradesListResponseInner;
 pub mod continuous_contract_kline_candlestick_data_response_item_inner;

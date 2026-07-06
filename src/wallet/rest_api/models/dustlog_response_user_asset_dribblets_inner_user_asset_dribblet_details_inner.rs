@@ -32,6 +32,8 @@ pub struct DustlogResponseUserAssetDribbletsInnerUserAssetDribbletDetailsInner {
     pub transfered_amount: Option<String>,
     #[serde(rename = "fromAsset", skip_serializing_if = "Option::is_none")]
     pub from_asset: Option<String>,
+    #[serde(rename = "targetAsset", skip_serializing_if = "Option::is_none")]
+    pub target_asset: Option<String>,
 }
 
 impl DustlogResponseUserAssetDribbletsInnerUserAssetDribbletDetailsInner {
@@ -44,6 +46,7 @@ impl DustlogResponseUserAssetDribbletsInnerUserAssetDribbletDetailsInner {
             operate_time: None,
             transfered_amount: None,
             from_asset: None,
+            target_asset: None,
         }
     }
 }

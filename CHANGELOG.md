@@ -1,5 +1,35 @@
 # Changelog
 
+## 60.0.0 - 2026-07-06
+
+**Derivatives Trading Coin Futures**
+
+### Added (1)
+
+#### WebSocket Streams
+
+- `index_price_stream()` (`<pair>@indexPrice` stream)
+
+### Removed (2)
+
+#### REST API
+
+- `classic_portfolio_margin_account_information()` (`GET /dapi/v1/pmAccountInfo`)
+
+#### WebSocket Streams
+
+- `/<pair>@index_price@<update_speed>()` (`<pair>@indexPrice@<updateSpeed>` stream)
+
+**Wallet**
+
+### Changed (1)
+
+- Modified response for `dustlog()` (`GET /sapi/v1/asset/dribblet`):
+  - `userAssetDribblets`.items.`userAssetDribbletDetails`.items: property `targetAsset` added
+  - `userAssetDribblets`.items.`userAssetDribbletDetails`.items: item property `targetAsset` added
+  - `userAssetDribblets`.items.`userAssetDribbletDetails`.items: property `targetAsset` added
+  - `userAssetDribblets`.items.`userAssetDribbletDetails`.items: item property `targetAsset` added
+
 ## 59.0.0 - 2026-06-30
 
 **Derivatives Trading Coin Futures**

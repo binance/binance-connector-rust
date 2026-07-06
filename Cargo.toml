@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "59.0.0"
+version = "60.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -616,11 +616,6 @@ required-features = [ "derivatives_trading_coin_futures" ]
 [[example]]
 name = "derivatives_trading_coin_futures_rest_api_market_data_api_top_trader_long_short_ratio_positions"
 path = "examples/derivatives_trading_coin_futures/rest_api/market_data_api/top_trader_long_short_ratio_positions.rs"
-required-features = [ "derivatives_trading_coin_futures" ]
-
-[[example]]
-name = "derivatives_trading_coin_futures_rest_api_portfolio_margin_endpoints_api_classic_portfolio_margin_account_information"
-path = "examples/derivatives_trading_coin_futures/rest_api/portfolio_margin_endpoints_api/classic_portfolio_margin_account_information.rs"
 required-features = [ "derivatives_trading_coin_futures" ]
 
 [[example]]

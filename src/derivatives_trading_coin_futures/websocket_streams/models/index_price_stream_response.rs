@@ -22,8 +22,8 @@ pub struct IndexPriceStreamResponse {
     pub e: Option<String>,
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
-    #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
-    pub i: Option<String>,
+    #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
+    pub s: Option<String>,
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
 }
@@ -34,7 +34,7 @@ impl IndexPriceStreamResponse {
         IndexPriceStreamResponse {
             e: None,
             e_uppercase: None,
-            i: None,
+            s: None,
             p: None,
         }
     }
