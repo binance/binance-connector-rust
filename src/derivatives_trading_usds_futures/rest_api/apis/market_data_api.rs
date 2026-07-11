@@ -3814,7 +3814,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":1583139900000}]"#).unwrap();
             let dummy_response: Vec<models::LongShortRatioResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::LongShortRatioResponseInner>");
@@ -3953,7 +3953,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","CMCCirculatingSupply":"165880.538","timestamp":"1583127900000"},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","CMCCirculatingSupply":"165900.14853","timestamp":"1583128200000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","CMCCirculatingSupply":"165880.538","timestamp":1583127900000},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","CMCCirculatingSupply":"165900.14853","timestamp":1583128200000}]"#).unwrap();
             let dummy_response: Vec<models::OpenInterestStatisticsResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::OpenInterestStatisticsResponseInner>");
@@ -4262,7 +4262,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":"1585614900000"},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":1585614900000},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":1583139900000}]"#).unwrap();
             let dummy_response: Vec<models::TakerBuySellVolumeResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::TakerBuySellVolumeResponseInner>");
@@ -4340,7 +4340,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":1583139900000}]"#).unwrap();
             let dummy_response: Vec<models::TopTraderLongShortRatioAccountsResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::TopTraderLongShortRatioAccountsResponseInner>",
@@ -4370,7 +4370,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":1583139900000}]"#).unwrap();
             let dummy_response: Vec<models::TopTraderLongShortRatioPositionsResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::TopTraderLongShortRatioPositionsResponseInner>",
@@ -5058,7 +5058,7 @@ mod tests {
 
             let params = LongShortRatioParams::builder("symbol_example".to_string(),LongShortRatioPeriodEnum::Period5m,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::LongShortRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::LongShortRatioResponseInner>");
 
             let resp = client.long_short_ratio(params).await.expect("Expected a response");
@@ -5075,7 +5075,7 @@ mod tests {
 
             let params = LongShortRatioParams::builder("symbol_example".to_string(),LongShortRatioPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"1.9559","longAccount":"0.6617","shortAccount":"0.3382","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::LongShortRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::LongShortRatioResponseInner>");
 
             let resp = client.long_short_ratio(params).await.expect("Expected a response");
@@ -5104,6 +5104,16 @@ mod tests {
                 }
             }
         });
+    }
+
+    #[test]
+    fn long_short_ratio_deserializes_live_timestamp_payload() {
+        // `timestamp` is a bare integer on the real API, not a quoted string — captured
+        // live from fapi.binance.com. Guards against regressing to Option<String>.
+        let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longAccount":"0.5940","longShortRatio":"1.4631","shortAccount":"0.4060","timestamp":1783641600000}]"#).unwrap();
+        let parsed: Vec<models::LongShortRatioResponseInner> =
+            serde_json::from_value(resp_json).expect("live payload should deserialize");
+        assert_eq!(parsed[0].timestamp, Some(1783641600000));
     }
 
     #[test]
@@ -5342,7 +5352,7 @@ mod tests {
 
             let params = OpenInterestStatisticsParams::builder("symbol_example".to_string(),OpenInterestStatisticsPeriodEnum::Period5m,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","CMCCirculatingSupply":"165880.538","timestamp":"1583127900000"},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","CMCCirculatingSupply":"165900.14853","timestamp":"1583128200000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","CMCCirculatingSupply":"165880.538","timestamp":1583127900000},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","CMCCirculatingSupply":"165900.14853","timestamp":1583128200000}]"#).unwrap();
             let expected_response : Vec<models::OpenInterestStatisticsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OpenInterestStatisticsResponseInner>");
 
             let resp = client.open_interest_statistics(params).await.expect("Expected a response");
@@ -5359,7 +5369,7 @@ mod tests {
 
             let params = OpenInterestStatisticsParams::builder("symbol_example".to_string(),OpenInterestStatisticsPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","CMCCirculatingSupply":"165880.538","timestamp":"1583127900000"},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","CMCCirculatingSupply":"165900.14853","timestamp":"1583128200000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"20403.63700000","sumOpenInterestValue":"150570784.07809979","CMCCirculatingSupply":"165880.538","timestamp":1583127900000},{"symbol":"BTCUSDT","sumOpenInterest":"20401.36700000","sumOpenInterestValue":"149940752.14464448","CMCCirculatingSupply":"165900.14853","timestamp":1583128200000}]"#).unwrap();
             let expected_response : Vec<models::OpenInterestStatisticsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OpenInterestStatisticsResponseInner>");
 
             let resp = client.open_interest_statistics(params).await.expect("Expected a response");
@@ -5388,6 +5398,16 @@ mod tests {
                 }
             }
         });
+    }
+
+    #[test]
+    fn open_interest_statistics_deserializes_live_timestamp_payload() {
+        // `timestamp` is a bare integer on the real API, not a quoted string — captured
+        // live from fapi.binance.com. Guards against regressing to Option<String>.
+        let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","sumOpenInterest":"100146.65100000","sumOpenInterestValue":"6329051472.72400900","CMCCirculatingSupply":"20053853.00000000","timestamp":1783641600000}]"#).unwrap();
+        let parsed: Vec<models::OpenInterestStatisticsResponseInner> =
+            serde_json::from_value(resp_json).expect("live payload should deserialize");
+        assert_eq!(parsed[0].timestamp, Some(1783641600000));
     }
 
     #[test]
@@ -5953,7 +5973,7 @@ mod tests {
 
             let params = TakerBuySellVolumeParams::builder("symbol_example".to_string(),TakerBuySellVolumePeriodEnum::Period5m,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":"1585614900000"},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":1585614900000},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::TakerBuySellVolumeResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TakerBuySellVolumeResponseInner>");
 
             let resp = client.taker_buy_sell_volume(params).await.expect("Expected a response");
@@ -5970,7 +5990,7 @@ mod tests {
 
             let params = TakerBuySellVolumeParams::builder("symbol_example".to_string(),TakerBuySellVolumePeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":"1585614900000"},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.5586","buyVol":"387.3300","sellVol":"248.5030","timestamp":1585614900000},{"buySellRatio":"1.3104","buyVol":"343.9290","sellVol":"248.5030","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::TakerBuySellVolumeResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TakerBuySellVolumeResponseInner>");
 
             let resp = client.taker_buy_sell_volume(params).await.expect("Expected a response");
@@ -5999,6 +6019,16 @@ mod tests {
                 }
             }
         });
+    }
+
+    #[test]
+    fn taker_buy_sell_volume_deserializes_live_timestamp_payload() {
+        // `timestamp` is a bare integer on the real API, not a quoted string — captured
+        // live from fapi.binance.com. Guards against regressing to Option<String>.
+        let resp_json: Value = serde_json::from_str(r#"[{"buySellRatio":"1.1179","sellVol":"65529.9990","buyVol":"73258.0120","timestamp":1783641600000}]"#).unwrap();
+        let parsed: Vec<models::TakerBuySellVolumeResponseInner> =
+            serde_json::from_value(resp_json).expect("live payload should deserialize");
+        assert_eq!(parsed[0].timestamp, Some(1783641600000));
     }
 
     #[test]
@@ -6108,7 +6138,7 @@ mod tests {
 
             let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioAccountsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioAccountsResponseInner>");
 
             let resp = client.top_trader_long_short_ratio_accounts(params).await.expect("Expected a response");
@@ -6125,7 +6155,7 @@ mod tests {
 
             let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"0.5576","longAccount":"0.3580","shortAccount":"0.6420","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioAccountsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioAccountsResponseInner>");
 
             let resp = client.top_trader_long_short_ratio_accounts(params).await.expect("Expected a response");
@@ -6157,13 +6187,23 @@ mod tests {
     }
 
     #[test]
+    fn top_trader_long_short_ratio_accounts_deserializes_live_timestamp_payload() {
+        // `timestamp` is a bare integer on the real API, not a quoted string — captured
+        // live from fapi.binance.com. Guards against regressing to Option<String>.
+        let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longAccount":"0.5826","longShortRatio":"1.3958","shortAccount":"0.4174","timestamp":1783728000000}]"#).unwrap();
+        let parsed: Vec<models::TopTraderLongShortRatioAccountsResponseInner> =
+            serde_json::from_value(resp_json).expect("live payload should deserialize");
+        assert_eq!(parsed[0].timestamp, Some(1783728000000));
+    }
+
+    #[test]
     fn top_trader_long_short_ratio_positions_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
             let params = TopTraderLongShortRatioPositionsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::Period5m,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioPositionsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioPositionsResponseInner>");
 
             let resp = client.top_trader_long_short_ratio_positions(params).await.expect("Expected a response");
@@ -6180,7 +6220,7 @@ mod tests {
 
             let params = TopTraderLongShortRatioPositionsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::Period5m,).limit(100).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":"1583139600000"},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":"1583139900000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longShortRatio":"1.4342","longAccount":"0.5891","shortAccount":"0.4108","timestamp":1583139600000},{"symbol":"BTCUSDT","longShortRatio":"1.4337","longAccount":"0.3583","shortAccount":"0.6417","timestamp":1583139900000}]"#).unwrap();
             let expected_response : Vec<models::TopTraderLongShortRatioPositionsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioPositionsResponseInner>");
 
             let resp = client.top_trader_long_short_ratio_positions(params).await.expect("Expected a response");
@@ -6209,6 +6249,16 @@ mod tests {
                 }
             }
         });
+    }
+
+    #[test]
+    fn top_trader_long_short_ratio_positions_deserializes_live_timestamp_payload() {
+        // `timestamp` is a bare integer on the real API, not a quoted string — captured
+        // live from fapi.binance.com. Guards against regressing to Option<String>.
+        let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","longAccount":"0.5824","longShortRatio":"1.3944","shortAccount":"0.4176","timestamp":1783641600000}]"#).unwrap();
+        let parsed: Vec<models::TopTraderLongShortRatioPositionsResponseInner> =
+            serde_json::from_value(resp_json).expect("live payload should deserialize");
+        assert_eq!(parsed[0].timestamp, Some(1783641600000));
     }
 
     #[test]

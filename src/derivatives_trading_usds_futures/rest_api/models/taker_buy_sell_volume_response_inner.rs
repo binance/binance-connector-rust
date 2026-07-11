@@ -24,7 +24,7 @@ pub struct TakerBuySellVolumeResponseInner {
     #[serde(rename = "sellVol", skip_serializing_if = "Option::is_none")]
     pub sell_vol: Option<String>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<String>,
+    pub timestamp: Option<i64>,
 }
 
 impl TakerBuySellVolumeResponseInner {

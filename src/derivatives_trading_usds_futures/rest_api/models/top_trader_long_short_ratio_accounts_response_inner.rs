@@ -26,7 +26,7 @@ pub struct TopTraderLongShortRatioAccountsResponseInner {
     #[serde(rename = "shortAccount", skip_serializing_if = "Option::is_none")]
     pub short_account: Option<String>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<String>,
+    pub timestamp: Option<i64>,
 }
 
 impl TopTraderLongShortRatioAccountsResponseInner {

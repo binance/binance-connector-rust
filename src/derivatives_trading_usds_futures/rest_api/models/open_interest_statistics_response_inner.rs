@@ -32,7 +32,7 @@ pub struct OpenInterestStatisticsResponseInner {
     )]
     pub cmc_circulating_supply: Option<String>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<String>,
+    pub timestamp: Option<i64>,
 }
 
 impl OpenInterestStatisticsResponseInner {
