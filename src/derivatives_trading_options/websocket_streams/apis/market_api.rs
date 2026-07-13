@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -36,10 +36,6 @@ pub trait MarketApi: Send + Sync {
         &self,
         params: KlineCandlestickStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::KlineCandlestickStreamsResponse>>>;
-    async fn mark_price(
-        &self,
-        params: MarkPriceParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MarkPriceResponseInner>>>>;
     async fn new_symbol_info(
         &self,
         params: NewSymbolInfoParams,
@@ -48,6 +44,10 @@ pub trait MarketApi: Send + Sync {
         &self,
         params: OpenInterestParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::OpenInterestResponseInner>>>>;
+    async fn option_mark_price(
+        &self,
+        params: OptionMarkPriceParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::OptionMarkPriceResponseInner>>>>;
 }
 
 pub struct MarketApiClient {
@@ -62,17 +62,93 @@ impl MarketApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum KlineCandlestickStreamsIntervalEnum {
+    #[serde(rename = "1m")]
+    Interval1m,
+    #[serde(rename = "3m")]
+    Interval3m,
+    #[serde(rename = "5m")]
+    Interval5m,
+    #[serde(rename = "15m")]
+    Interval15m,
+    #[serde(rename = "30m")]
+    Interval30m,
+    #[serde(rename = "1h")]
+    Interval1h,
+    #[serde(rename = "2h")]
+    Interval2h,
+    #[serde(rename = "4h")]
+    Interval4h,
+    #[serde(rename = "6h")]
+    Interval6h,
+    #[serde(rename = "12h")]
+    Interval12h,
+    #[serde(rename = "1d")]
+    Interval1d,
+    #[serde(rename = "3d")]
+    Interval3d,
+    #[serde(rename = "1w")]
+    Interval1w,
+}
+
+impl KlineCandlestickStreamsIntervalEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Interval1m => "1m",
+            Self::Interval3m => "3m",
+            Self::Interval5m => "5m",
+            Self::Interval15m => "15m",
+            Self::Interval30m => "30m",
+            Self::Interval1h => "1h",
+            Self::Interval2h => "2h",
+            Self::Interval4h => "4h",
+            Self::Interval6h => "6h",
+            Self::Interval12h => "12h",
+            Self::Interval1d => "1d",
+            Self::Interval3d => "3d",
+            Self::Interval1w => "1w",
+        }
+    }
+}
+
+impl std::str::FromStr for KlineCandlestickStreamsIntervalEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1m" => Ok(Self::Interval1m),
+            "3m" => Ok(Self::Interval3m),
+            "5m" => Ok(Self::Interval5m),
+            "15m" => Ok(Self::Interval15m),
+            "30m" => Ok(Self::Interval30m),
+            "1h" => Ok(Self::Interval1h),
+            "2h" => Ok(Self::Interval2h),
+            "4h" => Ok(Self::Interval4h),
+            "6h" => Ok(Self::Interval6h),
+            "12h" => Ok(Self::Interval12h),
+            "1d" => Ok(Self::Interval1d),
+            "3d" => Ok(Self::Interval3d),
+            "1w" => Ok(Self::Interval1w),
+            other => Err(format!("invalid KlineCandlestickStreamsIntervalEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`index_price_streams`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`index_price_streams`](#method.index_price_streams).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct IndexPriceStreamsParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<u32>,
 }
 
@@ -88,23 +164,26 @@ impl IndexPriceStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`kline_candlestick_streams`](#method.kline_candlestick_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct KlineCandlestickStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// The interval parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub interval: String,
+    #[serde(rename = "interval")]
+    pub interval: KlineCandlestickStreamsIntervalEnum,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<u32>,
 }
 
@@ -117,54 +196,27 @@ impl KlineCandlestickStreamsParams {
     /// * `interval` — The interval parameter
     ///
     #[must_use]
-    pub fn builder(symbol: String, interval: String) -> KlineCandlestickStreamsParamsBuilder {
+    pub fn builder(
+        symbol: String,
+        interval: KlineCandlestickStreamsIntervalEnum,
+    ) -> KlineCandlestickStreamsParamsBuilder {
         KlineCandlestickStreamsParamsBuilder::default()
             .symbol(symbol)
             .interval(interval)
-    }
-}
-/// Request parameters for the [`mark_price`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`mark_price`](#method.mark_price).
-#[derive(Clone, Debug, Builder)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct MarkPriceParams {
-    /// The underlying parameter
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub underlying: String,
-    /// Unique WebSocket request ID.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub id: Option<u32>,
-}
-
-impl MarkPriceParams {
-    /// Create a builder for [`mark_price`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `underlying` — The underlying parameter
-    ///
-    #[must_use]
-    pub fn builder(underlying: String) -> MarkPriceParamsBuilder {
-        MarkPriceParamsBuilder::default().underlying(underlying)
     }
 }
 /// Request parameters for the [`new_symbol_info`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`new_symbol_info`](#method.new_symbol_info).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct NewSymbolInfoParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<u32>,
 }
 
@@ -180,18 +232,26 @@ impl NewSymbolInfoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`open_interest`](#method.open_interest).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OpenInterestParams {
+    /// The underlying parameter
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "underlying")]
+    pub underlying: String,
     /// The expirationDate parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "expirationDate")]
     pub expiration_date: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<u32>,
 }
 
@@ -200,11 +260,47 @@ impl OpenInterestParams {
     ///
     /// Required parameters:
     ///
+    /// * `underlying` — The underlying parameter
     /// * `expiration_date` — The expirationDate parameter
     ///
     #[must_use]
-    pub fn builder(expiration_date: String) -> OpenInterestParamsBuilder {
-        OpenInterestParamsBuilder::default().expiration_date(expiration_date)
+    pub fn builder(underlying: String, expiration_date: String) -> OpenInterestParamsBuilder {
+        OpenInterestParamsBuilder::default()
+            .underlying(underlying)
+            .expiration_date(expiration_date)
+    }
+}
+/// Request parameters for the [`option_mark_price`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`option_mark_price`](#method.option_mark_price).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct OptionMarkPriceParams {
+    /// The underlying parameter
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "underlying")]
+    pub underlying: String,
+    /// Unique WebSocket request ID.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
+    pub id: Option<u32>,
+}
+
+impl OptionMarkPriceParams {
+    /// Create a builder for [`option_mark_price`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `underlying` — The underlying parameter
+    ///
+    #[must_use]
+    pub fn builder(underlying: String) -> OptionMarkPriceParamsBuilder {
+        OptionMarkPriceParamsBuilder::default().underlying(underlying)
     }
 }
 
@@ -223,7 +319,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!index@arr", &vars);
 
@@ -257,7 +353,7 @@ impl MarketApi for MarketApiClient {
 
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
-            ("interval", Some(interval.clone())),
+            ("interval", Some(interval.as_str().to_string())),
             ("id", id.map(|v| v.to_string())),
         ];
 
@@ -266,50 +362,12 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@kline_<interval>", &vars);
 
         Ok(
             create_stream_handler::<models::KlineCandlestickStreamsResponse>(
-                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
-                stream,
-                id_opt.map(|s| {
-                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
-                        if let Ok(n) = s.parse::<u32>() {
-                            return StreamId::Number(n);
-                        }
-                    }
-                    StreamId::Str(s)
-                }),
-                Some("market".to_string()),
-            )
-            .await,
-        )
-    }
-
-    async fn mark_price(
-        &self,
-        params: MarkPriceParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MarkPriceResponseInner>>>> {
-        let MarkPriceParams { underlying, id } = params;
-
-        let pairs: &[(&str, Option<String>)] = &[
-            ("underlying", Some(underlying.clone())),
-            ("id", id.map(|v| v.to_string())),
-        ];
-
-        let vars: HashMap<_, _> = pairs
-            .iter()
-            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-            .collect();
-
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
-
-        let stream = replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
-
-        Ok(
-            create_stream_handler::<Vec<models::MarkPriceResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
                 id_opt.map(|s| {
@@ -339,7 +397,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!optionSymbol", &vars);
 
@@ -364,11 +422,13 @@ impl MarketApi for MarketApiClient {
         params: OpenInterestParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::OpenInterestResponseInner>>>> {
         let OpenInterestParams {
+            underlying,
             expiration_date,
             id,
         } = params;
 
         let pairs: &[(&str, Option<String>)] = &[
+            ("underlying", Some(underlying.clone())),
             ("expirationDate", Some(expiration_date.clone())),
             ("id", id.map(|v| v.to_string())),
         ];
@@ -378,15 +438,53 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders(
-            "/underlying@optionOpenInterest@<expirationDate>",
+            "/<underlying>@openInterest@<expirationDate>",
             &vars,
         );
 
         Ok(
             create_stream_handler::<Vec<models::OpenInterestResponseInner>>(
+                WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
+                stream,
+                id_opt.map(|s| {
+                    if !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) {
+                        if let Ok(n) = s.parse::<u32>() {
+                            return StreamId::Number(n);
+                        }
+                    }
+                    StreamId::Str(s)
+                }),
+                Some("market".to_string()),
+            )
+            .await,
+        )
+    }
+
+    async fn option_mark_price(
+        &self,
+        params: OptionMarkPriceParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::OptionMarkPriceResponseInner>>>> {
+        let OptionMarkPriceParams { underlying, id } = params;
+
+        let pairs: &[(&str, Option<String>)] = &[
+            ("underlying", Some(underlying.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
+
+        let vars: HashMap<_, _> = pairs
+            .iter()
+            .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+            .collect();
+
+        let id_opt: Option<String> = vars.get("id").cloned();
+
+        let stream = replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
+
+        Ok(
+            create_stream_handler::<Vec<models::OptionMarkPriceResponseInner>>(
                 WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
                 stream,
                 id_opt.map(|s| {
@@ -475,17 +573,14 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = IndexPriceStreamsParams::builder().id(Some(id)).build().unwrap();
+            let params = IndexPriceStreamsParams::builder()
+                .id(Some(id))
+                .build()
+                .unwrap();
 
-            let IndexPriceStreamsParams {
-                id,
-            } = params.clone();
+            let IndexPriceStreamsParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.map(|v| v.to_string())
-                ),
-            ];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -497,11 +592,16 @@ mod tests {
 
             let called = Arc::new(AtomicBool::new(false));
             let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::IndexPriceStreamsResponseInner>| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
+            ws_stream.on_message(
+                move |_payload: Vec<models::IndexPriceStreamsResponseInner>| {
+                    called_with_message.store(true, Ordering::SeqCst);
+                },
+            );
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"indexPrice","E":1763092572229,"s":"ETHUSDT","p":"3224.51976744"},{"e":"indexPrice","E":1763092572229,"s":"BTCUSDT","p":"99102.32326087"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(
+                r#"[{"e":"indexPrice","E":1763092572229,"s":"ETHUSDT","p":"3224.51976744"}]"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -510,7 +610,10 @@ mod tests {
             streams_base.on_message(msg.to_string(), conn.clone()).await;
             yield_now().await;
 
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
+            assert!(
+                called.load(Ordering::SeqCst),
+                "expected our callback to have been invoked"
+            );
         });
     }
 
@@ -522,17 +625,14 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = IndexPriceStreamsParams::builder().id(Some(id)).build().unwrap();
+            let params = IndexPriceStreamsParams::builder()
+                .id(Some(id))
+                .build()
+                .unwrap();
 
-            let IndexPriceStreamsParams {
-                id,
-            } = params.clone();
+            let IndexPriceStreamsParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[
-                ("id",
-                        id.map(|v| v.to_string())
-                ),
-            ];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -544,15 +644,23 @@ mod tests {
 
             let called = Arc::new(AtomicBool::new(false));
             let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::IndexPriceStreamsResponseInner>| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
+            ws_stream.on_message(
+                move |_payload: Vec<models::IndexPriceStreamsResponseInner>| {
+                    called_clone.store(true, Ordering::SeqCst);
+                },
+            );
 
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
+            assert!(
+                streams_base.is_subscribed(&stream).await,
+                "should be subscribed before unsubscribe"
+            );
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"indexPrice","E":1763092572229,"s":"ETHUSDT","p":"3224.51976744"},{"e":"indexPrice","E":1763092572229,"s":"BTCUSDT","p":"99102.32326087"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(
+                r#"[{"e":"indexPrice","E":1763092572229,"s":"ETHUSDT","p":"3224.51976744"}]"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -562,7 +670,10 @@ mod tests {
 
             yield_now().await;
 
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
+            assert!(
+                !called.load(Ordering::SeqCst),
+                "callback should not be invoked after unsubscribe"
+            );
         });
     }
 
@@ -574,11 +685,13 @@ mod tests {
 
             let id = 123456u32;
 
-            let params =
-                KlineCandlestickStreamsParams::builder("btcusdt".to_string(), "1m".to_string())
-                    .id(Some(id))
-                    .build()
-                    .unwrap();
+            let params = KlineCandlestickStreamsParams::builder(
+                "btcusdt".to_string(),
+                KlineCandlestickStreamsIntervalEnum::Interval1m,
+            )
+            .id(Some(id))
+            .build()
+            .unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,
@@ -588,7 +701,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("interval", Some(interval.clone())),
+                ("interval", Some(interval.as_str().to_string())),
                 ("id", id.map(|v| v.to_string())),
             ];
 
@@ -619,7 +732,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id)).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -630,7 +743,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("interval",
-                        Some(interval.clone())
+                        Some(interval.as_str().to_string())
                 ),
                 ("id",
                         id.map(|v| v.to_string())
@@ -651,7 +764,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTC-200630-9000-P","k":{"t":1638747660000,"T":1638747719999,"s":"BTC-200630-9000-P","i":"1m","f":0,"L":0,"o":"1000","c":"1000","h":"1000","l":"1000","v":"0","n":0,"x":false,"q":"0","V":"0","Q":"0"}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTC-200630-9000-P","k":{"t":1638747660000,"T":1638747719999,"s":"BTC-200630-9000-P","i":"1m","f":0,"L":0,"o":"1000","c":"1000","h":"1000","l":"1000","v":"0","n":0,"x":false,"q":"0","V":"0","Q":"0"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -672,7 +785,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id)).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -683,7 +796,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("interval",
-                        Some(interval.clone())
+                        Some(interval.as_str().to_string())
                 ),
                 ("id",
                         id.map(|v| v.to_string())
@@ -708,151 +821,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTC-200630-9000-P","k":{"t":1638747660000,"T":1638747719999,"s":"BTC-200630-9000-P","i":"1m","f":0,"L":0,"o":"1000","c":"1000","h":"1000","l":"1000","v":"0","n":0,"x":false,"q":"0","V":"0","Q":"0"}}"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-
-            yield_now().await;
-
-            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
-        });
-    }
-
-    #[test]
-    fn mark_price_should_execute_successfully() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = MarketApiClient::new(streams_base.clone());
-
-            let id = 123456u32;
-
-            let params = MarkPriceParams::builder("btcusdt".to_string())
-                .id(Some(id))
-                .build()
-                .unwrap();
-
-            let MarkPriceParams { underlying, id } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("underlying", Some(underlying.clone())),
-                ("id", id.map(|v| v.to_string())),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream =
-                replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
-            let ws_stream = api
-                .mark_price(params)
-                .await
-                .expect("mark_price should return a WebsocketStream");
-
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "expected stream '{stream}' to be subscribed"
-            );
-            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
-        });
-    }
-
-    #[test]
-    fn mark_price_should_handle_incoming_message() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = MarketApiClient::new(streams_base.clone());
-
-            let id = 123456u32;
-
-            let params = MarkPriceParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
-
-            let MarkPriceParams {
-                underlying,id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("underlying",
-                        Some(underlying.clone())
-                ),
-                ("id",
-                        id.map(|v| v.to_string())
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
-
-            let ws_stream = api.mark_price(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_with_message = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::MarkPriceResponseInner>| {
-                called_with_message.store(true, Ordering::SeqCst);
-            });
-
-            let payload: Value = serde_json::from_str(r#"[{"s":"BTC-251120-126000-C","mp":"770.543","E":1762867543321,"e":"markPrice","i":"104334.60217391","P":"0.000","bo":"0.000","ao":"900.000","bq":"0.0000","aq":"0.2000","b":"-1.0","a":"0.98161161","hl":"924.652","ll":"616.435","vo":"0.9408058","rf":"0.0","d":"0.11111964","t":"-164.26702615","g":"0.00001245","v":"30.63855919"},{"s":"BTC-251123-126000-C","mp":"1249.61","E":1762867543321,"e":"markPrice","i":"104334.60217391","P":"0.000","bo":"1200.000","ao":"1300.000","bq":"0.3000","aq":"0.6000","b":"0.92159033","a":"0.94461441","hl":"1499.533","ll":"999.688","vo":"0.93310237","rf":"0.0","d":"0.14869196","t":"-172.12148811","g":"0.00001326","v":"43.43627792"}]"#).unwrap();
-            let msg = json!({
-                "stream": stream,
-                "data": payload,
-            });
-
-            streams_base.on_message(msg.to_string(), conn.clone()).await;
-            yield_now().await;
-
-            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
-        });
-    }
-
-    #[test]
-    fn mark_price_should_not_fire_after_unsubscribe() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, conn) = make_streams_base().await;
-            let api = MarketApiClient::new(streams_base.clone());
-
-            let id = 123456u32;
-
-            let params = MarkPriceParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
-
-            let MarkPriceParams {
-                underlying,id,
-            } = params.clone();
-
-            let pairs: &[(&str, Option<String>)] = &[
-                ("underlying",
-                        Some(underlying.clone())
-                ),
-                ("id",
-                        id.map(|v| v.to_string())
-                ),
-            ];
-
-            let vars: HashMap<_, _> = pairs
-                .iter()
-                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
-                .collect();
-            let stream = replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
-
-            let ws_stream = api.mark_price(params).await.unwrap();
-
-            let called = Arc::new(AtomicBool::new(false));
-            let called_clone = called.clone();
-            ws_stream.on_message(move |_payload: Vec<models::MarkPriceResponseInner>| {
-                called_clone.store(true, Ordering::SeqCst);
-            });
-
-            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
-
-            ws_stream.unsubscribe().await;
-
-            let payload: Value = serde_json::from_str(r#"[{"s":"BTC-251120-126000-C","mp":"770.543","E":1762867543321,"e":"markPrice","i":"104334.60217391","P":"0.000","bo":"0.000","ao":"900.000","bq":"0.0000","aq":"0.2000","b":"-1.0","a":"0.98161161","hl":"924.652","ll":"616.435","vo":"0.9408058","rf":"0.0","d":"0.11111964","t":"-164.26702615","g":"0.00001245","v":"30.63855919"},{"s":"BTC-251123-126000-C","mp":"1249.61","E":1762867543321,"e":"markPrice","i":"104334.60217391","P":"0.000","bo":"1200.000","ao":"1300.000","bq":"0.3000","aq":"0.6000","b":"0.92159033","a":"0.94461441","hl":"1499.533","ll":"999.688","vo":"0.93310237","rf":"0.0","d":"0.14869196","t":"-172.12148811","g":"0.00001326","v":"43.43627792"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTC-200630-9000-P","k":{"t":1638747660000,"T":1638747719999,"s":"BTC-200630-9000-P","i":"1m","f":0,"L":0,"o":"1000","c":"1000","h":"1000","l":"1000","v":"0","n":0,"x":false,"q":"0","V":"0","Q":"0"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -932,7 +901,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"optionSymbol","E":1669356423908,"s":"BTC-250926-140000-C","ps":"BTCUSDT","qa":"USDT","d":"CALL","sp":"21000","dt":4133404800000,"u":1,"ot":1569398400000,"cs":"TRADING"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"optionSymbol","E":1669356423908,"s":"BTC-250926-140000-C","ps":"BTCUSDT","qa":"USDT","d":"CALL","sp":"21000","dt":4133404800000,"u":1,"ot":1569398400000,"cs":"TRADING"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -983,7 +952,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"optionSymbol","E":1669356423908,"s":"BTC-250926-140000-C","ps":"BTCUSDT","qa":"USDT","d":"CALL","sp":"21000","dt":4133404800000,"u":1,"ot":1569398400000,"cs":"TRADING"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"optionSymbol","E":1669356423908,"s":"BTC-250926-140000-C","ps":"BTCUSDT","qa":"USDT","d":"CALL","sp":"21000","dt":4133404800000,"u":1,"ot":1569398400000,"cs":"TRADING"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1005,17 +974,19 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = OpenInterestParams::builder("220930".to_string())
+            let params = OpenInterestParams::builder("btcusdt".to_string(), "220930".to_string())
                 .id(Some(id))
                 .build()
                 .unwrap();
 
             let OpenInterestParams {
+                underlying,
                 expiration_date,
                 id,
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
+                ("underlying", Some(underlying.clone())),
                 ("expirationDate", Some(expiration_date.clone())),
                 ("id", id.map(|v| v.to_string())),
             ];
@@ -1025,7 +996,7 @@ mod tests {
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
             let stream = replace_websocket_streams_placeholders(
-                "/underlying@optionOpenInterest@<expirationDate>",
+                "/<underlying>@openInterest@<expirationDate>",
                 &vars,
             );
             let ws_stream = api
@@ -1049,13 +1020,16 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = OpenInterestParams::builder("220930".to_string(),).id(Some(id)).build().unwrap();
+            let params = OpenInterestParams::builder("btcusdt".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let OpenInterestParams {
-                expiration_date,id,
+                underlying,expiration_date,id,
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
+                ("underlying",
+                        Some(underlying.clone())
+                ),
                 ("expirationDate",
                         Some(expiration_date.clone())
                 ),
@@ -1068,7 +1042,7 @@ mod tests {
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream = replace_websocket_streams_placeholders("/underlying@optionOpenInterest@<expirationDate>", &vars);
+            let stream = replace_websocket_streams_placeholders("/<underlying>@openInterest@<expirationDate>", &vars);
 
             let ws_stream = api.open_interest(params).await.unwrap();
 
@@ -1078,7 +1052,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"openInterest","E":1668759300045,"s":"ETH-221125-2700-C","o":"1580.87","h":"1912992.178168204"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"openInterest","E":1668759300045,"s":"ETH-221125-2700-C","o":"1580.87","h":"1912992.178168204"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1099,13 +1073,16 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = OpenInterestParams::builder("220930".to_string(),).id(Some(id)).build().unwrap();
+            let params = OpenInterestParams::builder("btcusdt".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let OpenInterestParams {
-                expiration_date,id,
+                underlying,expiration_date,id,
             } = params.clone();
 
             let pairs: &[(&str, Option<String>)] = &[
+                ("underlying",
+                        Some(underlying.clone())
+                ),
                 ("expirationDate",
                         Some(expiration_date.clone())
                 ),
@@ -1118,7 +1095,7 @@ mod tests {
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream = replace_websocket_streams_placeholders("/underlying@optionOpenInterest@<expirationDate>", &vars);
+            let stream = replace_websocket_streams_placeholders("/<underlying>@openInterest@<expirationDate>", &vars);
 
             let ws_stream = api.open_interest(params).await.unwrap();
 
@@ -1132,7 +1109,151 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"openInterest","E":1668759300045,"s":"ETH-221125-2700-C","o":"1580.87","h":"1912992.178168204"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"openInterest","E":1668759300045,"s":"ETH-221125-2700-C","o":"1580.87","h":"1912992.178168204"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+
+            yield_now().await;
+
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
+        });
+    }
+
+    #[test]
+    fn option_mark_price_should_execute_successfully() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, _) = make_streams_base().await;
+            let api = MarketApiClient::new(streams_base.clone());
+
+            let id = 123456u32;
+
+            let params = OptionMarkPriceParams::builder("btcusdt".to_string())
+                .id(Some(id))
+                .build()
+                .unwrap();
+
+            let OptionMarkPriceParams { underlying, id } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("underlying", Some(underlying.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream =
+                replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
+            let ws_stream = api
+                .option_mark_price(params)
+                .await
+                .expect("option_mark_price should return a WebsocketStream");
+
+            assert!(
+                streams_base.is_subscribed(&stream).await,
+                "expected stream '{stream}' to be subscribed"
+            );
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
+        });
+    }
+
+    #[test]
+    fn option_mark_price_should_handle_incoming_message() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = MarketApiClient::new(streams_base.clone());
+
+            let id = 123456u32;
+
+            let params = OptionMarkPriceParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+
+            let OptionMarkPriceParams {
+                underlying,id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("underlying",
+                        Some(underlying.clone())
+                ),
+                ("id",
+                        id.map(|v| v.to_string())
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
+
+            let ws_stream = api.option_mark_price(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_with_message = called.clone();
+            ws_stream.on_message(move |_payload: Vec<models::OptionMarkPriceResponseInner>| {
+                called_with_message.store(true, Ordering::SeqCst);
+            });
+
+            let payload: Value = serde_json::from_str(r#"[{"s":"BTC-251120-126000-C","mp":"770.543","E":1762867543321,"e":"markPrice","i":"104334.60217391","P":"0.000","bo":"0.000","ao":"900.000","bq":"0.0000","aq":"0.2000","b":"-1.0","a":"0.98161161","hl":"924.652","ll":"616.435","vo":"0.9408058","rf":"0.0","d":"0.11111964","t":"-164.26702615","g":"0.00001245","v":"30.63855919"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let msg = json!({
+                "stream": stream,
+                "data": payload,
+            });
+
+            streams_base.on_message(msg.to_string(), conn.clone()).await;
+            yield_now().await;
+
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
+        });
+    }
+
+    #[test]
+    fn option_mark_price_should_not_fire_after_unsubscribe() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (streams_base, conn) = make_streams_base().await;
+            let api = MarketApiClient::new(streams_base.clone());
+
+            let id = 123456u32;
+
+            let params = OptionMarkPriceParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+
+            let OptionMarkPriceParams {
+                underlying,id,
+            } = params.clone();
+
+            let pairs: &[(&str, Option<String>)] = &[
+                ("underlying",
+                        Some(underlying.clone())
+                ),
+                ("id",
+                        id.map(|v| v.to_string())
+                ),
+            ];
+
+            let vars: HashMap<_, _> = pairs
+                .iter()
+                .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
+                .collect();
+            let stream = replace_websocket_streams_placeholders("/<underlying>@optionMarkPrice", &vars);
+
+            let ws_stream = api.option_mark_price(params).await.unwrap();
+
+            let called = Arc::new(AtomicBool::new(false));
+            let called_clone = called.clone();
+            ws_stream.on_message(move |_payload: Vec<models::OptionMarkPriceResponseInner>| {
+                called_clone.store(true, Ordering::SeqCst);
+            });
+
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
+
+            ws_stream.unsubscribe().await;
+
+            let payload: Value = serde_json::from_str(r#"[{"s":"BTC-251120-126000-C","mp":"770.543","E":1762867543321,"e":"markPrice","i":"104334.60217391","P":"0.000","bo":"0.000","ao":"900.000","bq":"0.0000","aq":"0.2000","b":"-1.0","a":"0.98161161","hl":"924.652","ll":"616.435","vo":"0.9408058","rf":"0.0","d":"0.11111964","t":"-164.26702615","g":"0.00001245","v":"30.63855919"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -104,22 +104,299 @@ impl MarketApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ContinuousContractKlineCandlestickStreamsContractTypeEnum {
+    #[serde(rename = "perpetual")]
+    Perpetual,
+    #[serde(rename = "current_quarter")]
+    CurrentQuarter,
+    #[serde(rename = "next_quarter")]
+    NextQuarter,
+    #[serde(rename = "tradifi_perpetual")]
+    TradifiPerpetual,
+}
+
+impl ContinuousContractKlineCandlestickStreamsContractTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Perpetual => "perpetual",
+            Self::CurrentQuarter => "current_quarter",
+            Self::NextQuarter => "next_quarter",
+            Self::TradifiPerpetual => "tradifi_perpetual",
+        }
+    }
+}
+
+impl std::str::FromStr for ContinuousContractKlineCandlestickStreamsContractTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "perpetual" => Ok(Self::Perpetual),
+            "current_quarter" => Ok(Self::CurrentQuarter),
+            "next_quarter" => Ok(Self::NextQuarter),
+            "tradifi_perpetual" => Ok(Self::TradifiPerpetual),
+            other => Err(format!(
+                "invalid ContinuousContractKlineCandlestickStreamsContractTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ContinuousContractKlineCandlestickStreamsIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
+    #[serde(rename = "1m")]
+    Interval1m,
+    #[serde(rename = "3m")]
+    Interval3m,
+    #[serde(rename = "5m")]
+    Interval5m,
+    #[serde(rename = "15m")]
+    Interval15m,
+    #[serde(rename = "30m")]
+    Interval30m,
+    #[serde(rename = "1h")]
+    Interval1h,
+    #[serde(rename = "2h")]
+    Interval2h,
+    #[serde(rename = "4h")]
+    Interval4h,
+    #[serde(rename = "6h")]
+    Interval6h,
+    #[serde(rename = "8h")]
+    Interval8h,
+    #[serde(rename = "12h")]
+    Interval12h,
+    #[serde(rename = "1d")]
+    Interval1d,
+    #[serde(rename = "3d")]
+    Interval3d,
+    #[serde(rename = "1w")]
+    Interval1w,
+    #[serde(rename = "1M")]
+    Interval1M,
+}
+
+impl ContinuousContractKlineCandlestickStreamsIntervalEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Interval1s => "1s",
+            Self::Interval1m => "1m",
+            Self::Interval3m => "3m",
+            Self::Interval5m => "5m",
+            Self::Interval15m => "15m",
+            Self::Interval30m => "30m",
+            Self::Interval1h => "1h",
+            Self::Interval2h => "2h",
+            Self::Interval4h => "4h",
+            Self::Interval6h => "6h",
+            Self::Interval8h => "8h",
+            Self::Interval12h => "12h",
+            Self::Interval1d => "1d",
+            Self::Interval3d => "3d",
+            Self::Interval1w => "1w",
+            Self::Interval1M => "1M",
+        }
+    }
+}
+
+impl std::str::FromStr for ContinuousContractKlineCandlestickStreamsIntervalEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1s" => Ok(Self::Interval1s),
+            "1m" => Ok(Self::Interval1m),
+            "3m" => Ok(Self::Interval3m),
+            "5m" => Ok(Self::Interval5m),
+            "15m" => Ok(Self::Interval15m),
+            "30m" => Ok(Self::Interval30m),
+            "1h" => Ok(Self::Interval1h),
+            "2h" => Ok(Self::Interval2h),
+            "4h" => Ok(Self::Interval4h),
+            "6h" => Ok(Self::Interval6h),
+            "8h" => Ok(Self::Interval8h),
+            "12h" => Ok(Self::Interval12h),
+            "1d" => Ok(Self::Interval1d),
+            "3d" => Ok(Self::Interval3d),
+            "1w" => Ok(Self::Interval1w),
+            "1M" => Ok(Self::Interval1M),
+            other => Err(format!(
+                "invalid ContinuousContractKlineCandlestickStreamsIntervalEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum KlineCandlestickStreamsIntervalEnum {
+    #[serde(rename = "1m")]
+    Interval1m,
+    #[serde(rename = "3m")]
+    Interval3m,
+    #[serde(rename = "5m")]
+    Interval5m,
+    #[serde(rename = "15m")]
+    Interval15m,
+    #[serde(rename = "30m")]
+    Interval30m,
+    #[serde(rename = "1h")]
+    Interval1h,
+    #[serde(rename = "2h")]
+    Interval2h,
+    #[serde(rename = "4h")]
+    Interval4h,
+    #[serde(rename = "6h")]
+    Interval6h,
+    #[serde(rename = "8h")]
+    Interval8h,
+    #[serde(rename = "12h")]
+    Interval12h,
+    #[serde(rename = "1d")]
+    Interval1d,
+    #[serde(rename = "3d")]
+    Interval3d,
+    #[serde(rename = "1w")]
+    Interval1w,
+    #[serde(rename = "1M")]
+    Interval1M,
+}
+
+impl KlineCandlestickStreamsIntervalEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Interval1m => "1m",
+            Self::Interval3m => "3m",
+            Self::Interval5m => "5m",
+            Self::Interval15m => "15m",
+            Self::Interval30m => "30m",
+            Self::Interval1h => "1h",
+            Self::Interval2h => "2h",
+            Self::Interval4h => "4h",
+            Self::Interval6h => "6h",
+            Self::Interval8h => "8h",
+            Self::Interval12h => "12h",
+            Self::Interval1d => "1d",
+            Self::Interval3d => "3d",
+            Self::Interval1w => "1w",
+            Self::Interval1M => "1M",
+        }
+    }
+}
+
+impl std::str::FromStr for KlineCandlestickStreamsIntervalEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1m" => Ok(Self::Interval1m),
+            "3m" => Ok(Self::Interval3m),
+            "5m" => Ok(Self::Interval5m),
+            "15m" => Ok(Self::Interval15m),
+            "30m" => Ok(Self::Interval30m),
+            "1h" => Ok(Self::Interval1h),
+            "2h" => Ok(Self::Interval2h),
+            "4h" => Ok(Self::Interval4h),
+            "6h" => Ok(Self::Interval6h),
+            "8h" => Ok(Self::Interval8h),
+            "12h" => Ok(Self::Interval12h),
+            "1d" => Ok(Self::Interval1d),
+            "3d" => Ok(Self::Interval3d),
+            "1w" => Ok(Self::Interval1w),
+            "1M" => Ok(Self::Interval1M),
+            other => Err(format!("invalid KlineCandlestickStreamsIntervalEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum MarkPriceStreamUpdateSpeedEnum {
+    #[serde(rename = "1s")]
+    UpdateSpeed1s,
+}
+
+impl MarkPriceStreamUpdateSpeedEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::UpdateSpeed1s => "1s",
+        }
+    }
+}
+
+impl std::str::FromStr for MarkPriceStreamUpdateSpeedEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1s" => Ok(Self::UpdateSpeed1s),
+            other => Err(format!("invalid MarkPriceStreamUpdateSpeedEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum MarkPriceStreamForAllMarketUpdateSpeedEnum {
+    #[serde(rename = "1s")]
+    UpdateSpeed1s,
+}
+
+impl MarkPriceStreamForAllMarketUpdateSpeedEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::UpdateSpeed1s => "1s",
+        }
+    }
+}
+
+impl std::str::FromStr for MarkPriceStreamForAllMarketUpdateSpeedEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1s" => Ok(Self::UpdateSpeed1s),
+            other => Err(format!(
+                "invalid MarkPriceStreamForAllMarketUpdateSpeedEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`aggregate_trade_streams`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`aggregate_trade_streams`](#method.aggregate_trade_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AggregateTradeStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -139,13 +416,14 @@ impl AggregateTradeStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_market_liquidation_order_streams`](#method.all_market_liquidation_order_streams).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllMarketLiquidationOrderStreamsParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -161,13 +439,14 @@ impl AllMarketLiquidationOrderStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_market_mini_tickers_stream`](#method.all_market_mini_tickers_stream).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllMarketMiniTickersStreamParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -183,13 +462,14 @@ impl AllMarketMiniTickersStreamParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_market_tickers_streams`](#method.all_market_tickers_streams).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllMarketTickersStreamsParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -205,13 +485,14 @@ impl AllMarketTickersStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`asset_index`](#method.asset_index).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AssetIndexParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -227,18 +508,20 @@ impl AssetIndexParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`composite_index_symbol_information_streams`](#method.composite_index_symbol_information_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CompositeIndexSymbolInformationStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -258,28 +541,35 @@ impl CompositeIndexSymbolInformationStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`continuous_contract_kline_candlestick_streams`](#method.continuous_contract_kline_candlestick_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ContinuousContractKlineCandlestickStreamsParams {
-    /// The pair parameter
+    ///
+    /// The `pair` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pair")]
     pub pair: String,
-    /// The contractType parameter
+    ///
+    /// The `contract_type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub contract_type: String,
-    /// The interval parameter
+    #[serde(rename = "contractType")]
+    pub contract_type: ContinuousContractKlineCandlestickStreamsContractTypeEnum,
+    ///
+    /// The `interval` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub interval: String,
+    #[serde(rename = "interval")]
+    pub interval: ContinuousContractKlineCandlestickStreamsIntervalEnum,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -288,15 +578,15 @@ impl ContinuousContractKlineCandlestickStreamsParams {
     ///
     /// Required parameters:
     ///
-    /// * `pair` — The pair parameter
-    /// * `contract_type` — The contractType parameter
-    /// * `interval` — The interval parameter
+    /// * `pair` — String
+    /// * `contract_type` — String
+    /// * `interval` — String
     ///
     #[must_use]
     pub fn builder(
         pair: String,
-        contract_type: String,
-        interval: String,
+        contract_type: ContinuousContractKlineCandlestickStreamsContractTypeEnum,
+        interval: ContinuousContractKlineCandlestickStreamsIntervalEnum,
     ) -> ContinuousContractKlineCandlestickStreamsParamsBuilder {
         ContinuousContractKlineCandlestickStreamsParamsBuilder::default()
             .pair(pair)
@@ -308,13 +598,14 @@ impl ContinuousContractKlineCandlestickStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`contract_info_stream`](#method.contract_info_stream).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ContractInfoStreamParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -330,18 +621,20 @@ impl ContractInfoStreamParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`individual_symbol_mini_ticker_stream`](#method.individual_symbol_mini_ticker_stream).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct IndividualSymbolMiniTickerStreamParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -361,18 +654,20 @@ impl IndividualSymbolMiniTickerStreamParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`individual_symbol_ticker_streams`](#method.individual_symbol_ticker_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct IndividualSymbolTickerStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -392,23 +687,26 @@ impl IndividualSymbolTickerStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`kline_candlestick_streams`](#method.kline_candlestick_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct KlineCandlestickStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// The interval parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub interval: String,
+    #[serde(rename = "interval")]
+    pub interval: KlineCandlestickStreamsIntervalEnum,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -421,7 +719,10 @@ impl KlineCandlestickStreamsParams {
     /// * `interval` — The interval parameter
     ///
     #[must_use]
-    pub fn builder(symbol: String, interval: String) -> KlineCandlestickStreamsParamsBuilder {
+    pub fn builder(
+        symbol: String,
+        interval: KlineCandlestickStreamsIntervalEnum,
+    ) -> KlineCandlestickStreamsParamsBuilder {
         KlineCandlestickStreamsParamsBuilder::default()
             .symbol(symbol)
             .interval(interval)
@@ -431,18 +732,20 @@ impl KlineCandlestickStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`liquidation_order_streams`](#method.liquidation_order_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct LiquidationOrderStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -462,24 +765,27 @@ impl LiquidationOrderStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`mark_price_stream`](#method.mark_price_stream).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MarkPriceStreamParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
     /// WebSocket stream update speed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub update_speed: Option<String>,
+    #[serde(rename = "updateSpeed", default)]
+    pub update_speed: Option<MarkPriceStreamUpdateSpeedEnum>,
 }
 
 impl MarkPriceStreamParams {
@@ -498,19 +804,21 @@ impl MarkPriceStreamParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`mark_price_stream_for_all_market`](#method.mark_price_stream_for_all_market).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MarkPriceStreamForAllMarketParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
     /// WebSocket stream update speed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub update_speed: Option<String>,
+    #[serde(rename = "updateSpeed", default)]
+    pub update_speed: Option<MarkPriceStreamForAllMarketUpdateSpeedEnum>,
 }
 
 impl MarkPriceStreamForAllMarketParams {
@@ -525,13 +833,14 @@ impl MarkPriceStreamForAllMarketParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`trading_session_stream`](#method.trading_session_stream).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct TradingSessionStreamParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -560,7 +869,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@aggTrade", &vars);
 
@@ -596,7 +905,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!forceOrder@arr", &vars);
 
@@ -632,7 +941,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!miniTicker@arr", &vars);
 
@@ -668,7 +977,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!ticker@arr", &vars);
 
@@ -703,7 +1012,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!assetIndex@arr", &vars);
 
@@ -740,7 +1049,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@compositeIndex", &vars);
 
@@ -777,8 +1086,8 @@ impl MarketApi for MarketApiClient {
 
         let pairs: &[(&str, Option<String>)] = &[
             ("pair", Some(pair.clone())),
-            ("contractType", Some(contract_type.clone())),
-            ("interval", Some(interval.clone())),
+            ("contractType", Some(contract_type.as_str().to_string())),
+            ("interval", Some(interval.as_str().to_string())),
             ("id", id.clone()),
         ];
 
@@ -787,7 +1096,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders(
             "/<pair>_<contractType>@continuousKline_<interval>",
@@ -825,7 +1134,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!contractInfo", &vars);
 
@@ -860,7 +1169,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@miniTicker", &vars);
 
@@ -896,7 +1205,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@ticker", &vars);
 
@@ -930,7 +1239,7 @@ impl MarketApi for MarketApiClient {
 
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
-            ("interval", Some(interval.clone())),
+            ("interval", Some(interval.as_str().to_string())),
             ("id", id.clone()),
         ];
 
@@ -939,7 +1248,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@kline_<interval>", &vars);
 
@@ -975,7 +1284,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@forceOrder", &vars);
 
@@ -1010,7 +1319,10 @@ impl MarketApi for MarketApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("id", id.clone()),
-            ("updateSpeed", update_speed.clone()),
+            (
+                "updateSpeed",
+                update_speed.clone().map(|v| v.as_str().to_string()),
+            ),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1018,7 +1330,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream =
             replace_websocket_streams_placeholders("/<symbol>@markPrice@<updateSpeed>", &vars);
@@ -1046,15 +1358,20 @@ impl MarketApi for MarketApiClient {
     {
         let MarkPriceStreamForAllMarketParams { id, update_speed } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("id", id.clone()), ("updateSpeed", update_speed.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("id", id.clone()),
+            (
+                "updateSpeed",
+                update_speed.clone().map(|v| v.as_str().to_string()),
+            ),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!markPrice@arr@<updateSpeed>", &vars);
 
@@ -1089,7 +1406,7 @@ impl MarketApi for MarketApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/tradingSession", &vars);
 
@@ -1213,7 +1530,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true,"st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BNBUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true,"st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1267,7 +1584,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BTCUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true,"st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":123456789,"s":"BNBUSDT","a":5933014,"p":"0.001","q":"100","nq":"100","f":100,"l":105,"T":123456785,"m":true,"st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1350,7 +1667,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893},"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893},"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1401,7 +1718,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893},"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893},"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1484,7 +1801,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BNBUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1535,7 +1852,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":123456789,"s":"BNBUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1618,7 +1935,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BNBUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1669,7 +1986,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrTicker","E":123456789,"s":"BNBUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1752,7 +2069,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"},{"e":"assetIndexUpdate","E":1686749230000,"s":"USDTUSD","i":"0.99987691","b":"0.00010000","a":"0.00010000","B":"0.99977692","A":"0.99997689","q":"0.00010000","g":"0.00010000","Q":"0.99977692","G":"0.99997689"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1803,7 +2120,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"},{"e":"assetIndexUpdate","E":1686749230000,"s":"USDTUSD","i":"0.99987691","b":"0.00010000","a":"0.00010000","B":"0.99977692","A":"0.99997689","q":"0.00010000","g":"0.00010000","Q":"0.99977692","G":"0.99997689"}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"assetIndexUpdate","E":1686749230000,"s":"ADAUSD","i":"0.27462452","b":"0.10000000","a":"0.10000000","B":"0.24716207","A":"0.30208698","q":"0.05000000","g":"0.05000000","Q":"0.26089330","G":"0.28835575"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1893,7 +2210,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"compositeIndex","E":1602310596000,"s":"DEFIUSDT","p":"554.41604065","C":"baseAsset","c":[{"b":"BAL","q":"USDT","w":"1.04884844","W":"0.01457800","i":"24.33521021"},{"b":"BAND","q":"USDT","w":"3.53782729","W":"0.03935200","i":"7.26420084"}]}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"compositeIndex","E":1602310596000,"s":"DEFIUSDT","p":"554.41604065","C":"baseAsset","c":[{"b":"BAL","q":"USDT","w":"1.04884844","W":"0.01457800","i":"24.33521021"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1947,7 +2264,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"compositeIndex","E":1602310596000,"s":"DEFIUSDT","p":"554.41604065","C":"baseAsset","c":[{"b":"BAL","q":"USDT","w":"1.04884844","W":"0.01457800","i":"24.33521021"},{"b":"BAND","q":"USDT","w":"3.53782729","W":"0.03935200","i":"7.26420084"}]}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"compositeIndex","E":1602310596000,"s":"DEFIUSDT","p":"554.41604065","C":"baseAsset","c":[{"b":"BAL","q":"USDT","w":"1.04884844","W":"0.01457800","i":"24.33521021"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1971,8 +2288,8 @@ mod tests {
 
             let params = ContinuousContractKlineCandlestickStreamsParams::builder(
                 "btcusdt".to_string(),
-                "next_quarter".to_string(),
-                "1m".to_string(),
+                ContinuousContractKlineCandlestickStreamsContractTypeEnum::Perpetual,
+                ContinuousContractKlineCandlestickStreamsIntervalEnum::Interval1s,
             )
             .id(Some(id.clone()))
             .build()
@@ -1987,8 +2304,8 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("pair", Some(pair.clone())),
-                ("contractType", Some(contract_type.clone())),
-                ("interval", Some(interval.clone())),
+                ("contractType", Some(contract_type.as_str().to_string())),
+                ("interval", Some(interval.as_str().to_string())),
                 ("id", id.clone()),
             ];
 
@@ -2023,7 +2340,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = ContinuousContractKlineCandlestickStreamsParams::builder("btcusdt".to_string(),"next_quarter".to_string(),"1m".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = ContinuousContractKlineCandlestickStreamsParams::builder("btcusdt".to_string(),ContinuousContractKlineCandlestickStreamsContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickStreamsIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let ContinuousContractKlineCandlestickStreamsParams {
                 pair,contract_type,interval,id,
@@ -2034,10 +2351,10 @@ mod tests {
                         Some(pair.clone())
                 ),
                 ("contractType",
-                        Some(contract_type.clone())
+                        Some(contract_type.as_str().to_string())
                 ),
                 ("interval",
-                        Some(interval.clone())
+                        Some(interval.as_str().to_string())
                 ),
                 ("id",
                         id.clone()
@@ -2058,7 +2375,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"continuous_kline","E":1607443058651,"ps":"BTCUSDT","ct":"PERPETUAL","k":{"t":1607443020000,"T":1607443079999,"i":"1m","f":116467658886,"L":116468012423,"o":"18787.00","c":"18804.04","h":"18804.04","l":"18786.54","v":"197.664","n":543,"x":false,"q":"3715253.19494","V":"184.769","Q":"3472925.84746","B":"0"}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"continuous_kline","E":1607443058651,"ps":"BTCUSDT","ct":"PERPETUAL","k":{"t":1607443020000,"T":1607443079999,"i":"1m","f":116467658886,"L":116468012423,"o":"18787.00","c":"18804.04","h":"18804.04","l":"18786.54","v":"197.664","n":543,"x":false,"q":"3715253.19494","V":"184.769","Q":"3472925.84746","B":"0"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2079,7 +2396,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = ContinuousContractKlineCandlestickStreamsParams::builder("btcusdt".to_string(),"next_quarter".to_string(),"1m".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = ContinuousContractKlineCandlestickStreamsParams::builder("btcusdt".to_string(),ContinuousContractKlineCandlestickStreamsContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickStreamsIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let ContinuousContractKlineCandlestickStreamsParams {
                 pair,contract_type,interval,id,
@@ -2090,10 +2407,10 @@ mod tests {
                         Some(pair.clone())
                 ),
                 ("contractType",
-                        Some(contract_type.clone())
+                        Some(contract_type.as_str().to_string())
                 ),
                 ("interval",
-                        Some(interval.clone())
+                        Some(interval.as_str().to_string())
                 ),
                 ("id",
                         id.clone()
@@ -2118,7 +2435,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"continuous_kline","E":1607443058651,"ps":"BTCUSDT","ct":"PERPETUAL","k":{"t":1607443020000,"T":1607443079999,"i":"1m","f":116467658886,"L":116468012423,"o":"18787.00","c":"18804.04","h":"18804.04","l":"18786.54","v":"197.664","n":543,"x":false,"q":"3715253.19494","V":"184.769","Q":"3472925.84746","B":"0"}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"continuous_kline","E":1607443058651,"ps":"BTCUSDT","ct":"PERPETUAL","k":{"t":1607443020000,"T":1607443079999,"i":"1m","f":116467658886,"L":116468012423,"o":"18787.00","c":"18804.04","h":"18804.04","l":"18786.54","v":"197.664","n":543,"x":false,"q":"3715253.19494","V":"184.769","Q":"3472925.84746","B":"0"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2201,7 +2518,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50},{"bs":2,"bnf":5000,"bnc":25000,"mmr":0.025,"cf":75,"mi":11,"ma":20}],"st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50}],"st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2252,7 +2569,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50},{"bs":2,"bnf":5000,"bnc":25000,"mmr":0.025,"cf":75,"mi":11,"ma":20}],"st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"contractInfo","E":1669356423908,"s":"IOTAUSDT","ct":"PERPETUAL","dt":4133404800000,"ot":1569398400000,"cs":"TRADING","bks":[{"bs":1,"bnf":0,"bnc":5000,"mmr":0.01,"cf":0,"mi":21,"ma":50}],"st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2339,7 +2656,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BNBUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2393,7 +2710,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BTCUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":123456789,"s":"BNBUSDT","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2480,7 +2797,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BNBUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2534,7 +2851,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BTCUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":123456789,"s":"BNBUSDT","p":"0.0015","P":"250.00","w":"0.0018","c":"0.0025","Q":"10","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":86400000,"F":0,"L":18150,"n":18151,"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2556,11 +2873,13 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params =
-                KlineCandlestickStreamsParams::builder("btcusdt".to_string(), "1m".to_string())
-                    .id(Some(id.clone()))
-                    .build()
-                    .unwrap();
+            let params = KlineCandlestickStreamsParams::builder(
+                "btcusdt".to_string(),
+                KlineCandlestickStreamsIntervalEnum::Interval1m,
+            )
+            .id(Some(id.clone()))
+            .build()
+            .unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,
@@ -2570,7 +2889,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("interval", Some(interval.clone())),
+                ("interval", Some(interval.as_str().to_string())),
                 ("id", id.clone()),
             ];
 
@@ -2601,7 +2920,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -2612,7 +2931,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("interval",
-                        Some(interval.clone())
+                        Some(interval.as_str().to_string())
                 ),
                 ("id",
                         id.clone()
@@ -2633,7 +2952,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTCUSDT","k":{"t":1638747660000,"T":1638747719999,"s":"BTCUSDT","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTCUSDT","k":{"t":1638747660000,"T":1638747719999,"s":"BTCUSDT","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2654,7 +2973,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),"1m".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -2665,7 +2984,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("interval",
-                        Some(interval.clone())
+                        Some(interval.as_str().to_string())
                 ),
                 ("id",
                         id.clone()
@@ -2690,7 +3009,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTCUSDT","k":{"t":1638747660000,"T":1638747719999,"s":"BTCUSDT","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1638747660000,"s":"BTCUSDT","k":{"t":1638747660000,"T":1638747719999,"s":"BTCUSDT","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2777,7 +3096,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2831,7 +3150,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893}}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"forceOrder","E":1568014460893,"o":{"s":"BTCUSDT","S":"SELL","o":"LIMIT","f":"IOC","q":"0.014","p":"9910","ap":"9910","X":"FILLED","l":"0.014","z":"0.014","T":1568014460893}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2867,7 +3186,10 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
+                (
+                    "updateSpeed",
+                    update_speed.clone().map(|v| v.as_str().to_string()),
+                ),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2911,7 +3233,7 @@ mod tests {
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -2929,7 +3251,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000,"st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","ap":"11794.15000000","T":1562306400000,"st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2964,7 +3286,7 @@ mod tests {
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -2986,7 +3308,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","ap":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","T":1562306400000,"st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11794.15000000","i":"11784.62659091","P":"11784.25641265","r":"0.00038167","ap":"11794.15000000","T":1562306400000,"st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3015,8 +3337,13 @@ mod tests {
 
             let MarkPriceStreamForAllMarketParams { id, update_speed } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("id", id.clone()), ("updateSpeed", update_speed.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("id", id.clone()),
+                (
+                    "updateSpeed",
+                    update_speed.clone().map(|v| v.as_str().to_string()),
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -3056,7 +3383,7 @@ mod tests {
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -3074,7 +3401,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000,"st":1}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","ap":"11185.87786614","T":1562306400000,"st":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3106,7 +3433,7 @@ mod tests {
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -3128,7 +3455,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","ap":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","T":1562306400000,"st":1}]"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"[{"e":"markPriceUpdate","E":1562305380000,"s":"BTCUSDT","p":"11185.87786614","i":"11784.62659091","P":"11784.25641265","r":"0.00030000","ap":"11185.87786614","T":1562306400000,"st":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3211,7 +3538,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"EquityUpdate","E":1765244143062,"t":1765242000000,"T":1765270800000,"S":"OVERNIGHT"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"EquityUpdate","E":1765244143062,"t":1765242000000,"T":1765270800000,"S":"OVERNIGHT"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3262,7 +3589,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"EquityUpdate","E":1765244143062,"t":1765242000000,"T":1765270800000,"S":"OVERNIGHT"}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"EquityUpdate","E":1765244143062,"t":1765242000000,"T":1765270800000,"S":"OVERNIGHT"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,

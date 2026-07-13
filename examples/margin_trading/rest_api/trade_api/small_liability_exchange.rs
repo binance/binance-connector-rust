@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = SmallLiabilityExchangeParams::builder(["BTC".to_string()].to_vec()).build()?;
+    let params = SmallLiabilityExchangeParams::builder("BTC,ETH".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

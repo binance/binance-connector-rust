@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -97,17 +97,52 @@ impl MarketDataApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum QueryMarginAvailableInventoryTypeEnum {
+    #[serde(rename = "MARGIN")]
+    Margin,
+    #[serde(rename = "ISOLATED")]
+    Isolated,
+}
+
+impl QueryMarginAvailableInventoryTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Margin => "MARGIN",
+            Self::Isolated => "ISOLATED",
+        }
+    }
+}
+
+impl std::str::FromStr for QueryMarginAvailableInventoryTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MARGIN" => Ok(Self::Margin),
+            "ISOLATED" => Ok(Self::Isolated),
+            other => {
+                Err(format!("invalid QueryMarginAvailableInventoryTypeEnum: {}", other).into())
+            }
+        }
+    }
+}
+
 /// Request parameters for the [`get_all_cross_margin_pairs`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_all_cross_margin_pairs`](#method.get_all_cross_margin_pairs).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetAllCrossMarginPairsParams {
-    /// isolated margin pair
+    ///
+    /// The `symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
 }
 
@@ -123,18 +158,22 @@ impl GetAllCrossMarginPairsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_all_isolated_margin_symbol`](#method.get_all_isolated_margin_symbol).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetAllIsolatedMarginSymbolParams {
-    /// isolated margin pair
+    ///
+    /// The `symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -150,7 +189,7 @@ impl GetAllIsolatedMarginSymbolParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_all_margin_assets`](#method.get_all_margin_assets).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetAllMarginAssetsParams {
     ///
@@ -158,6 +197,7 @@ pub struct GetAllMarginAssetsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
 }
 
@@ -173,13 +213,15 @@ impl GetAllMarginAssetsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_delist_schedule`](#method.get_delist_schedule).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetDelistScheduleParams {
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -195,13 +237,15 @@ impl GetDelistScheduleParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_list_schedule`](#method.get_list_schedule).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetListScheduleParams {
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -217,7 +261,7 @@ impl GetListScheduleParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_isolated_margin_tier_data`](#method.query_isolated_margin_tier_data).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryIsolatedMarginTierDataParams {
     ///
@@ -225,16 +269,21 @@ pub struct QueryIsolatedMarginTierDataParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// All margin tier data will be returned if tier is omitted
+    ///
+    /// The `tier` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "tier", default)]
     pub tier: Option<i64>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -254,14 +303,16 @@ impl QueryIsolatedMarginTierDataParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_margin_available_inventory`](#method.query_margin_available_inventory).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMarginAvailableInventoryParams {
-    /// `MARGIN`,`ISOLATED`
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
+    #[serde(rename = "type")]
+    pub r#type: QueryMarginAvailableInventoryTypeEnum,
 }
 
 impl QueryMarginAvailableInventoryParams {
@@ -269,10 +320,12 @@ impl QueryMarginAvailableInventoryParams {
     ///
     /// Required parameters:
     ///
-    /// * `r#type` — `MARGIN`,`ISOLATED`
+    /// * `r#type` — String
     ///
     #[must_use]
-    pub fn builder(r#type: String) -> QueryMarginAvailableInventoryParamsBuilder {
+    pub fn builder(
+        r#type: QueryMarginAvailableInventoryTypeEnum,
+    ) -> QueryMarginAvailableInventoryParamsBuilder {
         QueryMarginAvailableInventoryParamsBuilder::default().r#type(r#type)
     }
 }
@@ -280,7 +333,7 @@ impl QueryMarginAvailableInventoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_margin_priceindex`](#method.query_margin_priceindex).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMarginPriceindexParams {
     ///
@@ -288,6 +341,7 @@ pub struct QueryMarginPriceindexParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
 }
 
@@ -715,7 +769,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"collaterals":[{"minUsdValue":"0","maxUsdValue":"13000000","discountRate":"1"},{"minUsdValue":"13000000","maxUsdValue":"20000000","discountRate":"0.975"},{"minUsdValue":"20000000","discountRate":"0"}],"assetNames":["BNX"]},{"collaterals":[{"minUsdValue":"0","discountRate":"1"}],"assetNames":["BTC","BUSD","ETH","USDT"]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"collaterals":[{"minUsdValue":"0","maxUsdValue":"13000000","discountRate":"1"}],"assetNames":["BNX"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::CrossMarginCollateralRatioResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::CrossMarginCollateralRatioResponseInner>",
@@ -744,7 +798,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","id":351637150141315840,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"},{"base":"TRX","id":351637923235429100,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"TRXBTC","delistTime":1704973040},{"base":"XRP","id":351638112213990140,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"XRPBTC"},{"base":"ETH","id":351638524530850560,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"ETHBTC"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","id":351637150141315840,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetAllCrossMarginPairsResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetAllCrossMarginPairsResponseInner>");
@@ -772,7 +826,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"},{"base":"TRX","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"TRXBTC"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetAllIsolatedMarginSymbolResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetAllIsolatedMarginSymbolResponseInner>",
@@ -800,7 +854,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetAllMarginAssetsResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetAllMarginAssetsResponseInner>");
@@ -827,7 +881,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"crossMarginAssets":["BTC","USDT"],"isolatedMarginSymbols":["ADAUSDT","BNBUSDT"]},{"delistTime":1686222232000,"crossMarginAssets":["ADA"],"isolatedMarginSymbols":[]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"crossMarginAssets":["BTC"],"isolatedMarginSymbols":["ADAUSDT"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetDelistScheduleResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetDelistScheduleResponseInner>");
@@ -853,7 +907,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC","SANDBTC","QKCBTC","SEIFDUSD","NEOUSDC","ARBFDUSD","ORDIUSDC"]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC"]}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetLimitPricePairsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLimitPricePairsResponse");
@@ -880,7 +935,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"listTime":1686161202000,"crossMarginAssets":["BTC","USDT"],"isolatedMarginSymbols":["ADAUSDT","BNBUSDT"]},{"listTime":1686222232000,"crossMarginAssets":["ADA"],"isolatedMarginSymbols":[]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"listTime":1686161202000,"crossMarginAssets":["BTC"],"isolatedMarginSymbols":["ADAUSDT"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetListScheduleResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetListScheduleResponseInner>");
@@ -908,7 +963,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","riskBasedLiquidationRatio":"0.01"},{"asset":"BUSD","riskBasedLiquidationRatio":"0.01"}]"#).unwrap();
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"asset":"USDC","riskBasedLiquidationRatio":"0.01"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -932,7 +989,10 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"openLongRestrictedAsset":["ADA","CHZ","ETH","LTC","XRP","币安人生"],"maxCollateralExceededAsset":["ACH","BNB","BTC","USDT"]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(
+                r#"{"openLongRestrictedAsset":["ADA"],"maxCollateralExceededAsset":["ACH"]}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetMarginRestrictedAssetsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetMarginRestrictedAssetsResponse");
@@ -960,7 +1020,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","tier":1,"effectiveMultiple":"10","initialRiskRatio":"1.111","liquidationRiskRatio":"1.05","baseAssetMaxBorrowable":"9","quoteAssetMaxBorrowable":"70000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","tier":1,"effectiveMultiple":"10","initialRiskRatio":"1.111","liquidationRiskRatio":"1.05","baseAssetMaxBorrowable":"9","quoteAssetMaxBorrowable":"70000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryIsolatedMarginTierDataResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryIsolatedMarginTierDataResponseInner>",
@@ -991,7 +1051,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetNames":["SHIB","FDUSD","BTC","ETH","USDC"],"rank":1,"brackets":[{"leverage":10,"maxDebt":1000000,"maintenanceMarginRate":0.02,"initialMarginRate":0.1112,"fastNum":0},{"leverage":3,"maxDebt":4000000,"maintenanceMarginRate":0.07,"initialMarginRate":0.5,"fastNum":60000}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"assetNames":["SHIB"],"rank":1,"brackets":[{"leverage":10,"maxDebt":1000000,"maintenanceMarginRate":0.02,"initialMarginRate":0.1112,"fastNum":60000}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -1017,7 +1077,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"assets":{"MATIC":"100000000","STPT":"100000000","TVK":"100000000","SHIB":"97409653"},"updateTime":1699272487}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"assets":{"MATIC":"200","STPT":"30000","TVK":"10000","SHIB":"4000000"},"updateTime":1699272487}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryMarginAvailableInventoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMarginAvailableInventoryResponse");
@@ -1047,7 +1107,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"calcTime":1562046418000,"price":"0.00333930","symbol":"BNBBTC"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryMarginPriceindexResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMarginPriceindexResponse");
@@ -1069,7 +1129,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"collaterals":[{"minUsdValue":"0","maxUsdValue":"13000000","discountRate":"1"},{"minUsdValue":"13000000","maxUsdValue":"20000000","discountRate":"0.975"},{"minUsdValue":"20000000","discountRate":"0"}],"assetNames":["BNX"]},{"collaterals":[{"minUsdValue":"0","discountRate":"1"}],"assetNames":["BTC","BUSD","ETH","USDT"]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"collaterals":[{"minUsdValue":"0","maxUsdValue":"13000000","discountRate":"1"}],"assetNames":["BNX"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::CrossMarginCollateralRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CrossMarginCollateralRatioResponseInner>");
 
             let resp = client.cross_margin_collateral_ratio().await.expect("Expected a response");
@@ -1085,7 +1145,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"collaterals":[{"minUsdValue":"0","maxUsdValue":"13000000","discountRate":"1"},{"minUsdValue":"13000000","maxUsdValue":"20000000","discountRate":"0.975"},{"minUsdValue":"20000000","discountRate":"0"}],"assetNames":["BNX"]},{"collaterals":[{"minUsdValue":"0","discountRate":"1"}],"assetNames":["BTC","BUSD","ETH","USDT"]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"collaterals":[{"minUsdValue":"0","maxUsdValue":"13000000","discountRate":"1"}],"assetNames":["BNX"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::CrossMarginCollateralRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CrossMarginCollateralRatioResponseInner>");
 
             let resp = client.cross_margin_collateral_ratio().await.expect("Expected a response");
@@ -1116,7 +1176,7 @@ mod tests {
 
             let params = GetAllCrossMarginPairsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","id":351637150141315840,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"},{"base":"TRX","id":351637923235429100,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"TRXBTC","delistTime":1704973040},{"base":"XRP","id":351638112213990140,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"XRPBTC"},{"base":"ETH","id":351638524530850560,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"ETHBTC"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","id":351637150141315840,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllCrossMarginPairsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllCrossMarginPairsResponseInner>");
 
             let resp = client.get_all_cross_margin_pairs(params).await.expect("Expected a response");
@@ -1131,9 +1191,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetAllCrossMarginPairsParams::builder().symbol("symbol_example".to_string()).build().unwrap();
+            let params = GetAllCrossMarginPairsParams::builder().symbol("BNBBTC".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","id":351637150141315840,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"},{"base":"TRX","id":351637923235429100,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"TRXBTC","delistTime":1704973040},{"base":"XRP","id":351638112213990140,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"XRPBTC"},{"base":"ETH","id":351638524530850560,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"ETHBTC"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","id":351637150141315840,"isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllCrossMarginPairsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllCrossMarginPairsResponseInner>");
 
             let resp = client.get_all_cross_margin_pairs(params).await.expect("Expected a response");
@@ -1166,7 +1226,7 @@ mod tests {
 
             let params = GetAllIsolatedMarginSymbolParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"},{"base":"TRX","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"TRXBTC"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllIsolatedMarginSymbolResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllIsolatedMarginSymbolResponseInner>");
 
             let resp = client.get_all_isolated_margin_symbol(params).await.expect("Expected a response");
@@ -1181,9 +1241,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetAllIsolatedMarginSymbolParams::builder().symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetAllIsolatedMarginSymbolParams::builder().symbol("BNBBTC".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"},{"base":"TRX","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"TRXBTC"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"base":"BNB","isBuyAllowed":true,"isMarginTrade":true,"isSellAllowed":true,"quote":"BTC","symbol":"BNBBTC"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllIsolatedMarginSymbolResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllIsolatedMarginSymbolResponseInner>");
 
             let resp = client.get_all_isolated_margin_symbol(params).await.expect("Expected a response");
@@ -1216,7 +1276,7 @@ mod tests {
 
             let params = GetAllMarginAssetsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllMarginAssetsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllMarginAssetsResponseInner>");
 
             let resp = client.get_all_margin_assets(params).await.expect("Expected a response");
@@ -1231,9 +1291,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetAllMarginAssetsParams::builder().asset("asset_example".to_string()).build().unwrap();
+            let params = GetAllMarginAssetsParams::builder().asset("USDC".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllMarginAssetsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllMarginAssetsResponseInner>");
 
             let resp = client.get_all_margin_assets(params).await.expect("Expected a response");
@@ -1266,7 +1326,7 @@ mod tests {
 
             let params = GetDelistScheduleParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"crossMarginAssets":["BTC","USDT"],"isolatedMarginSymbols":["ADAUSDT","BNBUSDT"]},{"delistTime":1686222232000,"crossMarginAssets":["ADA"],"isolatedMarginSymbols":[]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"crossMarginAssets":["BTC"],"isolatedMarginSymbols":["ADAUSDT"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetDelistScheduleResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetDelistScheduleResponseInner>");
 
             let resp = client.get_delist_schedule(params).await.expect("Expected a response");
@@ -1283,7 +1343,7 @@ mod tests {
 
             let params = GetDelistScheduleParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"crossMarginAssets":["BTC","USDT"],"isolatedMarginSymbols":["ADAUSDT","BNBUSDT"]},{"delistTime":1686222232000,"crossMarginAssets":["ADA"],"isolatedMarginSymbols":[]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"crossMarginAssets":["BTC"],"isolatedMarginSymbols":["ADAUSDT"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetDelistScheduleResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetDelistScheduleResponseInner>");
 
             let resp = client.get_delist_schedule(params).await.expect("Expected a response");
@@ -1314,11 +1374,16 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
+            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC"]}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetLimitPricePairsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetLimitPricePairsResponse");
 
-            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC","SANDBTC","QKCBTC","SEIFDUSD","NEOUSDC","ARBFDUSD","ORDIUSDC"]}"#).unwrap();
-            let expected_response : models::GetLimitPricePairsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLimitPricePairsResponse");
-
-            let resp = client.get_limit_price_pairs().await.expect("Expected a response");
+            let resp = client
+                .get_limit_price_pairs()
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1330,11 +1395,16 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
+            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC"]}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetLimitPricePairsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetLimitPricePairsResponse");
 
-            let resp_json: Value = serde_json::from_str(r#"{"crossMarginSymbols":["BLURUSDC","SANDBTC","QKCBTC","SEIFDUSD","NEOUSDC","ARBFDUSD","ORDIUSDC"]}"#).unwrap();
-            let expected_response : models::GetLimitPricePairsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLimitPricePairsResponse");
-
-            let resp = client.get_limit_price_pairs().await.expect("Expected a response");
+            let resp = client
+                .get_limit_price_pairs()
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1362,7 +1432,7 @@ mod tests {
 
             let params = GetListScheduleParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"listTime":1686161202000,"crossMarginAssets":["BTC","USDT"],"isolatedMarginSymbols":["ADAUSDT","BNBUSDT"]},{"listTime":1686222232000,"crossMarginAssets":["ADA"],"isolatedMarginSymbols":[]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"listTime":1686161202000,"crossMarginAssets":["BTC"],"isolatedMarginSymbols":["ADAUSDT"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetListScheduleResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetListScheduleResponseInner>");
 
             let resp = client.get_list_schedule(params).await.expect("Expected a response");
@@ -1379,7 +1449,7 @@ mod tests {
 
             let params = GetListScheduleParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"listTime":1686161202000,"crossMarginAssets":["BTC","USDT"],"isolatedMarginSymbols":["ADAUSDT","BNBUSDT"]},{"listTime":1686222232000,"crossMarginAssets":["ADA"],"isolatedMarginSymbols":[]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"listTime":1686161202000,"crossMarginAssets":["BTC"],"isolatedMarginSymbols":["ADAUSDT"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetListScheduleResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetListScheduleResponseInner>");
 
             let resp = client.get_list_schedule(params).await.expect("Expected a response");
@@ -1411,7 +1481,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","riskBasedLiquidationRatio":"0.01"},{"asset":"BUSD","riskBasedLiquidationRatio":"0.01"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","riskBasedLiquidationRatio":"0.01"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner>");
 
             let resp = client.get_margin_asset_risk_based_liquidation_ratio().await.expect("Expected a response");
@@ -1427,7 +1497,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","riskBasedLiquidationRatio":"0.01"},{"asset":"BUSD","riskBasedLiquidationRatio":"0.01"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","riskBasedLiquidationRatio":"0.01"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetMarginAssetRiskBasedLiquidationRatioResponseInner>");
 
             let resp = client.get_margin_asset_risk_based_liquidation_ratio().await.expect("Expected a response");
@@ -1456,11 +1526,18 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
+            let resp_json: Value = serde_json::from_str(
+                r#"{"openLongRestrictedAsset":["ADA"],"maxCollateralExceededAsset":["ACH"]}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetMarginRestrictedAssetsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetMarginRestrictedAssetsResponse");
 
-            let resp_json: Value = serde_json::from_str(r#"{"openLongRestrictedAsset":["ADA","CHZ","ETH","LTC","XRP","币安人生"],"maxCollateralExceededAsset":["ACH","BNB","BTC","USDT"]}"#).unwrap();
-            let expected_response : models::GetMarginRestrictedAssetsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetMarginRestrictedAssetsResponse");
-
-            let resp = client.get_margin_restricted_assets().await.expect("Expected a response");
+            let resp = client
+                .get_margin_restricted_assets()
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1472,11 +1549,18 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
+            let resp_json: Value = serde_json::from_str(
+                r#"{"openLongRestrictedAsset":["ADA"],"maxCollateralExceededAsset":["ACH"]}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetMarginRestrictedAssetsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetMarginRestrictedAssetsResponse");
 
-            let resp_json: Value = serde_json::from_str(r#"{"openLongRestrictedAsset":["ADA","CHZ","ETH","LTC","XRP","币安人生"],"maxCollateralExceededAsset":["ACH","BNB","BTC","USDT"]}"#).unwrap();
-            let expected_response : models::GetMarginRestrictedAssetsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetMarginRestrictedAssetsResponse");
-
-            let resp = client.get_margin_restricted_assets().await.expect("Expected a response");
+            let resp = client
+                .get_margin_restricted_assets()
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1502,9 +1586,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = QueryIsolatedMarginTierDataParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = QueryIsolatedMarginTierDataParams::builder("BTCUSDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","tier":1,"effectiveMultiple":"10","initialRiskRatio":"1.111","liquidationRiskRatio":"1.05","baseAssetMaxBorrowable":"9","quoteAssetMaxBorrowable":"70000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","tier":1,"effectiveMultiple":"10","initialRiskRatio":"1.111","liquidationRiskRatio":"1.05","baseAssetMaxBorrowable":"9","quoteAssetMaxBorrowable":"70000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryIsolatedMarginTierDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryIsolatedMarginTierDataResponseInner>");
 
             let resp = client.query_isolated_margin_tier_data(params).await.expect("Expected a response");
@@ -1519,9 +1603,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = QueryIsolatedMarginTierDataParams::builder("symbol_example".to_string(),).tier(789).recv_window(5000).build().unwrap();
+            let params = QueryIsolatedMarginTierDataParams::builder("BTCUSDT".to_string(),).tier(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","tier":1,"effectiveMultiple":"10","initialRiskRatio":"1.111","liquidationRiskRatio":"1.05","baseAssetMaxBorrowable":"9","quoteAssetMaxBorrowable":"70000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","tier":1,"effectiveMultiple":"10","initialRiskRatio":"1.111","liquidationRiskRatio":"1.05","baseAssetMaxBorrowable":"9","quoteAssetMaxBorrowable":"70000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryIsolatedMarginTierDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryIsolatedMarginTierDataResponseInner>");
 
             let resp = client.query_isolated_margin_tier_data(params).await.expect("Expected a response");
@@ -1536,7 +1620,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = QueryIsolatedMarginTierDataParams::builder("symbol_example".to_string())
+            let params = QueryIsolatedMarginTierDataParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 
@@ -1555,7 +1639,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetNames":["SHIB","FDUSD","BTC","ETH","USDC"],"rank":1,"brackets":[{"leverage":10,"maxDebt":1000000,"maintenanceMarginRate":0.02,"initialMarginRate":0.1112,"fastNum":0},{"leverage":3,"maxDebt":4000000,"maintenanceMarginRate":0.07,"initialMarginRate":0.5,"fastNum":60000}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"assetNames":["SHIB"],"rank":1,"brackets":[{"leverage":10,"maxDebt":1000000,"maintenanceMarginRate":0.02,"initialMarginRate":0.1112,"fastNum":60000}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner>");
 
             let resp = client.query_liability_coin_leverage_bracket_in_cross_margin_pro_mode().await.expect("Expected a response");
@@ -1571,7 +1655,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetNames":["SHIB","FDUSD","BTC","ETH","USDC"],"rank":1,"brackets":[{"leverage":10,"maxDebt":1000000,"maintenanceMarginRate":0.02,"initialMarginRate":0.1112,"fastNum":0},{"leverage":3,"maxDebt":4000000,"maintenanceMarginRate":0.07,"initialMarginRate":0.5,"fastNum":60000}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"assetNames":["SHIB"],"rank":1,"brackets":[{"leverage":10,"maxDebt":1000000,"maintenanceMarginRate":0.02,"initialMarginRate":0.1112,"fastNum":60000}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner>");
 
             let resp = client.query_liability_coin_leverage_bracket_in_cross_margin_pro_mode().await.expect("Expected a response");
@@ -1603,9 +1687,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = QueryMarginAvailableInventoryParams::builder("r#type_example".to_string()).build().unwrap();
+            let params = QueryMarginAvailableInventoryParams::builder(QueryMarginAvailableInventoryTypeEnum::Margin).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"assets":{"MATIC":"100000000","STPT":"100000000","TVK":"100000000","SHIB":"97409653"},"updateTime":1699272487}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"assets":{"MATIC":"200","STPT":"30000","TVK":"10000","SHIB":"4000000"},"updateTime":1699272487}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryMarginAvailableInventoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryMarginAvailableInventoryResponse");
 
             let resp = client.query_margin_available_inventory(params).await.expect("Expected a response");
@@ -1620,9 +1704,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = QueryMarginAvailableInventoryParams::builder("r#type_example".to_string()).build().unwrap();
+            let params = QueryMarginAvailableInventoryParams::builder(QueryMarginAvailableInventoryTypeEnum::Margin).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"assets":{"MATIC":"100000000","STPT":"100000000","TVK":"100000000","SHIB":"97409653"},"updateTime":1699272487}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"assets":{"MATIC":"200","STPT":"30000","TVK":"10000","SHIB":"4000000"},"updateTime":1699272487}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryMarginAvailableInventoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryMarginAvailableInventoryResponse");
 
             let resp = client.query_margin_available_inventory(params).await.expect("Expected a response");
@@ -1637,9 +1721,11 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = QueryMarginAvailableInventoryParams::builder("r#type_example".to_string())
-                .build()
-                .unwrap();
+            let params = QueryMarginAvailableInventoryParams::builder(
+                QueryMarginAvailableInventoryTypeEnum::Margin,
+            )
+            .build()
+            .unwrap();
 
             match client.query_margin_available_inventory(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1655,14 +1741,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = QueryMarginPriceindexParams::builder("symbol_example".to_string())
+            let params = QueryMarginPriceindexParams::builder("BNBBTC".to_string())
                 .build()
                 .unwrap();
 
             let resp_json: Value = serde_json::from_str(
                 r#"{"calcTime":1562046418000,"price":"0.00333930","symbol":"BNBBTC"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryMarginPriceindexResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMarginPriceindexResponse");
@@ -1682,14 +1768,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = QueryMarginPriceindexParams::builder("symbol_example".to_string())
+            let params = QueryMarginPriceindexParams::builder("BNBBTC".to_string())
                 .build()
                 .unwrap();
 
             let resp_json: Value = serde_json::from_str(
                 r#"{"calcTime":1562046418000,"price":"0.00333930","symbol":"BNBBTC"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryMarginPriceindexResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMarginPriceindexResponse");
@@ -1709,7 +1795,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = QueryMarginPriceindexParams::builder("symbol_example".to_string())
+            let params = QueryMarginPriceindexParams::builder("BNBBTC".to_string())
                 .build()
                 .unwrap();
 

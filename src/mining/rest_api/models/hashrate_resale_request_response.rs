@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,6 +21,7 @@ pub struct HashrateResaleRequestResponse {
     pub code: Option<i64>,
     #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
     pub msg: Option<String>,
+    /// Configuration ID
     #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
     pub data: Option<i64>,
 }

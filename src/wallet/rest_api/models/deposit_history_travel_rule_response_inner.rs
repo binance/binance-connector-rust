@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -31,6 +31,9 @@ pub struct DepositHistoryTravelRuleResponseInner {
     pub deposit_status: Option<i64>,
     #[serde(rename = "travelRuleStatus", skip_serializing_if = "Option::is_none")]
     pub travel_rule_status: Option<i64>,
+    /// Overall travel rule verification status (GTR + sanctions screening combined). \"PASSED\": verification complete, deposit released. \"PENDING\": verification in progress, deposit frozen. \"REJECTED\": verification failed.
+    #[serde(rename = "travelRuleStatusV2", skip_serializing_if = "Option::is_none")]
+    pub travel_rule_status_v2: Option<String>,
     #[serde(rename = "address", skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
     #[serde(rename = "addressTag", skip_serializing_if = "Option::is_none")]
@@ -39,14 +42,13 @@ pub struct DepositHistoryTravelRuleResponseInner {
     pub tx_id: Option<String>,
     #[serde(rename = "insertTime", skip_serializing_if = "Option::is_none")]
     pub insert_time: Option<i64>,
+    /// Timestamp when the deposit was fully completed/credited (epoch ms).
+    #[serde(rename = "completeTime", skip_serializing_if = "Option::is_none")]
+    pub complete_time: Option<i64>,
     #[serde(rename = "transferType", skip_serializing_if = "Option::is_none")]
     pub transfer_type: Option<i64>,
     #[serde(rename = "confirmTimes", skip_serializing_if = "Option::is_none")]
     pub confirm_times: Option<String>,
-    #[serde(rename = "unlockConfirm", skip_serializing_if = "Option::is_none")]
-    pub unlock_confirm: Option<i64>,
-    #[serde(rename = "walletType", skip_serializing_if = "Option::is_none")]
-    pub wallet_type: Option<i64>,
     #[serde(
         rename = "requireQuestionnaire",
         skip_serializing_if = "Option::is_none"
@@ -67,14 +69,14 @@ impl DepositHistoryTravelRuleResponseInner {
             network: None,
             deposit_status: None,
             travel_rule_status: None,
+            travel_rule_status_v2: None,
             address: None,
             address_tag: None,
             tx_id: None,
             insert_time: None,
+            complete_time: None,
             transfer_type: None,
             confirm_times: None,
-            unlock_confirm: None,
-            wallet_type: None,
             require_questionnaire: None,
             questionnaire: None,
         }

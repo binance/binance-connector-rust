@@ -1,7 +1,7 @@
 /*
- * Binance C2C REST API
+ * C2C REST API
  *
- * OpenAPI Specification for the Binance C2C REST API
+ * Query fiat transaction history via the C2C REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,5 +11,5 @@
  * Do not edit the class manually.
  */
 
-pub mod c2_c_api;
-pub use c2_c_api::*;
+pub mod api;
+pub use api::*;

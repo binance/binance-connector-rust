@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::dual_investment::{
-    DualInvestmentRestApi, rest_api::GetDualInvestmentProductListParams,
+    DualInvestmentRestApi,
+    rest_api::{GetDualInvestmentProductListOptionTypeEnum, GetDualInvestmentProductListParams},
 };
 use binance_sdk::logger;
 
@@ -28,9 +29,9 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = GetDualInvestmentProductListParams::builder(
-        "option_type_example".to_string(),
-        "exercised_coin_example".to_string(),
-        "invest_coin_example".to_string(),
+        GetDualInvestmentProductListOptionTypeEnum::Call,
+        "USDT".to_string(),
+        "BNB".to_string(),
     )
     .build()?;
 

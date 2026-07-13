@@ -5,7 +5,9 @@ use tracing::info;
 use binance_sdk::config::ConfigurationWebsocketApi;
 use binance_sdk::derivatives_trading_usds_futures::{
     DerivativesTradingUsdsFuturesWsApi,
-    websocket_api::{NewAlgoOrderParams, NewAlgoOrderSideEnum},
+    websocket_api::{
+        NewAlgoOrderAlgoTypeEnum, NewAlgoOrderParams, NewAlgoOrderSideEnum, NewAlgoOrderTypeEnum,
+    },
 };
 use binance_sdk::logger;
 
@@ -35,10 +37,10 @@ async fn main() -> Result<()> {
 
     // Setup the WS API parameters
     let params = NewAlgoOrderParams::builder(
-        "algo_type_example".to_string(),
-        "symbol_example".to_string(),
+        NewAlgoOrderAlgoTypeEnum::Conditional,
+        "BTCUSDT".to_string(),
         NewAlgoOrderSideEnum::Buy,
-        "r#type_example".to_string(),
+        NewAlgoOrderTypeEnum::StopMarket,
     )
     .build()?;
 

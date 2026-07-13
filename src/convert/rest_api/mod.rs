@@ -1,7 +1,7 @@
 /*
- * Binance Convert REST API
+ * Convert REST API
  *
- * OpenAPI Specification for the Binance Convert REST API
+ * Request quotes and execute cryptocurrency conversions via the Convert REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -116,12 +116,14 @@ impl RestApi {
 
     /// List All Convert Pairs
     ///
-    /// Query for all convertible token pairs and the tokens’ respective upper/lower limits
+    /// Query for all convertible token pairs and the tokens’ respective
+    /// upper/lower limits
     ///
-    /// * User needs to supply either or both of the input parameter
-    /// * If not defined for both fromAsset and toAsset, only partial token pairs will be returned
+    /// Weight(IP): 3000
     ///
-    /// Weight: 3000(IP)
+    /// Notes:
+    /// - User needs to supply either or both input parameters.
+    /// - If only one of `fromAsset` and `toAsset` is provided, only partial token pairs are returned.
     ///
     /// # Arguments
     ///
@@ -151,7 +153,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/market-data/).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/market-data#list-all-convert-pairs).
     ///
     pub async fn list_all_convert_pairs(
         &self,
@@ -162,11 +164,13 @@ impl RestApi {
             .await
     }
 
-    /// Query order quantity precision per `asset(USER_DATA)`
+    /// Query order quantity precision per asset (`USER_DATA`)
     ///
     /// Query for supported asset’s precision information
     ///
-    /// Weight: 100(IP)
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -196,7 +200,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/market-data/Query-order-quantity-precision-per-asset).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/market-data#query-order-quantity-precision-per-asset).
     ///
     pub async fn query_order_quantity_precision_per_asset(
         &self,
@@ -213,7 +217,9 @@ impl RestApi {
     ///
     /// Accept the offered quote by quote ID.
     ///
-    /// Weight: 500(UID)
+    /// Weight(UID): 500
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -243,7 +249,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/trade/Accept-Quote).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#accept-quote).
     ///
     pub async fn accept_quote(
         &self,
@@ -252,11 +258,13 @@ impl RestApi {
         self.trade_api_client.accept_quote(params).await
     }
 
-    /// Cancel limit order (`USER_DATA`)
+    /// Cancel limit order (TRADE)
     ///
     /// Enable users to cancel a limit order
     ///
-    /// Weight: 200(UID)
+    /// Weight(UID): 200
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -286,7 +294,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/trade/Cancel-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#cancel-limit-order).
     ///
     pub async fn cancel_limit_order(
         &self,
@@ -295,13 +303,16 @@ impl RestApi {
         self.trade_api_client.cancel_limit_order(params).await
     }
 
-    /// Get Convert Trade `History(USER_DATA)`
+    /// Get Convert Trade History (`USER_DATA`)
     ///
     /// Get Convert Trade History
     ///
-    /// * The max interval between startTime and endTime is 30 days.
+    /// Weight(UID): 3000
     ///
-    /// Weight: 3000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The max interval between `startTime` and `endTime` is 30 days.
     ///
     /// # Arguments
     ///
@@ -331,7 +342,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/trade/Get-Convert-Trade-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#get-convert-trade-history).
     ///
     pub async fn get_convert_trade_history(
         &self,
@@ -342,11 +353,13 @@ impl RestApi {
             .await
     }
 
-    /// Order `status(USER_DATA)`
+    /// Order status (`USER_DATA`)
     ///
     /// Query order status by order ID.
     ///
-    /// Weight: 100(UID)
+    /// Weight(UID): 100
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -376,7 +389,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/trade/Order-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#order-status).
     ///
     pub async fn order_status(
         &self,
@@ -385,15 +398,18 @@ impl RestApi {
         self.trade_api_client.order_status(params).await
     }
 
-    /// Place limit order (`USER_DATA`)
+    /// Place limit order (TRADE)
     ///
     /// Enable users to place a limit order
     ///
-    /// * `baseAsset` or `quoteAsset` can be determined via `exchangeInfo` endpoint.
-    /// * Limit price is defined from `baseAsset` to `quoteAsset`.
-    /// * Either `baseAmount` or `quoteAmount` is used.
+    /// Weight(UID): 500
     ///
-    /// Weight: 500(UID)
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - `baseAsset` and `quoteAsset` can be determined via the `exchangeInfo` endpoint.
+    /// - Limit price is defined from `baseAsset` to `quoteAsset`.
+    /// - Exactly one of `baseAmount` or `quoteAmount` should be sent.
     ///
     /// # Arguments
     ///
@@ -423,7 +439,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/trade/Place-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#place-limit-order).
     ///
     pub async fn place_limit_order(
         &self,
@@ -434,9 +450,11 @@ impl RestApi {
 
     /// Query limit open orders (`USER_DATA`)
     ///
-    /// Request a quote for the requested token pairs
+    /// Query current open limit orders
     ///
-    /// Weight: 3000(UID)
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -466,7 +484,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/trade/Query-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#query-limit-open-orders).
     ///
     pub async fn query_limit_open_orders(
         &self,
@@ -475,14 +493,17 @@ impl RestApi {
         self.trade_api_client.query_limit_open_orders(params).await
     }
 
-    /// Send Quote `Request(USER_DATA)`
+    /// Send Quote Request (TRADE)
     ///
     /// Request a quote for the requested token pairs
     ///
-    /// * Either fromAmount or toAmount should be sent
-    /// * `quoteId` will be returned only if you have enough funds to convert
+    /// Weight(UID): 200
     ///
-    /// Weight: 200(UID)
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `fromAmount` or `toAmount` should be sent.
+    /// - `quoteId` is returned only if you have enough funds to convert.
     ///
     /// # Arguments
     ///
@@ -512,7 +533,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/convert/trade/Send-quote-request).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/trade#send-quote-request).
     ///
     pub async fn send_quote_request(
         &self,

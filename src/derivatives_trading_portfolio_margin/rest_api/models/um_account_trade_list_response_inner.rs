@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,32 +17,46 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UmAccountTradeListResponseInner {
+    /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// ID.
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
+    /// Normal orderID after trigger if appliable, only have when the strategy is triggered
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Qty.
     #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+    /// Realized Pnl.
     #[serde(rename = "realizedPnl", skip_serializing_if = "Option::is_none")]
     pub realized_pnl: Option<String>,
+    /// Quote Qty.
     #[serde(rename = "quoteQty", skip_serializing_if = "Option::is_none")]
     pub quote_qty: Option<String>,
+    /// Commission.
     #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
     pub commission: Option<String>,
+    /// Commission Asset.
     #[serde(rename = "commissionAsset", skip_serializing_if = "Option::is_none")]
     pub commission_asset: Option<String>,
+    /// Event time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// Buyer.
     #[serde(rename = "buyer", skip_serializing_if = "Option::is_none")]
     pub buyer: Option<bool>,
+    /// Maker.
     #[serde(rename = "maker", skip_serializing_if = "Option::is_none")]
     pub maker: Option<bool>,
+    /// BOTH means that it is the position of One-way Mode
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
 }

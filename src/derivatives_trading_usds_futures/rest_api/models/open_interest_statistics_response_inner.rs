@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,20 +19,24 @@ use serde::{Deserialize, Serialize};
 pub struct OpenInterestStatisticsResponseInner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// total open interest
     #[serde(rename = "sumOpenInterest", skip_serializing_if = "Option::is_none")]
     pub sum_open_interest: Option<String>,
+    /// total open interest value
     #[serde(
         rename = "sumOpenInterestValue",
         skip_serializing_if = "Option::is_none"
     )]
     pub sum_open_interest_value: Option<String>,
+    /// circulating supply provided by CMC
     #[serde(
         rename = "CMCCirculatingSupply",
         skip_serializing_if = "Option::is_none"
     )]
     pub cmc_circulating_supply: Option<String>,
+    /// Timestamp in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<String>,
+    pub timestamp: Option<i64>,
 }
 
 impl OpenInterestStatisticsResponseInner {

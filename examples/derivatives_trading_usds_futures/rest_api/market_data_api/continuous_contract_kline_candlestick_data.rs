@@ -33,9 +33,9 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = ContinuousContractKlineCandlestickDataParams::builder(
-        "pair_example".to_string(),
+        "BTCUSDT".to_string(),
         ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,
-        ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,
+        ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,
     )
     .build()?;
 

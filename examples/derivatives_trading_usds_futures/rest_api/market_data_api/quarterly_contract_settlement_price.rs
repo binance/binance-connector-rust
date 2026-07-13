@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingUsdsFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        QuarterlyContractSettlementPriceParams::builder("pair_example".to_string()).build()?;
+    let params = QuarterlyContractSettlementPriceParams::builder("BTCUSDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

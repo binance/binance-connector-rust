@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,18 +17,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OldTradesLookupResponseInner {
+    /// Id.
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
+    /// Price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Qty.
     #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+    /// Quote Qty.
     #[serde(rename = "quoteQty", skip_serializing_if = "Option::is_none")]
     pub quote_qty: Option<String>,
+    /// Time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// Is Buyer Maker.
     #[serde(rename = "isBuyerMaker", skip_serializing_if = "Option::is_none")]
     pub is_buyer_maker: Option<bool>,
+    /// Is `RPITrade`.
     #[serde(rename = "isRPITrade", skip_serializing_if = "Option::is_none")]
     pub is_rpi_trade: Option<bool>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,25 +16,34 @@ use crate::derivatives_trading_coin_futures::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `AccountInformationResponseResult` : Indicates that combined is set to true.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationResponseResult {
+    /// Fee tier level.
     #[serde(rename = "feeTier", skip_serializing_if = "Option::is_none")]
     pub fee_tier: Option<i64>,
+    /// Whether trading is enabled.
     #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]
     pub can_trade: Option<bool>,
+    /// Whether deposits are enabled.
     #[serde(rename = "canDeposit", skip_serializing_if = "Option::is_none")]
     pub can_deposit: Option<bool>,
+    /// Whether withdrawals are enabled.
     #[serde(rename = "canWithdraw", skip_serializing_if = "Option::is_none")]
     pub can_withdraw: Option<bool>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// Supported assets.
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
     pub assets: Option<Vec<models::AccountInformationResponseResultAssetsInner>>,
+    /// Position list.
     #[serde(rename = "positions", skip_serializing_if = "Option::is_none")]
     pub positions: Option<Vec<models::AccountInformationResponseResultPositionsInner>>,
 }
 
 impl AccountInformationResponseResult {
+    /// Indicates that combined is set to true.
     #[must_use]
     pub fn new() -> AccountInformationResponseResult {
         AccountInformationResponseResult {

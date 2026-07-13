@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,13 +16,16 @@ use crate::derivatives_trading_coin_futures::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `StartUserDataStreamResponseResult` : Indicates that combined is set to true.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct StartUserDataStreamResponseResult {
+    /// Listen key.
     #[serde(rename = "listenKey", skip_serializing_if = "Option::is_none")]
     pub listen_key: Option<String>,
 }
 
 impl StartUserDataStreamResponseResult {
+    /// Indicates that combined is set to true.
     #[must_use]
     pub fn new() -> StartUserDataStreamResponseResult {
         StartUserDataStreamResponseResult { listen_key: None }

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,26 +17,37 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarginAccountTradeListResponseInner {
+    /// Commission.
     #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
     pub commission: Option<String>,
+    /// Commission Asset.
     #[serde(rename = "commissionAsset", skip_serializing_if = "Option::is_none")]
     pub commission_asset: Option<String>,
+    /// ID.
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
+    /// Is Best Match.
     #[serde(rename = "isBestMatch", skip_serializing_if = "Option::is_none")]
     pub is_best_match: Option<bool>,
+    /// Is Buyer.
     #[serde(rename = "isBuyer", skip_serializing_if = "Option::is_none")]
     pub is_buyer: Option<bool>,
+    /// Is Maker.
     #[serde(rename = "isMaker", skip_serializing_if = "Option::is_none")]
     pub is_maker: Option<bool>,
+    /// Normal orderID after trigger if appliable, only have when the strategy is triggered
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Qty.
     #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+    /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Event time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
 }

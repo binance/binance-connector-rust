@@ -190,43 +190,50 @@ impl std::str::FromStr for QueryTransferListDirectionEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`create_inbound_transfer`](#method.create_inbound_transfer).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CreateInboundTransferParams {
     /// Wallet ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletId")]
     pub wallet_id: String,
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Transfer amount in wei (18 decimals). Must be > 0. Example: `1000000000000000000` = 1 USDT
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "fromTokenAmount")]
     pub from_token_amount: String,
     /// Destination CEX account. Enum: `SPOT`, `FUNDING`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "accountType")]
     pub account_type: CreateInboundTransferAccountTypeEnum,
     /// Source token symbol. Default `USDT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromToken", default)]
     pub from_token: Option<String>,
     /// Destination token symbol. Default `USDT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "toToken", default)]
     pub to_token: Option<String>,
     /// Chain ID. Default `56` (BSC)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "chainId", default)]
     pub chain_id: Option<String>,
 }
 
@@ -258,48 +265,56 @@ impl CreateInboundTransferParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`create_outbound_transfer`](#method.create_outbound_transfer).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CreateOutboundTransferParams {
     /// Wallet ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletId")]
     pub wallet_id: String,
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Transfer amount in wei (18 decimals). Must be > 0. Example: `1000000000000000000` = 1 USDT
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "fromTokenAmount")]
     pub from_token_amount: String,
     /// Source CEX account. Enum: `SPOT`, `FUNDING`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "accountType")]
     pub account_type: CreateOutboundTransferAccountTypeEnum,
     /// Business source. Enum: `USER_TRANSFER`, `PREDICTION_BUY`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "sourceBiz")]
     pub source_biz: CreateOutboundTransferSourceBizEnum,
     /// Source token symbol. Default `USDT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromToken", default)]
     pub from_token: Option<String>,
     /// Destination token symbol. Default `USDT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "toToken", default)]
     pub to_token: Option<String>,
     /// Chain ID. Default `56` (BSC)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "chainId", default)]
     pub chain_id: Option<String>,
 }
 
@@ -334,48 +349,56 @@ impl CreateOutboundTransferParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_transfer_list`](#method.query_transfer_list).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryTransferListParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Start date. Format: `yyyy-MM-dd`. Must be ≤ `endDate`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startDate")]
     pub start_date: String,
     /// End date. Format: `yyyy-MM-dd`. Must be ≥ `startDate`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endDate")]
     pub end_date: String,
     /// Filter by token symbol (e.g. `USDT`)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "tokenSymbol", default)]
     pub token_symbol: Option<String>,
     /// Filter by direction. Enum: `INBOUND`, `OUTBOUND`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "direction", default)]
     pub direction: Option<QueryTransferListDirectionEnum>,
     /// Pagination offset. Default `0`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i32>,
     /// Page size. Default `20`, range 1–100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -404,18 +427,20 @@ impl QueryTransferListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_transfer_status`](#method.query_transfer_status).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryTransferStatusParams {
     /// Transfer ID returned from outbound/inbound transfer
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "transferId")]
     pub transfer_id: String,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,14 +17,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct LongShortRatioResponseInner {
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Long/short ratio.
     #[serde(rename = "longShortRatio", skip_serializing_if = "Option::is_none")]
     pub long_short_ratio: Option<String>,
+    /// 64.42%
     #[serde(rename = "longAccount", skip_serializing_if = "Option::is_none")]
     pub long_account: Option<String>,
+    /// 35.58%
     #[serde(rename = "shortAccount", skip_serializing_if = "Option::is_none")]
     pub short_account: Option<String>,
+    /// Timestamp in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }

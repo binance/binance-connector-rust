@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,40 +17,55 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationResponsePositionsInner {
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// position amount
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
     pub position_amt: Option<String>,
+    /// total intial margin required with the latest mark price
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// maintenance margin
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// unrealized profit or loss
     #[serde(rename = "unrealizedProfit", skip_serializing_if = "Option::is_none")]
     pub unrealized_profit: Option<String>,
+    /// positions margin required with the latest mark price
     #[serde(
         rename = "positionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub position_initial_margin: Option<String>,
+    /// open orders intial margin required with the latest mark price
     #[serde(
         rename = "openOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub open_order_initial_margin: Option<String>,
+    /// Leverage value.
     #[serde(rename = "leverage", skip_serializing_if = "Option::is_none")]
     pub leverage: Option<String>,
+    /// Whether isolated margin mode is enabled.
     #[serde(rename = "isolated", skip_serializing_if = "Option::is_none")]
     pub isolated: Option<bool>,
+    /// Position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// Position entry price.
     #[serde(rename = "entryPrice", skip_serializing_if = "Option::is_none")]
     pub entry_price: Option<String>,
+    /// break-even price
     #[serde(rename = "breakEvenPrice", skip_serializing_if = "Option::is_none")]
     pub break_even_price: Option<String>,
+    /// maximum quantity of base asset
     #[serde(rename = "maxQty", skip_serializing_if = "Option::is_none")]
     pub max_qty: Option<String>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// Notional value.
     #[serde(rename = "notionalValue", skip_serializing_if = "Option::is_none")]
     pub notional_value: Option<String>,
 }

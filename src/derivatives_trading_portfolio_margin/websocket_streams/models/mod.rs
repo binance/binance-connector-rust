@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Portfolio Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,35 +23,35 @@ pub mod account_update_a_b_inner;
 pub use self::account_update_a_b_inner::AccountUpdateABInner;
 pub mod account_update_a_p_inner;
 pub use self::account_update_a_p_inner::AccountUpdateAPInner;
-pub mod algo_update;
-pub use self::algo_update::AlgoUpdate;
-pub mod algo_update_ao;
-pub use self::algo_update_ao::AlgoUpdateAo;
-pub mod balanceupdate;
-pub use self::balanceupdate::Balanceupdate;
+pub mod algo_order_update;
+pub use self::algo_order_update::AlgoOrderUpdate;
+pub mod algo_order_update_ao;
+pub use self::algo_order_update_ao::AlgoOrderUpdateAo;
+pub mod balance_update;
+pub use self::balance_update::BalanceUpdate;
 pub mod conditional_order_trade_update;
 pub use self::conditional_order_trade_update::ConditionalOrderTradeUpdate;
 pub mod conditional_order_trade_update_so;
 pub use self::conditional_order_trade_update_so::ConditionalOrderTradeUpdateSo;
-pub mod executionreport;
-pub use self::executionreport::Executionreport;
-pub mod liabilitychange;
-pub use self::liabilitychange::Liabilitychange;
-pub mod listenkeyexpired;
-pub use self::listenkeyexpired::Listenkeyexpired;
-pub mod openorderloss;
-pub use self::openorderloss::Openorderloss;
-pub mod openorderloss_o_inner;
-pub use self::openorderloss_o_inner::OpenorderlossOInner;
+pub mod execution_report;
+pub use self::execution_report::ExecutionReport;
+pub mod liability_change;
+pub use self::liability_change::LiabilityChange;
+pub mod listen_key_expired;
+pub use self::listen_key_expired::ListenKeyExpired;
+pub mod open_order_loss;
+pub use self::open_order_loss::OpenOrderLoss;
+pub mod open_order_loss_o_inner;
+pub use self::open_order_loss_o_inner::OpenOrderLossOInner;
 pub mod order_trade_update;
 pub use self::order_trade_update::OrderTradeUpdate;
 pub mod order_trade_update_o;
 pub use self::order_trade_update_o::OrderTradeUpdateO;
-pub mod outboundaccountposition;
-pub use self::outboundaccountposition::Outboundaccountposition;
-pub mod outboundaccountposition_b_inner;
-pub use self::outboundaccountposition_b_inner::OutboundaccountpositionBInner;
-pub mod risklevelchange;
-pub use self::risklevelchange::Risklevelchange;
+pub mod outbound_account_position;
+pub use self::outbound_account_position::OutboundAccountPosition;
+pub mod outbound_account_position_b_inner;
+pub use self::outbound_account_position_b_inner::OutboundAccountPositionBInner;
+pub mod risk_level_change;
+pub use self::risk_level_change::RiskLevelChange;
 pub mod user_data_stream_events_response;
 pub use self::user_data_stream_events_response::UserDataStreamEventsResponse;

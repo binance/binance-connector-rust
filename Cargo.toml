@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "60.0.0"
+version = "61.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -259,6 +259,11 @@ path = "examples/alpha/rest_api/market_data_api/aggregated_trades.rs"
 required-features = [ "alpha" ]
 
 [[example]]
+name = "alpha_rest_api_market_data_api_full_depth"
+path = "examples/alpha/rest_api/market_data_api/full_depth.rs"
+required-features = [ "alpha" ]
+
+[[example]]
 name = "alpha_rest_api_market_data_api_get_exchange_info"
 path = "examples/alpha/rest_api/market_data_api/get_exchange_info.rs"
 required-features = [ "alpha" ]
@@ -279,8 +284,73 @@ path = "examples/alpha/rest_api/market_data_api/token_list.rs"
 required-features = [ "alpha" ]
 
 [[example]]
-name = "c2c_rest_api_c2_c_api_get_c2_c_trade_history"
-path = "examples/c2c/rest_api/c2_c_api/get_c2_c_trade_history.rs"
+name = "alpha_websocket_streams_aggregate_trade_stream"
+path = "examples/alpha/websocket_streams/aggregate_trade_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_all_book_ticker_stream"
+path = "examples/alpha/websocket_streams/all_book_ticker_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_all_mini_ticker_stream"
+path = "examples/alpha/websocket_streams/all_mini_ticker_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_all_ticker_stream"
+path = "examples/alpha/websocket_streams/all_ticker_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_all_tokens24h_ticker_stream"
+path = "examples/alpha/websocket_streams/all_tokens24h_ticker_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_book_ticker_stream"
+path = "examples/alpha/websocket_streams/book_ticker_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_contract_kline_stream"
+path = "examples/alpha/websocket_streams/contract_kline_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_full_depth_stream"
+path = "examples/alpha/websocket_streams/full_depth_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_kline_stream"
+path = "examples/alpha/websocket_streams/kline_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_mini_ticker_stream"
+path = "examples/alpha/websocket_streams/mini_ticker_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_partial_depth_stream"
+path = "examples/alpha/websocket_streams/partial_depth_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_ticker_stream"
+path = "examples/alpha/websocket_streams/ticker_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "alpha_websocket_streams_trade_stream"
+path = "examples/alpha/websocket_streams/trade_stream.rs"
+required-features = [ "alpha" ]
+
+[[example]]
+name = "c2c_rest_api_get_c2_c_trade_history"
+path = "examples/c2c/rest_api/get_c2_c_trade_history.rs"
 required-features = [ "c2c" ]
 
 [[example]]
@@ -396,11 +466,6 @@ required-features = [ "crypto_loan" ]
 [[example]]
 name = "crypto_loan_rest_api_flexible_rate_api_get_flexible_loan_repayment_history"
 path = "examples/crypto_loan/rest_api/flexible_rate_api/get_flexible_loan_repayment_history.rs"
-required-features = [ "crypto_loan" ]
-
-[[example]]
-name = "crypto_loan_rest_api_stable_rate_api_check_collateral_repay_rate_stable_rate"
-path = "examples/crypto_loan/rest_api/stable_rate_api/check_collateral_repay_rate_stable_rate.rs"
 required-features = [ "crypto_loan" ]
 
 [[example]]
@@ -864,11 +929,6 @@ path = "examples/derivatives_trading_coin_futures/websocket_streams/kline_candle
 required-features = [ "derivatives_trading_coin_futures" ]
 
 [[example]]
-name = "derivatives_trading_coin_futures_websocket_streams_liquidation_order_streams"
-path = "examples/derivatives_trading_coin_futures/websocket_streams/liquidation_order_streams.rs"
-required-features = [ "derivatives_trading_coin_futures" ]
-
-[[example]]
 name = "derivatives_trading_coin_futures_websocket_streams_mark_price_kline_candlestick_streams"
 path = "examples/derivatives_trading_coin_futures/websocket_streams/mark_price_kline_candlestick_streams.rs"
 required-features = [ "derivatives_trading_coin_futures" ]
@@ -881,6 +941,11 @@ required-features = [ "derivatives_trading_coin_futures" ]
 [[example]]
 name = "derivatives_trading_coin_futures_websocket_streams_mark_price_stream"
 path = "examples/derivatives_trading_coin_futures/websocket_streams/mark_price_stream.rs"
+required-features = [ "derivatives_trading_coin_futures" ]
+
+[[example]]
+name = "derivatives_trading_coin_futures_websocket_streams_market_liquidation_order_streams"
+path = "examples/derivatives_trading_coin_futures/websocket_streams/market_liquidation_order_streams.rs"
 required-features = [ "derivatives_trading_coin_futures" ]
 
 [[example]]
@@ -1079,6 +1144,11 @@ path = "examples/derivatives_trading_options/rest_api/trade_api/query_single_ord
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
+name = "derivatives_trading_options_rest_api_trade_api_tradfi_options_contract"
+path = "examples/derivatives_trading_options/rest_api/trade_api/tradfi_options_contract.rs"
+required-features = [ "derivatives_trading_options" ]
+
+[[example]]
 name = "derivatives_trading_options_rest_api_trade_api_user_commission"
 path = "examples/derivatives_trading_options/rest_api/trade_api/user_commission.rs"
 required-features = [ "derivatives_trading_options" ]
@@ -1109,6 +1179,11 @@ path = "examples/derivatives_trading_options/websocket_streams/diff_book_depth_s
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
+name = "derivatives_trading_options_websocket_streams_hour24_ticker"
+path = "examples/derivatives_trading_options/websocket_streams/hour24_ticker.rs"
+required-features = [ "derivatives_trading_options" ]
+
+[[example]]
 name = "derivatives_trading_options_websocket_streams_index_price_streams"
 path = "examples/derivatives_trading_options/websocket_streams/index_price_streams.rs"
 required-features = [ "derivatives_trading_options" ]
@@ -1124,11 +1199,6 @@ path = "examples/derivatives_trading_options/websocket_streams/kline_candlestick
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
-name = "derivatives_trading_options_websocket_streams_mark_price"
-path = "examples/derivatives_trading_options/websocket_streams/mark_price.rs"
-required-features = [ "derivatives_trading_options" ]
-
-[[example]]
 name = "derivatives_trading_options_websocket_streams_new_symbol_info"
 path = "examples/derivatives_trading_options/websocket_streams/new_symbol_info.rs"
 required-features = [ "derivatives_trading_options" ]
@@ -1139,13 +1209,13 @@ path = "examples/derivatives_trading_options/websocket_streams/open_interest.rs"
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
-name = "derivatives_trading_options_websocket_streams_partial_book_depth_streams"
-path = "examples/derivatives_trading_options/websocket_streams/partial_book_depth_streams.rs"
+name = "derivatives_trading_options_websocket_streams_option_mark_price"
+path = "examples/derivatives_trading_options/websocket_streams/option_mark_price.rs"
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
-name = "derivatives_trading_options_websocket_streams_ticker24_hour"
-path = "examples/derivatives_trading_options/websocket_streams/ticker24_hour.rs"
+name = "derivatives_trading_options_websocket_streams_partial_book_depth_streams"
+path = "examples/derivatives_trading_options/websocket_streams/partial_book_depth_streams.rs"
 required-features = [ "derivatives_trading_options" ]
 
 [[example]]
@@ -2509,28 +2579,28 @@ path = "examples/dual_investment/rest_api/trade_api/subscribe_dual_investment_pr
 required-features = [ "dual_investment" ]
 
 [[example]]
-name = "fiat_rest_api_fiat_api_deposit"
-path = "examples/fiat/rest_api/fiat_api/deposit.rs"
+name = "fiat_rest_api_deposit"
+path = "examples/fiat/rest_api/deposit.rs"
 required-features = [ "fiat" ]
 
 [[example]]
-name = "fiat_rest_api_fiat_api_fiat_withdraw"
-path = "examples/fiat/rest_api/fiat_api/fiat_withdraw.rs"
+name = "fiat_rest_api_fiat_withdraw"
+path = "examples/fiat/rest_api/fiat_withdraw.rs"
 required-features = [ "fiat" ]
 
 [[example]]
-name = "fiat_rest_api_fiat_api_get_fiat_deposit_withdraw_history"
-path = "examples/fiat/rest_api/fiat_api/get_fiat_deposit_withdraw_history.rs"
+name = "fiat_rest_api_get_fiat_deposit_withdraw_history"
+path = "examples/fiat/rest_api/get_fiat_deposit_withdraw_history.rs"
 required-features = [ "fiat" ]
 
 [[example]]
-name = "fiat_rest_api_fiat_api_get_fiat_payments_history"
-path = "examples/fiat/rest_api/fiat_api/get_fiat_payments_history.rs"
+name = "fiat_rest_api_get_fiat_payments_history"
+path = "examples/fiat/rest_api/get_fiat_payments_history.rs"
 required-features = [ "fiat" ]
 
 [[example]]
-name = "fiat_rest_api_fiat_api_get_order_detail"
-path = "examples/fiat/rest_api/fiat_api/get_order_detail.rs"
+name = "fiat_rest_api_get_order_detail"
+path = "examples/fiat/rest_api/get_order_detail.rs"
 required-features = [ "fiat" ]
 
 [[example]]
@@ -2714,21 +2784,6 @@ path = "examples/margin_trading/rest_api/market_data_api/query_margin_priceindex
 required-features = [ "margin_trading" ]
 
 [[example]]
-name = "margin_trading_rest_api_risk_data_stream_api_close_user_data_stream"
-path = "examples/margin_trading/rest_api/risk_data_stream_api/close_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_risk_data_stream_api_keepalive_user_data_stream"
-path = "examples/margin_trading/rest_api/risk_data_stream_api/keepalive_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
-name = "margin_trading_rest_api_risk_data_stream_api_start_user_data_stream"
-path = "examples/margin_trading/rest_api/risk_data_stream_api/start_user_data_stream.rs"
-required-features = [ "margin_trading" ]
-
-[[example]]
 name = "margin_trading_rest_api_trade_api_create_special_key"
 path = "examples/margin_trading/rest_api/trade_api/create_special_key.rs"
 required-features = [ "margin_trading" ]
@@ -2744,6 +2799,11 @@ path = "examples/margin_trading/rest_api/trade_api/edit_ip_for_special_key.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]
+name = "margin_trading_rest_api_trade_api_exit_special_key_mode"
+path = "examples/margin_trading/rest_api/trade_api/exit_special_key_mode.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
 name = "margin_trading_rest_api_trade_api_get_force_liquidation_record"
 path = "examples/margin_trading/rest_api/trade_api/get_force_liquidation_record.rs"
 required-features = [ "margin_trading" ]
@@ -2756,6 +2816,11 @@ required-features = [ "margin_trading" ]
 [[example]]
 name = "margin_trading_rest_api_trade_api_get_small_liability_exchange_history"
 path = "examples/margin_trading/rest_api/trade_api/get_small_liability_exchange_history.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_trade_api_liquidation_loan_repay"
+path = "examples/margin_trading/rest_api/trade_api/liquidation_loan_repay.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]
@@ -2801,6 +2866,16 @@ required-features = [ "margin_trading" ]
 [[example]]
 name = "margin_trading_rest_api_trade_api_query_current_margin_order_count_usage"
 path = "examples/margin_trading/rest_api/trade_api/query_current_margin_order_count_usage.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_trade_api_query_liquidation_loan_repay_history"
+path = "examples/margin_trading/rest_api/trade_api/query_liquidation_loan_repay_history.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_trade_api_query_liquidation_loan"
+path = "examples/margin_trading/rest_api/trade_api/query_liquidation_loan.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]
@@ -2869,68 +2944,83 @@ path = "examples/margin_trading/rest_api/transfer_api/query_max_transfer_out_amo
 required-features = [ "margin_trading" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_account_list"
-path = "examples/mining/rest_api/mining_api/account_list.rs"
+name = "margin_trading_rest_api_user_data_stream_api_close_user_data_stream"
+path = "examples/margin_trading/rest_api/user_data_stream_api/close_user_data_stream.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_user_data_stream_api_keepalive_user_data_stream"
+path = "examples/margin_trading/rest_api/user_data_stream_api/keepalive_user_data_stream.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_user_data_stream_api_start_user_data_stream"
+path = "examples/margin_trading/rest_api/user_data_stream_api/start_user_data_stream.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "mining_rest_api_account_list"
+path = "examples/mining/rest_api/account_list.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_acquiring_algorithm"
-path = "examples/mining/rest_api/mining_api/acquiring_algorithm.rs"
+name = "mining_rest_api_acquiring_algorithm"
+path = "examples/mining/rest_api/acquiring_algorithm.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_acquiring_coinname"
-path = "examples/mining/rest_api/mining_api/acquiring_coinname.rs"
+name = "mining_rest_api_acquiring_coinname"
+path = "examples/mining/rest_api/acquiring_coinname.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_cancel_hashrate_resale_configuration"
-path = "examples/mining/rest_api/mining_api/cancel_hashrate_resale_configuration.rs"
+name = "mining_rest_api_cancel_hashrate_resale_configuration"
+path = "examples/mining/rest_api/cancel_hashrate_resale_configuration.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_earnings_list"
-path = "examples/mining/rest_api/mining_api/earnings_list.rs"
+name = "mining_rest_api_earnings_list"
+path = "examples/mining/rest_api/earnings_list.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_extra_bonus_list"
-path = "examples/mining/rest_api/mining_api/extra_bonus_list.rs"
+name = "mining_rest_api_extra_bonus_list"
+path = "examples/mining/rest_api/extra_bonus_list.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_hashrate_resale_detail"
-path = "examples/mining/rest_api/mining_api/hashrate_resale_detail.rs"
+name = "mining_rest_api_hashrate_resale_detail"
+path = "examples/mining/rest_api/hashrate_resale_detail.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_hashrate_resale_list"
-path = "examples/mining/rest_api/mining_api/hashrate_resale_list.rs"
+name = "mining_rest_api_hashrate_resale_list"
+path = "examples/mining/rest_api/hashrate_resale_list.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_hashrate_resale_request"
-path = "examples/mining/rest_api/mining_api/hashrate_resale_request.rs"
+name = "mining_rest_api_hashrate_resale_request"
+path = "examples/mining/rest_api/hashrate_resale_request.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_mining_account_earning"
-path = "examples/mining/rest_api/mining_api/mining_account_earning.rs"
+name = "mining_rest_api_mining_account_earning"
+path = "examples/mining/rest_api/mining_account_earning.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_request_for_detail_miner_list"
-path = "examples/mining/rest_api/mining_api/request_for_detail_miner_list.rs"
+name = "mining_rest_api_request_for_detail_miner_list"
+path = "examples/mining/rest_api/request_for_detail_miner_list.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_request_for_miner_list"
-path = "examples/mining/rest_api/mining_api/request_for_miner_list.rs"
+name = "mining_rest_api_request_for_miner_list"
+path = "examples/mining/rest_api/request_for_miner_list.rs"
 required-features = [ "mining" ]
 
 [[example]]
-name = "mining_rest_api_mining_api_statistic_list"
-path = "examples/mining/rest_api/mining_api/statistic_list.rs"
+name = "mining_rest_api_statistic_list"
+path = "examples/mining/rest_api/statistic_list.rs"
 required-features = [ "mining" ]
 
 [[example]]
@@ -2954,13 +3044,13 @@ path = "examples/nft/rest_api/nft_api/get_nft_withdraw_history.rs"
 required-features = [ "nft" ]
 
 [[example]]
-name = "pay_rest_api_pay_api_get_pay_trade_history"
-path = "examples/pay/rest_api/pay_api/get_pay_trade_history.rs"
+name = "pay_rest_api_get_pay_trade_history"
+path = "examples/pay/rest_api/get_pay_trade_history.rs"
 required-features = [ "pay" ]
 
 [[example]]
-name = "rebate_rest_api_rebate_api_get_spot_rebate_history_records"
-path = "examples/rebate/rest_api/rebate_api/get_spot_rebate_history_records.rs"
+name = "rebate_rest_api_get_spot_rebate_history_records"
+path = "examples/rebate/rest_api/get_spot_rebate_history_records.rs"
 required-features = [ "rebate" ]
 
 [[example]]
@@ -3989,13 +4079,33 @@ path = "examples/sub_account/rest_api/api_management_api/add_ip_restriction_for_
 required-features = [ "sub_account" ]
 
 [[example]]
+name = "sub_account_rest_api_api_management_api_create_sub_account_api_key"
+path = "examples/sub_account/rest_api/api_management_api/create_sub_account_api_key.rs"
+required-features = [ "sub_account" ]
+
+[[example]]
 name = "sub_account_rest_api_api_management_api_delete_ip_list_for_a_sub_account_api_key"
 path = "examples/sub_account/rest_api/api_management_api/delete_ip_list_for_a_sub_account_api_key.rs"
 required-features = [ "sub_account" ]
 
 [[example]]
+name = "sub_account_rest_api_api_management_api_delete_sub_account_api_key"
+path = "examples/sub_account/rest_api/api_management_api/delete_sub_account_api_key.rs"
+required-features = [ "sub_account" ]
+
+[[example]]
 name = "sub_account_rest_api_api_management_api_get_ip_restriction_for_a_sub_account_api_key"
 path = "examples/sub_account/rest_api/api_management_api/get_ip_restriction_for_a_sub_account_api_key.rs"
+required-features = [ "sub_account" ]
+
+[[example]]
+name = "sub_account_rest_api_api_management_api_modify_sub_account_api_key_permission"
+path = "examples/sub_account/rest_api/api_management_api/modify_sub_account_api_key_permission.rs"
+required-features = [ "sub_account" ]
+
+[[example]]
+name = "sub_account_rest_api_api_management_api_query_sub_account_api_key"
+path = "examples/sub_account/rest_api/api_management_api/query_sub_account_api_key.rs"
 required-features = [ "sub_account" ]
 
 [[example]]
@@ -4229,9 +4339,144 @@ path = "examples/vip_loan/rest_api/user_information_api/get_vip_loan_ongoing_ord
 required-features = [ "vip_loan" ]
 
 [[example]]
+name = "vip_loan_rest_api_user_information_api_get_vip_loan_repayment_history"
+path = "examples/vip_loan/rest_api/user_information_api/get_vip_loan_repayment_history.rs"
+required-features = [ "vip_loan" ]
+
+[[example]]
 name = "vip_loan_rest_api_user_information_api_query_application_status"
 path = "examples/vip_loan/rest_api/user_information_api/query_application_status.rs"
 required-features = [ "vip_loan" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_market_data_api_get_market_detail"
+path = "examples/w3w_prediction/rest_api/market_data_api/get_market_detail.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_market_data_api_list_prediction_categories"
+path = "examples/w3w_prediction/rest_api/market_data_api/list_prediction_categories.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_market_data_api_list_prediction_markets"
+path = "examples/w3w_prediction/rest_api/market_data_api/list_prediction_markets.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_market_data_api_market_search"
+path = "examples/w3w_prediction/rest_api/market_data_api/market_search.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_market_data_api_query_last_trade_price"
+path = "examples/w3w_prediction/rest_api/market_data_api/query_last_trade_price.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_market_data_api_query_order_book"
+path = "examples/w3w_prediction/rest_api/market_data_api/query_order_book.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_position_api_get_position_by_token"
+path = "examples/w3w_prediction/rest_api/position_api/get_position_by_token.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_position_api_query_pn_l"
+path = "examples/w3w_prediction/rest_api/position_api/query_pn_l.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_position_api_query_positions_by_filter"
+path = "examples/w3w_prediction/rest_api/position_api/query_positions_by_filter.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_position_api_query_positions"
+path = "examples/w3w_prediction/rest_api/position_api/query_positions.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_position_api_query_settled_position_history"
+path = "examples/w3w_prediction/rest_api/position_api/query_settled_position_history.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_redeem_api_batch_redeem"
+path = "examples/w3w_prediction/rest_api/redeem_api/batch_redeem.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_redeem_api_get_redeem_status"
+path = "examples/w3w_prediction/rest_api/redeem_api/get_redeem_status.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_trade_api_batch_cancel_orders"
+path = "examples/w3w_prediction/rest_api/trade_api/batch_cancel_orders.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_trade_api_get_quote"
+path = "examples/w3w_prediction/rest_api/trade_api/get_quote.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_trade_api_place_order"
+path = "examples/w3w_prediction/rest_api/trade_api/place_order.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_trade_api_query_active_orders"
+path = "examples/w3w_prediction/rest_api/trade_api/query_active_orders.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_trade_api_query_order_history"
+path = "examples/w3w_prediction/rest_api/trade_api/query_order_history.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_transfer_api_create_inbound_transfer"
+path = "examples/w3w_prediction/rest_api/transfer_api/create_inbound_transfer.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_transfer_api_create_outbound_transfer"
+path = "examples/w3w_prediction/rest_api/transfer_api/create_outbound_transfer.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_transfer_api_query_transfer_list"
+path = "examples/w3w_prediction/rest_api/transfer_api/query_transfer_list.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_transfer_api_query_transfer_status"
+path = "examples/w3w_prediction/rest_api/transfer_api/query_transfer_status.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_wallet_api_get_portfolio"
+path = "examples/w3w_prediction/rest_api/wallet_api/get_portfolio.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_wallet_api_get_quota_status"
+path = "examples/w3w_prediction/rest_api/wallet_api/get_quota_status.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_wallet_api_list_prediction_wallets"
+path = "examples/w3w_prediction/rest_api/wallet_api/list_prediction_wallets.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_wallet_api_query_payment_option_balances"
+path = "examples/w3w_prediction/rest_api/wallet_api/query_payment_option_balances.rs"
+required-features = [ "w3w_prediction" ]
 
 [[example]]
 name = "wallet_rest_api_account_api_account_api_trading_status"

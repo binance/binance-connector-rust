@@ -1,7 +1,7 @@
 /*
- * Binance Convert REST API
+ * Convert REST API
  *
- * OpenAPI Specification for the Binance Convert REST API
+ * Request quotes and execute cryptocurrency conversions via the Convert REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -72,11 +72,218 @@ impl TradeApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PlaceLimitOrderSideEnum {
+    #[serde(rename = "BUY")]
+    Buy,
+    #[serde(rename = "SELL")]
+    Sell,
+}
+
+impl PlaceLimitOrderSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Buy => "BUY",
+            Self::Sell => "SELL",
+        }
+    }
+}
+
+impl std::str::FromStr for PlaceLimitOrderSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BUY" => Ok(Self::Buy),
+            "SELL" => Ok(Self::Sell),
+            other => Err(format!("invalid PlaceLimitOrderSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PlaceLimitOrderExpiredTypeEnum {
+    #[serde(rename = "1_D")]
+    ExpiredType1D,
+    #[serde(rename = "3_D")]
+    ExpiredType3D,
+    #[serde(rename = "7_D")]
+    ExpiredType7D,
+    #[serde(rename = "30_D")]
+    ExpiredType30D,
+}
+
+impl PlaceLimitOrderExpiredTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::ExpiredType1D => "1_D",
+            Self::ExpiredType3D => "3_D",
+            Self::ExpiredType7D => "7_D",
+            Self::ExpiredType30D => "30_D",
+        }
+    }
+}
+
+impl std::str::FromStr for PlaceLimitOrderExpiredTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1_D" => Ok(Self::ExpiredType1D),
+            "3_D" => Ok(Self::ExpiredType3D),
+            "7_D" => Ok(Self::ExpiredType7D),
+            "30_D" => Ok(Self::ExpiredType30D),
+            other => Err(format!("invalid PlaceLimitOrderExpiredTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PlaceLimitOrderWalletTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FUNDING")]
+    Funding,
+    #[serde(rename = "EARN")]
+    Earn,
+    #[serde(rename = "SPOT_FUNDING")]
+    SpotFunding,
+    #[serde(rename = "FUNDING_EARN")]
+    FundingEarn,
+    #[serde(rename = "SPOT_FUNDING_EARN")]
+    SpotFundingEarn,
+    #[serde(rename = "SPOT_EARN")]
+    SpotEarn,
+}
+
+impl PlaceLimitOrderWalletTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Funding => "FUNDING",
+            Self::Earn => "EARN",
+            Self::SpotFunding => "SPOT_FUNDING",
+            Self::FundingEarn => "FUNDING_EARN",
+            Self::SpotFundingEarn => "SPOT_FUNDING_EARN",
+            Self::SpotEarn => "SPOT_EARN",
+        }
+    }
+}
+
+impl std::str::FromStr for PlaceLimitOrderWalletTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FUNDING" => Ok(Self::Funding),
+            "EARN" => Ok(Self::Earn),
+            "SPOT_FUNDING" => Ok(Self::SpotFunding),
+            "FUNDING_EARN" => Ok(Self::FundingEarn),
+            "SPOT_FUNDING_EARN" => Ok(Self::SpotFundingEarn),
+            "SPOT_EARN" => Ok(Self::SpotEarn),
+            other => Err(format!("invalid PlaceLimitOrderWalletTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SendQuoteRequestWalletTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FUNDING")]
+    Funding,
+    #[serde(rename = "EARN")]
+    Earn,
+    #[serde(rename = "SPOT_FUNDING")]
+    SpotFunding,
+    #[serde(rename = "FUNDING_EARN")]
+    FundingEarn,
+    #[serde(rename = "SPOT_FUNDING_EARN")]
+    SpotFundingEarn,
+    #[serde(rename = "SPOT_EARN")]
+    SpotEarn,
+}
+
+impl SendQuoteRequestWalletTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Funding => "FUNDING",
+            Self::Earn => "EARN",
+            Self::SpotFunding => "SPOT_FUNDING",
+            Self::FundingEarn => "FUNDING_EARN",
+            Self::SpotFundingEarn => "SPOT_FUNDING_EARN",
+            Self::SpotEarn => "SPOT_EARN",
+        }
+    }
+}
+
+impl std::str::FromStr for SendQuoteRequestWalletTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FUNDING" => Ok(Self::Funding),
+            "EARN" => Ok(Self::Earn),
+            "SPOT_FUNDING" => Ok(Self::SpotFunding),
+            "FUNDING_EARN" => Ok(Self::FundingEarn),
+            "SPOT_FUNDING_EARN" => Ok(Self::SpotFundingEarn),
+            "SPOT_EARN" => Ok(Self::SpotEarn),
+            other => Err(format!("invalid SendQuoteRequestWalletTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SendQuoteRequestValidTimeEnum {
+    #[serde(rename = "10s")]
+    ValidTime10s,
+    #[serde(rename = "30s")]
+    ValidTime30s,
+    #[serde(rename = "1m")]
+    ValidTime1m,
+}
+
+impl SendQuoteRequestValidTimeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::ValidTime10s => "10s",
+            Self::ValidTime30s => "30s",
+            Self::ValidTime1m => "1m",
+        }
+    }
+}
+
+impl std::str::FromStr for SendQuoteRequestValidTimeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "10s" => Ok(Self::ValidTime10s),
+            "30s" => Ok(Self::ValidTime30s),
+            "1m" => Ok(Self::ValidTime1m),
+            other => Err(format!("invalid SendQuoteRequestValidTimeEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`accept_quote`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`accept_quote`](#method.accept_quote).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AcceptQuoteParams {
     ///
@@ -84,11 +291,13 @@ pub struct AcceptQuoteParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quoteId")]
     pub quote_id: String,
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -108,18 +317,20 @@ impl AcceptQuoteParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_limit_order`](#method.cancel_limit_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelLimitOrderParams {
     /// The orderId from `placeOrder` api
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "orderId")]
     pub order_id: i64,
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -139,7 +350,7 @@ impl CancelLimitOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_convert_trade_history`](#method.get_convert_trade_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetConvertTradeHistoryParams {
     ///
@@ -147,22 +358,26 @@ pub struct GetConvertTradeHistoryParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startTime")]
     pub start_time: i64,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endTime")]
     pub end_time: i64,
-    /// Default 100, Max 1000
+    /// Number of records to return
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -185,18 +400,20 @@ impl GetConvertTradeHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_status`](#method.order_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderStatusParams {
     /// Either orderId or quoteId is required
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<String>,
     /// Either orderId or quoteId is required
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quoteId", default)]
     pub quote_id: Option<String>,
 }
 
@@ -212,53 +429,64 @@ impl OrderStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`place_limit_order`](#method.place_limit_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PlaceLimitOrderParams {
-    /// base asset (use the response `fromIsBase` from `GET /sapi/v1/convert/exchangeInfo` api to check which one is baseAsset )
+    /// base asset (use the response `fromIsBase` from `GET /sapi/v1/convert/exchangeInfo` api to check
+    /// which one is baseAsset )
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "baseAsset")]
     pub base_asset: String,
     /// quote asset
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quoteAsset")]
     pub quote_asset: String,
     /// Symbol limit price (from baseAsset to quoteAsset)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "limitPrice")]
     pub limit_price: rust_decimal::Decimal,
     /// `BUY` or `SELL`
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub side: String,
-    /// `1_D`, `3_D`, `7_D`, `30_D`  (D means day)
+    #[serde(rename = "side")]
+    pub side: PlaceLimitOrderSideEnum,
+    /// Order expiry duration. `1_D`, `3_D`, `7_D`, `30_D` (D means day)
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub expired_type: String,
-    /// Base asset amount.  (One of `baseAmount` or `quoteAmount` is required)
+    #[serde(rename = "expiredType")]
+    pub expired_type: PlaceLimitOrderExpiredTypeEnum,
+    /// Base asset amount. (One of `baseAmount` or `quoteAmount` is required)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "baseAmount", default)]
     pub base_amount: Option<rust_decimal::Decimal>,
-    /// Quote asset amount.  (One of `baseAmount` or `quoteAmount` is required)
+    /// Quote asset amount. (One of `baseAmount` or `quoteAmount` is required)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quoteAmount", default)]
     pub quote_amount: Option<rust_decimal::Decimal>,
-    /// It is to choose which wallet of assets. The wallet selection is `SPOT`, `FUNDING` and `EARN`. Combination of wallet is supported i.e. `SPOT_FUNDING`, `FUNDING_EARN`, `SPOT_FUNDING_EARN` or `SPOT_EARN`  Default is `SPOT`.
+    /// Wallet to use for payment. Supported values: `SPOT`, `FUNDING`, `EARN`.
+    /// Combined wallets also supported: `SPOT_FUNDING`, `FUNDING_EARN`, `SPOT_FUNDING_EARN`, `SPOT_EARN`. Default is `SPOT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub wallet_type: Option<String>,
-    /// The value cannot be greater than 60000
+    #[serde(rename = "walletType", default)]
+    pub wallet_type: Option<PlaceLimitOrderWalletTypeEnum>,
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -271,15 +499,15 @@ impl PlaceLimitOrderParams {
     /// * `quote_asset` — quote asset
     /// * `limit_price` — Symbol limit price (from baseAsset to quoteAsset)
     /// * `side` — `BUY` or `SELL`
-    /// * `expired_type` — `1_D`, `3_D`, `7_D`, `30_D`  (D means day)
+    /// * `expired_type` — Order expiry duration. `1_D`, `3_D`, `7_D`, `30_D` (D means day)
     ///
     #[must_use]
     pub fn builder(
         base_asset: String,
         quote_asset: String,
         limit_price: rust_decimal::Decimal,
-        side: String,
-        expired_type: String,
+        side: PlaceLimitOrderSideEnum,
+        expired_type: PlaceLimitOrderExpiredTypeEnum,
     ) -> PlaceLimitOrderParamsBuilder {
         PlaceLimitOrderParamsBuilder::default()
             .base_asset(base_asset)
@@ -293,13 +521,14 @@ impl PlaceLimitOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_limit_open_orders`](#method.query_limit_open_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryLimitOpenOrdersParams {
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -315,7 +544,7 @@ impl QueryLimitOpenOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`send_quote_request`](#method.send_quote_request).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SendQuoteRequestParams {
     ///
@@ -323,37 +552,45 @@ pub struct SendQuoteRequestParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "fromAsset")]
     pub from_asset: String,
     ///
     /// The `to_asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "toAsset")]
     pub to_asset: String,
     /// When specified, it is the amount you will be debited after the conversion
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromAmount", default)]
     pub from_amount: Option<rust_decimal::Decimal>,
     /// When specified, it is the amount you will be credited after the conversion
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "toAmount", default)]
     pub to_amount: Option<rust_decimal::Decimal>,
-    /// It is to choose which wallet of assets. The wallet selection is `SPOT`, `FUNDING` and `EARN`. Combination of wallet is supported i.e. `SPOT_FUNDING`, `FUNDING_EARN`, `SPOT_FUNDING_EARN` or `SPOT_EARN`  Default is `SPOT`.
+    /// Wallet to use for payment. Supported values: `SPOT`, `FUNDING`, `EARN`.
+    /// Combined wallets also supported: `SPOT_FUNDING`, `FUNDING_EARN`, `SPOT_FUNDING_EARN`, `SPOT_EARN`. Default is `SPOT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub wallet_type: Option<String>,
-    /// 10s, 30s, 1m, default 10s
+    #[serde(rename = "walletType", default)]
+    pub wallet_type: Option<SendQuoteRequestWalletTypeEnum>,
+    /// Quote valid duration. Supported values: 10s, 30s, 1m. Default is 10s.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub valid_time: Option<String>,
-    /// The value cannot be greater than 60000
+    #[serde(rename = "validTime", default)]
+    pub valid_time: Option<SendQuoteRequestValidTimeEnum>,
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -710,7 +947,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AcceptQuoteResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AcceptQuoteResponse");
@@ -739,7 +976,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"CANCELED"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CancelLimitOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelLimitOrderResponse");
@@ -766,7 +1003,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"f3b91c525b2644c7bc1e1cd31b6e1aa6","orderId":940708407462087200,"orderStatus":"SUCCESS","fromAsset":"USDT","fromAmount":"20","toAsset":"BNB","toAmount":"0.06154036","ratio":"0.00307702","inverseRatio":"324.99","createTime":1624248872184}],"startTime":1623824139000,"endTime":1626416139000,"limit":100,"moreData":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"f3b91c525b2644c7bc1e1cd31b6e1aa6","orderId":940708407462087200,"orderStatus":"SUCCESS","fromAsset":"USDT","fromAmount":"20","toAsset":"BNB","toAmount":"0.06154036","ratio":"0.00307702","inverseRatio":"324.99","createTime":1624248872184}],"startTime":1623824139000,"endTime":1626416139000,"limit":100,"moreData":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetConvertTradeHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetConvertTradeHistoryResponse");
@@ -793,7 +1030,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::OrderStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OrderStatusResponse");
@@ -822,7 +1059,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"PROCESS"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::PlaceLimitOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::PlaceLimitOrderResponse");
@@ -849,7 +1086,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"18sdf87kh9df","orderId":1150901289839,"orderStatus":"SUCCESS","fromAsset":"BNB","fromAmount":"10","toAsset":"USDT","toAmount":"2317.89","ratio":"231.789","inverseRatio":"0.00431427","createTime":1614089498000,"expiredTimestamp":1614099498000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"18sdf87kh9df","orderId":1150901289839,"orderStatus":"SUCCESS","fromAsset":"BNB","fromAmount":"10","toAsset":"USDT","toAmount":"2317.89","ratio":"231.789","inverseRatio":"0.00431427","createTime":1614089498000,"expiredTimestamp":1614099498000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryLimitOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryLimitOpenOrdersResponse");
@@ -876,7 +1113,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SendQuoteRequestResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SendQuoteRequestResponse");
@@ -899,7 +1136,7 @@ mod tests {
 
             let params = AcceptQuoteParams::builder("1".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AcceptQuoteResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AcceptQuoteResponse");
 
             let resp = client.accept_quote(params).await.expect("Expected a response");
@@ -916,7 +1153,7 @@ mod tests {
 
             let params = AcceptQuoteParams::builder("1".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AcceptQuoteResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AcceptQuoteResponse");
 
             let resp = client.accept_quote(params).await.expect("Expected a response");
@@ -947,11 +1184,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelLimitOrderParams::builder(1).build().unwrap();
+            let params = CancelLimitOrderParams::builder(1603680255057330400)
+                .build()
+                .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"CANCELED"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CancelLimitOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelLimitOrderResponse");
@@ -971,14 +1210,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelLimitOrderParams::builder(1)
+            let params = CancelLimitOrderParams::builder(1603680255057330400)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"CANCELED"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CancelLimitOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelLimitOrderResponse");
@@ -998,7 +1237,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = CancelLimitOrderParams::builder(1).build().unwrap();
+            let params = CancelLimitOrderParams::builder(1603680255057330400)
+                .build()
+                .unwrap();
 
             match client.cancel_limit_order(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1016,7 +1257,7 @@ mod tests {
 
             let params = GetConvertTradeHistoryParams::builder(1623319461670,1641782889000,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"f3b91c525b2644c7bc1e1cd31b6e1aa6","orderId":940708407462087200,"orderStatus":"SUCCESS","fromAsset":"USDT","fromAmount":"20","toAsset":"BNB","toAmount":"0.06154036","ratio":"0.00307702","inverseRatio":"324.99","createTime":1624248872184}],"startTime":1623824139000,"endTime":1626416139000,"limit":100,"moreData":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"f3b91c525b2644c7bc1e1cd31b6e1aa6","orderId":940708407462087200,"orderStatus":"SUCCESS","fromAsset":"USDT","fromAmount":"20","toAsset":"BNB","toAmount":"0.06154036","ratio":"0.00307702","inverseRatio":"324.99","createTime":1624248872184}],"startTime":1623824139000,"endTime":1626416139000,"limit":100,"moreData":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetConvertTradeHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetConvertTradeHistoryResponse");
 
             let resp = client.get_convert_trade_history(params).await.expect("Expected a response");
@@ -1033,7 +1274,7 @@ mod tests {
 
             let params = GetConvertTradeHistoryParams::builder(1623319461670,1641782889000,).limit(100).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"f3b91c525b2644c7bc1e1cd31b6e1aa6","orderId":940708407462087200,"orderStatus":"SUCCESS","fromAsset":"USDT","fromAmount":"20","toAsset":"BNB","toAmount":"0.06154036","ratio":"0.00307702","inverseRatio":"324.99","createTime":1624248872184}],"startTime":1623824139000,"endTime":1626416139000,"limit":100,"moreData":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"f3b91c525b2644c7bc1e1cd31b6e1aa6","orderId":940708407462087200,"orderStatus":"SUCCESS","fromAsset":"USDT","fromAmount":"20","toAsset":"BNB","toAmount":"0.06154036","ratio":"0.00307702","inverseRatio":"324.99","createTime":1624248872184}],"startTime":1623824139000,"endTime":1626416139000,"limit":100,"moreData":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetConvertTradeHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetConvertTradeHistoryResponse");
 
             let resp = client.get_convert_trade_history(params).await.expect("Expected a response");
@@ -1068,7 +1309,7 @@ mod tests {
 
             let params = OrderStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OrderStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderStatusResponse");
 
             let resp = client.order_status(params).await.expect("Expected a response");
@@ -1085,7 +1326,7 @@ mod tests {
 
             let params = OrderStatusParams::builder().order_id("1".to_string()).quote_id("1".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OrderStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderStatusResponse");
 
             let resp = client.order_status(params).await.expect("Expected a response");
@@ -1117,18 +1358,18 @@ mod tests {
             let client = MockTradeApiClient { force_error: false };
 
             let params = PlaceLimitOrderParams::builder(
-                "base_asset_example".to_string(),
-                "quote_asset_example".to_string(),
-                dec!(1.0),
-                "BUY".to_string(),
-                "expired_type_example".to_string(),
+                "BTC".to_string(),
+                "USDT".to_string(),
+                dec!(1),
+                PlaceLimitOrderSideEnum::Buy,
+                PlaceLimitOrderExpiredTypeEnum::ExpiredType1D,
             )
             .build()
             .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"PROCESS"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::PlaceLimitOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::PlaceLimitOrderResponse");
@@ -1149,22 +1390,22 @@ mod tests {
             let client = MockTradeApiClient { force_error: false };
 
             let params = PlaceLimitOrderParams::builder(
-                "base_asset_example".to_string(),
-                "quote_asset_example".to_string(),
-                dec!(1.0),
-                "BUY".to_string(),
-                "expired_type_example".to_string(),
+                "BTC".to_string(),
+                "USDT".to_string(),
+                dec!(1),
+                PlaceLimitOrderSideEnum::Buy,
+                PlaceLimitOrderExpiredTypeEnum::ExpiredType1D,
             )
-            .base_amount(dec!(1.0))
-            .quote_amount(dec!(1.0))
-            .wallet_type(String::new())
+            .base_amount(dec!(1))
+            .quote_amount(dec!(1))
+            .wallet_type(PlaceLimitOrderWalletTypeEnum::Spot)
             .recv_window(5000)
             .build()
             .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"orderId":1603680255057330400,"status":"PROCESS"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::PlaceLimitOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::PlaceLimitOrderResponse");
@@ -1185,11 +1426,11 @@ mod tests {
             let client = MockTradeApiClient { force_error: true };
 
             let params = PlaceLimitOrderParams::builder(
-                "base_asset_example".to_string(),
-                "quote_asset_example".to_string(),
-                dec!(1.0),
-                "BUY".to_string(),
-                "expired_type_example".to_string(),
+                "BTC".to_string(),
+                "USDT".to_string(),
+                dec!(1),
+                PlaceLimitOrderSideEnum::Buy,
+                PlaceLimitOrderExpiredTypeEnum::ExpiredType1D,
             )
             .build()
             .unwrap();
@@ -1210,7 +1451,7 @@ mod tests {
 
             let params = QueryLimitOpenOrdersParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"18sdf87kh9df","orderId":1150901289839,"orderStatus":"SUCCESS","fromAsset":"BNB","fromAmount":"10","toAsset":"USDT","toAmount":"2317.89","ratio":"231.789","inverseRatio":"0.00431427","createTime":1614089498000,"expiredTimestamp":1614099498000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"18sdf87kh9df","orderId":1150901289839,"orderStatus":"SUCCESS","fromAsset":"BNB","fromAmount":"10","toAsset":"USDT","toAmount":"2317.89","ratio":"231.789","inverseRatio":"0.00431427","createTime":1614089498000,"expiredTimestamp":1614099498000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryLimitOpenOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryLimitOpenOrdersResponse");
 
             let resp = client.query_limit_open_orders(params).await.expect("Expected a response");
@@ -1227,7 +1468,7 @@ mod tests {
 
             let params = QueryLimitOpenOrdersParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"18sdf87kh9df","orderId":1150901289839,"orderStatus":"SUCCESS","fromAsset":"BNB","fromAmount":"10","toAsset":"USDT","toAmount":"2317.89","ratio":"231.789","inverseRatio":"0.00431427","createTime":1614089498000,"expiredTimestamp":1614099498000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"list":[{"quoteId":"18sdf87kh9df","orderId":1150901289839,"orderStatus":"SUCCESS","fromAsset":"BNB","fromAmount":"10","toAsset":"USDT","toAmount":"2317.89","ratio":"231.789","inverseRatio":"0.00431427","createTime":1614089498000,"expiredTimestamp":1614099498000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryLimitOpenOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryLimitOpenOrdersResponse");
 
             let resp = client.query_limit_open_orders(params).await.expect("Expected a response");
@@ -1258,9 +1499,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SendQuoteRequestParams::builder("from_asset_example".to_string(),"to_asset_example".to_string(),).build().unwrap();
+            let params = SendQuoteRequestParams::builder("BTC".to_string(),"USDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SendQuoteRequestResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SendQuoteRequestResponse");
 
             let resp = client.send_quote_request(params).await.expect("Expected a response");
@@ -1275,9 +1516,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SendQuoteRequestParams::builder("from_asset_example".to_string(),"to_asset_example".to_string(),).from_amount(dec!(1.0)).to_amount(dec!(1.0)).wallet_type(String::new()).valid_time("10s".to_string()).recv_window(5000).build().unwrap();
+            let params = SendQuoteRequestParams::builder("BTC".to_string(),"USDT".to_string(),).from_amount(dec!(1)).to_amount(dec!(1)).wallet_type(SendQuoteRequestWalletTypeEnum::Spot).valid_time(SendQuoteRequestValidTimeEnum::ValidTime10s).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SendQuoteRequestResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SendQuoteRequestResponse");
 
             let resp = client.send_quote_request(params).await.expect("Expected a response");
@@ -1292,12 +1533,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = SendQuoteRequestParams::builder(
-                "from_asset_example".to_string(),
-                "to_asset_example".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = SendQuoteRequestParams::builder("BTC".to_string(), "USDT".to_string())
+                .build()
+                .unwrap();
 
             match client.send_quote_request(params).await {
                 Ok(_) => panic!("Expected an error"),

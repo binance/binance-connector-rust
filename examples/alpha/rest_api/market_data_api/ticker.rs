@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = AlphaRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = TickerParams::builder("symbol_example".to_string()).build()?;
+    let params = TickerParams::builder("ALPHA_175USDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Fiat REST API
+ * Fiat REST API
  *
- * OpenAPI Specification for the Binance Fiat REST API
+ * Query Binance fiat deposit and withdrawal history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,12 +11,12 @@
  * Do not edit the class manually.
  */
 
-pub mod account_info;
-pub use self::account_info::AccountInfo;
 pub mod deposit_response;
 pub use self::deposit_response::DepositResponse;
 pub mod deposit_response_data;
 pub use self::deposit_response_data::DepositResponseData;
+pub mod fiat_withdraw_request_account_info;
+pub use self::fiat_withdraw_request_account_info::FiatWithdrawRequestAccountInfo;
 pub mod fiat_withdraw_response;
 pub use self::fiat_withdraw_response::FiatWithdrawResponse;
 pub mod get_fiat_deposit_withdraw_history_response;

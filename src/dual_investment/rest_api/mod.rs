@@ -1,7 +1,7 @@
 /*
- * Binance Dual Investment REST API
+ * Dual Investment REST API
  *
- * OpenAPI Specification for the Binance Dual Investment REST API
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -118,7 +118,7 @@ impl RestApi {
     ///
     /// Get Dual Investment product list
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -148,7 +148,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/market-data/Get-Dual-Investment-product-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-dual-investment/api/rest-api/market-data#get-dual-investment-product-list).
     ///
     pub async fn get_dual_investment_product_list(
         &self,
@@ -159,11 +159,16 @@ impl RestApi {
             .await
     }
 
-    /// Change Auto-Compound `status(USER_DATA)`
+    /// Change Auto-Compound status (`USER_DATA`)
     ///
     /// Change Auto-Compound status
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - 15:31 ~ 16:00 UTC+8: This function is disabled.
     ///
     /// # Arguments
     ///
@@ -193,7 +198,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Change-Auto-Compound-status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-dual-investment/api/rest-api/trade#change-auto-compound-status).
     ///
     pub async fn change_auto_compound_status(
         &self,
@@ -204,11 +209,13 @@ impl RestApi {
             .await
     }
 
-    /// Check Dual Investment `accounts(USER_DATA)`
+    /// Check Dual Investment accounts (`USER_DATA`)
     ///
     /// Check Dual Investment accounts
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -238,7 +245,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Check-Dual-Investment-accounts).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-dual-investment/api/rest-api/trade#check-dual-investment-accounts).
     ///
     pub async fn check_dual_investment_accounts(
         &self,
@@ -249,11 +256,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Dual Investment `positions(USER_DATA)`
+    /// Get Dual Investment positions (`USER_DATA`)
     ///
     /// Get Dual Investment positions (batch)
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -283,7 +292,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Get-Dual-Investment-positions).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-dual-investment/api/rest-api/trade#get-dual-investment-positions).
     ///
     pub async fn get_dual_investment_positions(
         &self,
@@ -294,14 +303,18 @@ impl RestApi {
             .await
     }
 
-    /// Subscribe Dual Investment `products(USER_DATA)`
+    /// Subscribe Dual Investment products (`USER_DATA`)
     ///
     /// Subscribe Dual Investment products
     ///
-    /// * Products are not available. // this means APR changes to lower value, or orders are not unavailable.
-    /// * Failed. This means System or network errors.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Failed messages:
+    /// - Products are not available. This means APR changed to a lower value, or the order is unavailable.
+    /// - Failed. This means system or network errors.
     ///
     /// # Arguments
     ///
@@ -331,7 +344,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/advanced_earn/dual-investment/trade/Subscribe-Dual-Investment-products).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-dual-investment/api/rest-api/trade#subscribe-dual-investment-products).
     ///
     pub async fn subscribe_dual_investment_products(
         &self,

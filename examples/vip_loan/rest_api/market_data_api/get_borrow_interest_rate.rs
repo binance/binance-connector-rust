@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = VIPLoanRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = GetBorrowInterestRateParams::builder("loan_coin_example".to_string()).build()?;
+    let params = GetBorrowInterestRateParams::builder("BTC".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

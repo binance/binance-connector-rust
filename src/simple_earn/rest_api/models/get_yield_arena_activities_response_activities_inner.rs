@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,22 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetYieldArenaActivitiesResponseActivitiesInner {
+    /// Activity ID.
     #[serde(rename = "activityId", skip_serializing_if = "Option::is_none")]
     pub activity_id: Option<i64>,
+    /// Activity category: `AIRDROP`, `LEADERBOARD`, or `EVENT`.
     #[serde(rename = "activityType", skip_serializing_if = "Option::is_none")]
     pub activity_type: Option<String>,
+    /// Activity title, localized via the `lang` header.
     #[serde(rename = "title", skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
+    /// Activity description, localized via the `lang` header.
     #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    /// USD value of the reward pool.
     #[serde(rename = "rewardPoolInUsd", skip_serializing_if = "Option::is_none")]
     pub reward_pool_in_usd: Option<String>,
+    /// Reward token symbols (e.g. `[\"BNB\"]`); may be empty.
     #[serde(rename = "rewardToken", skip_serializing_if = "Option::is_none")]
     pub reward_token: Option<Vec<String>>,
+    /// Web URL to the activity landing page.
     #[serde(rename = "redirectUrl", skip_serializing_if = "Option::is_none")]
     pub redirect_url: Option<String>,
+    /// Activity start time in milliseconds; may be null for activities that are immediately effective.
     #[serde(rename = "startTime", skip_serializing_if = "Option::is_none")]
     pub start_time: Option<i64>,
+    /// Activity end time in milliseconds; may be null for activities with no fixed end.
     #[serde(rename = "endTime", skip_serializing_if = "Option::is_none")]
     pub end_time: Option<i64>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,19 +15,25 @@
 use crate::alpha::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `GetExchangeInfoResponseData` : Exchange metadata, including assets and symbols.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetExchangeInfoResponseData {
+    /// Timezone of market data.
     #[serde(rename = "timezone", skip_serializing_if = "Option::is_none")]
     pub timezone: Option<String>,
+    /// Supported assets.
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
     pub assets: Option<Vec<models::GetExchangeInfoResponseDataAssetsInner>>,
+    /// Supported trading symbols.
     #[serde(rename = "symbols", skip_serializing_if = "Option::is_none")]
     pub symbols: Option<Vec<models::GetExchangeInfoResponseDataSymbolsInner>>,
+    /// Order types metadata returned by backend.
     #[serde(rename = "orderTypes", skip_serializing_if = "Option::is_none")]
     pub order_types: Option<String>,
 }
 
 impl GetExchangeInfoResponseData {
+    /// Exchange metadata, including assets and symbols.
     #[must_use]
     pub fn new() -> GetExchangeInfoResponseData {
         GetExchangeInfoResponseData {

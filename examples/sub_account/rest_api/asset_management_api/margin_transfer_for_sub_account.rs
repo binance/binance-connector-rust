@@ -27,10 +27,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = MarginTransferForSubAccountParams::builder(
-        "sub-account-email@email.com".to_string(),
-        "asset_example".to_string(),
+        "123@test.com".to_string(),
+        "BTC".to_string(),
         dec!(1.0),
-        789,
+        1,
     )
     .build()?;
 

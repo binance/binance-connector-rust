@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -76,17 +76,111 @@ impl RwusdApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetRwusdSubscriptionHistoryAssetEnum {
+    #[serde(rename = "USDC")]
+    Usdc,
+    #[serde(rename = "USDT")]
+    Usdt,
+}
+
+impl GetRwusdSubscriptionHistoryAssetEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Usdc => "USDC",
+            Self::Usdt => "USDT",
+        }
+    }
+}
+
+impl std::str::FromStr for GetRwusdSubscriptionHistoryAssetEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "USDC" => Ok(Self::Usdc),
+            "USDT" => Ok(Self::Usdt),
+            other => Err(format!("invalid GetRwusdSubscriptionHistoryAssetEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum RedeemRwusdTypeEnum {
+    #[serde(rename = "FAST")]
+    Fast,
+    #[serde(rename = "STANDARD")]
+    Standard,
+}
+
+impl RedeemRwusdTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Fast => "FAST",
+            Self::Standard => "STANDARD",
+        }
+    }
+}
+
+impl std::str::FromStr for RedeemRwusdTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "FAST" => Ok(Self::Fast),
+            "STANDARD" => Ok(Self::Standard),
+            other => Err(format!("invalid RedeemRwusdTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SubscribeRwusdAssetEnum {
+    #[serde(rename = "USDT")]
+    Usdt,
+    #[serde(rename = "USDC")]
+    Usdc,
+}
+
+impl SubscribeRwusdAssetEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Usdt => "USDT",
+            Self::Usdc => "USDC",
+        }
+    }
+}
+
+impl std::str::FromStr for SubscribeRwusdAssetEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "USDT" => Ok(Self::Usdt),
+            "USDC" => Ok(Self::Usdc),
+            other => Err(format!("invalid SubscribeRwusdAssetEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`get_rwusd_account`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_rwusd_account`](#method.get_rwusd_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRwusdAccountParams {
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -102,13 +196,14 @@ impl GetRwusdAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_rwusd_quota_details`](#method.get_rwusd_quota_details).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRwusdQuotaDetailsParams {
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -124,7 +219,7 @@ impl GetRwusdQuotaDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_rwusd_rate_history`](#method.get_rwusd_rate_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRwusdRateHistoryParams {
     ///
@@ -132,27 +227,32 @@ pub struct GetRwusdRateHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -168,7 +268,7 @@ impl GetRwusdRateHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_rwusd_redemption_history`](#method.get_rwusd_redemption_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRwusdRedemptionHistoryParams {
     ///
@@ -176,27 +276,32 @@ pub struct GetRwusdRedemptionHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -212,7 +317,7 @@ impl GetRwusdRedemptionHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_rwusd_rewards_history`](#method.get_rwusd_rewards_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRwusdRewardsHistoryParams {
     ///
@@ -220,27 +325,32 @@ pub struct GetRwusdRewardsHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -256,40 +366,47 @@ impl GetRwusdRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_rwusd_subscription_history`](#method.get_rwusd_subscription_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRwusdSubscriptionHistoryParams {
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub asset: Option<String>,
+    #[serde(rename = "asset", default)]
+    pub asset: Option<GetRwusdSubscriptionHistoryAssetEnum>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -305,23 +422,27 @@ impl GetRwusdSubscriptionHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_rwusd`](#method.redeem_rwusd).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemRwusdParams {
-    /// Amount
+    /// Amount in RWUSD
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// FAST or STANDARD, defaults to STANDARD
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
-    /// The value cannot be greater than 60000 (ms)
+    #[serde(rename = "type")]
+    pub r#type: RedeemRwusdTypeEnum,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -330,11 +451,14 @@ impl RedeemRwusdParams {
     ///
     /// Required parameters:
     ///
-    /// * `amount` — Amount
-    /// * `r#type` — FAST or STANDARD, defaults to STANDARD
+    /// * `amount` — Amount in RWUSD
+    /// * `r#type` — String
     ///
     #[must_use]
-    pub fn builder(amount: rust_decimal::Decimal, r#type: String) -> RedeemRwusdParamsBuilder {
+    pub fn builder(
+        amount: rust_decimal::Decimal,
+        r#type: RedeemRwusdTypeEnum,
+    ) -> RedeemRwusdParamsBuilder {
         RedeemRwusdParamsBuilder::default()
             .amount(amount)
             .r#type(r#type)
@@ -344,23 +468,27 @@ impl RedeemRwusdParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_rwusd`](#method.subscribe_rwusd).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeRwusdParams {
-    /// USDT or USDC (whichever is eligible)
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub asset: String,
+    #[serde(rename = "asset")]
+    pub asset: SubscribeRwusdAssetEnum,
     /// Amount
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// The value cannot be greater than 60000 (ms)
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -369,11 +497,14 @@ impl SubscribeRwusdParams {
     ///
     /// Required parameters:
     ///
-    /// * `asset` — USDT or USDC (whichever is eligible)
+    /// * `asset` — String
     /// * `amount` — Amount
     ///
     #[must_use]
-    pub fn builder(asset: String, amount: rust_decimal::Decimal) -> SubscribeRwusdParamsBuilder {
+    pub fn builder(
+        asset: SubscribeRwusdAssetEnum,
+        amount: rust_decimal::Decimal,
+    ) -> SubscribeRwusdParamsBuilder {
         SubscribeRwusdParamsBuilder::default()
             .asset(asset)
             .amount(amount)
@@ -769,7 +900,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetRwusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdAccountResponse");
@@ -796,7 +928,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT","USDC"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetRwusdQuotaDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdQuotaDetailsResponse");
@@ -826,7 +958,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetRwusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdRateHistoryResponse");
@@ -853,7 +985,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetRwusdRedemptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdRedemptionHistoryResponse");
@@ -880,7 +1012,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetRwusdRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdRewardsHistoryResponse");
@@ -907,7 +1039,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetRwusdSubscriptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdSubscriptionHistoryResponse");
@@ -934,7 +1066,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemRwusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemRwusdResponse");
@@ -962,7 +1094,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#).unwrap();
+                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeRwusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeRwusdResponse");
@@ -986,7 +1119,8 @@ mod tests {
             let params = GetRwusdAccountParams::builder().build().unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetRwusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdAccountResponse");
@@ -1012,7 +1146,8 @@ mod tests {
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#).unwrap();
+                serde_json::from_str(r#"{"rwusdAmount":"100","totalProfit":"12.81"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetRwusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdAccountResponse");
@@ -1050,7 +1185,7 @@ mod tests {
 
             let params = GetRwusdQuotaDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT","USDC"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdQuotaDetailsResponse");
 
             let resp = client.get_rwusd_quota_details(params).await.expect("Expected a response");
@@ -1067,7 +1202,7 @@ mod tests {
 
             let params = GetRwusdQuotaDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT","USDC"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"assets":["USDT"],"leftQuota":"1000","minimum":"0.10000000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","redeemPeriod":3},"subscribeEnable":true,"redeemEnable":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdQuotaDetailsResponse");
 
             let resp = client.get_rwusd_quota_details(params).await.expect("Expected a response");
@@ -1103,7 +1238,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetRwusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdRateHistoryResponse");
@@ -1135,7 +1270,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetRwusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRwusdRateHistoryResponse");
@@ -1173,7 +1308,7 @@ mod tests {
 
             let params = GetRwusdRedemptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRedemptionHistoryResponse");
 
             let resp = client.get_rwusd_redemption_history(params).await.expect("Expected a response");
@@ -1190,7 +1325,7 @@ mod tests {
 
             let params = GetRwusdRedemptionHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"RWUSD","amount":"51","receiveAsset":"USDC","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRedemptionHistoryResponse");
 
             let resp = client.get_rwusd_redemption_history(params).await.expect("Expected a response");
@@ -1223,7 +1358,7 @@ mod tests {
 
             let params = GetRwusdRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRewardsHistoryResponse");
 
             let resp = client.get_rwusd_rewards_history(params).await.expect("Expected a response");
@@ -1240,7 +1375,7 @@ mod tests {
 
             let params = GetRwusdRewardsHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardsAmount":"1","rwusdPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdRewardsHistoryResponse");
 
             let resp = client.get_rwusd_rewards_history(params).await.expect("Expected a response");
@@ -1273,7 +1408,7 @@ mod tests {
 
             let params = GetRwusdSubscriptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdSubscriptionHistoryResponse");
 
             let resp = client.get_rwusd_subscription_history(params).await.expect("Expected a response");
@@ -1288,9 +1423,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockRwusdApiClient { force_error: false };
 
-            let params = GetRwusdSubscriptionHistoryParams::builder().asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetRwusdSubscriptionHistoryParams::builder().asset(GetRwusdSubscriptionHistoryAssetEnum::Usdc).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDC","amount":"100","receiveAsset":"RWUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRwusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRwusdSubscriptionHistoryResponse");
 
             let resp = client.get_rwusd_subscription_history(params).await.expect("Expected a response");
@@ -1323,9 +1458,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockRwusdApiClient { force_error: false };
 
-            let params = RedeemRwusdParams::builder(dec!(1.0),"s".to_string(),).build().unwrap();
+            let params = RedeemRwusdParams::builder(dec!(1.0),RedeemRwusdTypeEnum::Fast,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemRwusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemRwusdResponse");
 
             let resp = client.redeem_rwusd(params).await.expect("Expected a response");
@@ -1340,9 +1475,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockRwusdApiClient { force_error: false };
 
-            let params = RedeemRwusdParams::builder(dec!(1.0),"s".to_string(),).recv_window(5000).build().unwrap();
+            let params = RedeemRwusdParams::builder(dec!(1.0),RedeemRwusdTypeEnum::Fast,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemRwusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemRwusdResponse");
 
             let resp = client.redeem_rwusd(params).await.expect("Expected a response");
@@ -1357,7 +1492,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockRwusdApiClient { force_error: true };
 
-            let params = RedeemRwusdParams::builder(dec!(1.0), "s".to_string())
+            let params = RedeemRwusdParams::builder(dec!(1.0), RedeemRwusdTypeEnum::Fast)
                 .build()
                 .unwrap();
 
@@ -1375,12 +1510,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockRwusdApiClient { force_error: false };
 
-            let params = SubscribeRwusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeRwusdParams::builder(SubscribeRwusdAssetEnum::Usdt, dec!(1.0))
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#).unwrap();
+                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeRwusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeRwusdResponse");
@@ -1400,13 +1536,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockRwusdApiClient { force_error: false };
 
-            let params = SubscribeRwusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeRwusdParams::builder(SubscribeRwusdAssetEnum::Usdt, dec!(1.0))
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#).unwrap();
+                serde_json::from_str(r#"{"success":true,"rwusdAmount":"0.22091092"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeRwusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeRwusdResponse");
@@ -1426,7 +1563,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockRwusdApiClient { force_error: true };
 
-            let params = SubscribeRwusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeRwusdParams::builder(SubscribeRwusdAssetEnum::Usdt, dec!(1.0))
                 .build()
                 .unwrap();
 

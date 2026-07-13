@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,22 +18,31 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountUpdateAPInner {
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Position Amount
     #[serde(rename = "pa", skip_serializing_if = "Option::is_none")]
     pub pa: Option<String>,
+    /// Entry Price
     #[serde(rename = "ep", skip_serializing_if = "Option::is_none")]
     pub ep: Option<String>,
+    /// Break-Even Price
     #[serde(rename = "bep", skip_serializing_if = "Option::is_none")]
     pub bep: Option<String>,
+    /// (Pre-fee) Accumulated Realized
     #[serde(rename = "cr", skip_serializing_if = "Option::is_none")]
     pub cr: Option<String>,
+    /// Unrealized `PnL`
     #[serde(rename = "up", skip_serializing_if = "Option::is_none")]
     pub up: Option<String>,
+    /// Margin Type
     #[serde(rename = "mt", skip_serializing_if = "Option::is_none")]
     pub mt: Option<String>,
+    /// Isolated Wallet (if isolated position)
     #[serde(rename = "iw", skip_serializing_if = "Option::is_none")]
     pub iw: Option<String>,
+    /// Position Side
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
 }

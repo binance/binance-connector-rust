@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = EditIpForSpecialKeyParams::builder("ip_example".to_string()).build()?;
+    let params = EditIpForSpecialKeyParams::builder("24.156.99.202".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

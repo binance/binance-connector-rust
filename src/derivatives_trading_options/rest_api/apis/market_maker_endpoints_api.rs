@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -72,19 +72,22 @@ impl MarketMakerEndpointsApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`auto_cancel_all_open_orders`](#method.auto_cancel_all_open_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AutoCancelAllOpenOrdersParams {
-    /// Option Underlying Symbols, e.g BTCUSDT,ETHUSDT
+    ///
+    /// The `underlyings` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "underlyings")]
     pub underlyings: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -93,7 +96,7 @@ impl AutoCancelAllOpenOrdersParams {
     ///
     /// Required parameters:
     ///
-    /// * `underlyings` — Option Underlying Symbols, e.g BTCUSDT,ETHUSDT
+    /// * `underlyings` — String
     ///
     #[must_use]
     pub fn builder(underlyings: String) -> AutoCancelAllOpenOrdersParamsBuilder {
@@ -104,19 +107,20 @@ impl AutoCancelAllOpenOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_auto_cancel_all_open_orders`](#method.get_auto_cancel_all_open_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetAutoCancelAllOpenOrdersParams {
-    /// underlying, e.g BTCUSDT
+    /// Underlying asset.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "underlying", default)]
     pub underlying: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -132,80 +136,96 @@ impl GetAutoCancelAllOpenOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_market_maker_protection_config`](#method.get_market_maker_protection_config).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetMarketMakerProtectionConfigParams {
-    /// underlying, e.g BTCUSDT
+    /// Underlying asset.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "underlying")]
+    pub underlying: String,
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub underlying: Option<String>,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
 impl GetMarketMakerProtectionConfigParams {
     /// Create a builder for [`get_market_maker_protection_config`].
     ///
+    /// Required parameters:
+    ///
+    /// * `underlying` — Underlying asset.
+    ///
     #[must_use]
-    pub fn builder() -> GetMarketMakerProtectionConfigParamsBuilder {
-        GetMarketMakerProtectionConfigParamsBuilder::default()
+    pub fn builder(underlying: String) -> GetMarketMakerProtectionConfigParamsBuilder {
+        GetMarketMakerProtectionConfigParamsBuilder::default().underlying(underlying)
     }
 }
 /// Request parameters for the [`reset_market_maker_protection_config`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`reset_market_maker_protection_config`](#method.reset_market_maker_protection_config).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ResetMarketMakerProtectionConfigParams {
-    /// underlying, e.g BTCUSDT
     ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub underlying: Option<String>,
+    /// The `underlying` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "underlying")]
+    pub underlying: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
 impl ResetMarketMakerProtectionConfigParams {
     /// Create a builder for [`reset_market_maker_protection_config`].
     ///
+    /// Required parameters:
+    ///
+    /// * `underlying` — String
+    ///
     #[must_use]
-    pub fn builder() -> ResetMarketMakerProtectionConfigParamsBuilder {
-        ResetMarketMakerProtectionConfigParamsBuilder::default()
+    pub fn builder(underlying: String) -> ResetMarketMakerProtectionConfigParamsBuilder {
+        ResetMarketMakerProtectionConfigParamsBuilder::default().underlying(underlying)
     }
 }
 /// Request parameters for the [`set_auto_cancel_all_open_orders`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_auto_cancel_all_open_orders`](#method.set_auto_cancel_all_open_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetAutoCancelAllOpenOrdersParams {
-    /// Option underlying, e.g BTCUSDT
+    ///
+    /// The `underlying` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "underlying")]
     pub underlying: String,
     /// Countdown time in milliseconds (ex. 1,000 for 1 second). 0 to disable the timer. Negative values (ex. -10000) are not accepted. Minimum acceptable value is 5,000
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "countdownTime")]
     pub countdown_time: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -214,7 +234,7 @@ impl SetAutoCancelAllOpenOrdersParams {
     ///
     /// Required parameters:
     ///
-    /// * `underlying` — Option underlying, e.g BTCUSDT
+    /// * `underlying` — String
     /// * `countdown_time` — Countdown time in milliseconds (ex. 1,000 for 1 second). 0 to disable the timer. Negative values (ex. -10000) are not accepted. Minimum acceptable value is 5,000
     ///
     #[must_use]
@@ -231,48 +251,74 @@ impl SetAutoCancelAllOpenOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_market_maker_protection_config`](#method.set_market_maker_protection_config).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetMarketMakerProtectionConfigParams {
-    /// underlying, e.g BTCUSDT
     ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub underlying: Option<String>,
-    /// MMP Interval in milliseconds; Range (0,5000]
+    /// The `underlying` parameter.
     ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub window_time_in_milliseconds: Option<i64>,
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "underlying")]
+    pub underlying: String,
+    /// MMP Interval in milliseconds
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "windowTimeInMilliseconds")]
+    pub window_time_in_milliseconds: i64,
     /// MMP frozen time in milliseconds, if set to 0 manual reset is required
     ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub frozen_time_in_milliseconds: Option<i64>,
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "frozenTimeInMilliseconds")]
+    pub frozen_time_in_milliseconds: i64,
     /// quantity limit
     ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub qty_limit: Option<rust_decimal::Decimal>,
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "qtyLimit")]
+    pub qty_limit: rust_decimal::Decimal,
     /// net delta limit
     ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    pub delta_limit: Option<rust_decimal::Decimal>,
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "deltaLimit")]
+    pub delta_limit: rust_decimal::Decimal,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
 impl SetMarketMakerProtectionConfigParams {
     /// Create a builder for [`set_market_maker_protection_config`].
     ///
+    /// Required parameters:
+    ///
+    /// * `underlying` — String
+    /// * `window_time_in_milliseconds` — MMP Interval in milliseconds
+    /// * `frozen_time_in_milliseconds` — MMP frozen time in milliseconds, if set to 0 manual reset is required
+    /// * `qty_limit` — quantity limit
+    /// * `delta_limit` — net delta limit
+    ///
     #[must_use]
-    pub fn builder() -> SetMarketMakerProtectionConfigParamsBuilder {
+    pub fn builder(
+        underlying: String,
+        window_time_in_milliseconds: i64,
+        frozen_time_in_milliseconds: i64,
+        qty_limit: rust_decimal::Decimal,
+        delta_limit: rust_decimal::Decimal,
+    ) -> SetMarketMakerProtectionConfigParamsBuilder {
         SetMarketMakerProtectionConfigParamsBuilder::default()
+            .underlying(underlying)
+            .window_time_in_milliseconds(window_time_in_milliseconds)
+            .frozen_time_in_milliseconds(frozen_time_in_milliseconds)
+            .qty_limit(qty_limit)
+            .delta_limit(delta_limit)
     }
 }
 
@@ -360,9 +406,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
-        if let Some(rw) = underlying {
-            query_params.insert("underlying".to_string(), json!(rw));
-        }
+        query_params.insert("underlying".to_string(), json!(underlying));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -396,9 +440,7 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
-        if let Some(rw) = underlying {
-            query_params.insert("underlying".to_string(), json!(rw));
-        }
+        query_params.insert("underlying".to_string(), json!(underlying));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -473,25 +515,21 @@ impl MarketMakerEndpointsApi for MarketMakerEndpointsApiClient {
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
-        if let Some(rw) = underlying {
-            query_params.insert("underlying".to_string(), json!(rw));
-        }
+        query_params.insert("underlying".to_string(), json!(underlying));
 
-        if let Some(rw) = window_time_in_milliseconds {
-            query_params.insert("windowTimeInMilliseconds".to_string(), json!(rw));
-        }
+        query_params.insert(
+            "windowTimeInMilliseconds".to_string(),
+            json!(window_time_in_milliseconds),
+        );
 
-        if let Some(rw) = frozen_time_in_milliseconds {
-            query_params.insert("frozenTimeInMilliseconds".to_string(), json!(rw));
-        }
+        query_params.insert(
+            "frozenTimeInMilliseconds".to_string(),
+            json!(frozen_time_in_milliseconds),
+        );
 
-        if let Some(rw) = qty_limit {
-            query_params.insert("qtyLimit".to_string(), json!(rw));
-        }
+        query_params.insert("qtyLimit".to_string(), json!(qty_limit));
 
-        if let Some(rw) = delta_limit {
-            query_params.insert("deltaLimit".to_string(), json!(rw));
-        }
+        query_params.insert("deltaLimit".to_string(), json!(delta_limit));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -558,8 +596,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"underlyings":["BTCUSDT","ETHUSDT"]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyings":["BTCUSDT"]}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
@@ -587,7 +625,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#).unwrap();
+                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetAutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetAutoCancelAllOpenOrdersResponse");
@@ -615,7 +654,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetMarketMakerProtectionConfigResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetMarketMakerProtectionConfigResponse");
@@ -643,7 +682,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ResetMarketMakerProtectionConfigResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ResetMarketMakerProtectionConfigResponse");
@@ -671,7 +710,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":30000}"#).unwrap();
+                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetAutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetAutoCancelAllOpenOrdersResponse");
@@ -699,7 +739,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetMarketMakerProtectionConfigResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetMarketMakerProtectionConfigResponse");
@@ -720,12 +760,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = AutoCancelAllOpenOrdersParams::builder("underlyings_example".to_string())
+            let params = AutoCancelAllOpenOrdersParams::builder("BTCUSDT,ETHUSDT".to_string())
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"underlyings":["BTCUSDT","ETHUSDT"]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyings":["BTCUSDT"]}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
@@ -745,13 +785,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = AutoCancelAllOpenOrdersParams::builder("underlyings_example".to_string())
+            let params = AutoCancelAllOpenOrdersParams::builder("BTCUSDT,ETHUSDT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"underlyings":["BTCUSDT","ETHUSDT"]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyings":["BTCUSDT"]}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
@@ -771,7 +811,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: true };
 
-            let params = AutoCancelAllOpenOrdersParams::builder("underlyings_example".to_string())
+            let params = AutoCancelAllOpenOrdersParams::builder("BTCUSDT,ETHUSDT".to_string())
                 .build()
                 .unwrap();
 
@@ -792,7 +832,8 @@ mod tests {
             let params = GetAutoCancelAllOpenOrdersParams::builder().build().unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#).unwrap();
+                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetAutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetAutoCancelAllOpenOrdersResponse");
@@ -813,13 +854,14 @@ mod tests {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
             let params = GetAutoCancelAllOpenOrdersParams::builder()
-                .underlying("underlying_example".to_string())
+                .underlying("BTCUSDT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#).unwrap();
+                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetAutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetAutoCancelAllOpenOrdersResponse");
@@ -855,9 +897,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = GetMarketMakerProtectionConfigParams::builder().build().unwrap();
+            let params = GetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetMarketMakerProtectionConfigResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetMarketMakerProtectionConfigResponse");
 
             let resp = client.get_market_maker_protection_config(params).await.expect("Expected a response");
@@ -872,9 +914,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = GetMarketMakerProtectionConfigParams::builder().underlying("underlying_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetMarketMakerProtectionConfigResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetMarketMakerProtectionConfigResponse");
 
             let resp = client.get_market_maker_protection_config(params).await.expect("Expected a response");
@@ -889,7 +931,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: true };
 
-            let params = GetMarketMakerProtectionConfigParams::builder()
+            let params = GetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 
@@ -907,9 +949,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = ResetMarketMakerProtectionConfigParams::builder().build().unwrap();
+            let params = ResetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ResetMarketMakerProtectionConfigResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ResetMarketMakerProtectionConfigResponse");
 
             let resp = client.reset_market_maker_protection_config(params).await.expect("Expected a response");
@@ -924,9 +966,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = ResetMarketMakerProtectionConfigParams::builder().underlying("underlying_example".to_string()).recv_window(5000).build().unwrap();
+            let params = ResetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ResetMarketMakerProtectionConfigResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ResetMarketMakerProtectionConfigResponse");
 
             let resp = client.reset_market_maker_protection_config(params).await.expect("Expected a response");
@@ -941,7 +983,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: true };
 
-            let params = ResetMarketMakerProtectionConfigParams::builder()
+            let params = ResetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 
@@ -959,13 +1001,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params =
-                SetAutoCancelAllOpenOrdersParams::builder("underlying_example".to_string(), 789)
-                    .build()
-                    .unwrap();
+            let params = SetAutoCancelAllOpenOrdersParams::builder("BTCUSDT".to_string(), 5000)
+                .build()
+                .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":30000}"#).unwrap();
+                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetAutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetAutoCancelAllOpenOrdersResponse");
@@ -985,14 +1027,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params =
-                SetAutoCancelAllOpenOrdersParams::builder("underlying_example".to_string(), 789)
-                    .recv_window(5000)
-                    .build()
-                    .unwrap();
+            let params = SetAutoCancelAllOpenOrdersParams::builder("BTCUSDT".to_string(), 5000)
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":30000}"#).unwrap();
+                serde_json::from_str(r#"{"underlying":"ETHUSDT","countdownTime":100000}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetAutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetAutoCancelAllOpenOrdersResponse");
@@ -1012,10 +1054,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: true };
 
-            let params =
-                SetAutoCancelAllOpenOrdersParams::builder("underlying_example".to_string(), 789)
-                    .build()
-                    .unwrap();
+            let params = SetAutoCancelAllOpenOrdersParams::builder("BTCUSDT".to_string(), 5000)
+                .build()
+                .unwrap();
 
             match client.set_auto_cancel_all_open_orders(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1031,9 +1072,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = SetMarketMakerProtectionConfigParams::builder().build().unwrap();
+            let params = SetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string(),1000,1000,dec!(1.0),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SetMarketMakerProtectionConfigResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SetMarketMakerProtectionConfigResponse");
 
             let resp = client.set_market_maker_protection_config(params).await.expect("Expected a response");
@@ -1048,9 +1089,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: false };
 
-            let params = SetMarketMakerProtectionConfigParams::builder().underlying("underlying_example".to_string()).window_time_in_milliseconds(789).frozen_time_in_milliseconds(789).qty_limit(dec!(1.0)).delta_limit(dec!(1.0)).recv_window(5000).build().unwrap();
+            let params = SetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string(),1000,1000,dec!(1.0),dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingId":2,"underlying":"BTCUSDT","windowTimeInMilliseconds":3000,"frozenTimeInMilliseconds":300000,"qtyLimit":"2","deltaLimit":"2.3","lastTriggerTime":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SetMarketMakerProtectionConfigResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SetMarketMakerProtectionConfigResponse");
 
             let resp = client.set_market_maker_protection_config(params).await.expect("Expected a response");
@@ -1065,9 +1106,15 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerEndpointsApiClient { force_error: true };
 
-            let params = SetMarketMakerProtectionConfigParams::builder()
-                .build()
-                .unwrap();
+            let params = SetMarketMakerProtectionConfigParams::builder(
+                "BTCUSDT".to_string(),
+                1000,
+                1000,
+                dec!(1.0),
+                dec!(1.0),
+            )
+            .build()
+            .unwrap();
 
             match client.set_market_maker_protection_config(params).await {
                 Ok(_) => panic!("Expected an error"),

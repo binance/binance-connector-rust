@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        QueryIsolatedMarginTierDataParams::builder("symbol_example".to_string()).build()?;
+    let params = QueryIsolatedMarginTierDataParams::builder("BTCUSDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

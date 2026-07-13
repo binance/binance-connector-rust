@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,36 +18,52 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PositionInformationResponseResultInner {
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// position amount
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
     pub position_amt: Option<String>,
+    /// Position entry price.
     #[serde(rename = "entryPrice", skip_serializing_if = "Option::is_none")]
     pub entry_price: Option<String>,
+    /// mark price
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
+    /// Unrealized profit.
     #[serde(rename = "unRealizedProfit", skip_serializing_if = "Option::is_none")]
     pub un_realized_profit: Option<String>,
+    /// Liquidation price.
     #[serde(rename = "liquidationPrice", skip_serializing_if = "Option::is_none")]
     pub liquidation_price: Option<String>,
+    /// Leverage value.
     #[serde(rename = "leverage", skip_serializing_if = "Option::is_none")]
     pub leverage: Option<String>,
+    /// maximum quantity of base asset
     #[serde(rename = "maxQty", skip_serializing_if = "Option::is_none")]
     pub max_qty: Option<String>,
+    /// Margin type.
     #[serde(rename = "marginType", skip_serializing_if = "Option::is_none")]
     pub margin_type: Option<String>,
+    /// Isolated margin amount.
     #[serde(rename = "isolatedMargin", skip_serializing_if = "Option::is_none")]
     pub isolated_margin: Option<String>,
+    /// Whether auto-add margin is enabled.
     #[serde(rename = "isAutoAddMargin", skip_serializing_if = "Option::is_none")]
     pub is_auto_add_margin: Option<String>,
+    /// Position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// Notional value.
     #[serde(rename = "notionalValue", skip_serializing_if = "Option::is_none")]
     pub notional_value: Option<String>,
+    /// Isolated wallet balance.
     #[serde(rename = "isolatedWallet", skip_serializing_if = "Option::is_none")]
     pub isolated_wallet: Option<String>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// break-even price
     #[serde(rename = "breakEvenPrice", skip_serializing_if = "Option::is_none")]
     pub break_even_price: Option<String>,
 }

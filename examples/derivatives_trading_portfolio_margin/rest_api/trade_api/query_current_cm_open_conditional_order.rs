@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        QueryCurrentCmOpenConditionalOrderParams::builder("symbol_example".to_string()).build()?;
+        QueryCurrentCmOpenConditionalOrderParams::builder("BTCUSD_200925".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

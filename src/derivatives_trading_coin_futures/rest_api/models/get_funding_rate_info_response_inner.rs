@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,23 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetFundingRateInfoResponseInner {
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Adjusted funding rate cap.
     #[serde(
         rename = "adjustedFundingRateCap",
         skip_serializing_if = "Option::is_none"
     )]
     pub adjusted_funding_rate_cap: Option<String>,
+    /// Adjusted funding rate floor.
     #[serde(
         rename = "adjustedFundingRateFloor",
         skip_serializing_if = "Option::is_none"
     )]
     pub adjusted_funding_rate_floor: Option<String>,
+    /// Funding interval in hours.
     #[serde(
         rename = "fundingIntervalHours",
         skip_serializing_if = "Option::is_none"
     )]
     pub funding_interval_hours: Option<i64>,
+    /// Disclaimer text.
     #[serde(rename = "disclaimer", skip_serializing_if = "Option::is_none")]
     pub disclaimer: Option<bool>,
 }

@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,24 +18,30 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInfoResponse {
-    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i64>,
-    #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
-    pub result: Option<Box<models::ExchangeInfoResponseResult>>,
+    #[serde(rename = "timezone", skip_serializing_if = "Option::is_none")]
+    pub timezone: Option<String>,
+    #[serde(rename = "serverTime", skip_serializing_if = "Option::is_none")]
+    pub server_time: Option<i64>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
     pub rate_limits: Option<Vec<models::RateLimits>>,
+    #[serde(rename = "exchangeFilters", skip_serializing_if = "Option::is_none")]
+    pub exchange_filters: Option<Vec<models::ExchangeFilters>>,
+    #[serde(rename = "symbols", skip_serializing_if = "Option::is_none")]
+    pub symbols: Option<Vec<models::ExchangeInfoResponseSymbolsInner>>,
+    #[serde(rename = "sors", skip_serializing_if = "Option::is_none")]
+    pub sors: Option<Vec<models::ExchangeInfoResponseSorsInner>>,
 }
 
 impl ExchangeInfoResponse {
     #[must_use]
     pub fn new() -> ExchangeInfoResponse {
         ExchangeInfoResponse {
-            id: None,
-            status: None,
-            result: None,
+            timezone: None,
+            server_time: None,
             rate_limits: None,
+            exchange_filters: None,
+            symbols: None,
+            sors: None,
         }
     }
 }

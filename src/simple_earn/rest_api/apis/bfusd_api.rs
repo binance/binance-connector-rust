@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -76,17 +76,81 @@ impl BfusdApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetBfusdSubscriptionHistoryAssetEnum {
+    #[serde(rename = "USDC")]
+    Usdc,
+    #[serde(rename = "USDT")]
+    Usdt,
+}
+
+impl GetBfusdSubscriptionHistoryAssetEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Usdc => "USDC",
+            Self::Usdt => "USDT",
+        }
+    }
+}
+
+impl std::str::FromStr for GetBfusdSubscriptionHistoryAssetEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "USDC" => Ok(Self::Usdc),
+            "USDT" => Ok(Self::Usdt),
+            other => Err(format!("invalid GetBfusdSubscriptionHistoryAssetEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum RedeemBfusdTypeEnum {
+    #[serde(rename = "FAST")]
+    Fast,
+    #[serde(rename = "STANDARD")]
+    Standard,
+}
+
+impl RedeemBfusdTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Fast => "FAST",
+            Self::Standard => "STANDARD",
+        }
+    }
+}
+
+impl std::str::FromStr for RedeemBfusdTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "FAST" => Ok(Self::Fast),
+            "STANDARD" => Ok(Self::Standard),
+            other => Err(format!("invalid RedeemBfusdTypeEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`get_bfusd_account`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bfusd_account`](#method.get_bfusd_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBfusdAccountParams {
-    /// The value cannot be greater than 60000 (ms)
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -102,13 +166,15 @@ impl GetBfusdAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bfusd_quota_details`](#method.get_bfusd_quota_details).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBfusdQuotaDetailsParams {
-    /// The value cannot be greater than 60000 (ms)
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -124,7 +190,7 @@ impl GetBfusdQuotaDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bfusd_rate_history`](#method.get_bfusd_rate_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBfusdRateHistoryParams {
     ///
@@ -132,27 +198,33 @@ pub struct GetBfusdRateHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    /// The value cannot be greater than 60000 (ms)
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -168,7 +240,7 @@ impl GetBfusdRateHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bfusd_redemption_history`](#method.get_bfusd_redemption_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBfusdRedemptionHistoryParams {
     ///
@@ -176,27 +248,33 @@ pub struct GetBfusdRedemptionHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    /// The value cannot be greater than 60000 (ms)
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -212,7 +290,7 @@ impl GetBfusdRedemptionHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bfusd_rewards_history`](#method.get_bfusd_rewards_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBfusdRewardsHistoryParams {
     ///
@@ -220,27 +298,33 @@ pub struct GetBfusdRewardsHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    /// The value cannot be greater than 60000 (ms)
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -256,40 +340,48 @@ impl GetBfusdRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bfusd_subscription_history`](#method.get_bfusd_subscription_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBfusdSubscriptionHistoryParams {
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub asset: Option<String>,
+    #[serde(rename = "asset", default)]
+    pub asset: Option<GetBfusdSubscriptionHistoryAssetEnum>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    /// The value cannot be greater than 60000 (ms)
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -305,23 +397,26 @@ impl GetBfusdSubscriptionHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_bfusd`](#method.redeem_bfusd).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemBfusdParams {
-    /// Amount
+    /// Amount in BFUSD
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// FAST or STANDARD, defaults to STANDARD
+    /// defaults to STANDARD
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
-    /// The value cannot be greater than 60000 (ms)
+    #[serde(rename = "type")]
+    pub r#type: RedeemBfusdTypeEnum,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -330,11 +425,14 @@ impl RedeemBfusdParams {
     ///
     /// Required parameters:
     ///
-    /// * `amount` — Amount
-    /// * `r#type` — FAST or STANDARD, defaults to STANDARD
+    /// * `amount` — Amount in BFUSD
+    /// * `r#type` — defaults to STANDARD
     ///
     #[must_use]
-    pub fn builder(amount: rust_decimal::Decimal, r#type: String) -> RedeemBfusdParamsBuilder {
+    pub fn builder(
+        amount: rust_decimal::Decimal,
+        r#type: RedeemBfusdTypeEnum,
+    ) -> RedeemBfusdParamsBuilder {
         RedeemBfusdParamsBuilder::default()
             .amount(amount)
             .r#type(r#type)
@@ -344,23 +442,27 @@ impl RedeemBfusdParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_bfusd`](#method.subscribe_bfusd).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeBfusdParams {
-    /// USDT or USDC (whichever is eligible)
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
     /// Amount
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// The value cannot be greater than 60000 (ms)
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -369,7 +471,7 @@ impl SubscribeBfusdParams {
     ///
     /// Required parameters:
     ///
-    /// * `asset` — USDT or USDC (whichever is eligible)
+    /// * `asset` — String
     /// * `amount` — Amount
     ///
     #[must_use]
@@ -771,7 +873,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"bfusdAmount":"100","usdtProfit":"11.00","bfusdProfit":"1.81"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdAccountResponse");
@@ -798,7 +900,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBfusdQuotaDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdQuotaDetailsResponse");
@@ -828,7 +930,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBfusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdRateHistoryResponse");
@@ -855,7 +957,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBfusdRedemptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdRedemptionHistoryResponse");
@@ -882,7 +984,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBfusdRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdRewardsHistoryResponse");
@@ -909,7 +1011,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBfusdSubscriptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdSubscriptionHistoryResponse");
@@ -936,7 +1038,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemBfusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemBfusdResponse");
@@ -964,7 +1066,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#).unwrap();
+                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeBfusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeBfusdResponse");
@@ -990,7 +1093,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"bfusdAmount":"100","usdtProfit":"11.00","bfusdProfit":"1.81"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdAccountResponse");
@@ -1018,7 +1121,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"bfusdAmount":"100","usdtProfit":"11.00","bfusdProfit":"1.81"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBfusdAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdAccountResponse");
@@ -1056,7 +1159,7 @@ mod tests {
 
             let params = GetBfusdQuotaDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
             let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");
@@ -1073,7 +1176,7 @@ mod tests {
 
             let params = GetBfusdQuotaDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subscriptionQuota":{"leftQuota":"1000"},"fastRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.001","freeQuota":"100"},"standardRedemptionQuota":{"leftQuota":"2","minimum":"0.1","fee":"0.0005","redeemPeriod":3}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdQuotaDetailsResponse");
 
             let resp = client.get_bfusd_quota_details(params).await.expect("Expected a response");
@@ -1109,7 +1212,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBfusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdRateHistoryResponse");
@@ -1141,7 +1244,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"rows":[{"annualPercentageRate":"0.0418","time":1577233578000}],"total":"1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBfusdRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBfusdRateHistoryResponse");
@@ -1179,7 +1282,7 @@ mod tests {
 
             let params = GetBfusdRedemptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRedemptionHistoryResponse");
 
             let resp = client.get_bfusd_redemption_history(params).await.expect("Expected a response");
@@ -1196,7 +1299,7 @@ mod tests {
 
             let params = GetBfusdRedemptionHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"BFUSD","amount":"51","receiveAsset":"USDT","receiveAmount":"50","fee":"1","arrivalTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRedemptionHistoryResponse");
 
             let resp = client.get_bfusd_redemption_history(params).await.expect("Expected a response");
@@ -1229,7 +1332,7 @@ mod tests {
 
             let params = GetBfusdRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRewardsHistoryResponse");
 
             let resp = client.get_bfusd_rewards_history(params).await.expect("Expected a response");
@@ -1246,7 +1349,7 @@ mod tests {
 
             let params = GetBfusdRewardsHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"rewardAsset":"BFUSD","rewardsAmount":"1","BFUSDPosition":"100","annualPercentageRate":"0.0418"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdRewardsHistoryResponse");
 
             let resp = client.get_bfusd_rewards_history(params).await.expect("Expected a response");
@@ -1279,7 +1382,7 @@ mod tests {
 
             let params = GetBfusdSubscriptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdSubscriptionHistoryResponse");
 
             let resp = client.get_bfusd_subscription_history(params).await.expect("Expected a response");
@@ -1294,9 +1397,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBfusdApiClient { force_error: false };
 
-            let params = GetBfusdSubscriptionHistoryParams::builder().asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetBfusdSubscriptionHistoryParams::builder().asset(GetBfusdSubscriptionHistoryAssetEnum::Usdc).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"USDT","amount":"100","receiveAsset":"BFUSD","receiveAmount":"100","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBfusdSubscriptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBfusdSubscriptionHistoryResponse");
 
             let resp = client.get_bfusd_subscription_history(params).await.expect("Expected a response");
@@ -1329,9 +1432,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBfusdApiClient { force_error: false };
 
-            let params = RedeemBfusdParams::builder(dec!(1.0),"s".to_string(),).build().unwrap();
+            let params = RedeemBfusdParams::builder(dec!(1.0),RedeemBfusdTypeEnum::Fast,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemBfusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemBfusdResponse");
 
             let resp = client.redeem_bfusd(params).await.expect("Expected a response");
@@ -1346,9 +1449,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBfusdApiClient { force_error: false };
 
-            let params = RedeemBfusdParams::builder(dec!(1.0),"s".to_string(),).recv_window(5000).build().unwrap();
+            let params = RedeemBfusdParams::builder(dec!(1.0),RedeemBfusdTypeEnum::Fast,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"receiveAmount":"0.23092091","fee":"0.00000012","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemBfusdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemBfusdResponse");
 
             let resp = client.redeem_bfusd(params).await.expect("Expected a response");
@@ -1363,7 +1466,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBfusdApiClient { force_error: true };
 
-            let params = RedeemBfusdParams::builder(dec!(1.0), "s".to_string())
+            let params = RedeemBfusdParams::builder(dec!(1.0), RedeemBfusdTypeEnum::Fast)
                 .build()
                 .unwrap();
 
@@ -1381,12 +1484,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBfusdApiClient { force_error: false };
 
-            let params = SubscribeBfusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeBfusdParams::builder("USDT".to_string(), dec!(1.0))
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#).unwrap();
+                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeBfusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeBfusdResponse");
@@ -1406,13 +1510,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBfusdApiClient { force_error: false };
 
-            let params = SubscribeBfusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeBfusdParams::builder("USDT".to_string(), dec!(1.0))
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#).unwrap();
+                serde_json::from_str(r#"{"success":true,"bfusdAmount":"0.22091092"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeBfusdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeBfusdResponse");
@@ -1432,7 +1537,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBfusdApiClient { force_error: true };
 
-            let params = SubscribeBfusdParams::builder("asset_example".to_string(), dec!(1.0))
+            let params = SubscribeBfusdParams::builder("USDT".to_string(), dec!(1.0))
                 .build()
                 .unwrap();
 

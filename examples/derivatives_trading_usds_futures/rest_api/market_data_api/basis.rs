@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = BasisParams::builder(
-        "pair_example".to_string(),
+        "BTCUSDT".to_string(),
         BasisContractTypeEnum::Perpetual,
         BasisPeriodEnum::Period5m,
     )

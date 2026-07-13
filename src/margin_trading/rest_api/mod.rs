@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -31,9 +31,9 @@ pub struct RestApi {
     account_api_client: AccountApiClient,
     borrow_repay_api_client: BorrowRepayApiClient,
     market_data_api_client: MarketDataApiClient,
-    risk_data_stream_api_client: RiskDataStreamApiClient,
     trade_api_client: TradeApiClient,
     transfer_api_client: TransferApiClient,
+    user_data_stream_api_client: UserDataStreamApiClient,
 }
 
 impl RestApi {
@@ -41,18 +41,18 @@ impl RestApi {
         let account_api_client = AccountApiClient::new(configuration.clone());
         let borrow_repay_api_client = BorrowRepayApiClient::new(configuration.clone());
         let market_data_api_client = MarketDataApiClient::new(configuration.clone());
-        let risk_data_stream_api_client = RiskDataStreamApiClient::new(configuration.clone());
         let trade_api_client = TradeApiClient::new(configuration.clone());
         let transfer_api_client = TransferApiClient::new(configuration.clone());
+        let user_data_stream_api_client = UserDataStreamApiClient::new(configuration.clone());
 
         Self {
             configuration,
             account_api_client,
             borrow_repay_api_client,
             market_data_api_client,
-            risk_data_stream_api_client,
             trade_api_client,
             transfer_api_client,
+            user_data_stream_api_client,
         }
     }
 
@@ -130,9 +130,12 @@ impl RestApi {
     ///
     /// Adjust cross margin max leverage
     ///
-    /// * The margin level need higher than the initial risk ratio of adjusted leverage, the initial risk ratio of 3x is 1.5 , the initial risk ratio of 5x is 1.25;  The detail conditions on how to switch between Cross Margin Classic and Cross Margin Pro can refer to [the FAQ](https://www.binance.com/en/support/faq/how-to-activate-the-cross-margin-pro-mode-on-binance-e27786da05e743a694b8c625b3bc475d).
+    /// Weight(UID): 3000, 1 times/min per IP
     ///
-    /// Weight: 3000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The margin level need higher than the initial risk ratio of adjusted leverage, the initial risk ratio of 3x is 1.5 , the initial risk ratio of 5x is 1.25; The detail conditions on how to switch between Cross Margin Classic and Cross Margin Pro can refer to [the FAQ](https://www.binance.com/en/support/faq/how-to-activate-the-cross-margin-pro-mode-on-binance-e27786da05e743a694b8c625b3bc475d).
     ///
     /// # Arguments
     ///
@@ -162,7 +165,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Adjust-cross-margin-max-leverage).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#adjust-cross-margin-max-leverage).
     ///
     pub async fn adjust_cross_margin_max_leverage(
         &self,
@@ -175,10 +178,11 @@ impl RestApi {
 
     /// Disable Isolated Margin Account (TRADE)
     ///
-    /// Disable isolated margin account for a specific symbol. Each trading pair can only be deactivated once every 24
-    /// hours.
+    /// Disable isolated margin account for a specific symbol. Each trading pair can only be deactivated once every 24 hours.
     ///
-    /// Weight: 300(UID)
+    /// Weight(UID): 300
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -208,7 +212,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Disable-Isolated-Margin-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#disable-isolated-margin-account).
     ///
     pub async fn disable_isolated_margin_account(
         &self,
@@ -223,7 +227,9 @@ impl RestApi {
     ///
     /// Enable isolated margin account for a specific symbol(Only supports activation of previously disabled accounts).
     ///
-    /// Weight: 300(UID)
+    /// Weight(UID): 300
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -253,7 +259,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Enable-Isolated-Margin-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#enable-isolated-margin-account).
     ///
     pub async fn enable_isolated_margin_account(
         &self,
@@ -268,7 +274,9 @@ impl RestApi {
     ///
     /// Get BNB Burn Status
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -298,7 +306,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Get-BNB-Burn-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#get-bnb-burn-status).
     ///
     pub async fn get_bnb_burn_status(
         &self,
@@ -311,7 +319,9 @@ impl RestApi {
     ///
     /// Get personal margin level information
     ///
-    /// Weight: 10(IP)
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -341,7 +351,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Get-Summary-of-Margin-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#get-summary-of-margin-account).
     ///
     pub async fn get_summary_of_margin_account(
         &self,
@@ -356,7 +366,19 @@ impl RestApi {
     ///
     /// Query Cross Isolated Margin Capital Flow
     ///
-    /// Weight: 100(IP)
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Only supports querying the data of the last 90 days
+    ///
+    /// - The time between startTime and endTime cannot be longer than 7 days.
+    ///
+    /// - If fromId is set, the data with id > fromId will be returned.
+    /// Otherwise the latest data will be returned
+    ///
+    /// - To query isolated data, Symbol needs to be entered.
     ///
     /// # Arguments
     ///
@@ -386,7 +408,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Query-Cross-Isolated-Margin-Capital-Flow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#query-cross-isolated-margin-capital-flow).
     ///
     pub async fn query_cross_isolated_margin_capital_flow(
         &self,
@@ -403,7 +425,9 @@ impl RestApi {
     ///
     /// Query Cross Margin Account Details
     ///
-    /// Weight: 10(IP)
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -433,7 +457,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Account-Details).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#query-cross-margin-account-details).
     ///
     pub async fn query_cross_margin_account_details(
         &self,
@@ -448,7 +472,9 @@ impl RestApi {
     ///
     /// Get cross margin fee data collection with any vip level or user's current specific data as <https://www.binance.com/en/margin-fee>
     ///
-    /// Weight: 1 when coin is specified;(IP)
+    /// Weight: 1 when coin is specified;(IP) 5 when the coin parameter is omitted(IP)
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -478,7 +504,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Fee-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#query-cross-margin-fee-data).
     ///
     pub async fn query_cross_margin_fee_data(
         &self,
@@ -493,7 +519,9 @@ impl RestApi {
     ///
     /// Query enabled isolated margin account limit.
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -523,7 +551,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#query-enabled-isolated-margin-account-limit).
     ///
     pub async fn query_enabled_isolated_margin_account_limit(
         &self,
@@ -539,10 +567,15 @@ impl RestApi {
     ///
     /// Query Isolated Margin Account Info
     ///
-    /// * If "symbols" is not sent, all isolated assets will be returned.
-    /// * If "symbols" is sent, only the isolated assets of the sent symbols will be returned.
+    /// Weight(IP): 10
     ///
-    /// Weight: 10(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If "symbols" is not sent, all isolated assets will be returned.
+    ///
+    /// - If "symbols" is sent, only the isolated assets of the sent symbols
+    /// will be returned.
     ///
     /// # Arguments
     ///
@@ -572,7 +605,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Query-Isolated-Margin-Account-Info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#query-isolated-margin-account-info).
     ///
     pub async fn query_isolated_margin_account_info(
         &self,
@@ -587,7 +620,9 @@ impl RestApi {
     ///
     /// Get isolated margin fee data collection with any vip level or user's current specific data as <https://www.binance.com/en/margin-fee>
     ///
-    /// Weight: 1 when a single is specified;(IP)
+    /// Weight: 1 when a single is specified;(IP) 10 when the symbol parameter is omitted(IP)
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -617,7 +652,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/account/Query-Isolated-Margin-Fee-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/account#query-isolated-margin-fee-data).
     ///
     pub async fn query_isolated_margin_fee_data(
         &self,
@@ -632,7 +667,9 @@ impl RestApi {
     ///
     /// Get future hourly interest rate
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -662,7 +699,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/borrow-and-repay/Get-a-future-hourly-interest-rate).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/borrow-repay#get-future-hourly-interest-rate).
     ///
     pub async fn get_future_hourly_interest_rate(
         &self,
@@ -678,20 +715,40 @@ impl RestApi {
     ///
     /// Get Interest History
     ///
-    /// * Response in descending order
-    /// * If isolatedSymbol is not sent, crossed margin data will be returned
-    /// * The max interval between `startTime` and `endTime` is 30 days.  It is a MUST to ensure data correctness.
-    /// * If `startTime`and `endTime` not sent, return records of the last 7 days by default.
-    /// * If `startTime` is sent and `endTime` is not sent, return records of [max(`startTime`, now-30d), now].
-    /// * If `startTime` is not sent and `endTime` is sent, return records of [`endTime`-7, `endTime`]
-    /// * `type` in response has 4 enums:
-    /// * `PERIODIC` interest charged per hour
-    /// * `ON_BORROW` first interest charged on borrow
-    /// * `PERIODIC_CONVERTED` interest charged per hour converted into BNB
-    /// * `ON_BORROW_CONVERTED` first interest charged on borrow converted into BNB
-    /// * `PORTFOLIO` interest charged daily on the portfolio margin negative balance
+    /// Weight(IP): 1
     ///
-    /// Weight: 1(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Response in descending order
+    ///
+    /// - If isolatedSymbol is not sent, crossed margin data will be returned
+    ///
+    /// - The max interval between `startTime` and `endTime` is 30 days. It is a
+    /// MUST to ensure data correctness.
+    ///
+    /// - If `startTime`and `endTime` not sent, return records of the last 7
+    /// days by default.
+    ///
+    /// - If `startTime` is sent and `endTime` is not sent, return records of
+    /// [max(`startTime`, now-30d), now].
+    ///
+    /// - If `startTime` is not sent and `endTime` is sent, return records of
+    /// [`endTime`-7, `endTime`]
+    ///
+    /// - `type` in response has 4 enums:
+    ///
+    /// - `PERIODIC` interest charged per hour
+    ///
+    /// - `ON_BORROW` first interest charged on borrow
+    ///
+    /// - `PERIODIC_CONVERTED` interest charged per hour converted into BNB
+    ///
+    /// - `ON_BORROW_CONVERTED` first interest charged on borrow converted into
+    /// BNB
+    ///
+    /// - `PORTFOLIO` interest charged daily on the portfolio margin negative
+    /// balance
     ///
     /// # Arguments
     ///
@@ -721,7 +778,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/borrow-and-repay/Get-Interest-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/borrow-repay#get-interest-history).
     ///
     pub async fn get_interest_history(
         &self,
@@ -732,11 +789,13 @@ impl RestApi {
             .await
     }
 
-    /// Margin account borrow/repay(MARGIN)
+    /// Margin account borrow/repay (`USER_DATA`)
     ///
-    /// Margin account borrow/repay(MARGIN)
+    /// Margin account borrow/repay
     ///
-    /// Weight: 1500
+    /// Weight(UID): 1500
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -766,7 +825,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/borrow-and-repay/Margin-account-borrow-repay).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/borrow-repay#margin-account-borrow-repay).
     ///
     pub async fn margin_account_borrow_repay(
         &self,
@@ -777,16 +836,24 @@ impl RestApi {
             .await
     }
 
-    /// Query borrow/repay records in Margin `account(USER_DATA)`
+    /// Query borrow/repay records in Margin account (`USER_DATA`)
     ///
     /// Query borrow/repay records in Margin account
     ///
-    /// * `txId` or `startTime` must be sent. `txId` takes precedence.
-    /// * If an asset is sent, data within 30 days before `endTime`; If an asset is not sent, data within 7 days before `endTime`
-    /// * If neither `startTime` nor `endTime` is sent, the recent 7-day data will be returned.
-    /// * `startTime` set as `endTime` - 7days by default, `endTime` set as current time by default
+    /// Weight(IP): 10
     ///
-    /// Weight: 10(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `txId` or `startTime` must be sent. `txId` takes precedence.
+    ///
+    /// - Response in descending order
+    ///
+    /// - If an asset is sent, data within 30 days before `endTime`; If an asset is not sent, data within 7 days before `endTime`
+    ///
+    /// - If neither `startTime` nor `endTime` is sent, the recent 7-day data will be returned.
+    ///
+    /// - `startTime` set as `endTime` - 7 days by default, `endTime` set as current time by default
     ///
     /// # Arguments
     ///
@@ -816,7 +883,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Borrow-Repay).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/borrow-repay#query-borrow-repay-records-in-margin-account).
     ///
     pub async fn query_borrow_repay_records_in_margin_account(
         &self,
@@ -832,7 +899,9 @@ impl RestApi {
     ///
     /// Query Margin Interest Rate History
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -862,7 +931,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Margin-Interest-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/borrow-repay#query-margin-interest-rate-history).
     ///
     pub async fn query_margin_interest_rate_history(
         &self,
@@ -878,10 +947,13 @@ impl RestApi {
     ///
     /// Query Max Borrow
     ///
-    /// * If isolatedSymbol is not sent, crossed margin data will be sent.
-    /// * `borrowLimit` is also available from [https://www.binance.com/en/margin-fee](https://www.binance.com/en/margin-fee)
+    /// Weight(IP): 50
     ///
-    /// Weight: 50(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If isolatedSymbol is not sent, crossed margin data will be sent.
+    /// - `borrowLimit` is also available from [https://www.binance.com/en/margin-fee](https://www.binance.com/en/margin-fee)
     ///
     /// # Arguments
     ///
@@ -911,7 +983,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Max-Borrow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/borrow-repay#query-max-borrow).
     ///
     pub async fn query_max_borrow(
         &self,
@@ -924,7 +996,9 @@ impl RestApi {
     ///
     /// Cross margin collateral ratio
     ///
-    /// Weight: 100(IP)
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -954,7 +1028,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Cross-margin-collateral-ratio).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#cross-margin-collateral-ratio).
     ///
     pub async fn cross_margin_collateral_ratio(
         &self,
@@ -968,7 +1042,9 @@ impl RestApi {
     ///
     /// Get All Cross Margin Pairs
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -998,7 +1074,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-All-Cross-Margin-Pairs).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-all-cross-margin-pairs).
     ///
     pub async fn get_all_cross_margin_pairs(
         &self,
@@ -1009,11 +1085,13 @@ impl RestApi {
             .await
     }
 
-    /// Get All Isolated Margin `Symbol(MARKET_DATA)`
+    /// Get All Isolated Margin Symbol (`MARKET_DATA`)
     ///
     /// Get All Isolated Margin Symbol
     ///
-    /// Weight: 10(IP)
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1043,7 +1121,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-All-Isolated-Margin-Symbol).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-all-isolated-margin-symbol).
     ///
     pub async fn get_all_isolated_margin_symbol(
         &self,
@@ -1058,7 +1136,9 @@ impl RestApi {
     ///
     /// Get All Margin Assets.
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1088,7 +1168,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-All-Margin-Assets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-all-margin-assets).
     ///
     pub async fn get_all_margin_assets(
         &self,
@@ -1103,7 +1183,9 @@ impl RestApi {
     ///
     /// Get tokens or symbols delist schedule for cross margin and isolated margin
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1133,7 +1215,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-Delist-Schedule).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-delist-schedule).
     ///
     pub async fn get_delist_schedule(
         &self,
@@ -1144,16 +1226,29 @@ impl RestApi {
             .await
     }
 
-    /// Get Limit Price `Pairs(MARKET_DATA)`
+    /// Get Limit Price Pairs (`MARKET_DATA`)
     ///
     /// Query trading pairs with restriction on limit price range.
-    /// In margin trading, you can place orders with limit price. Limit price should be within (-15%, 15%) of current index price for a list of margin trading pairs. This rule only impacts limit sell orders with limit price that is lower than current index price and limit buy orders with limit price that is higher than current index price.
     ///
-    /// - Buy order: Your order will be rejected with an error message notification if the limit price is 15% above the index price.
-    /// - Sell order: Your order will be rejected with an error message notification if the limit price is 15% below the index price.
-    /// Please review the limit price order placing strategy, backtest and calibrate the planned order size with the trading volume and order book depth to prevent trading loss.
+    /// In margin trading, you can place orders with limit price. Limit price
+    /// should be within (-15%, 15%) of current index price for a list of margin
+    /// trading pairs. This rule only impacts limit sell orders with limit price
+    /// that is lower than current index price and limit buy orders with limit
+    /// price that is higher than current index price.
     ///
-    /// Weight: 1
+    /// - Buy order: Your order will be rejected with an error message
+    /// notification if the limit price is 15% above the index price.
+    ///
+    /// - Sell order: Your order will be rejected with an error message
+    /// notification if the limit price is 15% below the index price.
+    ///
+    /// Please review the limit price order placing strategy, backtest and
+    /// calibrate the planned order size with the trading volume and order book
+    /// depth to prevent trading loss.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1183,7 +1278,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-Limit-Price-Pairs).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-limit-price-pairs).
     ///
     pub async fn get_limit_price_pairs(
         &self,
@@ -1195,7 +1290,9 @@ impl RestApi {
     ///
     /// Get the upcoming tokens or symbols listing schedule for Cross Margin and Isolated Margin.
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1225,7 +1322,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-list-Schedule).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-list-schedule).
     ///
     pub async fn get_list_schedule(
         &self,
@@ -1238,7 +1335,9 @@ impl RestApi {
     ///
     /// Get Margin Asset Risk-Based Liquidation Ratio
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1268,7 +1367,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-Margin-Asset-Risk-Based-Liquidation-Ratio).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-margin-asset-risk-based-liquidation-ratio).
     ///
     pub async fn get_margin_asset_risk_based_liquidation_ratio(
         &self,
@@ -1282,9 +1381,11 @@ impl RestApi {
 
     /// Get Margin Restricted Assets (`MARKET_DATA`)
     ///
-    /// Get Margin Restricted Assets
+    /// Get the list of margin-restricted assets.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1314,7 +1415,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Get-Margin-Restricted-Assets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#get-margin-restricted-assets).
     ///
     pub async fn get_margin_restricted_assets(
         &self,
@@ -1328,7 +1429,9 @@ impl RestApi {
     ///
     /// Get isolated margin tier data collection with any tier as <https://www.binance.com/en/margin-data>
     ///
-    /// Weight: 1(IP)
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1358,7 +1461,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#query-isolated-margin-tier-data).
     ///
     pub async fn query_isolated_margin_tier_data(
         &self,
@@ -1370,11 +1473,13 @@ impl RestApi {
             .await
     }
 
-    /// Query Liability Coin Leverage Bracket in Cross Margin Pro `Mode(MARKET_DATA)`
+    /// Query Liability Coin Leverage Bracket in Cross Margin Pro Mode (`MARKET_DATA`)
     ///
     /// Liability Coin Leverage Bracket in Cross Margin Pro Mode
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1404,7 +1509,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Query-Liability-Coin-Leverage-Bracket-in-Cross-Margin-Pro-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#query-liability-coin-leverage-bracket-in-cross-margin-pro-mode).
     ///
     pub async fn query_liability_coin_leverage_bracket_in_cross_margin_pro_mode(
         &self,
@@ -1418,11 +1523,13 @@ impl RestApi {
             .await
     }
 
-    /// Query Margin Available `Inventory(USER_DATA)`
+    /// Query Margin Available Inventory (`USER_DATA`)
     ///
     /// Margin available Inventory query
     ///
-    /// Weight: 50
+    /// Weight(UID): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1452,7 +1559,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Query-margin-avaliable-inventory).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#query-margin-available-inventory).
     ///
     pub async fn query_margin_available_inventory(
         &self,
@@ -1467,7 +1574,9 @@ impl RestApi {
     ///
     /// Query Margin `PriceIndex`
     ///
-    /// Weight: 10(IP)
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1497,7 +1606,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/market-data/Query-Margin-PriceIndex).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/market-data#query-margin-priceindex).
     ///
     pub async fn query_margin_priceindex(
         &self,
@@ -1508,141 +1617,16 @@ impl RestApi {
             .await
     }
 
-    /// Close User Data Stream (`USER_STREAM`)
+    /// Create Special Key(Low-Latency Trading) (TRADE)
     ///
-    /// Close out a user data stream.
-    ///
-    /// Weight: 3000
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`CloseUserDataStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<Value>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/risk-data-stream/Close-User-Data-Stream).
-    ///
-    pub async fn close_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
-        self.risk_data_stream_api_client
-            .close_user_data_stream()
-            .await
-    }
-
-    /// Keepalive User Data Stream (`USER_STREAM`)
-    ///
-    /// Keepalive a user data stream to prevent a time out.
-    ///
-    /// Weight: 1
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`KeepaliveUserDataStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<Value>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/risk-data-stream/Keepalive-User-Data-Stream).
-    ///
-    pub async fn keepalive_user_data_stream(
-        &self,
-        params: KeepaliveUserDataStreamParams,
-    ) -> anyhow::Result<RestApiResponse<Value>> {
-        self.risk_data_stream_api_client
-            .keepalive_user_data_stream(params)
-            .await
-    }
-
-    /// Start User Data Stream (`USER_STREAM`)
-    ///
-    /// Start a new user data stream.
-    ///
-    /// Weight: 1
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`StartUserDataStreamParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::StartUserDataStreamResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/risk-data-stream/Start-User-Data-Stream).
-    ///
-    pub async fn start_user_data_stream(
-        &self,
-    ) -> anyhow::Result<RestApiResponse<models::StartUserDataStreamResponse>> {
-        self.risk_data_stream_api_client
-            .start_user_data_stream()
-            .await
-    }
-
-    /// Create Special Key(Low-Latency Trading)(TRADE)
+    /// **Eligibility**
     ///
     /// - Binance Margin offers low-latency trading through a [special key](https://www.binance.com/en/support/faq/frequently-asked-questions-on-margin-special-api-key-3208663e900d4d2e9fec4140e1832f4e), available exclusively to users with VIP level 7 or higher.
     /// - If you are VIP level 6 or below, please contact your VIP manager for eligibility criterias.
+    /// - All new Margin Special Key users are required to read, understand, and agree to the Margin Special Key Supplemental Product Terms at the master account level before creating a Margin Special Key.
+    /// - Once signed at the master account level, the agreement applies to all sub-accounts. The master account and all sub-accounts (Cross Margin Classic and Portfolio Margin Pro) are authorized to create a Margin Special Key and are subject to the `LiquidationLoan` policy.
+    ///
+    /// For more information, please refer to [FAQ](https://www.binance.com/en/support/faq/detail/3208663e900d4d2e9fec4140e1832f4e).
     ///
     /// **Supported Products:**
     ///
@@ -1662,7 +1646,28 @@ impl RestApi {
     ///
     /// We recommend to **use Ed25519 API keys** as it should provide the best performance and security out of all supported key types. We accept PKCS#8 (BEGIN PUBLIC KEY). For how to generate an RSA key pair to send API requests on Binance. Please refer to the document below [FAQ](https://www.binance.com/en/support/faq/how-to-generate-an-rsa-key-pair-to-send-api-requests-on-binance-2b79728f331e43079b27440d9d15c5db) .
     ///
-    /// Weight: 1(UID)
+    /// **How to use the Margin Special Key**
+    /// - Use the below `sapi` endpoint to create your margin special API Key.
+    /// - For accessing the Cross Margin account, do not send the `symbol` parameter.
+    /// - For accessing the Isolated Margin account(s), pass the relevant `symbol` parameter in the API Key creation request.
+    /// - Use the generated API Key (and Secret key, if applicable) to perform margin trading and listenKey generation via **Spot** REST API (`https://api.binance.com/api/v3/*`) endpoints.
+    ///
+    /// Read [REST API](/products/spot/rest-api#signed-trade-and-user_data-endpoint-security) or [WebSocket API](/products/spot/web-socket-api#request-security) documentation to learn how to use different API keys
+    ///
+    /// You need to enable Permits “Enable Spot & Margin Trading” option for the API Key which requests this endpoint.
+    ///
+    /// Weight(UID): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Response Notes:
+    /// - Error Code Description
+    ///
+    /// - **`UNSUPPORTED_OPERATION`** : Portfolio Margin is an unsupported
+    /// product, please change the account type to a supported margin product.
+    ///
+    /// - **Forbidden**:  Cross Margin Pro accounts require additional
+    /// agreements, please contact your relationship manager.
     ///
     /// # Arguments
     ///
@@ -1692,7 +1697,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Create-Special-Key-of-Low-Latency-Trading).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#create-special-key).
     ///
     pub async fn create_special_key(
         &self,
@@ -1701,15 +1706,26 @@ impl RestApi {
         self.trade_api_client.create_special_key(params).await
     }
 
-    /// Delete Special Key(Low-Latency Trading)(TRADE)
+    /// Delete Special Key(Low-Latency Trading) (TRADE)
     ///
-    /// This only applies to Special Key for Low Latency Trading.
+    /// Deleting your Margin Special Key alone does not exit you from the Margin Special Key framework or discharge your obligations under the Margin Special Key Supplemental Product Terms. To fully exit, you must:
     ///
-    /// If apiKey is given, apiName will be ignored. If apiName is given with no apiKey, all apikeys with given apiName will be deleted.
+    /// 1. Delete your Margin Special Key.
+    /// 2. Ensure there are no outstanding liabilities on the account.
+    /// 3. Call the Exit Margin Special Key API endpoint.
+    /// 4. Confirm the exit status via the API response.
     ///
-    /// You need to enable Permits “Enable Spot & Margin Trading” option for the API Key which requests this endpoint.
+    /// Only after step 4 is completed and the exit status is confirmed by Binance will your account revert to standard liquidation logic and no longer be subject to the Margin Special Key Supplemental Product Terms.
     ///
-    /// Weight: 1(UID)
+    /// If apiKey is given, apiName will be ignored. If apiName is given with no
+    /// apiKey, all apikeys with given apiName will be deleted.
+    ///
+    /// You need to enable Permits “Enable Spot & Margin” option for the API Key
+    /// which requests this endpoint.
+    ///
+    /// Weight(UID): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1739,7 +1755,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Delete-Special-Key-of-Low-Latency-Trading).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#delete-special-key).
     ///
     pub async fn delete_special_key(
         &self,
@@ -1748,13 +1764,17 @@ impl RestApi {
         self.trade_api_client.delete_special_key(params).await
     }
 
-    /// Edit ip for Special Key(Low-Latency Trading)(TRADE)
+    /// Edit ip for Special Key(Low-Latency Trading) (TRADE)
     ///
-    /// Edit ip restriction. This only applies to Special Key for Low Latency Trading.
+    /// Edit ip restriction. This only applies to Special Key for Low Latency
+    /// Trading.
     ///
-    /// You need to enable Permits “Enable Spot & Margin Trading” option for the API Key which requests this endpoint.
+    /// You need to enable Permits “Enable Spot & Margin” option for the API Key
+    /// which requests this endpoint.
     ///
-    /// Weight: 1(UID)
+    /// Weight(UID): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1784,7 +1804,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Edit-ip-for-Special-Key-of-Low-Latency-Trading).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#edit-ip-for-special-key).
     ///
     pub async fn edit_ip_for_special_key(
         &self,
@@ -1793,13 +1813,82 @@ impl RestApi {
         self.trade_api_client.edit_ip_for_special_key(params).await
     }
 
+    /// Exit Special Key Mode (TRADE)
+    ///
+    /// Exit the Margin Special Key mode for Cross Margin Classic accounts.
+    ///
+    /// **All outstanding liabilities under the Cross Margin Classic account must be fully repaid before calling this endpoint.** Deleting the Margin Special Key alone does not constitute a valid exit.
+    ///
+    /// When a user creates a Margin Special API Key, the account enters "Special Key Mode". Upon a successful request, the following actions will be performed atomically:
+    ///
+    /// 1. All existing Margin Special API Keys under the Cross Margin Classic mode account will be deleted.
+    /// 2. All pre-execution margin checks (including Open-order-loss calculation) will revert to standard mode.
+    /// 3. A cooldown period (default: 24 hours) will be enforced, during which the account will not be permitted to create new Margin Special API Keys.
+    ///
+    /// For more information, please refer to [FAQ](https://www.binance.com/en/support/faq/detail/3208663e900d4d2e9fec4140e1832f4e).
+    ///
+    /// **Preconditions:**
+    ///
+    /// The following conditions must be met; otherwise the request will be rejected:
+    ///
+    /// - Account type must be **Cross Margin Classic**.
+    /// - Account must currently be in **Special Key Mode**. If not, the request silently succeeds.
+    /// - Account must **not be in liquidation**.
+    /// - Account must **have no liability**.
+    ///
+    /// You need to enable "Permits Enable Spot & Margin Trading" option for the API Key which requests this endpoint.
+    ///
+    /// Weight(UID): 10
+    ///
+    /// Security Type: TRADE
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ExitSpecialKeyModeParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<serde_json::Value>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#exit-special-key-mode).
+    ///
+    pub async fn exit_special_key_mode(
+        &self,
+        params: ExitSpecialKeyModeParams,
+    ) -> anyhow::Result<RestApiResponse<serde_json::Value>> {
+        self.trade_api_client.exit_special_key_mode(params).await
+    }
+
     /// Get Force Liquidation Record (`USER_DATA`)
     ///
     /// Get Force Liquidation Record
     ///
-    /// * Response in descending order
+    /// Weight(IP): 1
     ///
-    /// Weight: 1(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Response in descending order
     ///
     /// # Arguments
     ///
@@ -1829,7 +1918,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Get-Force-Liquidation-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#get-force-liquidation-record).
     ///
     pub async fn get_force_liquidation_record(
         &self,
@@ -1844,7 +1933,9 @@ impl RestApi {
     ///
     /// Query the coins which can be small liability exchange
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1874,7 +1965,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-Coin-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#get-small-liability-exchange-coin-list).
     ///
     pub async fn get_small_liability_exchange_coin_list(
         &self,
@@ -1890,7 +1981,9 @@ impl RestApi {
     ///
     /// Get Small liability Exchange History
     ///
-    /// Weight: 100(UID)
+    /// Weight(UID): 100
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1920,7 +2013,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#get-small-liability-exchange-history).
     ///
     pub async fn get_small_liability_exchange_history(
         &self,
@@ -1931,12 +2024,59 @@ impl RestApi {
             .await
     }
 
+    /// Liquidation Loan Repay (MARGIN)
+    ///
+    /// Repays the outstanding cross-margin liquidation loan from the user's spot wallet. A liquidation loan represents the account deficit incurred when account equity turns negative during liquidation (bankruptcy). The repayment amount must be greater than 0 and cannot exceed the remaining loan balance. If the Spot Account has insufficient USDC balance, the repayment will fail.
+    ///
+    /// Weight(UID): 100
+    ///
+    /// Security Type: MARGIN
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`LiquidationLoanRepayParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::LiquidationLoanRepayResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#liquidation-loan-repay).
+    ///
+    pub async fn liquidation_loan_repay(
+        &self,
+        params: LiquidationLoanRepayParams,
+    ) -> anyhow::Result<RestApiResponse<models::LiquidationLoanRepayResponse>> {
+        self.trade_api_client.liquidation_loan_repay(params).await
+    }
+
     /// Margin Account Cancel all Open Orders on a Symbol (TRADE)
     ///
     /// Cancels all active orders on a symbol for margin account.<br></br>
     /// This includes OCO orders.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1966,7 +2106,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-All-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-cancel-all-open-orders-on-asymbol).
     ///
     pub async fn margin_account_cancel_all_open_orders_on_a_symbol(
         &self,
@@ -1983,9 +2123,12 @@ impl RestApi {
     ///
     /// Cancel an entire Order List for a margin account.
     ///
-    /// * Canceling an individual leg will cancel the entire OCO
+    /// Weight(UID): 1
     ///
-    /// Weight: 1(UID)
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Canceling an individual leg will cancel the entire OCO
     ///
     /// # Arguments
     ///
@@ -2015,7 +2158,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-cancel-oco).
     ///
     pub async fn margin_account_cancel_oco(
         &self,
@@ -2030,9 +2173,12 @@ impl RestApi {
     ///
     /// Cancel an active order for margin account.
     ///
-    /// * Either orderId or origClientOrderId must be sent.
+    /// Weight(IP): 10
     ///
-    /// Weight: 10(IP)
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either orderId or origClientOrderId must be sent.
     ///
     /// # Arguments
     ///
@@ -2062,7 +2208,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-cancel-order).
     ///
     pub async fn margin_account_cancel_order(
         &self,
@@ -2077,9 +2223,12 @@ impl RestApi {
     ///
     /// Send in a new OCO for a margin account
     ///
-    /// * autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
+    /// Weight: 6(UID) or 1500(UID) when sideEffectType is `MARGIN_BUY` or `AUTO_BORROW_REPAY`
     ///
-    /// Weight: 6(UID)
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
     ///
     /// # Arguments
     ///
@@ -2109,7 +2258,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-oco).
     ///
     pub async fn margin_account_new_oco(
         &self,
@@ -2122,9 +2271,12 @@ impl RestApi {
     ///
     /// Post a new order for margin account.
     ///
-    /// * autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
+    /// Weight: 6(UID) or 1500(UID) when sideEffectType is `MARGIN_BUY` or `AUTO_BORROW_REPAY`
     ///
-    /// Weight: 6(UID)
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
     ///
     /// # Arguments
     ///
@@ -2154,7 +2306,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-order).
     ///
     pub async fn margin_account_new_order(
         &self,
@@ -2167,17 +2319,38 @@ impl RestApi {
     ///
     /// Post a new OTO order for margin account:
     ///
-    /// - An OTO (One-Triggers-the-Other) is an order list comprised of 2 orders.
-    /// - The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
-    /// - The second order is called the **pending order**. It can be any order type except for `MARKET` orders using parameter `quoteOrderQty`. The pending order is only placed on the order book when the working order gets **fully filled**.
-    /// - If either the working order or the pending order is cancelled individually, the other order in the order list will also be canceled or expired.
-    /// - When the order list is placed, if the working order gets **immediately fully filled**, the placement response will show the working order as `FILLED` but the pending order will still appear as `PENDING_NEW`. You need to query the status of the pending order again to see its updated status.
-    /// - OTOs add **2 orders** to the unfilled order count, `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
+    /// - An OTO (One-Triggers-the-Other) is an order list comprised of 2
+    /// orders.
     ///
-    /// * autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
-    /// * Depending on the `pendingType` or `workingType`, some optional parameters will become mandatory:
+    /// - The first order is called the **working order** and must be `LIMIT` or
+    /// `LIMIT_MAKER`. Initially, only the working order goes on the order book.
     ///
-    /// Weight: 6(UID)
+    /// - The second order is called the **pending order**. It can be any order
+    /// type except for `MARKET` orders using parameter `quoteOrderQty`. The
+    /// pending order is only placed on the order book when the working order
+    /// gets **fully filled**.
+    ///
+    /// - If either the working order or the pending order is cancelled
+    /// individually, the other order in the order list will also be canceled or
+    /// expired.
+    ///
+    /// - When the order list is placed, if the working order gets **immediately
+    /// fully filled**, the placement response will show the working order as
+    /// `FILLED` but the pending order will still appear as `PENDING_NEW`. You
+    /// need to query the status of the pending order again to see its updated
+    /// status.
+    ///
+    /// - OTOs add **2 orders** to the unfilled order count,
+    /// `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
+    ///
+    /// Weight: 6(UID) or 1500(UID) when sideEffectType is `MARGIN_BUY` or `AUTO_BORROW_REPAY`
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
+    /// - Depending on the `pendingType` or `workingType`, some optional
+    /// - parameters will become mandatory: | Type                                                     | Additional mandatory parameters                              | Additional information | | -------------------------------------------------------- | ------------------------------------------------------------ | ---------------------- | | `workingType` = `LIMIT`                                  | `workingTimeInForce`                                         |                        | | `pendingType` = `LIMIT`                                  | `pendingPrice`, `pendingTimeInForce`                         |                        | | `pendingType` = `STOP_LOSS` or `TAKE_PROFIT`             | `pendingStopPrice` and/or `pendingTrailingDelta`             |                        | | `pendingType` = `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT` | `pendingPrice`, `pendingStopPrice` and/or `pendingTrailingDelta`, `pendingTimeInForce` |                        | | `pendingTrailingDelta` is provided | `pendingPrice` |                        |
     ///
     /// # Arguments
     ///
@@ -2207,7 +2380,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OTO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-oto).
     ///
     pub async fn margin_account_new_oto(
         &self,
@@ -2220,17 +2393,27 @@ impl RestApi {
     ///
     /// Post a new OTOCO order for margin account：
     ///
-    /// - An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list comprised of 3 orders.
-    /// - The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
+    ///
+    /// - An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list
+    /// comprised of 3 orders.
+    ///
+    /// - The first order is called the **working order** and must be `LIMIT` or
+    /// `LIMIT_MAKER`. Initially, only the working order goes on the order book.
     /// - The behavior of the working order is the same as the OTO.
-    /// - OTOCO has 2 pending orders (pending above and pending below), forming an OCO pair. The pending orders are only placed on the order book when the working order gets **fully filled**.
-    /// - The rules of the pending above and pending below follow the same rules as the [Order List OCO](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OCO).
-    /// - OTOCOs add **3 orders** against the unfilled order count, `EXCHANGE_MAX_NUM_ORDERS` filter, and `MAX_NUM_ORDERS` filter.
+    /// - OTOCO has 2 pending orders (pending above and pending below), forming
+    /// an OCO pair. The pending orders are only placed on the order book when
+    /// the working order gets **fully filled**.
+    /// - The rules of the pending above and pending below follow the same rules as the [Order List OCO](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-oco).
+    /// - OTOCOs add **3 orders** against the unfilled order count,
+    /// `EXCHANGE_MAX_NUM_ORDERS` filter, and `MAX_NUM_ORDERS` filter.
     ///
-    /// * autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
-    /// * Depending on the `pendingAboveType`/`pendingBelowType` or `workingType`, some optional parameters will become mandatory:
+    /// Weight: 6(UID) or 1500(UID) when sideEffectType is `MARGIN_BUY` or `AUTO_BORROW_REPAY`
     ///
-    /// Weight: 6(UID)
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - autoRepayAtCancel is suggested to set as “FALSE” to keep liability unrepaid under high frequent new order/cancel order execution
+    /// - Depending on the `pendingAboveType`/`pendingBelowType` or `workingType`, some optional parameters will become mandatory: | Type                                 | Additional mandatory parameters                              | Additional information | | ------------------------------------ | ------------------------------------------------------------ | ---------------------- | | `workingType` = `LIMIT`              | `workingTimeInForce`                                         |                        | | `pendingAboveType`= `LIMIT_MAKER`    | `pendingAbovePrice`                                          |                        | | `pendingAboveType`= `STOP_LOSS`      | `pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`   |                        | | `pendingAboveType`=`STOP_LOSS_LIMIT` | `pendingAbovePrice`, `pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`, `pendingAboveTimeInForce` |                        | | `pendingBelowType`= `LIMIT_MAKER`    | `pendingBelowPrice`                                          |                        | | `pendingBelowType`= `STOP_LOSS`      | `pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`   |                        | | `pendingBelowType`=`STOP_LOSS_LIMIT` | `pendingBelowPrice`, `pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`, `pendingBelowTimeInForce` |                        | | `pendingAboveTrailingDelta` is provided | `pendingAbovePrice` |                        | | `pendingBelowTrailingDelta` is provided | `pendingBelowPrice` |                        |
     ///
     /// # Arguments
     ///
@@ -2260,7 +2443,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OTOCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-otoco).
     ///
     pub async fn margin_account_new_otoco(
         &self,
@@ -2269,14 +2452,17 @@ impl RestApi {
         self.trade_api_client.margin_account_new_otoco(params).await
     }
 
-    /// Margin Manual Liquidation(MARGIN)
+    /// Margin Manual Liquidation (TRADE)
     ///
     /// Margin Manual Liquidation
     ///
-    /// * This endpoint can support Cross Margin Classic Mode and Pro Mode.
-    /// * And only support Isolated Margin for restricted region.
+    /// Weight(UID): 3000
     ///
-    /// Weight: 3000
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - This endpoint supports Cross Margin Classic Mode and Pro Mode.
+    /// - Isolated Margin is only supported in restricted regions.
     ///
     /// # Arguments
     ///
@@ -2306,7 +2492,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Margin-Manual-Liquidation).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-manual-liquidation).
     ///
     pub async fn margin_manual_liquidation(
         &self,
@@ -2321,7 +2507,9 @@ impl RestApi {
     ///
     /// Displays the user's current margin order count usage for all intervals.
     ///
-    /// Weight: 20(IP)
+    /// Weight(IP): 20
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2351,7 +2539,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Current-Margin-Order-Count-Usage).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-current-margin-order-count-usage).
     ///
     pub async fn query_current_margin_order_count_usage(
         &self,
@@ -2363,11 +2551,109 @@ impl RestApi {
             .await
     }
 
+    /// Query Liquidation Loan (`USER_DATA`)
+    ///
+    /// Query the current user's cross-margin liquidation loan information, including the original loan amount, repaid amount, and remaining amount. When a cross-margin account is liquidated and the account equity turns negative (bankruptcy), the system generates a liquidation loan record representing the deficit. This represents the shortfall amount denominated in USDC.
+    ///
+    /// Weight(UID): 100
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryLiquidationLoanParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::QueryLiquidationLoanResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-liquidation-loan).
+    ///
+    pub async fn query_liquidation_loan(
+        &self,
+        params: QueryLiquidationLoanParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryLiquidationLoanResponse>> {
+        self.trade_api_client.query_liquidation_loan(params).await
+    }
+
+    /// Query Liquidation Loan Repay History (`USER_DATA`)
+    ///
+    /// Query the repayment history of cross-margin liquidation loans (deficit caused by bankruptcy during liquidation). Supports time-range filtering and pagination.
+    ///
+    /// Weight(UID): 100
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The maximum query range is 90 days. If `startTime` is earlier than 90 days ago, it will be clamped to 90 days ago.
+    /// - Only records with status `SUCCESS` or `PENDING` are returned. Failed repayment records are excluded.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryLiquidationLoanRepayHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::QueryLiquidationLoanRepayHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-liquidation-loan-repay-history).
+    ///
+    pub async fn query_liquidation_loan_repay_history(
+        &self,
+        params: QueryLiquidationLoanRepayHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryLiquidationLoanRepayHistoryResponse>> {
+        self.trade_api_client
+            .query_liquidation_loan_repay_history(params)
+            .await
+    }
+
     /// Query Margin Account's all OCO (`USER_DATA`)
     ///
     /// Retrieves all OCO for a specific margin account based on provided optional parameters
     ///
-    /// Weight: 200(IP)
+    /// Weight(IP): 200
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2397,7 +2683,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-all-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-all-oco).
     ///
     pub async fn query_margin_accounts_all_oco(
         &self,
@@ -2412,11 +2698,18 @@ impl RestApi {
     ///
     /// Query Margin Account's All Orders
     ///
-    /// * If orderId is set, it will get orders >= that orderId. Otherwise the orders within 24 hours are returned.
-    /// * For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
-    /// * Less than 24 hours between startTime and endTime.
+    /// Weight(IP): 200
     ///
-    /// Weight: 200(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If orderId is set, it will get orders >= that orderId. Otherwise the
+    /// orders within 24 hours are returned.
+    ///
+    /// - For some historical orders cummulativeQuoteQty will be < 0, meaning
+    /// the data is not available at this time.
+    ///
+    /// - Less than 24 hours between startTime and endTime.
     ///
     /// # Arguments
     ///
@@ -2446,7 +2739,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-All-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-all-orders).
     ///
     pub async fn query_margin_accounts_all_orders(
         &self,
@@ -2462,7 +2755,9 @@ impl RestApi {
     ///
     /// Retrieves a specific OCO based on provided optional parameters
     ///
-    /// Weight: 10(IP)
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2492,7 +2787,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-oco).
     ///
     pub async fn query_margin_accounts_oco(
         &self,
@@ -2507,7 +2802,9 @@ impl RestApi {
     ///
     /// Query Margin Account's Open OCO
     ///
-    /// Weight: 10(IP)
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2537,7 +2834,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-open-oco).
     ///
     pub async fn query_margin_accounts_open_oco(
         &self,
@@ -2552,11 +2849,19 @@ impl RestApi {
     ///
     /// Query Margin Account's Open Orders
     ///
-    /// * If the symbol is not sent, orders for all symbols will be returned in an array.
-    /// * When all symbols are returned, the number of requests counted against the rate limiter is equal to the number of symbols currently trading on the exchange.
-    /// * If isIsolated ="TRUE", symbol must be sent.
+    /// Weight(IP): 10
     ///
-    /// Weight: 10(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If the symbol is not sent, orders for all symbols will be returned in
+    /// an array.
+    ///
+    /// - When all symbols are returned, the number of requests counted against
+    /// the rate limiter is equal to the number of symbols currently trading on
+    /// the exchange.
+    ///
+    /// - If isIsolated ="TRUE", symbol must be sent.
     ///
     /// # Arguments
     ///
@@ -2586,7 +2891,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-open-orders).
     ///
     pub async fn query_margin_accounts_open_orders(
         &self,
@@ -2602,10 +2907,15 @@ impl RestApi {
     ///
     /// Query Margin Account's Order
     ///
-    /// * Either orderId or origClientOrderId must be sent.
-    /// * For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
+    /// Weight(IP): 10
     ///
-    /// Weight: 10(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either orderId or origClientOrderId must be sent.
+    ///
+    /// - For some historical orders cummulativeQuoteQty will be < 0, meaning
+    /// the data is not available at this time.
     ///
     /// # Arguments
     ///
@@ -2635,7 +2945,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-order).
     ///
     pub async fn query_margin_accounts_order(
         &self,
@@ -2650,10 +2960,15 @@ impl RestApi {
     ///
     /// Query Margin Account's Trade List
     ///
-    /// * If fromId is set, it will get trades >= that fromId. Otherwise the trades within 24 hours are returned.
-    /// * Less than 24 hours between startTime and endTime.
+    /// Weight(IP): 10
     ///
-    /// Weight: 10(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If fromId is set, it will get trades >= that fromId. Otherwise the
+    /// trades within 24 hours are returned.
+    ///
+    /// - Less than 24 hours between startTime and endTime.
     ///
     /// # Arguments
     ///
@@ -2683,7 +2998,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-trade-list).
     ///
     pub async fn query_margin_accounts_trade_list(
         &self,
@@ -2695,10 +3010,32 @@ impl RestApi {
             .await
     }
 
-    /// Query Prevented `Matches(USER_DATA)`
+    /// Query Prevented Matches (`USER_DATA`)
     ///
+    /// Displays the list of orders that were expired due to STP. (Self-Trade Prevention).
     ///
-    /// Weight: 10(IP)
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Supported parameter combinations:
+    ///
+    /// - `symbol` + `preventedMatchId`
+    ///
+    /// - `symbol` + `orderId`
+    ///
+    /// - `symbol` + `orderId` + `fromPreventedMatchId`
+    ///
+    /// - If `orderId` is provided, all prevented matches for that order will be
+    /// returned.
+    ///
+    /// - If `preventedMatchId` is provided, the specific prevented match will
+    /// be returned.
+    ///
+    /// - A single request returns a maximum of 500 records. If there are more
+    /// than 500 records, use `symbol` + `orderId` + `fromPreventedMatchId`
+    /// combination for pagination.
     ///
     /// # Arguments
     ///
@@ -2728,7 +3065,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Prevented-Matches).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-prevented-matches).
     ///
     pub async fn query_prevented_matches(
         &self,
@@ -2737,13 +3074,15 @@ impl RestApi {
         self.trade_api_client.query_prevented_matches(params).await
     }
 
-    /// Query Special key(Low Latency Trading)(TRADE)
+    /// Query Special key(Low Latency Trading) (TRADE)
     ///
     /// Query Special Key Information.
     ///
     /// This only applies to Special Key for Low Latency Trading.
     ///
-    /// Weight: 1(UID)
+    /// Weight(UID): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2773,7 +3112,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Special-Key-of-Low-Latency-Trading).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-special-key).
     ///
     pub async fn query_special_key(
         &self,
@@ -2782,11 +3121,13 @@ impl RestApi {
         self.trade_api_client.query_special_key(params).await
     }
 
-    /// Query Special key List(Low Latency Trading)(TRADE)
+    /// Query Special key List(Low Latency Trading) (TRADE)
     ///
     /// This only applies to Special Key for Low Latency Trading.
     ///
-    /// Weight: 1(UID)
+    /// Weight(UID): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2816,7 +3157,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Query-Special-Key-List-of-Low-Latency-Trading).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-special-key-list).
     ///
     pub async fn query_special_key_list(
         &self,
@@ -2829,11 +3170,14 @@ impl RestApi {
     ///
     /// Small Liability Exchange
     ///
-    /// * Only convert once within 6 hours
-    /// * Only liability valuation less than 10 USDT are supported
-    /// * The maximum number of coin is 10
+    /// Weight(UID): 3000
     ///
-    /// Weight: 3000(UID)
+    /// Security Type: MARGIN
+    ///
+    /// Notes:
+    /// - Only convert once within 6 hours
+    /// - Only liability valuation less than 10 USDT are supported
+    /// - The maximum number of coin is 10
     ///
     /// # Arguments
     ///
@@ -2863,7 +3207,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/trade/Small-Liability-Exchange).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#small-liability-exchange).
     ///
     pub async fn small_liability_exchange(
         &self,
@@ -2876,11 +3220,14 @@ impl RestApi {
     ///
     /// Get Cross Margin Transfer History
     ///
-    /// * Response in descending order
-    /// * The max interval between `startTime` and `endTime` is 30 days.
-    /// * Returns data for last 7 days by default
+    /// Weight(IP): 1
     ///
-    /// Weight: 1(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Response in descending order
+    /// - The max interval between `startTime` and `endTime` is 30 days.
+    /// - Returns data for last 7 days by default
     ///
     /// # Arguments
     ///
@@ -2910,7 +3257,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/transfer/Get-Cross-Margin-Transfer-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/transfer#get-cross-margin-transfer-history).
     ///
     pub async fn get_cross_margin_transfer_history(
         &self,
@@ -2925,9 +3272,12 @@ impl RestApi {
     ///
     /// Query Max Transfer-Out Amount
     ///
-    /// * If isolatedSymbol is not sent, crossed margin data will be sent.
+    /// Weight(IP): 50
     ///
-    /// Weight: 50(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If isolatedSymbol is not sent, crossed margin data will be sent.
     ///
     /// # Arguments
     ///
@@ -2957,7 +3307,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/margin_trading/transfer/Query-Max-Transfer-Out-Amount).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/transfer#query-max-transfer-out-amount).
     ///
     pub async fn query_max_transfer_out_amount(
         &self,
@@ -2965,6 +3315,143 @@ impl RestApi {
     ) -> anyhow::Result<RestApiResponse<models::QueryMaxTransferOutAmountResponse>> {
         self.transfer_api_client
             .query_max_transfer_out_amount(params)
+            .await
+    }
+
+    /// Close User Data Stream (`USER_STREAM`)
+    ///
+    /// Close out a user data stream.
+    ///
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_STREAM`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CloseUserDataStreamParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Value>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/user-data-stream#close-user-data-stream).
+    ///
+    pub async fn close_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
+        self.user_data_stream_api_client
+            .close_user_data_stream()
+            .await
+    }
+
+    /// Keepalive User Data Stream (`USER_STREAM`)
+    ///
+    /// Keepalive a user data stream to prevent a time out.
+    ///
+    /// Weight(UID): 1
+    ///
+    /// Security Type: `USER_STREAM`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`KeepaliveUserDataStreamParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Value>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/user-data-stream#keepalive-user-data-stream).
+    ///
+    pub async fn keepalive_user_data_stream(
+        &self,
+        params: KeepaliveUserDataStreamParams,
+    ) -> anyhow::Result<RestApiResponse<Value>> {
+        self.user_data_stream_api_client
+            .keepalive_user_data_stream(params)
+            .await
+    }
+
+    /// Start User Data Stream (`USER_STREAM`)
+    ///
+    /// Start a new user data stream.
+    ///
+    /// Weight(UID): 1
+    ///
+    /// Security Type: `USER_STREAM`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`StartUserDataStreamParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::StartUserDataStreamResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/user-data-stream#start-user-data-stream).
+    ///
+    pub async fn start_user_data_stream(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::StartUserDataStreamResponse>> {
+        self.user_data_stream_api_client
+            .start_user_data_stream()
             .await
     }
 }

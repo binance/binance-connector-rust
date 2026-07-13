@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -52,7 +52,7 @@ impl PortfolioMarginEndpointsApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`classic_portfolio_margin_account_information`](#method.classic_portfolio_margin_account_information).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ClassicPortfolioMarginAccountInformationParams {
     ///
@@ -60,12 +60,14 @@ pub struct ClassicPortfolioMarginAccountInformationParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -162,7 +164,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"maxWithdrawAmountUSD":"1627523.32459208","asset":"BTC","maxWithdrawAmount":"27.43689636"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"maxWithdrawAmountUSD":"1627523.32459208","asset":"BTC","maxWithdrawAmount":"27.43689636"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ClassicPortfolioMarginAccountInformationResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::ClassicPortfolioMarginAccountInformationResponse",
@@ -184,9 +186,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockPortfolioMarginEndpointsApiClient { force_error: false };
 
-            let params = ClassicPortfolioMarginAccountInformationParams::builder("asset_example".to_string(),).build().unwrap();
+            let params = ClassicPortfolioMarginAccountInformationParams::builder("BTC".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"maxWithdrawAmountUSD":"1627523.32459208","asset":"BTC","maxWithdrawAmount":"27.43689636"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"maxWithdrawAmountUSD":"1627523.32459208","asset":"BTC","maxWithdrawAmount":"27.43689636"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ClassicPortfolioMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ClassicPortfolioMarginAccountInformationResponse");
 
             let resp = client.classic_portfolio_margin_account_information(params).await.expect("Expected a response");
@@ -201,9 +203,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockPortfolioMarginEndpointsApiClient { force_error: false };
 
-            let params = ClassicPortfolioMarginAccountInformationParams::builder("asset_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = ClassicPortfolioMarginAccountInformationParams::builder("BTC".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"maxWithdrawAmountUSD":"1627523.32459208","asset":"BTC","maxWithdrawAmount":"27.43689636"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"maxWithdrawAmountUSD":"1627523.32459208","asset":"BTC","maxWithdrawAmount":"27.43689636"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ClassicPortfolioMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ClassicPortfolioMarginAccountInformationResponse");
 
             let resp = client.classic_portfolio_margin_account_information(params).await.expect("Expected a response");
@@ -218,11 +220,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockPortfolioMarginEndpointsApiClient { force_error: true };
 
-            let params = ClassicPortfolioMarginAccountInformationParams::builder(
-                "asset_example".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = ClassicPortfolioMarginAccountInformationParams::builder("BTC".to_string())
+                .build()
+                .unwrap();
 
             match client
                 .classic_portfolio_margin_account_information(params)

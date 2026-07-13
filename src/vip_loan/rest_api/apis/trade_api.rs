@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -64,7 +64,7 @@ impl TradeApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`vip_loan_borrow`](#method.vip_loan_borrow).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct VipLoanBorrowParams {
     ///
@@ -72,44 +72,53 @@ pub struct VipLoanBorrowParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanAccountId")]
     pub loan_account_id: i64,
     ///
     /// The `loan_coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanCoin")]
     pub loan_coin: String,
     ///
     /// The `loan_amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanAmount")]
     pub loan_amount: rust_decimal::Decimal,
-    /// Multiple split by `,`
+    /// Collateral account ID(s). Multiple split by `,`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralAccountId")]
     pub collateral_account_id: String,
-    /// Collateral coin(s), multiple separated by `,`. Only coin names, no amount (VIP loan collateral amount = entire spot account balance)
+    ///
+    /// The `collateral_coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralCoin")]
     pub collateral_coin: String,
-    /// Default: TRUE. TRUE : flexible rate; FALSE: fixed rate
+    /// TRUE: flexible rate; FALSE: fixed rate
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "isFlexibleRate")]
     pub is_flexible_rate: bool,
-    /// Mandatory for fixed rate. Optional for fixed interest rate. Eg: 30/60 days
+    /// Mandatory for fixed rate. Optional for flexible rate. e.g. 30/60 days
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanTerm", default)]
     pub loan_term: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -121,9 +130,9 @@ impl VipLoanBorrowParams {
     /// * `loan_account_id` — i64
     /// * `loan_coin` — String
     /// * `loan_amount` — `rust_decimal::Decimal`
-    /// * `collateral_account_id` — Multiple split by `,`
-    /// * `collateral_coin` — Collateral coin(s), multiple separated by `,`. Only coin names, no amount (VIP loan collateral amount = entire spot account balance)
-    /// * `is_flexible_rate` — Default: TRUE. TRUE : flexible rate; FALSE: fixed rate
+    /// * `collateral_account_id` — Collateral account ID(s). Multiple split by `,`
+    /// * `collateral_coin` — String
+    /// * `is_flexible_rate` — TRUE: flexible rate; FALSE: fixed rate
     ///
     #[must_use]
     pub fn builder(
@@ -147,49 +156,56 @@ impl VipLoanBorrowParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`vip_loan_fixed_rate_borrow`](#method.vip_loan_fixed_rate_borrow).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct VipLoanFixedRateBorrowParams {
     /// Supply request string, positional encoding (no key). Multiple entries separated by `;`, fields separated by `:`, order: `<requestId>:<interestRate>:<amount>`. Example: `1212:0.12:100;3434:0.13:50`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "supplyRequest")]
     pub supply_request: String,
     /// Borrow coin
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "borrowCoin")]
     pub borrow_coin: String,
-    /// 30/60 days
+    /// Loan term in days
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanTerm")]
     pub loan_term: i64,
     /// Borrow receiving account UID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "borrowUid")]
     pub borrow_uid: i64,
     /// Collateral coin(s), multiple separated by `,`. Only coin names, no amount (VIP loan collateral amount = entire spot account balance)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralCoin")]
     pub collateral_coin: String,
-    /// Multiple split by `,`
+    /// Collateral account ID(s), multiple separated by `,`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralAccountId")]
     pub collateral_account_id: String,
     /// Default: `true`. `true`: auto repay at expiration; `false`: auto-convert to flexible (floating rate) at expiration
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "autoRepay", default)]
     pub auto_repay: Option<bool>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than `60000`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -200,10 +216,10 @@ impl VipLoanFixedRateBorrowParams {
     ///
     /// * `supply_request` — Supply request string, positional encoding (no key). Multiple entries separated by `;`, fields separated by `:`, order: `<requestId>:<interestRate>:<amount>`. Example: `1212:0.12:100;3434:0.13:50`
     /// * `borrow_coin` — Borrow coin
-    /// * `loan_term` — 30/60 days
+    /// * `loan_term` — Loan term in days
     /// * `borrow_uid` — Borrow receiving account UID
     /// * `collateral_coin` — Collateral coin(s), multiple separated by `,`. Only coin names, no amount (VIP loan collateral amount = entire spot account balance)
-    /// * `collateral_account_id` — Multiple split by `,`
+    /// * `collateral_account_id` — Collateral account ID(s), multiple separated by `,`
     ///
     #[must_use]
     pub fn builder(
@@ -227,7 +243,7 @@ impl VipLoanFixedRateBorrowParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`vip_loan_renew`](#method.vip_loan_renew).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct VipLoanRenewParams {
     ///
@@ -235,17 +251,20 @@ pub struct VipLoanRenewParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "orderId")]
     pub order_id: i64,
     /// 30/60 days
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanTerm")]
     pub loan_term: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -268,7 +287,7 @@ impl VipLoanRenewParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`vip_loan_repay`](#method.vip_loan_repay).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct VipLoanRepayParams {
     ///
@@ -276,18 +295,21 @@ pub struct VipLoanRepayParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "orderId")]
     pub order_id: i64,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -542,7 +564,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","requestId":"12345678","loanCoin":"BTC","isFlexibleRate":"Yes","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","requestId":"12345678","loanCoin":"BTC","isFlexibleRate":"Yes","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::VipLoanBorrowResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::VipLoanBorrowResponse");
@@ -569,7 +591,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"borrowCoin":"BUSD","borrowAmount":"100.5","actualReceivedAmount":"98.75","collateralCoin":"BNB,ETH,BTC","collateralAccountId":"12345,67890,13579","borrowInterestRate":"0.01501231","duration":"30Days","autoRepay":true,"orderId":123456789,"status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"borrowCoin":"BUSD","borrowAmount":"100.5","actualReceivedAmount":"98.75","collateralCoin":"BNB,ETH,BTC","collateralAccountId":"12345,67890,13579","borrowInterestRate":"0.01501231","duration":"30Days","autoRepay":true,"orderId":123456789,"status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::VipLoanFixedRateBorrowResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::VipLoanFixedRateBorrowResponse");
@@ -596,7 +618,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345677,12345678,12345679","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345677,12345678,12345679","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::VipLoanRenewResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::VipLoanRenewResponse");
@@ -623,7 +645,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","repayAmount":"200.5","remainingPrincipal":"100.5","remainingInterest":"0","collateralCoin":"BNB,BTC,ETH","currentLTV":"0.25","repayStatus":"Repaid"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","repayAmount":"200.5","remainingPrincipal":"100.5","remainingInterest":"0","collateralCoin":"BNB,BTC,ETH","currentLTV":"0.25","repayStatus":"Repaid"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::VipLoanRepayResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::VipLoanRepayResponse");
@@ -644,9 +666,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = VipLoanBorrowParams::builder(1,"loan_coin_example".to_string(),dec!(1.0),"1".to_string(),"collateral_coin_example".to_string(),true,).build().unwrap();
+            let params = VipLoanBorrowParams::builder(1,"BTC".to_string(),dec!(1.0),"12345678,12345678,12345678".to_string(),"BUSD,USDT,ETH".to_string(),true,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","requestId":"12345678","loanCoin":"BTC","isFlexibleRate":"Yes","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","requestId":"12345678","loanCoin":"BTC","isFlexibleRate":"Yes","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanBorrowResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanBorrowResponse");
 
             let resp = client.vip_loan_borrow(params).await.expect("Expected a response");
@@ -661,9 +683,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = VipLoanBorrowParams::builder(1,"loan_coin_example".to_string(),dec!(1.0),"1".to_string(),"collateral_coin_example".to_string(),true,).loan_term(789).recv_window(5000).build().unwrap();
+            let params = VipLoanBorrowParams::builder(1,"BTC".to_string(),dec!(1.0),"12345678,12345678,12345678".to_string(),"BUSD,USDT,ETH".to_string(),true,).loan_term(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","requestId":"12345678","loanCoin":"BTC","isFlexibleRate":"Yes","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","requestId":"12345678","loanCoin":"BTC","isFlexibleRate":"Yes","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanBorrowResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanBorrowResponse");
 
             let resp = client.vip_loan_borrow(params).await.expect("Expected a response");
@@ -680,10 +702,10 @@ mod tests {
 
             let params = VipLoanBorrowParams::builder(
                 1,
-                "loan_coin_example".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
-                "1".to_string(),
-                "collateral_coin_example".to_string(),
+                "12345678,12345678,12345678".to_string(),
+                "BUSD,USDT,ETH".to_string(),
                 true,
             )
             .build()
@@ -703,9 +725,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = VipLoanFixedRateBorrowParams::builder("supply_request_example".to_string(),"borrow_coin_example".to_string(),789,789,"collateral_coin_example".to_string(),"1".to_string(),).build().unwrap();
+            let params = VipLoanFixedRateBorrowParams::builder("1212:0.12:100;3434:0.13:50".to_string(),"BUSD".to_string(),30,12345678,"BNB,ETH,BTC".to_string(),"12345,67890,13579".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"borrowCoin":"BUSD","borrowAmount":"100.5","actualReceivedAmount":"98.75","collateralCoin":"BNB,ETH,BTC","collateralAccountId":"12345,67890,13579","borrowInterestRate":"0.01501231","duration":"30Days","autoRepay":true,"orderId":123456789,"status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"borrowCoin":"BUSD","borrowAmount":"100.5","actualReceivedAmount":"98.75","collateralCoin":"BNB,ETH,BTC","collateralAccountId":"12345,67890,13579","borrowInterestRate":"0.01501231","duration":"30Days","autoRepay":true,"orderId":123456789,"status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanFixedRateBorrowResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanFixedRateBorrowResponse");
 
             let resp = client.vip_loan_fixed_rate_borrow(params).await.expect("Expected a response");
@@ -720,9 +742,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = VipLoanFixedRateBorrowParams::builder("supply_request_example".to_string(),"borrow_coin_example".to_string(),789,789,"collateral_coin_example".to_string(),"1".to_string(),).auto_repay(false).recv_window(5000).build().unwrap();
+            let params = VipLoanFixedRateBorrowParams::builder("1212:0.12:100;3434:0.13:50".to_string(),"BUSD".to_string(),30,12345678,"BNB,ETH,BTC".to_string(),"12345,67890,13579".to_string(),).auto_repay(true).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"borrowCoin":"BUSD","borrowAmount":"100.5","actualReceivedAmount":"98.75","collateralCoin":"BNB,ETH,BTC","collateralAccountId":"12345,67890,13579","borrowInterestRate":"0.01501231","duration":"30Days","autoRepay":true,"orderId":123456789,"status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"borrowCoin":"BUSD","borrowAmount":"100.5","actualReceivedAmount":"98.75","collateralCoin":"BNB,ETH,BTC","collateralAccountId":"12345,67890,13579","borrowInterestRate":"0.01501231","duration":"30Days","autoRepay":true,"orderId":123456789,"status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanFixedRateBorrowResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanFixedRateBorrowResponse");
 
             let resp = client.vip_loan_fixed_rate_borrow(params).await.expect("Expected a response");
@@ -738,12 +760,12 @@ mod tests {
             let client = MockTradeApiClient { force_error: true };
 
             let params = VipLoanFixedRateBorrowParams::builder(
-                "supply_request_example".to_string(),
-                "borrow_coin_example".to_string(),
-                789,
-                789,
-                "collateral_coin_example".to_string(),
-                "1".to_string(),
+                "1212:0.12:100;3434:0.13:50".to_string(),
+                "BUSD".to_string(),
+                30,
+                12345678,
+                "BNB,ETH,BTC".to_string(),
+                "12345,67890,13579".to_string(),
             )
             .build()
             .unwrap();
@@ -762,9 +784,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = VipLoanRenewParams::builder(1,789,).build().unwrap();
+            let params = VipLoanRenewParams::builder(1,30,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345677,12345678,12345679","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345677,12345678,12345679","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanRenewResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanRenewResponse");
 
             let resp = client.vip_loan_renew(params).await.expect("Expected a response");
@@ -779,9 +801,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = VipLoanRenewParams::builder(1,789,).recv_window(5000).build().unwrap();
+            let params = VipLoanRenewParams::builder(1,30,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345677,12345678,12345679","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanAccountId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345677,12345678,12345679","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanRenewResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanRenewResponse");
 
             let resp = client.vip_loan_renew(params).await.expect("Expected a response");
@@ -796,7 +818,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = VipLoanRenewParams::builder(1, 789).build().unwrap();
+            let params = VipLoanRenewParams::builder(1, 30).build().unwrap();
 
             match client.vip_loan_renew(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -814,7 +836,7 @@ mod tests {
 
             let params = VipLoanRepayParams::builder(1,dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","repayAmount":"200.5","remainingPrincipal":"100.5","remainingInterest":"0","collateralCoin":"BNB,BTC,ETH","currentLTV":"0.25","repayStatus":"Repaid"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","repayAmount":"200.5","remainingPrincipal":"100.5","remainingInterest":"0","collateralCoin":"BNB,BTC,ETH","currentLTV":"0.25","repayStatus":"Repaid"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanRepayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanRepayResponse");
 
             let resp = client.vip_loan_repay(params).await.expect("Expected a response");
@@ -831,7 +853,7 @@ mod tests {
 
             let params = VipLoanRepayParams::builder(1,dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","repayAmount":"200.5","remainingPrincipal":"100.5","remainingInterest":"0","collateralCoin":"BNB,BTC,ETH","currentLTV":"0.25","repayStatus":"Repaid"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","repayAmount":"200.5","remainingPrincipal":"100.5","remainingInterest":"0","collateralCoin":"BNB,BTC,ETH","currentLTV":"0.25","repayStatus":"Repaid"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VipLoanRepayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VipLoanRepayResponse");
 
             let resp = client.vip_loan_repay(params).await.expect("Expected a response");

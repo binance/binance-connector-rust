@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,12 +21,12 @@ pub struct RedeemSolResponse {
     pub success: Option<bool>,
     #[serde(rename = "solAmount", skip_serializing_if = "Option::is_none")]
     pub sol_amount: Option<String>,
+    #[serde(rename = "redeemId", skip_serializing_if = "Option::is_none")]
+    pub redeem_id: Option<i64>,
     #[serde(rename = "exchangeRate", skip_serializing_if = "Option::is_none")]
     pub exchange_rate: Option<String>,
     #[serde(rename = "arrivalTime", skip_serializing_if = "Option::is_none")]
     pub arrival_time: Option<i64>,
-    #[serde(rename = "redeemId", skip_serializing_if = "Option::is_none")]
-    pub redeem_id: Option<i64>,
 }
 
 impl RedeemSolResponse {
@@ -35,9 +35,9 @@ impl RedeemSolResponse {
         RedeemSolResponse {
             success: None,
             sol_amount: None,
+            redeem_id: None,
             exchange_rate: None,
             arrival_time: None,
-            redeem_id: None,
         }
     }
 }

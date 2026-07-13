@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket Streams
+ * Spot WebSocket Market Streams
  *
- * OpenAPI Specifications for the Binance Spot WebSocket Streams
- *
- * API documents:
- * - [Github web-socket-streams documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md)
- * - [General API information for web-socket-streams on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -22,79 +17,47 @@ pub mod all_market_rolling_window_ticker_response_inner;
 pub use self::all_market_rolling_window_ticker_response_inner::AllMarketRollingWindowTickerResponseInner;
 pub mod all_mini_ticker_response_inner;
 pub use self::all_mini_ticker_response_inner::AllMiniTickerResponseInner;
-pub mod asset_filters;
-pub use self::asset_filters::AssetFilters;
 pub mod avg_price_response;
 pub use self::avg_price_response::AvgPriceResponse;
+pub mod balance_update;
+pub use self::balance_update::BalanceUpdate;
 pub mod block_trade_response;
 pub use self::block_trade_response::BlockTradeResponse;
 pub mod book_ticker_response;
 pub use self::book_ticker_response::BookTickerResponse;
 pub mod diff_book_depth_response;
 pub use self::diff_book_depth_response::DiffBookDepthResponse;
-pub mod exchange_filters;
-pub use self::exchange_filters::ExchangeFilters;
-pub mod exchange_max_num_algo_orders_filter;
-pub use self::exchange_max_num_algo_orders_filter::ExchangeMaxNumAlgoOrdersFilter;
-pub mod exchange_max_num_iceberg_orders_filter;
-pub use self::exchange_max_num_iceberg_orders_filter::ExchangeMaxNumIcebergOrdersFilter;
-pub mod exchange_max_num_order_lists_filter;
-pub use self::exchange_max_num_order_lists_filter::ExchangeMaxNumOrderListsFilter;
-pub mod exchange_max_num_orders_filter;
-pub use self::exchange_max_num_orders_filter::ExchangeMaxNumOrdersFilter;
-pub mod iceberg_parts_filter;
-pub use self::iceberg_parts_filter::IcebergPartsFilter;
+pub mod event_stream_terminated;
+pub use self::event_stream_terminated::EventStreamTerminated;
+pub mod execution_report;
+pub use self::execution_report::ExecutionReport;
+pub mod external_lock_update;
+pub use self::external_lock_update::ExternalLockUpdate;
 pub mod kline_offset_response;
 pub use self::kline_offset_response::KlineOffsetResponse;
 pub mod kline_response;
 pub use self::kline_response::KlineResponse;
 pub mod kline_response_k;
 pub use self::kline_response_k::KlineResponseK;
-pub mod lot_size_filter;
-pub use self::lot_size_filter::LotSizeFilter;
-pub mod market_lot_size_filter;
-pub use self::market_lot_size_filter::MarketLotSizeFilter;
-pub mod max_asset_filter;
-pub use self::max_asset_filter::MaxAssetFilter;
-pub mod max_num_algo_orders_filter;
-pub use self::max_num_algo_orders_filter::MaxNumAlgoOrdersFilter;
-pub mod max_num_iceberg_orders_filter;
-pub use self::max_num_iceberg_orders_filter::MaxNumIcebergOrdersFilter;
-pub mod max_num_order_amends_filter;
-pub use self::max_num_order_amends_filter::MaxNumOrderAmendsFilter;
-pub mod max_num_order_lists_filter;
-pub use self::max_num_order_lists_filter::MaxNumOrderListsFilter;
-pub mod max_num_orders_filter;
-pub use self::max_num_orders_filter::MaxNumOrdersFilter;
-pub mod max_position_filter;
-pub use self::max_position_filter::MaxPositionFilter;
-pub mod min_notional_filter;
-pub use self::min_notional_filter::MinNotionalFilter;
+pub mod list_status;
+pub use self::list_status::ListStatus;
+pub mod list_status_o_inner;
+pub use self::list_status_o_inner::ListStatusOInner;
 pub mod mini_ticker_response;
 pub use self::mini_ticker_response::MiniTickerResponse;
-pub mod notional_filter;
-pub use self::notional_filter::NotionalFilter;
+pub mod outbound_account_position;
+pub use self::outbound_account_position::OutboundAccountPosition;
+pub mod outbound_account_position_b_inner;
+pub use self::outbound_account_position_b_inner::OutboundAccountPositionBInner;
 pub mod partial_book_depth_response;
 pub use self::partial_book_depth_response::PartialBookDepthResponse;
-pub mod percent_price_by_side_filter;
-pub use self::percent_price_by_side_filter::PercentPriceBySideFilter;
-pub mod percent_price_filter;
-pub use self::percent_price_filter::PercentPriceFilter;
-pub mod price_filter;
-pub use self::price_filter::PriceFilter;
-pub mod rate_limits;
-pub use self::rate_limits::RateLimits;
 pub mod reference_price_response;
 pub use self::reference_price_response::ReferencePriceResponse;
 pub mod rolling_window_ticker_response;
 pub use self::rolling_window_ticker_response::RollingWindowTickerResponse;
-pub mod symbol_filters;
-pub use self::symbol_filters::SymbolFilters;
-pub mod t_plus_sell_filter;
-pub use self::t_plus_sell_filter::TPlusSellFilter;
 pub mod ticker_response;
 pub use self::ticker_response::TickerResponse;
 pub mod trade_response;
 pub use self::trade_response::TradeResponse;
-pub mod trailing_delta_filter;
-pub use self::trailing_delta_filter::TrailingDeltaFilter;
+pub mod user_data_stream_events_response;
+pub use self::user_data_stream_events_response::UserDataStreamEventsResponse;

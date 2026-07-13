@@ -1,7 +1,7 @@
 /*
  * Binance Pay REST API
  *
- * OpenAPI Specification for the Binance Pay REST API
+ * Query Binance Pay transaction history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetPayTradeHistoryResponseDataInner {
+    /// Order type. Enum: PAY, `PAY_REFUND`, C2C, `CRYPTO_BOX`, `CRYPTO_BOX_RF`, `C2C_HOLDING`, `C2C_HOLDING_RF`, PAYOUT, REMITTANCE.
     #[serde(rename = "orderType", skip_serializing_if = "Option::is_none")]
     pub order_type: Option<String>,
+    /// Transaction ID.
     #[serde(rename = "transactionId", skip_serializing_if = "Option::is_none")]
     pub transaction_id: Option<String>,
+    /// Trade timestamp.
     #[serde(rename = "transactionTime", skip_serializing_if = "Option::is_none")]
     pub transaction_time: Option<i64>,
+    /// Order amount (up to 8 decimal places). Positive means income; negative means expenditure.
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Order asset.
     #[serde(rename = "currency", skip_serializing_if = "Option::is_none")]
     pub currency: Option<String>,
+    /// Main wallet type: 1=funding wallet, 2=spot wallet, 3=fiat wallet, 4 or 6=card payment, 5=earn wallet.
     #[serde(rename = "walletType", skip_serializing_if = "Option::is_none")]
     pub wallet_type: Option<i64>,
+    /// Array format of wallet types. Multiple values may appear for combined payments.
     #[serde(rename = "walletTypes", skip_serializing_if = "Option::is_none")]
     pub wallet_types: Option<Vec<i64>>,
+    /// Funds usage details.
     #[serde(rename = "fundsDetail", skip_serializing_if = "Option::is_none")]
     pub funds_detail: Option<Vec<models::GetPayTradeHistoryResponseDataInnerFundsDetailInner>>,
     #[serde(rename = "payerInfo", skip_serializing_if = "Option::is_none")]

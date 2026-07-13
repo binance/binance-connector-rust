@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -62,7 +57,7 @@ pub trait AccountApi: Send + Sync {
     async fn my_filters(
         &self,
         params: MyFiltersParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::MyFiltersResponseResult>>>;
+    ) -> anyhow::Result<WebsocketApiResponse<models::MyFiltersResponse>>;
     async fn my_prevented_matches(
         &self,
         params: MyPreventedMatchesParams,
@@ -86,7 +81,7 @@ pub trait AccountApi: Send + Sync {
     async fn order_list_status(
         &self,
         params: OrderListStatusParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::AllOrderListsResponseResultInner>>>;
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderListStatusResponseResult>>>;
     async fn order_status(
         &self,
         params: OrderStatusParams,
@@ -108,7 +103,7 @@ impl AccountApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_commission`](#method.account_commission).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountCommissionParams {
     ///
@@ -116,11 +111,13 @@ pub struct AccountCommissionParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -140,18 +137,20 @@ impl AccountCommissionParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_rate_limits_orders`](#method.account_rate_limits_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountRateLimitsOrdersParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -167,23 +166,26 @@ impl AccountRateLimitsOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_status`](#method.account_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountStatusParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// When set to `true`, emits only the non-zero balances of an account. <br>Default value: false
+    /// When set to `true`, emits only the non-zero balances of an account. Default value: `false`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "omitZeroBalances", default)]
     pub omit_zero_balances: Option<bool>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -199,40 +201,44 @@ impl AccountStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_order_lists`](#method.all_order_lists).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllOrderListsParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Trade ID to begin at
+    /// Order list ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromId", default)]
     pub from_id: Option<i32>,
-    ///
-    /// The `start_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default: 100; Maximum: 5000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -248,7 +254,7 @@ impl AllOrderListsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_orders`](#method.all_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllOrdersParams {
     ///
@@ -256,38 +262,43 @@ pub struct AllOrdersParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Order ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `start_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default: 100; Maximum: 5000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -307,7 +318,7 @@ impl AllOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`my_allocations`](#method.my_allocations).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MyAllocationsParams {
     ///
@@ -315,44 +326,49 @@ pub struct MyAllocationsParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `start_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    ///
-    /// The `from_allocation_id` parameter.
+    /// Allocation ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromAllocationId", default)]
     pub from_allocation_id: Option<i32>,
-    /// Default: 100; Maximum: 5000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -372,7 +388,7 @@ impl MyAllocationsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`my_filters`](#method.my_filters).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MyFiltersParams {
     ///
@@ -380,16 +396,19 @@ pub struct MyFiltersParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -409,7 +428,7 @@ impl MyFiltersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`my_prevented_matches`](#method.my_prevented_matches).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MyPreventedMatchesParams {
     ///
@@ -417,38 +436,43 @@ pub struct MyPreventedMatchesParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `prevented_match_id` parameter.
+    /// Prevented match ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "preventedMatchId", default)]
     pub prevented_match_id: Option<i64>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `from_prevented_match_id` parameter.
+    /// Prevented match ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromPreventedMatchId", default)]
     pub from_prevented_match_id: Option<i64>,
-    /// Default: 100; Maximum: 5000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -468,7 +492,7 @@ impl MyPreventedMatchesParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`my_trades`](#method.my_trades).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MyTradesParams {
     ///
@@ -476,43 +500,49 @@ pub struct MyTradesParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// This can only be used in combination with `symbol`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `start_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Timestamp in ms
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Trade ID to begin at
+    /// First trade ID to query
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromId", default)]
     pub from_id: Option<i32>,
-    /// Default: 100; Maximum: 5000
+    /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -532,18 +562,20 @@ impl MyTradesParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`open_order_lists_status`](#method.open_order_lists_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OpenOrderListsStatusParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -559,23 +591,26 @@ impl OpenOrderListsStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`open_orders_status`](#method.open_orders_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OpenOrdersStatusParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Describe a single symbol
+    /// If omitted, open orders for all symbols are returned
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -591,7 +626,7 @@ impl OpenOrdersStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_amendments`](#method.order_amendments).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderAmendmentsParams {
     ///
@@ -599,33 +634,37 @@ pub struct OrderAmendmentsParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `order_id` parameter.
+    /// Order ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "orderId")]
     pub order_id: i64,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `from_execution_id` parameter.
+    /// Execution ID to begin at
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromExecutionId", default)]
     pub from_execution_id: Option<i64>,
     /// Default: 500; Maximum: 1000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -635,7 +674,7 @@ impl OrderAmendmentsParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `order_id` — i64
+    /// * `order_id` — Order ID
     ///
     #[must_use]
     pub fn builder(symbol: String, order_id: i64) -> OrderAmendmentsParamsBuilder {
@@ -648,28 +687,32 @@ impl OrderAmendmentsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_status`](#method.order_list_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListStatusParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Query order list by `listClientOrderId`. `orderListId` or `origClientOrderId` must be provided.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    /// Cancel order list by orderListId
+    /// Query order list by `orderListId`. `orderListId` or `origClientOrderId` must be provided.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderListId", default)]
     pub order_list_id: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -685,7 +728,7 @@ impl OrderListStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_status`](#method.order_status).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderStatusParams {
     ///
@@ -693,26 +736,31 @@ pub struct OrderStatusParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Lookup order by `orderId`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// Lookup order by `clientOrderId`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -979,7 +1027,7 @@ impl AccountApi for AccountApiClient {
     async fn my_filters(
         &self,
         params: MyFiltersParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::MyFiltersResponseResult>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<models::MyFiltersResponse>> {
         let MyFiltersParams {
             symbol,
             id,
@@ -997,7 +1045,7 @@ impl AccountApi for AccountApiClient {
         let payload = remove_empty_value(payload);
 
         self.websocket_api_base
-            .send_message::<Box<models::MyFiltersResponseResult>>(
+            .send_message::<models::MyFiltersResponse>(
                 "/myFilters".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new().signed(),
@@ -1229,7 +1277,7 @@ impl AccountApi for AccountApiClient {
     async fn order_list_status(
         &self,
         params: OrderListStatusParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::AllOrderListsResponseResultInner>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderListStatusResponseResult>>> {
         let OrderListStatusParams {
             id,
             orig_client_order_id,
@@ -1253,7 +1301,7 @@ impl AccountApi for AccountApiClient {
         let payload = remove_empty_value(payload);
 
         self.websocket_api_base
-            .send_message::<Box<models::AllOrderListsResponseResultInner>>(
+            .send_message::<Box<models::OrderListStatusResponseResult>>(
                 "/orderList.status".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new().signed(),
@@ -1364,8 +1412,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.commission".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df8a61-98ea-4fe0-8f4e-0fcea5d418b0","status":200,"result":{"symbol":"BTCUSDT","standardCommission":{"maker":"0.00000010","taker":"0.00000020","buyer":"0.00000030","seller":"0.00000040"},"specialCommission":{"maker":"0.01000000","taker":"0.02000000","buyer":"0.03000000","seller":"0.04000000"},"taxCommission":{"maker":"0.00000112","taker":"0.00000114","buyer":"0.00000118","seller":"0.00000116"},"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB","discount":"0.75000000"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df8a61-98ea-4fe0-8f4e-0fcea5d418b0","status":200,"result":{"symbol":"BTCUSDT","standardCommission":{"maker":"0.00000010","taker":"0.00000020","buyer":"0.00000030","seller":"0.00000040"},"specialCommission":{"maker":"0.01000000","taker":"0.02000000","buyer":"0.03000000","seller":"0.04000000"},"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB","discount":"0.75000000"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -1495,8 +1542,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.rateLimits.orders".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3783d8d-f8d1-4d2c-b8a0-b7596af5a664","status":200,"result":[{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000,"count":0},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":50,"count":0}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":40}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3783d8d-f8d1-4d2c-b8a0-b7596af5a664","status":200,"result":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":50,"count":0}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -1624,8 +1670,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"makerCommission":15,"takerCommission":15,"buyerCommission":0,"sellerCommission":0,"canTrade":true,"canWithdraw":true,"canDeposit":true,"commissionRates":{"maker":"0.00150000","taker":"0.00150000","buyer":"0.00000000","seller":"0.00000000"},"brokered":false,"requireSelfTradePrevention":false,"preventSor":false,"updateTime":1660801833000,"accountType":"SPOT","balances":[{"asset":"USDT","free":"1021.21000000","locked":"0.00000000"},{"asset":"BTC","free":"1.3447112","locked":"0.08600000"},{"asset":"BNB","free":"0.00000000","locked":"0.00000000"}],"permissions":["SPOT"],"uid":354937868},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"makerCommission":15,"takerCommission":15,"buyerCommission":0,"sellerCommission":0,"canTrade":true,"canWithdraw":true,"canDeposit":true,"brokered":false,"requireSelfTradePrevention":false,"preventSor":false,"updateTime":1660801833000,"accountType":"SPOT","balances":[{"asset":"BNB"}],"permissions":["SPOT"],"uid":354937868},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -1753,8 +1798,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/allOrderLists".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"8617b7b3-1b3d-4dec-94cd-eefd929b8ceb","status":200,"result":[{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138902,"clientOrderId":"jLnZpj5enfMXTuhKB1d0us"},{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}]}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"8617b7b3-1b3d-4dec-94cd-eefd929b8ceb","status":200,"result":[{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}]}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -1882,8 +1926,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/allOrders".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"734235c2-13d2-4574-be68-723e818c08f3","status":200,"result":[{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157","price":"23416.10000000","origQty":"0.00847000","executedQty":"0.00847000","cummulativeQuoteQty":"198.33521500","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","stopPrice":"0.00000000","icebergQty":"0.00000000","time":1660801715639,"updateTime":1660801717945,"isWorking":true,"workingTime":1660801715639,"origQuoteOrderQty":"0.00000000","selfTradePreventionMode":"NONE","preventedMatchId":0,"preventedQuantity":"1.200000"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"734235c2-13d2-4574-be68-723e818c08f3","status":200,"result":[{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","time":1660801715639,"updateTime":1660801717945,"isWorking":true,"workingTime":1660801715639,"selfTradePreventionMode":"NONE","preventedMatchId":0,"icebergQty":"0.00000000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2013,8 +2056,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/myAllocations".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"g4ce6a53-a39d-4f71-823b-4ab5r391d6y8","status":200,"result":[{"symbol":"BTCUSDT","allocationId":0,"allocationType":"SOR","orderId":500,"orderListId":-1,"price":"1.00000000","qty":"0.10000000","quoteQty":"0.10000000","commission":"0.00000000","commissionAsset":"BTC","time":1687319487614,"isBuyer":false,"isMaker":false,"isAllocator":false}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"g4ce6a53-a39d-4f71-823b-4ab5r391d6y8","status":200,"result":[{"symbol":"BTCUSDT","allocationId":0,"allocationType":"SOR","orderId":500,"orderListId":-1,"commissionAsset":"BTC","time":1687319487614,"isBuyer":false,"isMaker":false,"isAllocator":false}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2144,12 +2186,11 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/myFilters".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"1758009606869","status":200,"result":{"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000}],"symbolFilters":[{"filterType":"MAX_NUM_ORDER_LISTS","maxNumOrderLists":20}],"assetFilters":[{"filterType":"MAX_ASSET","asset":"JPY","limit":"1000000.00000000"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"status":200,"result":{"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000}],"symbolFilters":[{"filterType":"PRICE_FILTER","priceExponent":8,"minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"}],"assetFilters":[{"filterType":"MAX_ASSET","qtyExponent":8,"limit":"1000000.00000000","asset":"JPY"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
-            let expected_data: Box<models::MyFiltersResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let expected_data: models::MyFiltersResponse = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
             let empty_array = Value::Array(vec![]);
             let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
             let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
@@ -2275,8 +2316,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/myPreventedMatches".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"g4ce6a53-a39d-4f71-823b-4ab5r391d6y8","status":200,"result":[{"symbol":"BTCUSDT","preventedMatchId":1,"takerOrderId":5,"makerSymbol":"BTCUSDT","makerOrderId":3,"tradeGroupId":1,"selfTradePreventionMode":"EXPIRE_MAKER","price":"1.100000","makerPreventedQuantity":"1.300000","transactTime":1669101687094}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"g4ce6a53-a39d-4f71-823b-4ab5r391d6y8","status":200,"result":[{"symbol":"BTCUSDT","preventedMatchId":1,"takerOrderId":5,"makerSymbol":"BTCUSDT","makerOrderId":3,"tradeGroupId":1,"selfTradePreventionMode":"EXPIRE_MAKER","transactTime":1669101687094}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2406,8 +2446,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/myTrades".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"f4ce6a53-a29d-4f70-823b-4ab59391d6e8","status":200,"result":[{"symbol":"BTCUSDT","id":1650422482,"orderId":12569099453,"orderListId":-1,"price":"23416.50000000","qty":"0.00212000","quoteQty":"49.64298000","commission":"0.00000000","commissionAsset":"BNB","time":1660801715793,"isBuyer":false,"isMaker":true,"isBestMatch":true},{"symbol":"BTCUSDT","id":1650422481,"orderId":12569099453,"orderListId":-1,"price":"23416.10000000","qty":"0.00635000","quoteQty":"148.69223500","commission":"0.00000000","commissionAsset":"BNB","time":1660801715793,"isBuyer":false,"isMaker":true,"isBestMatch":true}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"f4ce6a53-a29d-4f70-823b-4ab59391d6e8","status":200,"result":[{"symbol":"BTCUSDT","id":1650422481,"orderId":12569099453,"orderListId":-1,"commissionAsset":"BNB","time":1660801715793,"isBuyer":false,"isMaker":true,"isBestMatch":true}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2537,8 +2576,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/openOrderLists.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3a4437e2-41a3-4c19-897c-9cadc5dce8b6","status":200,"result":[{"orderListId":0,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":5,"clientOrderId":"1ZqG7bBuYwaF4SU8CwnwHm"},{"symbol":"BTCUSDT","orderId":4,"clientOrderId":"CUhLgTXnX5n2c0gWiLpV4d"}]}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":6}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3a4437e2-41a3-4c19-897c-9cadc5dce8b6","status":200,"result":[{"orderListId":0,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":4,"clientOrderId":"CUhLgTXnX5n2c0gWiLpV4d"}]}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2666,8 +2704,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/openOrders.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"55f07876-4f6f-4c47-87dc-43e5fff3f2e7","status":200,"result":[{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157","price":"23416.10000000","origQty":"0.00847000","executedQty":"0.00720000","origQuoteOrderQty":"0.00000000","cummulativeQuoteQty":"172.43931000","status":"PARTIALLY_FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","stopPrice":"0.00000000","icebergQty":"0.00000000","time":1660801715639,"updateTime":1660801717945,"isWorking":true,"workingTime":1660801715639,"selfTradePreventionMode":"NONE"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":6}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"55f07876-4f6f-4c47-87dc-43e5fff3f2e7","status":200,"result":[{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157","status":"PARTIALLY_FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","time":1660801715639,"updateTime":1660801717945,"isWorking":true,"workingTime":1660801715639,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2795,8 +2832,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.amendments".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"6f5ebe91-01d9-43ac-be99-57cf062e0e30","status":200,"result":[{"symbol":"BTCUSDT","orderId":23,"executionId":60,"origClientOrderId":"my_pending_order","newClientOrderId":"xbxXh5SSwaHS7oUEOCI88B","origQty":"7.00000000","newQty":"5.00000000","time":1741924229819}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":4}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"6f5ebe91-01d9-43ac-be99-57cf062e0e30","status":200,"result":[{"symbol":"BTCUSDT","orderId":23,"executionId":60,"origClientOrderId":"my_pending_order","newClientOrderId":"xbxXh5SSwaHS7oUEOCI88B","time":1741924229819}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2926,12 +2962,11 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"b53fd5ff-82c7-4a04-bd64-5f9dc42c2100","status":200,"result":{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138902,"clientOrderId":"jLnZpj5enfMXTuhKB1d0us"},{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":4}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"b53fd5ff-82c7-4a04-bd64-5f9dc42c2100","status":200,"result":{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
-            let expected_data: Box<models::AllOrderListsResponseResultInner> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let expected_data: Box<models::OrderListStatusResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
             let empty_array = Value::Array(vec![]);
             let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
             let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
@@ -3055,8 +3090,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"aa62318a-5a97-4f3b-bdc7-640bbe33b291","status":200,"result":{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157","price":"23416.10000000","origQty":"0.00847000","executedQty":"0.00847000","cummulativeQuoteQty":"198.33521500","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","stopPrice":"0.00000000","trailingDelta":10,"trailingTime":-1,"icebergQty":"0.00000000","time":1660801715639,"updateTime":1660801717945,"isWorking":true,"workingTime":1660801715639,"origQuoteOrderQty":"0.00000000","strategyId":37463720,"strategyType":1000000,"selfTradePreventionMode":"NONE","preventedMatchId":0,"preventedQuantity":"1.200000"},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":4}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"aa62318a-5a97-4f3b-bdc7-640bbe33b291","status":200,"result":{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","trailingDelta":10,"trailingTime":-1,"time":1660801715639,"updateTime":1660801717945,"isWorking":true,"workingTime":1660801715639,"strategyId":37463720,"strategyType":1000000,"selfTradePreventionMode":"NONE","preventedMatchId":0,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

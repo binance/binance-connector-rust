@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,24 +18,33 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarkPriceStreamResponse {
+    /// Event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Mark Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Estimated Settle Price, only useful in the last hour before the settlement starts.
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
     pub p_uppercase: Option<String>,
+    /// Index Price
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
+    /// funding rate for perpetual symbol, \"\" will be shown for delivery symbol
     #[serde(rename = "r", skip_serializing_if = "Option::is_none")]
     pub r: Option<String>,
+    /// next funding time for perpetual symbol, 0 will be shown for delivery symbol
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// (After CM migration) Symbol type: 1 = UM, 2 = CM
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
-    pub st: Option<i64>,
+    pub st: Option<i32>,
 }
 
 impl MarkPriceStreamResponse {

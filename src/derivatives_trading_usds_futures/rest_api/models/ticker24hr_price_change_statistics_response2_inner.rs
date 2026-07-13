@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,34 +19,49 @@ use serde::{Deserialize, Serialize};
 pub struct Ticker24hrPriceChangeStatisticsResponse2Inner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Price Change.
     #[serde(rename = "priceChange", skip_serializing_if = "Option::is_none")]
     pub price_change: Option<String>,
+    /// Price Change Percent.
     #[serde(rename = "priceChangePercent", skip_serializing_if = "Option::is_none")]
     pub price_change_percent: Option<String>,
+    /// Weighted Avg Price.
     #[serde(rename = "weightedAvgPrice", skip_serializing_if = "Option::is_none")]
     pub weighted_avg_price: Option<String>,
+    /// Last Price.
     #[serde(rename = "lastPrice", skip_serializing_if = "Option::is_none")]
     pub last_price: Option<String>,
+    /// Last Qty.
     #[serde(rename = "lastQty", skip_serializing_if = "Option::is_none")]
     pub last_qty: Option<String>,
+    /// Open Price.
     #[serde(rename = "openPrice", skip_serializing_if = "Option::is_none")]
     pub open_price: Option<String>,
+    /// High Price.
     #[serde(rename = "highPrice", skip_serializing_if = "Option::is_none")]
     pub high_price: Option<String>,
+    /// Low Price.
     #[serde(rename = "lowPrice", skip_serializing_if = "Option::is_none")]
     pub low_price: Option<String>,
+    /// Volume.
     #[serde(rename = "volume", skip_serializing_if = "Option::is_none")]
     pub volume: Option<String>,
+    /// Quote Volume.
     #[serde(rename = "quoteVolume", skip_serializing_if = "Option::is_none")]
     pub quote_volume: Option<String>,
+    /// Open Time.
     #[serde(rename = "openTime", skip_serializing_if = "Option::is_none")]
     pub open_time: Option<i64>,
+    /// Close Time.
     #[serde(rename = "closeTime", skip_serializing_if = "Option::is_none")]
     pub close_time: Option<i64>,
+    /// First tradeId
     #[serde(rename = "firstId", skip_serializing_if = "Option::is_none")]
     pub first_id: Option<i64>,
+    /// Last tradeId
     #[serde(rename = "lastId", skip_serializing_if = "Option::is_none")]
     pub last_id: Option<i64>,
+    /// Trade count
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }

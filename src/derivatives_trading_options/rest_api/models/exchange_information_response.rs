@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,16 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponse {
+    /// Time zone used by the server
     #[serde(rename = "timezone", skip_serializing_if = "Option::is_none")]
     pub timezone: Option<String>,
+    /// Current system time
     #[serde(rename = "serverTime", skip_serializing_if = "Option::is_none")]
     pub server_time: Option<i64>,
+    /// Option contract underlying asset info
     #[serde(rename = "optionContracts", skip_serializing_if = "Option::is_none")]
     pub option_contracts: Option<Vec<models::ExchangeInformationResponseOptionContractsInner>>,
+    /// Option asset info
     #[serde(rename = "optionAssets", skip_serializing_if = "Option::is_none")]
     pub option_assets: Option<Vec<models::ExchangeInformationResponseOptionAssetsInner>>,
+    /// Option trading pair info
     #[serde(rename = "optionSymbols", skip_serializing_if = "Option::is_none")]
     pub option_symbols: Option<Vec<models::ExchangeInformationResponseOptionSymbolsInner>>,
+    /// rate Limits
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
     pub rate_limits: Option<Vec<models::ExchangeInformationResponseRateLimitsInner>>,
 }

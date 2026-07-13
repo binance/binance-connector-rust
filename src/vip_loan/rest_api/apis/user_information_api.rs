@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -43,6 +43,10 @@ pub trait UserInformationApi: Send + Sync {
         &self,
         params: GetVipLoanOngoingOrdersParams,
     ) -> anyhow::Result<RestApiResponse<models::GetVipLoanOngoingOrdersResponse>>;
+    async fn get_vip_loan_repayment_history(
+        &self,
+        params: GetVipLoanRepaymentHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetVipLoanRepaymentHistoryResponse>>;
     async fn query_application_status(
         &self,
         params: QueryApplicationStatusParams,
@@ -64,7 +68,7 @@ impl UserInformationApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`check_vip_loan_collateral_account`](#method.check_vip_loan_collateral_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CheckVipLoanCollateralAccountParams {
     ///
@@ -72,18 +76,21 @@ pub struct CheckVipLoanCollateralAccountParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
     ///
     /// The `collateral_account_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralAccountId", default)]
     pub collateral_account_id: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -99,7 +106,7 @@ impl CheckVipLoanCollateralAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_vip_loan_accrued_interest`](#method.get_vip_loan_accrued_interest).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetVipLoanAccruedInterestParams {
     ///
@@ -107,40 +114,45 @@ pub struct GetVipLoanAccruedInterestParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
     ///
     /// The `loan_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
-    ///
-    /// The `start_time` parameter.
+    /// If both startTime and endTime are omitted, the most recent 90 days are returned.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Maximum interval between startTime and endTime is 90 days.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Page number, default 1, minimum 1
+    /// Current page number, starting from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -156,7 +168,7 @@ impl GetVipLoanAccruedInterestParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_vip_loan_ongoing_orders`](#method.get_vip_loan_ongoing_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetVipLoanOngoingOrdersParams {
     ///
@@ -164,40 +176,49 @@ pub struct GetVipLoanOngoingOrdersParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
     ///
     /// The `collateral_account_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralAccountId", default)]
     pub collateral_account_id: Option<i64>,
     ///
     /// The `loan_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
-    /// Page number, default 1, minimum 1
+    ///
+    /// The `current` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -209,28 +230,94 @@ impl GetVipLoanOngoingOrdersParams {
         GetVipLoanOngoingOrdersParamsBuilder::default()
     }
 }
-/// Request parameters for the [`query_application_status`] operation.
+/// Request parameters for the [`get_vip_loan_repayment_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`query_application_status`](#method.query_application_status).
-#[derive(Clone, Debug, Builder, Default)]
+/// [`get_vip_loan_repayment_history`](#method.get_vip_loan_repayment_history).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct QueryApplicationStatusParams {
-    /// Page number, default 1, minimum 1
+pub struct GetVipLoanRepaymentHistoryParams {
+    ///
+    /// The `order_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
+    pub order_id: Option<i64>,
+    ///
+    /// The `loan_coin` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
+    pub loan_coin: Option<String>,
+    /// If both startTime and endTime are omitted, the most recent 90 days are returned.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
+    pub start_time: Option<i64>,
+    /// Maximum interval between startTime and endTime is 180 days.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
+    pub end_time: Option<i64>,
+    /// Current page number, starting from 1.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetVipLoanRepaymentHistoryParams {
+    /// Create a builder for [`get_vip_loan_repayment_history`].
+    ///
+    #[must_use]
+    pub fn builder() -> GetVipLoanRepaymentHistoryParamsBuilder {
+        GetVipLoanRepaymentHistoryParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`query_application_status`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_application_status`](#method.query_application_status).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryApplicationStatusParams {
+    /// Current page number, starting from 1.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
+    pub current: Option<i64>,
+    ///
+    /// The `limit` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
+    pub limit: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -408,6 +495,67 @@ impl UserInformationApi for UserInformationApiClient {
         .await
     }
 
+    async fn get_vip_loan_repayment_history(
+        &self,
+        params: GetVipLoanRepaymentHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetVipLoanRepaymentHistoryResponse>> {
+        let GetVipLoanRepaymentHistoryParams {
+            order_id,
+            loan_coin,
+            start_time,
+            end_time,
+            current,
+            limit,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = order_id {
+            query_params.insert("orderId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = loan_coin {
+            query_params.insert("loanCoin".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = start_time {
+            query_params.insert("startTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = end_time {
+            query_params.insert("endTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = current {
+            query_params.insert("current".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = limit {
+            query_params.insert("limit".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetVipLoanRepaymentHistoryResponse>(
+            &self.configuration,
+            "/sapi/v1/loan/vip/repay/history",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn query_application_status(
         &self,
         params: QueryApplicationStatusParams,
@@ -495,7 +643,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralAccountId":"12345678","collateralCoin":"BNB,BTC,ETH"},{"collateralAccountId":"23456789","collateralCoin":"BNB,BTC,ETH"}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralAccountId":"12345678","collateralCoin":"BNB,BTC,ETH"}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CheckVipLoanCollateralAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckVipLoanCollateralAccountResponse");
@@ -522,7 +670,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"USDT","principalAmount":"10000","interestAmount":"1.2","annualInterestRate":"0.001273","accrualTime":1575018510000,"orderId":756783308056935400}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"USDT","principalAmount":"10000","interestAmount":"1.2","annualInterestRate":"0.001273","accrualTime":1575018510000,"orderId":756783308056935400}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetVipLoanAccruedInterestResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetVipLoanAccruedInterestResponse");
@@ -549,10 +697,37 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"orderId":100000001,"loanCoin":"BUSD","totalDebt":"10000","loanRate":"0.0123","residualInterest":"10.27687923","collateralAccountId":"12345678,23456789","collateralCoin":"BNB,BTC,ETH","totalCollateralValueAfterHaircut":"25000.27565492","lockedCollateralValue":"25000.27565492","currentLTV":"0.57","expirationTime":1575018510000,"loanDate":"1676851200000","loanTerm":"30days"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"orderId":100000001,"loanCoin":"BUSD","totalDebt":"10000","loanRate":"0.0123","residualInterest":"10.27687923","collateralAccountId":"12345678,23456789","collateralCoin":"BNB,BTC,ETH","totalCollateralValueAfterHaircut":"25000.27565492","lockedCollateralValue":"25000.27565492","currentLTV":"0.57","expirationTime":1575018510000,"loanDate":"1676851200000","loanTerm":"30days"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetVipLoanOngoingOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetVipLoanOngoingOrdersResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_vip_loan_repayment_history(
+            &self,
+            _params: GetVipLoanRepaymentHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetVipLoanRepaymentHistoryResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB,BTC,ETH","repayStatus":"Repaid","loanDate":"1676851200000","repayTime":"1575018510000","orderId":"756783308056935434"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetVipLoanRepaymentHistoryResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetVipLoanRepaymentHistoryResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -576,7 +751,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanAccountId":"12345678","orderId":"12345678","requestId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30","status":"Repaid","loanDate":"1676851200000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanAccountId":"12345678","orderId":"12345678","requestId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30","status":"Repaid","loanDate":"1676851200000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryApplicationStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryApplicationStatusResponse");
@@ -599,7 +774,7 @@ mod tests {
 
             let params = CheckVipLoanCollateralAccountParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralAccountId":"12345678","collateralCoin":"BNB,BTC,ETH"},{"collateralAccountId":"23456789","collateralCoin":"BNB,BTC,ETH"}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralAccountId":"12345678","collateralCoin":"BNB,BTC,ETH"}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CheckVipLoanCollateralAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CheckVipLoanCollateralAccountResponse");
 
             let resp = client.check_vip_loan_collateral_account(params).await.expect("Expected a response");
@@ -616,7 +791,7 @@ mod tests {
 
             let params = CheckVipLoanCollateralAccountParams::builder().order_id(1).collateral_account_id(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralAccountId":"12345678","collateralCoin":"BNB,BTC,ETH"},{"collateralAccountId":"23456789","collateralCoin":"BNB,BTC,ETH"}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralAccountId":"12345678","collateralCoin":"BNB,BTC,ETH"}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CheckVipLoanCollateralAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CheckVipLoanCollateralAccountResponse");
 
             let resp = client.check_vip_loan_collateral_account(params).await.expect("Expected a response");
@@ -651,7 +826,7 @@ mod tests {
 
             let params = GetVipLoanAccruedInterestParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"USDT","principalAmount":"10000","interestAmount":"1.2","annualInterestRate":"0.001273","accrualTime":1575018510000,"orderId":756783308056935400}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"USDT","principalAmount":"10000","interestAmount":"1.2","annualInterestRate":"0.001273","accrualTime":1575018510000,"orderId":756783308056935400}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetVipLoanAccruedInterestResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanAccruedInterestResponse");
 
             let resp = client.get_vip_loan_accrued_interest(params).await.expect("Expected a response");
@@ -666,9 +841,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockUserInformationApiClient { force_error: false };
 
-            let params = GetVipLoanAccruedInterestParams::builder().order_id(1).loan_coin("loan_coin_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
+            let params = GetVipLoanAccruedInterestParams::builder().order_id(1).loan_coin("BTC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"USDT","principalAmount":"10000","interestAmount":"1.2","annualInterestRate":"0.001273","accrualTime":1575018510000,"orderId":756783308056935400}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"USDT","principalAmount":"10000","interestAmount":"1.2","annualInterestRate":"0.001273","accrualTime":1575018510000,"orderId":756783308056935400}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetVipLoanAccruedInterestResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanAccruedInterestResponse");
 
             let resp = client.get_vip_loan_accrued_interest(params).await.expect("Expected a response");
@@ -701,7 +876,7 @@ mod tests {
 
             let params = GetVipLoanOngoingOrdersParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"orderId":100000001,"loanCoin":"BUSD","totalDebt":"10000","loanRate":"0.0123","residualInterest":"10.27687923","collateralAccountId":"12345678,23456789","collateralCoin":"BNB,BTC,ETH","totalCollateralValueAfterHaircut":"25000.27565492","lockedCollateralValue":"25000.27565492","currentLTV":"0.57","expirationTime":1575018510000,"loanDate":"1676851200000","loanTerm":"30days"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"orderId":100000001,"loanCoin":"BUSD","totalDebt":"10000","loanRate":"0.0123","residualInterest":"10.27687923","collateralAccountId":"12345678,23456789","collateralCoin":"BNB,BTC,ETH","totalCollateralValueAfterHaircut":"25000.27565492","lockedCollateralValue":"25000.27565492","currentLTV":"0.57","expirationTime":1575018510000,"loanDate":"1676851200000","loanTerm":"30days"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetVipLoanOngoingOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanOngoingOrdersResponse");
 
             let resp = client.get_vip_loan_ongoing_orders(params).await.expect("Expected a response");
@@ -716,9 +891,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockUserInformationApiClient { force_error: false };
 
-            let params = GetVipLoanOngoingOrdersParams::builder().order_id(1).collateral_account_id(1).loan_coin("loan_coin_example".to_string()).collateral_coin("collateral_coin_example".to_string()).current(1).limit(10).recv_window(5000).build().unwrap();
+            let params = GetVipLoanOngoingOrdersParams::builder().order_id(1).collateral_account_id(1).loan_coin("BUSD".to_string()).collateral_coin("BNB,BTC,ETH".to_string()).current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"orderId":100000001,"loanCoin":"BUSD","totalDebt":"10000","loanRate":"0.0123","residualInterest":"10.27687923","collateralAccountId":"12345678,23456789","collateralCoin":"BNB,BTC,ETH","totalCollateralValueAfterHaircut":"25000.27565492","lockedCollateralValue":"25000.27565492","currentLTV":"0.57","expirationTime":1575018510000,"loanDate":"1676851200000","loanTerm":"30days"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"orderId":100000001,"loanCoin":"BUSD","totalDebt":"10000","loanRate":"0.0123","residualInterest":"10.27687923","collateralAccountId":"12345678,23456789","collateralCoin":"BNB,BTC,ETH","totalCollateralValueAfterHaircut":"25000.27565492","lockedCollateralValue":"25000.27565492","currentLTV":"0.57","expirationTime":1575018510000,"loanDate":"1676851200000","loanTerm":"30days"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetVipLoanOngoingOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanOngoingOrdersResponse");
 
             let resp = client.get_vip_loan_ongoing_orders(params).await.expect("Expected a response");
@@ -745,13 +920,63 @@ mod tests {
     }
 
     #[test]
+    fn get_vip_loan_repayment_history_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockUserInformationApiClient { force_error: false };
+
+            let params = GetVipLoanRepaymentHistoryParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB,BTC,ETH","repayStatus":"Repaid","loanDate":"1676851200000","repayTime":"1575018510000","orderId":"756783308056935434"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetVipLoanRepaymentHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanRepaymentHistoryResponse");
+
+            let resp = client.get_vip_loan_repayment_history(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_vip_loan_repayment_history_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockUserInformationApiClient { force_error: false };
+
+            let params = GetVipLoanRepaymentHistoryParams::builder().order_id(1).loan_coin("BUSD".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB,BTC,ETH","repayStatus":"Repaid","loanDate":"1676851200000","repayTime":"1575018510000","orderId":"756783308056935434"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetVipLoanRepaymentHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanRepaymentHistoryResponse");
+
+            let resp = client.get_vip_loan_repayment_history(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_vip_loan_repayment_history_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockUserInformationApiClient { force_error: true };
+
+            let params = GetVipLoanRepaymentHistoryParams::builder().build().unwrap();
+
+            match client.get_vip_loan_repayment_history(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn query_application_status_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockUserInformationApiClient { force_error: false };
 
             let params = QueryApplicationStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanAccountId":"12345678","orderId":"12345678","requestId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30","status":"Repaid","loanDate":"1676851200000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanAccountId":"12345678","orderId":"12345678","requestId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30","status":"Repaid","loanDate":"1676851200000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryApplicationStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryApplicationStatusResponse");
 
             let resp = client.query_application_status(params).await.expect("Expected a response");
@@ -768,7 +993,7 @@ mod tests {
 
             let params = QueryApplicationStatusParams::builder().current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanAccountId":"12345678","orderId":"12345678","requestId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30","status":"Repaid","loanDate":"1676851200000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanAccountId":"12345678","orderId":"12345678","requestId":"12345678","loanCoin":"BTC","loanAmount":"100.55","collateralAccountId":"12345678,12345678,12345678","collateralCoin":"BUSD,USDT,ETH","loanTerm":"30","status":"Repaid","loanDate":"1676851200000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryApplicationStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryApplicationStatusResponse");
 
             let resp = client.query_application_status(params).await.expect("Expected a response");

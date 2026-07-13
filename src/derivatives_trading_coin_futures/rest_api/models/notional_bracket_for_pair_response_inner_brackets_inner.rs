@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,16 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct NotionalBracketForPairResponseInnerBracketsInner {
+    /// bracket level
     #[serde(rename = "bracket", skip_serializing_if = "Option::is_none")]
     pub bracket: Option<i64>,
+    /// the maximum leverage
     #[serde(rename = "initialLeverage", skip_serializing_if = "Option::is_none")]
     pub initial_leverage: Option<i64>,
+    /// upper edge of base asset quantity
     #[serde(rename = "qtyCap", skip_serializing_if = "Option::is_none")]
     pub qty_cap: Option<i64>,
+    /// lower edge of base asset quantity
     #[serde(rename = "qtylFloor", skip_serializing_if = "Option::is_none")]
     pub qtyl_floor: Option<i64>,
+    /// Maintenance margin ratio.
     #[serde(rename = "maintMarginRatio", skip_serializing_if = "Option::is_none")]
     pub maint_margin_ratio: Option<rust_decimal::Decimal>,
+    /// Cumulative value.
     #[serde(rename = "cum", skip_serializing_if = "Option::is_none")]
     pub cum: Option<rust_decimal::Decimal>,
 }

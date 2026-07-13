@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -37,12 +37,16 @@ pub struct QueryAlgoOrderResponse {
     pub quantity: Option<String>,
     #[serde(rename = "algoStatus", skip_serializing_if = "Option::is_none")]
     pub algo_status: Option<String>,
+    /// Empty string if not triggered; orderId if triggered.
     #[serde(rename = "actualOrderId", skip_serializing_if = "Option::is_none")]
     pub actual_order_id: Option<String>,
+    /// 0 if not triggered; average price if filled/partially filled.
     #[serde(rename = "actualPrice", skip_serializing_if = "Option::is_none")]
     pub actual_price: Option<String>,
+    /// Optional field, only present when triggered.
     #[serde(rename = "actualType", skip_serializing_if = "Option::is_none")]
     pub actual_type: Option<String>,
+    /// Optional field, only present when filled/partially filled.
     #[serde(rename = "actualQty", skip_serializing_if = "Option::is_none")]
     pub actual_qty: Option<String>,
     #[serde(rename = "triggerPrice", skip_serializing_if = "Option::is_none")]

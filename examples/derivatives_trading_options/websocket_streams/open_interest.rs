@@ -26,7 +26,8 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = OpenInterestParams::builder("220930".to_string()).build()?;
+    let params =
+        OpenInterestParams::builder("btcusdt".to_string(), "220930".to_string()).build()?;
 
     // Subscribe to the stream
     let stream = connection

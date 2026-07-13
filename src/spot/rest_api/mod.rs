@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -125,10 +120,16 @@ impl RestApi {
         .await
     }
 
-    /// Query Commission Rates
+    /// Query Commission Rates (`USER_DATA`)
     ///
     /// Get current account commission rates.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -158,7 +159,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-commission-rates-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#account-commission).
     ///
     pub async fn account_commission(
         &self,
@@ -167,12 +168,19 @@ impl RestApi {
         self.account_api_client.account_commission(params).await
     }
 
-    /// Query all Order lists
+    /// Query all Order lists (`USER_DATA`)
     ///
     /// Retrieves all order lists based on provided optional parameters.
     ///
-    /// Note that the time between `startTime` and `endTime` can't be longer than 24 hours.
-    /// Weight: 20
+    /// Note that the time between `startTime` and `endTime` can't be longer
+    /// than 24 hours.
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -202,7 +210,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-all-order-lists-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#all-order-list).
     ///
     pub async fn all_order_list(
         &self,
@@ -211,10 +219,21 @@ impl RestApi {
         self.account_api_client.all_order_list(params).await
     }
 
-    /// All orders
+    /// All orders (`USER_DATA`)
     ///
     /// Get all account orders; active, canceled, or filled.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// - If `orderId` is set, it will get orders >= that `orderId`. Otherwise most recent orders are returned.
+    /// - For some historical orders `cummulativeQuoteQty` will be < 0, meaning the data is not available at this time.
+    /// - If `startTime` and/or `endTime` provided, `orderId` is not required.
+    /// - The time between `startTime` and `endTime` can't be longer than 24 hours.
     ///
     /// # Arguments
     ///
@@ -244,7 +263,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#all-orders-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#all-orders).
     ///
     pub async fn all_orders(
         &self,
@@ -253,10 +272,16 @@ impl RestApi {
         self.account_api_client.all_orders(params).await
     }
 
-    /// Account information
+    /// Account information (`USER_DATA`)
     ///
     /// Get current account information.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory => Database
     ///
     /// # Arguments
     ///
@@ -286,7 +311,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#account-information-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#get-account).
     ///
     pub async fn get_account(
         &self,
@@ -295,10 +320,18 @@ impl RestApi {
         self.account_api_client.get_account(params).await
     }
 
-    /// Current open orders
+    /// Current open orders (`USER_DATA`)
     ///
     /// Get all open orders on a symbol. **Careful** when accessing this with no symbol.
-    /// Weight: 6 for a single symbol; **80** when the symbol parameter is omitted
+    ///
+    /// Weight: 6 for a single symbol; 80 when the symbol parameter is omitted
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory => Database
+    ///
+    /// - If the symbol is not sent, orders for all symbols will be returned in an array.
     ///
     /// # Arguments
     ///
@@ -307,7 +340,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::AllOrdersResponseInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::GetOpenOrdersResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -328,19 +361,29 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#current-open-orders-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#get-open-orders).
     ///
     pub async fn get_open_orders(
         &self,
         params: GetOpenOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::AllOrdersResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetOpenOrdersResponseInner>>> {
         self.account_api_client.get_open_orders(params).await
     }
 
-    /// Query order
+    /// Query order (`USER_DATA`)
     ///
     /// Check an order's status.
-    /// Weight: 4
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory => Database
+    ///
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - If both `orderId` and `origClientOrderId` are provided, the `orderId` is searched first, then the `origClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
+    /// - For some historical orders `cummulativeQuoteQty` will be < 0, meaning the data is not available at this time.
     ///
     /// # Arguments
     ///
@@ -370,7 +413,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-order-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#get-order).
     ///
     pub async fn get_order(
         &self,
@@ -379,10 +422,16 @@ impl RestApi {
         self.account_api_client.get_order(params).await
     }
 
-    /// Query Order list
+    /// Query Order list (`USER_DATA`)
     ///
     /// Retrieves a specific order list based on provided optional parameters.
-    /// Weight: 4
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -412,7 +461,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-order-list-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#get-order-list).
     ///
     pub async fn get_order_list(
         &self,
@@ -421,10 +470,30 @@ impl RestApi {
         self.account_api_client.get_order_list(params).await
     }
 
-    /// Query Allocations
+    /// Query Allocations (`USER_DATA`)
     ///
     /// Retrieves allocations resulting from SOR order placement.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database"
+    ///
+    /// Supported parameter combinations:
+    ///
+    /// Parameters                                  | Response |
+    /// ------------------------------------------- | -------- |
+    /// `symbol`                                    | allocations from oldest to newest |
+    /// `symbol` + `startTime`                      | oldest allocations since `startTime` |
+    /// `symbol` + `endTime`                        | newest allocations until `endTime` |
+    /// `symbol` + `startTime` + `endTime`          | allocations within the time range |
+    /// `symbol` + `fromAllocationId`               | allocations by allocation ID |
+    /// `symbol` + `orderId`                        | allocations related to an order starting with oldest |
+    /// `symbol` + `orderId` + `fromAllocationId`   | allocations related to an order by allocation ID |
+    ///
+    /// **Note:** The time between `startTime` and `endTime` can't be longer than 24 hours.
     ///
     /// # Arguments
     ///
@@ -454,7 +523,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-allocations-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#my-allocations).
     ///
     pub async fn my_allocations(
         &self,
@@ -463,10 +532,16 @@ impl RestApi {
         self.account_api_client.my_allocations(params).await
     }
 
-    /// Query relevant filters
+    /// Query relevant filters (`USER_DATA`)
     ///
-    /// Retrieves the list of [filters](filters.md) relevant to an account on a given symbol. This is the only endpoint that shows if an account has `MAX_ASSET` filters applied to it.
-    /// Weight: 40
+    /// Retrieves the list of filters relevant to an account on a given symbol. This is the only endpoint that shows if an account has `MAX_ASSET` filters applied to it.
+    ///
+    /// Weight(IP): 40
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -496,7 +571,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-relevant-filters-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#my-filters).
     ///
     pub async fn my_filters(
         &self,
@@ -505,21 +580,26 @@ impl RestApi {
         self.account_api_client.my_filters(params).await
     }
 
-    /// Query Prevented Matches
+    /// Query Prevented Matches (`USER_DATA`)
     ///
     /// Displays the list of orders that were expired due to STP.
     ///
     /// These are the combinations supported:
+    /// - `symbol` + `preventedMatchId`
+    /// - `symbol` + `orderId`
+    /// - `symbol` + `orderId` + `fromPreventedMatchId` (`limit` will default to 500)
+    /// - `symbol` + `orderId` + `fromPreventedMatchId` + `limit`
     ///
-    /// * `symbol` + `preventedMatchId`
-    /// * `symbol` + `orderId`
-    /// * `symbol` + `orderId` + `fromPreventedMatchId` (`limit` will default to 500)
-    /// * `symbol` + `orderId` + `fromPreventedMatchId` + `limit`
     /// Weight: Case                            | Weight
     /// ----                            | -----
     /// If `symbol` is invalid          | 2
     /// Querying by `preventedMatchId`  | 2
     /// Querying by `orderId`           | 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -549,7 +629,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-prevented-matches-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#my-prevented-matches).
     ///
     pub async fn my_prevented_matches(
         &self,
@@ -558,13 +638,31 @@ impl RestApi {
         self.account_api_client.my_prevented_matches(params).await
     }
 
-    /// Account trade list
+    /// Account trade list (`USER_DATA`)
     ///
     /// Get trades for a specific account and symbol.
+    ///
     /// Weight: Condition| Weight|
     /// ---| ---
     /// |Without orderId|20|
     /// |With orderId|5|
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory => Database
+    ///
+    /// **Notes:**:
+    /// - If `fromId` is set, it will get trades >= that `fromId`. Otherwise most recent trades are returned.
+    /// - The time between `startTime` and `endTime` can't be longer than 24 hours.
+    /// - These are the supported combinations of all parameters:
+    /// - `symbol`
+    /// - `symbol` + `orderId`
+    /// - `symbol` + `startTime`
+    /// - `symbol` + `endTime`
+    /// - `symbol` + `fromId`
+    /// - `symbol` + `startTime` + `endTime`
+    /// - `symbol`+ `orderId` + `fromId`
     ///
     /// # Arguments
     ///
@@ -594,7 +692,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#account-trade-list-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#my-trades).
     ///
     pub async fn my_trades(
         &self,
@@ -603,10 +701,16 @@ impl RestApi {
         self.account_api_client.my_trades(params).await
     }
 
+    /// Query Open Order lists (`USER_DATA`)
+    ///
     /// Query Open Order lists
     ///
+    /// Weight(IP): 6
     ///
-    /// Weight: 6
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory -> Database
     ///
     /// # Arguments
     ///
@@ -636,7 +740,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-open-order-lists-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#open-order-list).
     ///
     pub async fn open_order_list(
         &self,
@@ -645,10 +749,16 @@ impl RestApi {
         self.account_api_client.open_order_list(params).await
     }
 
-    /// Query Order Amendments
+    /// Query Order Amendments (`USER_DATA`)
     ///
     /// Queries all amendments of a single order.
-    /// Weight: 4
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -678,7 +788,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-order-amendments-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#order-amendments).
     ///
     pub async fn order_amendments(
         &self,
@@ -687,10 +797,16 @@ impl RestApi {
         self.account_api_client.order_amendments(params).await
     }
 
-    /// Query Unfilled Order Count
+    /// Query Unfilled Order Count (`USER_DATA`)
     ///
     /// Displays the user's unfilled order count for all intervals.
-    /// Weight: 40
+    ///
+    /// Weight(IP): 40
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -720,7 +836,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-unfilled-order-count-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account#rate-limit-order).
     ///
     pub async fn rate_limit_order(
         &self,
@@ -732,7 +848,26 @@ impl RestApi {
     /// Exchange information
     ///
     /// Current exchange trading rules and symbol information
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
+    /// **Notes:**
+    /// * If the value provided to `symbol` or `symbols` do not exist, the endpoint will throw an error saying the symbol is invalid.
+    /// * All parameters are optional.
+    /// * `permissions` can support single or multiple values (e.g. `SPOT`, `["MARGIN","LEVERAGED"]`). This cannot be used in combination with `symbol` or `symbols`.
+    /// * If `permissions` parameter not provided, all symbols that have either `SPOT`, `MARGIN`, or `LEVERAGED` permission will be exposed.
+    /// * To display symbols with any permission you need to specify them explicitly in `permissions`: (e.g. `["SPOT","MARGIN",...]`.). See Account and Symbol Permissions for the full list.
+    ///
+    /// **Examples of Symbol Permissions Interpretation from the Response:**
+    ///
+    /// * `[["A","B"]]` means you may place an order if your account has either permission "A" **or** permission "B".
+    /// * `[["A"],["B"]]` means you can place an order if your account has permission "A" **and** permission "B".
+    /// * `[["A"],["B","C"]]` means you can place an order if your account has permission "A" **and** permission "B" or permission "C". (Inclusive or is applied here, not exclusive or, so your account may have both permission "B" and permission "C".)
     ///
     /// # Arguments
     ///
@@ -762,7 +897,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#exchange-info).
     ///
     pub async fn exchange_info(
         &self,
@@ -773,13 +908,21 @@ impl RestApi {
 
     /// Query Execution Rules
     ///
+    /// Query execution rules for symbols.
     ///
-    /// Weight: Parameter | Weight|
-    /// ---        | ---
-    /// `symbol`  | 2
-    /// `symbols` | 2 for each `symbol`, capped at a max of 40|
-    /// `symbolStatus` |40|
-    /// None            |40|
+    /// Weight: Parameter | Weight
+    /// --- | ---
+    /// `symbol` | 2
+    /// `symbols` | 2 for each `symbol`, capped at a max of 40
+    /// `symbolStatus` | 40
+    /// None | 40
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
+    /// **Note:**: No combination of multiple parameters is allowed.
     ///
     /// # Arguments
     ///
@@ -809,7 +952,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#query-execution-rules).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#execution-rules).
     ///
     pub async fn execution_rules(
         &self,
@@ -821,7 +964,10 @@ impl RestApi {
     /// Test connectivity
     ///
     /// Test connectivity to the Rest API.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: NONE
     ///
     /// # Arguments
     ///
@@ -851,7 +997,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#test-connectivity).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#ping).
     ///
     pub async fn ping(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.general_api_client.ping().await
@@ -860,7 +1006,10 @@ impl RestApi {
     /// Check server time
     ///
     /// Test connectivity to the Rest API and get the current server time.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: NONE
     ///
     /// # Arguments
     ///
@@ -890,7 +1039,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#check-server-time).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/general#time).
     ///
     pub async fn time(&self) -> anyhow::Result<RestApiResponse<models::TimeResponse>> {
         self.general_api_client.time().await
@@ -899,7 +1048,15 @@ impl RestApi {
     /// Compressed/Aggregate trades list
     ///
     /// Get compressed, aggregate trades. Trades that fill at the time, from the same taker order, with the same price will have the quantity aggregated.
-    /// Weight: 4
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// - If fromId, startTime, and endTime are not sent, the most recent aggregate trades will be returned.
     ///
     /// # Arguments
     ///
@@ -929,7 +1086,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#compressedaggregate-trades-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#agg-trades).
     ///
     pub async fn agg_trades(
         &self,
@@ -941,7 +1098,13 @@ impl RestApi {
     /// Current average price
     ///
     /// Current average price for a symbol.
-    /// Weight: 2
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -971,7 +1134,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#current-average-price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#avg-price).
     ///
     pub async fn avg_price(
         &self,
@@ -982,6 +1145,7 @@ impl RestApi {
 
     /// Order book
     ///
+    /// Order book
     ///
     /// Weight: Adjusted based on the limit:
     ///
@@ -991,6 +1155,11 @@ impl RestApi {
     /// 101-500| 25
     /// 501-1000| 50
     /// 1001-5000| 250
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1020,7 +1189,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#order-book).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#depth).
     ///
     pub async fn depth(
         &self,
@@ -1032,7 +1201,13 @@ impl RestApi {
     /// Recent trades list
     ///
     /// Get recent trades.
-    /// Weight: 25
+    ///
+    /// Weight(IP): 25
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1041,7 +1216,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::HistoricalTradesResponseInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::GetTradesResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -1062,19 +1237,25 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#recent-trades-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#get-trades).
     ///
     pub async fn get_trades(
         &self,
         params: GetTradesParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalTradesResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetTradesResponseInner>>> {
         self.market_api_client.get_trades(params).await
     }
 
-    /// Historical Block Trades
+    /// Historical Block Trades (`MARKET_DATA`)
     ///
     /// Get block trades.
-    /// Weight: 25
+    ///
+    /// Weight(IP): 25
+    ///
+    /// Security Type: `MARKET_DATA`
+    ///
+    /// Notes:
+    /// - Data Source: Database
     ///
     /// # Arguments
     ///
@@ -1104,7 +1285,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#historical-block-trades).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#historical-block-trades).
     ///
     pub async fn historical_block_trades(
         &self,
@@ -1116,7 +1297,13 @@ impl RestApi {
     /// Old trade lookup
     ///
     /// Get older trades.
-    /// Weight: 25
+    ///
+    /// Weight(IP): 25
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -1125,7 +1312,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::HistoricalTradesResponseInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::GetTradesResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -1146,12 +1333,12 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#old-trade-lookup).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#historical-trades).
     ///
     pub async fn historical_trades(
         &self,
         params: HistoricalTradesParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::HistoricalTradesResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetTradesResponseInner>>> {
         self.market_api_client.historical_trades(params).await
     }
 
@@ -1159,7 +1346,34 @@ impl RestApi {
     ///
     /// Kline/candlestick bars for a symbol.
     /// Klines are uniquely identified by their open time.
-    /// Weight: 2
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Supported kline intervals (case-sensitive):
+    ///
+    /// Interval  | `interval` value
+    /// --------- | ----------------
+    /// seconds   | `1s`
+    /// minutes   | `1m`, `3m`, `5m`, `15m`, `30m`
+    /// hours     | `1h`, `2h`, `4h`, `6h`, `8h`, `12h`
+    /// days      | `1d`, `3d`
+    /// weeks     | `1w`
+    /// months    | `1M`
+    ///
+    /// **Notes:**
+    ///
+    /// * If `startTime` and `endTime` are not sent, the most recent klines are returned.
+    /// * Supported values for `timeZone`:
+    /// * Hours and minutes (e.g. `-1:00`, `05:45`)
+    /// * Only hours (e.g. `0`, `8`, `4`)
+    /// * Accepted range is strictly [-12:00 to +14:00] inclusive
+    /// * If `timeZone` provided, kline intervals are interpreted in that timezone instead of UTC.
+    /// * Note that `startTime` and `endTime` are always interpreted in UTC, regardless of `timeZone`.
     ///
     /// # Arguments
     ///
@@ -1189,7 +1403,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#klines).
     ///
     pub async fn klines(
         &self,
@@ -1200,8 +1414,14 @@ impl RestApi {
 
     /// Query Reference Price
     ///
+    /// Query the reference price for a symbol.
     ///
-    /// Weight: 2
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1231,7 +1451,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#query-reference-price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#reference-price).
     ///
     pub async fn reference_price(
         &self,
@@ -1243,7 +1463,13 @@ impl RestApi {
     /// Query Reference Price Calculation
     ///
     /// Describes how reference price is calculated for a given symbol.
-    /// Weight: 2
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1273,7 +1499,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#query-reference-price-calculation).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#reference-price-calculation).
     ///
     pub async fn reference_price_calculation(
         &self,
@@ -1286,8 +1512,27 @@ impl RestApi {
 
     /// Rolling window price change statistics
     ///
+    /// **Note:** This endpoint differs from `GET /api/v3/ticker/24hr`.
     ///
-    /// Weight: 4 for each requested <tt>symbol</tt> regardless of <tt>windowSize</tt>. <br/><br/> The weight for this request will cap at 200 once the number of `symbols` in the request is more than 50.
+    /// The statistical time range of this endpoint can be up to 59999ms longer
+    /// than the requested `windowSize`.
+    ///
+    /// `openTime` starts at the beginning of a minute, while the end time is
+    /// the current time. Therefore, the actual interval can be up to 59999ms
+    /// longer than the requested window.
+    ///
+    /// For example, if `closeTime` is 1641287867099 (January 04, 2022
+    /// 09:17:47:099 UTC) and `windowSize` is `1d`, then `openTime` is
+    /// 1641201420000 (January 3, 2022, 09:17:00 UTC).
+    ///
+    /// Weight: 4 for each requested symbol regardless of windowSize.
+    ///
+    /// The weight for this request will cap at 200 once the number of `symbols` in the request is more than 50.
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -1317,7 +1562,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#rolling-window-price-change-statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker).
     ///
     pub async fn ticker(
         &self,
@@ -1329,6 +1574,7 @@ impl RestApi {
     /// 24hr ticker price change statistics
     ///
     /// 24 hour rolling window price change statistics. **Careful** when accessing this with no symbol.
+    ///
     /// Weight: <table>
     /// <thead>
     /// <tr>
@@ -1367,6 +1613,11 @@ impl RestApi {
     /// </tbody>
     /// </table>
     ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
     /// # Arguments
     ///
     /// - `params`: [`Ticker24hrParams`]
@@ -1395,7 +1646,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker24hr).
     ///
     pub async fn ticker24hr(
         &self,
@@ -1407,31 +1658,17 @@ impl RestApi {
     /// Symbol order book ticker
     ///
     /// Best price/qty on the order book for a symbol or symbols.
-    /// Weight: <table>
-    /// <thead>
-    /// <tr>
-    /// <th>Parameter</th>
-    /// <th>Symbols Provided</th>
-    /// <th>Weight</th>
-    /// </tr>
-    /// </thead>
-    /// <tbody>
-    /// <tr>
-    /// <td rowspan="2">symbol</td>
-    /// <td>1</td>
-    /// <td>2</td>
-    /// </tr>
-    /// <tr>
-    /// <td>symbol parameter is omitted</td>
-    /// <td>4</td>
-    /// </tr>
-    /// <tr>
-    /// <td>symbols</td>
-    /// <td>Any</td>
-    /// <td>4</td>
-    /// </tr>
-    /// </tbody>
-    /// </table>
+    ///
+    /// Weight: |Parameter|Symbols Provided|Weight|
+    /// |---|---|---|
+    /// |symbol| 1 |2|
+    /// | |omitted| 4|
+    /// |symbols| Any |4|
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1461,7 +1698,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-order-book-ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-book-ticker).
     ///
     pub async fn ticker_book_ticker(
         &self,
@@ -1473,31 +1710,17 @@ impl RestApi {
     /// Symbol price ticker
     ///
     /// Latest price for a symbol or symbols.
-    /// Weight: <table>
-    /// <thead>
-    /// <tr>
-    /// <th>Parameter</th>
-    /// <th>Symbols Provided</th>
-    /// <th>Weight</th>
-    /// </tr>
-    /// </thead>
-    /// <tbody>
-    /// <tr>
-    /// <td rowspan="2">symbol</td>
-    /// <td>1</td>
-    /// <td>2</td>
-    /// </tr>
-    /// <tr>
-    /// <td>symbol parameter is omitted</td>
-    /// <td>4</td>
-    /// </tr>
-    /// <tr>
-    /// <td>symbols</td>
-    /// <td>Any</td>
-    /// <td>4</td>
-    /// </tr>
-    /// </tbody>
-    /// </table>
+    ///
+    /// Weight: |Parameter|Symbols Provided|Weight|
+    /// |---|---|---|
+    /// |symbol| 1 |2|
+    /// | |omitted| 4|
+    /// |symbols| Any |4|
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1527,7 +1750,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-price).
     ///
     pub async fn ticker_price(
         &self,
@@ -1539,7 +1762,18 @@ impl RestApi {
     /// Trading Day Ticker
     ///
     /// Price change statistics for a trading day.
-    /// Weight: 4 for each requested <tt>symbol</tt>. <br/><br/> The weight for this request will cap at 200 once the number of `symbols` in the request is more than 50.
+    ///
+    /// Weight: 4 for each requested symbol. The weight for this request will cap at 200 once the number of symbols in the request is more than 50.
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// **Notes:**:
+    /// - Supported values for `timeZone`:
+    /// - Hours and minutes (e.g. `-1:00`, `05:45`)
+    /// - Only hours (e.g. `0`, `8`, `4`)
     ///
     /// # Arguments
     ///
@@ -1569,7 +1803,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#trading-day-ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ticker-trading-day).
     ///
     pub async fn ticker_trading_day(
         &self,
@@ -1580,10 +1814,26 @@ impl RestApi {
 
     /// `UIKlines`
     ///
-    /// The request is similar to klines having the same parameters and response.
+    /// The request is similar to klines having the same parameters and
+    /// response.
     ///
-    /// `uiKlines` return modified kline data, optimized for presentation of candlestick charts.
-    /// Weight: 2
+    /// `uiKlines` return modified kline data, optimized for presentation of
+    /// candlestick charts.
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// - If `startTime` and `endTime` are not sent, the most recent klines are returned.
+    /// - Supported values for `timeZone`:
+    /// - Hours and minutes (e.g. `-1:00`, `05:45`)
+    /// - Only hours (e.g. `0`, `8`, `4`)
+    /// - Accepted range is strictly [-12:00 to +14:00] inclusive
+    /// - If `timeZone` provided, kline intervals are interpreted in that timezone instead of UTC.
+    /// - Note that `startTime` and `endTime` are always interpreted in UTC, regardless of `timeZone`.
     ///
     /// # Arguments
     ///
@@ -1613,7 +1863,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#uiklines).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/market#ui-klines).
     ///
     pub async fn ui_klines(
         &self,
@@ -1622,11 +1872,17 @@ impl RestApi {
         self.market_api_client.ui_klines(params).await
     }
 
-    /// Cancel All Open Orders on a Symbol
+    /// Cancel All Open Orders on a Symbol (TRADE)
     ///
     /// Cancels all active orders on a symbol.
     /// This includes orders that are part of an order list.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1656,7 +1912,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-all-open-orders-on-a-symbol-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#delete-open-orders).
     ///
     pub async fn delete_open_orders(
         &self,
@@ -1665,10 +1921,20 @@ impl RestApi {
         self.trade_api_client.delete_open_orders(params).await
     }
 
-    /// Cancel order
+    /// Cancel order (TRADE)
     ///
     /// Cancel an active order.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - If both `orderId` and `origClientOrderId` are provided, the `orderId` is searched first, then the `origClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
+    /// - The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` + `origClientOrderId` will be slower.
     ///
     /// # Arguments
     ///
@@ -1698,7 +1964,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#delete-order).
     ///
     pub async fn delete_order(
         &self,
@@ -1707,10 +1973,20 @@ impl RestApi {
         self.trade_api_client.delete_order(params).await
     }
 
-    /// Cancel Order list
+    /// Cancel Order list (TRADE)
     ///
     /// Cancel an entire Order list
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// **Notes:**
+    /// - Canceling an individual order from an order list will cancel the entire order list.
+    /// - If both orderListId and listClientOrderId parameters are provided, the orderListId is searched first, then the listClientOrderId from that result is checked against that order. If both conditions are not met the request will be rejected.
     ///
     /// # Arguments
     ///
@@ -1740,7 +2016,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-order-list-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#delete-order-list).
     ///
     pub async fn delete_order_list(
         &self,
@@ -1749,12 +2025,48 @@ impl RestApi {
         self.trade_api_client.delete_order_list(params).await
     }
 
-    /// New order
+    /// New order (TRADE)
     ///
     /// Send in a new order.
     ///
     /// This adds 1 order to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Unfilled Order Count: 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// Some additional mandatory parameters based on order `type`:
+    ///
+    /// Type | Additional mandatory parameters | Additional Information
+    /// ------------ | ------------| ------
+    /// `LIMIT` | `timeInForce`, `quantity`, `price`|
+    /// `MARKET` | `quantity` or `quoteOrderQty`| `MARKET` orders using the `quantity` field specifies the amount of the `base asset` the user wants to buy or sell at the market price. <br/> E.g. MARKET order on BTCUSDT will specify how much BTC the user is buying or selling. <br/><br/> `MARKET` orders using `quoteOrderQty` specifies the amount the user wants to spend (when buying) or receive (when selling) the `quote` asset; the correct `quantity` will be determined based on the market liquidity and `quoteOrderQty`. <br/> E.g. Using the symbol BTCUSDT: <br/> `BUY` side, the order will buy as many BTC as `quoteOrderQty` USDT can. <br/> `SELL` side, the order will sell as much BTC needed to receive `quoteOrderQty` USDT.
+    /// `STOP_LOSS` | `quantity`, `stopPrice` or `trailingDelta`| This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)
+    /// `STOP_LOSS_LIMIT` | `timeInForce`, `quantity`,  `price`, `stopPrice` or `trailingDelta`
+    /// `TAKE_PROFIT` | `quantity`, `stopPrice` or `trailingDelta` | This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)
+    /// `TAKE_PROFIT_LIMIT` | `timeInForce`, `quantity`, `price`, `stopPrice` or `trailingDelta` |
+    /// `LIMIT_MAKER` | `quantity`, `price`| This is a `LIMIT` order that will be rejected if the order immediately matches and trades as a taker. <br/> This is also known as a POST-ONLY order.
+    ///
+    ///
+    /// Notes on using parameters for Pegged Orders:
+    /// * These parameters are allowed for `LIMIT`, `LIMIT_MAKER`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` orders.
+    /// * If `pegPriceType` is specified, `price` becomes optional. Otherwise, it is still mandatory.
+    /// * `pegPriceType=PRIMARY_PEG` means the primary peg, that is the best price on the same side of the order book as your order.
+    /// * `pegPriceType=MARKET_PEG` means the market peg, that is the best price on the opposite side of the order book from your order.
+    /// * Use `pegOffsetType` and `pegOffsetValue` to request a price level other than the best one. These parameters must be specified together.
+    ///
+    /// Other info:
+    /// * Any `LIMIT` or `LIMIT_MAKER` type order can be made an iceberg order by sending an `icebergQty`.
+    /// * Any order with an `icebergQty` MUST have `timeInForce` set to `GTC`.
+    /// * For `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` and `TAKE_PROFIT` orders, `trailingDelta` can be combined with `stopPrice`.
+    /// * `MARKET` orders using `quoteOrderQty` will not break `LOT_SIZE` filter rules; the order will execute a `quantity` that will have the notional value as close as possible to `quoteOrderQty`. Trigger order price rules against market price for both MARKET and LIMIT versions:
+    /// * Price above market price: `STOP_LOSS` `BUY`, `TAKE_PROFIT` `SELL`
+    /// * Price below market price: `STOP_LOSS` `SELL`, `TAKE_PROFIT` `BUY`
     ///
     /// # Arguments
     ///
@@ -1784,7 +2096,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#new-order).
     ///
     pub async fn new_order(
         &self,
@@ -1793,14 +2105,22 @@ impl RestApi {
         self.trade_api_client.new_order(params).await
     }
 
-    /// Order Amend Keep Priority
+    /// Order Amend Keep Priority (TRADE)
     ///
     /// Reduce the quantity of an existing open order.
     ///
     /// This adds 0 orders to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
     ///
-    /// Read [Order Amend Keep Priority FAQ](faqs/order_amend_keep_priority.md) to learn more.
-    /// Weight: 4
+    /// Read Order Amend Keep Priority FAQ to learn more.
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Unfilled Order Count: 0
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1830,7 +2150,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#order-amend-keep-priority-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-amend-keep-priority).
     ///
     pub async fn order_amend_keep_priority(
         &self,
@@ -1841,13 +2161,195 @@ impl RestApi {
             .await
     }
 
-    /// Cancel an Existing Order and Send a New Order
+    /// Cancel an Existing Order and Send a New Order (TRADE)
     ///
-    /// * Cancels an existing order and places a new order on the same symbol.
-    /// * Filters and Order Count are evaluated before the processing of the cancellation and order placement occurs.
-    /// * A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
-    /// * You can only cancel an individual order from an orderList using this endpoint, but the result is the same as canceling the entire orderList.
-    /// Weight: 1
+    /// - Cancels an existing order and places a new order on the same symbol.
+    /// - Filters and Order Count are evaluated before the processing of the cancellation and order placement occurs.
+    /// - A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
+    /// - You can only cancel an individual order from an orderList using this endpoint, but the result is the same as canceling the entire orderList.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Unfilled Order Count: 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// Similar to `POST /api/v3/order`, additional mandatory parameters are determined by `type`.
+    /// Response format varies depending on whether the processing of the message succeeded, partially succeeded, or failed.
+    ///
+    /// <table>
+    /// <thead>
+    /// <tr>
+    /// <th colspan=3 align=left>Request</th>
+    /// <th colspan=3 align=left>Response</th>
+    /// </tr>
+    /// <tr>
+    /// <th><code>cancelReplaceMode</code></th>
+    /// <th><code>orderRateLimitExceededMode</code></th>
+    /// <th>Unfilled Order Count</th>
+    /// <th><code>cancelResult</code></th>
+    /// <th><code>newOrderResult</code></th>
+    /// <th><code>status</code></th>
+    /// </tr>
+    /// </thead>
+    /// <tbody>
+    /// <tr>
+    /// <td rowspan="11"><code>STOP_ON_FAILURE</code></td>
+    /// <td rowspan="6"><code>DO_NOTHING</code></td>
+    /// <td rowspan="3">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="3">Exceeds Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="5"><code>CANCEL_ONLY</code></td>
+    /// <td rowspan="3">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="2">Exceeds Limits</td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right><code>429</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>429</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="16"><code>ALLOW_FAILURE</code></td>
+    /// <td rowspan="8"><code>DO_NOTHING</code></td>
+    /// <td rowspan="4">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="4">Exceeds Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="8"><CODE>CANCEL_ONLY</CODE></td>
+    /// <td rowspan="4">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="4">Exceeds Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>N/A</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// </tbody>
+    /// </table>
+    ///
+    /// **Notes:**
+    /// - The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` + `origClientOrderId` will be slower.
     ///
     /// # Arguments
     ///
@@ -1877,7 +2379,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-an-existing-order-and-send-a-new-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-cancel-replace).
     ///
     pub async fn order_cancel_replace(
         &self,
@@ -1886,23 +2388,30 @@ impl RestApi {
         self.trade_api_client.order_cancel_replace(params).await
     }
 
-    /// New Order list - OCO
+    /// New Order list - OCO (TRADE)
     ///
-    /// Send in an one-cancels-the-other (OCO) pair, where activation of one order immediately cancels the other.
+    /// Send in an one-cancels-the-other (OCO) pair, where activation of one
+    /// order immediately cancels the other.
     ///
-    /// * An OCO has 2 orders called the **above order** and **below order**.
-    /// * One of the orders must be a `LIMIT_MAKER/TAKE_PROFIT/TAKE_PROFIT_LIMIT` order and the other must be `STOP_LOSS` or `STOP_LOSS_LIMIT` order.
-    /// * Price restrictions
-    /// * If the OCO is on the `SELL` side:
-    /// * `LIMIT_MAKER/TAKE_PROFIT_LIMIT` `price` > Last Traded Price >  `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
-    /// * `TAKE_PROFIT stopPrice` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT stopPrice`
-    /// * If the OCO is on the `BUY` side:
-    /// * `LIMIT_MAKER/TAKE_PROFIT_LIMIT price` < Last Traded Price < `stopPrice`
-    /// * `TAKE_PROFIT stopPrice` < Last Traded Price < `STOP_LOSS/STOP_LOSS_LIMIT stopPrice`
-    /// * OCOs add **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    /// - An OCO has 2 orders called the **above order** and **below order**.
+    /// - One of the orders must be a `LIMIT_MAKER/TAKE_PROFIT/TAKE_PROFIT_LIMIT` order and the other must be `STOP_LOSS` or `STOP_LOSS_LIMIT` order.
+    /// - Price restrictions
+    /// - If the OCO is on the `SELL` side:
+    /// - `LIMIT_MAKER/TAKE_PROFIT_LIMIT` `price` > Last Traded Price >  `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
+    /// - `TAKE_PROFIT stopPrice` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT stopPrice`
+    /// - If the OCO is on the `BUY` side:
+    /// - `LIMIT_MAKER/TAKE_PROFIT_LIMIT price` < Last Traded Price < `stopPrice`
+    /// - `TAKE_PROFIT stopPrice` < Last Traded Price < `STOP_LOSS/STOP_LOSS_LIMIT stopPrice` * OCOs add **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
+    /// - OCOs add 2 orders to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 2
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1932,7 +2441,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oco-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-list-oco).
     ///
     pub async fn order_list_oco(
         &self,
@@ -1941,14 +2450,20 @@ impl RestApi {
         self.trade_api_client.order_list_oco(params).await
     }
 
-    /// New Order List - OPO
+    /// New Order List - OPO (TRADE)
     ///
-    /// Place an [OPO](./faqs/opo.md).
+    /// Place an [OPO](/products/spot/faqs/opo).
     ///
-    /// * OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    /// - OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS`` filter and `MAX_NUM_ORDERS`` filter.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 2
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1978,7 +2493,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---opo-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-list-opo).
     ///
     pub async fn order_list_opo(
         &self,
@@ -1987,12 +2502,18 @@ impl RestApi {
         self.trade_api_client.order_list_opo(params).await
     }
 
-    /// New Order List - OPOCO
+    /// New Order List - OPOCO (TRADE)
     ///
-    /// Place an [OPOCO](./faqs/opo.md).
-    /// Weight: 1
+    /// Place an [OPOCO](/products/spot/faqs/opo).
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 3
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -2022,7 +2543,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---opoco-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-list-opoco).
     ///
     pub async fn order_list_opoco(
         &self,
@@ -2031,19 +2552,36 @@ impl RestApi {
         self.trade_api_client.order_list_opoco(params).await
     }
 
-    /// New Order list - OTO
+    /// New Order list - OTO (TRADE)
     ///
     /// Place an OTO.
     ///
-    /// * An OTO (One-Triggers-the-Other) is an order list comprised of 2 orders.
-    /// * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
-    /// * The second order is called the **pending order**. It can be any order type except for `MARKET` orders using parameter `quoteOrderQty`. The pending order is only placed on the order book when the working order gets **fully filled**.
-    /// * If either the working order or the pending order is cancelled individually, the other order in the order list will also be canceled or expired.
-    /// * When the order list is placed, if the working order gets **immediately fully filled**, the placement response will show the working order as `FILLED` but the pending order will still appear as `PENDING_NEW`. You need to query the status of the pending order again to see its updated status.
-    /// * OTOs add **2 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    /// - An OTO (One-Triggers-the-Other) is an order list comprised of 2 orders.
+    /// - The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
+    /// - The second order is called the **pending order**. It can be any order type except for `MARKET` orders using parameter `quoteOrderQty`. The pending order is only placed on the order book when the working order gets **fully filled**.
+    /// - If either the working order or the pending order is cancelled individually, the other order in the order list will also be canceled or expired.
+    /// - When the order list is placed, if the working order gets **immediately fully filled**, the placement response will show the working order as `FILLED` but the pending order will still appear as `PENDING_NEW`. You need to query the status of the pending order again to see its updated status.
+    /// - OTOs add **2 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 2
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// **Mandatory parameters based on `pendingType` or `workingType`**
+    ///
+    /// Depending on the `pendingType` or `workingType`, some optional parameters will become mandatory.
+    ///
+    /// |Type                                                  |Additional mandatory parameters|Additional information|
+    /// |----                                                  |----                           |------
+    /// |`workingType` = `LIMIT`                               |`workingTimeInForce`           |
+    /// |`pendingType` = `LIMIT`                                |`pendingPrice`, `pendingTimeInForce`          |
+    /// |`pendingType` = `STOP_LOSS` or `TAKE_PROFIT`           |`pendingStopPrice` and/or `pendingTrailingDelta`|
+    /// |`pendingType` = `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`|`pendingPrice`, `pendingStopPrice` and/or `pendingTrailingDelta`, `pendingTimeInForce`|
     ///
     /// # Arguments
     ///
@@ -2073,7 +2611,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oto-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-list-oto).
     ///
     pub async fn order_list_oto(
         &self,
@@ -2082,19 +2620,39 @@ impl RestApi {
         self.trade_api_client.order_list_oto(params).await
     }
 
-    /// New Order list - OTOCO
+    /// New Order list - OTOCO (TRADE)
     ///
     /// Place an OTOCO.
     ///
-    /// * An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list comprised of 3 orders.
-    /// * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
-    /// * The behavior of the working order is the same as the [OTO](#new-order-list---oto-trade).
-    /// * OTOCO has 2 pending orders (pending above and pending below), forming an OCO pair. The pending orders are only placed on the order book when the working order gets **fully filled**.
-    /// * The rules of the pending above and pending below follow the same rules as the [Order list OCO](#new-order-list---oco-trade).
-    /// * OTOCOs add **3 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    /// - An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list comprised of 3 orders.
+    /// - The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
+    /// - The behavior of the working order is the same as the [OTO](#order-list-oto).
+    /// - OTOCO has 2 pending orders (pending above and pending below), forming an OCO pair. The pending orders are only placed on the order book when the working order gets **fully filled**.
+    /// - The rules of the pending above and pending below follow the same rules as the [Order list OCO](#order-list-oco).
+    /// - OTOCOs add **3 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 3
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// **Mandatory parameters based on `pendingAboveType`, `pendingBelowType` or `workingType`**
+    ///
+    /// Depending on the `pendingAboveType`/`pendingBelowType` or `workingType`, some optional parameters will become mandatory.
+    ///
+    /// |Type                                                       |Additional mandatory parameters|Additional information|
+    /// |----                                                       |----                           |------
+    /// |`workingType` = `LIMIT`                                    |`workingTimeInForce`           |
+    /// |`pendingAboveType`= `LIMIT_MAKER`                                |`pendingAbovePrice`     |
+    /// |`pendingAboveType` = `STOP_LOSS/TAKE_PROFIT`        |`pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`|
+    /// |`pendingAboveType=STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT` |`pendingAbovePrice`, `pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`, `pendingAboveTimeInForce`|
+    /// |`pendingBelowType`= `LIMIT_MAKER`                                |`pendingBelowPrice`          |
+    /// |`pendingBelowType= STOP_LOSS/TAKE_PROFIT`         |`pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`|
+    /// |`pendingBelowType=STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT` |`pendingBelowPrice`, `pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`, `pendingBelowTimeInForce`|
     ///
     /// # Arguments
     ///
@@ -2124,7 +2682,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---otoco-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-list-otoco).
     ///
     pub async fn order_list_otoco(
         &self,
@@ -2133,20 +2691,26 @@ impl RestApi {
         self.trade_api_client.order_list_otoco(params).await
     }
 
-    /// New OCO - Deprecated
+    /// New OCO - Deprecated (TRADE)
     ///
     /// Send in a new OCO.
     ///
-    /// * Price Restrictions:
-    /// * `SELL`: Limit Price > Last Price > Stop Price
-    /// * `BUY`: Limit Price < Last Price < Stop Price
-    /// * Quantity Restrictions:
-    /// * Both legs must have the same quantity.
-    /// * `ICEBERG` quantities however do not have to be the same
-    /// * `OCO` adds **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    /// - Price Restrictions:
+    /// - `SELL`: Limit Price > Last Price > Stop Price
+    /// - `BUY`: Limit Price < Last Price < Stop Price
+    /// - Quantity Restrictions:
+    /// - Both legs must have the same quantity.
+    /// - `ICEBERG` quantities however do not have to be the same
+    /// - `OCO` adds **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 2
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -2176,7 +2740,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-oco---deprecated-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-oco).
     ///
     /// # Deprecation
     ///
@@ -2189,14 +2753,22 @@ impl RestApi {
         self.trade_api_client.order_oco(params).await
     }
 
-    /// Test new order
+    /// Test new order (TRADE)
     ///
     /// Test new order creation and signature/recvWindow long.
-    /// Creates and validates a new order but does not send it into the matching engine.
-    /// Weight: |Condition| Request Weight|
-    /// |------------           | ------------ |
-    /// |Without `computeCommissionRates`| 1|
+    ///
+    /// Creates and validates a new order but does not send it into the matching
+    /// engine.
+    ///
+    /// Weight: |Condition|Weight|
+    /// |---|---|
+    /// |Without `computeCommissionRates`|1|
     /// |With `computeCommissionRates`|20|
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -2226,7 +2798,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#test-new-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#order-test).
     ///
     pub async fn order_test(
         &self,
@@ -2235,16 +2807,24 @@ impl RestApi {
         self.trade_api_client.order_test(params).await
     }
 
-    /// New order using SOR
+    /// New order using SOR (TRADE)
     ///
     /// Places an order using smart order routing (SOR).
     ///
     /// This adds 1 order to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
     ///
-    /// Read [SOR FAQ](faqs/sor_faq.md) to learn more.
-    /// Weight: 1
+    /// Read [SOR FAQ](/products/spot/faqs/sor_faq) to learn more.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// **Note:** `POST /api/v3/sor/order` only supports `LIMIT` and `MARKET` orders. `quoteOrderQty` is not supported.
     ///
     /// # Arguments
     ///
@@ -2274,7 +2854,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-using-sor-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#sor-order).
     ///
     pub async fn sor_order(
         &self,
@@ -2283,14 +2863,20 @@ impl RestApi {
         self.trade_api_client.sor_order(params).await
     }
 
-    /// Test new order using SOR
+    /// Test new order using SOR (TRADE)
     ///
     /// Test new order creation and signature/recvWindow using smart order routing (SOR).
     /// Creates and validates a new order but does not send it into the matching engine.
-    /// Weight: | Condition | Request Weight |
-    /// | --------- | -------------- |
-    /// | Without `computeCommissionRates`  |  1 |
-    /// | With `computeCommissionRates`     | 20 |
+    ///
+    /// Weight: |Condition|Weight|
+    /// |---|---|
+    /// |Without `computeCommissionRates`|1|
+    /// |With `computeCommissionRates`|20|
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -2320,7 +2906,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#test-new-order-using-sor-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/trade#sor-order-test).
     ///
     pub async fn sor_order_test(
         &self,

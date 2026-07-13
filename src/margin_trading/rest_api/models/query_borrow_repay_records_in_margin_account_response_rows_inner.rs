@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,22 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryBorrowRepayRecordsInMarginAccountResponseRowsInner {
+    /// AUTO,MANUAL for Cross Margin Borrow; `MANUAL，AUTO，BNB_AUTO_REPAY，POINT_AUTO_REPAY` for Cross Margin Repay; AUTO，MANUAL for Isolated Margin Borrow/Repay;
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// isolated symbol, will not be returned for crossed margin
     #[serde(rename = "isolatedSymbol", skip_serializing_if = "Option::is_none")]
     pub isolated_symbol: Option<String>,
+    /// Total amount borrowed/repaid
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// asset.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Interest repaid
     #[serde(rename = "interest", skip_serializing_if = "Option::is_none")]
     pub interest: Option<String>,
+    /// Principal repaid
     #[serde(rename = "principal", skip_serializing_if = "Option::is_none")]
     pub principal: Option<String>,
+    /// one of PENDING (pending execution), CONFIRMED (successfully execution), FAILED (execution failed, nothing happened to your account);
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// timestamp.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
+    /// tx Id.
     #[serde(rename = "txId", skip_serializing_if = "Option::is_none")]
     pub tx_id: Option<i64>,
 }

@@ -160,7 +160,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#get-market-detail).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#get-market-detail).
     ///
     pub async fn get_market_detail(
         &self,
@@ -203,7 +203,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#list-prediction-categories).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#list-prediction-categories).
     ///
     pub async fn list_prediction_categories(
         &self,
@@ -247,7 +247,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#list-prediction-markets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#list-prediction-markets).
     ///
     pub async fn list_prediction_markets(
         &self,
@@ -292,7 +292,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#market-search).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#market-search).
     ///
     pub async fn market_search(
         &self,
@@ -335,7 +335,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#query-last-trade-price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#query-last-trade-price).
     ///
     pub async fn query_last_trade_price(
         &self,
@@ -380,7 +380,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#query-order-book).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/market-data#query-order-book).
     ///
     pub async fn query_order_book(
         &self,
@@ -389,7 +389,7 @@ impl RestApi {
         self.market_data_api_client.query_order_book(params).await
     }
 
-    /// Get Position by Token
+    /// Get Position by Token (`USER_DATA`)
     ///
     /// Get the authenticated user's position detail for a specific prediction token.
     ///
@@ -425,7 +425,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#get-position-by-token).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#get-position-by-token).
     ///
     pub async fn get_position_by_token(
         &self,
@@ -434,7 +434,7 @@ impl RestApi {
         self.position_api_client.get_position_by_token(params).await
     }
 
-    /// Query `PnL`
+    /// Query `PnL` (`USER_DATA`)
     ///
     /// Query profit and loss records for the authenticated user's prediction positions. When `tokenId` is provided, returns a single record in `pnl`; otherwise returns a list in `pnlList`.
     ///
@@ -470,7 +470,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-pn-l).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-pn-l).
     ///
     pub async fn query_pn_l(
         &self,
@@ -479,7 +479,7 @@ impl RestApi {
         self.position_api_client.query_pn_l(params).await
     }
 
-    /// Query Positions
+    /// Query Positions (`USER_DATA`)
     ///
     /// Get the authenticated user's prediction token positions with portfolio summary and tab-based filtering.
     ///
@@ -515,7 +515,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-positions).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-positions).
     ///
     pub async fn query_positions(
         &self,
@@ -524,7 +524,7 @@ impl RestApi {
         self.position_api_client.query_positions(params).await
     }
 
-    /// Query Positions by Filter
+    /// Query Positions by Filter (`USER_DATA`)
     ///
     /// Get prediction positions filtered by wallet address and/or market topic ID. Both parameters are optional.
     ///
@@ -560,7 +560,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-positions-by-filter).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-positions-by-filter).
     ///
     pub async fn query_positions_by_filter(
         &self,
@@ -571,7 +571,7 @@ impl RestApi {
             .await
     }
 
-    /// Query Settled Position History
+    /// Query Settled Position History (`USER_DATA`)
     ///
     /// Get the authenticated user's settled (resolved) prediction position history with optional filters.
     ///
@@ -607,7 +607,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-settled-position-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/position#query-settled-position-history).
     ///
     pub async fn query_settled_position_history(
         &self,
@@ -618,7 +618,7 @@ impl RestApi {
             .await
     }
 
-    /// Batch Redeem
+    /// Batch Redeem (TRADE)
     ///
     /// Redeem one or more settled prediction tokens on-chain to claim winnings. Requires SAS authorization.
     ///
@@ -654,7 +654,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/redeem#batch-redeem).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/redeem#batch-redeem).
     ///
     pub async fn batch_redeem(
         &self,
@@ -663,7 +663,7 @@ impl RestApi {
         self.redeem_api_client.batch_redeem(params).await
     }
 
-    /// Get Redeem Status
+    /// Get Redeem Status (`USER_DATA`)
     ///
     /// Query the on-chain transaction status of a previously submitted redeem request.
     ///
@@ -709,7 +709,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/redeem#get-redeem-status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/redeem#get-redeem-status).
     ///
     pub async fn get_redeem_status(
         &self,
@@ -718,7 +718,7 @@ impl RestApi {
         self.redeem_api_client.get_redeem_status(params).await
     }
 
-    /// Batch Cancel Orders
+    /// Batch Cancel Orders (TRADE)
     ///
     /// Cancel one or more active prediction orders in a single request. Requires SAS authorization.
     ///
@@ -766,7 +766,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#batch-cancel-orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#batch-cancel-orders).
     ///
     pub async fn batch_cancel_orders(
         &self,
@@ -775,7 +775,7 @@ impl RestApi {
         self.trade_api_client.batch_cancel_orders(params).await
     }
 
-    /// Get Quote
+    /// Get Quote (TRADE)
     ///
     /// Get a price quote for a prediction order. The returned `quoteId` must be used in the subsequent Place Order request.
     ///
@@ -815,7 +815,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#get-quote).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#get-quote).
     ///
     pub async fn get_quote(
         &self,
@@ -824,7 +824,7 @@ impl RestApi {
         self.trade_api_client.get_quote(params).await
     }
 
-    /// Place Order
+    /// Place Order (TRADE)
     ///
     /// Place a prediction order using a previously obtained quote. Requires SAS authorization.
     ///
@@ -868,7 +868,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#place-order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#place-order).
     ///
     pub async fn place_order(
         &self,
@@ -877,7 +877,7 @@ impl RestApi {
         self.trade_api_client.place_order(params).await
     }
 
-    /// Query Active Orders
+    /// Query Active Orders (`USER_DATA`)
     ///
     /// Get active (open) prediction orders for the authenticated user.
     ///
@@ -913,7 +913,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#query-active-orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#query-active-orders).
     ///
     pub async fn query_active_orders(
         &self,
@@ -922,7 +922,7 @@ impl RestApi {
         self.trade_api_client.query_active_orders(params).await
     }
 
-    /// Query Order History
+    /// Query Order History (`USER_DATA`)
     ///
     /// Get historical prediction orders (all statuses) for the authenticated user, with optional filters.
     ///
@@ -958,7 +958,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#query-order-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/trade#query-order-history).
     ///
     pub async fn query_order_history(
         &self,
@@ -967,7 +967,7 @@ impl RestApi {
         self.trade_api_client.query_order_history(params).await
     }
 
-    /// Create Inbound Transfer
+    /// Create Inbound Transfer (TRADE)
     ///
     /// Transfer funds from the prediction wallet back to the user's CEX account (SPOT or FUNDING). Requires SAS authorization.
     ///
@@ -1005,7 +1005,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#create-inbound-transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#create-inbound-transfer).
     ///
     pub async fn create_inbound_transfer(
         &self,
@@ -1016,7 +1016,7 @@ impl RestApi {
             .await
     }
 
-    /// Create Outbound Transfer
+    /// Create Outbound Transfer (TRADE)
     ///
     /// Transfer funds from the user's CEX account (SPOT or FUNDING) into the prediction wallet. Requires SAS authorization.
     ///
@@ -1052,7 +1052,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#create-outbound-transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#create-outbound-transfer).
     ///
     pub async fn create_outbound_transfer(
         &self,
@@ -1063,7 +1063,7 @@ impl RestApi {
             .await
     }
 
-    /// Query Transfer List
+    /// Query Transfer List (`USER_DATA`)
     ///
     /// Get the authenticated user's prediction wallet transfer history within a date range.
     ///
@@ -1099,7 +1099,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#query-transfer-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#query-transfer-list).
     ///
     pub async fn query_transfer_list(
         &self,
@@ -1108,7 +1108,7 @@ impl RestApi {
         self.transfer_api_client.query_transfer_list(params).await
     }
 
-    /// Query Transfer Status
+    /// Query Transfer Status (`USER_DATA`)
     ///
     /// Query the current status of a prediction wallet transfer by transfer ID.
     ///
@@ -1146,7 +1146,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#query-transfer-status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/transfer#query-transfer-status).
     ///
     pub async fn query_transfer_status(
         &self,
@@ -1155,7 +1155,7 @@ impl RestApi {
         self.transfer_api_client.query_transfer_status(params).await
     }
 
-    /// Get Portfolio
+    /// Get Portfolio (`USER_DATA`)
     ///
     /// Get the authenticated user's prediction portfolio overview including active positions count, aggregated `PnL`, and full position list.
     ///
@@ -1191,7 +1191,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#get-portfolio).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#get-portfolio).
     ///
     pub async fn get_portfolio(
         &self,
@@ -1200,7 +1200,7 @@ impl RestApi {
         self.wallet_api_client.get_portfolio(params).await
     }
 
-    /// Get Quota Status
+    /// Get Quota Status (`USER_DATA`)
     ///
     /// Query the current user's daily trading quota limit and remaining allowance for prediction markets.
     ///
@@ -1236,7 +1236,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#get-quota-status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#get-quota-status).
     ///
     pub async fn get_quota_status(
         &self,
@@ -1245,7 +1245,7 @@ impl RestApi {
         self.wallet_api_client.get_quota_status(params).await
     }
 
-    /// List Prediction Wallets
+    /// List Prediction Wallets (`USER_DATA`)
     ///
     /// Get all prediction wallets registered for the authenticated user.
     ///
@@ -1281,7 +1281,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#list-prediction-wallets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#list-prediction-wallets).
     ///
     pub async fn list_prediction_wallets(
         &self,
@@ -1290,7 +1290,7 @@ impl RestApi {
         self.wallet_api_client.list_prediction_wallets(params).await
     }
 
-    /// Query Payment Option Balances
+    /// Query Payment Option Balances (`USER_DATA`)
     ///
     /// Get available balances for each payment option that can be used for prediction trading.
     ///
@@ -1326,7 +1326,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/dev-docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#query-payment-option-balances).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api/wallet#query-payment-option-balances).
     ///
     pub async fn query_payment_option_balances(
         &self,

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,17 +15,20 @@
 use crate::derivatives_trading_portfolio_margin::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `QueryCmModifyOrderHistoryResponseInnerAmendment` : Amendment.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryCmModifyOrderHistoryResponseInnerAmendment {
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<Box<models::QueryCmModifyOrderHistoryResponseInnerAmendmentPrice>>,
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<Box<models::QueryCmModifyOrderHistoryResponseInnerAmendmentOrigQty>>,
+    /// Order modification count, representing the number of times the order has been modified
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }
 
 impl QueryCmModifyOrderHistoryResponseInnerAmendment {
+    /// Amendment.
     #[must_use]
     pub fn new() -> QueryCmModifyOrderHistoryResponseInnerAmendment {
         QueryCmModifyOrderHistoryResponseInnerAmendment {

@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,24 +17,34 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetExchangeInfoResponseDataSymbolsInner {
+    /// Trading symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Trading status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// Base asset symbol.
     #[serde(rename = "baseAsset", skip_serializing_if = "Option::is_none")]
     pub base_asset: Option<String>,
+    /// Quote asset symbol.
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// Allowed precision for price.
     #[serde(rename = "pricePrecision", skip_serializing_if = "Option::is_none")]
     pub price_precision: Option<i64>,
+    /// Allowed precision for quantity.
     #[serde(rename = "quantityPrecision", skip_serializing_if = "Option::is_none")]
     pub quantity_precision: Option<i64>,
+    /// Base asset precision.
     #[serde(rename = "baseAssetPrecision", skip_serializing_if = "Option::is_none")]
     pub base_asset_precision: Option<i64>,
+    /// Quote asset precision.
     #[serde(rename = "quotePrecision", skip_serializing_if = "Option::is_none")]
     pub quote_precision: Option<i64>,
+    /// Trading filters and constraints.
     #[serde(rename = "filters", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<models::GetExchangeInfoResponseDataSymbolsInnerFiltersInner>>,
+    /// Supported order types for this symbol.
     #[serde(rename = "orderTypes", skip_serializing_if = "Option::is_none")]
     pub order_types: Option<Vec<String>>,
 }

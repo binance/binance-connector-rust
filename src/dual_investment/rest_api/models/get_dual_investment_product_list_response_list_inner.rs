@@ -1,7 +1,7 @@
 /*
- * Binance Dual Investment REST API
+ * Dual Investment REST API
  *
- * OpenAPI Specification for the Binance Dual Investment REST API
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -33,6 +33,7 @@ pub struct GetDualInvestmentProductListResponseListInner {
     pub purchase_decimal: Option<i64>,
     #[serde(rename = "purchaseEndTime", skip_serializing_if = "Option::is_none")]
     pub purchase_end_time: Option<i64>,
+    /// Whether the product can be subscribed to currently
     #[serde(rename = "canPurchase", skip_serializing_if = "Option::is_none")]
     pub can_purchase: Option<bool>,
     #[serde(rename = "apr", skip_serializing_if = "Option::is_none")]
@@ -47,11 +48,13 @@ pub struct GetDualInvestmentProductListResponseListInner {
     pub create_timestamp: Option<i64>,
     #[serde(rename = "optionType", skip_serializing_if = "Option::is_none")]
     pub option_type: Option<String>,
+    /// Whether auto-compound is enabled for this product
     #[serde(
         rename = "isAutoCompoundEnable",
         skip_serializing_if = "Option::is_none"
     )]
     pub is_auto_compound_enable: Option<bool>,
+    /// Available auto-compound plans for this product
     #[serde(
         rename = "autoCompoundPlanList",
         skip_serializing_if = "Option::is_none"

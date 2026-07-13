@@ -32,8 +32,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = OpenInterestStatisticsParams::builder(
-        "pair_example".to_string(),
-        OpenInterestStatisticsContractTypeEnum::Perpetual,
+        "BTCUSD".to_string(),
+        OpenInterestStatisticsContractTypeEnum::All,
         OpenInterestStatisticsPeriodEnum::Period5m,
     )
     .build()?;

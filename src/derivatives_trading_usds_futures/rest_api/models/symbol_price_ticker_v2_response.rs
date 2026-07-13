@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,7 +19,7 @@ use serde::{Deserialize, Serialize};
 #[serde(untagged)]
 pub enum SymbolPriceTickerV2Response {
     SymbolPriceTickerV2Response1(Box<models::SymbolPriceTickerV2Response1>),
-    SymbolPriceTickerV2Response2(Vec<models::SymbolPriceTickerV2Response2Inner>),
+    SymbolPriceTickerV2Response2(Vec<models::SymbolPriceTickerResponse2Inner>),
     Other(serde_json::Value),
 }
 

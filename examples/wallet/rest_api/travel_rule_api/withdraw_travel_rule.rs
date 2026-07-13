@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = WithdrawTravelRuleParams::builder(
-        "coin_example".to_string(),
+        "BTC".to_string(),
         "address_example".to_string(),
         dec!(1.0),
         "questionnaire_example".to_string(),

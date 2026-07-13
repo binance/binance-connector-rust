@@ -1,7 +1,7 @@
 /*
  * Binance Pay REST API
  *
- * OpenAPI Specification for the Binance Pay REST API
+ * Query Binance Pay transaction history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,8 +17,6 @@ pub mod get_pay_trade_history_response_data_inner;
 pub use self::get_pay_trade_history_response_data_inner::GetPayTradeHistoryResponseDataInner;
 pub mod get_pay_trade_history_response_data_inner_funds_detail_inner;
 pub use self::get_pay_trade_history_response_data_inner_funds_detail_inner::GetPayTradeHistoryResponseDataInnerFundsDetailInner;
-pub mod get_pay_trade_history_response_data_inner_funds_detail_inner_wallet_asset_cost;
-pub use self::get_pay_trade_history_response_data_inner_funds_detail_inner_wallet_asset_cost::GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCost;
 pub mod get_pay_trade_history_response_data_inner_payer_info;
 pub use self::get_pay_trade_history_response_data_inner_payer_info::GetPayTradeHistoryResponseDataInnerPayerInfo;
 pub mod get_pay_trade_history_response_data_inner_receiver_info;

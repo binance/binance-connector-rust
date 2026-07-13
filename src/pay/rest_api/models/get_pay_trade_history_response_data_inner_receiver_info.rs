@@ -1,7 +1,7 @@
 /*
  * Binance Pay REST API
  *
- * OpenAPI Specification for the Binance Pay REST API
+ * Query Binance Pay transaction history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetPayTradeHistoryResponseDataInnerReceiverInfo {
+    /// Nickname or merchant name.
     #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+    /// Account type: USER for personal, MERCHANT for merchant.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// Email.
     #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
+    /// Binance UID.
     #[serde(rename = "binanceId", skip_serializing_if = "Option::is_none")]
     pub binance_id: Option<String>,
+    /// Binance Pay ID.
     #[serde(rename = "accountId", skip_serializing_if = "Option::is_none")]
     pub account_id: Option<String>,
+    /// International area code.
     #[serde(rename = "countryCode", skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
+    /// Phone number.
     #[serde(rename = "phoneNumber", skip_serializing_if = "Option::is_none")]
     pub phone_number: Option<String>,
+    /// Country code.
     #[serde(rename = "mobileCode", skip_serializing_if = "Option::is_none")]
     pub mobile_code: Option<String>,
     #[serde(rename = "extend", skip_serializing_if = "Option::is_none")]

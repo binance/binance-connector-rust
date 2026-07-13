@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -88,18 +88,49 @@ impl EthStakingApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum RedeemEthAssetEnum {
+    #[serde(rename = "WBETH")]
+    Wbeth,
+    #[serde(rename = "BETH")]
+    Beth,
+}
+
+impl RedeemEthAssetEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Wbeth => "WBETH",
+            Self::Beth => "BETH",
+        }
+    }
+}
+
+impl std::str::FromStr for RedeemEthAssetEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "WBETH" => Ok(Self::Wbeth),
+            "BETH" => Ok(Self::Beth),
+            other => Err(format!("invalid RedeemEthAssetEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`eth_staking_account`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`eth_staking_account`](#method.eth_staking_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct EthStakingAccountParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -115,14 +146,14 @@ impl EthStakingAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_current_eth_staking_quota`](#method.get_current_eth_staking_quota).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetCurrentEthStakingQuotaParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -138,7 +169,7 @@ impl GetCurrentEthStakingQuotaParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_eth_redemption_history`](#method.get_eth_redemption_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetEthRedemptionHistoryParams {
     ///
@@ -146,34 +177,40 @@ pub struct GetEthRedemptionHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "redeemId", default)]
     pub redeem_id: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -189,7 +226,7 @@ impl GetEthRedemptionHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_eth_staking_history`](#method.get_eth_staking_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetEthStakingHistoryParams {
     ///
@@ -197,34 +234,40 @@ pub struct GetEthStakingHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "purchaseId", default)]
     pub purchase_id: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -240,7 +283,7 @@ impl GetEthStakingHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_wbeth_rate_history`](#method.get_wbeth_rate_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetWbethRateHistoryParams {
     ///
@@ -248,28 +291,33 @@ pub struct GetWbethRateHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -285,7 +333,7 @@ impl GetWbethRateHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_wbeth_rewards_history`](#method.get_wbeth_rewards_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetWbethRewardsHistoryParams {
     ///
@@ -293,28 +341,33 @@ pub struct GetWbethRewardsHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -330,7 +383,7 @@ impl GetWbethRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_wbeth_unwrap_history`](#method.get_wbeth_unwrap_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetWbethUnwrapHistoryParams {
     ///
@@ -338,28 +391,33 @@ pub struct GetWbethUnwrapHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -375,7 +433,7 @@ impl GetWbethUnwrapHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_wbeth_wrap_history`](#method.get_wbeth_wrap_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetWbethWrapHistoryParams {
     ///
@@ -383,28 +441,33 @@ pub struct GetWbethWrapHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -420,24 +483,27 @@ impl GetWbethWrapHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_eth`](#method.redeem_eth).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemEthParams {
-    /// Amount in SOL.
+    /// Amount in BETH, limit 8 decimals
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub asset: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    #[serde(rename = "asset", default)]
+    pub asset: Option<RedeemEthAssetEnum>,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -446,7 +512,7 @@ impl RedeemEthParams {
     ///
     /// Required parameters:
     ///
-    /// * `amount` — Amount in SOL.
+    /// * `amount` — Amount in BETH, limit 8 decimals
     ///
     #[must_use]
     pub fn builder(amount: rust_decimal::Decimal) -> RedeemEthParamsBuilder {
@@ -457,19 +523,20 @@ impl RedeemEthParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_eth_staking`](#method.subscribe_eth_staking).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeEthStakingParams {
-    /// Amount in SOL.
+    /// Amount in ETH, limit 4 decimals
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -478,7 +545,7 @@ impl SubscribeEthStakingParams {
     ///
     /// Required parameters:
     ///
-    /// * `amount` — Amount in SOL.
+    /// * `amount` — Amount in ETH, limit 4 decimals
     ///
     #[must_use]
     pub fn builder(amount: rust_decimal::Decimal) -> SubscribeEthStakingParamsBuilder {
@@ -489,19 +556,20 @@ impl SubscribeEthStakingParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`wrap_beth`](#method.wrap_beth).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct WrapBethParams {
-    /// Amount in SOL.
+    /// Amount in BETH, limit 4 decimals
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -510,7 +578,7 @@ impl WrapBethParams {
     ///
     /// Required parameters:
     ///
-    /// * `amount` — Amount in SOL.
+    /// * `amount` — Amount in BETH, limit 4 decimals
     ///
     #[must_use]
     pub fn builder(amount: rust_decimal::Decimal) -> WrapBethParamsBuilder {
@@ -1046,7 +1114,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"holdingInETH":"1.22330928","holdings":{"wbethAmount":"1.10928781","bethAmount":"1.90002112"},"thirtyDaysProfitInETH":"0.22330928","profit":{"amountFromWBETH":"0.12330928","amountFromBETH":"0.1"}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"holdingInETH":"1.22330928","holdings":{"wbethAmount":"1.10928781","bethAmount":"1.90002112"},"thirtyDaysProfitInETH":"0.22330928","profit":{"amountFromWBETH":"0.12330928","amountFromBETH":"0.1"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::EthStakingAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EthStakingAccountResponse");
@@ -1073,7 +1141,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetCurrentEthStakingQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentEthStakingQuotaResponse");
@@ -1100,7 +1168,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"WBETH","amount":"21312.23223","distributeAsset":"ETH","distributeAmount":"21338.0699","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"WBETH","amount":"21312.23223","distributeAsset":"ETH","distributeAmount":"21338.0699","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetEthRedemptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetEthRedemptionHistoryResponse");
@@ -1127,7 +1195,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"ETH","amount":"21312.23223","distributeAsset":"WBETH","distributeAmount":"21286.42584","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"ETH","amount":"21312.23223","distributeAsset":"WBETH","distributeAmount":"21286.42584","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetEthStakingHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetEthStakingHistoryResponse");
@@ -1154,7 +1222,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.00121234","time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.00121234","time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetWbethRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetWbethRateHistoryResponse");
@@ -1181,7 +1249,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInETH":"1.23230920","rows":[{"time":1575018510000,"amountInETH":"0.23223","holding":"2.3223","holdingInETH":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInETH":"1.23230920","rows":[{"time":1575018510000,"amountInETH":"0.23223","holding":"2.3223","holdingInETH":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetWbethRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetWbethRewardsHistoryResponse");
@@ -1208,7 +1276,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"WBETH","fromAmount":"21312.23223","toAsset":"BETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"WBETH","fromAmount":"21312.23223","toAsset":"BETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetWbethUnwrapHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetWbethUnwrapHistoryResponse");
@@ -1235,7 +1303,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"BETH","fromAmount":"21312.23223","toAsset":"WBETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"BETH","fromAmount":"21312.23223","toAsset":"WBETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetWbethWrapHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetWbethWrapHistoryResponse");
@@ -1262,7 +1330,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","redeemId":1234567,"conversionRatio":"1.00121234","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemEthResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemEthResponse");
@@ -1289,7 +1357,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","purchaseId":1234567,"conversionRatio":"1.001212342342"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeEthStakingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeEthStakingResponse");
@@ -1319,7 +1387,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"success":true,"wbethAmount":"0.23092091","exchangeRate":"1.001212343432"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::WrapBethResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WrapBethResponse");
@@ -1342,7 +1410,7 @@ mod tests {
 
             let params = EthStakingAccountParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"holdingInETH":"1.22330928","holdings":{"wbethAmount":"1.10928781","bethAmount":"1.90002112"},"thirtyDaysProfitInETH":"0.22330928","profit":{"amountFromWBETH":"0.12330928","amountFromBETH":"0.1"}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"holdingInETH":"1.22330928","holdings":{"wbethAmount":"1.10928781","bethAmount":"1.90002112"},"thirtyDaysProfitInETH":"0.22330928","profit":{"amountFromWBETH":"0.12330928","amountFromBETH":"0.1"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::EthStakingAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::EthStakingAccountResponse");
 
             let resp = client.eth_staking_account(params).await.expect("Expected a response");
@@ -1359,7 +1427,7 @@ mod tests {
 
             let params = EthStakingAccountParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"holdingInETH":"1.22330928","holdings":{"wbethAmount":"1.10928781","bethAmount":"1.90002112"},"thirtyDaysProfitInETH":"0.22330928","profit":{"amountFromWBETH":"0.12330928","amountFromBETH":"0.1"}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"holdingInETH":"1.22330928","holdings":{"wbethAmount":"1.10928781","bethAmount":"1.90002112"},"thirtyDaysProfitInETH":"0.22330928","profit":{"amountFromWBETH":"0.12330928","amountFromBETH":"0.1"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::EthStakingAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::EthStakingAccountResponse");
 
             let resp = client.eth_staking_account(params).await.expect("Expected a response");
@@ -1392,7 +1460,7 @@ mod tests {
 
             let params = GetCurrentEthStakingQuotaParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCurrentEthStakingQuotaResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCurrentEthStakingQuotaResponse");
 
             let resp = client.get_current_eth_staking_quota(params).await.expect("Expected a response");
@@ -1409,7 +1477,7 @@ mod tests {
 
             let params = GetCurrentEthStakingQuotaParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.00010000","minRedeemAmount":"0.00000001","redeemPeriod":20,"stakeable":true,"redeemable":true,"commissionFee":"0.05000000","calculating":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCurrentEthStakingQuotaResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCurrentEthStakingQuotaResponse");
 
             let resp = client.get_current_eth_staking_quota(params).await.expect("Expected a response");
@@ -1442,7 +1510,7 @@ mod tests {
 
             let params = GetEthRedemptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"WBETH","amount":"21312.23223","distributeAsset":"ETH","distributeAmount":"21338.0699","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"WBETH","amount":"21312.23223","distributeAsset":"ETH","distributeAmount":"21338.0699","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetEthRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetEthRedemptionHistoryResponse");
 
             let resp = client.get_eth_redemption_history(params).await.expect("Expected a response");
@@ -1457,9 +1525,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = GetEthRedemptionHistoryParams::builder().redeem_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetEthRedemptionHistoryParams::builder().redeem_id(1234567).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"WBETH","amount":"21312.23223","distributeAsset":"ETH","distributeAmount":"21338.0699","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"WBETH","amount":"21312.23223","distributeAsset":"ETH","distributeAmount":"21338.0699","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetEthRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetEthRedemptionHistoryResponse");
 
             let resp = client.get_eth_redemption_history(params).await.expect("Expected a response");
@@ -1492,7 +1560,7 @@ mod tests {
 
             let params = GetEthStakingHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"ETH","amount":"21312.23223","distributeAsset":"WBETH","distributeAmount":"21286.42584","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"ETH","amount":"21312.23223","distributeAsset":"WBETH","distributeAmount":"21286.42584","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetEthStakingHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetEthStakingHistoryResponse");
 
             let resp = client.get_eth_staking_history(params).await.expect("Expected a response");
@@ -1507,9 +1575,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = GetEthStakingHistoryParams::builder().purchase_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetEthStakingHistoryParams::builder().purchase_id(1234567).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"ETH","amount":"21312.23223","distributeAsset":"WBETH","distributeAmount":"21286.42584","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"ETH","amount":"21312.23223","distributeAsset":"WBETH","distributeAmount":"21286.42584","conversionRatio":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetEthStakingHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetEthStakingHistoryResponse");
 
             let resp = client.get_eth_staking_history(params).await.expect("Expected a response");
@@ -1542,7 +1610,7 @@ mod tests {
 
             let params = GetWbethRateHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.00121234","time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.00121234","time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethRateHistoryResponse");
 
             let resp = client.get_wbeth_rate_history(params).await.expect("Expected a response");
@@ -1559,7 +1627,7 @@ mod tests {
 
             let params = GetWbethRateHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.00121234","time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.00121234","time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethRateHistoryResponse");
 
             let resp = client.get_wbeth_rate_history(params).await.expect("Expected a response");
@@ -1592,7 +1660,7 @@ mod tests {
 
             let params = GetWbethRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInETH":"1.23230920","rows":[{"time":1575018510000,"amountInETH":"0.23223","holding":"2.3223","holdingInETH":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInETH":"1.23230920","rows":[{"time":1575018510000,"amountInETH":"0.23223","holding":"2.3223","holdingInETH":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethRewardsHistoryResponse");
 
             let resp = client.get_wbeth_rewards_history(params).await.expect("Expected a response");
@@ -1609,7 +1677,7 @@ mod tests {
 
             let params = GetWbethRewardsHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInETH":"1.23230920","rows":[{"time":1575018510000,"amountInETH":"0.23223","holding":"2.3223","holdingInETH":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInETH":"1.23230920","rows":[{"time":1575018510000,"amountInETH":"0.23223","holding":"2.3223","holdingInETH":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethRewardsHistoryResponse");
 
             let resp = client.get_wbeth_rewards_history(params).await.expect("Expected a response");
@@ -1642,7 +1710,7 @@ mod tests {
 
             let params = GetWbethUnwrapHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"WBETH","fromAmount":"21312.23223","toAsset":"BETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"WBETH","fromAmount":"21312.23223","toAsset":"BETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethUnwrapHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethUnwrapHistoryResponse");
 
             let resp = client.get_wbeth_unwrap_history(params).await.expect("Expected a response");
@@ -1659,7 +1727,7 @@ mod tests {
 
             let params = GetWbethUnwrapHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"WBETH","fromAmount":"21312.23223","toAsset":"BETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"WBETH","fromAmount":"21312.23223","toAsset":"BETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethUnwrapHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethUnwrapHistoryResponse");
 
             let resp = client.get_wbeth_unwrap_history(params).await.expect("Expected a response");
@@ -1692,7 +1760,7 @@ mod tests {
 
             let params = GetWbethWrapHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"BETH","fromAmount":"21312.23223","toAsset":"WBETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"BETH","fromAmount":"21312.23223","toAsset":"WBETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethWrapHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethWrapHistoryResponse");
 
             let resp = client.get_wbeth_wrap_history(params).await.expect("Expected a response");
@@ -1709,7 +1777,7 @@ mod tests {
 
             let params = GetWbethWrapHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"BETH","fromAmount":"21312.23223","toAsset":"WBETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"fromAsset":"BETH","fromAmount":"21312.23223","toAsset":"WBETH","toAmount":"21312.23223","exchangeRate":"1.01243253","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetWbethWrapHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetWbethWrapHistoryResponse");
 
             let resp = client.get_wbeth_wrap_history(params).await.expect("Expected a response");
@@ -1742,7 +1810,7 @@ mod tests {
 
             let params = RedeemEthParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","redeemId":1234567,"conversionRatio":"1.00121234","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemEthResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemEthResponse");
 
             let resp = client.redeem_eth(params).await.expect("Expected a response");
@@ -1757,9 +1825,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockEthStakingApiClient { force_error: false };
 
-            let params = RedeemEthParams::builder(dec!(1.0),).asset("BETH".to_string()).recv_window(5000).build().unwrap();
+            let params = RedeemEthParams::builder(dec!(1.0),).asset(RedeemEthAssetEnum::Wbeth).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","conversionRatio":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"ethAmount":"0.23092091","redeemId":1234567,"conversionRatio":"1.00121234","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemEthResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemEthResponse");
 
             let resp = client.redeem_eth(params).await.expect("Expected a response");
@@ -1792,7 +1860,7 @@ mod tests {
 
             let params = SubscribeEthStakingParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","purchaseId":1234567,"conversionRatio":"1.001212342342"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeEthStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeEthStakingResponse");
 
             let resp = client.subscribe_eth_staking(params).await.expect("Expected a response");
@@ -1809,7 +1877,7 @@ mod tests {
 
             let params = SubscribeEthStakingParams::builder(dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","conversionRatio":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"wbethAmount":"0.23092091","purchaseId":1234567,"conversionRatio":"1.001212342342"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeEthStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeEthStakingResponse");
 
             let resp = client.subscribe_eth_staking(params).await.expect("Expected a response");
@@ -1847,7 +1915,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"success":true,"wbethAmount":"0.23092091","exchangeRate":"1.001212343432"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WrapBethResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WrapBethResponse");
@@ -1872,7 +1940,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"success":true,"wbethAmount":"0.23092091","exchangeRate":"1.001212343432"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WrapBethResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WrapBethResponse");

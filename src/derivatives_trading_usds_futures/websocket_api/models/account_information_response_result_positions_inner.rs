@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,42 +18,58 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationResponseResultPositionsInner {
+    /// symbol name
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// total initial margin required with current mark price
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// maintenance margin required
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// unrealized profit
     #[serde(rename = "unrealizedProfit", skip_serializing_if = "Option::is_none")]
     pub unrealized_profit: Option<String>,
+    /// initial margin required for positions with current mark price
     #[serde(
         rename = "positionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub position_initial_margin: Option<String>,
+    /// initial margin required for open orders with current mark price
     #[serde(
         rename = "openOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub open_order_initial_margin: Option<String>,
+    /// current initial leverage
     #[serde(rename = "leverage", skip_serializing_if = "Option::is_none")]
     pub leverage: Option<String>,
+    /// if the position is isolated
     #[serde(rename = "isolated", skip_serializing_if = "Option::is_none")]
     pub isolated: Option<bool>,
+    /// average entry price
     #[serde(rename = "entryPrice", skip_serializing_if = "Option::is_none")]
     pub entry_price: Option<String>,
+    /// maximum available notional with current leverage
     #[serde(rename = "maxNotional", skip_serializing_if = "Option::is_none")]
     pub max_notional: Option<String>,
+    /// bids notional, ignore
     #[serde(rename = "bidNotional", skip_serializing_if = "Option::is_none")]
     pub bid_notional: Option<String>,
+    /// ask notional, ignore
     #[serde(rename = "askNotional", skip_serializing_if = "Option::is_none")]
     pub ask_notional: Option<String>,
+    /// position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// position amount
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
     pub position_amt: Option<String>,
+    /// reserved property, please ignore
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// average entry price
     #[serde(rename = "breakEvenPrice", skip_serializing_if = "Option::is_none")]
     pub break_even_price: Option<String>,
 }

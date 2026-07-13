@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket Streams
+ * Spot WebSocket Market Streams
  *
- * OpenAPI Specifications for the Binance Spot WebSocket Streams
- *
- * API documents:
- * - [Github web-socket-streams documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md)
- * - [General API information for web-socket-streams on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,16 +18,22 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct BookTickerResponse {
+    /// Order book updateId
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Best bid price
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<String>,
+    /// Best bid qty
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<String>,
+    /// Best ask price
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    /// Best ask qty
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
 }

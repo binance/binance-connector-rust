@@ -28,8 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        MarginAccountCancelAllOpenOrdersOnASymbolParams::builder("symbol_example".to_string())
-            .build()?;
+        MarginAccountCancelAllOpenOrdersOnASymbolParams::builder("BTCUSDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

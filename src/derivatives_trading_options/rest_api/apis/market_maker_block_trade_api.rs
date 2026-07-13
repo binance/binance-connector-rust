@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -72,11 +72,42 @@ impl MarketMakerBlockTradeApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewBlockTradeOrderLiquidityEnum {
+    #[serde(rename = "MAKER")]
+    Maker,
+    #[serde(rename = "TAKER")]
+    Taker,
+}
+
+impl NewBlockTradeOrderLiquidityEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Maker => "MAKER",
+            Self::Taker => "TAKER",
+        }
+    }
+}
+
+impl std::str::FromStr for NewBlockTradeOrderLiquidityEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MAKER" => Ok(Self::Maker),
+            "TAKER" => Ok(Self::Taker),
+            other => Err(format!("invalid NewBlockTradeOrderLiquidityEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`accept_block_trade_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`accept_block_trade_order`](#method.accept_block_trade_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AcceptBlockTradeOrderParams {
     ///
@@ -84,12 +115,14 @@ pub struct AcceptBlockTradeOrderParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "blockOrderMatchingKey")]
     pub block_order_matching_key: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -110,29 +143,32 @@ impl AcceptBlockTradeOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_block_trade_list`](#method.account_block_trade_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountBlockTradeListParams {
     /// End Time, e.g 1593512200000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
     /// Start Time, e.g 1593511200000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    /// underlying, e.g BTCUSDT
+    /// Underlying asset.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "underlying", default)]
     pub underlying: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -148,20 +184,20 @@ impl AccountBlockTradeListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_block_trade_order`](#method.cancel_block_trade_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelBlockTradeOrderParams {
-    ///
-    /// The `block_order_matching_key` parameter.
+    /// Block trade matching key.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "blockOrderMatchingKey")]
     pub block_order_matching_key: String,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -170,7 +206,7 @@ impl CancelBlockTradeOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `block_order_matching_key` — String
+    /// * `block_order_matching_key` — Block trade matching key.
     ///
     #[must_use]
     pub fn builder(block_order_matching_key: String) -> CancelBlockTradeOrderParamsBuilder {
@@ -182,7 +218,7 @@ impl CancelBlockTradeOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`extend_block_trade_order`](#method.extend_block_trade_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ExtendBlockTradeOrderParams {
     ///
@@ -190,12 +226,14 @@ pub struct ExtendBlockTradeOrderParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "blockOrderMatchingKey")]
     pub block_order_matching_key: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -216,24 +254,28 @@ impl ExtendBlockTradeOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`new_block_trade_order`](#method.new_block_trade_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct NewBlockTradeOrderParams {
-    /// Taker or Maker
+    ///
+    /// The `liquidity` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub liquidity: String,
+    #[serde(rename = "liquidity")]
+    pub liquidity: NewBlockTradeOrderLiquidityEnum,
     /// Max 1 (only single leg supported), list of legs parameters in JSON; example: eapi/v1/block/order/create?orders=[{"symbol":"BTC-210115-35000-C", "price":"100","quantity":"0.0002","side":"BUY","type":"LIMIT"}]
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub legs: Vec<serde_json::Value>,
+    #[serde(rename = "legs")]
+    pub legs: Vec<models::NewBlockTradeOrderLegsParameterInner>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -242,13 +284,13 @@ impl NewBlockTradeOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `liquidity` — Taker or Maker
+    /// * `liquidity` — String
     /// * `legs` — Max 1 (only single leg supported), list of legs parameters in JSON; example: eapi/v1/block/order/create?orders=[{\"symbol\":\"BTC-210115-35000-C\", \"price\":\"100\",\"quantity\":\"0.0002\",\"side\":\"BUY\",\"type\":\"LIMIT\"}]
     ///
     #[must_use]
     pub fn builder(
-        liquidity: String,
-        legs: Vec<serde_json::Value>,
+        liquidity: NewBlockTradeOrderLiquidityEnum,
+        legs: Vec<models::NewBlockTradeOrderLegsParameterInner>,
     ) -> NewBlockTradeOrderParamsBuilder {
         NewBlockTradeOrderParamsBuilder::default()
             .liquidity(liquidity)
@@ -259,20 +301,20 @@ impl NewBlockTradeOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_block_trade_details`](#method.query_block_trade_details).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryBlockTradeDetailsParams {
-    ///
-    /// The `block_order_matching_key` parameter.
+    /// Block trade matching key.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "blockOrderMatchingKey")]
     pub block_order_matching_key: String,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -281,7 +323,7 @@ impl QueryBlockTradeDetailsParams {
     ///
     /// Required parameters:
     ///
-    /// * `block_order_matching_key` — String
+    /// * `block_order_matching_key` — Block trade matching key.
     ///
     #[must_use]
     pub fn builder(block_order_matching_key: String) -> QueryBlockTradeDetailsParamsBuilder {
@@ -293,34 +335,38 @@ impl QueryBlockTradeDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_block_trade_order`](#method.query_block_trade_order).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryBlockTradeOrderParams {
     /// If specified, returns the specific block trade associated with the blockOrderMatchingKey
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "blockOrderMatchingKey", default)]
     pub block_order_matching_key: Option<String>,
     /// End Time, e.g 1593512200000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
     /// Start Time, e.g 1593511200000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    /// underlying, e.g BTCUSDT
+    /// Underlying asset.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "underlying", default)]
     pub underlying: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -662,7 +708,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"MAKER","status":"ACCEPTED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"MAKER","status":"ACCEPTED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AcceptBlockTradeOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AcceptBlockTradeOrderResponse");
@@ -690,7 +736,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"parentOrderId":"4675011431944499201","crossType":"USER_BLOCK","legs":[{"createTime":1730170445600,"updateTime":1730170445600,"symbol":"BNB-241101-700-C","orderId":"4675011431944499203","orderPrice":2.8,"orderQuantity":1.2,"orderStatus":"FILLED","executedQty":1.2,"executedAmount":3.36,"fee":0.336,"orderType":"PREV_QUOTED","orderSide":"BUY","id":"1125899906900937837","tradeId":1,"tradePrice":2.8,"tradeQty":1.2,"tradeTime":1730170445600,"liquidity":"TAKER","commission":0.336}],"blockTradeSettlementKey":"7d085e6e-a229-2335-ab9d-6a581febcd25"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"parentOrderId":"4675011431944499201","crossType":"USER_BLOCK","legs":[{"createTime":1730170445600,"updateTime":1730170445600,"symbol":"BNB-241101-700-C","orderId":"4675011431944499203","orderPrice":2.8,"orderQuantity":1.2,"orderStatus":"FILLED","executedQty":1.2,"executedAmount":3.36,"fee":0.336,"orderType":"PREV_QUOTED","orderSide":"BUY","id":"1125899906900937837","tradeId":1,"tradePrice":2.8,"tradeQty":1.2,"tradeTime":1730170445600,"liquidity":"TAKER","commission":0.336}],"blockTradeSettlementKey":"7d085e6e-a229-2335-ab9d-6a581febcd25"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::AccountBlockTradeListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AccountBlockTradeListResponseInner>");
@@ -741,7 +787,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730172007000,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170088111,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730172007000,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170088111,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ExtendBlockTradeOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ExtendBlockTradeOrderResponse");
@@ -768,7 +814,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::NewBlockTradeOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::NewBlockTradeOrderResponse");
@@ -795,7 +841,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"12b96c28-ba05-8906-c89t-703215cfb2e6","expireTime":1730171860460,"liquidity":"MAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.66","price":"20"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"12b96c28-ba05-8906-c89t-703215cfb2e6","expireTime":1730171860460,"liquidity":"MAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.66","price":"20"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryBlockTradeDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryBlockTradeDetailsResponse");
@@ -823,7 +869,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]},{"blockTradeSettlementKey":"28b96c28-ba05-6906-a47c-703215cfbfe6","expireTime":1730171860460,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.66","price":"20"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryBlockTradeOrderResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::QueryBlockTradeOrderResponseInner>");
@@ -844,9 +890,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = AcceptBlockTradeOrderParams::builder("block_order_matching_key_example".to_string(),).build().unwrap();
+            let params = AcceptBlockTradeOrderParams::builder("7d046e6e-a429-4335-ab9d-6a681febcde5".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"MAKER","status":"ACCEPTED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"MAKER","status":"ACCEPTED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AcceptBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AcceptBlockTradeOrderResponse");
 
             let resp = client.accept_block_trade_order(params).await.expect("Expected a response");
@@ -861,9 +907,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = AcceptBlockTradeOrderParams::builder("block_order_matching_key_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = AcceptBlockTradeOrderParams::builder("7d046e6e-a429-4335-ab9d-6a681febcde5".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"MAKER","status":"ACCEPTED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"MAKER","status":"ACCEPTED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AcceptBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AcceptBlockTradeOrderResponse");
 
             let resp = client.accept_block_trade_order(params).await.expect("Expected a response");
@@ -879,7 +925,7 @@ mod tests {
             let client = MockMarketMakerBlockTradeApiClient { force_error: true };
 
             let params = AcceptBlockTradeOrderParams::builder(
-                "block_order_matching_key_example".to_string(),
+                "7d046e6e-a429-4335-ab9d-6a681febcde5".to_string(),
             )
             .build()
             .unwrap();
@@ -900,7 +946,7 @@ mod tests {
 
             let params = AccountBlockTradeListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"parentOrderId":"4675011431944499201","crossType":"USER_BLOCK","legs":[{"createTime":1730170445600,"updateTime":1730170445600,"symbol":"BNB-241101-700-C","orderId":"4675011431944499203","orderPrice":2.8,"orderQuantity":1.2,"orderStatus":"FILLED","executedQty":1.2,"executedAmount":3.36,"fee":0.336,"orderType":"PREV_QUOTED","orderSide":"BUY","id":"1125899906900937837","tradeId":1,"tradePrice":2.8,"tradeQty":1.2,"tradeTime":1730170445600,"liquidity":"TAKER","commission":0.336}],"blockTradeSettlementKey":"7d085e6e-a229-2335-ab9d-6a581febcd25"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"parentOrderId":"4675011431944499201","crossType":"USER_BLOCK","legs":[{"createTime":1730170445600,"updateTime":1730170445600,"symbol":"BNB-241101-700-C","orderId":"4675011431944499203","orderPrice":2.8,"orderQuantity":1.2,"orderStatus":"FILLED","executedQty":1.2,"executedAmount":3.36,"fee":0.336,"orderType":"PREV_QUOTED","orderSide":"BUY","id":"1125899906900937837","tradeId":1,"tradePrice":2.8,"tradeQty":1.2,"tradeTime":1730170445600,"liquidity":"TAKER","commission":0.336}],"blockTradeSettlementKey":"7d085e6e-a229-2335-ab9d-6a581febcd25"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountBlockTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountBlockTradeListResponseInner>");
 
             let resp = client.account_block_trade_list(params).await.expect("Expected a response");
@@ -915,9 +961,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = AccountBlockTradeListParams::builder().end_time(1641782889000).start_time(1623319461670).underlying("underlying_example".to_string()).recv_window(5000).build().unwrap();
+            let params = AccountBlockTradeListParams::builder().end_time(1641782889000).start_time(1623319461670).underlying("BTCUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"parentOrderId":"4675011431944499201","crossType":"USER_BLOCK","legs":[{"createTime":1730170445600,"updateTime":1730170445600,"symbol":"BNB-241101-700-C","orderId":"4675011431944499203","orderPrice":2.8,"orderQuantity":1.2,"orderStatus":"FILLED","executedQty":1.2,"executedAmount":3.36,"fee":0.336,"orderType":"PREV_QUOTED","orderSide":"BUY","id":"1125899906900937837","tradeId":1,"tradePrice":2.8,"tradeQty":1.2,"tradeTime":1730170445600,"liquidity":"TAKER","commission":0.336}],"blockTradeSettlementKey":"7d085e6e-a229-2335-ab9d-6a581febcd25"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"parentOrderId":"4675011431944499201","crossType":"USER_BLOCK","legs":[{"createTime":1730170445600,"updateTime":1730170445600,"symbol":"BNB-241101-700-C","orderId":"4675011431944499203","orderPrice":2.8,"orderQuantity":1.2,"orderStatus":"FILLED","executedQty":1.2,"executedAmount":3.36,"fee":0.336,"orderType":"PREV_QUOTED","orderSide":"BUY","id":"1125899906900937837","tradeId":1,"tradePrice":2.8,"tradeQty":1.2,"tradeTime":1730170445600,"liquidity":"TAKER","commission":0.336}],"blockTradeSettlementKey":"7d085e6e-a229-2335-ab9d-6a581febcd25"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountBlockTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountBlockTradeListResponseInner>");
 
             let resp = client.account_block_trade_list(params).await.expect("Expected a response");
@@ -949,7 +995,7 @@ mod tests {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
             let params = CancelBlockTradeOrderParams::builder(
-                "block_order_matching_key_example".to_string(),
+                "7d046e6e-a429-4335-ab9d-6a681febcde5".to_string(),
             )
             .build()
             .unwrap();
@@ -972,7 +1018,7 @@ mod tests {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
             let params = CancelBlockTradeOrderParams::builder(
-                "block_order_matching_key_example".to_string(),
+                "7d046e6e-a429-4335-ab9d-6a681febcde5".to_string(),
             )
             .recv_window(5000)
             .build()
@@ -996,7 +1042,7 @@ mod tests {
             let client = MockMarketMakerBlockTradeApiClient { force_error: true };
 
             let params = CancelBlockTradeOrderParams::builder(
-                "block_order_matching_key_example".to_string(),
+                "7d046e6e-a429-4335-ab9d-6a681febcde5".to_string(),
             )
             .build()
             .unwrap();
@@ -1015,9 +1061,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = ExtendBlockTradeOrderParams::builder("block_order_matching_key_example".to_string(),).build().unwrap();
+            let params = ExtendBlockTradeOrderParams::builder("3668822b8-1baa-6a2f-adb8-d3de6289b361".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730172007000,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170088111,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730172007000,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170088111,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ExtendBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExtendBlockTradeOrderResponse");
 
             let resp = client.extend_block_trade_order(params).await.expect("Expected a response");
@@ -1032,9 +1078,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = ExtendBlockTradeOrderParams::builder("block_order_matching_key_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = ExtendBlockTradeOrderParams::builder("3668822b8-1baa-6a2f-adb8-d3de6289b361".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730172007000,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170088111,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730172007000,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170088111,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ExtendBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExtendBlockTradeOrderResponse");
 
             let resp = client.extend_block_trade_order(params).await.expect("Expected a response");
@@ -1050,7 +1096,7 @@ mod tests {
             let client = MockMarketMakerBlockTradeApiClient { force_error: true };
 
             let params = ExtendBlockTradeOrderParams::builder(
-                "block_order_matching_key_example".to_string(),
+                "3668822b8-1baa-6a2f-adb8-d3de6289b361".to_string(),
             )
             .build()
             .unwrap();
@@ -1069,9 +1115,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = NewBlockTradeOrderParams::builder("liquidity_example".to_string(),[].to_vec(),).build().unwrap();
+            let params = NewBlockTradeOrderParams::builder(NewBlockTradeOrderLiquidityEnum::Maker,vec![],).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::NewBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewBlockTradeOrderResponse");
 
             let resp = client.new_block_trade_order(params).await.expect("Expected a response");
@@ -1086,9 +1132,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = NewBlockTradeOrderParams::builder("liquidity_example".to_string(),[].to_vec(),).recv_window(5000).build().unwrap();
+            let params = NewBlockTradeOrderParams::builder(NewBlockTradeOrderLiquidityEnum::Maker,vec![],).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"3668822b8-1baa-6a2f-adb8-d3de6289b361","expireTime":1730171888109,"liquidity":"TAKER","status":"RECEIVED","legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::NewBlockTradeOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewBlockTradeOrderResponse");
 
             let resp = client.new_block_trade_order(params).await.expect("Expected a response");
@@ -1104,7 +1150,7 @@ mod tests {
             let client = MockMarketMakerBlockTradeApiClient { force_error: true };
 
             let params =
-                NewBlockTradeOrderParams::builder("liquidity_example".to_string(), [].to_vec())
+                NewBlockTradeOrderParams::builder(NewBlockTradeOrderLiquidityEnum::Maker, vec![])
                     .build()
                     .unwrap();
 
@@ -1122,9 +1168,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = QueryBlockTradeDetailsParams::builder("block_order_matching_key_example".to_string(),).build().unwrap();
+            let params = QueryBlockTradeDetailsParams::builder("12b96c28-ba05-8906-c89t-703215cfb2e6".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"12b96c28-ba05-8906-c89t-703215cfb2e6","expireTime":1730171860460,"liquidity":"MAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.66","price":"20"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"12b96c28-ba05-8906-c89t-703215cfb2e6","expireTime":1730171860460,"liquidity":"MAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.66","price":"20"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryBlockTradeDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryBlockTradeDetailsResponse");
 
             let resp = client.query_block_trade_details(params).await.expect("Expected a response");
@@ -1139,9 +1185,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = QueryBlockTradeDetailsParams::builder("block_order_matching_key_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = QueryBlockTradeDetailsParams::builder("12b96c28-ba05-8906-c89t-703215cfb2e6".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"12b96c28-ba05-8906-c89t-703215cfb2e6","expireTime":1730171860460,"liquidity":"MAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.66","price":"20"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"blockTradeSettlementKey":"12b96c28-ba05-8906-c89t-703215cfb2e6","expireTime":1730171860460,"liquidity":"MAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"SELL","quantity":"1.66","price":"20"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryBlockTradeDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryBlockTradeDetailsResponse");
 
             let resp = client.query_block_trade_details(params).await.expect("Expected a response");
@@ -1157,7 +1203,7 @@ mod tests {
             let client = MockMarketMakerBlockTradeApiClient { force_error: true };
 
             let params = QueryBlockTradeDetailsParams::builder(
-                "block_order_matching_key_example".to_string(),
+                "12b96c28-ba05-8906-c89t-703215cfb2e6".to_string(),
             )
             .build()
             .unwrap();
@@ -1178,7 +1224,7 @@ mod tests {
 
             let params = QueryBlockTradeOrderParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]},{"blockTradeSettlementKey":"28b96c28-ba05-6906-a47c-703215cfbfe6","expireTime":1730171860460,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.66","price":"20"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryBlockTradeOrderResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryBlockTradeOrderResponseInner>");
 
             let resp = client.query_block_trade_order(params).await.expect("Expected a response");
@@ -1193,9 +1239,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketMakerBlockTradeApiClient { force_error: false };
 
-            let params = QueryBlockTradeOrderParams::builder().block_order_matching_key("block_order_matching_key_example".to_string()).end_time(1641782889000).start_time(1623319461670).underlying("underlying_example".to_string()).recv_window(5000).build().unwrap();
+            let params = QueryBlockTradeOrderParams::builder().block_order_matching_key("7d046e6e-a429-4335-ab9d-6a681febcde5".to_string()).end_time(1641782889000).start_time(1623319461670).underlying("BTCUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]},{"blockTradeSettlementKey":"28b96c28-ba05-6906-a47c-703215cfbfe6","expireTime":1730171860460,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170060462,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.66","price":"20"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"blockTradeSettlementKey":"7d046e6e-a429-4335-ab9d-6a681febcde5","expireTime":1730172115801,"liquidity":"TAKER","status":"RECEIVED","createTime":1730170315803,"legs":[{"symbol":"BNB-241101-700-C","side":"BUY","quantity":"1.2","price":"2.8"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryBlockTradeOrderResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryBlockTradeOrderResponseInner>");
 
             let resp = client.query_block_trade_order(params).await.expect("Expected a response");

@@ -28,8 +28,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = GetManagedSubAccountDepositAddressParams::builder(
-        "sub-account-email@email.com".to_string(),
-        "coin_example".to_string(),
+        "abc@test.com".to_string(),
+        "USDT".to_string(),
     )
     .build()?;
 

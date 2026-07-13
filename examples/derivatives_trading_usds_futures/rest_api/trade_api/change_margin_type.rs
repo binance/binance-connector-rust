@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = ChangeMarginTypeParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSDT".to_string(),
         ChangeMarginTypeMarginTypeEnum::Isolated,
     )
     .build()?;

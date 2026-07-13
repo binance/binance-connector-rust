@@ -68,23 +68,26 @@ impl PositionApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_position_by_token`](#method.get_position_by_token).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetPositionByTokenParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Prediction outcome token ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "tokenId")]
     pub token_id: String,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -107,38 +110,44 @@ impl GetPositionByTokenParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_pn_l`](#method.query_pn_l).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPnLParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Filter by prediction token ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "tokenId", default)]
     pub token_id: Option<String>,
     /// Filter by market ID. Must be > 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "marketId", default)]
     pub market_id: Option<i64>,
     /// Filter by market topic ID. Must be > 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "marketTopicId", default)]
     pub market_topic_id: Option<i64>,
     /// If `true`, return only active (unresolved) positions
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "activeOnly", default)]
     pub active_only: Option<bool>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -158,33 +167,38 @@ impl QueryPnLParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_positions`](#method.query_positions).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPositionsParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Position status tab. Values from `PositionQueryType`. Default `ONGOING`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "tab", default)]
     pub tab: Option<String>,
     /// Pagination offset. Default `0`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i32>,
     /// Page size. Default `20`, range 1–100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -204,23 +218,26 @@ impl QueryPositionsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_positions_by_filter`](#method.query_positions_by_filter).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPositionsByFilterParams {
     /// User's prediction wallet address
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "walletAddress", default)]
     pub wallet_address: Option<String>,
     /// Filter by market topic ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "marketTopicId", default)]
     pub market_topic_id: Option<i64>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -236,48 +253,56 @@ impl QueryPositionsByFilterParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_settled_position_history`](#method.query_settled_position_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QuerySettledPositionHistoryParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Filter by level-1 category
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "l1Category", default)]
     pub l1_category: Option<String>,
     /// Settlement result filter
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "result", default)]
     pub result: Option<i32>,
     /// Start date. Format: `yyyy-MM-dd`. Must be ≤ `endDate`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startDate", default)]
     pub start_date: Option<String>,
     /// End date. Format: `yyyy-MM-dd`. Must be ≥ `startDate`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endDate", default)]
     pub end_date: Option<String>,
     /// Pagination offset. Default `0`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i32>,
     /// Page size. Default `20`, range 1–100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -613,7 +638,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"chainId":"56","walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","pnl":"pnl","pnlList":[{"id":10001,"walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","marketTopicId":4229564,"marketId":5567895,"tokenId":"112233","vendor":"PREDICT_FUN","currentShares":"1923.07","avgPrice":"0.52","currentPrice":"0.55","realizedPnl":"0.00","unrealizedPnl":"0.06","totalPnl":"0.06","pnlPercentage":"6.00","isResolved":false}],"totalCount":1,"totalRealizedPnl":"0.00","totalUnrealizedPnl":"0.06","totalPnl":"0.06"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"chainId":"56","walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","pnl":{},"pnlList":[{"id":10001,"walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","marketTopicId":4229564,"marketId":5567895,"tokenId":"112233","vendor":"PREDICT_FUN","currentShares":"1923.07","avgPrice":"0.52","currentPrice":"0.55","realizedPnl":"0.00","unrealizedPnl":"0.06","totalPnl":"0.06","pnlPercentage":"6.00","isResolved":false}],"totalCount":1,"totalRealizedPnl":"0.00","totalUnrealizedPnl":"0.06","totalPnl":"0.06"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryPnLResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryPnLResponse");
@@ -772,7 +797,7 @@ mod tests {
 
             let params = QueryPnLParams::builder("0x12e32db8817e292508c34111cbc4b23340df542c".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"chainId":"56","walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","pnl":"pnl","pnlList":[{"id":10001,"walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","marketTopicId":4229564,"marketId":5567895,"tokenId":"112233","vendor":"PREDICT_FUN","currentShares":"1923.07","avgPrice":"0.52","currentPrice":"0.55","realizedPnl":"0.00","unrealizedPnl":"0.06","totalPnl":"0.06","pnlPercentage":"6.00","isResolved":false}],"totalCount":1,"totalRealizedPnl":"0.00","totalUnrealizedPnl":"0.06","totalPnl":"0.06"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"chainId":"56","walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","pnl":{},"pnlList":[{"id":10001,"walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","marketTopicId":4229564,"marketId":5567895,"tokenId":"112233","vendor":"PREDICT_FUN","currentShares":"1923.07","avgPrice":"0.52","currentPrice":"0.55","realizedPnl":"0.00","unrealizedPnl":"0.06","totalPnl":"0.06","pnlPercentage":"6.00","isResolved":false}],"totalCount":1,"totalRealizedPnl":"0.00","totalUnrealizedPnl":"0.06","totalPnl":"0.06"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryPnLResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryPnLResponse");
 
             let resp = client.query_pn_l(params).await.expect("Expected a response");
@@ -789,7 +814,7 @@ mod tests {
 
             let params = QueryPnLParams::builder("0x12e32db8817e292508c34111cbc4b23340df542c".to_string(),).token_id("112233".to_string()).market_id(5567895).market_topic_id(4229564).active_only(false).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"chainId":"56","walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","pnl":"pnl","pnlList":[{"id":10001,"walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","marketTopicId":4229564,"marketId":5567895,"tokenId":"112233","vendor":"PREDICT_FUN","currentShares":"1923.07","avgPrice":"0.52","currentPrice":"0.55","realizedPnl":"0.00","unrealizedPnl":"0.06","totalPnl":"0.06","pnlPercentage":"6.00","isResolved":false}],"totalCount":1,"totalRealizedPnl":"0.00","totalUnrealizedPnl":"0.06","totalPnl":"0.06"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"chainId":"56","walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","pnl":{},"pnlList":[{"id":10001,"walletAddress":"0x12e32db8817e292508c34111cbc4b23340df542c","marketTopicId":4229564,"marketId":5567895,"tokenId":"112233","vendor":"PREDICT_FUN","currentShares":"1923.07","avgPrice":"0.52","currentPrice":"0.55","realizedPnl":"0.00","unrealizedPnl":"0.06","totalPnl":"0.06","pnlPercentage":"6.00","isResolved":false}],"totalCount":1,"totalRealizedPnl":"0.00","totalUnrealizedPnl":"0.06","totalPnl":"0.06"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryPnLResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryPnLResponse");
 
             let resp = client.query_pn_l(params).await.expect("Expected a response");

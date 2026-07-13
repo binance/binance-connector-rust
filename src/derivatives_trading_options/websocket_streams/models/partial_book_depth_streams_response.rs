@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,22 +18,31 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PartialBookDepthStreamsResponse {
+    /// event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// transaction time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Option symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// First update ID in event
     #[serde(rename = "U", skip_serializing_if = "Option::is_none")]
     pub u_uppercase: Option<i64>,
+    /// Final update ID in event
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
+    /// Final update Id in last stream(ie `u` in last stream)
     #[serde(rename = "pu", skip_serializing_if = "Option::is_none")]
     pub pu: Option<i64>,
+    /// Buy order
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<Vec<Vec<String>>>,
+    /// Sell order
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<Vec<Vec<String>>>,
 }

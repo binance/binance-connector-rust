@@ -29,8 +29,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = PremiumIndexKlineDataParams::builder(
-        "symbol_example".to_string(),
-        PremiumIndexKlineDataIntervalEnum::Interval1s,
+        "BTCUSDT".to_string(),
+        PremiumIndexKlineDataIntervalEnum::Interval1m,
     )
     .build()?;
 

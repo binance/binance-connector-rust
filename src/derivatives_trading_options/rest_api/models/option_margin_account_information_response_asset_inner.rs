@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OptionMarginAccountInformationResponseAssetInner {
+    /// asset
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// margin Balance
     #[serde(rename = "marginBalance", skip_serializing_if = "Option::is_none")]
     pub margin_balance: Option<String>,
+    /// equity
     #[serde(rename = "equity", skip_serializing_if = "Option::is_none")]
     pub equity: Option<String>,
+    /// available
     #[serde(rename = "available", skip_serializing_if = "Option::is_none")]
     pub available: Option<String>,
+    /// initial Margin
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// maint Margin
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// unrealized PNL
     #[serde(rename = "unrealizedPNL", skip_serializing_if = "Option::is_none")]
     pub unrealized_pnl: Option<String>,
+    /// adjusted Equity
     #[serde(rename = "adjustedEquity", skip_serializing_if = "Option::is_none")]
     pub adjusted_equity: Option<String>,
 }

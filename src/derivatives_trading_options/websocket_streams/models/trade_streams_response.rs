@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,24 +18,34 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TradeStreamsResponse {
+    /// event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// trade completed time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Option trading symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// trade ID
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
     pub t: Option<i64>,
+    /// price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// quantity, always positive
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// trade type enum, \"MARKET\" for Orderbook trading, \"BLOCK\" for Block trade
     #[serde(rename = "X", skip_serializing_if = "Option::is_none")]
     pub x_uppercase: Option<String>,
+    /// direction
     #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
     pub s_uppercase: Option<String>,
+    /// Is the buyer the market maker?
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
 }

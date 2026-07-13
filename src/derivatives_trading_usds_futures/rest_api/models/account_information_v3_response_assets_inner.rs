@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,43 +15,58 @@
 use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `AccountInformationV3ResponseAssetsInner` : For assets that are quote assets, USDT/USDC/BTC
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationV3ResponseAssetsInner {
+    /// Asset name.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Wallet balance.
     #[serde(rename = "walletBalance", skip_serializing_if = "Option::is_none")]
     pub wallet_balance: Option<String>,
+    /// Unrealized profit.
     #[serde(rename = "unrealizedProfit", skip_serializing_if = "Option::is_none")]
     pub unrealized_profit: Option<String>,
+    /// Margin balance.
     #[serde(rename = "marginBalance", skip_serializing_if = "Option::is_none")]
     pub margin_balance: Option<String>,
+    /// Maintenance margin requirement.
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// Total initial margin requirement.
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// Initial margin required for positions.
     #[serde(
         rename = "positionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub position_initial_margin: Option<String>,
+    /// Initial margin required for open orders.
     #[serde(
         rename = "openOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub open_order_initial_margin: Option<String>,
+    /// Cross wallet balance.
     #[serde(rename = "crossWalletBalance", skip_serializing_if = "Option::is_none")]
     pub cross_wallet_balance: Option<String>,
+    /// Unrealized `PnL` for cross positions.
     #[serde(rename = "crossUnPnl", skip_serializing_if = "Option::is_none")]
     pub cross_un_pnl: Option<String>,
+    /// Available balance.
     #[serde(rename = "availableBalance", skip_serializing_if = "Option::is_none")]
     pub available_balance: Option<String>,
+    /// Maximum transferable/withdrawable amount.
     #[serde(rename = "maxWithdrawAmount", skip_serializing_if = "Option::is_none")]
     pub max_withdraw_amount: Option<String>,
+    /// Last update time in milliseconds.
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }
 
 impl AccountInformationV3ResponseAssetsInner {
+    /// For assets that are quote assets, USDT/USDC/BTC
     #[must_use]
     pub fn new() -> AccountInformationV3ResponseAssetsInner {
         AccountInformationV3ResponseAssetsInner {

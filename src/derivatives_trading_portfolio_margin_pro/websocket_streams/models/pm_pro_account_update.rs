@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Portfolio Margin Pro WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,27 +16,37 @@ use crate::derivatives_trading_portfolio_margin_pro::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `PmProAccountUpdate` : Pushed every 5 seconds with account asset status.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PmProAccountUpdate {
+    /// Event Time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// uniMMR level
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<String>,
+    /// Account equity in USD
     #[serde(rename = "eq", skip_serializing_if = "Option::is_none")]
     pub eq: Option<String>,
+    /// Actual equity without collateral rate in USD
     #[serde(rename = "ae", skip_serializing_if = "Option::is_none")]
     pub ae: Option<String>,
+    /// Total initial margin in USD
     #[serde(rename = "im", skip_serializing_if = "Option::is_none")]
     pub im: Option<String>,
+    /// Total maintenance margin in USD
     #[serde(rename = "mm", skip_serializing_if = "Option::is_none")]
     pub mm: Option<String>,
+    /// Total available balance in USD
     #[serde(rename = "avb", skip_serializing_if = "Option::is_none")]
     pub avb: Option<String>,
+    /// Virtual maxWithdraw amount in USD
     #[serde(rename = "vmw", skip_serializing_if = "Option::is_none")]
     pub vmw: Option<String>,
 }
 
 impl PmProAccountUpdate {
+    /// Pushed every 5 seconds with account asset status.
     #[must_use]
     pub fn new() -> PmProAccountUpdate {
         PmProAccountUpdate {

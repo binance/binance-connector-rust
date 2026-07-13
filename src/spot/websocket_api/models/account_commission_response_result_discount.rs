@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,6 +16,7 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `AccountCommissionResponseResultDiscount` : Discount on standard commissions when paying in BNB.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountCommissionResponseResultDiscount {
     #[serde(rename = "enabledForAccount", skip_serializing_if = "Option::is_none")]
@@ -29,11 +25,13 @@ pub struct AccountCommissionResponseResultDiscount {
     pub enabled_for_symbol: Option<bool>,
     #[serde(rename = "discountAsset", skip_serializing_if = "Option::is_none")]
     pub discount_asset: Option<String>,
+    /// Standard commission is reduced by this rate when paying commission in BNB.
     #[serde(rename = "discount", skip_serializing_if = "Option::is_none")]
     pub discount: Option<String>,
 }
 
 impl AccountCommissionResponseResultDiscount {
+    /// Discount on standard commissions when paying in BNB.
     #[must_use]
     pub fn new() -> AccountCommissionResponseResultDiscount {
         AccountCommissionResponseResultDiscount {

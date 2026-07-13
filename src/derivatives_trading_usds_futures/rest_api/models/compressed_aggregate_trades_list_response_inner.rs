@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CompressedAggregateTradesListResponseInner {
+    /// Aggregate tradeId
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<i64>,
+    /// Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Normal quantity without the trades involving RPI orders
     #[serde(rename = "nq", skip_serializing_if = "Option::is_none")]
     pub nq: Option<String>,
+    /// First tradeId
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<i64>,
+    /// Last tradeId
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<i64>,
+    /// Timestamp
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Was the buyer the maker?
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
 }

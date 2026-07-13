@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,28 +18,40 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AssetIndexResponseInner {
+    /// Event type.
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time.
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Asset index symbol.
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Index price.
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
+    /// Bid buffer.
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<String>,
+    /// Ask buffer.
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    /// Bid rate.
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<String>,
+    /// Ask rate.
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
+    /// Auto exchange bid buffer.
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Auto exchange ask buffer.
     #[serde(rename = "g", skip_serializing_if = "Option::is_none")]
     pub g: Option<String>,
+    /// Auto exchange bid rate.
     #[serde(rename = "Q", skip_serializing_if = "Option::is_none")]
     pub q_uppercase: Option<String>,
+    /// Auto exchange ask rate.
     #[serde(rename = "G", skip_serializing_if = "Option::is_none")]
     pub g_uppercase: Option<String>,
 }

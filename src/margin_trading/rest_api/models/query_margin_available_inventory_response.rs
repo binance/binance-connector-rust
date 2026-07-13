@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryMarginAvailableInventoryResponse {
+    /// Available inventory per asset. Keys are asset symbols, values are available amounts.
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
-    pub assets: Option<Box<models::QueryMarginAvailableInventoryResponseAssets>>,
+    pub assets: Option<std::collections::HashMap<String, String>>,
+    /// update Time.
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

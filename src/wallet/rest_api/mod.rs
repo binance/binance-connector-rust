@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -127,7 +127,9 @@ impl RestApi {
     ///
     /// Fetch account api trading status detail.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -157,7 +159,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/account/Account-API-Trading-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/account#account-api-trading-status).
     ///
     pub async fn account_api_trading_status(
         &self,
@@ -172,7 +174,9 @@ impl RestApi {
     ///
     /// Fetch account info detail.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -202,7 +206,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/account/Account-info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/account#account-info).
     ///
     pub async fn account_info(
         &self,
@@ -215,7 +219,9 @@ impl RestApi {
     ///
     /// Fetch account status detail.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -245,7 +251,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/account/Account-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/account#account-status).
     ///
     pub async fn account_status(
         &self,
@@ -258,11 +264,14 @@ impl RestApi {
     ///
     /// Daily account snapshot
     ///
-    /// * The query time period must be less then 30 days
-    /// * Support query within the last one month only
-    /// * If startTimeand endTime not sent, return records of the last 7 days by default
+    /// Weight(IP): 2400
     ///
-    /// Weight: 2400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The query time period must be less then 30 days
+    /// - Support query within the last one month only
+    /// - If startTimeand endTime not sent, return records of the last 7 days by default
     ///
     /// # Arguments
     ///
@@ -292,7 +301,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/account/daily-account-snapshoot).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/account#daily-account-snapshot).
     ///
     pub async fn daily_account_snapshot(
         &self,
@@ -303,8 +312,14 @@ impl RestApi {
 
     /// Disable Fast Withdraw Switch (`USER_DATA`)
     ///
+    /// Disable Fast Withdraw Switch
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - This request will disable fastwithdraw switch under your account. You need to enable "trade" option for the api key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -334,7 +349,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/account/Disable-Fast-Withdraw-Switch).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/account#disable-fast-withdraw-switch).
     ///
     pub async fn disable_fast_withdraw_switch(
         &self,
@@ -349,10 +364,13 @@ impl RestApi {
     ///
     /// Enable Fast Withdraw Switch (`USER_DATA`)
     ///
-    /// * This request will enable fastwithdraw switch under your  account. <br></br>
-    /// * When Fast Withdraw Switch is on, transferring funds to a Binance account will be done instantly. There is no on-chain transaction, no transaction ID and no withdrawal fee.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - This request will enable fastwithdraw switch under your account. You need to enable "trade" option for the api key which requests this endpoint.
+    /// - When Fast Withdraw Switch is on, transferring funds to a Binance account will be done instantly. There is no on-chain transaction, no transaction ID and no withdrawal fee.
     ///
     /// # Arguments
     ///
@@ -382,7 +400,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/account/Enable-Fast-Withdraw-Switch).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/account#enable-fast-withdraw-switch).
     ///
     pub async fn enable_fast_withdraw_switch(
         &self,
@@ -397,7 +415,9 @@ impl RestApi {
     ///
     /// Get API Key Permission
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -427,7 +447,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/account/api-key-permission).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/account#get-api-key-permission).
     ///
     pub async fn get_api_key_permission(
         &self,
@@ -440,10 +460,12 @@ impl RestApi {
     ///
     /// Fetch details of assets supported on Binance.
     ///
+    /// Weight(IP): 1
     ///
-    /// * Please get network and other deposit or withdraw details from ``GET /sapi/v1/capital/config/getall``.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Please get network and other deposit or withdraw details from `GET /sapi/v1/capital/config/getall`.
     ///
     /// # Arguments
     ///
@@ -473,7 +495,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Asset-Detail).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#asset-detail).
     ///
     pub async fn asset_detail(
         &self,
@@ -486,10 +508,12 @@ impl RestApi {
     ///
     /// Query asset dividend record.
     ///
+    /// Weight(IP): 10
     ///
-    /// * There cannot be more than 180 days between parameter `startTime` and `endTime`.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 10
+    /// Notes:
+    /// - There cannot be more than 180 days between parameter `startTime` and `endTime`.
     ///
     /// # Arguments
     ///
@@ -519,7 +543,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/assets-divided-record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#asset-dividend-record).
     ///
     pub async fn asset_dividend_record(
         &self,
@@ -532,7 +556,9 @@ impl RestApi {
     ///
     /// Convert dust assets
     ///
-    /// Weight: 10
+    /// Weight(UID): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -562,7 +588,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Dust-Convert).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#dust-convert).
     ///
     pub async fn dust_convert(
         &self,
@@ -575,7 +601,9 @@ impl RestApi {
     ///
     /// Query dust convertible assets
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -605,7 +633,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Dust-Convertible-Assets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#dust-convertible-assets).
     ///
     pub async fn dust_convertible_assets(
         &self,
@@ -618,9 +646,12 @@ impl RestApi {
     ///
     /// Convert dust assets to BNB.
     ///
-    /// * You need to open`Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
+    /// Weight(UID): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to open`Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -650,7 +681,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Dust-Transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#dust-transfer).
     ///
     pub async fn dust_transfer(
         &self,
@@ -659,14 +690,17 @@ impl RestApi {
         self.asset_api_client.dust_transfer(params).await
     }
 
-    /// `DustLog(USER_DATA)`
+    /// `DustLog` (`USER_DATA`)
     ///
     /// Dustlog
     ///
-    /// * Only return last 100 records
-    /// * Only return records after 2020/12/01
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Only return last 100 records
+    /// - Only return records after 2020/12/01
     ///
     /// # Arguments
     ///
@@ -696,7 +730,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/dust-log).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#dustlog).
     ///
     pub async fn dustlog(
         &self,
@@ -709,10 +743,12 @@ impl RestApi {
     ///
     /// Query Funding Wallet
     ///
+    /// Weight(IP): 1
     ///
-    /// * Currently supports querying the following business assets：Binance Pay, Binance Card, Binance Gift Card, Stock Token
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Currently supports querying the following business assets：Binance Pay, Binance Card, Binance Gift Card, Stock Token
     ///
     /// # Arguments
     ///
@@ -742,7 +778,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Funding-Wallet).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#funding-wallet).
     ///
     pub async fn funding_wallet(
         &self,
@@ -755,7 +791,9 @@ impl RestApi {
     ///
     /// Get Assets That Can Be Converted Into BNB
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -785,7 +823,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/assets-can-convert-bnb).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#get-assets-that-can-be-converted-into-bnb).
     ///
     pub async fn get_assets_that_can_be_converted_into_bnb(
         &self,
@@ -800,10 +838,13 @@ impl RestApi {
     ///
     /// The query of Cloud-Mining payment and refund history
     ///
-    /// * Just return the SUCCESS records of payment and refund.
-    /// * For response, type = 248 means payment, type = 249 means refund, status =S means SUCCESS.
+    /// Weight(UID): 600
     ///
-    /// Weight: 600
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Just return the SUCCESS records of payment and refund.
+    /// - For response, type = 248 means payment, type = 249 means refund, status =S means SUCCESS.
     ///
     /// # Arguments
     ///
@@ -833,7 +874,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/cloud-mining-payment-and-refund-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#get-cloud-mining-payment-and-refund-history).
     ///
     pub async fn get_cloud_mining_payment_and_refund_history(
         &self,
@@ -847,9 +888,12 @@ impl RestApi {
 
     /// Get Open Symbol List (`MARKET_DATA`)
     ///
-    /// Get the list of symbols that are scheduled to be opened for trading in the market.
+    /// Get the list of symbols that are scheduled to be opened for trading in
+    /// the market.
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -879,7 +923,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/open-symbol-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#get-open-symbol-list).
     ///
     pub async fn get_open_symbol_list(
         &self,
@@ -887,11 +931,13 @@ impl RestApi {
         self.asset_api_client.get_open_symbol_list().await
     }
 
-    /// Query User Delegation History(For Master `Account)(USER_DATA`)
+    /// Query User Delegation History(For Master Account) (`USER_DATA`)
     ///
     /// Query User Delegation History
     ///
-    /// Weight: 60
+    /// Weight(IP): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -921,7 +967,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/query-user-delegation).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#query-user-delegation-history).
     ///
     pub async fn query_user_delegation_history(
         &self,
@@ -932,17 +978,19 @@ impl RestApi {
             .await
     }
 
-    /// Query User Universal Transfer `History(USER_DATA)`
+    /// Query User Universal Transfer History (`USER_DATA`)
     ///
     /// Query User Universal Transfer History
     ///
+    /// Weight(IP): 1
     ///
-    /// *  `fromSymbol` must be sent when type are `ISOLATEDMARGIN_MARGIN` and `ISOLATEDMARGIN_ISOLATEDMARGIN`
-    /// *  `toSymbol` must be sent when type are `MARGIN_ISOLATEDMARGIN` and `ISOLATEDMARGIN_ISOLATEDMARGIN`
-    /// * Support query within the last 6 months only
-    /// * If `startTime`and `endTime` not sent, return records of the last 7 days by default
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - `fromSymbol` must be sent when type are `ISOLATEDMARGIN_MARGIN` and `ISOLATEDMARGIN_ISOLATEDMARGIN`
+    /// - `toSymbol` must be sent when type are `MARGIN_ISOLATEDMARGIN` and `ISOLATEDMARGIN_ISOLATEDMARGIN`
+    /// - Support query within the last 6 months only
+    /// - If `startTime`and `endTime` not sent, return records of the last 7 days by default
     ///
     /// # Arguments
     ///
@@ -972,7 +1020,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/query-user-universal-transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#query-user-universal-transfer-history).
     ///
     pub async fn query_user_universal_transfer_history(
         &self,
@@ -987,7 +1035,9 @@ impl RestApi {
     ///
     /// Query User Wallet Balance
     ///
-    /// Weight: 60
+    /// Weight(IP): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1017,7 +1067,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Query-User-Wallet-Balance).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#query-user-wallet-balance).
     ///
     pub async fn query_user_wallet_balance(
         &self,
@@ -1032,9 +1082,12 @@ impl RestApi {
     ///
     /// Toggle BNB Burn On Spot Trade And Margin Interest
     ///
-    /// * "spotBNBBurn" and "interestBNBBurn" should be sent at least one.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1(IP)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - "spotBNBBurn" and "interestBNBBurn" should be sent at least one.
     ///
     /// # Arguments
     ///
@@ -1064,7 +1117,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Toggle-BNB-Burn-On-Spot-Trade-And-Margin-Interest).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#toggle-bnb-burn-on-spot-trade-and-margin-interest).
     ///
     pub async fn toggle_bnb_burn_on_spot_trade_and_margin_interest(
         &self,
@@ -1080,7 +1133,9 @@ impl RestApi {
     ///
     /// Fetch trade fee
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1110,7 +1165,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/Trade-Fee).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#trade-fee).
     ///
     pub async fn trade_fee(
         &self,
@@ -1123,10 +1178,13 @@ impl RestApi {
     ///
     /// Get user assets, just for positive data.
     ///
-    /// * If asset is set, then return this asset, otherwise return all assets positive.
-    /// * If needBtcValuation is set, then return btcValudation.
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If asset is set, then return this asset, otherwise return all assets positive.
+    /// - If needBtcValuation is set, then return btcValudation.
     ///
     /// # Arguments
     ///
@@ -1156,7 +1214,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/user-assets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#user-asset).
     ///
     pub async fn user_asset(
         &self,
@@ -1167,44 +1225,48 @@ impl RestApi {
 
     /// User Universal Transfer (`USER_DATA`)
     ///
-    /// user universal transfer
+    /// User universal transfer
     ///
-    /// *  `fromSymbol` must be sent when type are `ISOLATEDMARGIN_MARGIN` and `ISOLATEDMARGIN_ISOLATEDMARGIN`
-    /// *  `toSymbol` must be sent when type are `MARGIN_ISOLATEDMARGIN` and `ISOLATEDMARGIN_ISOLATEDMARGIN`
-    /// * ENUM of transfer types:
-    /// * `MAIN_UMFUTURE`   Spot account transfer to USDⓈ-M Futures account
-    /// * `MAIN_CMFUTURE`   Spot account transfer to COIN-M Futures account
-    /// * `MAIN_MARGIN`   Spot account transfer to Margin（cross）account
-    /// * `UMFUTURE_MAIN`   USDⓈ-M Futures account transfer to Spot account
-    /// * `UMFUTURE_MARGIN`   USDⓈ-M Futures account transfer to Margin（cross）account
-    /// * `CMFUTURE_MAIN`   COIN-M Futures account transfer to Spot account
-    /// * `CMFUTURE_MARGIN`   COIN-M Futures account transfer to Margin(cross) account
-    /// * `MARGIN_MAIN`   Margin（cross）account transfer to Spot account
-    /// * `MARGIN_UMFUTURE`   Margin（cross）account transfer to USDⓈ-M Futures
-    /// * `MARGIN_CMFUTURE`   Margin（cross）account transfer to COIN-M Futures
-    /// * `ISOLATEDMARGIN_MARGIN`   Isolated margin account transfer to Margin(cross) account
-    /// * `MARGIN_ISOLATEDMARGIN`   Margin(cross) account transfer to Isolated margin account
-    /// * `ISOLATEDMARGIN_ISOLATEDMARGIN`   Isolated margin account transfer to Isolated margin account
-    /// * `MAIN_FUNDING`   Spot account transfer to Funding account
-    /// * `FUNDING_MAIN`   Funding account transfer to Spot account
-    /// * `FUNDING_UMFUTURE`   Funding account transfer to UMFUTURE account
-    /// * `UMFUTURE_FUNDING`   UMFUTURE account transfer to Funding account
-    /// * `MARGIN_FUNDING`   MARGIN account transfer to Funding account
-    /// * `FUNDING_MARGIN`   Funding account transfer to Margin account
-    /// * `FUNDING_CMFUTURE`   Funding account transfer to CMFUTURE account
-    /// * `CMFUTURE_FUNDING`   CMFUTURE account transfer to Funding account
-    /// * `MAIN_OPTION`  Spot account transfer to Options account
-    /// * `OPTION_MAIN`  Options account transfer to Spot account
-    /// * `UMFUTURE_OPTION` USDⓈ-M Futures account transfer to Options account
-    /// * `OPTION_UMFUTURE` Options account transfer to USDⓈ-M Futures account
-    /// * `MARGIN_OPTION`  Margin（cross）account transfer to Options account
-    /// * `OPTION_MARGIN`  Options account transfer to Margin（cross）account
-    /// * `FUNDING_OPTION`   Funding account transfer to Options account
-    /// * `OPTION_FUNDING`   Options account transfer to Funding account
-    /// * `MAIN_PORTFOLIO_MARGIN`  Spot account transfer to Portfolio Margin account
-    /// * `PORTFOLIO_MARGIN_MAIN`  Portfolio Margin account transfer to Spot account
+    /// Weight(UID): 900
     ///
-    /// Weight: 900
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to enable Permits Universal Transfer option for the API Key that requests this endpoint.
+    /// - `fromSymbol` must be sent when type is `ISOLATEDMARGIN_MARGIN` or `ISOLATEDMARGIN_ISOLATEDMARGIN`.
+    /// - `toSymbol` must be sent when type is `MARGIN_ISOLATEDMARGIN` or `ISOLATEDMARGIN_ISOLATEDMARGIN`.
+    /// - ENUM of transfer types:
+    /// - `MAIN_UMFUTURE`: Spot → USDⓈ-M Futures
+    /// - `MAIN_CMFUTURE`: Spot → COIN-M Futures
+    /// - `MAIN_MARGIN`: Spot → Margin (cross)
+    /// - `UMFUTURE_MAIN`: USDⓈ-M Futures → Spot
+    /// - `UMFUTURE_MARGIN`: USDⓈ-M Futures → Margin (cross)
+    /// - `CMFUTURE_MAIN`: COIN-M Futures → Spot
+    /// - `CMFUTURE_MARGIN`: COIN-M Futures → Margin (cross)
+    /// - `MARGIN_MAIN`: Margin (cross) → Spot
+    /// - `MARGIN_UMFUTURE`: Margin (cross) → USDⓈ-M Futures
+    /// - `MARGIN_CMFUTURE`: Margin (cross) → COIN-M Futures
+    /// - `ISOLATEDMARGIN_MARGIN`: Isolated margin → Margin (cross)
+    /// - `MARGIN_ISOLATEDMARGIN`: Margin (cross) → Isolated margin
+    /// - `ISOLATEDMARGIN_ISOLATEDMARGIN`: Isolated margin → Isolated margin
+    /// - `MAIN_FUNDING`: Spot → Funding
+    /// - `FUNDING_MAIN`: Funding → Spot
+    /// - `FUNDING_UMFUTURE`: Funding → USDⓈ-M Futures
+    /// - `UMFUTURE_FUNDING`: USDⓈ-M Futures → Funding
+    /// - `MARGIN_FUNDING`: Margin (cross) → Funding
+    /// - `FUNDING_MARGIN`: Funding → Margin (cross)
+    /// - `FUNDING_CMFUTURE`: Funding → COIN-M Futures
+    /// - `CMFUTURE_FUNDING`: COIN-M Futures → Funding
+    /// - `MAIN_OPTION`: Spot → Options
+    /// - `OPTION_MAIN`: Options → Spot
+    /// - `UMFUTURE_OPTION`: USDⓈ-M Futures → Options
+    /// - `OPTION_UMFUTURE`: Options → USDⓈ-M Futures
+    /// - `MARGIN_OPTION`: Margin (cross) → Options
+    /// - `OPTION_MARGIN`: Options → Margin (cross)
+    /// - `FUNDING_OPTION`: Funding → Options
+    /// - `OPTION_FUNDING`: Options → Funding
+    /// - `MAIN_PORTFOLIO_MARGIN`: Spot → Portfolio Margin
+    /// - `PORTFOLIO_MARGIN_MAIN`: Portfolio Margin → Spot
     ///
     /// # Arguments
     ///
@@ -1234,7 +1296,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/asset/User-Universal-Transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#user-universal-transfer).
     ///
     pub async fn user_universal_transfer(
         &self,
@@ -1247,7 +1309,9 @@ impl RestApi {
     ///
     /// Get information of coins (available for deposit and withdraw) for user.
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1277,7 +1341,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/all-coins-info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#all-coins-information).
     ///
     pub async fn all_coins_information(
         &self,
@@ -1290,11 +1354,14 @@ impl RestApi {
     ///
     /// Fetch deposit address with network.
     ///
-    /// * If `network` is not send, return with default network of the coin.
-    /// * You can get `network` and `isDefault` in `networkList` in the response of `Get /sapi/v1/capital/config/getall (HMAC SHA256)`.
-    /// * `amount` needs to be sent if using LIGHTNING network
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `network` is not send, return with default network of the coin.
+    /// - You can get `network` and `isDefault` in `networkList` in the response of `Get /sapi/v1/capital/config/getall (HMAC SHA256)`.
+    /// - `amount` needs to be sent if using LIGHTNING network
     ///
     /// # Arguments
     ///
@@ -1324,7 +1391,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/deposite-address).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#deposit-address).
     ///
     pub async fn deposit_address(
         &self,
@@ -1337,11 +1404,13 @@ impl RestApi {
     ///
     /// Fetch deposit history.
     ///
+    /// Weight(IP): 1
     ///
-    /// * Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
-    /// * If both ``startTime`` and ``endTime`` are sent, time between ``startTime`` and ``endTime`` must be less than 90 days.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
+    /// - If both `startTime` and `endTime` are sent, time between `startTime` and `endTime` must be less than 90 days.
     ///
     /// # Arguments
     ///
@@ -1371,7 +1440,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/deposite-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#deposit-history).
     ///
     pub async fn deposit_history(
         &self,
@@ -1380,15 +1449,13 @@ impl RestApi {
         self.capital_api_client.deposit_history(params).await
     }
 
-    /// Fetch deposit address list with `network(USER_DATA)`
+    /// Fetch deposit address list with network (`USER_DATA`)
     ///
     /// Fetch deposit address list with network.
     ///
+    /// Weight(IP): 10
     ///
-    /// * If network is not send, return with default network of the coin.
-    /// * You can get network and isDefault in networkList in the response of `Get /sapi/v1/capital/config/getall`.
-    ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1418,7 +1485,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/Fetch-deposit-address-list-with-network).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#fetch-deposit-address-list-with-network).
     ///
     pub async fn fetch_deposit_address_list_with_network(
         &self,
@@ -1434,7 +1501,9 @@ impl RestApi {
     ///
     /// Fetch withdraw address list
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1464,7 +1533,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/fetch-withdraw-address).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#fetch-withdraw-address-list).
     ///
     pub async fn fetch_withdraw_address_list(
         &self,
@@ -1476,7 +1545,9 @@ impl RestApi {
     ///
     /// Fetch withdraw quota
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1506,7 +1577,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/Fetch-withdraw-quota).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#fetch-withdraw-quota).
     ///
     pub async fn fetch_withdraw_quota(
         &self,
@@ -1518,9 +1589,9 @@ impl RestApi {
     ///
     /// Apply deposit credit for expired address (One click arrival)
     ///
-    /// * Params need to be in the POST body
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1550,7 +1621,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/one-click-arrival-deposite-apply).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#one-click-arrival-deposit-apply).
     ///
     pub async fn one_click_arrival_deposit_apply(
         &self,
@@ -1561,19 +1632,19 @@ impl RestApi {
             .await
     }
 
-    /// `Withdraw(USER_DATA)`
+    /// Withdraw (`USER_DATA`)
     ///
-    /// Submit a withdraw request.
+    /// Submit a withdraw request
     ///
+    /// Weight(UID): 900
     ///
-    /// * If `network` not send, return with default network of the coin.
-    /// * You can get `network` and `isDefault` in `networkList` of a coin in the response of `Get /sapi/v1/capital/config/getall (HMAC SHA256)`.
-    /// * To check if travel rule is required, by using  `GET /sapi/v1/localentity/questionnaire-requirements` and if it returns anything other than `NIL` you will need update SAPI to `POST /sapi/v1/localentity/withdraw/apply` else you can continue `POST /sapi/v1/capital/withdraw/apply`. Please note that if you are required to comply to travel rule please refer to the Travel Rule SAPI.
-    /// * For networks that do not support memo/tag, submitting a withdrawal request with a non-empty `addressTag` will return error `-4106 TAG_NOT_SUPPORTED_FOR_NETWORK`. Please omit the `addressTag` field for such networks. You can check whether a network requires a tag via `GET /sapi/v1/capital/config/getall`:
-    /// * If `withdrawTag` = `true` → memo/tag is required.
-    /// * If `withdrawTag` = `false` → memo/tag is not supported; omit `addressTag`.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 900
+    /// Notes:
+    /// - If `network` not send, return with default network of the coin.
+    /// - You can get `network` and `isDefault` in `networkList` of a coin in the response of `Get /sapi/v1/capital/config/getall (HMAC SHA256)`.
+    /// - To check if travel rule is required, by using `GET /sapi/v1/localentity/questionnaire-requirements` and if it returns anything other than `NIL` you will need update SAPI to `POST /sapi/v1/localentity/withdraw/apply` else you can continue `POST /sapi/v1/capital/withdraw/apply`. Please note that if you are required to comply to travel rule please refer to the Travel Rule SAPI.
+    /// - "For networks that do not support memo/tag, submitting a withdrawal request with a non-empty `addressTag` will return error `-4106 TAG_NOT_SUPPORTED_FOR_NETWORK`. Please omit the `addressTag` field for such networks. You can check whether a network requires a tag via `GET /sapi/v1/capital/config/getall`: If `withdrawTag` = `true` → memo/tag is required. If `withdrawTag` = `false` → memo/tag is not supported; omit `addressTag`."
     ///
     /// # Arguments
     ///
@@ -1603,7 +1674,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/Withdraw).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#withdraw).
     ///
     pub async fn withdraw(
         &self,
@@ -1614,17 +1685,19 @@ impl RestApi {
 
     /// Withdraw History (supporting network) (`USER_DATA`)
     ///
-    /// Fetch withdraw history.
+    /// Fetch withdraw history
     ///
-    /// * `network` may not be in the response for old withdraw.
-    /// * Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
-    /// * If both `startTime` and `endTime`are sent, time between `startTime`and `endTime`must be less than 90 days.
-    /// * If `withdrawOrderId` is sent, time between `startTime` and `endTime` must be less than 7 days.
-    /// * If `withdrawOrderId` is sent, `startTime` and `endTime` are not sent, will return last 7 days records by default.
-    /// * Maximum support `idList` number is 45.
+    /// Weight(UID): 18000 (10 requests per second)
     ///
-    /// Weight: 18000
-    /// Request limit: 10 requests per second
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `network` may not be in the response for old withdraw.
+    /// - Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
+    /// - If both `startTime` and `endTime`are sent, time between `startTime`and `endTime`must be less than 90 days.
+    /// - If `withdrawOrderId` is sent, time between `startTime` and `endTime` must be less than 7 days.
+    /// - If `withdrawOrderId` is sent, `startTime` and `endTime` are not sent, will return last 7 days records by default.
+    /// - Maximum support `idList` number is 45.
     ///
     /// # Arguments
     ///
@@ -1654,7 +1727,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/capital/Withdraw-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/capital#withdraw-history).
     ///
     pub async fn withdraw_history(
         &self,
@@ -1663,11 +1736,13 @@ impl RestApi {
         self.capital_api_client.withdraw_history(params).await
     }
 
-    /// Get symbols delist schedule for spot (`MARKET_DATA`)
+    /// Get Spot Delist Schedule (`MARKET_DATA`)
     ///
     /// Get symbols delist schedule for spot
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1697,7 +1772,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/others/delist-schedule).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/others#get-symbols-delist-schedule-for-spot).
     ///
     pub async fn get_symbols_delist_schedule_for_spot(
         &self,
@@ -1709,11 +1784,13 @@ impl RestApi {
             .await
     }
 
-    /// System Status (System)
+    /// System Status
     ///
     /// Fetch system status.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: System
     ///
     /// # Arguments
     ///
@@ -1743,7 +1820,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/others/System-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/others#system-status).
     ///
     pub async fn system_status(
         &self,
@@ -1755,12 +1832,15 @@ impl RestApi {
     ///
     /// Submit a withdrawal request for brokers of local entities that required travel rule.
     ///
-    /// * If `network` not send, return with default network of the coin, but if the address could not match default network, the withdraw will be rejected.
-    /// * You can get `network` in `networkList` of a coin in the response
-    /// * Questionnaire is different for each local entity, please refer to
-    /// * If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`,
+    /// Weight(UID): 600
     ///
-    /// Weight: 600
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `network` not send, return with default network of the coin, but if the address could not match default network, the withdraw will be rejected.
+    /// - You can get `network` in `networkList` of a coin in the response of `Get /sapi/v1/capital/config/getall (HMAC SHA256)`.
+    /// - Questionnaire is different for each local entity, please refer to the `Withdraw Questionnaire Contents` page.
+    /// - If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`, please try to verify the format of the questionnaire and use URL-encoded format.
     ///
     /// # Arguments
     ///
@@ -1790,7 +1870,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/Broker-Withdraw).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#broker-withdraw).
     ///
     pub async fn broker_withdraw(
         &self,
@@ -1801,9 +1881,12 @@ impl RestApi {
 
     /// Check Questionnaire Requirements (for local entities that require travel rule) (supporting network) (`USER_DATA`)
     ///
-    /// This API will return user-specific Travel Rule questionnaire requirement information in reference to the current API key.
+    /// This API will return user-specific Travel Rule questionnaire requirement information in reference to the current
+    /// API key.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1833,7 +1916,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/questionnaire-requirements).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#check-questionnaire-requirements).
     ///
     pub async fn check_questionnaire_requirements(
         &self,
@@ -1844,15 +1927,18 @@ impl RestApi {
             .await
     }
 
-    /// Deposit History (for local entities that required travel rule) (supporting network) (`USER_DATA`)
+    /// Deposit History Travel Rule (for local entities that required travel rule) (supporting network) (`USER_DATA`)
     ///
     /// Fetch deposit history for local entities that required travel rule.
     ///
-    /// * Please notice the default `startTime` and `endTime` to make sure that time interval is within
-    /// * If both ``startTime`` and ``endTime`` are sent, time between ``startTime`` and ``endTime`` must
-    /// * Please, note that due to network-specific characteristics, the returned source address may be inaccurate. If multiple source addresses are found, only the first one will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
+    /// - If both `startTime` and `endTime` are sent, time between `startTime` and `endTime` must be less than 90 days.
+    /// - Please, note that due to network-specific characteristics, the returned source address may be inaccurate. If multiple source addresses are found, only the first one will be returned.
     ///
     /// # Arguments
     ///
@@ -1882,7 +1968,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/Deposit-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#deposit-history-travel-rule).
     ///
     pub async fn deposit_history_travel_rule(
         &self,
@@ -1897,11 +1983,14 @@ impl RestApi {
     ///
     /// Fetch deposit history for local entities that with required travel rule information.
     ///
-    /// * Please notice the default `startTime` and `endTime` to make sure that time interval is within
-    /// * If both ``startTime`` and ``endTime`` are sent, time between ``startTime`` and ``endTime`` must
-    /// * Please, note that due to network-specific characteristics, the returned source address may be inaccurate. If multiple source addresses are found, only the first one will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
+    /// - If both `startTime` and `endTime` are sent, time between `startTime` and `endTime` must be less than 90 days.
+    /// - Please, note that due to network-specific characteristics, the returned source address may be inaccurate. If multiple source addresses are found, only the first one will be returned.
     ///
     /// # Arguments
     ///
@@ -1931,7 +2020,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/Deposit-History-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#deposit-history-v2).
     ///
     pub async fn deposit_history_v2(
         &self,
@@ -1942,9 +2031,12 @@ impl RestApi {
 
     /// Fetch address verification list (`USER_DATA`)
     ///
-    /// Fetch address verification list for user to check on status and other details for the addresses stored in Address Book.
+    /// Fetch address verification list for user to check on status and other details for the addresses stored in
+    /// Address Book.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1974,7 +2066,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/address-verification-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#fetch-address-verification-list).
     ///
     pub async fn fetch_address_verification_list(
         &self,
@@ -1990,7 +2082,9 @@ impl RestApi {
     ///
     /// Query the active country list for travel rule questionnaires. Currently, only supports AU entity.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2020,19 +2114,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/country-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#get-country-list).
     ///
     pub async fn get_country_list(
         &self,
+        params: GetCountryListParams,
     ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>> {
-        self.travel_rule_api_client.get_country_list().await
+        self.travel_rule_api_client.get_country_list(params).await
     }
 
     /// Get Region List (`USER_DATA`)
     ///
     /// Query the active region/city list for a given country. Currently, only supports AU entity.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2062,7 +2159,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/region-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#get-region-list).
     ///
     pub async fn get_region_list(
         &self,
@@ -2071,16 +2168,19 @@ impl RestApi {
         self.travel_rule_api_client.get_region_list(params).await
     }
 
-    /// Submit Deposit Questionnaire (For local entities that require travel rule) (supporting network) (`USER_DATA`)
+    /// Submit Deposit Questionnaire Broker (For local entities that require travel rule) (supporting network) (`USER_DATA`)
     ///
     /// Submit questionnaire for brokers of local entities that require travel rule.
     /// The questionnaire is only applies to transactions from un-hosted wallets or VASPs that are not
     /// yet onboarded with GTR.
     ///
-    /// * Questionnaire is different for each local entity, please refer
-    /// * If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`,
+    /// Weight(UID): 600
     ///
-    /// Weight: 600
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Questionnaire is different for each local entity, please refer to `Deposit Questionnaire Content` page.
+    /// - If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`, please try to verify the format of the questionnaire and use URL-encoded format.
     ///
     /// # Arguments
     ///
@@ -2110,7 +2210,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/deposit-provide-info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#submit-deposit-questionnaire).
     ///
     pub async fn submit_deposit_questionnaire(
         &self,
@@ -2127,10 +2227,13 @@ impl RestApi {
     /// The questionnaire is only applies to transactions from unhosted wallets or VASPs that are not
     /// yet onboarded with GTR.
     ///
-    /// * Questionnaire is different for each local entity, please refer
-    /// * If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`,
+    /// Weight(UID): 600
     ///
-    /// Weight: 600
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Questionnaire is different for each local entity, please refer to `Deposit Questionnaire Content` page.
+    /// - If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`, please try to verify the format of the questionnaire and use URL-encoded format.
     ///
     /// # Arguments
     ///
@@ -2160,7 +2263,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/deposit-provide-info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#submit-deposit-questionnaire-travel-rule).
     ///
     pub async fn submit_deposit_questionnaire_travel_rule(
         &self,
@@ -2177,10 +2280,13 @@ impl RestApi {
     /// The questionnaire is only applies to transactions from unhosted wallets or VASPs that are not
     /// yet onboarded with GTR.
     ///
-    /// * Questionnaire is different for each local entity, please refer
-    /// * If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`,
+    /// Weight(UID): 600
     ///
-    /// Weight: 600
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Questionnaire is different for each local entity, please refer to `Deposit Questionnaire Content` page.
+    /// - If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`, please try to verify the format of the questionnaire and use URL-encoded format.
     ///
     /// # Arguments
     ///
@@ -2210,7 +2316,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/deposit-provide-info-v2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#submit-deposit-questionnaire-v2).
     ///
     pub async fn submit_deposit_questionnaire_v2(
         &self,
@@ -2225,7 +2331,9 @@ impl RestApi {
     ///
     /// Fetch the VASP list for local entities.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2255,7 +2363,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/onboarded-vasp-list).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#vasp-list).
     ///
     pub async fn vasp_list(
         &self,
@@ -2264,15 +2372,18 @@ impl RestApi {
         self.travel_rule_api_client.vasp_list(params).await
     }
 
-    /// Withdraw History (for local entities that require travel rule) (supporting network) (`USER_DATA`)
+    /// Withdraw History Travel Rule (supporting network) (`USER_DATA`)
     ///
     /// Fetch withdraw history for local entities that required travel rule.
     ///
-    /// * `network` may not be in the response for old withdraw.
-    /// * Please notice the default `startTime` and `endTime` to make sure that time interval is within
-    /// * If both `startTime` and `endTime`are sent, time between `startTime`and `endTime`must be less
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `network` may not be in the response for old withdraw.
+    /// - Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
+    /// - If both `startTime` and `endTime`are sent, time between `startTime`and `endTime`must be less than 90 days.
     ///
     /// # Arguments
     ///
@@ -2281,7 +2392,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -2302,12 +2413,12 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/Withdraw-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#withdraw-history-v1).
     ///
     pub async fn withdraw_history_v1(
         &self,
         params: WithdrawHistoryV1Params,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>> {
         self.travel_rule_api_client
             .withdraw_history_v1(params)
             .await
@@ -2317,17 +2428,20 @@ impl RestApi {
     ///
     /// Fetch withdraw history for local entities that required travel rule.
     ///
-    /// * `network` may not be in the response for old withdraw.
-    /// * Withdrawal made through /sapi/v1/capital/withdraw/apply may not be in the response.
-    /// * Please notice the default `startTime` and `endTime` to make sure that time interval is within
-    /// * If both `startTime` and `endTime`are sent, time between `startTime`and `endTime`must be less
-    /// * If withdrawOrderId is sent, time between startTime and endTime must be less than 7 days.
-    /// * If withdrawOrderId is sent, startTime and endTime are not sent, will return last 7 days records by default.
-    /// * Maximum support trId,txId number is 45.
-    /// * `WithdrawOrderId` only support 1.
-    /// * If responsible does not include withdrawalStatus, please input trId or txId retrieve the data.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `network` may not be in the response for old withdraw.
+    /// - Withdrawal made through /sapi/v1/capital/withdraw/apply may not be in the response.
+    /// - Please notice the default `startTime` and `endTime` to make sure that time interval is within 0-90 days.
+    /// - If both `startTime` and `endTime`are sent, time between `startTime`and `endTime`must be less than 90 days.
+    /// - If withdrawOrderId is sent, time between startTime and endTime must be less than 7 days.
+    /// - If withdrawOrderId is sent, startTime and endTime are not sent, will return last 7 days records by default.
+    /// - Maximum support trId,txId number is 45.
+    /// - `WithdrawOrderId` only support 1.
+    /// - If responsible does not include withdrawalStatus, please input trId or txId retrieve the data.
     ///
     /// # Arguments
     ///
@@ -2336,7 +2450,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -2357,27 +2471,30 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/Withdraw-History-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#withdraw-history-v2).
     ///
     pub async fn withdraw_history_v2(
         &self,
         params: WithdrawHistoryV2Params,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>> {
         self.travel_rule_api_client
             .withdraw_history_v2(params)
             .await
     }
 
-    /// Withdraw (for local entities that require travel rule) (`USER_DATA`)
+    /// Withdraw Travel Rule (`USER_DATA`)
     ///
     /// Submit a withdrawal request for local entities that required travel rule.
     ///
-    /// * If `network` not send, return with default network of the coin, but if the address could not match default network, the withdraw will be rejected.
-    /// * You can get `network` and `isDefault` in `networkList` of a coin in the response
-    /// * Questionnaire is different for each local entity, please refer to
-    /// * If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`,
+    /// Weight(UID): 600
     ///
-    /// Weight: 600
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `network` not send, return with default network of the coin, but if the address could not match default network, the withdraw will be rejected.
+    /// - You can get `network` and `isDefault` in `networkList` of a coin in the response of `Get /sapi/v1/capital/config/getall (HMAC SHA256)`.
+    /// - Questionnaire is different for each local entity, please refer to the `Withdraw Questionnaire Contents` page.
+    /// - If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`, please try to verify the format of the questionnaire and use URL-encoded format.
     ///
     /// # Arguments
     ///
@@ -2407,7 +2524,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/wallet/travel-rule/Withdraw).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/travel-rule#withdraw-travel-rule).
     ///
     pub async fn withdraw_travel_rule(
         &self,

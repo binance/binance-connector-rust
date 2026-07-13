@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,28 +17,33 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PlaceMultipleOrdersOrdersParameterInner {
-    #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
-    pub symbol: Option<String>,
-    #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
-    pub side: Option<SideEnum>,
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<TypeEnum>,
-    #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
-    pub quantity: Option<String>,
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    #[serde(rename = "side")]
+    pub side: SideEnum,
+    #[serde(rename = "type")]
+    pub r#type: TypeEnum,
+    /// Order Quantity
+    #[serde(rename = "quantity")]
+    pub quantity: rust_decimal::Decimal,
+    /// Order Price
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<String>,
+    pub price: Option<rust_decimal::Decimal>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<TimeInForceEnum>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
-    pub reduce_only: Option<String>,
+    pub reduce_only: Option<bool>,
     #[serde(rename = "postOnly", skip_serializing_if = "Option::is_none")]
-    pub post_only: Option<String>,
+    pub post_only: Option<bool>,
     #[serde(rename = "newOrderRespType", skip_serializing_if = "Option::is_none")]
     pub new_order_resp_type: Option<NewOrderRespTypeEnum>,
+    /// User-defined order ID cannot be repeated in pending orders
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// is market maker protection order
     #[serde(rename = "isMmp", skip_serializing_if = "Option::is_none")]
-    pub is_mmp: Option<String>,
+    pub is_mmp: Option<bool>,
+    /// `EXPIRE_TAKER:expire` taker order when STP triggers/ `EXPIRE_MAKER:expire` maker order when STP triggers/ `EXPIRE_BOTH:expire` both orders when STP triggers; Default `EXPIRE_MAKER`
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
@@ -48,12 +53,17 @@ pub struct PlaceMultipleOrdersOrdersParameterInner {
 
 impl PlaceMultipleOrdersOrdersParameterInner {
     #[must_use]
-    pub fn new() -> PlaceMultipleOrdersOrdersParameterInner {
+    pub fn new(
+        symbol: String,
+        side: SideEnum,
+        r#type: TypeEnum,
+        quantity: rust_decimal::Decimal,
+    ) -> PlaceMultipleOrdersOrdersParameterInner {
         PlaceMultipleOrdersOrdersParameterInner {
-            symbol: None,
-            side: None,
-            r#type: None,
-            quantity: None,
+            symbol,
+            side,
+            r#type,
+            quantity,
             price: None,
             time_in_force: None,
             reduce_only: None,
@@ -66,35 +76,34 @@ impl PlaceMultipleOrdersOrdersParameterInner {
     }
 }
 ///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
+)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
+    #[default]
     Buy,
     #[serde(rename = "SELL")]
     Sell,
 }
 
-impl Default for SideEnum {
-    fn default() -> SideEnum {
-        Self::Buy
-    }
-}
 ///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
+)]
 pub enum TypeEnum {
     #[serde(rename = "LIMIT")]
+    #[default]
     Limit,
 }
 
-impl Default for TypeEnum {
-    fn default() -> TypeEnum {
-        Self::Limit
-    }
-}
 ///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
+)]
 pub enum TimeInForceEnum {
     #[serde(rename = "GTC")]
+    #[default]
     Gtc,
     #[serde(rename = "IOC")]
     Ioc,
@@ -104,38 +113,28 @@ pub enum TimeInForceEnum {
     Gtx,
 }
 
-impl Default for TimeInForceEnum {
-    fn default() -> TimeInForceEnum {
-        Self::Gtc
-    }
-}
 ///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
+)]
 pub enum NewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
+    #[default]
     Ack,
     #[serde(rename = "RESULT")]
     Result,
 }
 
-impl Default for NewOrderRespTypeEnum {
-    fn default() -> NewOrderRespTypeEnum {
-        Self::Ack
-    }
-}
-///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+/// `EXPIRE_TAKER:expire` taker order when STP triggers/ `EXPIRE_MAKER:expire` maker order when STP triggers/ `EXPIRE_BOTH:expire` both orders when STP triggers; Default `EXPIRE_MAKER`
+#[derive(
+    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
+)]
 pub enum SelfTradePreventionModeEnum {
     #[serde(rename = "EXPIRE_TAKER")]
+    #[default]
     ExpireTaker,
-    #[serde(rename = "EXPIRE_BOTH")]
-    ExpireBoth,
     #[serde(rename = "EXPIRE_MAKER")]
     ExpireMaker,
-}
-
-impl Default for SelfTradePreventionModeEnum {
-    fn default() -> SelfTradePreventionModeEnum {
-        Self::ExpireTaker
-    }
+    #[serde(rename = "EXPIRE_BOTH")]
+    ExpireBoth,
 }

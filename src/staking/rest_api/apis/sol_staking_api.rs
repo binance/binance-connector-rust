@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -88,18 +88,49 @@ impl SolStakingApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetBoostRewardsHistoryTypeEnum {
+    #[serde(rename = "CLAIM")]
+    Claim,
+    #[serde(rename = "DISTRIBUTE")]
+    Distribute,
+}
+
+impl GetBoostRewardsHistoryTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Claim => "CLAIM",
+            Self::Distribute => "DISTRIBUTE",
+        }
+    }
+}
+
+impl std::str::FromStr for GetBoostRewardsHistoryTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "CLAIM" => Ok(Self::Claim),
+            "DISTRIBUTE" => Ok(Self::Distribute),
+            other => Err(format!("invalid GetBoostRewardsHistoryTypeEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`claim_boost_rewards`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`claim_boost_rewards`](#method.claim_boost_rewards).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ClaimBoostRewardsParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -115,7 +146,7 @@ impl ClaimBoostRewardsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bnsol_rate_history`](#method.get_bnsol_rate_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBnsolRateHistoryParams {
     ///
@@ -123,28 +154,33 @@ pub struct GetBnsolRateHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -160,7 +196,7 @@ impl GetBnsolRateHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bnsol_rewards_history`](#method.get_bnsol_rewards_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBnsolRewardsHistoryParams {
     ///
@@ -168,28 +204,33 @@ pub struct GetBnsolRewardsHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -205,41 +246,48 @@ impl GetBnsolRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_boost_rewards_history`](#method.get_boost_rewards_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBoostRewardsHistoryParams {
-    /// "CLAIM", "DISTRIBUTE", default "CLAIM"
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
+    #[serde(rename = "type")]
+    pub r#type: GetBoostRewardsHistoryTypeEnum,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -248,10 +296,10 @@ impl GetBoostRewardsHistoryParams {
     ///
     /// Required parameters:
     ///
-    /// * `r#type` — \"CLAIM\", \"DISTRIBUTE\", default \"CLAIM\"
+    /// * `r#type` — String
     ///
     #[must_use]
-    pub fn builder(r#type: String) -> GetBoostRewardsHistoryParamsBuilder {
+    pub fn builder(r#type: GetBoostRewardsHistoryTypeEnum) -> GetBoostRewardsHistoryParamsBuilder {
         GetBoostRewardsHistoryParamsBuilder::default().r#type(r#type)
     }
 }
@@ -259,7 +307,7 @@ impl GetBoostRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_sol_redemption_history`](#method.get_sol_redemption_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSolRedemptionHistoryParams {
     ///
@@ -267,34 +315,40 @@ pub struct GetSolRedemptionHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "redeemId", default)]
     pub redeem_id: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -310,7 +364,7 @@ impl GetSolRedemptionHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_sol_staking_history`](#method.get_sol_staking_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSolStakingHistoryParams {
     ///
@@ -318,34 +372,40 @@ pub struct GetSolStakingHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "purchaseId", default)]
     pub purchase_id: Option<i64>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -361,14 +421,14 @@ impl GetSolStakingHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_sol_staking_quota_details`](#method.get_sol_staking_quota_details).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSolStakingQuotaDetailsParams {
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -384,14 +444,14 @@ impl GetSolStakingQuotaDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_unclaimed_rewards`](#method.get_unclaimed_rewards).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetUnclaimedRewardsParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -407,19 +467,20 @@ impl GetUnclaimedRewardsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_sol`](#method.redeem_sol).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemSolParams {
-    /// Amount in SOL.
+    /// Amount in BNSOL, limit 8 decimals
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -428,7 +489,7 @@ impl RedeemSolParams {
     ///
     /// Required parameters:
     ///
-    /// * `amount` — Amount in SOL.
+    /// * `amount` — Amount in BNSOL, limit 8 decimals
     ///
     #[must_use]
     pub fn builder(amount: rust_decimal::Decimal) -> RedeemSolParamsBuilder {
@@ -439,14 +500,14 @@ impl RedeemSolParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`sol_staking_account`](#method.sol_staking_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SolStakingAccountParams {
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than 60000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -462,19 +523,20 @@ impl SolStakingAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_sol_staking`](#method.subscribe_sol_staking).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeSolStakingParams {
     /// Amount in SOL.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -990,7 +1052,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ClaimBoostRewardsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ClaimBoostRewardsResponse");
@@ -1017,7 +1080,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.001212343432","boostRewards":[{"boostAPR":"0.12000000","rewardsAsset":"SOL"},{"boostAPR":"0.00200000","rewardsAsset":"BNB"}],"time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.001212343432","boostRewards":[{"boostAPR":"0.12000000","rewardsAsset":"SOL"}],"time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBnsolRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnsolRateHistoryResponse");
@@ -1044,7 +1107,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInSOL":"1.23230920","rows":[{"time":1575018510000,"amountInSOL":"0.23223","holding":"2.3223","holdingInSOL":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInSOL":"1.23230920","rows":[{"time":1575018510000,"amountInSOL":"0.23223","holding":"2.3223","holdingInSOL":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBnsolRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnsolRewardsHistoryResponse");
@@ -1071,7 +1134,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1729520680,"token":"SOL","amount":"1.20291028","bnsolHolding":"2.0928798","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1729520680,"token":"SOL","amount":"1.20291028","bnsolHolding":"2.0928798","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBoostRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBoostRewardsHistoryResponse");
@@ -1098,7 +1161,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"BNSOL","amount":"21312.23223","distributeAsset":"SOL","distributeAmount":"21338.0699","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"BNSOL","amount":"21312.23223","distributeAsset":"SOL","distributeAmount":"21338.0699","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSolRedemptionHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSolRedemptionHistoryResponse");
@@ -1125,7 +1188,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"SOL","amount":"21312.23223","distributeAsset":"BNSOL","distributeAmount":"21286.42584","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"SOL","amount":"21312.23223","distributeAsset":"BNSOL","distributeAmount":"21286.42584","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSolStakingHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSolStakingHistoryResponse");
@@ -1152,7 +1215,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.01000000","minRedeemAmount":"0.00000001","redeemPeriod":4,"stakeable":true,"redeemable":true,"soldOut":false,"commissionFee":"0.25000000","nextEpochTime":725993969475,"calculating":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.01000000","minRedeemAmount":"0.00000001","redeemPeriod":4,"stakeable":true,"redeemable":true,"soldOut":false,"commissionFee":"0.25000000","nextEpochTime":725993969475,"calculating":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSolStakingQuotaDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSolStakingQuotaDetailsResponse");
@@ -1180,7 +1243,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amount":"1.00000011","rewardsAsset":"SOL"},{"amount":"2.00202321","rewardsAsset":"BNB"}]"#).unwrap();
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"amount":"1.00000011","rewardsAsset":"SOL"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetUnclaimedRewardsResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetUnclaimedRewardsResponseInner>");
@@ -1207,7 +1272,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","redeemId":1234567,"exchangeRate":"1.00121234","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemSolResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemSolResponse");
@@ -1234,7 +1299,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"bnsolAmount":"1.10928781","holdingInSOL":"1.22330928","thirtyDaysProfitInSOL":"0.22330928"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"bnsolAmount":"1.10928781","holdingInSOL":"1.22330928","thirtyDaysProfitInSOL":"0.22330928"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SolStakingAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SolStakingAccountResponse");
@@ -1261,7 +1326,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","purchaseId":1234567,"exchangeRate":"1.001212342342"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeSolStakingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeSolStakingResponse");
@@ -1284,7 +1349,8 @@ mod tests {
 
             let params = ClaimBoostRewardsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ClaimBoostRewardsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ClaimBoostRewardsResponse");
@@ -1309,7 +1375,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ClaimBoostRewardsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ClaimBoostRewardsResponse");
@@ -1347,7 +1414,7 @@ mod tests {
 
             let params = GetBnsolRateHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.001212343432","boostRewards":[{"boostAPR":"0.12000000","rewardsAsset":"SOL"},{"boostAPR":"0.00200000","rewardsAsset":"BNB"}],"time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.001212343432","boostRewards":[{"boostAPR":"0.12000000","rewardsAsset":"SOL"}],"time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBnsolRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBnsolRateHistoryResponse");
 
             let resp = client.get_bnsol_rate_history(params).await.expect("Expected a response");
@@ -1364,7 +1431,7 @@ mod tests {
 
             let params = GetBnsolRateHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.001212343432","boostRewards":[{"boostAPR":"0.12000000","rewardsAsset":"SOL"},{"boostAPR":"0.00200000","rewardsAsset":"BNB"}],"time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"annualPercentageRate":"0.00006408","exchangeRate":"1.001212343432","boostRewards":[{"boostAPR":"0.12000000","rewardsAsset":"SOL"}],"time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBnsolRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBnsolRateHistoryResponse");
 
             let resp = client.get_bnsol_rate_history(params).await.expect("Expected a response");
@@ -1397,7 +1464,7 @@ mod tests {
 
             let params = GetBnsolRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInSOL":"1.23230920","rows":[{"time":1575018510000,"amountInSOL":"0.23223","holding":"2.3223","holdingInSOL":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInSOL":"1.23230920","rows":[{"time":1575018510000,"amountInSOL":"0.23223","holding":"2.3223","holdingInSOL":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBnsolRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBnsolRewardsHistoryResponse");
 
             let resp = client.get_bnsol_rewards_history(params).await.expect("Expected a response");
@@ -1414,7 +1481,7 @@ mod tests {
 
             let params = GetBnsolRewardsHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInSOL":"1.23230920","rows":[{"time":1575018510000,"amountInSOL":"0.23223","holding":"2.3223","holdingInSOL":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"estRewardsInSOL":"1.23230920","rows":[{"time":1575018510000,"amountInSOL":"0.23223","holding":"2.3223","holdingInSOL":"2.4231","annualPercentageRate":"0.5"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBnsolRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBnsolRewardsHistoryResponse");
 
             let resp = client.get_bnsol_rewards_history(params).await.expect("Expected a response");
@@ -1445,9 +1512,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = GetBoostRewardsHistoryParams::builder("CLAIM".to_string(),).build().unwrap();
+            let params = GetBoostRewardsHistoryParams::builder(GetBoostRewardsHistoryTypeEnum::Claim,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1729520680,"token":"SOL","amount":"1.20291028","bnsolHolding":"2.0928798","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1729520680,"token":"SOL","amount":"1.20291028","bnsolHolding":"2.0928798","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBoostRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBoostRewardsHistoryResponse");
 
             let resp = client.get_boost_rewards_history(params).await.expect("Expected a response");
@@ -1462,9 +1529,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = GetBoostRewardsHistoryParams::builder("CLAIM".to_string(),).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetBoostRewardsHistoryParams::builder(GetBoostRewardsHistoryTypeEnum::Claim,).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1729520680,"token":"SOL","amount":"1.20291028","bnsolHolding":"2.0928798","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1729520680,"token":"SOL","amount":"1.20291028","bnsolHolding":"2.0928798","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetBoostRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetBoostRewardsHistoryResponse");
 
             let resp = client.get_boost_rewards_history(params).await.expect("Expected a response");
@@ -1479,9 +1546,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: true };
 
-            let params = GetBoostRewardsHistoryParams::builder("CLAIM".to_string())
-                .build()
-                .unwrap();
+            let params =
+                GetBoostRewardsHistoryParams::builder(GetBoostRewardsHistoryTypeEnum::Claim)
+                    .build()
+                    .unwrap();
 
             match client.get_boost_rewards_history(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1499,7 +1567,7 @@ mod tests {
 
             let params = GetSolRedemptionHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"BNSOL","amount":"21312.23223","distributeAsset":"SOL","distributeAmount":"21338.0699","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"BNSOL","amount":"21312.23223","distributeAsset":"SOL","distributeAmount":"21338.0699","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSolRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolRedemptionHistoryResponse");
 
             let resp = client.get_sol_redemption_history(params).await.expect("Expected a response");
@@ -1514,9 +1582,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = GetSolRedemptionHistoryParams::builder().redeem_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSolRedemptionHistoryParams::builder().redeem_id(1234567).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"BNSOL","amount":"21312.23223","distributeAsset":"SOL","distributeAmount":"21338.0699","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"arrivalTime":1575018510000,"asset":"BNSOL","amount":"21312.23223","distributeAsset":"SOL","distributeAmount":"21338.0699","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSolRedemptionHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolRedemptionHistoryResponse");
 
             let resp = client.get_sol_redemption_history(params).await.expect("Expected a response");
@@ -1549,7 +1617,7 @@ mod tests {
 
             let params = GetSolStakingHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"SOL","amount":"21312.23223","distributeAsset":"BNSOL","distributeAmount":"21286.42584","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"SOL","amount":"21312.23223","distributeAsset":"BNSOL","distributeAmount":"21286.42584","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSolStakingHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolStakingHistoryResponse");
 
             let resp = client.get_sol_staking_history(params).await.expect("Expected a response");
@@ -1564,9 +1632,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = GetSolStakingHistoryParams::builder().purchase_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSolStakingHistoryParams::builder().purchase_id(1234567).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"SOL","amount":"21312.23223","distributeAsset":"BNSOL","distributeAmount":"21286.42584","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"time":1575018510000,"asset":"SOL","amount":"21312.23223","distributeAsset":"BNSOL","distributeAmount":"21286.42584","exchangeRate":"1.00121234","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSolStakingHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolStakingHistoryResponse");
 
             let resp = client.get_sol_staking_history(params).await.expect("Expected a response");
@@ -1599,7 +1667,7 @@ mod tests {
 
             let params = GetSolStakingQuotaDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.01000000","minRedeemAmount":"0.00000001","redeemPeriod":4,"stakeable":true,"redeemable":true,"soldOut":false,"commissionFee":"0.25000000","nextEpochTime":725993969475,"calculating":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.01000000","minRedeemAmount":"0.00000001","redeemPeriod":4,"stakeable":true,"redeemable":true,"soldOut":false,"commissionFee":"0.25000000","nextEpochTime":725993969475,"calculating":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSolStakingQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolStakingQuotaDetailsResponse");
 
             let resp = client.get_sol_staking_quota_details(params).await.expect("Expected a response");
@@ -1616,7 +1684,7 @@ mod tests {
 
             let params = GetSolStakingQuotaDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.01000000","minRedeemAmount":"0.00000001","redeemPeriod":4,"stakeable":true,"redeemable":true,"soldOut":false,"commissionFee":"0.25000000","nextEpochTime":725993969475,"calculating":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftStakingPersonalQuota":"1000","leftRedemptionPersonalQuota":"1000","minStakeAmount":"0.01000000","minRedeemAmount":"0.00000001","redeemPeriod":4,"stakeable":true,"redeemable":true,"soldOut":false,"commissionFee":"0.25000000","nextEpochTime":725993969475,"calculating":false}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSolStakingQuotaDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSolStakingQuotaDetailsResponse");
 
             let resp = client.get_sol_staking_quota_details(params).await.expect("Expected a response");
@@ -1649,10 +1717,17 @@ mod tests {
 
             let params = GetUnclaimedRewardsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amount":"1.00000011","rewardsAsset":"SOL"},{"amount":"2.00202321","rewardsAsset":"BNB"}]"#).unwrap();
-            let expected_response : Vec<models::GetUnclaimedRewardsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetUnclaimedRewardsResponseInner>");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"amount":"1.00000011","rewardsAsset":"SOL"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::GetUnclaimedRewardsResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::GetUnclaimedRewardsResponseInner>");
 
-            let resp = client.get_unclaimed_rewards(params).await.expect("Expected a response");
+            let resp = client
+                .get_unclaimed_rewards(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1664,12 +1739,22 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSolStakingApiClient { force_error: false };
 
-            let params = GetUnclaimedRewardsParams::builder().recv_window(5000).build().unwrap();
+            let params = GetUnclaimedRewardsParams::builder()
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amount":"1.00000011","rewardsAsset":"SOL"},{"amount":"2.00202321","rewardsAsset":"BNB"}]"#).unwrap();
-            let expected_response : Vec<models::GetUnclaimedRewardsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetUnclaimedRewardsResponseInner>");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"amount":"1.00000011","rewardsAsset":"SOL"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::GetUnclaimedRewardsResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::GetUnclaimedRewardsResponseInner>");
 
-            let resp = client.get_unclaimed_rewards(params).await.expect("Expected a response");
+            let resp = client
+                .get_unclaimed_rewards(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -1699,7 +1784,7 @@ mod tests {
 
             let params = RedeemSolParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","redeemId":1234567,"exchangeRate":"1.00121234","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemSolResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemSolResponse");
 
             let resp = client.redeem_sol(params).await.expect("Expected a response");
@@ -1716,7 +1801,7 @@ mod tests {
 
             let params = RedeemSolParams::builder(dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","exchangeRate":"1.00121234","arrivalTime":1575018510000,"redeemId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"solAmount":"0.23092091","redeemId":1234567,"exchangeRate":"1.00121234","arrivalTime":1575018510000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemSolResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemSolResponse");
 
             let resp = client.redeem_sol(params).await.expect("Expected a response");
@@ -1749,7 +1834,7 @@ mod tests {
 
             let params = SolStakingAccountParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"bnsolAmount":"1.10928781","holdingInSOL":"1.22330928","thirtyDaysProfitInSOL":"0.22330928"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"bnsolAmount":"1.10928781","holdingInSOL":"1.22330928","thirtyDaysProfitInSOL":"0.22330928"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SolStakingAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SolStakingAccountResponse");
 
             let resp = client.sol_staking_account(params).await.expect("Expected a response");
@@ -1766,7 +1851,7 @@ mod tests {
 
             let params = SolStakingAccountParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"bnsolAmount":"1.10928781","holdingInSOL":"1.22330928","thirtyDaysProfitInSOL":"0.22330928"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"bnsolAmount":"1.10928781","holdingInSOL":"1.22330928","thirtyDaysProfitInSOL":"0.22330928"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SolStakingAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SolStakingAccountResponse");
 
             let resp = client.sol_staking_account(params).await.expect("Expected a response");
@@ -1799,7 +1884,7 @@ mod tests {
 
             let params = SubscribeSolStakingParams::builder(dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","purchaseId":1234567,"exchangeRate":"1.001212342342"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeSolStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeSolStakingResponse");
 
             let resp = client.subscribe_sol_staking(params).await.expect("Expected a response");
@@ -1816,7 +1901,7 @@ mod tests {
 
             let params = SubscribeSolStakingParams::builder(dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","exchangeRate":"1.001212342342","purchaseId":1234567}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"bnsolAmount":"0.23092091","purchaseId":1234567,"exchangeRate":"1.001212342342"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeSolStakingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeSolStakingResponse");
 
             let resp = client.subscribe_sol_staking(params).await.expect("Expected a response");

@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,6 +23,7 @@ pub struct GetVipLoanOngoingOrdersResponseRowsInner {
     pub loan_coin: Option<String>,
     #[serde(rename = "totalDebt", skip_serializing_if = "Option::is_none")]
     pub total_debt: Option<String>,
+    /// For flexible loans, this is the flexible rate.
     #[serde(rename = "loanRate", skip_serializing_if = "Option::is_none")]
     pub loan_rate: Option<String>,
     #[serde(rename = "residualInterest", skip_serializing_if = "Option::is_none")]
@@ -46,10 +47,12 @@ pub struct GetVipLoanOngoingOrdersResponseRowsInner {
     pub locked_collateral_value: Option<String>,
     #[serde(rename = "currentLTV", skip_serializing_if = "Option::is_none")]
     pub current_ltv: Option<String>,
+    /// For flexible loans, this value is `0`.
     #[serde(rename = "expirationTime", skip_serializing_if = "Option::is_none")]
     pub expiration_time: Option<i64>,
     #[serde(rename = "loanDate", skip_serializing_if = "Option::is_none")]
     pub loan_date: Option<String>,
+    /// For flexible loans, this value is `open term`.
     #[serde(rename = "loanTerm", skip_serializing_if = "Option::is_none")]
     pub loan_term: Option<String>,
 }

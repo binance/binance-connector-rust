@@ -32,7 +32,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = NewCmConditionalOrderParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSDT".to_string(),
         NewCmConditionalOrderSideEnum::Buy,
         NewCmConditionalOrderStrategyTypeEnum::Stop,
     )

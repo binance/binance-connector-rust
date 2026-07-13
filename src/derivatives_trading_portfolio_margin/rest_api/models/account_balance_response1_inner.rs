@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,36 +17,49 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountBalanceResponse1Inner {
+    /// asset name
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Total Wallet Balance.
     #[serde(rename = "totalWalletBalance", skip_serializing_if = "Option::is_none")]
     pub total_wallet_balance: Option<String>,
+    /// Cross Margin Asset.
     #[serde(rename = "crossMarginAsset", skip_serializing_if = "Option::is_none")]
     pub cross_margin_asset: Option<String>,
+    /// Cross Margin Borrowed.
     #[serde(
         rename = "crossMarginBorrowed",
         skip_serializing_if = "Option::is_none"
     )]
     pub cross_margin_borrowed: Option<String>,
+    /// Cross Margin Free.
     #[serde(rename = "crossMarginFree", skip_serializing_if = "Option::is_none")]
     pub cross_margin_free: Option<String>,
+    /// Cross Margin Interest.
     #[serde(
         rename = "crossMarginInterest",
         skip_serializing_if = "Option::is_none"
     )]
     pub cross_margin_interest: Option<String>,
+    /// Cross Margin Locked.
     #[serde(rename = "crossMarginLocked", skip_serializing_if = "Option::is_none")]
     pub cross_margin_locked: Option<String>,
+    /// Um Wallet Balance.
     #[serde(rename = "umWalletBalance", skip_serializing_if = "Option::is_none")]
     pub um_wallet_balance: Option<String>,
+    /// Um Unrealized PNL.
     #[serde(rename = "umUnrealizedPNL", skip_serializing_if = "Option::is_none")]
     pub um_unrealized_pnl: Option<String>,
+    /// Cm Wallet Balance.
     #[serde(rename = "cmWalletBalance", skip_serializing_if = "Option::is_none")]
     pub cm_wallet_balance: Option<String>,
+    /// Cm Unrealized PNL.
     #[serde(rename = "cmUnrealizedPNL", skip_serializing_if = "Option::is_none")]
     pub cm_unrealized_pnl: Option<String>,
+    /// last update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// negative balance amount
     #[serde(rename = "negativeBalance", skip_serializing_if = "Option::is_none")]
     pub negative_balance: Option<String>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Algo REST API
+ * Algo Trading REST API
  *
- * OpenAPI Specification for the Binance Algo REST API
+ * Programmatic access to Binance’s execution algorithms for creating and managing Spot and Futures algo orders.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,32 +17,46 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QuerySubOrdersFutureAlgoResponseSubOrdersInner {
+    /// Algo order ID
     #[serde(rename = "algoId", skip_serializing_if = "Option::is_none")]
     pub algo_id: Option<i64>,
+    /// Sub-order ID
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Sub-order status
     #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
     pub order_status: Option<String>,
+    /// Executed quantity
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// Executed amount
     #[serde(rename = "executedAmt", skip_serializing_if = "Option::is_none")]
     pub executed_amt: Option<String>,
+    /// Fee amount
     #[serde(rename = "feeAmt", skip_serializing_if = "Option::is_none")]
     pub fee_amt: Option<String>,
+    /// Fee asset
     #[serde(rename = "feeAsset", skip_serializing_if = "Option::is_none")]
     pub fee_asset: Option<String>,
+    /// Order creation time
     #[serde(rename = "bookTime", skip_serializing_if = "Option::is_none")]
     pub book_time: Option<i64>,
+    /// Average execution price
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
+    /// Trading side
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Sub-order execution sequence ID
     #[serde(rename = "subId", skip_serializing_if = "Option::is_none")]
     pub sub_id: Option<i64>,
+    /// Time in force
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// Original order quantity
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
 }

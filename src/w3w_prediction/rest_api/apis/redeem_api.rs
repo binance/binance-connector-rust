@@ -56,28 +56,32 @@ impl RedeemApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`batch_redeem`](#method.batch_redeem).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct BatchRedeemParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Wallet ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletId")]
     pub wallet_id: String,
     /// List of prediction token IDs to redeem. Not empty. Example: `tokenIds=112233&tokenIds=112234`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "tokenIds")]
     pub token_ids: Vec<String>,
     /// Chain ID. Default `56` (BSC)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "chainId", default)]
     pub chain_id: Option<String>,
 }
 
@@ -106,23 +110,26 @@ impl BatchRedeemParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_redeem_status`](#method.get_redeem_status).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRedeemStatusParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Redeem transaction hash
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "txHash")]
     pub tx_hash: String,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 

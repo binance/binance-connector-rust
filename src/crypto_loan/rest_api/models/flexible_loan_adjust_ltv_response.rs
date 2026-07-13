@@ -1,7 +1,7 @@
 /*
- * Binance Crypto Loan REST API
+ * Crypto Loan REST API
  *
- * OpenAPI Specification for the Binance Crypto Loan REST API
+ * Access Binance Crypto Loans to query assets, subscribe to loans, and manage loan positions.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -27,6 +27,7 @@ pub struct FlexibleLoanAdjustLtvResponse {
     pub adjustment_amount: Option<String>,
     #[serde(rename = "currentLTV", skip_serializing_if = "Option::is_none")]
     pub current_ltv: Option<String>,
+    /// Succeeds, Failed, Processing
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

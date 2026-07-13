@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,13 +18,13 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MyFiltersResponse {
     #[serde(rename = "exchangeFilters", skip_serializing_if = "Option::is_none")]
-    pub exchange_filters: Option<Vec<models::ExchangeFilters>>,
+    pub exchange_filters: Option<Vec<models::MyFiltersResponseExchangeFiltersInner>>,
     #[serde(rename = "symbolFilters", skip_serializing_if = "Option::is_none")]
-    pub symbol_filters: Option<Vec<models::SymbolFilters>>,
+    pub symbol_filters: Option<Vec<models::MyFiltersResponseSymbolFiltersInner>>,
     #[serde(rename = "assetFilters", skip_serializing_if = "Option::is_none")]
-    pub asset_filters: Option<Vec<models::AssetFilters>>,
+    pub asset_filters: Option<Vec<models::MyFiltersResponseAssetFiltersInner>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::RateLimits>>,
+    pub rate_limits: Option<Vec<models::MyFiltersResponseRateLimitsInner>>,
 }
 
 impl MyFiltersResponse {

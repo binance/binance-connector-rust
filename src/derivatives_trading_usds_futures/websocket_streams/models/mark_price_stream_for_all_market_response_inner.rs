@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,26 +18,36 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarkPriceStreamForAllMarketResponseInner {
+    /// Event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Mark price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
-    #[serde(rename = "ap", skip_serializing_if = "Option::is_none")]
-    pub ap: Option<String>,
+    /// Index price
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
+    /// Estimated Settle Price, only useful in the last hour before the settlement starts
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
     pub p_uppercase: Option<String>,
+    /// Funding rate
     #[serde(rename = "r", skip_serializing_if = "Option::is_none")]
     pub r: Option<String>,
+    /// Mark price moving average
+    #[serde(rename = "ap", skip_serializing_if = "Option::is_none")]
+    pub ap: Option<String>,
+    /// Next funding time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// (After CM migration) Symbol type: 1 = UM, 2 = CM
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
-    pub st: Option<i64>,
+    pub st: Option<i32>,
 }
 
 impl MarkPriceStreamForAllMarketResponseInner {
@@ -48,10 +58,10 @@ impl MarkPriceStreamForAllMarketResponseInner {
             e_uppercase: None,
             s: None,
             p: None,
-            ap: None,
             i: None,
             p_uppercase: None,
             r: None,
+            ap: None,
             t_uppercase: None,
             st: None,
         }

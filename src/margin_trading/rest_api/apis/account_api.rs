@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -90,17 +90,109 @@ impl AccountApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum QueryCrossIsolatedMarginCapitalFlowTypeEnum {
+    #[serde(rename = "TRANSFER")]
+    Transfer,
+    #[serde(rename = "BORROW")]
+    Borrow,
+    #[serde(rename = "REPAY")]
+    Repay,
+    #[serde(rename = "BUY_INCOME")]
+    BuyIncome,
+    #[serde(rename = "BUY_EXPENSE")]
+    BuyExpense,
+    #[serde(rename = "SELL_INCOME")]
+    SellIncome,
+    #[serde(rename = "SELL_EXPENSE")]
+    SellExpense,
+    #[serde(rename = "TRADING_COMMISSION")]
+    TradingCommission,
+    #[serde(rename = "BUY_LIQUIDATION")]
+    BuyLiquidation,
+    #[serde(rename = "SELL_LIQUIDATION")]
+    SellLiquidation,
+    #[serde(rename = "REPAY_LIQUIDATION")]
+    RepayLiquidation,
+    #[serde(rename = "OTHER_LIQUIDATION")]
+    OtherLiquidation,
+    #[serde(rename = "LIQUIDATION_FEE")]
+    LiquidationFee,
+    #[serde(rename = "SMALL_BALANCE_CONVERT")]
+    SmallBalanceConvert,
+    #[serde(rename = "COMMISSION_RETURN")]
+    CommissionReturn,
+    #[serde(rename = "SMALL_CONVERT")]
+    SmallConvert,
+}
+
+impl QueryCrossIsolatedMarginCapitalFlowTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Transfer => "TRANSFER",
+            Self::Borrow => "BORROW",
+            Self::Repay => "REPAY",
+            Self::BuyIncome => "BUY_INCOME",
+            Self::BuyExpense => "BUY_EXPENSE",
+            Self::SellIncome => "SELL_INCOME",
+            Self::SellExpense => "SELL_EXPENSE",
+            Self::TradingCommission => "TRADING_COMMISSION",
+            Self::BuyLiquidation => "BUY_LIQUIDATION",
+            Self::SellLiquidation => "SELL_LIQUIDATION",
+            Self::RepayLiquidation => "REPAY_LIQUIDATION",
+            Self::OtherLiquidation => "OTHER_LIQUIDATION",
+            Self::LiquidationFee => "LIQUIDATION_FEE",
+            Self::SmallBalanceConvert => "SMALL_BALANCE_CONVERT",
+            Self::CommissionReturn => "COMMISSION_RETURN",
+            Self::SmallConvert => "SMALL_CONVERT",
+        }
+    }
+}
+
+impl std::str::FromStr for QueryCrossIsolatedMarginCapitalFlowTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRANSFER" => Ok(Self::Transfer),
+            "BORROW" => Ok(Self::Borrow),
+            "REPAY" => Ok(Self::Repay),
+            "BUY_INCOME" => Ok(Self::BuyIncome),
+            "BUY_EXPENSE" => Ok(Self::BuyExpense),
+            "SELL_INCOME" => Ok(Self::SellIncome),
+            "SELL_EXPENSE" => Ok(Self::SellExpense),
+            "TRADING_COMMISSION" => Ok(Self::TradingCommission),
+            "BUY_LIQUIDATION" => Ok(Self::BuyLiquidation),
+            "SELL_LIQUIDATION" => Ok(Self::SellLiquidation),
+            "REPAY_LIQUIDATION" => Ok(Self::RepayLiquidation),
+            "OTHER_LIQUIDATION" => Ok(Self::OtherLiquidation),
+            "LIQUIDATION_FEE" => Ok(Self::LiquidationFee),
+            "SMALL_BALANCE_CONVERT" => Ok(Self::SmallBalanceConvert),
+            "COMMISSION_RETURN" => Ok(Self::CommissionReturn),
+            "SMALL_CONVERT" => Ok(Self::SmallConvert),
+            other => Err(format!(
+                "invalid QueryCrossIsolatedMarginCapitalFlowTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`adjust_cross_margin_max_leverage`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`adjust_cross_margin_max_leverage`](#method.adjust_cross_margin_max_leverage).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AdjustCrossMarginMaxLeverageParams {
     /// Can only adjust 3 , 5 or 10，Example: maxLeverage = 5 or 3 for Cross Margin Classic; maxLeverage=10 for Cross Margin Pro 10x leverage or 20x if compliance allows.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "maxLeverage")]
     pub max_leverage: i64,
 }
 
@@ -120,7 +212,7 @@ impl AdjustCrossMarginMaxLeverageParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`disable_isolated_margin_account`](#method.disable_isolated_margin_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DisableIsolatedMarginAccountParams {
     ///
@@ -128,11 +220,14 @@ pub struct DisableIsolatedMarginAccountParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -152,7 +247,7 @@ impl DisableIsolatedMarginAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`enable_isolated_margin_account`](#method.enable_isolated_margin_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct EnableIsolatedMarginAccountParams {
     ///
@@ -160,11 +255,14 @@ pub struct EnableIsolatedMarginAccountParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -184,13 +282,15 @@ impl EnableIsolatedMarginAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bnb_burn_status`](#method.get_bnb_burn_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBnbBurnStatusParams {
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -206,13 +306,15 @@ impl GetBnbBurnStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_summary_of_margin_account`](#method.get_summary_of_margin_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSummaryOfMarginAccountParams {
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -228,7 +330,7 @@ impl GetSummaryOfMarginAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_cross_isolated_margin_capital_flow`](#method.query_cross_isolated_margin_capital_flow).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryCrossIsolatedMarginCapitalFlowParams {
     ///
@@ -236,42 +338,55 @@ pub struct QueryCrossIsolatedMarginCapitalFlowParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// isolated margin pair
+    /// Mandatory for Isolated data
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// Transfer Type: `ROLL_IN`, `ROLL_OUT`
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub r#type: Option<String>,
-    /// Only supports querying data from the past 90 days.
+    #[serde(rename = "type", default)]
+    pub r#type: Option<QueryCrossIsolatedMarginCapitalFlowTypeEnum>,
+    ///
+    /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// If `fromId` is set, data with `id` greater than `fromId` will be returned. Otherwise, the latest data will be returned.
+    ///
+    /// The `from_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromId", default)]
     pub from_id: Option<i64>,
-    /// Limit on the number of data records returned per request. Default: 500; Maximum: 1000.
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -287,13 +402,15 @@ impl QueryCrossIsolatedMarginCapitalFlowParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_cross_margin_account_details`](#method.query_cross_margin_account_details).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryCrossMarginAccountDetailsParams {
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -309,24 +426,28 @@ impl QueryCrossMarginAccountDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_cross_margin_fee_data`](#method.query_cross_margin_fee_data).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryCrossMarginFeeDataParams {
     /// User's current specific margin data will be returned if vipLevel is omitted
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "vipLevel", default)]
     pub vip_level: Option<i64>,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -342,13 +463,15 @@ impl QueryCrossMarginFeeDataParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_enabled_isolated_margin_account_limit`](#method.query_enabled_isolated_margin_account_limit).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryEnabledIsolatedMarginAccountLimitParams {
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -364,18 +487,22 @@ impl QueryEnabledIsolatedMarginAccountLimitParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_isolated_margin_account_info`](#method.query_isolated_margin_account_info).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryIsolatedMarginAccountInfoParams {
-    /// Max 5 symbols can be sent; separated by ",". e.g. "BTCUSDT,BNBUSDT,ADAUSDT"
+    ///
+    /// The `symbols` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbols", default)]
     pub symbols: Option<String>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -391,23 +518,29 @@ impl QueryIsolatedMarginAccountInfoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_isolated_margin_fee_data`](#method.query_isolated_margin_fee_data).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryIsolatedMarginFeeDataParams {
-    /// User's current specific margin data will be returned if vipLevel is omitted
+    ///
+    /// The `vip_level` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "vipLevel", default)]
     pub vip_level: Option<i64>,
-    /// isolated margin pair
+    ///
+    /// The `symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -865,7 +998,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AdjustCrossMarginMaxLeverageResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AdjustCrossMarginMaxLeverageResponse");
@@ -892,8 +1026,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::DisableIsolatedMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DisableIsolatedMarginAccountResponse");
@@ -920,8 +1054,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::EnableIsolatedMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableIsolatedMarginAccountResponse");
@@ -949,7 +1083,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"spotBNBBurn":true,"interestBNBBurn":false}"#).unwrap();
+                serde_json::from_str(r#"{"spotBNBBurn":true,"interestBNBBurn":false}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBnbBurnStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnbBurnStatusResponse");
@@ -979,7 +1114,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"normalBar":"1.5","marginCallBar":"1.3","forceLiquidationBar":"1.1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSummaryOfMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSummaryOfMarginAccountResponse");
@@ -1008,7 +1143,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":123456,"tranId":123123,"timestamp":1691116657000,"asset":"USDT","symbol":"BTCUSDT","type":"BORROW","amount":"101"},{"id":123457,"tranId":123124,"timestamp":1691116658000,"asset":"BTC","symbol":"BTCUSDT","type":"REPAY","amount":"10"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":123456,"tranId":123123,"timestamp":1691116657000,"asset":"USDT","symbol":"BTCUSDT","type":"BORROW","amount":"101","note":"INSTITUTIONAL_LOAN_TRANSFER"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::QueryCrossIsolatedMarginCapitalFlowResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCrossIsolatedMarginCapitalFlowResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -1034,7 +1169,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"},{"asset":"BNB","borrowed":"201.66666672","free":"2346.50000000","interest":"0.00000000","locked":"0.00000000","netAsset":"2144.83333328"},{"asset":"ETH","borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000"},{"asset":"USDT","borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryCrossMarginAccountDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryCrossMarginAccountDetailsResponse");
@@ -1062,7 +1197,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"coin":"BTC","transferIn":true,"borrowable":true,"dailyInterest":"0.00026125","yearlyInterest":"0.0953","borrowLimit":"180","marginablePairs":["BNBBTC","TRXBTC","ETHBTC","BTCUSDT"]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"coin":"BTC","transferIn":true,"borrowable":true,"dailyInterest":"0.00026125","yearlyInterest":"0.0953","borrowLimit":"180","marginablePairs":["BNBBTC"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryCrossMarginFeeDataResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::QueryCrossMarginFeeDataResponseInner>");
@@ -1090,8 +1225,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"enabledAccount":5,"maxAccount":20}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"enabledAccount":5,"maxAccount":20}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryEnabledIsolatedMarginAccountLimitResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryEnabledIsolatedMarginAccountLimitResponse",
@@ -1120,7 +1255,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"assets":[{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true},{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true}],"totalAssetOfBtc":"0.00000000","totalLiabilityOfBtc":"0.00000000","totalNetAssetOfBtc":"0.00000000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"assets":[{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true}],"totalAssetOfBtc":"0.00000000","totalLiabilityOfBtc":"0.00000000","totalNetAssetOfBtc":"0.00000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryIsolatedMarginAccountInfoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryIsolatedMarginAccountInfoResponse");
@@ -1148,7 +1283,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"symbol":"BTCUSDT","leverage":"10","data":[{"coin":"BTC","dailyInterest":"0.00026125","borrowLimit":"270"},{"coin":"USDT","dailyInterest":"0.000475","borrowLimit":"2100000"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"symbol":"BTCUSDT","leverage":"10","data":[{"coin":"BTC","dailyInterest":"0.00026125","borrowLimit":"270"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryIsolatedMarginFeeDataResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryIsolatedMarginFeeDataResponseInner>",
@@ -1170,11 +1305,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = AdjustCrossMarginMaxLeverageParams::builder(789)
+            let params = AdjustCrossMarginMaxLeverageParams::builder(3)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AdjustCrossMarginMaxLeverageResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AdjustCrossMarginMaxLeverageResponse");
@@ -1194,11 +1330,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = AdjustCrossMarginMaxLeverageParams::builder(789)
+            let params = AdjustCrossMarginMaxLeverageParams::builder(3)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AdjustCrossMarginMaxLeverageResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AdjustCrossMarginMaxLeverageResponse");
@@ -1218,7 +1355,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = AdjustCrossMarginMaxLeverageParams::builder(789)
+            let params = AdjustCrossMarginMaxLeverageParams::builder(3)
                 .build()
                 .unwrap();
 
@@ -1236,12 +1373,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = DisableIsolatedMarginAccountParams::builder("symbol_example".to_string())
+            let params = DisableIsolatedMarginAccountParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::DisableIsolatedMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DisableIsolatedMarginAccountResponse");
@@ -1261,13 +1398,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = DisableIsolatedMarginAccountParams::builder("symbol_example".to_string())
+            let params = DisableIsolatedMarginAccountParams::builder("BTCUSDT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::DisableIsolatedMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DisableIsolatedMarginAccountResponse");
@@ -1287,7 +1424,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = DisableIsolatedMarginAccountParams::builder("symbol_example".to_string())
+            let params = DisableIsolatedMarginAccountParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 
@@ -1305,12 +1442,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = EnableIsolatedMarginAccountParams::builder("symbol_example".to_string())
+            let params = EnableIsolatedMarginAccountParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::EnableIsolatedMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableIsolatedMarginAccountResponse");
@@ -1330,13 +1467,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = EnableIsolatedMarginAccountParams::builder("symbol_example".to_string())
+            let params = EnableIsolatedMarginAccountParams::builder("BTCUSDT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true,"symbol":"BTCUSDT"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::EnableIsolatedMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableIsolatedMarginAccountResponse");
@@ -1356,7 +1493,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = EnableIsolatedMarginAccountParams::builder("symbol_example".to_string())
+            let params = EnableIsolatedMarginAccountParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 
@@ -1377,7 +1514,8 @@ mod tests {
             let params = GetBnbBurnStatusParams::builder().build().unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"spotBNBBurn":true,"interestBNBBurn":false}"#).unwrap();
+                serde_json::from_str(r#"{"spotBNBBurn":true,"interestBNBBurn":false}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBnbBurnStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnbBurnStatusResponse");
@@ -1403,7 +1541,8 @@ mod tests {
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"spotBNBBurn":true,"interestBNBBurn":false}"#).unwrap();
+                serde_json::from_str(r#"{"spotBNBBurn":true,"interestBNBBurn":false}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBnbBurnStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnbBurnStatusResponse");
@@ -1444,7 +1583,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"normalBar":"1.5","marginCallBar":"1.3","forceLiquidationBar":"1.1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetSummaryOfMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSummaryOfMarginAccountResponse");
@@ -1472,7 +1611,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"normalBar":"1.5","marginCallBar":"1.3","forceLiquidationBar":"1.1"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetSummaryOfMarginAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSummaryOfMarginAccountResponse");
@@ -1510,7 +1649,7 @@ mod tests {
 
             let params = QueryCrossIsolatedMarginCapitalFlowParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":123456,"tranId":123123,"timestamp":1691116657000,"asset":"USDT","symbol":"BTCUSDT","type":"BORROW","amount":"101"},{"id":123457,"tranId":123124,"timestamp":1691116658000,"asset":"BTC","symbol":"BTCUSDT","type":"REPAY","amount":"10"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":123456,"tranId":123123,"timestamp":1691116657000,"asset":"USDT","symbol":"BTCUSDT","type":"BORROW","amount":"101","note":"INSTITUTIONAL_LOAN_TRANSFER"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryCrossIsolatedMarginCapitalFlowResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCrossIsolatedMarginCapitalFlowResponseInner>");
 
             let resp = client.query_cross_isolated_margin_capital_flow(params).await.expect("Expected a response");
@@ -1525,9 +1664,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = QueryCrossIsolatedMarginCapitalFlowParams::builder().asset("asset_example".to_string()).symbol("symbol_example".to_string()).r#type("r#type_example".to_string()).start_time(1623319461670).end_time(1641782889000).from_id(1).limit(500).recv_window(5000).build().unwrap();
+            let params = QueryCrossIsolatedMarginCapitalFlowParams::builder().asset("USDT".to_string()).symbol("BTCUSDT".to_string()).r#type(QueryCrossIsolatedMarginCapitalFlowTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).from_id(1).limit(500).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":123456,"tranId":123123,"timestamp":1691116657000,"asset":"USDT","symbol":"BTCUSDT","type":"BORROW","amount":"101"},{"id":123457,"tranId":123124,"timestamp":1691116658000,"asset":"BTC","symbol":"BTCUSDT","type":"REPAY","amount":"10"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":123456,"tranId":123123,"timestamp":1691116657000,"asset":"USDT","symbol":"BTCUSDT","type":"BORROW","amount":"101","note":"INSTITUTIONAL_LOAN_TRANSFER"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryCrossIsolatedMarginCapitalFlowResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCrossIsolatedMarginCapitalFlowResponseInner>");
 
             let resp = client.query_cross_isolated_margin_capital_flow(params).await.expect("Expected a response");
@@ -1565,7 +1704,7 @@ mod tests {
 
             let params = QueryCrossMarginAccountDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"},{"asset":"BNB","borrowed":"201.66666672","free":"2346.50000000","interest":"0.00000000","locked":"0.00000000","netAsset":"2144.83333328"},{"asset":"ETH","borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000"},{"asset":"USDT","borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCrossMarginAccountDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCrossMarginAccountDetailsResponse");
 
             let resp = client.query_cross_margin_account_details(params).await.expect("Expected a response");
@@ -1582,7 +1721,7 @@ mod tests {
 
             let params = QueryCrossMarginAccountDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"},{"asset":"BNB","borrowed":"201.66666672","free":"2346.50000000","interest":"0.00000000","locked":"0.00000000","netAsset":"2144.83333328"},{"asset":"ETH","borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000"},{"asset":"USDT","borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCrossMarginAccountDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCrossMarginAccountDetailsResponse");
 
             let resp = client.query_cross_margin_account_details(params).await.expect("Expected a response");
@@ -1617,7 +1756,7 @@ mod tests {
 
             let params = QueryCrossMarginFeeDataParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"coin":"BTC","transferIn":true,"borrowable":true,"dailyInterest":"0.00026125","yearlyInterest":"0.0953","borrowLimit":"180","marginablePairs":["BNBBTC","TRXBTC","ETHBTC","BTCUSDT"]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"coin":"BTC","transferIn":true,"borrowable":true,"dailyInterest":"0.00026125","yearlyInterest":"0.0953","borrowLimit":"180","marginablePairs":["BNBBTC"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryCrossMarginFeeDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCrossMarginFeeDataResponseInner>");
 
             let resp = client.query_cross_margin_fee_data(params).await.expect("Expected a response");
@@ -1632,9 +1771,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = QueryCrossMarginFeeDataParams::builder().vip_level(1).coin("coin_example".to_string()).recv_window(5000).build().unwrap();
+            let params = QueryCrossMarginFeeDataParams::builder().vip_level(1).coin("BTC".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"coin":"BTC","transferIn":true,"borrowable":true,"dailyInterest":"0.00026125","yearlyInterest":"0.0953","borrowLimit":"180","marginablePairs":["BNBBTC","TRXBTC","ETHBTC","BTCUSDT"]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"coin":"BTC","transferIn":true,"borrowable":true,"dailyInterest":"0.00026125","yearlyInterest":"0.0953","borrowLimit":"180","marginablePairs":["BNBBTC"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryCrossMarginFeeDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCrossMarginFeeDataResponseInner>");
 
             let resp = client.query_cross_margin_fee_data(params).await.expect("Expected a response");
@@ -1669,8 +1808,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"enabledAccount":5,"maxAccount":20}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"enabledAccount":5,"maxAccount":20}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryEnabledIsolatedMarginAccountLimitResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryEnabledIsolatedMarginAccountLimitResponse",
@@ -1696,8 +1835,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"enabledAccount":5,"maxAccount":20}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"enabledAccount":5,"maxAccount":20}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryEnabledIsolatedMarginAccountLimitResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryEnabledIsolatedMarginAccountLimitResponse",
@@ -1741,7 +1880,7 @@ mod tests {
 
             let params = QueryIsolatedMarginAccountInfoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"assets":[{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true},{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true}],"totalAssetOfBtc":"0.00000000","totalLiabilityOfBtc":"0.00000000","totalNetAssetOfBtc":"0.00000000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"assets":[{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true}],"totalAssetOfBtc":"0.00000000","totalLiabilityOfBtc":"0.00000000","totalNetAssetOfBtc":"0.00000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryIsolatedMarginAccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryIsolatedMarginAccountInfoResponse");
 
             let resp = client.query_isolated_margin_account_info(params).await.expect("Expected a response");
@@ -1756,9 +1895,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = QueryIsolatedMarginAccountInfoParams::builder().symbols("symbols_example".to_string()).recv_window(5000).build().unwrap();
+            let params = QueryIsolatedMarginAccountInfoParams::builder().symbols("BTCUSDT,BNBUSDT,ADAUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"assets":[{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true},{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true}],"totalAssetOfBtc":"0.00000000","totalLiabilityOfBtc":"0.00000000","totalNetAssetOfBtc":"0.00000000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"assets":[{"baseAsset":{"asset":"BTC","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"quoteAsset":{"asset":"USDT","borrowEnabled":true,"borrowed":"0.00000000","free":"0.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00000000","netAssetOfBtc":"0.00000000","repayEnabled":true,"totalAsset":"0.00000000"},"symbol":"BTCUSDT","isolatedCreated":true,"enabled":true,"marginLevel":"0.00000000","marginLevelStatus":"EXCESSIVE","marginRatio":"0.00000000","indexPrice":"10000.00000000","liquidatePrice":"1000.00000000","liquidateRate":"1.00000000","tradeEnabled":true}],"totalAssetOfBtc":"0.00000000","totalLiabilityOfBtc":"0.00000000","totalNetAssetOfBtc":"0.00000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryIsolatedMarginAccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryIsolatedMarginAccountInfoResponse");
 
             let resp = client.query_isolated_margin_account_info(params).await.expect("Expected a response");
@@ -1793,7 +1932,7 @@ mod tests {
 
             let params = QueryIsolatedMarginFeeDataParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"symbol":"BTCUSDT","leverage":"10","data":[{"coin":"BTC","dailyInterest":"0.00026125","borrowLimit":"270"},{"coin":"USDT","dailyInterest":"0.000475","borrowLimit":"2100000"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"symbol":"BTCUSDT","leverage":"10","data":[{"coin":"BTC","dailyInterest":"0.00026125","borrowLimit":"270"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryIsolatedMarginFeeDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryIsolatedMarginFeeDataResponseInner>");
 
             let resp = client.query_isolated_margin_fee_data(params).await.expect("Expected a response");
@@ -1808,9 +1947,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = QueryIsolatedMarginFeeDataParams::builder().vip_level(1).symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
+            let params = QueryIsolatedMarginFeeDataParams::builder().vip_level(1).symbol("BTCUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"symbol":"BTCUSDT","leverage":"10","data":[{"coin":"BTC","dailyInterest":"0.00026125","borrowLimit":"270"},{"coin":"USDT","dailyInterest":"0.000475","borrowLimit":"2100000"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"vipLevel":0,"symbol":"BTCUSDT","leverage":"10","data":[{"coin":"BTC","dailyInterest":"0.00026125","borrowLimit":"270"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryIsolatedMarginFeeDataResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryIsolatedMarginFeeDataResponseInner>");
 
             let resp = client.query_isolated_margin_fee_data(params).await.expect("Expected a response");

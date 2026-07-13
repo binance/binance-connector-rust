@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,10 +17,11 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct VaspListResponseInner {
-    #[serde(rename = "vaspCode", skip_serializing_if = "Option::is_none")]
-    pub vasp_code: Option<String>,
     #[serde(rename = "vaspName", skip_serializing_if = "Option::is_none")]
     pub vasp_name: Option<String>,
+    #[serde(rename = "vaspCode", skip_serializing_if = "Option::is_none")]
+    pub vasp_code: Option<String>,
+    /// For populating the `vasp` field in the deposit/withdrawal questionnaire
     #[serde(rename = "identifier", skip_serializing_if = "Option::is_none")]
     pub identifier: Option<String>,
 }
@@ -29,8 +30,8 @@ impl VaspListResponseInner {
     #[must_use]
     pub fn new() -> VaspListResponseInner {
         VaspListResponseInner {
-            vasp_code: None,
             vasp_name: None,
+            vasp_code: None,
             identifier: None,
         }
     }

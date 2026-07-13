@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket API")?;
 
     // Setup the WS API parameters
-    let params = ReferencePriceCalculationParams::builder("BNBUSDT".to_string()).build()?;
+    let params = ReferencePriceCalculationParams::builder("BAZUSD".to_string()).build()?;
 
     // Make the WS API call
     let response = connection

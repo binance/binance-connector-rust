@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,28 +17,40 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryMarginAccountsTradeListResponseInner {
+    /// commission.
     #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
     pub commission: Option<String>,
+    /// commission Asset.
     #[serde(rename = "commissionAsset", skip_serializing_if = "Option::is_none")]
     pub commission_asset: Option<String>,
+    /// id.
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
+    /// is Best Match.
     #[serde(rename = "isBestMatch", skip_serializing_if = "Option::is_none")]
     pub is_best_match: Option<bool>,
+    /// is Buyer.
     #[serde(rename = "isBuyer", skip_serializing_if = "Option::is_none")]
     pub is_buyer: Option<bool>,
+    /// is Maker.
     #[serde(rename = "isMaker", skip_serializing_if = "Option::is_none")]
     pub is_maker: Option<bool>,
+    /// order Id.
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// qty.
     #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// is Isolated.
     #[serde(rename = "isIsolated", skip_serializing_if = "Option::is_none")]
     pub is_isolated: Option<bool>,
+    /// time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
 }

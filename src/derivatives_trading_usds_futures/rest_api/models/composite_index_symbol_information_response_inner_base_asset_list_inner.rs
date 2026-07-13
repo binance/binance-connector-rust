@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,12 +17,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CompositeIndexSymbolInformationResponseInnerBaseAssetListInner {
+    /// Base Asset.
     #[serde(rename = "baseAsset", skip_serializing_if = "Option::is_none")]
     pub base_asset: Option<String>,
+    /// Quote Asset.
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// Weight In Quantity.
     #[serde(rename = "weightInQuantity", skip_serializing_if = "Option::is_none")]
     pub weight_in_quantity: Option<String>,
+    /// Weight In Percentage.
     #[serde(rename = "weightInPercentage", skip_serializing_if = "Option::is_none")]
     pub weight_in_percentage: Option<String>,
 }

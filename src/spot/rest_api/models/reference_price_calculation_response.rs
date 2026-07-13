@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -24,12 +19,16 @@ use serde::{Deserialize, Serialize};
 pub struct ReferencePriceCalculationResponse {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Either `ARITHMETIC_MEAN` or `EXTERNAL`.
     #[serde(rename = "calculationType", skip_serializing_if = "Option::is_none")]
     pub calculation_type: Option<String>,
+    /// Present when calculationType is `ARITHMETIC_MEAN`.
     #[serde(rename = "bucketCount", skip_serializing_if = "Option::is_none")]
     pub bucket_count: Option<i64>,
+    /// Present when calculationType is `ARITHMETIC_MEAN`.
     #[serde(rename = "bucketWidthMs", skip_serializing_if = "Option::is_none")]
     pub bucket_width_ms: Option<i64>,
+    /// Present when calculationType is EXTERNAL.
     #[serde(
         rename = "externalCalculationId",
         skip_serializing_if = "Option::is_none"

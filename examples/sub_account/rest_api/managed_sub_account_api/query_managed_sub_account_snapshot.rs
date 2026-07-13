@@ -4,7 +4,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::sub_account::{SubAccountRestApi, rest_api::QueryManagedSubAccountSnapshotParams};
+use binance_sdk::sub_account::{
+    SubAccountRestApi,
+    rest_api::{QueryManagedSubAccountSnapshotParams, QueryManagedSubAccountSnapshotTypeEnum},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -26,8 +29,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = QueryManagedSubAccountSnapshotParams::builder(
-        "sub-account-email@email.com".to_string(),
-        "r#type_example".to_string(),
+        "abc@test.com".to_string(),
+        QueryManagedSubAccountSnapshotTypeEnum::Spot,
     )
     .build()?;
 

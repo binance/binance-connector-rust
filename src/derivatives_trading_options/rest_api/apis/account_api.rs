@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -52,43 +52,75 @@ impl AccountApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum AccountFundingFlowCurrencyEnum {
+    #[serde(rename = "USDT")]
+    Usdt,
+}
+
+impl AccountFundingFlowCurrencyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Usdt => "USDT",
+        }
+    }
+}
+
+impl std::str::FromStr for AccountFundingFlowCurrencyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "USDT" => Ok(Self::Usdt),
+            other => Err(format!("invalid AccountFundingFlowCurrencyEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`account_funding_flow`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_funding_flow`](#method.account_funding_flow).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountFundingFlowParams {
     /// Asset type, only support USDT  as of now
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub currency: String,
-    /// Return the recordId and subsequent data, the latest data is returned by default, e.g 100000
+    #[serde(rename = "currency")]
+    pub currency: AccountFundingFlowCurrencyEnum,
+    /// Return the recordId and subsequent data, the latest data is returned by default
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recordId", default)]
     pub record_id: Option<i64>,
     /// Start Time, e.g 1593511200000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     /// End Time, e.g 1593512200000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Number of result sets returned Default:100 Max:1000
+    /// Number of result sets returned
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -100,7 +132,7 @@ impl AccountFundingFlowParams {
     /// * `currency` — Asset type, only support USDT  as of now
     ///
     #[must_use]
-    pub fn builder(currency: String) -> AccountFundingFlowParamsBuilder {
+    pub fn builder(currency: AccountFundingFlowCurrencyEnum) -> AccountFundingFlowParamsBuilder {
         AccountFundingFlowParamsBuilder::default().currency(currency)
     }
 }
@@ -108,14 +140,14 @@ impl AccountFundingFlowParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`option_margin_account_information`](#method.option_margin_account_information).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OptionMarginAccountInformationParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -258,7 +290,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"100","type":"CONTRACT","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"10000","type":"TRANSFER","createDate":1592448410000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::AccountFundingFlowResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AccountFundingFlowResponseInner>");
@@ -286,7 +318,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"10099.448","equity":"10094.44662","available":"8725.92524","initialMargin":"1084.52138","maintMargin":"151.00138","unrealizedPNL":"-5.00138","adjustedEquity":"34.13282285"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::OptionMarginAccountInformationResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OptionMarginAccountInformationResponse");
@@ -307,9 +339,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = AccountFundingFlowParams::builder("currency_example".to_string(),).build().unwrap();
+            let params = AccountFundingFlowParams::builder(AccountFundingFlowCurrencyEnum::Usdt,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"100","type":"CONTRACT","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"10000","type":"TRANSFER","createDate":1592448410000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountFundingFlowResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountFundingFlowResponseInner>");
 
             let resp = client.account_funding_flow(params).await.expect("Expected a response");
@@ -324,9 +356,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = AccountFundingFlowParams::builder("currency_example".to_string(),).record_id(1).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
+            let params = AccountFundingFlowParams::builder(AccountFundingFlowCurrencyEnum::Usdt,).record_id(100000).start_time(1623319461670).end_time(1641782889000).limit(20).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"100","type":"CONTRACT","createDate":1592449456000},{"id":1125899906842624000,"asset":"USDT","amount":"10000","type":"TRANSFER","createDate":1592448410000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountFundingFlowResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountFundingFlowResponseInner>");
 
             let resp = client.account_funding_flow(params).await.expect("Expected a response");
@@ -341,7 +373,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = AccountFundingFlowParams::builder("currency_example".to_string())
+            let params = AccountFundingFlowParams::builder(AccountFundingFlowCurrencyEnum::Usdt)
                 .build()
                 .unwrap();
 
@@ -361,7 +393,7 @@ mod tests {
 
             let params = OptionMarginAccountInformationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"10099.448","equity":"10094.44662","available":"8725.92524","initialMargin":"1084.52138","maintMargin":"151.00138","unrealizedPNL":"-5.00138","adjustedEquity":"34.13282285"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OptionMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionMarginAccountInformationResponse");
 
             let resp = client.option_margin_account_information(params).await.expect("Expected a response");
@@ -378,7 +410,7 @@ mod tests {
 
             let params = OptionMarginAccountInformationParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"99998.87365244","equity":"99998.87365244","available":"96883.72734374","initialMargin":"3115.14630870","maintMargin":"0.00000000","unrealizedPNL":"0.00000000","adjustedEquity":"99998.87365244"}],"greek":[{"underlying":"BTCUSDT","delta":"0","theta":"0","gamma":"0","vega":"0"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":[{"asset":"USDT","marginBalance":"10099.448","equity":"10094.44662","available":"8725.92524","initialMargin":"1084.52138","maintMargin":"151.00138","unrealizedPNL":"-5.00138","adjustedEquity":"34.13282285"}],"greek":[{"underlying":"BTCUSDT","delta":"-0.05","gamma":"-0.002","theta":"-0.05","vega":"-0.002"}],"time":1762843368098,"canTrade":true,"canDeposit":true,"canWithdraw":true,"reduceOnly":false,"tradeGroupId":-1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OptionMarginAccountInformationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OptionMarginAccountInformationResponse");
 
             let resp = client.option_margin_account_information(params).await.expect("Expected a response");

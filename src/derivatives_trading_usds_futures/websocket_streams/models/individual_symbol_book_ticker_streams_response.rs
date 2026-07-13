@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,28 +18,39 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct IndividualSymbolBookTickerStreamsResponse {
+    /// event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// order book updateId
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
-    #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
-    pub s: Option<String>,
-    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
-    pub ps: Option<String>,
+    /// event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// transaction time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// symbol
+    #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
+    pub s: Option<String>,
+    /// pair (After CM migration)
+    #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
+    pub ps: Option<String>,
+    /// best bid price
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<String>,
+    /// best bid qty
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<String>,
+    /// best ask price
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    /// best ask qty
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
+    /// (After CM migration) Symbol type: 1 = UM, 2 = CM
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
-    pub st: Option<i64>,
+    pub st: Option<i32>,
 }
 
 impl IndividualSymbolBookTickerStreamsResponse {
@@ -48,10 +59,10 @@ impl IndividualSymbolBookTickerStreamsResponse {
         IndividualSymbolBookTickerStreamsResponse {
             e: None,
             u: None,
-            s: None,
-            ps: None,
             e_uppercase: None,
             t_uppercase: None,
+            s: None,
+            ps: None,
             b: None,
             b_uppercase: None,
             a: None,

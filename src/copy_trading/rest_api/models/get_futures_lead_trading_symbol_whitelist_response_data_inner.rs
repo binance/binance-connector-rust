@@ -1,7 +1,7 @@
 /*
- * Binance Copy Trading REST API
+ * Copy Trading REST API
  *
- * OpenAPI Specification for the Binance Copy Trading REST API
+ * Automate lead trading via the Copy Trading API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,10 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetFuturesLeadTradingSymbolWhitelistResponseDataInner {
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Base asset
     #[serde(rename = "baseAsset", skip_serializing_if = "Option::is_none")]
     pub base_asset: Option<String>,
+    /// Quote asset
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
 }

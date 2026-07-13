@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,35 +17,48 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarginAccountCancelOrderResponse {
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
-    #[serde(rename = "isIsolated", skip_serializing_if = "Option::is_none")]
-    pub is_isolated: Option<bool>,
+    /// order Id.
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<String>,
+    /// orig Client Order Id.
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
+    /// client Order Id.
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// orig Qty.
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
+    /// executed Qty.
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// cummulative Quote Qty.
     #[serde(
         rename = "cummulativeQuoteQty",
         skip_serializing_if = "Option::is_none"
     )]
     pub cummulative_quote_qty: Option<String>,
+    /// status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// time In Force.
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// type.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// if isolated margin
+    #[serde(rename = "isIsolated", skip_serializing_if = "Option::is_none")]
+    pub is_isolated: Option<bool>,
 }
 
 impl MarginAccountCancelOrderResponse {
@@ -53,7 +66,6 @@ impl MarginAccountCancelOrderResponse {
     pub fn new() -> MarginAccountCancelOrderResponse {
         MarginAccountCancelOrderResponse {
             symbol: None,
-            is_isolated: None,
             order_id: None,
             orig_client_order_id: None,
             client_order_id: None,
@@ -65,6 +77,7 @@ impl MarginAccountCancelOrderResponse {
             time_in_force: None,
             r#type: None,
             side: None,
+            is_isolated: None,
         }
     }
 }

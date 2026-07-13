@@ -5,7 +5,11 @@ use tracing::info;
 use binance_sdk::config::ConfigurationWebsocketStreams;
 use binance_sdk::derivatives_trading_usds_futures::{
     DerivativesTradingUsdsFuturesWsStreams,
-    websocket_streams::ContinuousContractKlineCandlestickStreamsParams,
+    websocket_streams::{
+        ContinuousContractKlineCandlestickStreamsContractTypeEnum,
+        ContinuousContractKlineCandlestickStreamsIntervalEnum,
+        ContinuousContractKlineCandlestickStreamsParams,
+    },
 };
 use binance_sdk::logger;
 
@@ -29,8 +33,8 @@ async fn main() -> Result<()> {
     // Setup the stream parameters
     let params = ContinuousContractKlineCandlestickStreamsParams::builder(
         "btcusdt".to_string(),
-        "next_quarter".to_string(),
-        "1m".to_string(),
+        ContinuousContractKlineCandlestickStreamsContractTypeEnum::Perpetual,
+        ContinuousContractKlineCandlestickStreamsIntervalEnum::Interval1s,
     )
     .build()?;
 

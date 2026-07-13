@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Portfolio Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,36 +19,36 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(try_from = "Value")]
 pub enum UserDataStreamEventsResponse {
-    #[serde(rename = "ALGO_UPDATE")]
-    AlgoUpdate(Box<models::AlgoUpdate>),
-    #[serde(rename = "CONDITIONAL_ORDER_TRADE_UPDATE")]
-    ConditionalOrderTradeUpdate(Box<models::ConditionalOrderTradeUpdate>),
     #[serde(rename = "ACCOUNT_CONFIG_UPDATE")]
     AccountConfigUpdate(Box<models::AccountConfigUpdate>),
     #[serde(rename = "ACCOUNT_UPDATE")]
     AccountUpdate(Box<models::AccountUpdate>),
+    #[serde(rename = "ALGO_UPDATE")]
+    AlgoUpdate(Box<models::AlgoOrderUpdate>),
+    #[serde(rename = "balanceUpdate")]
+    BalanceUpdate(Box<models::BalanceUpdate>),
+    #[serde(rename = "CONDITIONAL_ORDER_TRADE_UPDATE")]
+    ConditionalOrderTradeUpdate(Box<models::ConditionalOrderTradeUpdate>),
+    #[serde(rename = "executionReport")]
+    ExecutionReport(Box<models::ExecutionReport>),
+    #[serde(rename = "liabilityChange")]
+    LiabilityChange(Box<models::LiabilityChange>),
+    #[serde(rename = "listenKeyExpired")]
+    ListenKeyExpired(Box<models::ListenKeyExpired>),
+    #[serde(rename = "openOrderLoss")]
+    OpenOrderLoss(Box<models::OpenOrderLoss>),
     #[serde(rename = "ORDER_TRADE_UPDATE")]
     OrderTradeUpdate(Box<models::OrderTradeUpdate>),
-    #[serde(rename = "liabilityChange")]
-    LiabilityChange(Box<models::Liabilitychange>),
     #[serde(rename = "outboundAccountPosition")]
-    OutboundAccountPosition(Box<models::Outboundaccountposition>),
-    #[serde(rename = "balanceUpdate")]
-    BalanceUpdate(Box<models::Balanceupdate>),
-    #[serde(rename = "executionReport")]
-    ExecutionReport(Box<models::Executionreport>),
-    #[serde(rename = "openOrderLoss")]
-    OpenOrderLoss(Box<models::Openorderloss>),
-    #[serde(rename = "listenKeyExpired")]
-    ListenKeyExpired(Box<models::Listenkeyexpired>),
+    OutboundAccountPosition(Box<models::OutboundAccountPosition>),
     #[serde(rename = "riskLevelChange")]
-    RiskLevelChange(Box<models::Risklevelchange>),
+    RiskLevelChange(Box<models::RiskLevelChange>),
     Other(serde_json::Value),
 }
 
 impl Default for UserDataStreamEventsResponse {
     fn default() -> Self {
-        Self::AlgoUpdate(Default::default())
+        Self::AccountConfigUpdate(Default::default())
     }
 }
 
@@ -62,18 +62,6 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             .ok_or_else(|| serde_json::Error::custom("missing field `e`"))?;
 
         match tag {
-            "ALGO_UPDATE" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::AlgoUpdate(Box::new(payload)))
-            }
-
-            "CONDITIONAL_ORDER_TRADE_UPDATE" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ConditionalOrderTradeUpdate(
-                    Box::new(payload),
-                ))
-            }
-
             "ACCOUNT_CONFIG_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::AccountConfigUpdate(Box::new(
@@ -88,9 +76,28 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 )))
             }
 
-            "ORDER_TRADE_UPDATE" => {
+            "ALGO_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::OrderTradeUpdate(Box::new(
+                Ok(UserDataStreamEventsResponse::AlgoUpdate(Box::new(payload)))
+            }
+
+            "balanceUpdate" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::BalanceUpdate(Box::new(
+                    payload,
+                )))
+            }
+
+            "CONDITIONAL_ORDER_TRADE_UPDATE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ConditionalOrderTradeUpdate(
+                    Box::new(payload),
+                ))
+            }
+
+            "executionReport" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ExecutionReport(Box::new(
                     payload,
                 )))
             }
@@ -102,23 +109,9 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 )))
             }
 
-            "outboundAccountPosition" => {
+            "listenKeyExpired" => {
                 let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::OutboundAccountPosition(
-                    Box::new(payload),
-                ))
-            }
-
-            "balanceUpdate" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::BalanceUpdate(Box::new(
-                    payload,
-                )))
-            }
-
-            "executionReport" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ExecutionReport(Box::new(
+                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
                     payload,
                 )))
             }
@@ -130,11 +123,18 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 )))
             }
 
-            "listenKeyExpired" => {
+            "ORDER_TRADE_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
+                Ok(UserDataStreamEventsResponse::OrderTradeUpdate(Box::new(
                     payload,
                 )))
+            }
+
+            "outboundAccountPosition" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::OutboundAccountPosition(
+                    Box::new(payload),
+                ))
             }
 
             "riskLevelChange" => {

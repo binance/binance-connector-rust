@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UmFuturesAccountConfigurationResponse {
+    /// account commission tier
     #[serde(rename = "feeTier", skip_serializing_if = "Option::is_none")]
     pub fee_tier: Option<i64>,
+    /// if can trade
     #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]
     pub can_trade: Option<bool>,
+    /// if can transfer in asset
     #[serde(rename = "canDeposit", skip_serializing_if = "Option::is_none")]
     pub can_deposit: Option<bool>,
+    /// if can transfer out asset
     #[serde(rename = "canWithdraw", skip_serializing_if = "Option::is_none")]
     pub can_withdraw: Option<bool>,
+    /// \"true\": Hedge Mode; \"false\": One-way Mode
     #[serde(rename = "dualSidePosition", skip_serializing_if = "Option::is_none")]
     pub dual_side_position: Option<bool>,
+    /// reserved property, please ignore
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// Multi Assets Margin.
     #[serde(rename = "multiAssetsMargin", skip_serializing_if = "Option::is_none")]
     pub multi_assets_margin: Option<bool>,
+    /// Trade Group ID.
     #[serde(rename = "tradeGroupId", skip_serializing_if = "Option::is_none")]
     pub trade_group_id: Option<i64>,
 }

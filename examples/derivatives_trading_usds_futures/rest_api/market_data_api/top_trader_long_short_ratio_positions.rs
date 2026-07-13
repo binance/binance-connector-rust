@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = TopTraderLongShortRatioPositionsParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSDT".to_string(),
         TopTraderLongShortRatioPositionsPeriodEnum::Period5m,
     )
     .build()?;

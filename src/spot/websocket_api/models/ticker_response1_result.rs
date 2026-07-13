@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -25,10 +20,13 @@ use serde_json::Value;
 pub struct TickerResponse1Result {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Absolute price change
     #[serde(rename = "priceChange", skip_serializing_if = "Option::is_none")]
     pub price_change: Option<String>,
+    /// Relative price change in percent
     #[serde(rename = "priceChangePercent", skip_serializing_if = "Option::is_none")]
     pub price_change_percent: Option<String>,
+    /// `QuoteVolume` / Volume
     #[serde(rename = "weightedAvgPrice", skip_serializing_if = "Option::is_none")]
     pub weighted_avg_price: Option<String>,
     #[serde(rename = "openPrice", skip_serializing_if = "Option::is_none")]
@@ -41,16 +39,21 @@ pub struct TickerResponse1Result {
     pub last_price: Option<String>,
     #[serde(rename = "volume", skip_serializing_if = "Option::is_none")]
     pub volume: Option<String>,
+    /// Sum of (price * volume) for all trades
     #[serde(rename = "quoteVolume", skip_serializing_if = "Option::is_none")]
     pub quote_volume: Option<String>,
+    /// Open time for ticker window
     #[serde(rename = "openTime", skip_serializing_if = "Option::is_none")]
     pub open_time: Option<i64>,
+    /// Close time for ticker window
     #[serde(rename = "closeTime", skip_serializing_if = "Option::is_none")]
     pub close_time: Option<i64>,
+    /// Trade IDs
     #[serde(rename = "firstId", skip_serializing_if = "Option::is_none")]
     pub first_id: Option<i64>,
     #[serde(rename = "lastId", skip_serializing_if = "Option::is_none")]
     pub last_id: Option<i64>,
+    /// Number of trades in the interval
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }

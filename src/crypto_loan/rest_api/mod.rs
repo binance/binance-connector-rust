@@ -1,7 +1,7 @@
 /*
- * Binance Crypto Loan REST API
+ * Crypto Loan REST API
  *
- * OpenAPI Specification for the Binance Crypto Loan REST API
+ * Access Binance Crypto Loans to query assets, subscribe to loans, and manage loan positions.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -114,10 +114,13 @@ impl RestApi {
         .await
     }
 
-    /// Check Collateral Repay Rate (`USER_DATA`)
+    /// Check Collateral Flexible Repay Rate (`USER_DATA`)
     ///
+    /// Get the latest rate of collateral coin/loan coin when using collateral repay.
     ///
-    /// Weight: 6000
+    /// Weight(IP): 6000
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -147,7 +150,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Check-Collateral-Repay-Rate).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#check-collateral-repay-rate).
     ///
     pub async fn check_collateral_repay_rate(
         &self,
@@ -158,13 +161,16 @@ impl RestApi {
             .await
     }
 
-    /// Flexible Loan Adjust LTV(TRADE)
+    /// Flexible Loan Adjust LTV (TRADE)
     ///
     /// Flexible Loan Adjust LTV
     ///
-    /// * API Key needs Spot & Margin Trading permission for this endpoint
+    /// Weight(UID): 6000
     ///
-    /// Weight: 6000
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - API key needs Spot & Margin Trading permission for this endpoint.
     ///
     /// # Arguments
     ///
@@ -194,7 +200,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Adjust-LTV).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#flexible-loan-adjust-ltv).
     ///
     pub async fn flexible_loan_adjust_ltv(
         &self,
@@ -205,15 +211,17 @@ impl RestApi {
             .await
     }
 
-    /// Flexible Loan Borrow(TRADE)
+    /// Flexible Loan Borrow (TRADE)
     ///
     /// Borrow Flexible Loan
     ///
+    /// Weight(IP): 6000
     ///
-    /// * This API endpoint is available for both the master account and the sub-account.
-    /// * You can customize LTV by entering loanAmount and collateralAmount.
+    /// Security Type: TRADE
     ///
-    /// Weight: 6000
+    /// Notes:
+    /// - This endpoint is available for both master and sub-accounts.
+    /// - You can customize LTV by entering `loanAmount` and `collateralAmount`.
     ///
     /// # Arguments
     ///
@@ -243,7 +251,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Borrow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#flexible-loan-borrow).
     ///
     pub async fn flexible_loan_borrow(
         &self,
@@ -254,14 +262,16 @@ impl RestApi {
             .await
     }
 
-    /// Flexible Loan Repay(TRADE)
+    /// Flexible Loan Repay (TRADE)
     ///
     /// Flexible Loan Repay
     ///
+    /// Weight(IP): 6000
     ///
-    /// * repayAmount is mandatory even fullRepayment = FALSE
+    /// Security Type: TRADE
     ///
-    /// Weight: 6000
+    /// Notes:
+    /// - `repayAmount` is mandatory even when `fullRepayment = FALSE`.
     ///
     /// # Arguments
     ///
@@ -291,7 +301,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Repay).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#flexible-loan-repay).
     ///
     pub async fn flexible_loan_repay(
         &self,
@@ -302,11 +312,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Loan Assets `Data(USER_DATA)`
+    /// Get Flexible Loan Assets Data (`USER_DATA`)
     ///
     /// Get interest rate and borrow limit of flexible loanable assets. The borrow limit is shown in USD value.
     ///
-    /// Weight: 400
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -336,7 +348,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Assets-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-assets-data).
     ///
     pub async fn get_flexible_loan_assets_data(
         &self,
@@ -347,14 +359,17 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Loan Borrow `History(USER_DATA)`
+    /// Get Flexible Loan Borrow History (`USER_DATA`)
     ///
-    /// Get Flexible Loan Borrow History
+    /// Get Flexible Loan Borrow History. It can be used to check history before 2024-02-27 08:00.
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned.
-    /// * The max interval between startTime and endTime is 180 days.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
+    /// - The max interval between `startTime` and `endTime` is 180 days.
     ///
     /// # Arguments
     ///
@@ -384,7 +399,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Borrow-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-borrow-history).
     ///
     pub async fn get_flexible_loan_borrow_history(
         &self,
@@ -395,11 +410,14 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Loan Collateral Assets `Data(USER_DATA)`
+    /// Get Flexible Loan Collateral Assets Data (`USER_DATA`)
     ///
-    /// Get LTV information and collateral limit of flexible loan's collateral assets. The collateral limit is shown in USD value.
+    /// Get LTV information and collateral limit of flexible loan's collateral assets. The collateral limit is shown in
+    /// USD value.
     ///
-    /// Weight: 400
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -429,7 +447,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Collateral-Assets-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-collateral-assets-data).
     ///
     pub async fn get_flexible_loan_collateral_assets_data(
         &self,
@@ -444,11 +462,14 @@ impl RestApi {
     ///
     /// Check Flexible Loan interest rate history
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned
-    /// * The max interval between startTime and endTime is 90 days.
-    /// * Time based on UTC+0.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
+    /// - The max interval between `startTime` and `endTime` is 90 days.
+    /// - Time is based on UTC+0.
     ///
     /// # Arguments
     ///
@@ -478,7 +499,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Interest-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-interest-rate-history).
     ///
     pub async fn get_flexible_loan_interest_rate_history(
         &self,
@@ -491,8 +512,11 @@ impl RestApi {
 
     /// Get Flexible Loan Liquidation History (`USER_DATA`)
     ///
+    /// Get Flexible Loan Liquidation History
     ///
-    /// Weight: 400
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -522,7 +546,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Liquidation-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-liquidation-history).
     ///
     pub async fn get_flexible_loan_liquidation_history(
         &self,
@@ -533,14 +557,17 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Loan LTV Adjustment `History(USER_DATA)`
+    /// Get Flexible Loan LTV Adjustment History (`USER_DATA`)
     ///
-    /// Get Flexible Loan LTV Adjustment History
+    /// Get Flexible Loan LTV Adjustment History. It can be used to check history before 2024-02-27 08:00.
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned.
-    /// * The max interval between startTime and endTime is 180 days.
+    /// Weight(UID): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
+    /// - The max interval between `startTime` and `endTime` is 180 days.
     ///
     /// # Arguments
     ///
@@ -570,7 +597,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-LTV-Adjustment-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-ltv-adjustment-history).
     ///
     pub async fn get_flexible_loan_ltv_adjustment_history(
         &self,
@@ -581,11 +608,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Loan Ongoing `Orders(USER_DATA)`
+    /// Get Flexible Loan Ongoing Orders (`USER_DATA`)
     ///
     /// Get Flexible Loan Ongoing Orders
     ///
-    /// Weight: 300
+    /// Weight(IP): 300
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -615,7 +644,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Ongoing-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-ongoing-orders).
     ///
     pub async fn get_flexible_loan_ongoing_orders(
         &self,
@@ -626,14 +655,17 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Loan Repayment `History(USER_DATA)`
+    /// Get Flexible Loan Repayment History (`USER_DATA`)
     ///
-    /// Get Flexible Loan Repayment History
+    /// Get Flexible Loan Repayment History. It can be used to check history before 2024-02-27 08:00.
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned.
-    /// * The max interval between startTime and endTime is 180 days.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
+    /// - The max interval between `startTime` and `endTime` is 180 days.
     ///
     /// # Arguments
     ///
@@ -663,7 +695,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Repayment-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/flexible-rate#get-flexible-loan-repayment-history).
     ///
     pub async fn get_flexible_loan_repayment_history(
         &self,
@@ -674,59 +706,17 @@ impl RestApi {
             .await
     }
 
-    /// Check Collateral Repay `Rate(USER_DATA)`
-    ///
-    /// Get the the rate of collateral coin / loan coin when using collateral repay, the rate will be valid within 8 second.
-    ///
-    /// Weight: 6000
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`CheckCollateralRepayRateStableRateParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::CheckCollateralRepayRateStableRateResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/stable-rate/market-data/Check-Collateral-Repay-Rate).
-    ///
-    pub async fn check_collateral_repay_rate_stable_rate(
-        &self,
-        params: CheckCollateralRepayRateStableRateParams,
-    ) -> anyhow::Result<RestApiResponse<models::CheckCollateralRepayRateStableRateResponse>> {
-        self.stable_rate_api_client
-            .check_collateral_repay_rate_stable_rate(params)
-            .await
-    }
-
-    /// Get Crypto Loans Income `History(USER_DATA)`
+    /// Get Crypto Loans Income History (`USER_DATA`)
     ///
     /// Get Crypto Loans Income History
     ///
-    /// * If startTime and endTime are not sent, the recent 7-day data will be returned.
-    /// * The max interval between startTime and endTime is 30 days.
+    /// Weight(UID): 6000
     ///
-    /// Weight: 6000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are both omitted, the most recent 7 days of data are returned.
+    /// - The maximum interval between `startTime` and `endTime` is 30 days.
     ///
     /// # Arguments
     ///
@@ -756,7 +746,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/stable-rate/market-data/Get-Crypto-Loans-Income-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-crypto-loans-income-history).
     ///
     pub async fn get_crypto_loans_income_history(
         &self,
@@ -768,14 +758,17 @@ impl RestApi {
             .await
     }
 
-    /// Get Loan Borrow `History(USER_DATA)`
+    /// Get Loan Borrow History (`USER_DATA`)
     ///
     /// Get Loan Borrow History
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned.
-    /// * The max interval between startTime and endTime is 180 days.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
+    /// - The max interval between `startTime` and `endTime` is 180 days.
     ///
     /// # Arguments
     ///
@@ -805,7 +798,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/stable-rate/user-information/Get-Loan-Borrow-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-loan-borrow-history).
     ///
     pub async fn get_loan_borrow_history(
         &self,
@@ -816,14 +809,17 @@ impl RestApi {
             .await
     }
 
-    /// Get Loan LTV Adjustment `History(USER_DATA)`
+    /// Get Loan LTV Adjustment History (`USER_DATA`)
     ///
     /// Get Loan LTV Adjustment History
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned.
-    /// * The max interval between startTime and endTime is 180 days.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
+    /// - The max interval between `startTime` and `endTime` is 180 days.
     ///
     /// # Arguments
     ///
@@ -853,7 +849,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/stable-rate/user-information/Get-Loan-LTV-Adjustment-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-loan-ltv-adjustment-history).
     ///
     pub async fn get_loan_ltv_adjustment_history(
         &self,
@@ -864,14 +860,17 @@ impl RestApi {
             .await
     }
 
-    /// Get Loan Repayment `History(USER_DATA)`
+    /// Get Loan Repayment History (`USER_DATA`)
     ///
     /// Get Loan Repayment History
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned.
-    /// * The max interval between startTime and endTime is 180 days.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
+    /// - The max interval between `startTime` and `endTime` is 180 days.
     ///
     /// # Arguments
     ///
@@ -901,7 +900,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/crypto_loan/stable-rate/user-information/Get-Loan-Repayment-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-loan-repayment-history).
     ///
     pub async fn get_loan_repayment_history(
         &self,

@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading WebSocket Market Streams
+ * Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Margin Trading WebSocket Market Streams
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,14 +18,19 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UserLiabilityChange {
+    /// Event Time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Asset
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    /// Liability Update Type
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
     pub t: Option<String>,
+    /// Principle Quantity
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Interest Quantity
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
 }

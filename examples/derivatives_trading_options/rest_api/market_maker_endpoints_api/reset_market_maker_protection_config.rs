@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = ResetMarketMakerProtectionConfigParams::default();
+    let params = ResetMarketMakerProtectionConfigParams::builder("BTCUSDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

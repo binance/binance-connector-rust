@@ -3,7 +3,13 @@ use rust_decimal::prelude::*;
 use std::env;
 use tracing::info;
 
-use binance_sdk::algo::{AlgoRestApi, rest_api::VolumeParticipationFutureAlgoParams};
+use binance_sdk::algo::{
+    AlgoRestApi,
+    rest_api::{
+        VolumeParticipationFutureAlgoParams, VolumeParticipationFutureAlgoSideEnum,
+        VolumeParticipationFutureAlgoUrgencyEnum,
+    },
+};
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
 
@@ -28,9 +34,9 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = VolumeParticipationFutureAlgoParams::builder(
         "BTCUSDT".to_string(),
-        "BUY".to_string(),
-        dec!(1.0),
-        "LOW".to_string(),
+        VolumeParticipationFutureAlgoSideEnum::Buy,
+        dec!(1),
+        VolumeParticipationFutureAlgoUrgencyEnum::Low,
     )
     .build()?;
 

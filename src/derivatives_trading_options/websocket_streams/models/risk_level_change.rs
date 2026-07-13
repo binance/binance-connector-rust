@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,12 +18,16 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RiskLevelChange {
+    /// Event Time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Risk level. This feature only applies to VIP and Market Maker accounts. Risk level is re-evaluated on: funds transfer, trade fill, option expiry.
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Margin balance
     #[serde(rename = "mb", skip_serializing_if = "Option::is_none")]
     pub mb: Option<String>,
+    /// Maintenance margin
     #[serde(rename = "mm", skip_serializing_if = "Option::is_none")]
     pub mm: Option<String>,
 }

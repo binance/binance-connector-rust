@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,17 +15,21 @@
 use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `ExchangeInformationResponseAssetsInner` : assets information
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseAssetsInner {
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// whether the asset can be used as margin in Multi-Assets mode
     #[serde(rename = "marginAvailable", skip_serializing_if = "Option::is_none")]
     pub margin_available: Option<bool>,
+    /// auto-exchange threshold in Multi-Assets margin mode
     #[serde(rename = "autoAssetExchange", skip_serializing_if = "Option::is_none")]
     pub auto_asset_exchange: Option<String>,
 }
 
 impl ExchangeInformationResponseAssetsInner {
+    /// assets information
     #[must_use]
     pub fn new() -> ExchangeInformationResponseAssetsInner {
         ExchangeInformationResponseAssetsInner {

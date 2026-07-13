@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,10 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetSummaryOfMarginAccountResponse {
+    /// normal Bar.
     #[serde(rename = "normalBar", skip_serializing_if = "Option::is_none")]
     pub normal_bar: Option<String>,
+    /// margin Call Bar.
     #[serde(rename = "marginCallBar", skip_serializing_if = "Option::is_none")]
     pub margin_call_bar: Option<String>,
+    /// force Liquidation Bar.
     #[serde(
         rename = "forceLiquidationBar",
         skip_serializing_if = "Option::is_none"

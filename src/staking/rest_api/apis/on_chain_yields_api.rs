@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -92,11 +92,120 @@ impl OnChainYieldsApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FLEXIBLE")]
+    Flexible,
+}
+
+impl SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Flexible => "FLEXIBLE",
+        }
+    }
+}
+
+impl std::str::FromStr for SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FLEXIBLE" => Ok(Self::Flexible),
+            other => Err(format!(
+                "invalid SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SubscribeOnChainYieldsLockedProductSourceAccountEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FUND")]
+    Fund,
+    #[serde(rename = "ALL")]
+    All,
+}
+
+impl SubscribeOnChainYieldsLockedProductSourceAccountEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Fund => "FUND",
+            Self::All => "ALL",
+        }
+    }
+}
+
+impl std::str::FromStr for SubscribeOnChainYieldsLockedProductSourceAccountEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FUND" => Ok(Self::Fund),
+            "ALL" => Ok(Self::All),
+            other => Err(format!(
+                "invalid SubscribeOnChainYieldsLockedProductSourceAccountEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SubscribeOnChainYieldsLockedProductRedeemToEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FLEXIBLE")]
+    Flexible,
+}
+
+impl SubscribeOnChainYieldsLockedProductRedeemToEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Flexible => "FLEXIBLE",
+        }
+    }
+}
+
+impl std::str::FromStr for SubscribeOnChainYieldsLockedProductRedeemToEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FLEXIBLE" => Ok(Self::Flexible),
+            other => Err(format!(
+                "invalid SubscribeOnChainYieldsLockedProductRedeemToEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`get_on_chain_yields_locked_personal_left_quota`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_on_chain_yields_locked_personal_left_quota`](#method.get_on_chain_yields_locked_personal_left_quota).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOnChainYieldsLockedPersonalLeftQuotaParams {
     ///
@@ -104,12 +213,13 @@ pub struct GetOnChainYieldsLockedPersonalLeftQuotaParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "projectId")]
     pub project_id: String,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -129,29 +239,33 @@ impl GetOnChainYieldsLockedPersonalLeftQuotaParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_on_chain_yields_locked_product_list`](#method.get_on_chain_yields_locked_product_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOnChainYieldsLockedProductListParams {
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -167,41 +281,47 @@ impl GetOnChainYieldsLockedProductListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_on_chain_yields_locked_product_position`](#method.get_on_chain_yields_locked_product_position).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOnChainYieldsLockedProductPositionParams {
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `position_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub position_id: Option<i64>,
+    #[serde(rename = "positionId", default)]
+    pub position_id: Option<String>,
     ///
     /// The `project_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "projectId", default)]
     pub project_id: Option<String>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -217,7 +337,7 @@ impl GetOnChainYieldsLockedProductPositionParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_on_chain_yields_locked_redemption_record`](#method.get_on_chain_yields_locked_redemption_record).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOnChainYieldsLockedRedemptionRecordParams {
     ///
@@ -225,45 +345,54 @@ pub struct GetOnChainYieldsLockedRedemptionRecordParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub position_id: Option<i64>,
+    #[serde(rename = "positionId", default)]
+    pub position_id: Option<String>,
     ///
     /// The `redeem_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "redeemId", default)]
     pub redeem_id: Option<String>,
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -279,7 +408,7 @@ impl GetOnChainYieldsLockedRedemptionRecordParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_on_chain_yields_locked_rewards_history`](#method.get_on_chain_yields_locked_rewards_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOnChainYieldsLockedRewardsHistoryParams {
     ///
@@ -287,39 +416,47 @@ pub struct GetOnChainYieldsLockedRewardsHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "positionId", default)]
     pub position_id: Option<String>,
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -335,7 +472,7 @@ impl GetOnChainYieldsLockedRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_on_chain_yields_locked_subscription_preview`](#method.get_on_chain_yields_locked_subscription_preview).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOnChainYieldsLockedSubscriptionPreviewParams {
     ///
@@ -343,22 +480,27 @@ pub struct GetOnChainYieldsLockedSubscriptionPreviewParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "projectId")]
     pub project_id: String,
-    /// Amount in SOL.
+    ///
+    /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// true or false, default true.
+    ///
+    /// The `auto_subscribe` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "autoSubscribe", default)]
     pub auto_subscribe: Option<bool>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -368,7 +510,7 @@ impl GetOnChainYieldsLockedSubscriptionPreviewParams {
     /// Required parameters:
     ///
     /// * `project_id` — String
-    /// * `amount` — Amount in SOL.
+    /// * `amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
@@ -384,7 +526,7 @@ impl GetOnChainYieldsLockedSubscriptionPreviewParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_on_chain_yields_locked_subscription_record`](#method.get_on_chain_yields_locked_subscription_record).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOnChainYieldsLockedSubscriptionRecordParams {
     ///
@@ -392,45 +534,54 @@ pub struct GetOnChainYieldsLockedSubscriptionRecordParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "purchaseId", default)]
     pub purchase_id: Option<String>,
     ///
     /// The `client_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "clientId", default)]
     pub client_id: Option<String>,
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -446,14 +597,14 @@ impl GetOnChainYieldsLockedSubscriptionRecordParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`on_chain_yields_account`](#method.on_chain_yields_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OnChainYieldsAccountParams {
-    ///
-    /// The `recv_window` parameter.
+    /// The value cannot be greater than `60000`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -469,26 +620,27 @@ impl OnChainYieldsAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_on_chain_yields_locked_product`](#method.redeem_on_chain_yields_locked_product).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemOnChainYieldsLockedProductParams {
-    ///
-    /// The `position_id` parameter.
+    /// Locked product position ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "positionId")]
     pub position_id: String,
     ///
     /// The `channel_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "channelId", default)]
     pub channel_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -497,7 +649,7 @@ impl RedeemOnChainYieldsLockedProductParams {
     ///
     /// Required parameters:
     ///
-    /// * `position_id` — String
+    /// * `position_id` — Locked product position ID
     ///
     #[must_use]
     pub fn builder(position_id: String) -> RedeemOnChainYieldsLockedProductParamsBuilder {
@@ -508,7 +660,7 @@ impl RedeemOnChainYieldsLockedProductParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_on_chain_yields_locked_auto_subscribe`](#method.set_on_chain_yields_locked_auto_subscribe).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetOnChainYieldsLockedAutoSubscribeParams {
     ///
@@ -516,17 +668,20 @@ pub struct SetOnChainYieldsLockedAutoSubscribeParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "positionId")]
     pub position_id: String,
-    /// true or false
+    ///
+    /// The `auto_subscribe` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "autoSubscribe")]
     pub auto_subscribe: bool,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -536,7 +691,7 @@ impl SetOnChainYieldsLockedAutoSubscribeParams {
     /// Required parameters:
     ///
     /// * `position_id` — String
-    /// * `auto_subscribe` — true or false
+    /// * `auto_subscribe` — bool
     ///
     #[must_use]
     pub fn builder(
@@ -552,7 +707,7 @@ impl SetOnChainYieldsLockedAutoSubscribeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_on_chain_yields_locked_product_redeem_option`](#method.set_on_chain_yields_locked_product_redeem_option).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetOnChainYieldsLockedProductRedeemOptionParams {
     ///
@@ -560,17 +715,20 @@ pub struct SetOnChainYieldsLockedProductRedeemOptionParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "positionId")]
     pub position_id: String,
-    /// 'SPOT','FLEXIBLE'
+    ///
+    /// The `redeem_to` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub redeem_to: String,
-    ///
-    /// The `recv_window` parameter.
+    #[serde(rename = "redeemTo")]
+    pub redeem_to: SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -580,12 +738,12 @@ impl SetOnChainYieldsLockedProductRedeemOptionParams {
     /// Required parameters:
     ///
     /// * `position_id` — String
-    /// * `redeem_to` — 'SPOT','FLEXIBLE'
+    /// * `redeem_to` — String
     ///
     #[must_use]
     pub fn builder(
         position_id: String,
-        redeem_to: String,
+        redeem_to: SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum,
     ) -> SetOnChainYieldsLockedProductRedeemOptionParamsBuilder {
         SetOnChainYieldsLockedProductRedeemOptionParamsBuilder::default()
             .position_id(position_id)
@@ -596,7 +754,7 @@ impl SetOnChainYieldsLockedProductRedeemOptionParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_on_chain_yields_locked_product`](#method.subscribe_on_chain_yields_locked_product).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeOnChainYieldsLockedProductParams {
     ///
@@ -604,44 +762,54 @@ pub struct SubscribeOnChainYieldsLockedProductParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "projectId")]
     pub project_id: String,
-    /// Amount in SOL.
+    ///
+    /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// true or false, default true.
+    ///
+    /// The `auto_subscribe` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "autoSubscribe", default)]
     pub auto_subscribe: Option<bool>,
-    /// `SPOT`,`FUND`,`ALL`, default `SPOT`
+    ///
+    /// The `source_account` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub source_account: Option<String>,
-    /// `SPOT`,`FLEXIBLE`, default `FLEXIBLE` Takes effect when Auto Subscribe is false
+    #[serde(rename = "sourceAccount", default)]
+    pub source_account: Option<SubscribeOnChainYieldsLockedProductSourceAccountEnum>,
+    /// Takes effect when Auto Subscribe is false
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub redeem_to: Option<String>,
+    #[serde(rename = "redeemTo", default)]
+    pub redeem_to: Option<SubscribeOnChainYieldsLockedProductRedeemToEnum>,
     ///
     /// The `channel_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "channelId", default)]
     pub channel_id: Option<String>,
     ///
     /// The `client_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "clientId", default)]
     pub client_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -651,7 +819,7 @@ impl SubscribeOnChainYieldsLockedProductParams {
     /// Required parameters:
     ///
     /// * `project_id` — String
-    /// * `amount` — Amount in SOL.
+    /// * `amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
@@ -1293,7 +1461,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetOnChainYieldsLockedPersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedPersonalLeftQuotaResponse",
@@ -1322,7 +1491,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Solv-60d","detail":{"asset":"BTC","rewardAsset":"SOLV","duration":60,"renewable":true,"isSoldOut":true,"apr":"0.039","status":"PREHEATING","subscriptionStartTime":1646182276000,"canRedeemToFlex":true},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Solv-60d","detail":{"asset":"BTC","rewardAsset":"SOLV","duration":60,"renewable":true,"isSoldOut":true,"apr":"0.039","status":"PREHEATING","subscriptionStartTime":1646182276000,"canRedeemToFlex":true},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetOnChainYieldsLockedProductListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetOnChainYieldsLockedProductListResponse");
@@ -1350,7 +1519,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","projectId":"Solv-60d","asset":"BTC","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"SOLV","APY":"0.039","rewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","rewardsPayDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","canRedeemEarly":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","projectId":"Solv-60d","asset":"BTC","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"SOLV","APY":"0.039","rewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","rewardsPayDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","canRedeemEarly":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetOnChainYieldsLockedProductPositionResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedProductPositionResponse",
@@ -1379,7 +1548,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","redeemId":40607,"time":1575018510000,"asset":"BTC","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"NORMAL","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"SOLV","rewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","redeemId":40607,"time":1575018510000,"asset":"BTC","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"NORMAL","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"SOLV","rewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetOnChainYieldsLockedRedemptionRecordResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedRedemptionRecordResponse",
@@ -1408,7 +1577,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetOnChainYieldsLockedRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedRewardsHistoryResponse",
@@ -1438,7 +1607,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rewardAsset":"SOLV","totalRewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","rewardsPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rewardAsset":"SOLV","totalRewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","rewardsPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetOnChainYieldsLockedSubscriptionPreviewResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedSubscriptionPreviewResponse",
@@ -1467,7 +1636,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","purchaseId":"26055","projectId":"Solv-60d","clientId":"ABC","time":1575018510000,"asset":"BTC","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","purchaseId":"26055","projectId":"Solv-60d","clientId":"ABC","time":1575018510000,"asset":"BTC","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetOnChainYieldsLockedSubscriptionRecordResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedSubscriptionRecordResponse",
@@ -1495,7 +1664,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::OnChainYieldsAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OnChainYieldsAccountResponse");
@@ -1523,8 +1692,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemOnChainYieldsLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemOnChainYieldsLockedProductResponse");
@@ -1552,7 +1721,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetOnChainYieldsLockedAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SetOnChainYieldsLockedAutoSubscribeResponse",
@@ -1582,7 +1752,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetOnChainYieldsLockedProductRedeemOptionResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SetOnChainYieldsLockedProductRedeemOptionResponse",
@@ -1611,7 +1782,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","amount":"75.46000000","success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","amount":"75.46000000","success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeOnChainYieldsLockedProductResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SubscribeOnChainYieldsLockedProductResponse",
@@ -1637,7 +1808,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetOnChainYieldsLockedPersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedPersonalLeftQuotaResponse",
@@ -1663,7 +1835,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetOnChainYieldsLockedPersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetOnChainYieldsLockedPersonalLeftQuotaResponse",
@@ -1707,7 +1880,7 @@ mod tests {
 
             let params = GetOnChainYieldsLockedProductListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Solv-60d","detail":{"asset":"BTC","rewardAsset":"SOLV","duration":60,"renewable":true,"isSoldOut":true,"apr":"0.039","status":"PREHEATING","subscriptionStartTime":1646182276000,"canRedeemToFlex":true},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Solv-60d","detail":{"asset":"BTC","rewardAsset":"SOLV","duration":60,"renewable":true,"isSoldOut":true,"apr":"0.039","status":"PREHEATING","subscriptionStartTime":1646182276000,"canRedeemToFlex":true},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedProductListResponse");
 
             let resp = client.get_on_chain_yields_locked_product_list(params).await.expect("Expected a response");
@@ -1722,9 +1895,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOnChainYieldsApiClient { force_error: false };
 
-            let params = GetOnChainYieldsLockedProductListParams::builder().asset("BETH".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetOnChainYieldsLockedProductListParams::builder().asset("SOL".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Solv-60d","detail":{"asset":"BTC","rewardAsset":"SOLV","duration":60,"renewable":true,"isSoldOut":true,"apr":"0.039","status":"PREHEATING","subscriptionStartTime":1646182276000,"canRedeemToFlex":true},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Solv-60d","detail":{"asset":"BTC","rewardAsset":"SOLV","duration":60,"renewable":true,"isSoldOut":true,"apr":"0.039","status":"PREHEATING","subscriptionStartTime":1646182276000,"canRedeemToFlex":true},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedProductListResponse");
 
             let resp = client.get_on_chain_yields_locked_product_list(params).await.expect("Expected a response");
@@ -1759,7 +1932,7 @@ mod tests {
 
             let params = GetOnChainYieldsLockedProductPositionParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","projectId":"Solv-60d","asset":"BTC","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"SOLV","APY":"0.039","rewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","rewardsPayDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","canRedeemEarly":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","projectId":"Solv-60d","asset":"BTC","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"SOLV","APY":"0.039","rewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","rewardsPayDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","canRedeemEarly":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedProductPositionResponse");
 
             let resp = client.get_on_chain_yields_locked_product_position(params).await.expect("Expected a response");
@@ -1774,9 +1947,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOnChainYieldsApiClient { force_error: false };
 
-            let params = GetOnChainYieldsLockedProductPositionParams::builder().asset("BETH".to_string()).position_id(1).project_id("1".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetOnChainYieldsLockedProductPositionParams::builder().asset("BTC".to_string()).position_id("1".to_string()).project_id("1".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","projectId":"Solv-60d","asset":"BTC","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"SOLV","APY":"0.039","rewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","rewardsPayDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","canRedeemEarly":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","projectId":"Solv-60d","asset":"BTC","amount":"122.09202928","purchaseTime":"1646182276000","duration":"60","accrualDays":"4","rewardAsset":"SOLV","APY":"0.039","rewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","payPeriod":"1","rewardsPayDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","canRedeemEarly":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedProductPositionResponse");
 
             let resp = client.get_on_chain_yields_locked_product_position(params).await.expect("Expected a response");
@@ -1814,7 +1987,7 @@ mod tests {
 
             let params = GetOnChainYieldsLockedRedemptionRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","redeemId":40607,"time":1575018510000,"asset":"BTC","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"NORMAL","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"SOLV","rewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","redeemId":40607,"time":1575018510000,"asset":"BTC","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"NORMAL","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"SOLV","rewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedRedemptionRecordResponse");
 
             let resp = client.get_on_chain_yields_locked_redemption_record(params).await.expect("Expected a response");
@@ -1829,9 +2002,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOnChainYieldsApiClient { force_error: false };
 
-            let params = GetOnChainYieldsLockedRedemptionRecordParams::builder().position_id(1).redeem_id("1".to_string()).asset("BETH".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetOnChainYieldsLockedRedemptionRecordParams::builder().position_id("1".to_string()).redeem_id("1".to_string()).asset("BTC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","redeemId":40607,"time":1575018510000,"asset":"BTC","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"NORMAL","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"SOLV","rewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","redeemId":40607,"time":1575018510000,"asset":"BTC","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"NORMAL","deliverDate":"1575018510000","lossAmount":"0.00001232","isComplete":true,"rewardAsset":"SOLV","rewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedRedemptionRecordResponse");
 
             let resp = client.get_on_chain_yields_locked_redemption_record(params).await.expect("Expected a response");
@@ -1869,7 +2042,7 @@ mod tests {
 
             let params = GetOnChainYieldsLockedRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedRewardsHistoryResponse");
 
             let resp = client.get_on_chain_yields_locked_rewards_history(params).await.expect("Expected a response");
@@ -1884,9 +2057,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOnChainYieldsApiClient { force_error: false };
 
-            let params = GetOnChainYieldsLockedRewardsHistoryParams::builder().position_id("1".to_string()).asset("BETH".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetOnChainYieldsLockedRewardsHistoryParams::builder().position_id("1".to_string()).asset("BTC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedRewardsHistoryResponse");
 
             let resp = client.get_on_chain_yields_locked_rewards_history(params).await.expect("Expected a response");
@@ -1924,7 +2097,7 @@ mod tests {
 
             let params = GetOnChainYieldsLockedSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rewardAsset":"SOLV","totalRewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","rewardsPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rewardAsset":"SOLV","totalRewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","rewardsPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedSubscriptionPreviewResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedSubscriptionPreviewResponse");
 
             let resp = client.get_on_chain_yields_locked_subscription_preview(params).await.expect("Expected a response");
@@ -1941,7 +2114,7 @@ mod tests {
 
             let params = GetOnChainYieldsLockedSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).auto_subscribe(true).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rewardAsset":"SOLV","totalRewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","rewardsPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rewardAsset":"SOLV","totalRewardAmt":"5.17181528","nextPay":"1.29295383","nextPayDate":"1646697600000","rewardsPayDate":"1646697600000","valueDate":"1646697600000","rewardsEndDate":"1651449600000","deliverDate":"1651536000000","nextSubscriptionDate":"1651536000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedSubscriptionPreviewResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedSubscriptionPreviewResponse");
 
             let resp = client.get_on_chain_yields_locked_subscription_preview(params).await.expect("Expected a response");
@@ -1982,7 +2155,7 @@ mod tests {
 
             let params = GetOnChainYieldsLockedSubscriptionRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","purchaseId":"26055","projectId":"Solv-60d","clientId":"ABC","time":1575018510000,"asset":"BTC","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","purchaseId":"26055","projectId":"Solv-60d","clientId":"ABC","time":1575018510000,"asset":"BTC","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedSubscriptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedSubscriptionRecordResponse");
 
             let resp = client.get_on_chain_yields_locked_subscription_record(params).await.expect("Expected a response");
@@ -1997,9 +2170,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOnChainYieldsApiClient { force_error: false };
 
-            let params = GetOnChainYieldsLockedSubscriptionRecordParams::builder().purchase_id("1".to_string()).client_id("1".to_string()).asset("BETH".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetOnChainYieldsLockedSubscriptionRecordParams::builder().purchase_id("1".to_string()).client_id("1".to_string()).asset("BTC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","purchaseId":"26055","projectId":"Solv-60d","clientId":"ABC","time":1575018510000,"asset":"BTC","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":"123123","purchaseId":"26055","projectId":"Solv-60d","clientId":"ABC","time":1575018510000,"asset":"BTC","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetOnChainYieldsLockedSubscriptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetOnChainYieldsLockedSubscriptionRecordResponse");
 
             let resp = client.get_on_chain_yields_locked_subscription_record(params).await.expect("Expected a response");
@@ -2037,7 +2210,7 @@ mod tests {
 
             let params = OnChainYieldsAccountParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OnChainYieldsAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OnChainYieldsAccountResponse");
 
             let resp = client.on_chain_yields_account(params).await.expect("Expected a response");
@@ -2054,7 +2227,7 @@ mod tests {
 
             let params = OnChainYieldsAccountParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OnChainYieldsAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OnChainYieldsAccountResponse");
 
             let resp = client.on_chain_yields_account(params).await.expect("Expected a response");
@@ -2089,8 +2262,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RedeemOnChainYieldsLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemOnChainYieldsLockedProductResponse");
@@ -2116,8 +2289,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RedeemOnChainYieldsLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemOnChainYieldsLockedProductResponse");
@@ -2159,7 +2332,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetOnChainYieldsLockedAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SetOnChainYieldsLockedAutoSubscribeResponse",
@@ -2185,7 +2359,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetOnChainYieldsLockedAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SetOnChainYieldsLockedAutoSubscribeResponse",
@@ -2229,12 +2404,13 @@ mod tests {
 
             let params = SetOnChainYieldsLockedProductRedeemOptionParams::builder(
                 "1".to_string(),
-                "redeem_to_example".to_string(),
+                SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum::Spot,
             )
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetOnChainYieldsLockedProductRedeemOptionResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SetOnChainYieldsLockedProductRedeemOptionResponse",
@@ -2257,13 +2433,14 @@ mod tests {
 
             let params = SetOnChainYieldsLockedProductRedeemOptionParams::builder(
                 "1".to_string(),
-                "redeem_to_example".to_string(),
+                SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum::Spot,
             )
             .recv_window(5000)
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetOnChainYieldsLockedProductRedeemOptionResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SetOnChainYieldsLockedProductRedeemOptionResponse",
@@ -2286,7 +2463,7 @@ mod tests {
 
             let params = SetOnChainYieldsLockedProductRedeemOptionParams::builder(
                 "1".to_string(),
-                "redeem_to_example".to_string(),
+                SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum::Spot,
             )
             .build()
             .unwrap();
@@ -2310,7 +2487,7 @@ mod tests {
 
             let params = SubscribeOnChainYieldsLockedProductParams::builder("1".to_string(),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","amount":"75.46000000","success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","amount":"75.46000000","success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeOnChainYieldsLockedProductResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeOnChainYieldsLockedProductResponse");
 
             let resp = client.subscribe_on_chain_yields_locked_product(params).await.expect("Expected a response");
@@ -2325,9 +2502,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOnChainYieldsApiClient { force_error: false };
 
-            let params = SubscribeOnChainYieldsLockedProductParams::builder("1".to_string(),dec!(1.0),).auto_subscribe(true).source_account("SPOT".to_string()).redeem_to(String::new()).channel_id("1".to_string()).client_id("1".to_string()).recv_window(5000).build().unwrap();
+            let params = SubscribeOnChainYieldsLockedProductParams::builder("1".to_string(),dec!(1.0),).auto_subscribe(false).source_account(SubscribeOnChainYieldsLockedProductSourceAccountEnum::Spot).redeem_to(SubscribeOnChainYieldsLockedProductRedeemToEnum::Spot).channel_id("1".to_string()).client_id("1".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","amount":"75.46000000","success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","amount":"75.46000000","success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeOnChainYieldsLockedProductResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeOnChainYieldsLockedProductResponse");
 
             let resp = client.subscribe_on_chain_yields_locked_product(params).await.expect("Expected a response");

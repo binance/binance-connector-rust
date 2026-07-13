@@ -27,8 +27,9 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = CancelAllOptionOrdersOnSpecificSymbolParams::builder("symbol_example".to_string())
-        .build()?;
+    let params =
+        CancelAllOptionOrdersOnSpecificSymbolParams::builder("BTC-200730-9000-C".to_string())
+            .build()?;
 
     // Make the API call
     let response = rest_client

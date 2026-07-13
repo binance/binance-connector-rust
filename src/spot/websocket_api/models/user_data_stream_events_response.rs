@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -24,24 +19,24 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(try_from = "Value")]
 pub enum UserDataStreamEventsResponse {
-    #[serde(rename = "outboundAccountPosition")]
-    OutboundAccountPosition(Box<models::OutboundAccountPosition>),
     #[serde(rename = "balanceUpdate")]
     BalanceUpdate(Box<models::BalanceUpdate>),
-    #[serde(rename = "executionReport")]
-    ExecutionReport(Box<models::ExecutionReport>),
-    #[serde(rename = "listStatus")]
-    ListStatus(Box<models::ListStatus>),
     #[serde(rename = "eventStreamTerminated")]
     EventStreamTerminated(Box<models::EventStreamTerminated>),
+    #[serde(rename = "executionReport")]
+    ExecutionReport(Box<models::ExecutionReport>),
     #[serde(rename = "externalLockUpdate")]
     ExternalLockUpdate(Box<models::ExternalLockUpdate>),
+    #[serde(rename = "listStatus")]
+    ListStatus(Box<models::ListStatus>),
+    #[serde(rename = "outboundAccountPosition")]
+    OutboundAccountPosition(Box<models::OutboundAccountPosition>),
     Other(serde_json::Value),
 }
 
 impl Default for UserDataStreamEventsResponse {
     fn default() -> Self {
-        Self::OutboundAccountPosition(Default::default())
+        Self::BalanceUpdate(Default::default())
     }
 }
 
@@ -55,30 +50,11 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             .ok_or_else(|| serde_json::Error::custom("missing field `e`"))?;
 
         match tag {
-            "outboundAccountPosition" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::OutboundAccountPosition(
-                    Box::new(payload),
-                ))
-            }
-
             "balanceUpdate" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::BalanceUpdate(Box::new(
                     payload,
                 )))
-            }
-
-            "executionReport" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ExecutionReport(Box::new(
-                    payload,
-                )))
-            }
-
-            "listStatus" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ListStatus(Box::new(payload)))
             }
 
             "eventStreamTerminated" => {
@@ -88,11 +64,30 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 ))
             }
 
+            "executionReport" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ExecutionReport(Box::new(
+                    payload,
+                )))
+            }
+
             "externalLockUpdate" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::ExternalLockUpdate(Box::new(
                     payload,
                 )))
+            }
+
+            "listStatus" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ListStatus(Box::new(payload)))
+            }
+
+            "outboundAccountPosition" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::OutboundAccountPosition(
+                    Box::new(payload),
+                ))
             }
 
             _ => Ok(UserDataStreamEventsResponse::Other(v)),

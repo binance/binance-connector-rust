@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,44 +17,58 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryCrossMarginAccountDetailsResponse {
+    /// True means margin account created , false means margin account not created.
     #[serde(rename = "created", skip_serializing_if = "Option::is_none")]
     pub created: Option<bool>,
+    /// borrow Enabled.
     #[serde(rename = "borrowEnabled", skip_serializing_if = "Option::is_none")]
     pub borrow_enabled: Option<bool>,
+    /// margin Level.
     #[serde(rename = "marginLevel", skip_serializing_if = "Option::is_none")]
     pub margin_level: Option<String>,
+    /// collateral Margin Level.
     #[serde(
         rename = "collateralMarginLevel",
         skip_serializing_if = "Option::is_none"
     )]
     pub collateral_margin_level: Option<String>,
+    /// total Asset Of Btc.
     #[serde(rename = "totalAssetOfBtc", skip_serializing_if = "Option::is_none")]
     pub total_asset_of_btc: Option<String>,
+    /// total Liability Of Btc.
     #[serde(
         rename = "totalLiabilityOfBtc",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_liability_of_btc: Option<String>,
+    /// total Net Asset Of Btc.
     #[serde(rename = "totalNetAssetOfBtc", skip_serializing_if = "Option::is_none")]
     pub total_net_asset_of_btc: Option<String>,
+    /// Total Collateral Value In USDT.
     #[serde(
         rename = "TotalCollateralValueInUSDT",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_collateral_value_in_usdt: Option<String>,
+    /// total Open Order Loss In USDT.
     #[serde(
         rename = "totalOpenOrderLossInUSDT",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_open_order_loss_in_usdt: Option<String>,
+    /// trade Enabled.
     #[serde(rename = "tradeEnabled", skip_serializing_if = "Option::is_none")]
     pub trade_enabled: Option<bool>,
+    /// transfer In Enabled.
     #[serde(rename = "transferInEnabled", skip_serializing_if = "Option::is_none")]
     pub transfer_in_enabled: Option<bool>,
+    /// transfer Out Enabled.
     #[serde(rename = "transferOutEnabled", skip_serializing_if = "Option::is_none")]
     pub transfer_out_enabled: Option<bool>,
+    /// // `MARGIN_1` for Cross Margin Classic, `MARGIN_2` for Cross Margin Pro
     #[serde(rename = "accountType", skip_serializing_if = "Option::is_none")]
     pub account_type: Option<String>,
+    /// user Assets list.
     #[serde(rename = "userAssets", skip_serializing_if = "Option::is_none")]
     pub user_assets: Option<Vec<models::QueryCrossMarginAccountDetailsResponseUserAssetsInner>>,
 }

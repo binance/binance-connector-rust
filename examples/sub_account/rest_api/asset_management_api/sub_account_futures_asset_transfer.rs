@@ -27,10 +27,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = SubAccountFuturesAssetTransferParams::builder(
-        "from_email_example".to_string(),
-        "to_email_example".to_string(),
-        789,
-        "asset_example".to_string(),
+        "abc@test.com".to_string(),
+        "def@test.com".to_string(),
+        1,
+        "BTC".to_string(),
         dec!(1.0),
     )
     .build()?;

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -124,10 +124,13 @@ impl RestApi {
     ///
     /// Get current account information.
     ///
-    /// * for One-way Mode user, the "positions" will only show the "BOTH" positions
-    /// * for Hedge Mode user, the "positions" will show "BOTH", "LONG", and "SHORT" positions.
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - for One-way Mode user, the "positions" will only show the "BOTH" positions
+    /// - for Hedge Mode user, the "positions" will show "BOTH", "LONG", and "SHORT" positions.
     ///
     /// # Arguments
     ///
@@ -157,7 +160,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Account-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#account-information).
     ///
     pub async fn account_information(
         &self,
@@ -170,7 +173,9 @@ impl RestApi {
     ///
     /// Check futures account balance
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -200,7 +205,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Futures-Account-Balance).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#futures-account-balance).
     ///
     pub async fn futures_account_balance(
         &self,
@@ -211,11 +216,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Current Position `Mode(USER_DATA)`
+    /// Get Current Position Mode (`USER_DATA`)
     ///
     /// Get user's position mode (Hedge Mode or One-way Mode ) on ***EVERY symbol***
     ///
-    /// Weight: 30
+    /// Weight(IP): 30
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -245,7 +252,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Current-Position-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-current-position-mode).
     ///
     pub async fn get_current_position_mode(
         &self,
@@ -260,11 +267,14 @@ impl RestApi {
     ///
     /// Get Download Id For Futures Order History
     ///
-    /// * Request Limitation is 8 times per month, shared by front end download page and rest api
-    /// * This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
-    /// * The time between `startTime` and `endTime` can not be longer than 1 year
+    /// Weight(IP): 1000
     ///
-    /// Weight: 1000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 8 times per month, shared by front end download page and rest api
+    /// - This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
     ///
     /// # Arguments
     ///
@@ -294,7 +304,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-download-id-for-futures-order-history).
     ///
     pub async fn get_download_id_for_futures_order_history(
         &self,
@@ -309,11 +319,14 @@ impl RestApi {
     ///
     /// Get download id for futures trade history
     ///
-    /// * Request Limitation is 8 times per month, shared by front end download page and rest api
-    /// * This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
-    /// * The time between `startTime` and `endTime` can not be longer than 1 year
+    /// Weight(IP): 1000
     ///
-    /// Weight: 1000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 8 times per month, shared by front end download page and rest api
+    /// - This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
     ///
     /// # Arguments
     ///
@@ -343,7 +356,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Trade-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-download-id-for-futures-trade-history).
     ///
     pub async fn get_download_id_for_futures_trade_history(
         &self,
@@ -354,15 +367,18 @@ impl RestApi {
             .await
     }
 
-    /// Get Download Id For Futures Transaction `History(USER_DATA)`
+    /// Get Download Id For Futures Transaction History (`USER_DATA`)
     ///
     /// Get download id for futures transaction history
     ///
-    /// * Request Limitation is 8 times per month, shared by front end download page and rest api
-    /// * This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
-    /// * The time between `startTime` and `endTime` can not be longer than 1 year
+    /// Weight(IP): 1000
     ///
-    /// Weight: 1000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 8 times per month, shared by front end download page and rest api
+    /// - This endpoint uses the IP rate limit bucket and costs 1000 weight per call. The maximum is 2 calls per minute; the 3rd call within the same minute will trigger a ban.
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
     ///
     /// # Arguments
     ///
@@ -392,7 +408,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Transaction-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-download-id-for-futures-transaction-history).
     ///
     pub async fn get_download_id_for_futures_transaction_history(
         &self,
@@ -408,9 +424,12 @@ impl RestApi {
     ///
     /// Get futures order history download link by Id
     ///
-    /// * Download link expiration: 7 days
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
     ///
     /// # Arguments
     ///
@@ -440,7 +459,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-futures-order-history-download-link-by-id).
     ///
     pub async fn get_futures_order_history_download_link_by_id(
         &self,
@@ -452,13 +471,16 @@ impl RestApi {
             .await
     }
 
-    /// Get Futures Trade Download Link by `Id(USER_DATA)`
+    /// Get Futures Trade Download Link by Id (`USER_DATA`)
     ///
     /// Get futures trade download link by Id
     ///
-    /// * Download link expiration: 7 days
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
     ///
     /// # Arguments
     ///
@@ -488,7 +510,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Trade-Download-Link-by-Id).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-futures-trade-download-link-by-id).
     ///
     pub async fn get_futures_trade_download_link_by_id(
         &self,
@@ -503,9 +525,12 @@ impl RestApi {
     ///
     /// Get futures transaction history download link by Id
     ///
-    /// * Download link expiration: 7 days
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
     ///
     /// # Arguments
     ///
@@ -535,7 +560,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Transaction-History-Download-Link-by-Id).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-futures-transaction-history-download-link-by-id).
     ///
     pub async fn get_futures_transaction_history_download_link_by_id(
         &self,
@@ -547,15 +572,18 @@ impl RestApi {
             .await
     }
 
-    /// Get Income `History(USER_DATA)`
+    /// Get Income History (`USER_DATA`)
     ///
     /// Get income history
     ///
-    /// * If `incomeType ` is not sent, all kinds of flow will be returned
-    /// * "trandId" is unique in the same "incomeType" for a user
-    /// * The time between `startTime` and `endTime` can not be longer than 1 year
+    /// Weight(IP): 20
     ///
-    /// Weight: 20
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `incomeType ` is not sent, all kinds of flow will be returned
+    /// - "trandId" is unique in the same "incomeType" for a user
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
     ///
     /// # Arguments
     ///
@@ -585,7 +613,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Income-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#get-income-history).
     ///
     pub async fn get_income_history(
         &self,
@@ -594,13 +622,18 @@ impl RestApi {
         self.account_api_client.get_income_history(params).await
     }
 
-    /// Notional Bracket for `Pair(USER_DATA)`
+    /// Notional Bracket for Pair (`USER_DATA`)
     ///
     /// **Not recommended to continue using this v1 endpoint**
     ///
-    /// Get the pair's default notional bracket list, may return ambiguous values when there have been multiple different `symbol` brackets under the `pair`, suggest using the following `GET /dapi/v2/leverageBracket` query instead to get the specific `symbol` notional bracket list.
+    /// Get the pair's default notional bracket list, may return ambiguous
+    /// values when there have been multiple different `symbol` brackets under
+    /// the `pair`, suggest using the following `GET /dapi/v2/leverageBracket`
+    /// query instead to get the specific `symbol` notional bracket list.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -630,7 +663,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Notional-Bracket-for-Pair).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#notional-bracket-for-pair).
     ///
     pub async fn notional_bracket_for_pair(
         &self,
@@ -641,11 +674,13 @@ impl RestApi {
             .await
     }
 
-    /// Notional Bracket for `Symbol(USER_DATA)`
+    /// Notional Bracket for Symbol (`USER_DATA`)
     ///
     /// Get the symbol's notional bracket list.
     ///
-    /// Weight: 1 (after CM migration: 1 with symbol / 2 without symbol)
+    /// Weight: 1 (after CM migration: 1 with `symbol` / 2 without `symbol`)
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -675,7 +710,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Notional-Bracket-for-Symbol).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#notional-bracket-for-symbol).
     ///
     pub async fn notional_bracket_for_symbol(
         &self,
@@ -690,7 +725,9 @@ impl RestApi {
     ///
     /// Query user commission rate
     ///
-    /// Weight: 20
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -720,7 +757,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/User-Commission-Rate).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/account#user-commission-rate).
     ///
     pub async fn user_commission_rate(
         &self,
@@ -733,10 +770,11 @@ impl RestApi {
     ///
     /// Query basis
     ///
-    /// * If startTime and endTime are not sent, the most recent data is returned.
-    /// * Only the data of the latest 30 days is available.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent data is returned.
+    /// - Only the data of the latest 30 days is available.
     ///
     /// # Arguments
     ///
@@ -766,7 +804,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Basis).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#basis).
     ///
     pub async fn basis(
         &self,
@@ -779,7 +817,7 @@ impl RestApi {
     ///
     /// Test connectivity to the Rest API and get the current server time.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -809,7 +847,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Check-Server-time).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#check-server-time).
     ///
     pub async fn check_server_time(
         &self,
@@ -819,15 +857,18 @@ impl RestApi {
 
     /// Compressed/Aggregate Trades List
     ///
-    /// Get compressed, aggregate trades. Market trades that fill in 100ms with the same price and the same taking side will have the quantity aggregated.
+    /// Get compressed, aggregate trades. Market trades that fill in 100ms with
+    /// the same price and the same taking side will have the quantity
+    /// aggregated.
     ///
-    /// * support querying futures trade histories that are not older than 24 hours
-    /// * If both `startTime` and `endTime` are sent, time between `startTime` and `endTime` must be less than 1 hour.
-    /// * If `fromId`, `startTime`, and `endTime` are not sent, the most recent aggregate trades will be returned.
-    /// * Only market trades will be aggregated and returned, which means the insurance fund trades and ADL trades won't be aggregated.
-    /// * Sending both `startTime`/`endTime` and `fromId` might cause response timeout, please send either `fromId` or `startTime`/`endTime`
+    /// Weight(IP): 20
     ///
-    /// Weight: 20
+    /// Notes:
+    /// - support querying futures trade histories that are not older than 24 hours
+    /// - If both `startTime` and `endTime` are sent, time between `startTime` and `endTime` must be less than 1 hour.
+    /// - If `fromId`, `startTime`, and `endTime` are not sent, the most recent aggregate trades will be returned.
+    /// - Only market trades will be aggregated and returned, which means the insurance fund trades and ADL trades won't be aggregated.
+    /// - Sending both `startTime`/`endTime` and `fromId` might cause response timeout, please send either `fromId` or `startTime`/`endTime`
     ///
     /// # Arguments
     ///
@@ -857,7 +898,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#compressed-aggregate-trades-list).
     ///
     pub async fn compressed_aggregate_trades_list(
         &self,
@@ -871,28 +912,23 @@ impl RestApi {
 
     /// Continuous Contract Kline/Candlestick Data
     ///
-    /// Kline/candlestick bars for a specific contract type.
-    /// Klines are uniquely identified by their open time.
+    /// Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
     ///
-    /// * Contract type:
-    /// * PERPETUAL
-    /// * `CURRENT_QUARTER`
-    /// * `NEXT_QUARTER`
+    /// Weight: based on parameter `LIMIT`
     ///
-    /// 1000 | 10
-    /// * The difference between `startTime` and `endTime` can only be up to 200 days
-    /// * Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
-    /// * If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
-    /// * If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
-    /// * If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
+    /// | LIMIT | weight |
+    /// | --- | --- |
+    /// | [1,100) | 1 |
+    /// | [100, 500) | 2 |
+    /// | [500, 1000] | 5 |
+    /// | > 1000 | 10 |
     ///
-    /// Weight: based on parameter LIMIT
-    /// LIMIT | weight
-    /// ---|---
-    /// [1,100) | 1
-    /// [100, 500) | 2
-    /// [500, 1000] | 5
-    /// > 1000 | 10
+    /// Notes:
+    /// - The difference between `startTime` and `endTime` can only be up to 200 days
+    /// - Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
+    /// - If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
+    /// - If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
+    /// - If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
     ///
     /// # Arguments
     ///
@@ -901,7 +937,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>>`] on success.
+    /// [`RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>>>`] on success.
     ///
     /// # Errors
     ///
@@ -922,13 +958,13 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#continuous-contract-kline-candlestick-data).
     ///
     pub async fn continuous_contract_kline_candlestick_data(
         &self,
         params: ContinuousContractKlineCandlestickDataParams,
     ) -> anyhow::Result<
-        RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>>,
+        RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>>>,
     > {
         self.market_data_api_client
             .continuous_contract_kline_candlestick_data(params)
@@ -939,7 +975,7 @@ impl RestApi {
     ///
     /// Current exchange trading rules and symbol information
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -969,7 +1005,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Exchange-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#exchange-information).
     ///
     pub async fn exchange_information(
         &self,
@@ -981,9 +1017,10 @@ impl RestApi {
     ///
     /// Get Funding Rate History of Perpetual Futures
     ///
-    /// * empty array will be returned for delivery symbols.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - empty array will be returned for delivery symbols.
     ///
     /// # Arguments
     ///
@@ -1013,7 +1050,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Rate-History-of-Perpetual-Futures).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#get-funding-rate-history-of-perpetual-futures).
     ///
     pub async fn get_funding_rate_history_of_perpetual_futures(
         &self,
@@ -1028,9 +1065,7 @@ impl RestApi {
 
     /// Get Funding Rate Info
     ///
-    /// Query funding rate info for symbols that had `FundingRateCap`/ `FundingRateFloor` / fundingIntervalHours adjustment
-    ///
-    /// Weight: 0
+    /// Query funding rate info for symbols that had FundingRateCap/FundingRateFloor/fundingIntervalHours adjustment
     ///
     /// # Arguments
     ///
@@ -1060,7 +1095,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#get-funding-rate-info).
     ///
     pub async fn get_funding_rate_info(
         &self,
@@ -1072,7 +1107,7 @@ impl RestApi {
     ///
     /// Query index price and mark price
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
     ///
     /// # Arguments
     ///
@@ -1102,7 +1137,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-and-Mark-Price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#index-price-and-mark-price).
     ///
     pub async fn index_price_and_mark_price(
         &self,
@@ -1117,20 +1152,21 @@ impl RestApi {
     ///
     /// Kline/candlestick bars for the index price of a pair. Klines are uniquely identified by their open time.
     ///
-    /// 1000 | 10
-    /// * The difference between `startTime` and `endTime` can only be up to 200 days
-    /// * Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
-    /// * If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
-    /// * If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
-    /// * If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
+    /// Weight: Based on parameter `LIMIT`
     ///
-    /// Weight: based on parameter LIMIT
-    /// LIMIT | weight
-    /// ---|---
-    /// [1,100) | 1
-    /// [100, 500) | 2
-    /// [500, 1000] | 5
-    /// > 1000 | 10
+    /// | LIMIT | weight |
+    /// | --- | --- |
+    /// | [1,100) | 1 |
+    /// | [100, 500) | 2 |
+    /// | [500, 1000] | 5 |
+    /// | > 1000 | 10 |
+    ///
+    /// Notes:
+    /// - The difference between `startTime` and `endTime` can only be up to 200 days
+    /// - Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
+    /// - If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
+    /// - If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
+    /// - If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
     ///
     /// # Arguments
     ///
@@ -1139,7 +1175,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>>>`] on success.
+    /// [`RestApiResponse<Vec<Vec<models::IndexPriceKlineCandlestickDataItemInner>>>`] on success.
     ///
     /// # Errors
     ///
@@ -1160,14 +1196,13 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#index-price-kline-candlestick-data).
     ///
     pub async fn index_price_kline_candlestick_data(
         &self,
         params: IndexPriceKlineCandlestickDataParams,
-    ) -> anyhow::Result<
-        RestApiResponse<Vec<Vec<models::IndexPriceKlineCandlestickDataResponseItemInner>>>,
-    > {
+    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::IndexPriceKlineCandlestickDataItemInner>>>>
+    {
         self.market_data_api_client
             .index_price_kline_candlestick_data(params)
             .await
@@ -1175,23 +1210,23 @@ impl RestApi {
 
     /// Kline/Candlestick Data
     ///
-    /// Kline/candlestick bars for a symbol.
-    /// Klines are uniquely identified by their open time.
+    /// Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
     ///
-    /// 1000 | 10
-    /// * The difference between `startTime` and `endTime` can only be up to 200 days
-    /// * Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
-    /// * If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
-    /// * If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
-    /// * If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
+    /// Weight: Based on parameter `LIMIT`
     ///
-    /// Weight: based on parameter LIMIT
-    /// LIMIT | weight
-    /// ---|---
-    /// [1,100) | 1
-    /// [100, 500) | 2
-    /// [500, 1000] | 5
-    /// > 1000 | 10
+    /// | LIMIT | weight |
+    /// | --- | --- |
+    /// | [1,100) | 1 |
+    /// | [100, 500) | 2 |
+    /// | [500, 1000] | 5 |
+    /// | > 1000 | 10 |
+    ///
+    /// Notes:
+    /// - The difference between `startTime` and `endTime` can only be up to 200 days
+    /// - Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
+    /// - If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
+    /// - If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
+    /// - If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
     ///
     /// # Arguments
     ///
@@ -1200,7 +1235,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>>`] on success.
+    /// [`RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>>>`] on success.
     ///
     /// # Errors
     ///
@@ -1221,13 +1256,13 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#kline-candlestick-data).
     ///
     pub async fn kline_candlestick_data(
         &self,
         params: KlineCandlestickDataParams,
     ) -> anyhow::Result<
-        RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataResponseItemInner>>>,
+        RestApiResponse<Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>>>,
     > {
         self.market_data_api_client
             .kline_candlestick_data(params)
@@ -1238,10 +1273,11 @@ impl RestApi {
     ///
     /// Query symbol Long/Short Ratio
     ///
-    /// * If startTime and endTime are not sent, the most recent data is returned.
-    /// * Only the data of the latest 30 days is available.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent data is returned.
+    /// - Only the data of the latest 30 days is available.
     ///
     /// # Arguments
     ///
@@ -1271,7 +1307,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Long-Short-Ratio).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#long-short-ratio).
     ///
     pub async fn long_short_ratio(
         &self,
@@ -1282,23 +1318,23 @@ impl RestApi {
 
     /// Mark Price Kline/Candlestick Data
     ///
-    /// Kline/candlestick bars for the mark price of a symbol.
-    /// Klines are uniquely identified by their open time.
+    /// Kline/candlestick bars for the mark price of a symbol. Klines are uniquely identified by their open time.
     ///
-    /// 1000 | 10
-    /// * The difference between `startTime` and `endTime` can only be up to 200 days
-    /// * Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
-    /// * If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
-    /// * If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
-    /// * If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
+    /// Weight: Based on parameter `LIMIT`
     ///
-    /// Weight: based on parameter LIMIT
-    /// LIMIT | weight
-    /// ---|---
-    /// [1,100) | 1
-    /// [100, 500) | 2
-    /// [500, 1000] | 5
-    /// > 1000 | 10
+    /// | LIMIT | weight |
+    /// | --- | --- |
+    /// | [1,100) | 1 |
+    /// | [100, 500) | 2 |
+    /// | [500, 1000] | 5 |
+    /// | > 1000 | 10 |
+    ///
+    /// Notes:
+    /// - The difference between `startTime` and `endTime` can only be up to 200 days
+    /// - Between `startTime` and `endTime`, the most recent `limit` data from `endTime` will be returned:
+    /// - If `startTime` and `endTime` are not sent, current timestamp will be set as `endTime`, and the most recent data will be returned.
+    /// - If `startTime` is sent only, the timestamp of 200 days after `startTime` will be set as `endTime`(up to the current time)
+    /// - If `endTime` is sent only, the timestamp of 200 days before `endTime` will be set as `startTime`
     ///
     /// # Arguments
     ///
@@ -1307,7 +1343,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>>`] on success.
+    /// [`RestApiResponse<Vec<Vec<models::IndexPriceKlineCandlestickDataItemInner>>>`] on success.
     ///
     /// # Errors
     ///
@@ -1328,27 +1364,29 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#mark-price-kline-candlestick-data).
     ///
     pub async fn mark_price_kline_candlestick_data(
         &self,
         params: MarkPriceKlineCandlestickDataParams,
-    ) -> anyhow::Result<
-        RestApiResponse<Vec<Vec<models::MarkPriceKlineCandlestickDataResponseItemInner>>>,
-    > {
+    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::IndexPriceKlineCandlestickDataItemInner>>>>
+    {
         self.market_data_api_client
             .mark_price_kline_candlestick_data(params)
             .await
     }
 
-    /// Old Trades `Lookup(MARKET_DATA)`
+    /// Old Trades Lookup (`MARKET_DATA`)
     ///
     /// Get older market historical trades.
     ///
-    /// * Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
-    /// * Only supports data from within the last one month
+    /// Weight(IP): 20
     ///
-    /// Weight: 20
+    /// Security Type: `MARKET_DATA`
+    ///
+    /// Notes:
+    /// - Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
+    /// - Only supports data from within the last one month
     ///
     /// # Arguments
     ///
@@ -1378,7 +1416,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Old-Trades-Lookup).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#old-trades-lookup).
     ///
     pub async fn old_trades_lookup(
         &self,
@@ -1391,7 +1429,7 @@ impl RestApi {
     ///
     /// Get present open interest of a specific symbol.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -1421,7 +1459,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#open-interest).
     ///
     pub async fn open_interest(
         &self,
@@ -1434,11 +1472,11 @@ impl RestApi {
     ///
     /// Query open interest stats
     ///
+    /// Weight(IP): 1
     ///
-    /// * If startTime and endTime are not sent, the most recent data is returned.
-    /// * Only the data of the latest 30 days is available.
-    ///
-    /// Weight: 1
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent data is returned.
+    /// - Only the data of the latest 30 days is available.
     ///
     /// # Arguments
     ///
@@ -1468,7 +1506,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest-Statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#open-interest-statistics).
     ///
     pub async fn open_interest_statistics(
         &self,
@@ -1484,12 +1522,13 @@ impl RestApi {
     /// Query orderbook on specific symbol
     ///
     /// Weight: Adjusted based on the limit:
-    /// Limit | Weight
-    /// ------------ | ------------
-    /// 5, 10, 20, 50 | 2
-    /// 100 | 5
-    /// 500 | 10
-    /// 1000 | 20
+    ///
+    /// | Limit | Weight |
+    /// | ------------ | ------------ |
+    /// | 5, 10, 20, 50 | 2 |
+    /// | 100 | 5 |
+    /// | 500 | 10 |
+    /// | 1000 | 20 |
     ///
     /// # Arguments
     ///
@@ -1519,7 +1558,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Order-Book).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#order-book).
     ///
     pub async fn order_book(
         &self,
@@ -1532,16 +1571,17 @@ impl RestApi {
     ///
     /// Premium index kline bars of a symbol. Klines are uniquely identified by their open time.
     ///
+    /// Weight: Based on parameter `LIMIT`
     ///
-    /// * If startTime and endTime are not sent, the most recent klines are returned.
-    ///
-    /// Weight: based on parameter LIMIT
     /// | LIMIT       | weight |
     /// | ----------- | ------ |
     /// | [1,100)     | 1      |
     /// | [100, 500)  | 2      |
     /// | [500, 1000] | 5      |
     /// | > 1000      | 10     |
+    ///
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent klines are returned.
     ///
     /// # Arguments
     ///
@@ -1550,7 +1590,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>>>`] on success.
+    /// [`RestApiResponse<Vec<Vec<models::PremiumIndexKlineDataItemInner>>>`] on success.
     ///
     /// # Errors
     ///
@@ -1571,13 +1611,12 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-index-Kline-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#premium-index-kline-data).
     ///
     pub async fn premium_index_kline_data(
         &self,
         params: PremiumIndexKlineDataParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::PremiumIndexKlineDataResponseItemInner>>>>
-    {
+    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::PremiumIndexKlineDataItemInner>>>> {
         self.market_data_api_client
             .premium_index_kline_data(params)
             .await
@@ -1587,7 +1626,7 @@ impl RestApi {
     ///
     /// Query index price constituents
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -1617,7 +1656,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Constituents).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#query-index-price-constituents).
     ///
     pub async fn query_index_price_constituents(
         &self,
@@ -1632,9 +1671,10 @@ impl RestApi {
     ///
     /// Get recent market trades
     ///
-    /// * Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Notes:
+    /// - Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
     ///
     /// # Arguments
     ///
@@ -1664,7 +1704,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Recent-Trades-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#recent-trades-list).
     ///
     pub async fn recent_trades_list(
         &self,
@@ -1677,11 +1717,12 @@ impl RestApi {
     ///
     /// Best price/qty on the order book for a symbol or symbols.
     ///
-    /// * Symbol and pair cannot be sent together
-    /// * If a pair is sent,tickers for all symbols of the pair will be returned
-    /// * If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
+    /// Weight: **2** for a single symbol, **5** when the symbol parameter is omitted
     ///
-    /// Weight: 2 for a single symbol, 5 when the symbol parameter is omitted
+    /// Notes:
+    /// - Symbol and pair cannot be sent together
+    /// - If a pair is sent,tickers for all symbols of the pair will be returned
+    /// - If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
     ///
     /// # Arguments
     ///
@@ -1711,7 +1752,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#symbol-order-book-ticker).
     ///
     pub async fn symbol_order_book_ticker(
         &self,
@@ -1726,11 +1767,12 @@ impl RestApi {
     ///
     /// Latest price for a symbol or symbols.
     ///
-    /// * Symbol and pair cannot be sent together
-    /// * If a pair is sent,tickers for all symbols of the pair will be returned
-    /// * If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
+    /// Weight: **1** for a single symbol, **2** when the symbol parameter is omitted
     ///
-    /// Weight: 1 for a single symbol, 2 when the symbol parameter is omitted
+    /// Notes:
+    /// - Symbol and pair cannot be sent together
+    /// - If a pair is sent,tickers for all symbols of the pair will be returned
+    /// - If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
     ///
     /// # Arguments
     ///
@@ -1760,7 +1802,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Price-Ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#symbol-price-ticker).
     ///
     pub async fn symbol_price_ticker(
         &self,
@@ -1773,13 +1815,17 @@ impl RestApi {
 
     /// Taker Buy/Sell Volume
     ///
-    /// Taker Buy Volume: the total volume of buy orders filled by takers within the period.
-    /// Taker Sell Volume: the total volume of sell orders filled by takers within the period.
+    /// Taker Buy Volume: the total volume of buy orders filled by takers within
+    /// the period.
     ///
-    /// * If startTime and endTime are not sent, the most recent data is returned.
-    /// * Only the data of the latest 30 days is available.
+    /// Taker Sell Volume: the total volume of sell orders filled by takers
+    /// within the period.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent data is returned.
+    /// - Only the data of the latest 30 days is available.
     ///
     /// # Arguments
     ///
@@ -1809,7 +1855,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Taker-Buy-Sell-Volume).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#taker-buy-sell-volume).
     ///
     pub async fn taker_buy_sell_volume(
         &self,
@@ -1824,7 +1870,7 @@ impl RestApi {
     ///
     /// Test connectivity to the Rest API.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -1854,7 +1900,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Test-Connectivity).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#test-connectivity).
     ///
     pub async fn test_connectivity(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.market_data_api_client.test_connectivity().await
@@ -1864,12 +1910,13 @@ impl RestApi {
     ///
     /// 24 hour rolling window price change statistics.
     ///
-    /// * Symbol and pair cannot be sent together
-    /// * If a pair is sent,tickers for all symbols of the pair will be returned
-    /// * If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
+    /// Weight: **1** for a single symbol, **40** when the symbol parameter is omitted
+    /// **Careful** when accessing this with no symbol.
     ///
-    /// Weight: 1 for a single symbol, 40 when the symbol parameter is omitted
-    /// Careful when accessing this with no symbol.
+    /// Notes:
+    /// - Symbol and pair cannot be sent together
+    /// - If a pair is sent,tickers for all symbols of the pair will be returned
+    /// - If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
     ///
     /// # Arguments
     ///
@@ -1899,7 +1946,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#ticker24hr-price-change-statistics).
     ///
     pub async fn ticker24hr_price_change_statistics(
         &self,
@@ -1911,17 +1958,27 @@ impl RestApi {
             .await
     }
 
-    /// Top Trader Long/Short Ratio (Accounts)
+    /// Top Trader Long/Short Account Ratio
     ///
-    /// The proportion of net long and net short accounts to total accounts of the top 20% users with the highest margin balance. Each account is counted once only.
-    /// Long Account % = Accounts of top traders with net long positions / Total accounts of top traders with open positions
-    /// Short Account % = Accounts of top traders with net short positions / Total accounts of top traders with open positions
+    /// The proportion of net long and net short accounts to total accounts of
+    /// the top 20% users with the highest margin balance. Each account is
+    /// counted once only.
+    ///
+    /// Long Account % = Accounts of top traders with net long positions / Total
+    /// accounts of top traders with open positions
+    ///
+    /// Short Account % = Accounts of top traders with net short positions /
+    /// Total accounts of top traders with open positions
+    ///
     /// Long/Short Ratio (Accounts) = Long Account % / Short Account %
     ///
-    /// * If startTime and endTime are not sent, the most recent data is returned.
-    /// * Only the data of the latest 30 days is available.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: Accounts
+    ///
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent data is returned.
+    /// - Only the data of the latest 30 days is available.
     ///
     /// # Arguments
     ///
@@ -1951,7 +2008,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Long-Short-Account-Ratio).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#top-trader-long-short-ratio-accounts).
     ///
     pub async fn top_trader_long_short_ratio_accounts(
         &self,
@@ -1963,17 +2020,26 @@ impl RestApi {
             .await
     }
 
-    /// Top Trader Long/Short Ratio (Positions)
+    /// Top Trader Long/Short Position Ratio
     ///
-    /// The proportion of net long and net short positions to total open positions of the top 20% users with the highest margin balance.
-    /// Long Position % = Long positions of top traders / Total open positions of top traders
-    /// Short Position % = Short positions of top traders / Total open positions of top traders
+    /// The proportion of net long and net short positions to total open
+    /// positions of the top 20% users with the highest margin balance.
+    ///
+    /// Long Position % = Long positions of top traders / Total open positions
+    /// of top traders
+    ///
+    /// Short Position % = Short positions of top traders / Total open positions
+    /// of top traders
+    ///
     /// Long/Short Ratio (Positions) = Long Position % / Short Position %
     ///
-    /// * If startTime and endTime are not sent, the most recent data is returned.
-    /// * Only the data of the latest 30 days is available.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: Positions
+    ///
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent data is returned.
+    /// - Only the data of the latest 30 days is available.
     ///
     /// # Arguments
     ///
@@ -2003,7 +2069,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/market-data#top-trader-long-short-ratio-positions).
     ///
     pub async fn top_trader_long_short_ratio_positions(
         &self,
@@ -2019,17 +2085,19 @@ impl RestApi {
     ///
     /// Get trades for a specific account and symbol.
     ///
+    /// Weight: **20** with symbol，**40** with pair (after CM migration: **5** flat)
     ///
-    /// * Either symbol or pair must be sent
-    /// * Symbol and pair cannot be sent together
-    /// * Pair and fromId cannot be sent together
-    /// * `OrderId` can only be sent together with symbol
-    /// * If a pair is sent,tickers for all symbols of the pair will be returned
-    /// * The parameter `fromId` cannot be sent with `startTime` or `endTime`
-    /// * If startTime and endTime are both not sent, then the last 7 days' data will be returned.
-    /// * The time between startTime and endTime cannot be longer than 7 days.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 20 with symbol，40 with pair (after CM migration: 5 flat)
+    /// Notes:
+    /// - Either symbol or pair must be sent
+    /// - Symbol and pair cannot be sent together
+    /// - Pair and fromId cannot be sent together
+    /// - `OrderId` can only be sent together with symbol
+    /// - If a pair is sent,tickers for all symbols of the pair will be returned
+    /// - The parameter `fromId` cannot be sent with `startTime` or `endTime`
+    /// - If startTime and endTime are both not sent, then the last 7 days' data will be returned.
+    /// - The time between startTime and endTime cannot be longer than 7 days.
     ///
     /// # Arguments
     ///
@@ -2059,7 +2127,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Account-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#account-trade-list).
     ///
     pub async fn account_trade_list(
         &self,
@@ -2076,14 +2144,16 @@ impl RestApi {
     /// * order status is CANCELED or EXPIRED AND order has NO filled trade AND created time + 3 days < current time
     /// * order create time + 90 days < current time
     ///
+    /// Weight: **20** with symbol, **40** with pair (after CM migration: **5** flat)
     ///
-    /// * Either `symbol` or `pair` must be sent.
-    /// * `pair` can't be sent with `orderId`
-    /// * If `orderId` is set, it will get orders >= that `orderId`. Otherwise most recent orders are returned.
-    /// * If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
-    /// * The query time period must be less then 7 days( default as the recent 7 days).
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 20 with symbol, 40 with pair (after CM migration: 5 flat)
+    /// Notes:
+    /// - Either `symbol` or `pair` must be sent.
+    /// - `pair` can't be sent with `orderId`
+    /// - If `orderId` is set, it will get orders >= that `orderId`. Otherwise most recent orders are returned.
+    /// - If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+    /// - The query time period must be less then 7 days( default as the recent 7 days).
     ///
     /// # Arguments
     ///
@@ -2113,7 +2183,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/All-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#all-orders).
     ///
     pub async fn all_orders(
         &self,
@@ -2124,14 +2194,30 @@ impl RestApi {
 
     /// Auto-Cancel All Open Orders (TRADE)
     ///
-    /// Cancel all open orders of the specified symbol at the end of the specified countdown. This rest endpoint means to ensure your open orders are canceled in case of an outage. The endpoint should be called repeatedly as heartbeats so that the existing countdown time can be canceled and repalced by a new one. The system will check all countdowns **approximately every 10 milliseconds**, so please note that sufficient redundancy should be considered when using this function. We do not recommend setting the countdown time to be too precise or too small.
+    /// Cancel all open orders of the specified symbol at the end of the
+    /// specified countdown. This rest endpoint means to ensure your open orders
+    /// are canceled in case of an outage. The endpoint should be called
+    /// repeatedly as heartbeats so that the existing countdown time can be
+    /// canceled and repalced by a new one. The system will check all countdowns
+    /// **approximately every 10 milliseconds**, so please note that sufficient
+    /// redundancy should be considered when using this function. We do not
+    /// recommend setting the countdown time to be too precise or too small.
+    ///
     ///
     /// * Example usage:
-    /// Call this endpoint at 30s intervals with an countdownTime of 120000 (120s).
-    /// If this endpoint is not called within 120 seconds, all your orders of the specified symbol will be automatically canceled.
-    /// If this endpoint is called with an countdownTime of 0, the countdown timer will be stopped.
     ///
-    /// Weight: 10
+    /// Call this endpoint at 30s intervals with an countdownTime of 120000
+    /// (120s).
+    ///
+    /// If this endpoint is not called within 120 seconds, all your orders of
+    /// the specified symbol will be automatically canceled.
+    ///
+    /// If this endpoint is called with an countdownTime of 0, the countdown
+    /// timer will be stopped.
+    ///
+    /// Weight(IP): 10
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2161,7 +2247,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Auto-Cancel-All-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#auto-cancel-all-open-orders).
     ///
     pub async fn auto_cancel_all_open_orders(
         &self,
@@ -2172,11 +2258,13 @@ impl RestApi {
             .await
     }
 
-    /// Cancel All Open Orders(TRADE)
+    /// Cancel All Open Orders (TRADE)
     ///
     /// Cancel All Open Orders
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2206,7 +2294,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-All-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-all-open-orders).
     ///
     pub async fn cancel_all_open_orders(
         &self,
@@ -2215,13 +2303,16 @@ impl RestApi {
         self.trade_api_client.cancel_all_open_orders(params).await
     }
 
-    /// Cancel Multiple Orders(TRADE)
+    /// Cancel Multiple Orders (TRADE)
     ///
     /// Cancel Multiple Orders
     ///
-    /// * Either `orderIdList` or `origClientOrderIdList ` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderIdList` or `origClientOrderIdList ` must be sent.
     ///
     /// # Arguments
     ///
@@ -2251,7 +2342,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Multiple-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-multiple-orders).
     ///
     pub async fn cancel_multiple_orders(
         &self,
@@ -2264,9 +2355,12 @@ impl RestApi {
     ///
     /// Cancel an active order.
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -2296,7 +2390,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-order).
     ///
     pub async fn cancel_order(
         &self,
@@ -2308,9 +2402,13 @@ impl RestApi {
     /// Change Initial Leverage (TRADE)
     ///
     /// Change user's initial leverage in the specific symbol market.
-    /// For Hedge Mode, LONG and SHORT positions of one symbol use the same initial leverage and share a total notional value.
     ///
-    /// Weight: 1
+    /// For Hedge Mode, LONG and SHORT positions of one symbol use the same
+    /// initial leverage and share a total notional value.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2340,7 +2438,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Initial-Leverage).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#change-initial-leverage).
     ///
     pub async fn change_initial_leverage(
         &self,
@@ -2351,10 +2449,15 @@ impl RestApi {
 
     /// Change Margin Type (TRADE)
     ///
-    /// Change user's margin type in the specific symbol market.For Hedge Mode, LONG and SHORT positions of one symbol use the same margin type.
-    /// With ISOLATED margin type, margins of the LONG and SHORT positions are isolated from each other.
+    /// Change user's margin type in the specific symbol market.For Hedge Mode,
+    /// LONG and SHORT positions of one symbol use the same margin type.
     ///
-    /// Weight: 1
+    /// With ISOLATED margin type, margins of the LONG and SHORT positions are
+    /// isolated from each other.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2384,7 +2487,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Margin-Type).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#change-margin-type).
     ///
     pub async fn change_margin_type(
         &self,
@@ -2393,7 +2496,7 @@ impl RestApi {
         self.trade_api_client.change_margin_type(params).await
     }
 
-    /// Change Position Mode(TRADE)
+    /// Change Position Mode (TRADE)
     ///
     /// Change user's position mode (Hedge Mode or One-way Mode ) on ***EVERY symbol***.
     ///
@@ -2401,7 +2504,9 @@ impl RestApi {
     /// - `-4067` (open orders exist)
     /// - `-4068` (open position exists)
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2431,7 +2536,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Position-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#change-position-mode).
     ///
     pub async fn change_position_mode(
         &self,
@@ -2444,7 +2549,11 @@ impl RestApi {
     ///
     /// Get all open orders on a symbol. **Careful** when accessing this with no symbol.
     ///
-    /// Weight: 1 for a single symbol, 40 for mutltiple symbols
+    /// Weight(IP): null
+    ///
+    /// Weight: **1** for a single symbol, **40** for mutltiple symbols
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2474,7 +2583,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Current-All-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#current-all-open-orders).
     ///
     pub async fn current_all_open_orders(
         &self,
@@ -2487,11 +2596,13 @@ impl RestApi {
     ///
     /// Get order modification history
     ///
+    /// Weight(IP): 1
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
-    /// * Order modify history longer than 3 month is not avaliable
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
+    /// - Order modify history longer than 3 month is not avaliable
     ///
     /// # Arguments
     ///
@@ -2521,7 +2632,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Order-Modify-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#get-order-modify-history).
     ///
     pub async fn get_order_modify_history(
         &self,
@@ -2530,11 +2641,13 @@ impl RestApi {
         self.trade_api_client.get_order_modify_history(params).await
     }
 
-    /// Get Position Margin Change History(TRADE)
+    /// Get Position Margin Change History (TRADE)
     ///
     /// Get position margin change history
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2564,7 +2677,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Position-Margin-Change-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#get-position-margin-change-history).
     ///
     pub async fn get_position_margin_change_history(
         &self,
@@ -2576,13 +2689,16 @@ impl RestApi {
             .await
     }
 
-    /// Modify Isolated Position Margin(TRADE)
+    /// Modify Isolated Position Margin (TRADE)
     ///
     /// Modify Isolated Position Margin
     ///
-    /// * Only for isolated symbol
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Only for isolated symbol
     ///
     /// # Arguments
     ///
@@ -2612,7 +2728,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Isolated-Position-Margin).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#modify-isolated-position-margin).
     ///
     pub async fn modify_isolated_position_margin(
         &self,
@@ -2623,16 +2739,19 @@ impl RestApi {
             .await
     }
 
-    /// Modify Multiple Orders(TRADE)
+    /// Modify Multiple Orders (TRADE)
     ///
     /// Modify Multiple Orders
     ///
-    /// * Parameter rules are same with `Modify Order`
-    /// * Batch modify orders are processed concurrently, and the order of matching is not guaranteed.
-    /// * The order of returned contents for batch modify orders is the same as the order of the order list.
-    /// * One order can only be modfied for less than 10000 times
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Parameter rules are same with `Modify Order`
+    /// - Batch modify orders are processed concurrently, and the order of matching is not guaranteed.
+    /// - The order of returned contents for batch modify orders is the same as the order of the order list.
+    /// - One order can only be modfied for less than 10000 times
     ///
     /// # Arguments
     ///
@@ -2662,7 +2781,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Multiple-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#modify-multiple-orders).
     ///
     pub async fn modify_multiple_orders(
         &self,
@@ -2675,15 +2794,18 @@ impl RestApi {
     ///
     /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
-    /// * Either `quantity` or `price` must be sent. *(After CM migration, both `quantity` and `price` are required.)*
-    /// * When the new `quantity` or `price` doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
-    /// * However the order will be cancelled by the amendment in the following situations:
-    /// * when the order is in partially filled status and the new `quantity` <= `executedQty`
-    /// * When the order is `GTX` and the new price will cause it to be executed immediately
-    /// * One order can only be modfied for less than 10000 times
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
+    /// - Either `quantity` or `price` must be sent. *(After CM migration, both `quantity` and `price` are required.)*
+    /// - When the new `quantity` or `price` doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
+    /// - However the order will be cancelled by the amendment in the following situations:
+    /// - when the order is in partially filled status and the new `quantity`
+    /// - When the order is `GTX` and the new price will cause it to be executed immediately
+    /// - One order can only be modfied for less than 10000 times
     ///
     /// # Arguments
     ///
@@ -2713,7 +2835,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#modify-order).
     ///
     pub async fn modify_order(
         &self,
@@ -2726,44 +2848,43 @@ impl RestApi {
     ///
     /// Send in a new order.
     ///
-    /// * Order with type `STOP`,  parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Order with type `TAKE_PROFIT`,  parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Condition orders will be triggered when:
-    ///
-    /// * If parameter`priceProtect`is sent as true:
-    /// * when price reaches the `stopPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
-    /// * "triggerProtect" of a symbol can be got from `GET /dapi/v1/exchangeInfo`
-    ///
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// * `TRAILING_STOP_MARKET`:
-    /// * BUY: the lowest price after order placed `<= `activationPrice`, and the latest price >`= the lowest price * (1 + `callbackRate`)
-    /// * SELL: the highest price after order placed >= `activationPrice`, and the latest price <= the highest price * (1 - `callbackRate`)
-    ///
-    /// * For `TRAILING_STOP_MARKET`, if you got such error code.
-    /// ``{"code": -2021, "msg": "Order would immediately trigger."}``
-    /// means that the parameters you send do not meet the following requirements:
-    /// * BUY: `activationPrice` should be smaller than latest price.
-    /// * SELL: `activationPrice` should be larger than latest price.
-    ///
-    /// * If `newOrderRespType ` is sent as `RESULT` :
-    /// * `MARKET` order: the final FILLED result of the order will be return directly.
-    /// * `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
-    ///
-    /// * `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
-    /// * Follow the same rules for condition orders.
-    /// * If triggered,**close all** current long position( if `SELL`) or current short position( if `BUY`).
-    /// * Cannot be used with `quantity` parameter
-    /// * Cannot be used with `reduceOnly` parameter
-    /// * In Hedge Mode,cannot be used with `BUY` orders in `LONG` position side. and cannot be used with `SELL` orders in `SHORT` position side
-    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC`.
-    ///
-    /// Weight: 1 on 1min order rate limit(X-MBX-ORDER-COUNT-1M)\
+    /// Weight: 1 on 1min order rate limit(X-MBX-ORDER-COUNT-1M)
     /// 0 on IP rate limit(x-mbx-used-weight-1m)
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Additional mandatory parameters based on `type`:
+    /// - Order with type `STOP`, parameter `timeInForce` can be sent ( default `GTC`).
+    /// - Order with type `TAKE_PROFIT`, parameter `timeInForce` can be sent ( default `GTC`).
+    /// - Condition orders will be triggered when:
+    /// - If parameter`priceProtect`is sent as true:
+    /// - when price reaches the `stopPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
+    /// - "triggerProtect" of a symbol can be got from `GET /dapi/v1/exchangeInfo`
+    /// - `STOP`, `STOP_MARKET`:
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`")
+    /// -`TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`")
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
+    /// - `TRAILING_STOP_MARKET`:
+    /// - BUY: the lowest price after order placed ``= the lowest price * (1 + `callbackRate`)
+    /// - SELL: the highest price after order placed >= `activationPrice`, and the latest price
+    ///
+    /// - For `TRAILING_STOP_MARKET`, if you got such error code. > `{"code": -2021, "msg": "Order would immediately trigger."}` > means that the parameters you send do not meet the following requirements:
+    /// - BUY: `activationPrice` should be smaller than latest price.
+    /// - SELL: `activationPrice` should be larger than latest price.
+    /// - If `newOrderRespType ` is sent as `RESULT` :
+    /// - `MARKET` order: the final FILLED result of the order will be return directly.
+    /// - `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+    /// - `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
+    /// - Follow the same rules for condition orders.
+    /// - If triggered,**close all** current long position( if `SELL`) or current short position( if `BUY`).
+    /// - Cannot be used with `quantity` parameter
+    /// - Cannot be used with `reduceOnly` parameter
+    /// - In Hedge Mode,cannot be used with `BUY` orders in `LONG` position side. and cannot be used with `SELL` orders in `SHORT` position side
+    ///
+    /// - `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC`.
     ///
     /// # Arguments
     ///
@@ -2793,7 +2914,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/New-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#new-order).
     ///
     pub async fn new_order(
         &self,
@@ -2802,7 +2923,7 @@ impl RestApi {
         self.trade_api_client.new_order(params).await
     }
 
-    /// Place Multiple Orders(TRADE)
+    /// Place Multiple Orders (TRADE)
     ///
     /// Place multiple orders
     ///
@@ -2810,7 +2931,14 @@ impl RestApi {
     /// * Batch orders are processed concurrently, and the order of matching is not guaranteed.
     /// * The order of returned contents for batch orders is the same as the order of the order list.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - `batchOrders` must be a JSON array of order parameter objects.
+    /// - Example:
+    /// `/dapi/v1/batchOrders?batchOrders=[{"type":"LIMIT","timeInForce":"GTC","symbol":"BTCUSD_PERP","side":"BUY","price":"10001","quantity":"1"}]`
     ///
     /// # Arguments
     ///
@@ -2840,7 +2968,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Place-Multiple-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#place-multiple-orders).
     ///
     pub async fn place_multiple_orders(
         &self,
@@ -2849,7 +2977,7 @@ impl RestApi {
         self.trade_api_client.place_multiple_orders(params).await
     }
 
-    /// Position ADL Quantile `Estimation(USER_DATA)`
+    /// Position ADL Quantile Estimation (`USER_DATA`)
     ///
     /// Query position ADL quantile estimation
     ///
@@ -2860,7 +2988,9 @@ impl RestApi {
     /// * "HEDGE" as a sign will be returned instead of "BOTH";
     /// * A same value caculated on unrealized pnls on long and short sides' positions will be shown for "LONG" and "SHORT" when there are positions in both of long and short sides.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2890,7 +3020,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Position-ADL-Quantile-Estimation).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#position-adl-quantile-estimation).
     ///
     pub async fn position_adl_quantile_estimation(
         &self,
@@ -2902,16 +3032,19 @@ impl RestApi {
             .await
     }
 
-    /// Position `Information(USER_DATA)`
+    /// Position Information (`USER_DATA`)
     ///
     /// Get current account information.
     ///
-    /// * If neither `marginAsset` nor `pair` is sent, positions of all symbols with `TRADING` status will be returned.
-    /// * for One-way Mode user, the response  will only show the "BOTH" positions
-    /// * for Hedge Mode user, the response will show "BOTH", "LONG", and "SHORT" positions.
-    /// Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If neither `marginAsset` nor `pair` is sent, positions of all symbols with `TRADING` status will be returned.
+    /// - for One-way Mode user, the response will only show the "BOTH" positions
+    /// - for Hedge Mode user, the response will show "BOTH", "LONG", and "SHORT" positions. **Note** > Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
+    /// - Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
     ///
     /// # Arguments
     ///
@@ -2941,7 +3074,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Position-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#position-information).
     ///
     pub async fn position_information(
         &self,
@@ -2950,14 +3083,17 @@ impl RestApi {
         self.trade_api_client.position_information(params).await
     }
 
-    /// Query Current Open `Order(USER_DATA)`
+    /// Query Current Open Order (`USER_DATA`)
     ///
     /// Query Current Open Order
     ///
-    /// * Either`orderId` or `origClientOrderId` must be sent
-    /// * If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either`orderId` or `origClientOrderId` must be sent
+    /// - If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
     ///
     /// # Arguments
     ///
@@ -2987,7 +3123,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Current-Open-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#query-current-open-order).
     ///
     pub async fn query_current_open_order(
         &self,
@@ -3004,10 +3140,12 @@ impl RestApi {
     /// * order status is CANCELED or EXPIRED AND order has NO filled trade AND created time + 3 days < current time
     /// * order create time + 90 days < current time
     ///
+    /// Weight(IP): 1
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -3037,7 +3175,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#query-order).
     ///
     pub async fn query_order(
         &self,
@@ -3046,14 +3184,17 @@ impl RestApi {
         self.trade_api_client.query_order(params).await
     }
 
-    /// User's Force `Orders(USER_DATA)`
+    /// User's Force Orders (`USER_DATA`)
     ///
     /// User's Force Orders
     ///
-    /// * If "autoCloseType" is not sent, orders with both of the types will be returned
-    /// * Only support querying data in the past 90 days
+    /// Weight: **20** (after CM migration: **20** with symbol / **50** without symbol)
     ///
-    /// Weight: 20 (after CM migration: 20 with symbol / 50 without symbol)
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If "autoCloseType" is not sent, orders with both of the types will be returned
+    /// - Only support querying data in the past 90 days
     ///
     /// # Arguments
     ///
@@ -3083,7 +3224,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Users-Force-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#users-force-orders).
     ///
     pub async fn users_force_orders(
         &self,
@@ -3092,11 +3233,13 @@ impl RestApi {
         self.trade_api_client.users_force_orders(params).await
     }
 
-    /// Close User Data `Stream(USER_STREAM)`
+    /// Close User Data Stream (`USER_STREAM`)
     ///
     /// Close out a user data stream.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -3126,7 +3269,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams/Close-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/user-data-streams#close-user-data-stream).
     ///
     pub async fn close_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.user_data_streams_api_client
@@ -3136,9 +3279,12 @@ impl RestApi {
 
     /// Keepalive User Data Stream (`USER_STREAM`)
     ///
-    /// Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes.
+    /// Keepalive a user data stream to prevent a time out. User data streams
+    /// will close after 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -3168,7 +3314,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams/Keepalive-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/user-data-streams#keepalive-user-data-stream).
     ///
     pub async fn keepalive_user_data_stream(
         &self,
@@ -3180,9 +3326,14 @@ impl RestApi {
 
     /// Start User Data Stream (`USER_STREAM`)
     ///
-    /// Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent. If the account has an active `listenKey`, that `listenKey` will be returned and its validity will be extended for 60 minutes.
+    /// Start a new user data stream. The stream will close after 60 minutes
+    /// unless a keepalive is sent. If the account has an active `listenKey`,
+    /// that `listenKey` will be returned and its validity will be extended for
+    /// 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -3212,7 +3363,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/coin-margined-futures/user-data-streams/Start-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/user-data-streams#start-user-data-stream).
     ///
     pub async fn start_user_data_stream(
         &self,

@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,10 +21,10 @@ pub struct SubscribeEthStakingResponse {
     pub success: Option<bool>,
     #[serde(rename = "wbethAmount", skip_serializing_if = "Option::is_none")]
     pub wbeth_amount: Option<String>,
-    #[serde(rename = "conversionRatio", skip_serializing_if = "Option::is_none")]
-    pub conversion_ratio: Option<String>,
     #[serde(rename = "purchaseId", skip_serializing_if = "Option::is_none")]
     pub purchase_id: Option<i64>,
+    #[serde(rename = "conversionRatio", skip_serializing_if = "Option::is_none")]
+    pub conversion_ratio: Option<String>,
 }
 
 impl SubscribeEthStakingResponse {
@@ -33,8 +33,8 @@ impl SubscribeEthStakingResponse {
         SubscribeEthStakingResponse {
             success: None,
             wbeth_amount: None,
-            conversion_ratio: None,
             purchase_id: None,
+            conversion_ratio: None,
         }
     }
 }

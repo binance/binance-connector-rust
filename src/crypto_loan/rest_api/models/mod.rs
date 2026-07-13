@@ -1,7 +1,7 @@
 /*
- * Binance Crypto Loan REST API
+ * Crypto Loan REST API
  *
- * OpenAPI Specification for the Binance Crypto Loan REST API
+ * Access Binance Crypto Loans to query assets, subscribe to loans, and manage loan positions.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -13,8 +13,6 @@
 
 pub mod check_collateral_repay_rate_response;
 pub use self::check_collateral_repay_rate_response::CheckCollateralRepayRateResponse;
-pub mod check_collateral_repay_rate_stable_rate_response;
-pub use self::check_collateral_repay_rate_stable_rate_response::CheckCollateralRepayRateStableRateResponse;
 pub mod flexible_loan_adjust_ltv_response;
 pub use self::flexible_loan_adjust_ltv_response::FlexibleLoanAdjustLtvResponse;
 pub mod flexible_loan_borrow_response;

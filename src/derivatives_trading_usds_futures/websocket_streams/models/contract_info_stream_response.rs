@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,24 +18,33 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContractInfoStreamResponse {
+    /// Event type.
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time.
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol.
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Contract type.
     #[serde(rename = "ct", skip_serializing_if = "Option::is_none")]
     pub ct: Option<String>,
+    /// Delivery date time.
     #[serde(rename = "dt", skip_serializing_if = "Option::is_none")]
     pub dt: Option<i64>,
+    /// Onboard date time.
     #[serde(rename = "ot", skip_serializing_if = "Option::is_none")]
     pub ot: Option<i64>,
+    /// Contract status.
     #[serde(rename = "cs", skip_serializing_if = "Option::is_none")]
     pub cs: Option<String>,
+    /// Notional bracket updates.
     #[serde(rename = "bks", skip_serializing_if = "Option::is_none")]
     pub bks: Option<Vec<models::ContractInfoStreamResponseBksInner>>,
+    /// (After CM migration) Symbol type: 1 = UM, 2 = CM
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
-    pub st: Option<i64>,
+    pub st: Option<i32>,
 }
 
 impl ContractInfoStreamResponse {

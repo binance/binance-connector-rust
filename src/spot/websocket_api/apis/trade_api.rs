@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -113,12 +108,8 @@ impl TradeApiClient {
 pub enum OrderCancelCancelRestrictionsEnum {
     #[serde(rename = "ONLY_NEW")]
     OnlyNew,
-    #[serde(rename = "NEW")]
-    New,
     #[serde(rename = "ONLY_PARTIALLY_FILLED")]
     OnlyPartiallyFilled,
-    #[serde(rename = "PARTIALLY_FILLED")]
-    PartiallyFilled,
 }
 
 impl OrderCancelCancelRestrictionsEnum {
@@ -126,9 +117,7 @@ impl OrderCancelCancelRestrictionsEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::OnlyNew => "ONLY_NEW",
-            Self::New => "NEW",
             Self::OnlyPartiallyFilled => "ONLY_PARTIALLY_FILLED",
-            Self::PartiallyFilled => "PARTIALLY_FILLED",
         }
     }
 }
@@ -139,9 +128,7 @@ impl std::str::FromStr for OrderCancelCancelRestrictionsEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "ONLY_NEW" => Ok(Self::OnlyNew),
-            "NEW" => Ok(Self::New),
             "ONLY_PARTIALLY_FILLED" => Ok(Self::OnlyPartiallyFilled),
-            "PARTIALLY_FILLED" => Ok(Self::PartiallyFilled),
             other => Err(format!("invalid OrderCancelCancelRestrictionsEnum: {}", other).into()),
         }
     }
@@ -228,8 +215,6 @@ pub enum OrderCancelReplaceTypeEnum {
     TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
     LimitMaker,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderCancelReplaceTypeEnum {
@@ -243,7 +228,6 @@ impl OrderCancelReplaceTypeEnum {
             Self::TakeProfit => "TAKE_PROFIT",
             Self::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
             Self::LimitMaker => "LIMIT_MAKER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -260,7 +244,6 @@ impl std::str::FromStr for OrderCancelReplaceTypeEnum {
             "TAKE_PROFIT" => Ok(Self::TakeProfit),
             "TAKE_PROFIT_LIMIT" => Ok(Self::TakeProfitLimit),
             "LIMIT_MAKER" => Ok(Self::LimitMaker),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderCancelReplaceTypeEnum: {}", other).into()),
         }
     }
@@ -275,8 +258,6 @@ pub enum OrderCancelReplaceTimeInForceEnum {
     Ioc,
     #[serde(rename = "FOK")]
     Fok,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderCancelReplaceTimeInForceEnum {
@@ -286,7 +267,6 @@ impl OrderCancelReplaceTimeInForceEnum {
             Self::Gtc => "GTC",
             Self::Ioc => "IOC",
             Self::Fok => "FOK",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -299,7 +279,6 @@ impl std::str::FromStr for OrderCancelReplaceTimeInForceEnum {
             "GTC" => Ok(Self::Gtc),
             "IOC" => Ok(Self::Ioc),
             "FOK" => Ok(Self::Fok),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderCancelReplaceTimeInForceEnum: {}", other).into()),
         }
     }
@@ -314,10 +293,6 @@ pub enum OrderCancelReplaceNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderCancelReplaceNewOrderRespTypeEnum {
@@ -327,8 +302,6 @@ impl OrderCancelReplaceNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -341,8 +314,6 @@ impl std::str::FromStr for OrderCancelReplaceNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => {
                 Err(format!("invalid OrderCancelReplaceNewOrderRespTypeEnum: {}", other).into())
             }
@@ -365,8 +336,6 @@ pub enum OrderCancelReplaceSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderCancelReplaceSelfTradePreventionModeEnum {
@@ -379,7 +348,6 @@ impl OrderCancelReplaceSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -395,7 +363,6 @@ impl std::str::FromStr for OrderCancelReplaceSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderCancelReplaceSelfTradePreventionModeEnum: {}",
                 other
@@ -410,12 +377,8 @@ impl std::str::FromStr for OrderCancelReplaceSelfTradePreventionModeEnum {
 pub enum OrderCancelReplaceCancelRestrictionsEnum {
     #[serde(rename = "ONLY_NEW")]
     OnlyNew,
-    #[serde(rename = "NEW")]
-    New,
     #[serde(rename = "ONLY_PARTIALLY_FILLED")]
     OnlyPartiallyFilled,
-    #[serde(rename = "PARTIALLY_FILLED")]
-    PartiallyFilled,
 }
 
 impl OrderCancelReplaceCancelRestrictionsEnum {
@@ -423,9 +386,7 @@ impl OrderCancelReplaceCancelRestrictionsEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::OnlyNew => "ONLY_NEW",
-            Self::New => "NEW",
             Self::OnlyPartiallyFilled => "ONLY_PARTIALLY_FILLED",
-            Self::PartiallyFilled => "PARTIALLY_FILLED",
         }
     }
 }
@@ -436,9 +397,7 @@ impl std::str::FromStr for OrderCancelReplaceCancelRestrictionsEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "ONLY_NEW" => Ok(Self::OnlyNew),
-            "NEW" => Ok(Self::New),
             "ONLY_PARTIALLY_FILLED" => Ok(Self::OnlyPartiallyFilled),
-            "PARTIALLY_FILLED" => Ok(Self::PartiallyFilled),
             other => Err(format!(
                 "invalid OrderCancelReplaceCancelRestrictionsEnum: {}",
                 other
@@ -490,8 +449,6 @@ pub enum OrderCancelReplacePegPriceTypeEnum {
     PrimaryPeg,
     #[serde(rename = "MARKET_PEG")]
     MarketPeg,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderCancelReplacePegPriceTypeEnum {
@@ -500,7 +457,6 @@ impl OrderCancelReplacePegPriceTypeEnum {
         match self {
             Self::PrimaryPeg => "PRIMARY_PEG",
             Self::MarketPeg => "MARKET_PEG",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -512,7 +468,6 @@ impl std::str::FromStr for OrderCancelReplacePegPriceTypeEnum {
         match s {
             "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
             "MARKET_PEG" => Ok(Self::MarketPeg),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderCancelReplacePegPriceTypeEnum: {}", other).into()),
         }
     }
@@ -523,8 +478,6 @@ impl std::str::FromStr for OrderCancelReplacePegPriceTypeEnum {
 pub enum OrderCancelReplacePegOffsetTypeEnum {
     #[serde(rename = "PRICE_LEVEL")]
     PriceLevel,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderCancelReplacePegOffsetTypeEnum {
@@ -532,7 +485,6 @@ impl OrderCancelReplacePegOffsetTypeEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::PriceLevel => "PRICE_LEVEL",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -543,7 +495,6 @@ impl std::str::FromStr for OrderCancelReplacePegOffsetTypeEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "PRICE_LEVEL" => Ok(Self::PriceLevel),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderCancelReplacePegOffsetTypeEnum: {}", other).into()),
         }
     }
@@ -626,10 +577,6 @@ pub enum OrderListPlaceNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderListPlaceNewOrderRespTypeEnum {
@@ -639,8 +586,6 @@ impl OrderListPlaceNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -653,8 +598,6 @@ impl std::str::FromStr for OrderListPlaceNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => Err(format!("invalid OrderListPlaceNewOrderRespTypeEnum: {}", other).into()),
         }
     }
@@ -675,8 +618,6 @@ pub enum OrderListPlaceSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderListPlaceSelfTradePreventionModeEnum {
@@ -689,7 +630,6 @@ impl OrderListPlaceSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -705,7 +645,6 @@ impl std::str::FromStr for OrderListPlaceSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceSelfTradePreventionModeEnum: {}",
                 other
@@ -1035,10 +974,6 @@ pub enum OrderListPlaceOcoNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderListPlaceOcoNewOrderRespTypeEnum {
@@ -1048,8 +983,6 @@ impl OrderListPlaceOcoNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -1062,8 +995,6 @@ impl std::str::FromStr for OrderListPlaceOcoNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => {
                 Err(format!("invalid OrderListPlaceOcoNewOrderRespTypeEnum: {}", other).into())
             }
@@ -1086,8 +1017,6 @@ pub enum OrderListPlaceOcoSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderListPlaceOcoSelfTradePreventionModeEnum {
@@ -1100,7 +1029,6 @@ impl OrderListPlaceOcoSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1116,7 +1044,6 @@ impl std::str::FromStr for OrderListPlaceOcoSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOcoSelfTradePreventionModeEnum: {}",
                 other
@@ -1279,10 +1206,6 @@ pub enum OrderListPlaceOpoNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderListPlaceOpoNewOrderRespTypeEnum {
@@ -1292,8 +1215,6 @@ impl OrderListPlaceOpoNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -1306,8 +1227,6 @@ impl std::str::FromStr for OrderListPlaceOpoNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => {
                 Err(format!("invalid OrderListPlaceOpoNewOrderRespTypeEnum: {}", other).into())
             }
@@ -1330,8 +1249,6 @@ pub enum OrderListPlaceOpoSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderListPlaceOpoSelfTradePreventionModeEnum {
@@ -1344,7 +1261,6 @@ impl OrderListPlaceOpoSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1360,7 +1276,6 @@ impl std::str::FromStr for OrderListPlaceOpoSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOpoSelfTradePreventionModeEnum: {}",
                 other
@@ -1723,10 +1638,6 @@ pub enum OrderListPlaceOpocoNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderListPlaceOpocoNewOrderRespTypeEnum {
@@ -1736,8 +1647,6 @@ impl OrderListPlaceOpocoNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -1750,8 +1659,6 @@ impl std::str::FromStr for OrderListPlaceOpocoNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => {
                 Err(format!("invalid OrderListPlaceOpocoNewOrderRespTypeEnum: {}", other).into())
             }
@@ -1774,8 +1681,6 @@ pub enum OrderListPlaceOpocoSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderListPlaceOpocoSelfTradePreventionModeEnum {
@@ -1788,7 +1693,6 @@ impl OrderListPlaceOpocoSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -1804,7 +1708,6 @@ impl std::str::FromStr for OrderListPlaceOpocoSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOpocoSelfTradePreventionModeEnum: {}",
                 other
@@ -2323,10 +2226,6 @@ pub enum OrderListPlaceOtoNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderListPlaceOtoNewOrderRespTypeEnum {
@@ -2336,8 +2235,6 @@ impl OrderListPlaceOtoNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -2350,8 +2247,6 @@ impl std::str::FromStr for OrderListPlaceOtoNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => {
                 Err(format!("invalid OrderListPlaceOtoNewOrderRespTypeEnum: {}", other).into())
             }
@@ -2374,8 +2269,6 @@ pub enum OrderListPlaceOtoSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderListPlaceOtoSelfTradePreventionModeEnum {
@@ -2388,7 +2281,6 @@ impl OrderListPlaceOtoSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -2404,7 +2296,6 @@ impl std::str::FromStr for OrderListPlaceOtoSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOtoSelfTradePreventionModeEnum: {}",
                 other
@@ -2767,10 +2658,6 @@ pub enum OrderListPlaceOtocoNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderListPlaceOtocoNewOrderRespTypeEnum {
@@ -2780,8 +2667,6 @@ impl OrderListPlaceOtocoNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -2794,8 +2679,6 @@ impl std::str::FromStr for OrderListPlaceOtocoNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => {
                 Err(format!("invalid OrderListPlaceOtocoNewOrderRespTypeEnum: {}", other).into())
             }
@@ -2818,8 +2701,6 @@ pub enum OrderListPlaceOtocoSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderListPlaceOtocoSelfTradePreventionModeEnum {
@@ -2832,7 +2713,6 @@ impl OrderListPlaceOtocoSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -2848,7 +2728,6 @@ impl std::str::FromStr for OrderListPlaceOtocoSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid OrderListPlaceOtocoSelfTradePreventionModeEnum: {}",
                 other
@@ -3262,8 +3141,6 @@ pub enum OrderPlaceTypeEnum {
     TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
     LimitMaker,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderPlaceTypeEnum {
@@ -3277,7 +3154,6 @@ impl OrderPlaceTypeEnum {
             Self::TakeProfit => "TAKE_PROFIT",
             Self::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
             Self::LimitMaker => "LIMIT_MAKER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3294,7 +3170,6 @@ impl std::str::FromStr for OrderPlaceTypeEnum {
             "TAKE_PROFIT" => Ok(Self::TakeProfit),
             "TAKE_PROFIT_LIMIT" => Ok(Self::TakeProfitLimit),
             "LIMIT_MAKER" => Ok(Self::LimitMaker),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderPlaceTypeEnum: {}", other).into()),
         }
     }
@@ -3309,8 +3184,6 @@ pub enum OrderPlaceTimeInForceEnum {
     Ioc,
     #[serde(rename = "FOK")]
     Fok,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderPlaceTimeInForceEnum {
@@ -3320,7 +3193,6 @@ impl OrderPlaceTimeInForceEnum {
             Self::Gtc => "GTC",
             Self::Ioc => "IOC",
             Self::Fok => "FOK",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3333,7 +3205,6 @@ impl std::str::FromStr for OrderPlaceTimeInForceEnum {
             "GTC" => Ok(Self::Gtc),
             "IOC" => Ok(Self::Ioc),
             "FOK" => Ok(Self::Fok),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderPlaceTimeInForceEnum: {}", other).into()),
         }
     }
@@ -3348,10 +3219,6 @@ pub enum OrderPlaceNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderPlaceNewOrderRespTypeEnum {
@@ -3361,8 +3228,6 @@ impl OrderPlaceNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -3375,8 +3240,6 @@ impl std::str::FromStr for OrderPlaceNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => Err(format!("invalid OrderPlaceNewOrderRespTypeEnum: {}", other).into()),
         }
     }
@@ -3397,8 +3260,6 @@ pub enum OrderPlaceSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderPlaceSelfTradePreventionModeEnum {
@@ -3411,7 +3272,6 @@ impl OrderPlaceSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3427,7 +3287,6 @@ impl std::str::FromStr for OrderPlaceSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => {
                 Err(format!("invalid OrderPlaceSelfTradePreventionModeEnum: {}", other).into())
             }
@@ -3442,8 +3301,6 @@ pub enum OrderPlacePegPriceTypeEnum {
     PrimaryPeg,
     #[serde(rename = "MARKET_PEG")]
     MarketPeg,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderPlacePegPriceTypeEnum {
@@ -3452,7 +3309,6 @@ impl OrderPlacePegPriceTypeEnum {
         match self {
             Self::PrimaryPeg => "PRIMARY_PEG",
             Self::MarketPeg => "MARKET_PEG",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3464,7 +3320,6 @@ impl std::str::FromStr for OrderPlacePegPriceTypeEnum {
         match s {
             "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
             "MARKET_PEG" => Ok(Self::MarketPeg),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderPlacePegPriceTypeEnum: {}", other).into()),
         }
     }
@@ -3475,8 +3330,6 @@ impl std::str::FromStr for OrderPlacePegPriceTypeEnum {
 pub enum OrderPlacePegOffsetTypeEnum {
     #[serde(rename = "PRICE_LEVEL")]
     PriceLevel,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderPlacePegOffsetTypeEnum {
@@ -3484,7 +3337,6 @@ impl OrderPlacePegOffsetTypeEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::PriceLevel => "PRICE_LEVEL",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3495,7 +3347,6 @@ impl std::str::FromStr for OrderPlacePegOffsetTypeEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "PRICE_LEVEL" => Ok(Self::PriceLevel),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderPlacePegOffsetTypeEnum: {}", other).into()),
         }
     }
@@ -3549,8 +3400,6 @@ pub enum OrderTestTypeEnum {
     TakeProfitLimit,
     #[serde(rename = "LIMIT_MAKER")]
     LimitMaker,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderTestTypeEnum {
@@ -3564,7 +3413,6 @@ impl OrderTestTypeEnum {
             Self::TakeProfit => "TAKE_PROFIT",
             Self::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
             Self::LimitMaker => "LIMIT_MAKER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3581,7 +3429,6 @@ impl std::str::FromStr for OrderTestTypeEnum {
             "TAKE_PROFIT" => Ok(Self::TakeProfit),
             "TAKE_PROFIT_LIMIT" => Ok(Self::TakeProfitLimit),
             "LIMIT_MAKER" => Ok(Self::LimitMaker),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderTestTypeEnum: {}", other).into()),
         }
     }
@@ -3596,8 +3443,6 @@ pub enum OrderTestTimeInForceEnum {
     Ioc,
     #[serde(rename = "FOK")]
     Fok,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderTestTimeInForceEnum {
@@ -3607,7 +3452,6 @@ impl OrderTestTimeInForceEnum {
             Self::Gtc => "GTC",
             Self::Ioc => "IOC",
             Self::Fok => "FOK",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3620,7 +3464,6 @@ impl std::str::FromStr for OrderTestTimeInForceEnum {
             "GTC" => Ok(Self::Gtc),
             "IOC" => Ok(Self::Ioc),
             "FOK" => Ok(Self::Fok),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderTestTimeInForceEnum: {}", other).into()),
         }
     }
@@ -3635,10 +3478,6 @@ pub enum OrderTestNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl OrderTestNewOrderRespTypeEnum {
@@ -3648,8 +3487,6 @@ impl OrderTestNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -3662,8 +3499,6 @@ impl std::str::FromStr for OrderTestNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => Err(format!("invalid OrderTestNewOrderRespTypeEnum: {}", other).into()),
         }
     }
@@ -3684,8 +3519,6 @@ pub enum OrderTestSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderTestSelfTradePreventionModeEnum {
@@ -3698,7 +3531,6 @@ impl OrderTestSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3714,7 +3546,6 @@ impl std::str::FromStr for OrderTestSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderTestSelfTradePreventionModeEnum: {}", other).into()),
         }
     }
@@ -3727,8 +3558,6 @@ pub enum OrderTestPegPriceTypeEnum {
     PrimaryPeg,
     #[serde(rename = "MARKET_PEG")]
     MarketPeg,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderTestPegPriceTypeEnum {
@@ -3737,7 +3566,6 @@ impl OrderTestPegPriceTypeEnum {
         match self {
             Self::PrimaryPeg => "PRIMARY_PEG",
             Self::MarketPeg => "MARKET_PEG",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3749,7 +3577,6 @@ impl std::str::FromStr for OrderTestPegPriceTypeEnum {
         match s {
             "PRIMARY_PEG" => Ok(Self::PrimaryPeg),
             "MARKET_PEG" => Ok(Self::MarketPeg),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderTestPegPriceTypeEnum: {}", other).into()),
         }
     }
@@ -3760,8 +3587,6 @@ impl std::str::FromStr for OrderTestPegPriceTypeEnum {
 pub enum OrderTestPegOffsetTypeEnum {
     #[serde(rename = "PRICE_LEVEL")]
     PriceLevel,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl OrderTestPegOffsetTypeEnum {
@@ -3769,7 +3594,6 @@ impl OrderTestPegOffsetTypeEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::PriceLevel => "PRICE_LEVEL",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3780,7 +3604,6 @@ impl std::str::FromStr for OrderTestPegOffsetTypeEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "PRICE_LEVEL" => Ok(Self::PriceLevel),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid OrderTestPegOffsetTypeEnum: {}", other).into()),
         }
     }
@@ -3824,18 +3647,6 @@ pub enum SorOrderPlaceTypeEnum {
     Market,
     #[serde(rename = "LIMIT")]
     Limit,
-    #[serde(rename = "STOP_LOSS")]
-    StopLoss,
-    #[serde(rename = "STOP_LOSS_LIMIT")]
-    StopLossLimit,
-    #[serde(rename = "TAKE_PROFIT")]
-    TakeProfit,
-    #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TakeProfitLimit,
-    #[serde(rename = "LIMIT_MAKER")]
-    LimitMaker,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl SorOrderPlaceTypeEnum {
@@ -3844,12 +3655,6 @@ impl SorOrderPlaceTypeEnum {
         match self {
             Self::Market => "MARKET",
             Self::Limit => "LIMIT",
-            Self::StopLoss => "STOP_LOSS",
-            Self::StopLossLimit => "STOP_LOSS_LIMIT",
-            Self::TakeProfit => "TAKE_PROFIT",
-            Self::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
-            Self::LimitMaker => "LIMIT_MAKER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3861,12 +3666,6 @@ impl std::str::FromStr for SorOrderPlaceTypeEnum {
         match s {
             "MARKET" => Ok(Self::Market),
             "LIMIT" => Ok(Self::Limit),
-            "STOP_LOSS" => Ok(Self::StopLoss),
-            "STOP_LOSS_LIMIT" => Ok(Self::StopLossLimit),
-            "TAKE_PROFIT" => Ok(Self::TakeProfit),
-            "TAKE_PROFIT_LIMIT" => Ok(Self::TakeProfitLimit),
-            "LIMIT_MAKER" => Ok(Self::LimitMaker),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid SorOrderPlaceTypeEnum: {}", other).into()),
         }
     }
@@ -3881,8 +3680,6 @@ pub enum SorOrderPlaceTimeInForceEnum {
     Ioc,
     #[serde(rename = "FOK")]
     Fok,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl SorOrderPlaceTimeInForceEnum {
@@ -3892,7 +3689,6 @@ impl SorOrderPlaceTimeInForceEnum {
             Self::Gtc => "GTC",
             Self::Ioc => "IOC",
             Self::Fok => "FOK",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3905,7 +3701,6 @@ impl std::str::FromStr for SorOrderPlaceTimeInForceEnum {
             "GTC" => Ok(Self::Gtc),
             "IOC" => Ok(Self::Ioc),
             "FOK" => Ok(Self::Fok),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid SorOrderPlaceTimeInForceEnum: {}", other).into()),
         }
     }
@@ -3920,10 +3715,6 @@ pub enum SorOrderPlaceNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl SorOrderPlaceNewOrderRespTypeEnum {
@@ -3933,8 +3724,6 @@ impl SorOrderPlaceNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -3947,8 +3736,6 @@ impl std::str::FromStr for SorOrderPlaceNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => Err(format!("invalid SorOrderPlaceNewOrderRespTypeEnum: {}", other).into()),
         }
     }
@@ -3969,8 +3756,6 @@ pub enum SorOrderPlaceSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl SorOrderPlaceSelfTradePreventionModeEnum {
@@ -3983,7 +3768,6 @@ impl SorOrderPlaceSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -3999,7 +3783,6 @@ impl std::str::FromStr for SorOrderPlaceSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!(
                 "invalid SorOrderPlaceSelfTradePreventionModeEnum: {}",
                 other
@@ -4047,18 +3830,6 @@ pub enum SorOrderTestTypeEnum {
     Market,
     #[serde(rename = "LIMIT")]
     Limit,
-    #[serde(rename = "STOP_LOSS")]
-    StopLoss,
-    #[serde(rename = "STOP_LOSS_LIMIT")]
-    StopLossLimit,
-    #[serde(rename = "TAKE_PROFIT")]
-    TakeProfit,
-    #[serde(rename = "TAKE_PROFIT_LIMIT")]
-    TakeProfitLimit,
-    #[serde(rename = "LIMIT_MAKER")]
-    LimitMaker,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl SorOrderTestTypeEnum {
@@ -4067,12 +3838,6 @@ impl SorOrderTestTypeEnum {
         match self {
             Self::Market => "MARKET",
             Self::Limit => "LIMIT",
-            Self::StopLoss => "STOP_LOSS",
-            Self::StopLossLimit => "STOP_LOSS_LIMIT",
-            Self::TakeProfit => "TAKE_PROFIT",
-            Self::TakeProfitLimit => "TAKE_PROFIT_LIMIT",
-            Self::LimitMaker => "LIMIT_MAKER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -4084,12 +3849,6 @@ impl std::str::FromStr for SorOrderTestTypeEnum {
         match s {
             "MARKET" => Ok(Self::Market),
             "LIMIT" => Ok(Self::Limit),
-            "STOP_LOSS" => Ok(Self::StopLoss),
-            "STOP_LOSS_LIMIT" => Ok(Self::StopLossLimit),
-            "TAKE_PROFIT" => Ok(Self::TakeProfit),
-            "TAKE_PROFIT_LIMIT" => Ok(Self::TakeProfitLimit),
-            "LIMIT_MAKER" => Ok(Self::LimitMaker),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid SorOrderTestTypeEnum: {}", other).into()),
         }
     }
@@ -4104,8 +3863,6 @@ pub enum SorOrderTestTimeInForceEnum {
     Ioc,
     #[serde(rename = "FOK")]
     Fok,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl SorOrderTestTimeInForceEnum {
@@ -4115,7 +3872,6 @@ impl SorOrderTestTimeInForceEnum {
             Self::Gtc => "GTC",
             Self::Ioc => "IOC",
             Self::Fok => "FOK",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -4128,7 +3884,6 @@ impl std::str::FromStr for SorOrderTestTimeInForceEnum {
             "GTC" => Ok(Self::Gtc),
             "IOC" => Ok(Self::Ioc),
             "FOK" => Ok(Self::Fok),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid SorOrderTestTimeInForceEnum: {}", other).into()),
         }
     }
@@ -4143,10 +3898,6 @@ pub enum SorOrderTestNewOrderRespTypeEnum {
     Result,
     #[serde(rename = "FULL")]
     Full,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "LIMIT")]
-    Limit,
 }
 
 impl SorOrderTestNewOrderRespTypeEnum {
@@ -4156,8 +3907,6 @@ impl SorOrderTestNewOrderRespTypeEnum {
             Self::Ack => "ACK",
             Self::Result => "RESULT",
             Self::Full => "FULL",
-            Self::Market => "MARKET",
-            Self::Limit => "LIMIT",
         }
     }
 }
@@ -4170,8 +3919,6 @@ impl std::str::FromStr for SorOrderTestNewOrderRespTypeEnum {
             "ACK" => Ok(Self::Ack),
             "RESULT" => Ok(Self::Result),
             "FULL" => Ok(Self::Full),
-            "MARKET" => Ok(Self::Market),
-            "LIMIT" => Ok(Self::Limit),
             other => Err(format!("invalid SorOrderTestNewOrderRespTypeEnum: {}", other).into()),
         }
     }
@@ -4192,8 +3939,6 @@ pub enum SorOrderTestSelfTradePreventionModeEnum {
     Decrement,
     #[serde(rename = "TRANSFER")]
     Transfer,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl SorOrderTestSelfTradePreventionModeEnum {
@@ -4206,7 +3951,6 @@ impl SorOrderTestSelfTradePreventionModeEnum {
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::Decrement => "DECREMENT",
             Self::Transfer => "TRANSFER",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -4222,7 +3966,6 @@ impl std::str::FromStr for SorOrderTestSelfTradePreventionModeEnum {
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "DECREMENT" => Ok(Self::Decrement),
             "TRANSFER" => Ok(Self::Transfer),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => {
                 Err(format!("invalid SorOrderTestSelfTradePreventionModeEnum: {}", other).into())
             }
@@ -4234,7 +3977,7 @@ impl std::str::FromStr for SorOrderTestSelfTradePreventionModeEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`open_orders_cancel_all`](#method.open_orders_cancel_all).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OpenOrdersCancelAllParams {
     ///
@@ -4242,16 +3985,19 @@ pub struct OpenOrdersCancelAllParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -4271,7 +4017,7 @@ impl OpenOrdersCancelAllParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_amend_keep_priority`](#method.order_amend_keep_priority).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderAmendKeepPriorityParams {
     ///
@@ -4279,36 +4025,43 @@ pub struct OrderAmendKeepPriorityParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// `newQty` must be greater than 0 and less than the order's quantity.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "newQty")]
     pub new_qty: rust_decimal::Decimal,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// `orderId` or `origClientOrderId` must be sent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    /// `orderId` or `origClientOrderId` must be sent
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
     /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -4334,7 +4087,7 @@ impl OrderAmendKeepPriorityParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_cancel`](#method.order_cancel).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderCancelParams {
     ///
@@ -4342,37 +4095,45 @@ pub struct OrderCancelParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    ///
+    /// The `order_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    /// `orderId`or`origClientOrderId`mustbesent
+    ///
+    /// The `orig_client_order_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    /// Used to uniquely identify this cancel. Automatically generated by default.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    ///
-    /// The `cancel_restrictions` parameter.
+    /// Supported values: <br>`ONLY_NEW` - Cancel will succeed if the order status is `NEW`.<br> `ONLY_PARTIALLY_FILLED` - Cancel will succeed if order status is `PARTIALLY_FILLED`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "cancelRestrictions", default)]
     pub cancel_restrictions: Option<OrderCancelCancelRestrictionsEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -4392,7 +4153,7 @@ impl OrderCancelParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_cancel_replace`](#method.order_cancel_replace).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderCancelReplaceParams {
     ///
@@ -4400,149 +4161,161 @@ pub struct OrderCancelReplaceParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `cancel_replace_mode` parameter.
+    /// The allowed values are: <br/> `STOP_ON_FAILURE` - If the cancel request fails, the new order placement will not be attempted. <br/> `ALLOW_FAILURE` - new order placement will be attempted even if cancel request fails.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "cancelReplaceMode")]
     pub cancel_replace_mode: OrderCancelReplaceCancelReplaceModeEnum,
-    ///
-    /// The `side` parameter.
+    /// Please see [Enums](/products/spot/enums#side) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: OrderCancelReplaceSideEnum,
-    ///
-    /// The `r#type` parameter.
+    /// Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "type")]
     pub r#type: OrderCancelReplaceTypeEnum,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Cancel order by orderId
+    /// Either `cancelOrderId` or `cancelOrigClientOrderId` must be sent. <br></br>If both `cancelOrderId` and `cancelOrigClientOrderId` parameters are provided, the `cancelOrderId` is searched first, then the `cancelOrigClientOrderId` from that result is checked against that order. <br></br>If both conditions are not met the request will be rejected.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "cancelOrderId", default)]
     pub cancel_order_id: Option<i64>,
-    ///
-    /// The `cancel_orig_client_order_id` parameter.
+    /// Either `cancelOrderId` or `cancelOrigClientOrderId` must be sent. <br></br> If both `cancelOrderId` and `cancelOrigClientOrderId` parameters are provided, the `cancelOrderId` is searched first, then the `cancelOrigClientOrderId` from that result is checked against that order. <br></br> If both conditions are not met the request will be rejected.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "cancelOrigClientOrderId", default)]
     pub cancel_orig_client_order_id: Option<String>,
-    /// New ID for the canceled order. Automatically generated if not sent
+    /// Used to uniquely identify this cancel. Automatically generated by default.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "cancelNewClientOrderId", default)]
     pub cancel_new_client_order_id: Option<String>,
-    ///
-    /// The `time_in_force` parameter.
+    /// Please see [Enums](/products/spot/enums#timeinforce) for supported values.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<OrderCancelReplaceTimeInForceEnum>,
     ///
     /// The `price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
     pub quantity: Option<rust_decimal::Decimal>,
     ///
     /// The `quote_order_qty` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quoteOrderQty", default)]
     pub quote_order_qty: Option<rust_decimal::Decimal>,
-    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    /// Used to identify the new order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Allowed values: <br/> `ACK`, `RESULT`, `FULL` <br/> `MARKET` and `LIMIT` orders types default to `FULL`; all other orders default to `ACK`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderCancelReplaceNewOrderRespTypeEnum>,
-    ///
-    /// The `stop_price` parameter.
+    /// Used with `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, and `TAKE_PROFIT_LIMIT` orders.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopPrice", default)]
     pub stop_price: Option<rust_decimal::Decimal>,
-    /// See Trailing Stop order FAQ
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "trailingDelta", default)]
     pub trailing_delta: Option<rust_decimal::Decimal>,
-    ///
-    /// The `iceberg_qty` parameter.
+    /// Used with `LIMIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` to create an iceberg order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "icebergQty", default)]
     pub iceberg_qty: Option<rust_decimal::Decimal>,
-    /// Arbitrary numeric value identifying the order within an order strategy.
+    ///
+    /// The `strategy_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyId", default)]
     pub strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the order strategy.
-    /// Values smaller than 1000000 are reserved and cannot be used.
+    /// The value cannot be less than `1000000`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyType", default)]
     pub strategy_type: Option<i32>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. The possible supported values are: [STP Modes](/products/spot/enums#stpmodes).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderCancelReplaceSelfTradePreventionModeEnum>,
-    ///
-    /// The `cancel_restrictions` parameter.
+    /// Supported values: <br>`ONLY_NEW` - Cancel will succeed if the order status is `NEW`.<br> `ONLY_PARTIALLY_FILLED` - Cancel will succeed if order status is `PARTIALLY_FILLED`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "cancelRestrictions", default)]
     pub cancel_restrictions: Option<OrderCancelReplaceCancelRestrictionsEnum>,
-    ///
-    /// The `order_rate_limit_exceeded_mode` parameter.
+    /// Supported values: <br> `DO_NOTHING` (default)- will only attempt to cancel the order if account has not exceeded the unfilled order rate limit<br> `CANCEL_ONLY` - will always cancel the order
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderRateLimitExceededMode", default)]
     pub order_rate_limit_exceeded_mode: Option<OrderCancelReplaceOrderRateLimitExceededModeEnum>,
-    ///
-    /// The `peg_price_type` parameter.
+    /// `PRIMARY_PEG` or `MARKET_PEG` <br> See Pegged Orders
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegPriceType", default)]
     pub peg_price_type: Option<OrderCancelReplacePegPriceTypeEnum>,
-    /// Price level to peg the price to (max: 100)
-    /// See Pegged Orders
+    /// Price level to peg the price to (max: 100) <br> See Pegged Orders
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegOffsetValue", default)]
     pub peg_offset_value: Option<i32>,
-    ///
-    /// The `peg_offset_type` parameter.
+    /// Only `PRICE_LEVEL` is supported <br> See Pegged Orders
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegOffsetType", default)]
     pub peg_offset_type: Option<OrderCancelReplacePegOffsetTypeEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -4552,9 +4325,9 @@ impl OrderCancelReplaceParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `cancel_replace_mode` — String
-    /// * `side` — String
-    /// * `r#type` — String
+    /// * `cancel_replace_mode` — The allowed values are: <br/> `STOP_ON_FAILURE` - If the cancel request fails, the new order placement will not be attempted. <br/> `ALLOW_FAILURE` - new order placement will be attempted even if cancel request fails.
+    /// * `side` — Please see [Enums](/products/spot/enums#side) for supported values.
+    /// * `r#type` — Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     ///
     #[must_use]
     pub fn builder(
@@ -4574,7 +4347,7 @@ impl OrderCancelReplaceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_cancel`](#method.order_list_cancel).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListCancelParams {
     ///
@@ -4582,32 +4355,37 @@ pub struct OrderListCancelParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Cancel order list by orderListId
+    /// Either `orderListId` or `listClientOrderId` must be provided
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderListId", default)]
     pub order_list_id: Option<i32>,
-    ///
-    /// The `list_client_order_id` parameter.
+    /// Either `orderListId` or `listClientOrderId` must be provided
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "listClientOrderId", default)]
     pub list_client_order_id: Option<String>,
-    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    /// Used to uniquely identify this cancel. Automatically generated by default.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -4627,7 +4405,7 @@ impl OrderListCancelParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_place`](#method.order_list_place).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListPlaceParams {
     ///
@@ -4635,116 +4413,133 @@ pub struct OrderListPlaceParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `side` parameter.
+    /// Please see [Enums](/products/spot/enums#side) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: OrderListPlaceSideEnum,
-    /// Price for the limit order
+    ///
+    /// The `price` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "price")]
     pub price: rust_decimal::Decimal,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quantity")]
     pub quantity: rust_decimal::Decimal,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `list_client_order_id` parameter.
+    /// A unique Id for the entire orderList
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "listClientOrderId", default)]
     pub list_client_order_id: Option<String>,
-    /// Arbitrary unique ID among open orders for the limit order. Automatically generated if not sent
+    /// A unique Id for the limit order
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limitClientOrderId", default)]
     pub limit_client_order_id: Option<String>,
-    ///
-    /// The `limit_iceberg_qty` parameter.
+    /// Used to make the `LIMIT_MAKER` leg an iceberg order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limitIcebergQty", default)]
     pub limit_iceberg_qty: Option<rust_decimal::Decimal>,
-    /// Arbitrary numeric value identifying the limit order within an order strategy.
+    ///
+    /// The `limit_strategy_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limitStrategyId", default)]
     pub limit_strategy_id: Option<i64>,
-    /// <p>Arbitrary numeric value identifying the limit order strategy.</p><p>Values smaller than `1000000` are reserved and cannot be used.</p>
+    /// The value cannot be less than `1000000`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limitStrategyType", default)]
     pub limit_strategy_type: Option<i32>,
     ///
     /// The `stop_price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopPrice", default)]
     pub stop_price: Option<rust_decimal::Decimal>,
-    /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md)
+    ///
+    /// The `trailing_delta` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "trailingDelta", default)]
     pub trailing_delta: Option<i32>,
-    /// Arbitrary unique ID among open orders for the stop order. Automatically generated if not sent
+    /// A unique Id for the stop loss/stop loss limit leg
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopClientOrderId", default)]
     pub stop_client_order_id: Option<String>,
-    ///
-    /// The `stop_limit_price` parameter.
+    /// If provided, `stopLimitTimeInForce` is required.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopLimitPrice", default)]
     pub stop_limit_price: Option<rust_decimal::Decimal>,
-    ///
-    /// The `stop_limit_time_in_force` parameter.
+    /// Valid values are `GTC`/`FOK`/`IOC`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopLimitTimeInForce", default)]
     pub stop_limit_time_in_force: Option<OrderListPlaceStopLimitTimeInForceEnum>,
-    ///
-    /// The `stop_iceberg_qty` parameter.
+    /// Used with `STOP_LOSS_LIMIT` leg to make an iceberg order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopIcebergQty", default)]
     pub stop_iceberg_qty: Option<rust_decimal::Decimal>,
-    /// Arbitrary numeric value identifying the stop order within an order strategy.
+    ///
+    /// The `stop_strategy_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopStrategyId", default)]
     pub stop_strategy_id: Option<i64>,
-    /// <p>Arbitrary numeric value identifying the stop order strategy.</p><p>Values smaller than `1000000` are reserved and cannot be used.</p>
+    /// The value cannot be less than `1000000`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopStrategyType", default)]
     pub stop_strategy_type: Option<i32>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Format of the JSON response. Supported values: [Order Response Type](/products/spot/enums#orderresponsetype)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderListPlaceNewOrderRespTypeEnum>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed values are dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderListPlaceSelfTradePreventionModeEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -4754,8 +4549,8 @@ impl OrderListPlaceParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `side` — String
-    /// * `price` — Price for the limit order
+    /// * `side` — Please see [Enums](/products/spot/enums#side) for supported values.
+    /// * `price` — `rust_decimal::Decimal`
     /// * `quantity` — `rust_decimal::Decimal`
     ///
     #[must_use]
@@ -4776,7 +4571,7 @@ impl OrderListPlaceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_place_oco`](#method.order_list_place_oco).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListPlaceOcoParams {
     ///
@@ -4784,177 +4579,198 @@ pub struct OrderListPlaceOcoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `side` parameter.
+    /// `BUY` or `SELL`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: OrderListPlaceOcoSideEnum,
-    ///
-    /// The `quantity` parameter.
+    /// Quantity for both orders of the order list.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quantity")]
     pub quantity: rust_decimal::Decimal,
     ///
     /// The `above_type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "aboveType")]
     pub above_type: OrderListPlaceOcoAboveTypeEnum,
-    ///
-    /// The `below_type` parameter.
+    /// Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "belowType")]
     pub below_type: OrderListPlaceOcoBelowTypeEnum,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `list_client_order_id` parameter.
+    /// Arbitrary unique ID among open order lists. Automatically generated if not sent. A new order list with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired. `listClientOrderId` is distinct from the `aboveClientOrderId` and the `belowClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "listClientOrderId", default)]
     pub list_client_order_id: Option<String>,
-    /// Arbitrary unique ID among open orders for the above order. Automatically generated if not sent
+    /// Arbitrary unique ID among open orders for the above order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "aboveClientOrderId", default)]
     pub above_client_order_id: Option<String>,
     /// Note that this can only be used if `aboveTimeInForce` is `GTC`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "aboveIcebergQty", default)]
     pub above_iceberg_qty: Option<i64>,
-    /// Can be used if `aboveType` is `STOP_LOSS_LIMIT` , `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
+    /// Can be used if `aboveType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "abovePrice", default)]
     pub above_price: Option<rust_decimal::Decimal>,
-    /// Can be used if `aboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. <br>Either `aboveStopPrice` or `aboveTrailingDelta` or both, must be specified.
+    /// Can be used if `aboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `aboveStopPrice` or `aboveTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "aboveStopPrice", default)]
     pub above_stop_price: Option<rust_decimal::Decimal>,
-    /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md).
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "aboveTrailingDelta", default)]
     pub above_trailing_delta: Option<i64>,
-    ///
-    /// The `above_time_in_force` parameter.
+    /// Required if `aboveType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "aboveTimeInForce", default)]
     pub above_time_in_force: Option<OrderListPlaceOcoAboveTimeInForceEnum>,
     /// Arbitrary numeric value identifying the above order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "aboveStrategyId", default)]
     pub above_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the above order strategy. <br>Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the above order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "aboveStrategyType", default)]
     pub above_strategy_type: Option<i32>,
-    ///
-    /// The `above_peg_price_type` parameter.
+    /// `PRIMARY_PEG` or `MARKET_PEG`. See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "abovePegPriceType", default)]
     pub above_peg_price_type: Option<OrderListPlaceOcoAbovePegPriceTypeEnum>,
     ///
     /// The `above_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "abovePegOffsetType", default)]
     pub above_peg_offset_type: Option<OrderListPlaceOcoAbovePegOffsetTypeEnum>,
     ///
     /// The `above_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "abovePegOffsetValue", default)]
     pub above_peg_offset_value: Option<i32>,
-    ///
-    /// The `below_client_order_id` parameter.
+    /// Arbitrary unique ID among open orders for the below order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowClientOrderId", default)]
     pub below_client_order_id: Option<String>,
     /// Note that this can only be used if `belowTimeInForce` is `GTC`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowIcebergQty", default)]
     pub below_iceberg_qty: Option<i64>,
-    /// Can be used if `belowType` is `STOP_LOSS_LIMIT` , `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
+    /// Can be used if `belowType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowPrice", default)]
     pub below_price: Option<rust_decimal::Decimal>,
-    /// Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` or `TAKE_PROFIT_LIMIT`. <br>Either `belowStopPrice` or `belowTrailingDelta` or both, must be specified.
+    /// Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `belowStopPrice` or `belowTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowStopPrice", default)]
     pub below_stop_price: Option<rust_decimal::Decimal>,
-    /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md).
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowTrailingDelta", default)]
     pub below_trailing_delta: Option<i64>,
-    ///
-    /// The `below_time_in_force` parameter.
+    /// Required if `belowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowTimeInForce", default)]
     pub below_time_in_force: Option<OrderListPlaceOcoBelowTimeInForceEnum>,
     /// Arbitrary numeric value identifying the below order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowStrategyId", default)]
     pub below_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the below order strategy. <br>Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the below order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowStrategyType", default)]
     pub below_strategy_type: Option<i32>,
-    ///
-    /// The `below_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowPegPriceType", default)]
     pub below_peg_price_type: Option<OrderListPlaceOcoBelowPegPriceTypeEnum>,
     ///
     /// The `below_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowPegOffsetType", default)]
     pub below_peg_offset_type: Option<OrderListPlaceOcoBelowPegOffsetTypeEnum>,
     ///
     /// The `below_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "belowPegOffsetValue", default)]
     pub below_peg_offset_value: Option<i32>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Select response format: `ACK`, `RESULT`, `FULL`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderListPlaceOcoNewOrderRespTypeEnum>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderListPlaceOcoSelfTradePreventionModeEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -4964,10 +4780,10 @@ impl OrderListPlaceOcoParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `side` — String
-    /// * `quantity` — `rust_decimal::Decimal`
+    /// * `side` — `BUY` or `SELL`
+    /// * `quantity` — Quantity for both orders of the order list.
     /// * `above_type` — String
-    /// * `below_type` — String
+    /// * `below_type` — Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     #[must_use]
     pub fn builder(
@@ -4989,7 +4805,7 @@ impl OrderListPlaceOcoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_place_opo`](#method.order_list_place_opo).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListPlaceOpoParams {
     ///
@@ -4997,175 +4813,191 @@ pub struct OrderListPlaceOpoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `working_type` parameter.
+    /// Supported values: `LIMIT`, `LIMIT_MAKER`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingType")]
     pub working_type: OrderListPlaceOpoWorkingTypeEnum,
-    ///
-    /// The `working_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingSide")]
     pub working_side: OrderListPlaceOpoWorkingSideEnum,
-    ///
-    /// The `working_price` parameter.
+    /// Price for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingPrice")]
     pub working_price: rust_decimal::Decimal,
     /// Sets the quantity for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingQuantity")]
     pub working_quantity: rust_decimal::Decimal,
-    ///
-    /// The `pending_type` parameter.
+    /// Supported values: [Order Types](/products/spot/enums#ordertypes). Note that `MARKET` orders using `quoteOrderQty` are not supported.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingType")]
     pub pending_type: OrderListPlaceOpoPendingTypeEnum,
-    ///
-    /// The `pending_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingSide")]
     pub pending_side: OrderListPlaceOpoPendingSideEnum,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `list_client_order_id` parameter.
+    /// Arbitrary unique ID among open order lists. Automatically generated if not sent. A new order list with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired. `listClientOrderId` is distinct from the `workingClientOrderId` and the `pendingClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "listClientOrderId", default)]
     pub list_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Format of the JSON response. Supported values: [Order Response Type](/products/spot/enums#orderresponsetype)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderListPlaceOpoNewOrderRespTypeEnum>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderListPlaceOpoSelfTradePreventionModeEnum>,
     /// Arbitrary unique ID among open orders for the working order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingClientOrderId", default)]
     pub working_client_order_id: Option<String>,
     /// This can only be used if `workingTimeInForce` is `GTC`, or if `workingType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingIcebergQty", default)]
     pub working_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `working_time_in_force` parameter.
+    /// Supported values: [Time In Force](/products/spot/enums#timeinforce)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingTimeInForce", default)]
     pub working_time_in_force: Option<OrderListPlaceOpoWorkingTimeInForceEnum>,
     /// Arbitrary numeric value identifying the working order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyId", default)]
     pub working_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the working order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the working order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyType", default)]
     pub working_strategy_type: Option<i32>,
-    ///
-    /// The `working_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegPriceType", default)]
     pub working_peg_price_type: Option<OrderListPlaceOpoWorkingPegPriceTypeEnum>,
     ///
     /// The `working_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetType", default)]
     pub working_peg_offset_type: Option<OrderListPlaceOpoWorkingPegOffsetTypeEnum>,
     ///
     /// The `working_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetValue", default)]
     pub working_peg_offset_value: Option<i32>,
     /// Arbitrary unique ID among open orders for the pending order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingClientOrderId", default)]
     pub pending_client_order_id: Option<String>,
-    ///
-    /// The `pending_price` parameter.
+    /// Price for the pending order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPrice", default)]
     pub pending_price: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_stop_price` parameter.
+    /// Stop price for the pending order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingStopPrice", default)]
     pub pending_stop_price: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_trailing_delta` parameter.
+    /// Trailing delta for the pending order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingTrailingDelta", default)]
     pub pending_trailing_delta: Option<rust_decimal::Decimal>,
     /// This can only be used if `pendingTimeInForce` is `GTC` or if `pendingType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingIcebergQty", default)]
     pub pending_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_time_in_force` parameter.
+    /// Supported values: [Time In Force](/products/spot/enums#timeinforce)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingTimeInForce", default)]
     pub pending_time_in_force: Option<OrderListPlaceOpoPendingTimeInForceEnum>,
     /// Arbitrary numeric value identifying the pending order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingStrategyId", default)]
     pub pending_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the pending order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the pending order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingStrategyType", default)]
     pub pending_strategy_type: Option<i32>,
-    ///
-    /// The `pending_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPegPriceType", default)]
     pub pending_peg_price_type: Option<OrderListPlaceOpoPendingPegPriceTypeEnum>,
     ///
     /// The `pending_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPegOffsetType", default)]
     pub pending_peg_offset_type: Option<OrderListPlaceOpoPendingPegOffsetTypeEnum>,
     ///
     /// The `pending_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPegOffsetValue", default)]
     pub pending_peg_offset_value: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -5175,12 +5007,12 @@ impl OrderListPlaceOpoParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `working_type` — String
-    /// * `working_side` — String
-    /// * `working_price` — `rust_decimal::Decimal`
+    /// * `working_type` — Supported values: `LIMIT`, `LIMIT_MAKER`
+    /// * `working_side` — Supported values: [Order Side](/products/spot/enums#side)
+    /// * `working_price` — Price for the working order.
     /// * `working_quantity` — Sets the quantity for the working order.
-    /// * `pending_type` — String
-    /// * `pending_side` — String
+    /// * `pending_type` — Supported values: [Order Types](/products/spot/enums#ordertypes). Note that `MARKET` orders using `quoteOrderQty` are not supported.
+    /// * `pending_side` — Supported values: [Order Side](/products/spot/enums#side)
     ///
     #[must_use]
     pub fn builder(
@@ -5206,7 +5038,7 @@ impl OrderListPlaceOpoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_place_opoco`](#method.order_list_place_opoco).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListPlaceOpocoParams {
     ///
@@ -5214,238 +5046,262 @@ pub struct OrderListPlaceOpocoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     ///
     /// The `working_type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingType")]
     pub working_type: OrderListPlaceOpocoWorkingTypeEnum,
-    ///
-    /// The `working_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingSide")]
     pub working_side: OrderListPlaceOpocoWorkingSideEnum,
-    ///
-    /// The `working_price` parameter.
+    /// Price for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingPrice")]
     pub working_price: rust_decimal::Decimal,
     /// Sets the quantity for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingQuantity")]
     pub working_quantity: rust_decimal::Decimal,
-    ///
-    /// The `pending_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingSide")]
     pub pending_side: OrderListPlaceOpocoPendingSideEnum,
-    ///
-    /// The `pending_above_type` parameter.
+    /// Supported values: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingAboveType")]
     pub pending_above_type: OrderListPlaceOpocoPendingAboveTypeEnum,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `list_client_order_id` parameter.
+    /// Arbitrary unique ID among open order lists. Automatically generated if not sent. A new order list with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired. `listClientOrderId` is distinct from the `workingClientOrderId` and the `pendingClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "listClientOrderId", default)]
     pub list_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Format of the JSON response. Supported values: [Order Response Type](/products/spot/enums#orderresponsetype)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderListPlaceOpocoNewOrderRespTypeEnum>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderListPlaceOpocoSelfTradePreventionModeEnum>,
     /// Arbitrary unique ID among open orders for the working order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingClientOrderId", default)]
     pub working_client_order_id: Option<String>,
     /// This can only be used if `workingTimeInForce` is `GTC`, or if `workingType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingIcebergQty", default)]
     pub working_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `working_time_in_force` parameter.
+    /// Supported values: [Time In Force](/products/spot/enums#timeinforce)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingTimeInForce", default)]
     pub working_time_in_force: Option<OrderListPlaceOpocoWorkingTimeInForceEnum>,
     /// Arbitrary numeric value identifying the working order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyId", default)]
     pub working_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the working order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the working order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyType", default)]
     pub working_strategy_type: Option<i32>,
-    ///
-    /// The `working_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegPriceType", default)]
     pub working_peg_price_type: Option<OrderListPlaceOpocoWorkingPegPriceTypeEnum>,
-    ///
-    /// The `working_peg_offset_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetType", default)]
     pub working_peg_offset_type: Option<OrderListPlaceOpocoWorkingPegOffsetTypeEnum>,
-    ///
-    /// The `working_peg_offset_value` parameter.
+    /// Price level for pegging (max: 100). See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetValue", default)]
     pub working_peg_offset_value: Option<i32>,
     /// Arbitrary unique ID among open orders for the pending above order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveClientOrderId", default)]
     pub pending_above_client_order_id: Option<String>,
-    /// Can be used if `pendingAboveType` is `STOP_LOSS_LIMIT` , `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
+    /// Can be used if `pendingAboveType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePrice", default)]
     pub pending_above_price: Option<rust_decimal::Decimal>,
-    /// Can be used if `pendingAboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
+    /// Can be used if `pendingAboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveStopPrice", default)]
     pub pending_above_stop_price: Option<rust_decimal::Decimal>,
-    /// See [Trailing Stop FAQ](./faqs/trailing-stop-faq.md)
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveTrailingDelta", default)]
     pub pending_above_trailing_delta: Option<rust_decimal::Decimal>,
-    /// This can only be used if `pendingAboveTimeInForce` is `GTC` or if `pendingAboveType` is `LIMIT_MAKER`.
+    /// This can only be used if `pendingAboveTimeInForce` is `GTC` or `pendingAboveType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveIcebergQty", default)]
     pub pending_above_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_above_time_in_force` parameter.
+    /// Required if `pendingAboveType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveTimeInForce", default)]
     pub pending_above_time_in_force: Option<OrderListPlaceOpocoPendingAboveTimeInForceEnum>,
     /// Arbitrary numeric value identifying the pending above order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveStrategyId", default)]
     pub pending_above_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the pending above order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the pending above order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveStrategyType", default)]
     pub pending_above_strategy_type: Option<i32>,
-    ///
-    /// The `pending_above_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePegPriceType", default)]
     pub pending_above_peg_price_type: Option<OrderListPlaceOpocoPendingAbovePegPriceTypeEnum>,
-    ///
-    /// The `pending_above_peg_offset_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePegOffsetType", default)]
     pub pending_above_peg_offset_type: Option<OrderListPlaceOpocoPendingAbovePegOffsetTypeEnum>,
-    ///
-    /// The `pending_above_peg_offset_value` parameter.
+    /// Price level for pegging (max: 100). See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePegOffsetValue", default)]
     pub pending_above_peg_offset_value: Option<i32>,
-    ///
-    /// The `pending_below_type` parameter.
+    /// Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowType", default)]
     pub pending_below_type: Option<OrderListPlaceOpocoPendingBelowTypeEnum>,
     /// Arbitrary unique ID among open orders for the pending below order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowClientOrderId", default)]
     pub pending_below_client_order_id: Option<String>,
-    /// Can be used if `pendingBelowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT` to specify limit price
+    /// Can be used if `pendingBelowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPrice", default)]
     pub pending_below_price: Option<rust_decimal::Decimal>,
-    /// Can be used if `pendingBelowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT, TAKE_PROFIT or TAKE_PROFIT_LIMIT`. Either `pendingBelowStopPrice` or `pendingBelowTrailingDelta` or both, must be specified.
+    /// Can be used if `pendingBelowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `pendingBelowStopPrice` or `pendingBelowTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowStopPrice", default)]
     pub pending_below_stop_price: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_below_trailing_delta` parameter.
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowTrailingDelta", default)]
     pub pending_below_trailing_delta: Option<rust_decimal::Decimal>,
-    /// This can only be used if `pendingBelowTimeInForce` is `GTC`, or if `pendingBelowType` is `LIMIT_MAKER`.
+    /// This can only be used if `pendingBelowTimeInForce` is `GTC` or `pendingBelowType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowIcebergQty", default)]
     pub pending_below_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_below_time_in_force` parameter.
+    /// Supported values: [Time In Force](/products/spot/enums#timeinforce)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowTimeInForce", default)]
     pub pending_below_time_in_force: Option<OrderListPlaceOpocoPendingBelowTimeInForceEnum>,
     /// Arbitrary numeric value identifying the pending below order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowStrategyId", default)]
     pub pending_below_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the pending below order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the pending below order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowStrategyType", default)]
     pub pending_below_strategy_type: Option<i32>,
-    ///
-    /// The `pending_below_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPegPriceType", default)]
     pub pending_below_peg_price_type: Option<OrderListPlaceOpocoPendingBelowPegPriceTypeEnum>,
     ///
     /// The `pending_below_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPegOffsetType", default)]
     pub pending_below_peg_offset_type: Option<OrderListPlaceOpocoPendingBelowPegOffsetTypeEnum>,
     ///
     /// The `pending_below_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPegOffsetValue", default)]
     pub pending_below_peg_offset_value: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -5456,11 +5312,11 @@ impl OrderListPlaceOpocoParams {
     ///
     /// * `symbol` — String
     /// * `working_type` — String
-    /// * `working_side` — String
-    /// * `working_price` — `rust_decimal::Decimal`
+    /// * `working_side` — Supported values: [Order Side](/products/spot/enums#side)
+    /// * `working_price` — Price for the working order.
     /// * `working_quantity` — Sets the quantity for the working order.
-    /// * `pending_side` — String
-    /// * `pending_above_type` — String
+    /// * `pending_side` — Supported values: [Order Side](/products/spot/enums#side)
+    /// * `pending_above_type` — Supported values: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     #[must_use]
     pub fn builder(
@@ -5486,7 +5342,7 @@ impl OrderListPlaceOpocoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_place_oto`](#method.order_list_place_oto).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListPlaceOtoParams {
     ///
@@ -5494,180 +5350,201 @@ pub struct OrderListPlaceOtoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `working_type` parameter.
+    /// Supported values: `LIMIT`, `LIMIT_MAKER`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingType")]
     pub working_type: OrderListPlaceOtoWorkingTypeEnum,
-    ///
-    /// The `working_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingSide")]
     pub working_side: OrderListPlaceOtoWorkingSideEnum,
     ///
     /// The `working_price` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingPrice")]
     pub working_price: rust_decimal::Decimal,
     /// Sets the quantity for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingQuantity")]
     pub working_quantity: rust_decimal::Decimal,
-    ///
-    /// The `pending_type` parameter.
+    /// Supported values: [Order Types](/products/spot/enums#ordertypes). Note that `MARKET` orders using `quoteOrderQty` are not supported.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingType")]
     pub pending_type: OrderListPlaceOtoPendingTypeEnum,
-    ///
-    /// The `pending_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingSide")]
     pub pending_side: OrderListPlaceOtoPendingSideEnum,
     /// Sets the quantity for the pending order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingQuantity")]
     pub pending_quantity: rust_decimal::Decimal,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `list_client_order_id` parameter.
+    /// Arbitrary unique ID among open order lists. Automatically generated if not sent. A new order list with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired. `listClientOrderId` is distinct from the `workingClientOrderId` and the `pendingClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "listClientOrderId", default)]
     pub list_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Format of the JSON response. Supported values: [Order Response Type](/products/spot/enums#orderresponsetype)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderListPlaceOtoNewOrderRespTypeEnum>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderListPlaceOtoSelfTradePreventionModeEnum>,
     /// Arbitrary unique ID among open orders for the working order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingClientOrderId", default)]
     pub working_client_order_id: Option<String>,
     /// This can only be used if `workingTimeInForce` is `GTC`, or if `workingType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingIcebergQty", default)]
     pub working_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `working_time_in_force` parameter.
+    /// Supported values: [Time In Force](/products/spot/enums#timeinforce)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingTimeInForce", default)]
     pub working_time_in_force: Option<OrderListPlaceOtoWorkingTimeInForceEnum>,
     /// Arbitrary numeric value identifying the working order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyId", default)]
     pub working_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the working order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the working order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyType", default)]
     pub working_strategy_type: Option<i32>,
-    ///
-    /// The `working_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegPriceType", default)]
     pub working_peg_price_type: Option<OrderListPlaceOtoWorkingPegPriceTypeEnum>,
     ///
     /// The `working_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetType", default)]
     pub working_peg_offset_type: Option<OrderListPlaceOtoWorkingPegOffsetTypeEnum>,
     ///
     /// The `working_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetValue", default)]
     pub working_peg_offset_value: Option<i32>,
     /// Arbitrary unique ID among open orders for the pending order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingClientOrderId", default)]
     pub pending_client_order_id: Option<String>,
     ///
     /// The `pending_price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPrice", default)]
     pub pending_price: Option<rust_decimal::Decimal>,
     ///
     /// The `pending_stop_price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingStopPrice", default)]
     pub pending_stop_price: Option<rust_decimal::Decimal>,
     ///
     /// The `pending_trailing_delta` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingTrailingDelta", default)]
     pub pending_trailing_delta: Option<rust_decimal::Decimal>,
     /// This can only be used if `pendingTimeInForce` is `GTC` or if `pendingType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingIcebergQty", default)]
     pub pending_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_time_in_force` parameter.
+    /// Supported values: [Time In Force](/products/spot/enums#timeinforce)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingTimeInForce", default)]
     pub pending_time_in_force: Option<OrderListPlaceOtoPendingTimeInForceEnum>,
     /// Arbitrary numeric value identifying the pending order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingStrategyId", default)]
     pub pending_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the pending order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the pending order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingStrategyType", default)]
     pub pending_strategy_type: Option<i32>,
     ///
     /// The `pending_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPegOffsetType", default)]
     pub pending_peg_offset_type: Option<OrderListPlaceOtoPendingPegOffsetTypeEnum>,
-    ///
-    /// The `pending_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPegPriceType", default)]
     pub pending_peg_price_type: Option<OrderListPlaceOtoPendingPegPriceTypeEnum>,
     ///
     /// The `pending_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingPegOffsetValue", default)]
     pub pending_peg_offset_value: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -5677,12 +5554,12 @@ impl OrderListPlaceOtoParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `working_type` — String
-    /// * `working_side` — String
+    /// * `working_type` — Supported values: `LIMIT`, `LIMIT_MAKER`
+    /// * `working_side` — Supported values: [Order Side](/products/spot/enums#side)
     /// * `working_price` — `rust_decimal::Decimal`
     /// * `working_quantity` — Sets the quantity for the working order.
-    /// * `pending_type` — String
-    /// * `pending_side` — String
+    /// * `pending_type` — Supported values: [Order Types](/products/spot/enums#ordertypes). Note that `MARKET` orders using `quoteOrderQty` are not supported.
+    /// * `pending_side` — Supported values: [Order Side](/products/spot/enums#side)
     /// * `pending_quantity` — Sets the quantity for the pending order.
     ///
     #[must_use]
@@ -5711,7 +5588,7 @@ impl OrderListPlaceOtoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_list_place_otoco`](#method.order_list_place_otoco).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderListPlaceOtocoParams {
     ///
@@ -5719,243 +5596,272 @@ pub struct OrderListPlaceOtocoParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `working_type` parameter.
+    /// Supported values: `LIMIT`, `LIMIT_MAKER`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingType")]
     pub working_type: OrderListPlaceOtocoWorkingTypeEnum,
-    ///
-    /// The `working_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingSide")]
     pub working_side: OrderListPlaceOtocoWorkingSideEnum,
     ///
     /// The `working_price` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingPrice")]
     pub working_price: rust_decimal::Decimal,
     /// Sets the quantity for the working order.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "workingQuantity")]
     pub working_quantity: rust_decimal::Decimal,
-    ///
-    /// The `pending_side` parameter.
+    /// Supported values: [Order Side](/products/spot/enums#side)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingSide")]
     pub pending_side: OrderListPlaceOtocoPendingSideEnum,
-    /// Sets the quantity for the pending order.
+    /// Sets the quantity for the pending orders.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingQuantity")]
     pub pending_quantity: rust_decimal::Decimal,
-    ///
-    /// The `pending_above_type` parameter.
+    /// Supported values: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "pendingAboveType")]
     pub pending_above_type: OrderListPlaceOtocoPendingAboveTypeEnum,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `list_client_order_id` parameter.
+    /// Arbitrary unique ID among open order lists. Automatically generated if not sent. A new order list with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired. `listClientOrderId` is distinct from the `workingClientOrderId` and the `pendingClientOrderId`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "listClientOrderId", default)]
     pub list_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Format of the JSON response. Supported values: [Order Response Type](/products/spot/enums#orderresponsetype)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderListPlaceOtocoNewOrderRespTypeEnum>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderListPlaceOtocoSelfTradePreventionModeEnum>,
     /// Arbitrary unique ID among open orders for the working order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingClientOrderId", default)]
     pub working_client_order_id: Option<String>,
     /// This can only be used if `workingTimeInForce` is `GTC`, or if `workingType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingIcebergQty", default)]
     pub working_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `working_time_in_force` parameter.
+    /// Supported values: [Time In Force](/products/spot/enums#timeinforce)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingTimeInForce", default)]
     pub working_time_in_force: Option<OrderListPlaceOtocoWorkingTimeInForceEnum>,
     /// Arbitrary numeric value identifying the working order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyId", default)]
     pub working_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the working order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the working order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingStrategyType", default)]
     pub working_strategy_type: Option<i32>,
-    ///
-    /// The `working_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegPriceType", default)]
     pub working_peg_price_type: Option<OrderListPlaceOtocoWorkingPegPriceTypeEnum>,
     ///
     /// The `working_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetType", default)]
     pub working_peg_offset_type: Option<OrderListPlaceOtocoWorkingPegOffsetTypeEnum>,
     ///
     /// The `working_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingPegOffsetValue", default)]
     pub working_peg_offset_value: Option<i32>,
     /// Arbitrary unique ID among open orders for the pending above order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveClientOrderId", default)]
     pub pending_above_client_order_id: Option<String>,
-    /// Can be used if `pendingAboveType` is `STOP_LOSS_LIMIT` , `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
+    /// Can be used if `pendingAboveType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePrice", default)]
     pub pending_above_price: Option<rust_decimal::Decimal>,
-    /// Can be used if `pendingAboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
+    /// Can be used if `pendingAboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveStopPrice", default)]
     pub pending_above_stop_price: Option<rust_decimal::Decimal>,
-    /// See [Trailing Stop FAQ](./faqs/trailing-stop-faq.md)
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveTrailingDelta", default)]
     pub pending_above_trailing_delta: Option<rust_decimal::Decimal>,
     /// This can only be used if `pendingAboveTimeInForce` is `GTC` or if `pendingAboveType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveIcebergQty", default)]
     pub pending_above_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_above_time_in_force` parameter.
+    /// Required if `pendingAboveType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveTimeInForce", default)]
     pub pending_above_time_in_force: Option<OrderListPlaceOtocoPendingAboveTimeInForceEnum>,
     /// Arbitrary numeric value identifying the pending above order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveStrategyId", default)]
     pub pending_above_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the pending above order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the pending above order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveStrategyType", default)]
     pub pending_above_strategy_type: Option<i32>,
-    ///
-    /// The `pending_above_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePegPriceType", default)]
     pub pending_above_peg_price_type: Option<OrderListPlaceOtocoPendingAbovePegPriceTypeEnum>,
     ///
     /// The `pending_above_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePegOffsetType", default)]
     pub pending_above_peg_offset_type: Option<OrderListPlaceOtocoPendingAbovePegOffsetTypeEnum>,
     ///
     /// The `pending_above_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingAbovePegOffsetValue", default)]
     pub pending_above_peg_offset_value: Option<i32>,
-    ///
-    /// The `pending_below_type` parameter.
+    /// Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowType", default)]
     pub pending_below_type: Option<OrderListPlaceOtocoPendingBelowTypeEnum>,
     /// Arbitrary unique ID among open orders for the pending below order. Automatically generated if not sent.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowClientOrderId", default)]
     pub pending_below_client_order_id: Option<String>,
-    /// Can be used if `pendingBelowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT` to specify limit price
+    /// Can be used if `pendingBelowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPrice", default)]
     pub pending_below_price: Option<rust_decimal::Decimal>,
-    /// Can be used if `pendingBelowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT, TAKE_PROFIT or TAKE_PROFIT_LIMIT`. Either `pendingBelowStopPrice` or `pendingBelowTrailingDelta` or both, must be specified.
+    /// Can be used if `pendingBelowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`. Either `pendingBelowStopPrice` or `pendingBelowTrailingDelta` or both, must be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowStopPrice", default)]
     pub pending_below_stop_price: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_below_trailing_delta` parameter.
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowTrailingDelta", default)]
     pub pending_below_trailing_delta: Option<rust_decimal::Decimal>,
     /// This can only be used if `pendingBelowTimeInForce` is `GTC`, or if `pendingBelowType` is `LIMIT_MAKER`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowIcebergQty", default)]
     pub pending_below_iceberg_qty: Option<rust_decimal::Decimal>,
-    ///
-    /// The `pending_below_time_in_force` parameter.
+    /// Required if `pendingBelowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowTimeInForce", default)]
     pub pending_below_time_in_force: Option<OrderListPlaceOtocoPendingBelowTimeInForceEnum>,
     /// Arbitrary numeric value identifying the pending below order within an order strategy.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowStrategyId", default)]
     pub pending_below_strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the pending below order strategy. Values smaller than 1000000 are reserved and cannot be used.
+    /// Arbitrary numeric value identifying the pending below order strategy. Values smaller than `1000000` are reserved and cannot be used.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowStrategyType", default)]
     pub pending_below_strategy_type: Option<i32>,
-    ///
-    /// The `pending_below_peg_price_type` parameter.
+    /// See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPegPriceType", default)]
     pub pending_below_peg_price_type: Option<OrderListPlaceOtocoPendingBelowPegPriceTypeEnum>,
     ///
     /// The `pending_below_peg_offset_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPegOffsetType", default)]
     pub pending_below_peg_offset_type: Option<OrderListPlaceOtocoPendingBelowPegOffsetTypeEnum>,
     ///
     /// The `pending_below_peg_offset_value` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowPegOffsetValue", default)]
     pub pending_below_peg_offset_value: Option<i32>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -5965,13 +5871,13 @@ impl OrderListPlaceOtocoParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `working_type` — String
-    /// * `working_side` — String
+    /// * `working_type` — Supported values: `LIMIT`, `LIMIT_MAKER`
+    /// * `working_side` — Supported values: [Order Side](/products/spot/enums#side)
     /// * `working_price` — `rust_decimal::Decimal`
     /// * `working_quantity` — Sets the quantity for the working order.
-    /// * `pending_side` — String
-    /// * `pending_quantity` — Sets the quantity for the pending order.
-    /// * `pending_above_type` — String
+    /// * `pending_side` — Supported values: [Order Side](/products/spot/enums#side)
+    /// * `pending_quantity` — Sets the quantity for the pending orders.
+    /// * `pending_above_type` — Supported values: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`
     ///
     #[must_use]
     pub fn builder(
@@ -5999,7 +5905,7 @@ impl OrderListPlaceOtocoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_place`](#method.order_place).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderPlaceParams {
     ///
@@ -6007,115 +5913,125 @@ pub struct OrderPlaceParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `side` parameter.
+    /// Please see [Enums](/products/spot/enums#side) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: OrderPlaceSideEnum,
-    ///
-    /// The `r#type` parameter.
+    /// Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "type")]
     pub r#type: OrderPlaceTypeEnum,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `time_in_force` parameter.
+    /// Please see [Enums](/products/spot/enums#timeinforce) for supported values.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<OrderPlaceTimeInForceEnum>,
     ///
     /// The `price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
     pub quantity: Option<rust_decimal::Decimal>,
     ///
     /// The `quote_order_qty` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quoteOrderQty", default)]
     pub quote_order_qty: Option<rust_decimal::Decimal>,
-    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    /// A unique id among open orders. Automatically generated if not sent.<br/> Orders with the same `newClientOrderID` can be accepted only when the previous one is filled, otherwise the order will be rejected.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// `MARKET` and `LIMIT` order types default to `FULL`, all other orders default to `ACK`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderPlaceNewOrderRespTypeEnum>,
-    ///
-    /// The `stop_price` parameter.
+    /// Used with `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, and `TAKE_PROFIT_LIMIT` orders.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopPrice", default)]
     pub stop_price: Option<rust_decimal::Decimal>,
-    /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md)
+    /// See Trailing Stop order FAQ
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "trailingDelta", default)]
     pub trailing_delta: Option<i32>,
-    ///
-    /// The `iceberg_qty` parameter.
+    /// Used with `LIMIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` to create an iceberg order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "icebergQty", default)]
     pub iceberg_qty: Option<rust_decimal::Decimal>,
-    /// Arbitrary numeric value identifying the order within an order strategy.
+    ///
+    /// The `strategy_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyId", default)]
     pub strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the order strategy.
-    /// Values smaller than 1000000 are reserved and cannot be used.
+    /// The value cannot be less than `1000000`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyType", default)]
     pub strategy_type: Option<i32>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderPlaceSelfTradePreventionModeEnum>,
-    ///
-    /// The `peg_price_type` parameter.
+    /// See Pegged Orders Info
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegPriceType", default)]
     pub peg_price_type: Option<OrderPlacePegPriceTypeEnum>,
-    /// Price level to peg the price to (max: 100)
-    /// See Pegged Orders
+    /// Price level to peg the price to (max: 100). See Pegged Orders Info
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegOffsetValue", default)]
     pub peg_offset_value: Option<i32>,
-    ///
-    /// The `peg_offset_type` parameter.
+    /// Only `PRICE_LEVEL` is supported. See Pegged Orders Info
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegOffsetType", default)]
     pub peg_offset_type: Option<OrderPlacePegOffsetTypeEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -6125,8 +6041,8 @@ impl OrderPlaceParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `side` — String
-    /// * `r#type` — String
+    /// * `side` — Please see [Enums](/products/spot/enums#side) for supported values.
+    /// * `r#type` — Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     ///
     #[must_use]
     pub fn builder(
@@ -6144,7 +6060,7 @@ impl OrderPlaceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_test`](#method.order_test).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderTestParams {
     ///
@@ -6152,120 +6068,131 @@ pub struct OrderTestParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `side` parameter.
+    /// Please see [Enums](/products/spot/enums#side) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: OrderTestSideEnum,
-    ///
-    /// The `r#type` parameter.
+    /// Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "type")]
     pub r#type: OrderTestTypeEnum,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Default: `false` <br> See [Commissions FAQ](faqs/commission_faq.md#test-order-diferences) to learn more.
+    /// Default: `false` <br> See [Commissions FAQ](/products/spot/faqs/commission_faq#test-order-diferences) to learn more.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "computeCommissionRates", default)]
     pub compute_commission_rates: Option<bool>,
-    ///
-    /// The `time_in_force` parameter.
+    /// Please see [Enums](/products/spot/enums#timeinforce) for supported values.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<OrderTestTimeInForceEnum>,
     ///
     /// The `price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
     pub quantity: Option<rust_decimal::Decimal>,
     ///
     /// The `quote_order_qty` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quoteOrderQty", default)]
     pub quote_order_qty: Option<rust_decimal::Decimal>,
-    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    /// A unique id among open orders. Automatically generated if not sent. Orders with the same `newClientOrderID` can be accepted only when the previous one is filled, otherwise the order will be rejected.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Set the response JSON. `ACK`, `RESULT`, or `FULL`; `MARKET` and `LIMIT` order types default to `FULL`, all other orders default to `ACK`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<OrderTestNewOrderRespTypeEnum>,
-    ///
-    /// The `stop_price` parameter.
+    /// Used with `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, and `TAKE_PROFIT_LIMIT` orders.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopPrice", default)]
     pub stop_price: Option<rust_decimal::Decimal>,
-    /// See [Trailing Stop order FAQ](faqs/trailing-stop-faq.md)
+    /// See [Trailing Stop order FAQ](/products/spot/faqs/trailing-stop-faq)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "trailingDelta", default)]
     pub trailing_delta: Option<i32>,
-    ///
-    /// The `iceberg_qty` parameter.
+    /// Used with `LIMIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` to create an iceberg order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "icebergQty", default)]
     pub iceberg_qty: Option<rust_decimal::Decimal>,
-    /// Arbitrary numeric value identifying the order within an order strategy.
+    ///
+    /// The `strategy_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyId", default)]
     pub strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the order strategy.
-    /// Values smaller than 1000000 are reserved and cannot be used.
+    /// The value cannot be less than `1000000`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyType", default)]
     pub strategy_type: Option<i32>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderTestSelfTradePreventionModeEnum>,
-    ///
-    /// The `peg_price_type` parameter.
+    /// `PRIMARY_PEG` or `MARKET_PEG`. See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegPriceType", default)]
     pub peg_price_type: Option<OrderTestPegPriceTypeEnum>,
-    /// Price level to peg the price to (max: 100)
-    /// See Pegged Orders
+    /// Price level for pegging (max: 100). See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegOffsetValue", default)]
     pub peg_offset_value: Option<i32>,
-    ///
-    /// The `peg_offset_type` parameter.
+    /// Only `PRICE_LEVEL` is supported. See [Pegged Orders](/products/spot/faqs/pegged_orders)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pegOffsetType", default)]
     pub peg_offset_type: Option<OrderTestPegOffsetTypeEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -6275,8 +6202,8 @@ impl OrderTestParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `side` — String
-    /// * `r#type` — String
+    /// * `side` — Please see [Enums](/products/spot/enums#side) for supported values.
+    /// * `r#type` — Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     ///
     #[must_use]
     pub fn builder(
@@ -6294,7 +6221,7 @@ impl OrderTestParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`sor_order_place`](#method.sor_order_place).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SorOrderPlaceParams {
     ///
@@ -6302,80 +6229,88 @@ pub struct SorOrderPlaceParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `side` parameter.
+    /// `BUY` or `SELL`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: SorOrderPlaceSideEnum,
-    ///
-    /// The `r#type` parameter.
+    /// Only `LIMIT` and `MARKET` orders are supported.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "type")]
     pub r#type: SorOrderPlaceTypeEnum,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quantity")]
     pub quantity: rust_decimal::Decimal,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `time_in_force` parameter.
+    /// Applicable only to `LIMIT` order type.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<SorOrderPlaceTimeInForceEnum>,
     ///
     /// The `price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
-    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    /// A unique id among open orders. Automatically generated if not sent.<br/> Orders with the same `newClientOrderID` can be accepted only when the previous one is filled, otherwise the order will be rejected.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Set the response JSON. `ACK`, `RESULT`, or `FULL`. Default to `FULL`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<SorOrderPlaceNewOrderRespTypeEnum>,
-    ///
-    /// The `iceberg_qty` parameter.
+    /// Used with `LIMIT` to create an iceberg order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "icebergQty", default)]
     pub iceberg_qty: Option<rust_decimal::Decimal>,
-    /// Arbitrary numeric value identifying the order within an order strategy.
+    ///
+    /// The `strategy_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyId", default)]
     pub strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the order strategy.
-    /// Values smaller than 1000000 are reserved and cannot be used.
+    /// The value cannot be less than `1000000`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyType", default)]
     pub strategy_type: Option<i32>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. The possible supported values are: [STP Modes](/products/spot/enums#stpmodes).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<SorOrderPlaceSelfTradePreventionModeEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -6385,8 +6320,8 @@ impl SorOrderPlaceParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `side` — String
-    /// * `r#type` — String
+    /// * `side` — `BUY` or `SELL`
+    /// * `r#type` — Only `LIMIT` and `MARKET` orders are supported.
     /// * `quantity` — `rust_decimal::Decimal`
     ///
     #[must_use]
@@ -6407,7 +6342,7 @@ impl SorOrderPlaceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`sor_order_test`](#method.sor_order_test).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SorOrderTestParams {
     ///
@@ -6415,85 +6350,94 @@ pub struct SorOrderTestParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `side` parameter.
+    /// Please see [Enums](/products/spot/enums#side) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: SorOrderTestSideEnum,
-    ///
-    /// The `r#type` parameter.
+    /// Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "type")]
     pub r#type: SorOrderTestTypeEnum,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quantity")]
     pub quantity: rust_decimal::Decimal,
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Default: `false` <br> See [Commissions FAQ](faqs/commission_faq.md#test-order-diferences) to learn more.
+    /// Default: `false`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "computeCommissionRates", default)]
     pub compute_commission_rates: Option<bool>,
-    ///
-    /// The `time_in_force` parameter.
+    /// Please see [Enums](/products/spot/enums#timeinforce) for supported values.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<SorOrderTestTimeInForceEnum>,
     ///
     /// The `price` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
-    /// The new client order ID for the order after being amended. <br> If not sent, one will be randomly generated. <br> It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.
+    /// A unique id among open orders. Automatically generated if not sent. Orders with the same `newClientOrderID` can be accepted only when the previous one is filled, otherwise the order will be rejected.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    ///
-    /// The `new_order_resp_type` parameter.
+    /// Set the response JSON. `ACK`, `RESULT`, or `FULL`. Default to `FULL`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<SorOrderTestNewOrderRespTypeEnum>,
-    ///
-    /// The `iceberg_qty` parameter.
+    /// Used with `LIMIT` to create an iceberg order.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "icebergQty", default)]
     pub iceberg_qty: Option<rust_decimal::Decimal>,
-    /// Arbitrary numeric value identifying the order within an order strategy.
+    ///
+    /// The `strategy_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyId", default)]
     pub strategy_id: Option<i64>,
-    /// Arbitrary numeric value identifying the order strategy.
-    /// Values smaller than 1000000 are reserved and cannot be used.
+    /// The value cannot be less than `1000000`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "strategyType", default)]
     pub strategy_type: Option<i32>,
-    ///
-    /// The `self_trade_prevention_mode` parameter.
+    /// The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/products/spot/enums#stpmodes)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<SorOrderTestSelfTradePreventionModeEnum>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -6503,8 +6447,8 @@ impl SorOrderTestParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `side` — String
-    /// * `r#type` — String
+    /// * `side` — Please see [Enums](/products/spot/enums#side) for supported values.
+    /// * `r#type` — Please see [Enums](/products/spot/enums#ordertypes) for supported values.
     /// * `quantity` — `rust_decimal::Decimal`
     ///
     #[must_use]
@@ -8319,8 +8263,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/openOrders.cancelAll".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"778f938f-9041-4b88-9914-efbf64eeacc8","status":200,"result":[{"orderListId":19431,"contingencyType":"OCO","listStatusType":"ALL_DONE","listOrderStatus":"ALL_DONE","listClientOrderId":"iuVNVJYYrByz6C4yGOPPK0","transactionTime":1660803702431,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569099454,"clientOrderId":"Tnu2IP0J5Y4mxw3IATBfmW"},{"symbol":"BTCUSDT","orderId":12569099453,"clientOrderId":"bX5wROblo6YeDwa9iTLeyY"}],"orderReports":[{"symbol":"BTCUSDT","origClientOrderId":"Tnu2IP0J5Y4mxw3IATBfmW","orderId":12569099454,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"price":"23400.00000000","origQty":"0.00850000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","origClientOrderId":"bX5wROblo6YeDwa9iTLeyY","orderId":12569099453,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"price":"23450.50000000","origQty":"0.00850000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"BUY","stopPrice":"23430.00000000","selfTradePreventionMode":"NONE"}]},{"symbol":"BTCUSDT","origClientOrderId":"4d96324ff9d44481926157","orderId":12569099453,"orderListId":-1,"clientOrderId":"91fe37ce9e69c90d6358c0","transactTime":1684804350068,"price":"23416.10000000","origQty":"0.00847000","executedQty":"0.00001000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.23416100","status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","stopPrice":"0.00000000","trailingDelta":0,"trailingTime":-1,"icebergQty":"0.00000000","strategyId":37463720,"strategyType":1000000,"selfTradePreventionMode":"NONE"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"778f938f-9041-4b88-9914-efbf64eeacc8","status":200,"result":[{"orderListId":-1,"contingencyType":"OCO","listStatusType":"ALL_DONE","listOrderStatus":"ALL_DONE","listClientOrderId":"iuVNVJYYrByz6C4yGOPPK0","transactionTime":1660803702431,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569099453,"clientOrderId":"bX5wROblo6YeDwa9iTLeyY"}],"orderReports":[{"symbol":"BTCUSDT","origClientOrderId":"bX5wROblo6YeDwa9iTLeyY","orderId":12569099453,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"status":"CANCELED","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"BUY","selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}],"origClientOrderId":"4d96324ff9d44481926157","orderId":12569099453,"clientOrderId":"91fe37ce9e69c90d6358c0","transactTime":1684804350068,"status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","stopPrice":"0.00000000","trailingDelta":10,"trailingTime":-1,"icebergQty":"0.00000000","strategyId":1,"strategyType":1000000,"selfTradePreventionMode":"NONE","preventedMatchId":0,"preventedQuantity":"1.200000","usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -8441,7 +8384,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(),dec!(1.0),).build().unwrap();
+                let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(),dec!(1),).build().unwrap();
                 client.order_amend_keep_priority(params).await
             });
 
@@ -8450,8 +8393,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.amend.keepPriority".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"56374b46-3061-486b-a311-89ee972eb648","status":200,"result":{"transactTime":1741924229819,"executionId":60,"amendedOrder":{"symbol":"BTUCSDT","orderId":23,"orderListId":4,"origClientOrderId":"my_pending_order","clientOrderId":"xbxXh5SSwaHS7oUEOCI88B","price":"1.00000000","qty":"5.00000000","executedQty":"0.00000000","preventedQty":"0.00000000","quoteOrderQty":"0.00000000","cumulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1741924204920,"selfTradePreventionMode":"NONE"},"listStatus":{"orderListId":4,"contingencyType":"OTO","listOrderStatus":"EXECUTING","listClientOrderId":"8nOGLLawudj1QoOiwbroRH","symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":23,"clientOrderId":"xbxXh5SSwaHS7oUEOCI88B"},{"symbol":"BTCUSDT","orderId":22,"clientOrderId":"g04EWsjaackzedjC9wRkWD"},{"symbol":"BTCUSDT","orderId":23,"clientOrderId":"xbxXh5SSwaHS7oUEOCI88B"},{"symbol":"BTCUSDT","orderId":22,"clientOrderId":"g04EWsjaackzedjC9wRkWD"}]}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"56374b46-3061-486b-a311-89ee972eb648","status":200,"result":{"transactTime":1741924229819,"executionId":60,"amendedOrder":{"symbol":"BTUCSDT","orderId":23,"orderListId":4,"origClientOrderId":"my_pending_order","clientOrderId":"xbxXh5SSwaHS7oUEOCI88B","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1741924204920,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"},"listStatus":{"orderListId":4,"contingencyType":"OTO","listOrderStatus":"EXECUTING","listClientOrderId":"8nOGLLawudj1QoOiwbroRH","symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":22,"clientOrderId":"g04EWsjaackzedjC9wRkWD"}]}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -8485,7 +8427,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(),dec!(1.0),).build().unwrap();
+                let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(),dec!(1),).build().unwrap();
                 client.order_amend_keep_priority(params).await
             });
 
@@ -8535,10 +8477,9 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params =
-                    OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), dec!(1.0))
-                        .build()
-                        .unwrap();
+                let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), dec!(1))
+                    .build()
+                    .unwrap();
                 client.order_amend_keep_priority(params).await
             });
 
@@ -8582,8 +8523,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.cancel".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"16eaf097-bbec-44b9-96ff-e97e6e875870","status":200,"result":{"symbol":"BTCUSDT","origClientOrderId":"4d96324ff9d44481926157","orderId":12569099453,"orderListId":19431,"clientOrderId":"91fe37ce9e69c90d6358c0","transactTime":1684804350068,"price":"23416.10000000","origQty":"0.00847000","executedQty":"0.00001000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.23416100","status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","stopPrice":"0.00000000","trailingDelta":0,"icebergQty":"0.00000000","strategyId":37463720,"strategyType":1000000,"selfTradePreventionMode":"NONE","contingencyType":"OCO","listStatusType":"ALL_DONE","listOrderStatus":"ALL_DONE","listClientOrderId":"iuVNVJYYrByz6C4yGOPPK0","transactionTime":1660803702431,"orders":[{"symbol":"BTCUSDT","orderId":12569099454,"clientOrderId":"Tnu2IP0J5Y4mxw3IATBfmW"},{"symbol":"BTCUSDT","orderId":12569099453,"clientOrderId":"bX5wROblo6YeDwa9iTLeyY"},{"symbol":"BTCUSDT","orderId":12569099454,"clientOrderId":"Tnu2IP0J5Y4mxw3IATBfmW"},{"symbol":"BTCUSDT","orderId":12569099453,"clientOrderId":"bX5wROblo6YeDwa9iTLeyY"}],"orderReports":[{"symbol":"BTCUSDT","origClientOrderId":"Tnu2IP0J5Y4mxw3IATBfmW","orderId":12569099454,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"price":"23400.00000000","origQty":"0.00850000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","origClientOrderId":"bX5wROblo6YeDwa9iTLeyY","orderId":12569099453,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"price":"23450.50000000","origQty":"0.00850000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"BUY","stopPrice":"23430.00000000","selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","origClientOrderId":"Tnu2IP0J5Y4mxw3IATBfmW","orderId":12569099454,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"price":"23400.00000000","origQty":"0.00850000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","origClientOrderId":"bX5wROblo6YeDwa9iTLeyY","orderId":12569099453,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"price":"23450.50000000","origQty":"0.00850000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"BUY","stopPrice":"23430.00000000","selfTradePreventionMode":"NONE"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"16eaf097-bbec-44b9-96ff-e97e6e875870","status":200,"result":{"symbol":"BTCUSDT","origClientOrderId":"4d96324ff9d44481926157","orderId":12569099453,"orderListId":19431,"clientOrderId":"91fe37ce9e69c90d6358c0","transactTime":1684804350068,"status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","stopPrice":"0.00000000","trailingDelta":10,"icebergQty":"0.00000000","strategyId":1,"strategyType":1000000,"selfTradePreventionMode":"NONE","preventedMatchId":0,"preventedQuantity":"1.200000","trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY","contingencyType":"OCO","listStatusType":"ALL_DONE","listOrderStatus":"ALL_DONE","listClientOrderId":"iuVNVJYYrByz6C4yGOPPK0","transactionTime":1660803702431,"orders":[{"symbol":"BTCUSDT","orderId":12569099453,"clientOrderId":"bX5wROblo6YeDwa9iTLeyY"}],"orderReports":[{"symbol":"BTCUSDT","origClientOrderId":"bX5wROblo6YeDwa9iTLeyY","orderId":12569099453,"orderListId":19431,"clientOrderId":"OFFXQtxVFZ6Nbcg4PgE2DA","transactTime":1684804350068,"status":"CANCELED","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"BUY","selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -8713,8 +8653,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.cancelReplace".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"99de1036-b5e2-4e0f-9b5c-13d751c93a1a","status":200,"result":{"cancelResult":"SUCCESS","newOrderResult":"SUCCESS","cancelResponse":{"symbol":"BTCUSDT","origClientOrderId":"4d96324ff9d44481926157","orderId":125690984230,"orderListId":-1,"clientOrderId":"91fe37ce9e69c90d6358c0","transactTime":1684804350068,"price":"23450.00000000","origQty":"0.00847000","executedQty":"0.00001000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.23450000","status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","selfTradePreventionMode":"NONE"},"newOrderResponse":{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"bX5wROblo6YeDwa9iTLeyY","transactTime":1660813156959,"price":"23416.10000000","origQty":"0.00847000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","selfTradePreventionMode":"NONE"}},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":50,"count":1},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000,"count":1},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"99de1036-b5e2-4e0f-9b5c-13d751c93a1a","status":200,"result":{"cancelResult":"SUCCESS","newOrderResult":"SUCCESS","cancelResponse":{"symbol":"BTCUSDT","origClientOrderId":"4d96324ff9d44481926157","orderId":125690984230,"orderListId":-1,"clientOrderId":"91fe37ce9e69c90d6358c0","transactTime":1684804350068,"status":"CANCELED","timeInForce":"GTC","type":"LIMIT","side":"SELL","selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"},"newOrderResponse":{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"bX5wROblo6YeDwa9iTLeyY","transactTime":1660813156959,"status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -8849,8 +8788,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.cancel".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c5899911-d3f4-47ae-8835-97da553d27d0","status":200,"result":{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"ALL_DONE","listOrderStatus":"ALL_DONE","listClientOrderId":"6023531d7edaad348f5aff","transactionTime":1660801720215,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138902,"clientOrderId":"jLnZpj5enfMXTuhKB1d0us"},{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}],"orderReports":[{"symbol":"BTCUSDT","orderId":12569138902,"orderListId":1274512,"clientOrderId":"jLnZpj5enfMXTuhKB1d0us","transactTime":1660801720215,"price":"23420.00000000","origQty":"0.00650000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"LIMIT_MAKER","side":"SELL","selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","orderId":12569138901,"orderListId":1274512,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU","transactTime":1660801720215,"price":"23410.00000000","origQty":"0.00650000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"CANCELED","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"SELL","stopPrice":"23405.00000000","selfTradePreventionMode":"NONE"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c5899911-d3f4-47ae-8835-97da553d27d0","status":200,"result":{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"ALL_DONE","listOrderStatus":"ALL_DONE","listClientOrderId":"6023531d7edaad348f5aff","transactionTime":1660801720215,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}],"orderReports":[{"symbol":"BTCUSDT","orderId":12569138901,"orderListId":1274512,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU","transactTime":1660801720215,"status":"CANCELED","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"SELL","selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -8971,7 +8909,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
+                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::Buy,dec!(1),dec!(1),).build().unwrap();
                 client.order_list_place(params).await
             });
 
@@ -8980,8 +8918,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"57833dc0-e3f2-43fb-ba20-46480973b0aa","status":200,"result":{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138902,"clientOrderId":"jLnZpj5enfMXTuhKB1d0us"},{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}],"orderReports":[{"symbol":"BTCUSDT","orderId":12569138902,"orderListId":1274512,"clientOrderId":"jLnZpj5enfMXTuhKB1d0us","transactTime":1660801713793,"price":"23420.00000000","origQty":"0.00650000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"SELL","workingTime":1660801713793,"selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","orderId":12569138901,"orderListId":1274512,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU","transactTime":1660801713793,"price":"23410.00000000","origQty":"0.00650000","executedQty":"0.00000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"SELL","stopPrice":"23405.00000000","workingTime":-1,"selfTradePreventionMode":"NONE"}]},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":50,"count":2},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000,"count":2},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"57833dc0-e3f2-43fb-ba20-46480973b0aa","status":200,"result":{"orderListId":1274512,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"08985fedd9ea2cf6b28996","transactionTime":1660801713793,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":12569138901,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU"}],"orderReports":[{"symbol":"BTCUSDT","orderId":12569138901,"orderListId":1274512,"clientOrderId":"BqtFCj5odMoWtSqGk2X9tU","transactTime":1660801713793,"status":"NEW","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"SELL","workingTime":-1,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -9015,7 +8952,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
+                let params = OrderListPlaceParams::builder("BNBUSDT".to_string(),OrderListPlaceSideEnum::Buy,dec!(1),dec!(1),).build().unwrap();
                 client.order_list_place(params).await
             });
 
@@ -9068,8 +9005,8 @@ mod tests {
                 let params = OrderListPlaceParams::builder(
                     "BNBUSDT".to_string(),
                     OrderListPlaceSideEnum::Buy,
-                    dec!(1.0),
-                    dec!(1.0),
+                    dec!(1),
+                    dec!(1),
                 )
                 .build()
                 .unwrap();
@@ -9107,7 +9044,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::Buy,dec!(1.0),OrderListPlaceOcoAboveTypeEnum::StopLossLimit,OrderListPlaceOcoBelowTypeEnum::StopLoss,).build().unwrap();
+                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::Buy,dec!(1),OrderListPlaceOcoAboveTypeEnum::StopLossLimit,OrderListPlaceOcoBelowTypeEnum::StopLoss,).build().unwrap();
                 client.order_list_place_oco(params).await
             });
 
@@ -9116,8 +9053,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.oco".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"56374a46-3261-486b-a211-99ed972eb648","status":200,"result":{"orderListId":2,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"cKPMnDCbcLQILtDYM4f4fX","transactionTime":1711062760648,"symbol":"LTCBNB","orders":[{"symbol":"LTCBNB","orderId":3,"clientOrderId":"Z2IMlR79XNY5LU0tOxrWyW"},{"symbol":"LTCBNB","orderId":2,"clientOrderId":"0m6I4wfxvTUrOBSMUl0OPU"}],"orderReports":[{"symbol":"LTCBNB","orderId":3,"orderListId":2,"clientOrderId":"Z2IMlR79XNY5LU0tOxrWyW","transactTime":1711062760648,"price":"1.49999999","origQty":"1.000000","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"BUY","workingTime":1711062760648,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBNB","orderId":2,"orderListId":2,"clientOrderId":"0m6I4wfxvTUrOBSMUl0OPU","transactTime":1711062760648,"price":"1.50000000","origQty":"1.000000","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"BUY","stopPrice":"1.50000001","workingTime":-1,"selfTradePreventionMode":"NONE"}]},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":50,"count":2},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000,"count":2},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"56374a46-3261-486b-a211-99ed972eb648","status":200,"result":{"orderListId":2,"contingencyType":"OCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"cKPMnDCbcLQILtDYM4f4fX","transactionTime":1711062760648,"symbol":"LTCBNB","orders":[{"symbol":"LTCBNB","orderId":2,"clientOrderId":"0m6I4wfxvTUrOBSMUl0OPU"}],"orderReports":[{"symbol":"LTCBNB","orderId":2,"orderListId":2,"clientOrderId":"0m6I4wfxvTUrOBSMUl0OPU","transactTime":1711062760648,"status":"NEW","timeInForce":"GTC","type":"STOP_LOSS_LIMIT","side":"BUY","workingTime":-1,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -9151,7 +9087,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::Buy,dec!(1.0),OrderListPlaceOcoAboveTypeEnum::StopLossLimit,OrderListPlaceOcoBelowTypeEnum::StopLoss,).build().unwrap();
+                let params = OrderListPlaceOcoParams::builder("BNBUSDT".to_string(),OrderListPlaceOcoSideEnum::Buy,dec!(1),OrderListPlaceOcoAboveTypeEnum::StopLossLimit,OrderListPlaceOcoBelowTypeEnum::StopLoss,).build().unwrap();
                 client.order_list_place_oco(params).await
             });
 
@@ -9204,7 +9140,7 @@ mod tests {
                 let params = OrderListPlaceOcoParams::builder(
                     "BNBUSDT".to_string(),
                     OrderListPlaceOcoSideEnum::Buy,
-                    dec!(1.0),
+                    dec!(1),
                     OrderListPlaceOcoAboveTypeEnum::StopLossLimit,
                     OrderListPlaceOcoBelowTypeEnum::StopLoss,
                 )
@@ -9244,7 +9180,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOpoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpoWorkingTypeEnum::Limit,OrderListPlaceOpoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOpoPendingTypeEnum::Limit,OrderListPlaceOpoPendingSideEnum::Buy,).build().unwrap();
+                let params = OrderListPlaceOpoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpoWorkingTypeEnum::Limit,OrderListPlaceOpoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOpoPendingTypeEnum::Limit,OrderListPlaceOpoPendingSideEnum::Buy,).build().unwrap();
                 client.order_list_place_opo(params).await
             });
 
@@ -9253,8 +9189,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.opo".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"1762941318128","status":200,"result":{"orderListId":2,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"OiOgqvRagBefpzdM5gjYX3","transactionTime":1762941318142,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":3,"clientOrderId":"x7ISSjywZxFXOdzwsThNnd"},{"symbol":"BTCUSDT","orderId":2,"clientOrderId":"pUzhKBbc0ZVdMScIRAqitH"}],"orderReports":[{"symbol":"BTCUSDT","orderId":3,"orderListId":2,"clientOrderId":"x7ISSjywZxFXOdzwsThNnd","transactTime":1762941318142,"price":"0.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.00000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"GTC","type":"MARKET","side":"SELL","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","orderId":2,"orderListId":2,"clientOrderId":"pUzhKBbc0ZVdMScIRAqitH","transactTime":1762941318142,"price":"101496.00000000","origQty":"0.00070000","executedQty":"0.00000000","origQuoteOrderQty":"0.00000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1762941318142,"selfTradePreventionMode":"NONE"}]}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"status":200,"result":{"orderListId":2,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"OiOgqvRagBefpzdM5gjYX3","transactionTime":1762941318142,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":2,"clientOrderId":"pUzhKBbc0ZVdMScIRAqitH"}],"orderReports":[{"symbol":"BTCUSDT","orderId":2,"orderListId":2,"clientOrderId":"pUzhKBbc0ZVdMScIRAqitH","transactTime":1762941318142,"status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1762941318142,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -9288,7 +9223,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOpoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpoWorkingTypeEnum::Limit,OrderListPlaceOpoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOpoPendingTypeEnum::Limit,OrderListPlaceOpoPendingSideEnum::Buy,).build().unwrap();
+                let params = OrderListPlaceOpoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpoWorkingTypeEnum::Limit,OrderListPlaceOpoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOpoPendingTypeEnum::Limit,OrderListPlaceOpoPendingSideEnum::Buy,).build().unwrap();
                 client.order_list_place_opo(params).await
             });
 
@@ -9342,8 +9277,8 @@ mod tests {
                     "BNBUSDT".to_string(),
                     OrderListPlaceOpoWorkingTypeEnum::Limit,
                     OrderListPlaceOpoWorkingSideEnum::Buy,
-                    dec!(1.0),
-                    dec!(1.0),
+                    dec!(1),
+                    dec!(1),
                     OrderListPlaceOpoPendingTypeEnum::Limit,
                     OrderListPlaceOpoPendingSideEnum::Buy,
                 )
@@ -9383,7 +9318,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOpocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpocoWorkingTypeEnum::Limit,OrderListPlaceOpocoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOpocoPendingSideEnum::Buy,OrderListPlaceOpocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
+                let params = OrderListPlaceOpocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpocoWorkingTypeEnum::Limit,OrderListPlaceOpocoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOpocoPendingSideEnum::Buy,OrderListPlaceOpocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
                 client.order_list_place_opoco(params).await
             });
 
@@ -9392,8 +9327,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.opoco".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"1763000139090","status":200,"result":{"orderListId":1,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"TVbG6ymkYMXTj7tczbOsBf","transactionTime":1763000139104,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":8,"clientOrderId":"i76cGJWN9J1FpADS56TtQZ"},{"symbol":"BTCUSDT","orderId":7,"clientOrderId":"kyIKnMLKQclE5FmyYgaMSo"},{"symbol":"BTCUSDT","orderId":6,"clientOrderId":"3czuJSeyjPwV9Xo28j1Dv3"}],"orderReports":[{"symbol":"BTCUSDT","orderId":8,"orderListId":1,"clientOrderId":"i76cGJWN9J1FpADS56TtQZ","transactTime":1763000139104,"price":"104261.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.00000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"SELL","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","orderId":7,"orderListId":1,"clientOrderId":"kyIKnMLKQclE5FmyYgaMSo","transactTime":1763000139104,"price":"101613.00000000","executedQty":"0.00000000","origQuoteOrderQty":"0.00000000","cummulativeQuoteQty":"0.00000000","status":"PENDING_NEW","timeInForce":"IOC","type":"STOP_LOSS_LIMIT","side":"SELL","stopPrice":"10100.00000000","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"BTCUSDT","orderId":6,"orderListId":1,"clientOrderId":"3czuJSeyjPwV9Xo28j1Dv3","transactTime":1763000139104,"price":"102496.00000000","origQty":"0.00170000","executedQty":"0.00000000","origQuoteOrderQty":"0.00000000","cummulativeQuoteQty":"0.00000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1763000139104,"selfTradePreventionMode":"NONE"}]}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"status":200,"result":{"orderListId":1,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"TVbG6ymkYMXTj7tczbOsBf","transactionTime":1763000139104,"symbol":"BTCUSDT","orders":[{"symbol":"BTCUSDT","orderId":6,"clientOrderId":"3czuJSeyjPwV9Xo28j1Dv3"}],"orderReports":[{"symbol":"BTCUSDT","orderId":6,"orderListId":1,"clientOrderId":"3czuJSeyjPwV9Xo28j1Dv3","transactTime":1763000139104,"status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1763000139104,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -9427,7 +9361,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOpocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpocoWorkingTypeEnum::Limit,OrderListPlaceOpocoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOpocoPendingSideEnum::Buy,OrderListPlaceOpocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
+                let params = OrderListPlaceOpocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOpocoWorkingTypeEnum::Limit,OrderListPlaceOpocoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOpocoPendingSideEnum::Buy,OrderListPlaceOpocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
                 client.order_list_place_opoco(params).await
             });
 
@@ -9481,8 +9415,8 @@ mod tests {
                     "BNBUSDT".to_string(),
                     OrderListPlaceOpocoWorkingTypeEnum::Limit,
                     OrderListPlaceOpocoWorkingSideEnum::Buy,
-                    dec!(1.0),
-                    dec!(1.0),
+                    dec!(1),
+                    dec!(1),
                     OrderListPlaceOpocoPendingSideEnum::Buy,
                     OrderListPlaceOpocoPendingAboveTypeEnum::StopLossLimit,
                 )
@@ -9522,7 +9456,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::Limit,OrderListPlaceOtoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOtoPendingTypeEnum::Limit,OrderListPlaceOtoPendingSideEnum::Buy,dec!(1.0),).build().unwrap();
+                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::Limit,OrderListPlaceOtoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOtoPendingTypeEnum::Limit,OrderListPlaceOtoPendingSideEnum::Buy,dec!(1),).build().unwrap();
                 client.order_list_place_oto(params).await
             });
 
@@ -9531,8 +9465,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.oto".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"1712544395950","status":200,"result":{"orderListId":626,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"KA4EBjGnzvSwSCQsDdTrlf","transactionTime":1712544395981,"symbol":"1712544378871","orders":[{"symbol":"LTCBNB","orderId":14,"clientOrderId":"9MxJSE1TYkmyx5lbGLve7R"},{"symbol":"LTCBNB","orderId":13,"clientOrderId":"YiAUtM9yJjl1a2jXHSp9Ny"}],"orderReports":[{"symbol":"LTCBNB","orderId":14,"orderListId":626,"clientOrderId":"9MxJSE1TYkmyx5lbGLve7R","transactTime":1712544395981,"price":"0.000000","origQty":"1.000000","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"PENDING_NEW","timeInForce":"GTC","type":"MARKET","side":"BUY","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBNB","orderId":13,"orderListId":626,"clientOrderId":"YiAUtM9yJjl1a2jXHSp9Ny","transactTime":1712544395981,"price":"1.000000","origQty":"1.000000","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1712544395981,"selfTradePreventionMode":"NONE"}]},"rateLimits":[{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":10000000,"count":10},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":1000,"count":38}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"status":200,"result":{"orderListId":626,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"KA4EBjGnzvSwSCQsDdTrlf","transactionTime":1712544395981,"orders":[{"symbol":"LTCBNB","orderId":13,"clientOrderId":"YiAUtM9yJjl1a2jXHSp9Ny"}],"orderReports":[{"symbol":"LTCBNB","orderId":13,"orderListId":626,"clientOrderId":"YiAUtM9yJjl1a2jXHSp9Ny","transactTime":1712544395981,"status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1712544395981,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","stopPrice":"0.00000000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -9566,7 +9499,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::Limit,OrderListPlaceOtoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOtoPendingTypeEnum::Limit,OrderListPlaceOtoPendingSideEnum::Buy,dec!(1.0),).build().unwrap();
+                let params = OrderListPlaceOtoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtoWorkingTypeEnum::Limit,OrderListPlaceOtoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOtoPendingTypeEnum::Limit,OrderListPlaceOtoPendingSideEnum::Buy,dec!(1),).build().unwrap();
                 client.order_list_place_oto(params).await
             });
 
@@ -9620,11 +9553,11 @@ mod tests {
                     "BNBUSDT".to_string(),
                     OrderListPlaceOtoWorkingTypeEnum::Limit,
                     OrderListPlaceOtoWorkingSideEnum::Buy,
-                    dec!(1.0),
-                    dec!(1.0),
+                    dec!(1),
+                    dec!(1),
                     OrderListPlaceOtoPendingTypeEnum::Limit,
                     OrderListPlaceOtoPendingSideEnum::Buy,
-                    dec!(1.0),
+                    dec!(1),
                 )
                 .build()
                 .unwrap();
@@ -9662,7 +9595,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::Limit,OrderListPlaceOtocoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOtocoPendingSideEnum::Buy,dec!(1.0),OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
+                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::Limit,OrderListPlaceOtocoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOtocoPendingSideEnum::Buy,dec!(1),OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
                 client.order_list_place_otoco(params).await
             });
 
@@ -9671,8 +9604,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/orderList.place.otoco".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"1712544408508","status":200,"result":{"orderListId":629,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"GaeJHjZPasPItFj4x7Mqm6","transactionTime":1712544408537,"symbol":"1712544378871","orders":[{"symbol":"LTCBNB","orderId":25,"clientOrderId":"ilpIoShcFZ1ZGgSASKxMPt"},{"symbol":"LTCBNB","orderId":24,"clientOrderId":"YcCPKCDMQIjNvLtNswt82X"},{"symbol":"LTCBNB","orderId":23,"clientOrderId":"OVQOpKwfmPCfaBTD0n7e7H"}],"orderReports":[{"symbol":"LTCBNB","orderId":25,"orderListId":629,"clientOrderId":"ilpIoShcFZ1ZGgSASKxMPt","transactTime":1712544408537,"price":"5.000000","origQty":"5.000000","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"PENDING_NEW","timeInForce":"GTC","type":"LIMIT_MAKER","side":"SELL","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBNB","orderId":24,"orderListId":629,"clientOrderId":"YcCPKCDMQIjNvLtNswt82X","transactTime":1712544408537,"price":"0.000000","origQty":"5.000000","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"PENDING_NEW","timeInForce":"GTC","type":"STOP_LOSS","side":"SELL","stopPrice":"0.500000","workingTime":-1,"selfTradePreventionMode":"NONE"},{"symbol":"LTCBNB","orderId":23,"orderListId":629,"clientOrderId":"OVQOpKwfmPCfaBTD0n7e7H","transactTime":1712544408537,"price":"1.500000","origQty":"1.000000","executedQty":"0.000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"0.000000","status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1712544408537,"selfTradePreventionMode":"NONE"}]},"rateLimits":[{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":10000000,"count":18},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":1000,"count":65}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"status":200,"result":{"orderListId":629,"contingencyType":"OTO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"GaeJHjZPasPItFj4x7Mqm6","transactionTime":1712544408537,"orders":[{"symbol":"LTCBNB","orderId":23,"clientOrderId":"OVQOpKwfmPCfaBTD0n7e7H"}],"orderReports":[{"symbol":"LTCBNB","orderId":23,"orderListId":629,"clientOrderId":"OVQOpKwfmPCfaBTD0n7e7H","transactTime":1712544408537,"status":"NEW","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1712544408537,"selfTradePreventionMode":"NONE","icebergQty":"0.00000000","preventedMatchId":0,"preventedQuantity":"1.200000","strategyId":1,"strategyType":1000000,"trailingDelta":10,"trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -9706,7 +9638,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::Limit,OrderListPlaceOtocoWorkingSideEnum::Buy,dec!(1.0),dec!(1.0),OrderListPlaceOtocoPendingSideEnum::Buy,dec!(1.0),OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
+                let params = OrderListPlaceOtocoParams::builder("BNBUSDT".to_string(),OrderListPlaceOtocoWorkingTypeEnum::Limit,OrderListPlaceOtocoWorkingSideEnum::Buy,dec!(1),dec!(1),OrderListPlaceOtocoPendingSideEnum::Buy,dec!(1),OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,).build().unwrap();
                 client.order_list_place_otoco(params).await
             });
 
@@ -9760,10 +9692,10 @@ mod tests {
                     "BNBUSDT".to_string(),
                     OrderListPlaceOtocoWorkingTypeEnum::Limit,
                     OrderListPlaceOtocoWorkingSideEnum::Buy,
-                    dec!(1.0),
-                    dec!(1.0),
+                    dec!(1),
+                    dec!(1),
                     OrderListPlaceOtocoPendingSideEnum::Buy,
-                    dec!(1.0),
+                    dec!(1),
                     OrderListPlaceOtocoPendingAboveTypeEnum::StopLossLimit,
                 )
                 .build()
@@ -9811,8 +9743,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.place".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"56374a46-3061-486b-a311-99ee972eb648","status":200,"result":{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157ec08158a40","transactTime":1660801715793,"price":"23416.10000000","origQty":"0.00847000","executedQty":"0.00847000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"198.33521500","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1660801715793,"selfTradePreventionMode":"NONE","fills":[{"price":"23416.50000000","qty":"0.00212000","commission":"0.000000","commissionAsset":"BNB","tradeId":1650422482},{"price":"23416.10000000","qty":"0.00635000","commission":"0.000000","commissionAsset":"BNB","tradeId":1650422481},{"price":"23416.50000000","qty":"0.00212000","commission":"0.000000","commissionAsset":"BNB","tradeId":1650422482},{"price":"23416.10000000","qty":"0.00635000","commission":"0.000000","commissionAsset":"BNB","tradeId":1650422481}]},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":50,"count":1},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000,"count":1},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"56374a46-3061-486b-a311-99ee972eb648","status":200,"result":{"symbol":"BTCUSDT","orderId":12569099453,"orderListId":-1,"clientOrderId":"4d96324ff9d44481926157ec08158a40","transactTime":1660801715793,"status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"SELL","workingTime":1660801715639,"selfTradePreventionMode":"NONE","stopPrice":"0.00000000","trailingDelta":10,"icebergQty":"0.00000000","strategyId":1,"strategyType":1000000,"preventedMatchId":0,"preventedQuantity":"1.200000","trailingTime":-1,"usedSor":true,"workingFloor":"SOR","pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY","fills":[{"commissionAsset":"BNB","tradeId":1650422481}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -9946,8 +9877,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.test".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"6ffebe91-01d9-43ac-be99-57cf062e0e30","status":200,"result":{"standardCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"specialCommissionForOrder":{"maker":"0.05000000","taker":"0.06000000"},"taxCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB","discount":"0.25000000"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"6ffebe91-01d9-43ac-be99-57cf062e0e30","status":200,"result":{"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -10072,7 +10002,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::Buy,SorOrderPlaceTypeEnum::Market,dec!(1.0),).build().unwrap();
+                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::Buy,SorOrderPlaceTypeEnum::Market,dec!(1),).build().unwrap();
                 client.sor_order_place(params).await
             });
 
@@ -10081,8 +10011,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/sor.order.place".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3a4437e2-41a3-4c19-897c-9cadc5dce8b6","status":200,"result":[{"symbol":"BTCUSDT","orderId":2,"orderListId":-1,"clientOrderId":"sBI1KM6nNtOfj5tccZSKly","transactTime":1689149087774,"price":"31000.00000000","origQty":"0.50000000","executedQty":"0.50000000","origQuoteOrderQty":"0.000000","cummulativeQuoteQty":"14000.00000000","status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1689149087774,"fills":[{"matchType":"ONE_PARTY_TRADE_REPORT","price":"28000.00000000","qty":"0.50000000","commission":"0.00000000","commissionAsset":"BTC","tradeId":-1,"allocId":0}],"workingFloor":"SOR","selfTradePreventionMode":"NONE","usedSor":true}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3a4437e2-41a3-4c19-897c-9cadc5dce8b6","status":200,"result":[{"symbol":"BTCUSDT","orderId":2,"orderListId":-1,"clientOrderId":"sBI1KM6nNtOfj5tccZSKly","transactTime":1689149087774,"status":"FILLED","timeInForce":"GTC","type":"LIMIT","side":"BUY","workingTime":1689149087774,"fills":[{"matchType":"ONE_PARTY_TRADE_REPORT","commissionAsset":"BTC","tradeId":-1,"allocId":0}],"workingFloor":"SOR","selfTradePreventionMode":"NONE","usedSor":true,"stopPrice":"0.00000000","trailingDelta":10,"icebergQty":"0.00000000","strategyId":1,"strategyType":1000000,"preventedMatchId":0,"preventedQuantity":"1.200000","trailingTime":-1,"pegPriceType":"PRIMARY_PEG","pegOffsetType":"PRICE_LEVEL","pegOffsetValue":5,"peggedPrice":"87523.83710000","expiryReason":"INSUFFICIENT_LIQUIDITY"}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -10116,7 +10045,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::Buy,SorOrderPlaceTypeEnum::Market,dec!(1.0),).build().unwrap();
+                let params = SorOrderPlaceParams::builder("BNBUSDT".to_string(),SorOrderPlaceSideEnum::Buy,SorOrderPlaceTypeEnum::Market,dec!(1),).build().unwrap();
                 client.sor_order_place(params).await
             });
 
@@ -10170,7 +10099,7 @@ mod tests {
                     "BNBUSDT".to_string(),
                     SorOrderPlaceSideEnum::Buy,
                     SorOrderPlaceTypeEnum::Market,
-                    dec!(1.0),
+                    dec!(1),
                 )
                 .build()
                 .unwrap();
@@ -10208,7 +10137,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = SorOrderTestParams::builder("BNBUSDT".to_string(),SorOrderTestSideEnum::Buy,SorOrderTestTypeEnum::Market,dec!(1.0),).build().unwrap();
+                let params = SorOrderTestParams::builder("BNBUSDT".to_string(),SorOrderTestSideEnum::Buy,SorOrderTestTypeEnum::Market,dec!(1),).build().unwrap();
                 client.sor_order_test(params).await
             });
 
@@ -10217,8 +10146,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/sor.order.test".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3a4437e2-41a3-4c19-897c-9cadc5dce8b6","status":200,"result":{"standardCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"taxCommissionForOrder":{"maker":"0.00000112","taker":"0.00000114"},"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB","discount":"0.25"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3a4437e2-41a3-4c19-897c-9cadc5dce8b6","status":200,"result":{"discount":{"enabledForAccount":true,"enabledForSymbol":true,"discountAsset":"BNB"}},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -10252,7 +10180,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = SorOrderTestParams::builder("BNBUSDT".to_string(),SorOrderTestSideEnum::Buy,SorOrderTestTypeEnum::Market,dec!(1.0),).build().unwrap();
+                let params = SorOrderTestParams::builder("BNBUSDT".to_string(),SorOrderTestSideEnum::Buy,SorOrderTestTypeEnum::Market,dec!(1),).build().unwrap();
                 client.sor_order_test(params).await
             });
 
@@ -10306,7 +10234,7 @@ mod tests {
                     "BNBUSDT".to_string(),
                     SorOrderTestSideEnum::Buy,
                     SorOrderTestTypeEnum::Market,
-                    dec!(1.0),
+                    dec!(1),
                 )
                 .build()
                 .unwrap();

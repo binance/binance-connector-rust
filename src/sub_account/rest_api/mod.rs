@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -124,10 +124,13 @@ impl RestApi {
     ///
     /// Create a Virtual Sub-account
     ///
-    /// * This request will generate a virtual sub account under your master account.
-    /// * You need to enable "trade" option for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - This request generates a virtual sub-account under your master account.
+    /// - The API key used to call this endpoint must have the `trade` option enabled.
     ///
     /// # Arguments
     ///
@@ -157,7 +160,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Create-a-Virtual-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#create-avirtual-sub-account).
     ///
     pub async fn create_a_virtual_sub_account(
         &self,
@@ -172,7 +175,9 @@ impl RestApi {
     ///
     /// Enable Futures for Sub-account for Master Account
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -202,7 +207,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Enable-Futures-for-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#enable-futures-for-sub-account).
     ///
     pub async fn enable_futures_for_sub_account(
         &self,
@@ -217,7 +222,9 @@ impl RestApi {
     ///
     /// Enable Options for Sub-account (For Master Account).
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -247,7 +254,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Enable-Options-for-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#enable-options-for-sub-account).
     ///
     pub async fn enable_options_for_sub_account(
         &self,
@@ -262,7 +269,9 @@ impl RestApi {
     ///
     /// Get Futures Position-Risk of Sub-account
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -271,7 +280,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -292,16 +301,13 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#get-futures-position-risk-of-sub-account).
     ///
     pub async fn get_futures_position_risk_of_sub_account(
         &self,
         params: GetFuturesPositionRiskOfSubAccountParams,
-    ) -> anyhow::Result<
-        RestApiResponse<
-            Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>,
-        >,
-    > {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>>>
+    {
         self.account_management_api_client
             .get_futures_position_risk_of_sub_account(params)
             .await
@@ -311,7 +317,9 @@ impl RestApi {
     ///
     /// Get Futures Position-Risk of Sub-account V2
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -341,7 +349,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#get-futures-position-risk-of-sub-account-v2).
     ///
     pub async fn get_futures_position_risk_of_sub_account_v2(
         &self,
@@ -356,9 +364,12 @@ impl RestApi {
     ///
     /// Get Sub-account's Status on Margin Or Futures
     ///
-    /// * If no email sent, all sub-accounts' information will be returned.
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If no email sent, all sub-accounts' information will be returned.
     ///
     /// # Arguments
     ///
@@ -388,7 +399,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Get-Sub-accounts-Status-on-Margin-Or-Futures).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#get-sub-accounts-status-on-margin-or-futures).
     ///
     pub async fn get_sub_accounts_status_on_margin_or_futures(
         &self,
@@ -405,7 +416,9 @@ impl RestApi {
     ///
     /// Query Sub-account List
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -435,7 +448,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Query-Sub-account-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#query-sub-account-list).
     ///
     pub async fn query_sub_account_list(
         &self,
@@ -450,7 +463,9 @@ impl RestApi {
     ///
     /// Query Sub-account Transaction statistics (For Master Account).
     ///
-    /// Weight: 60
+    /// Weight(IP): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -480,7 +495,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/account-management/Query-Sub-account-Transaction-Statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/account-management#query-sub-account-transaction-statistics).
     ///
     pub async fn query_sub_account_transaction_statistics(
         &self,
@@ -495,9 +510,12 @@ impl RestApi {
     ///
     /// Add IP Restriction for Sub-Account API key
     ///
-    /// * You need to enable Enable Spot & Margin Trading option for the api key which requests this endpoint
+    /// Weight(UID): 3000
     ///
-    /// Weight: 3000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to enable Enable Spot & Margin Trading option for the api key which requests this endpoint
     ///
     /// # Arguments
     ///
@@ -527,7 +545,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/api-management/Add-IP-Restriction-for-Sub-Account-API-key).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#add-ip-restriction-for-sub-account-api-key).
     ///
     pub async fn add_ip_restriction_for_sub_account_api_key(
         &self,
@@ -538,13 +556,69 @@ impl RestApi {
             .await
     }
 
+    /// Create Sub-account API Key (For Master Account) (`USER_DATA`)
+    ///
+    /// Create a new API Key for a sub-account.
+    ///
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `status=2` requires `ipAddress`
+    /// - `status=3` requires `thirdPartyName`
+    /// - Asset Sub Account is not supported
+    /// - The caller must pass the KYC IP restriction check
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CreateSubAccountApiKeyParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CreateSubAccountApiKeyResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#create-sub-account-api-key).
+    ///
+    pub async fn create_sub_account_api_key(
+        &self,
+        params: CreateSubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyResponse>> {
+        self.api_management_api_client
+            .create_sub_account_api_key(params)
+            .await
+    }
+
     /// Delete IP List For a Sub-account API Key (For Master Account) (`USER_DATA`)
     ///
     /// Delete IP List For a Sub-account API Key
     ///
-    /// * You need to enable Enable Spot & Margin Trading option for the api key which requests this endpoint
+    /// Weight(UID): 3000
     ///
-    /// Weight: 3000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to enable Enable Spot & Margin Trading option for the api key which requests this endpoint
     ///
     /// # Arguments
     ///
@@ -574,7 +648,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#delete-ip-list-for-asub-account-api-key).
     ///
     pub async fn delete_ip_list_for_a_sub_account_api_key(
         &self,
@@ -585,11 +659,64 @@ impl RestApi {
             .await
     }
 
+    /// Delete Sub-account API Key (For Master Account) (`USER_DATA`)
+    ///
+    /// Delete an API Key of a sub-account.
+    ///
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Asset Sub Account is not supported
+    /// - The caller must pass the KYC IP restriction check
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`DeleteSubAccountApiKeyParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<serde_json::Value>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#delete-sub-account-api-key).
+    ///
+    pub async fn delete_sub_account_api_key(
+        &self,
+        params: DeleteSubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<serde_json::Value>> {
+        self.api_management_api_client
+            .delete_sub_account_api_key(params)
+            .await
+    }
+
     /// Get IP Restriction for a Sub-account API Key (For Master Account) (`USER_DATA`)
     ///
     /// Get IP Restriction for a Sub-account API Key
     ///
-    /// Weight: 3000
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -619,7 +746,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/api-management/Get-IP-Restriction-for-a-Sub-account-API-Key).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#get-ip-restriction-for-asub-account-api-key).
     ///
     pub async fn get_ip_restriction_for_a_sub_account_api_key(
         &self,
@@ -630,13 +757,115 @@ impl RestApi {
             .await
     }
 
+    /// Modify Sub-account API Key Permission (For Master Account) (`USER_DATA`)
+    ///
+    /// Modify the trading permissions of a sub-account API Key.
+    ///
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Portfolio Margin Retail User is not supported
+    /// - Asset Sub Account is not supported
+    /// - The caller must pass the KYC IP restriction check
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`ModifySubAccountApiKeyPermissionParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::ModifySubAccountApiKeyPermissionResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#modify-sub-account-api-key-permission).
+    ///
+    pub async fn modify_sub_account_api_key_permission(
+        &self,
+        params: ModifySubAccountApiKeyPermissionParams,
+    ) -> anyhow::Result<RestApiResponse<models::ModifySubAccountApiKeyPermissionResponse>> {
+        self.api_management_api_client
+            .modify_sub_account_api_key_permission(params)
+            .await
+    }
+
+    /// Query Sub-account API Key (For Master Account) (`USER_DATA`)
+    ///
+    /// Query the API Key list of a sub-account.
+    ///
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QuerySubAccountApiKeyParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::QuerySubAccountApiKeyResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#query-sub-account-api-key).
+    ///
+    pub async fn query_sub_account_api_key(
+        &self,
+        params: QuerySubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<models::QuerySubAccountApiKeyResponse>> {
+        self.api_management_api_client
+            .query_sub_account_api_key(params)
+            .await
+    }
+
     /// Futures Transfer for Sub-account (For Master Account) (`USER_DATA`)
     ///
     /// Futures Transfer for Sub-account
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -666,7 +895,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Futures-Transfer-for-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#futures-transfer-for-sub-account).
     ///
     pub async fn futures_transfer_for_sub_account(
         &self,
@@ -681,7 +910,9 @@ impl RestApi {
     ///
     /// Get Detail on Sub-account's Futures Account
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -711,7 +942,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-detail-on-sub-accounts-futures-account).
     ///
     pub async fn get_detail_on_sub_accounts_futures_account(
         &self,
@@ -726,7 +957,9 @@ impl RestApi {
     ///
     /// Get Detail on Sub-account's Futures Account
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -756,7 +989,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-detail-on-sub-accounts-futures-account-v2).
     ///
     pub async fn get_detail_on_sub_accounts_futures_account_v2(
         &self,
@@ -772,7 +1005,9 @@ impl RestApi {
     ///
     /// Get Detail on Sub-account's Margin Account
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -802,7 +1037,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Margin-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-detail-on-sub-accounts-margin-account).
     ///
     pub async fn get_detail_on_sub_accounts_margin_account(
         &self,
@@ -817,11 +1052,14 @@ impl RestApi {
     ///
     /// Query move position history
     ///
-    /// * If `startTime` and `endTime` not sent, return records of the last 90 days by default with 1000 maximum limits
-    /// * If `startTime` is sent and `endTime` is not sent, return records of [max(startTime, now-90d), now].
-    /// * If `startTime` is not sent and `endTime` is sent, return records of [max(now,endTime-90d), endTime].
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are both omitted, records from the last 90 days are returned by default (up to 1000 records).
+    /// - If `startTime` is sent and `endTime` is omitted, records in `[max(startTime, now-90d), now]` are returned.
+    /// - If `startTime` is omitted and `endTime` is sent, records in `[max(now, endTime-90d), endTime]` are returned.
     ///
     /// # Arguments
     ///
@@ -851,7 +1089,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Move-Position-History-for-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-move-position-history-for-sub-account).
     ///
     pub async fn get_move_position_history_for_sub_account(
         &self,
@@ -866,9 +1104,12 @@ impl RestApi {
     ///
     /// Fetch sub-account deposit address
     ///
-    /// * `amount` needs to be sent if using LIGHTNING network
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `amount` needs to be sent if using LIGHTNING network
     ///
     /// # Arguments
     ///
@@ -898,7 +1139,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Sub-account-Deposit-Address).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-sub-account-deposit-address).
     ///
     pub async fn get_sub_account_deposit_address(
         &self,
@@ -913,7 +1154,9 @@ impl RestApi {
     ///
     /// Fetch sub-account deposit history
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -943,7 +1186,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Sub-account-Deposit-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-sub-account-deposit-history).
     ///
     pub async fn get_sub_account_deposit_history(
         &self,
@@ -959,7 +1202,9 @@ impl RestApi {
     ///
     /// Get Summary of Sub-account's Futures Account
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -989,7 +1234,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Summary-of-Sub-accounts-Futures-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-summary-of-sub-accounts-futures-account).
     ///
     pub async fn get_summary_of_sub_accounts_futures_account(
         &self,
@@ -1005,7 +1250,9 @@ impl RestApi {
     ///
     /// Get Summary of Sub-account's Futures Account
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1035,7 +1282,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Summary-of-Sub-accounts-Futures-Account-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-summary-of-sub-accounts-futures-account-v2).
     ///
     pub async fn get_summary_of_sub_accounts_futures_account_v2(
         &self,
@@ -1051,7 +1298,9 @@ impl RestApi {
     ///
     /// Get Summary of Sub-account's Margin Account
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1081,7 +1330,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Get-Summary-of-Sub-accounts-Margin-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#get-summary-of-sub-accounts-margin-account).
     ///
     pub async fn get_summary_of_sub_accounts_margin_account(
         &self,
@@ -1096,9 +1345,12 @@ impl RestApi {
     ///
     /// Margin Transfer for Sub-account
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1128,7 +1380,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Margin-Transfer-for-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#margin-transfer-for-sub-account).
     ///
     pub async fn margin_transfer_for_sub_account(
         &self,
@@ -1143,19 +1395,22 @@ impl RestApi {
     ///
     /// Move position between sub-master, master-sub, or sub-sub accounts when necessary
     ///
-    /// * You need to Enable Trading permission for the API Key which requests this endpoint.
-    /// * This function only support VIP level 7-9.
-    /// * Only master account can use the function
-    /// * Quantity should be positive number only
-    /// * The function support normal account, PM PRO, PM PRO SPAN and PM Retail.
-    /// * Only support for from account has positions
-    /// * For all orders in the same orderArgs request, if any symbol’s total close position quantity is bigger than the symbol’s current position quantity, all batch orders in the same list will fail simultaneously.
-    /// * Only support cross margin mode
-    /// * The price for move position is `MarkPrice` only.
-    /// * Not support for MSA.
-    /// * Not support for the symbol under Reduce-Only.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to enable the `Trading` permission for the API key used to call this endpoint.
+    /// - This function is only available for VIP levels 7-9.
+    /// - Only master accounts can call this endpoint.
+    /// - `quantity` must be a positive number.
+    /// - Supported account types: normal account, PM PRO, PM PRO SPAN, and PM Retail.
+    /// - The source account must have positions.
+    /// - For orders in the same `orderArgs` request, if any symbol's total close position quantity exceeds current position quantity, all orders in that batch fail.
+    /// - Only cross margin mode is supported.
+    /// - The move position price supports `MARK_PRICE` only.
+    /// - MSA is not supported.
+    /// - Symbols configured with `Reduce-Only` are not supported.
     ///
     /// # Arguments
     ///
@@ -1185,7 +1440,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Move-Position-for-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#move-position-for-sub-account).
     ///
     pub async fn move_position_for_sub_account(
         &self,
@@ -1200,7 +1455,9 @@ impl RestApi {
     ///
     /// Fetch sub-account assets
     ///
-    /// Weight: 60
+    /// Weight(UID): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1230,7 +1487,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Assets-V4).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#query-sub-account-assets).
     ///
     pub async fn query_sub_account_assets(
         &self,
@@ -1241,11 +1498,13 @@ impl RestApi {
             .await
     }
 
-    /// Query Sub-account Assets (For Master Account) (`USER_DATA`)
+    /// Query Sub-account Assets V4 (For Master Account) (`USER_DATA`)
     ///
     /// Fetch sub-account assets
     ///
-    /// Weight: 60
+    /// Weight(UID): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1275,7 +1534,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Assets-V4).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#query-sub-account-assets-asset-management).
     ///
     pub async fn query_sub_account_assets_asset_management(
         &self,
@@ -1290,7 +1549,9 @@ impl RestApi {
     ///
     /// Query Sub-account Futures Asset Transfer History
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1320,7 +1581,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#query-sub-account-futures-asset-transfer-history).
     ///
     pub async fn query_sub_account_futures_asset_transfer_history(
         &self,
@@ -1336,10 +1597,13 @@ impl RestApi {
     ///
     /// Query Sub-account Spot Asset Transfer History
     ///
-    /// * fromEmail and toEmail cannot be sent at the same time.
-    /// * Return fromEmail equal master account email by default.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `fromEmail` and `toEmail` cannot be sent at the same time.
+    /// - If both `fromEmail` and `toEmail` are omitted, records with `fromEmail` equal to the master account are returned by default.
     ///
     /// # Arguments
     ///
@@ -1369,7 +1633,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Spot-Asset-Transfer-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#query-sub-account-spot-asset-transfer-history).
     ///
     pub async fn query_sub_account_spot_asset_transfer_history(
         &self,
@@ -1386,7 +1650,9 @@ impl RestApi {
     ///
     /// Get BTC valued asset summary of subaccounts.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1416,7 +1682,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Spot-Assets-Summary).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#query-sub-account-spot-assets-summary).
     ///
     pub async fn query_sub_account_spot_assets_summary(
         &self,
@@ -1431,12 +1697,15 @@ impl RestApi {
     ///
     /// Query Universal Transfer History
     ///
-    /// * fromEmail and toEmail cannot be sent at the same time.
-    /// * Return fromEmail equal master account email by default.
-    /// * The query time period must be less than 7 days.
-    /// * If startTime and endTime not sent, return records of the last 7 days by default.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `fromEmail` and `toEmail` cannot be sent at the same time.
+    /// - If both `fromEmail` and `toEmail` are omitted, records with `fromEmail` equal to the master account are returned by default.
+    /// - The query time range must be less than 7 days.
+    /// - If `startTime` and `endTime` are omitted, records from the last 7 days are returned by default.
     ///
     /// # Arguments
     ///
@@ -1466,7 +1735,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Query-Universal-Transfer-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#query-universal-transfer-history).
     ///
     pub async fn query_universal_transfer_history(
         &self,
@@ -1481,11 +1750,13 @@ impl RestApi {
     ///
     /// Sub-account Futures Asset Transfer
     ///
+    /// Weight(IP): 1
     ///
-    /// * Master account can transfer max 2000 times a minute
-    /// * There must be sufficient margin balance in futures wallet to execute transferring.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - A master account can transfer at most 2000 times per minute.
+    /// - The futures wallet must have sufficient margin balance to execute the transfer.
     ///
     /// # Arguments
     ///
@@ -1515,7 +1786,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Sub-account-Futures-Asset-Transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#sub-account-futures-asset-transfer).
     ///
     pub async fn sub_account_futures_asset_transfer(
         &self,
@@ -1530,10 +1801,13 @@ impl RestApi {
     ///
     /// Sub-account Transfer History
     ///
-    /// * If type is not sent, the records of type 2: transfer out will be returned by default.
-    /// * If startTime and endTime are not sent, the recent 30-day data will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `type` is not sent, records of type `2` (transfer out) are returned by default.
+    /// - If `startTime` and `endTime` are not sent, data from the most recent 30 days is returned.
     ///
     /// # Arguments
     ///
@@ -1563,7 +1837,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Sub-account-Transfer-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#sub-account-transfer-history).
     ///
     pub async fn sub_account_transfer_history(
         &self,
@@ -1578,9 +1852,12 @@ impl RestApi {
     ///
     /// Transfer to Master
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1610,7 +1887,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Transfer-to-Master).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#transfer-to-master).
     ///
     pub async fn transfer_to_master(
         &self,
@@ -1625,9 +1902,12 @@ impl RestApi {
     ///
     /// Transfer to Sub-account of Same Master
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1657,7 +1937,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Transfer-to-Sub-account-of-Same-Master).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#transfer-to-sub-account-of-same-master).
     ///
     pub async fn transfer_to_sub_account_of_same_master(
         &self,
@@ -1672,19 +1952,24 @@ impl RestApi {
     ///
     /// Universal Transfer
     ///
-    /// * You need to enable "internal transfer" option for the api key which requests this endpoint.
-    /// * Transfer from master account by default if fromEmail is not sent.
-    /// * Transfer to master account by default if toEmail is not sent.
-    /// * At least either fromEmail or toEmail need to be sent when the fromAccountType and the toAccountType are the same.
-    /// * Supported transfer scenarios:
-    /// * `SPOT` transfer to `SPOT`, `USDT_FUTURE`, `COIN_FUTURE` (regardless of master or sub)
-    /// * `SPOT`, `USDT_FUTURE`, `COIN_FUTURE` transfer to `SPOT`  (regardless of master or sub)
-    /// * Master account `SPOT` transfer to sub-account `MARGIN(Cross)`, `ISOLATED_MARGIN`
-    /// * Sub-account `MARGIN(Cross)`, `ISOLATED_MARGIN` transfer to master account `SPOT`
-    /// * Sub-account `MARGIN(Cross)` transfer to Sub-account `MARGIN(Cross)`
-    /// * `ALPHA` to `ALPHA`  (regardless of master or sub)
+    /// Weight(IP): 1
     ///
-    /// Weight: 360
+    /// Weight(UID): 360
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to enable the `internal transfer` option for the API key used to call this endpoint.
+    /// - If `fromEmail` is not sent, transfer out from the master account by default.
+    /// - If `toEmail` is not sent, transfer into the master account by default.
+    /// - When `fromAccountType` and `toAccountType` are the same, at least one of `fromEmail` or `toEmail` must be sent.
+    /// - Supported transfer scenarios:
+    /// - `SPOT` -> `SPOT` / `USDT_FUTURE` / `COIN_FUTURE` (master or sub-account).
+    /// - `SPOT` / `USDT_FUTURE` / `COIN_FUTURE` -> `SPOT` (master or sub-account).
+    /// - Master account `SPOT` -> sub-account `MARGIN(Cross)` / `ISOLATED_MARGIN`.
+    /// - Sub-account `MARGIN(Cross)` / `ISOLATED_MARGIN` -> master account `SPOT`.
+    /// - Sub-account `MARGIN(Cross)` -> sub-account `MARGIN(Cross)`.
+    /// - `ALPHA` -> `ALPHA` (master or sub-account).
     ///
     /// # Arguments
     ///
@@ -1714,7 +1999,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/asset-management#universal-transfer).
     ///
     pub async fn universal_transfer(
         &self,
@@ -1729,9 +2014,12 @@ impl RestApi {
     ///
     /// Deposit Assets Into The Managed Sub-account
     ///
-    /// * You need to enable `Enable Spot & Margin Trading` option for the api key which requests this endpoint
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - You need to enable `Enable Spot & Margin Trading` option for the api key which requests this endpoint
     ///
     /// # Arguments
     ///
@@ -1761,7 +2049,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Deposit-Assets-Into-The-Managed-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#deposit-assets-into-the-managed-sub-account).
     ///
     pub async fn deposit_assets_into_the_managed_sub_account(
         &self,
@@ -1777,10 +2065,13 @@ impl RestApi {
     ///
     /// Get investor's managed sub-account deposit address.
     ///
-    /// * If `network` is not send, return with default `network` of the `coin`.
-    /// * * `amount` needs to be sent if using LIGHTNING network
+    /// Weight(UID): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `network` is not sent, the default `network` for the `coin` is returned.
+    /// - When using `LIGHTNING`, `amount` must be provided.
     ///
     /// # Arguments
     ///
@@ -1810,7 +2101,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Get-Managed-Sub-account-Deposit-Address).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#get-managed-sub-account-deposit-address).
     ///
     pub async fn get_managed_sub_account_deposit_address(
         &self,
@@ -1825,7 +2116,9 @@ impl RestApi {
     ///
     /// Query Managed Sub-account Asset Details
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1855,7 +2148,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Asset-Details).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-asset-details).
     ///
     pub async fn query_managed_sub_account_asset_details(
         &self,
@@ -1871,7 +2164,9 @@ impl RestApi {
     ///
     /// Investor can use this api to query managed sub account futures asset details
     ///
-    /// Weight: 60
+    /// Weight(UID): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1901,7 +2196,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Futures-Asset-Details).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-futures-asset-details).
     ///
     pub async fn query_managed_sub_account_futures_asset_details(
         &self,
@@ -1917,7 +2212,9 @@ impl RestApi {
     ///
     /// Get investor's managed sub-account list.
     ///
-    /// Weight: 60
+    /// Weight(UID): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1947,7 +2244,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-list).
     ///
     pub async fn query_managed_sub_account_list(
         &self,
@@ -1962,7 +2259,9 @@ impl RestApi {
     ///
     /// Investor can use this api to query managed sub account margin asset details
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1992,7 +2291,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Margin-Asset-Details).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-margin-asset-details).
     ///
     pub async fn query_managed_sub_account_margin_asset_details(
         &self,
@@ -2008,11 +2307,14 @@ impl RestApi {
     ///
     /// Query Managed Sub-account Snapshot
     ///
-    /// * The query time period must be less then 30 days
-    /// * Support query within the last one month only
-    /// * If startTimeand endTime not sent, return records of the last 7 days by default
+    /// Weight(IP): 2400
     ///
-    /// Weight: 2400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The query time range must be less than 30 days.
+    /// - Only data from the most recent month is supported.
+    /// - If `startTime` and `endTime` are omitted, records from the last 7 days are returned by default.
     ///
     /// # Arguments
     ///
@@ -2042,7 +2344,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Snapshot).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-snapshot).
     ///
     pub async fn query_managed_sub_account_snapshot(
         &self,
@@ -2053,12 +2355,20 @@ impl RestApi {
             .await
     }
 
-    /// Query Managed Sub Account Transfer Log (For Investor Master Account) (`USER_DATA`)
+    /// Query Managed Sub Account Transfer Log For Investor Master Account (`USER_DATA`)
     ///
-    /// Investor can use this api to query managed sub account transfer log. This endpoint is available for investor of Managed Sub-Account. A Managed Sub-Account is an account type for investors who value flexibility in asset allocation and account application, while delegating trades to a professional trading team.
-    /// Please refer to [link](https://www.binance.com/en/support/faq/how-to-get-started-with-managed-sub-account-functions-and-frequently-asked-questions-0594748722704383a7c369046e489459)
+    /// Query Managed Sub Account Transfer Log For Investor Master Account
     ///
-    /// Weight: 1
+    /// Investor can use this api to query managed sub account transfer log. This endpoint is available for investor of
+    /// Managed Sub-Account. A Managed Sub-Account is an account type for investors who value flexibility in asset
+    /// allocation and account application, while delegating trades to a professional trading team.
+    ///
+    /// Please refer to
+    /// [link](https://www.binance.com/en/support/faq/how-to-get-started-with-managed-sub-account-functions-and-frequently-asked-questions-0594748722704383a7c369046e489459)
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2088,7 +2398,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-Account-Transfer-Log-Investor).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-transfer-log-master-account-investor).
     ///
     pub async fn query_managed_sub_account_transfer_log_master_account_investor(
         &self,
@@ -2101,12 +2411,20 @@ impl RestApi {
             .await
     }
 
-    /// Query Managed Sub Account Transfer Log (For Trading Team Master Account) (`USER_DATA`)
+    /// Query Managed Sub Account Transfer Log For Trading Team Master Account (`USER_DATA`)
     ///
-    /// Trading team can use this api to query managed sub account transfer log. This endpoint is available for trading team of Managed Sub-Account. A Managed Sub-Account is an account type for investors who value flexibility in asset allocation and account application, while delegating trades to a professional trading team.
-    /// Please refer to [link](https://www.binance.com/en/support/faq/how-to-get-started-with-managed-sub-account-functions-and-frequently-asked-questions-0594748722704383a7c369046e489459)
+    /// Query Managed Sub Account Transfer Log For Trading Team Master Account
     ///
-    /// Weight: 60
+    /// Trading team can use this api to query managed sub account transfer log. This endpoint is available for trading
+    /// team of Managed Sub-Account. A Managed Sub-Account is an account type for investors who value flexibility in
+    /// asset allocation and account application, while delegating trades to a professional trading team.
+    ///
+    /// Please refer to
+    /// [link](https://www.binance.com/en/support/faq/how-to-get-started-with-managed-sub-account-functions-and-frequently-asked-questions-0594748722704383a7c369046e489459)
+    ///
+    /// Weight(UID): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2136,7 +2454,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-Account-Transfer-Log-Trading-Team-Master).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-transfer-log-master-account-trading).
     ///
     pub async fn query_managed_sub_account_transfer_log_master_account_trading(
         &self,
@@ -2153,7 +2471,9 @@ impl RestApi {
     ///
     /// Query Managed Sub Account Transfer Log (For Trading Team Sub Account)
     ///
-    /// Weight: 60
+    /// Weight(UID): 60
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2183,7 +2503,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-Account-Transfer-Log-Trading-Team-Sub).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#query-managed-sub-account-transfer-log-sub-account-trading).
     ///
     pub async fn query_managed_sub_account_transfer_log_sub_account_trading(
         &self,
@@ -2200,9 +2520,12 @@ impl RestApi {
     ///
     /// Withdrawl Assets From The Managed Sub-account
     ///
-    /// * You need to enable `Enable Spot & Margin Trading` option for the api key which requests this endpoint
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Your API key must have the permission `Enable Spot & Margin Trading`.
     ///
     /// # Arguments
     ///
@@ -2232,7 +2555,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/managed-sub-account#withdrawl-assets-from-the-managed-sub-account).
     ///
     pub async fn withdrawl_assets_from_the_managed_sub_account(
         &self,

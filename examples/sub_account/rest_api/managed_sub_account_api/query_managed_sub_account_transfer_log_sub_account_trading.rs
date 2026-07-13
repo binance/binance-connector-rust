@@ -30,8 +30,8 @@ async fn main() -> Result<()> {
     let params = QueryManagedSubAccountTransferLogSubAccountTradingParams::builder(
         1623319461670,
         1641782889000,
-        789,
-        789,
+        1,
+        10,
     )
     .build()?;
 

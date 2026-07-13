@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        QueryUmConditionalOrderHistoryParams::builder("symbol_example".to_string()).build()?;
+    let params = QueryUmConditionalOrderHistoryParams::builder("BTCUSDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

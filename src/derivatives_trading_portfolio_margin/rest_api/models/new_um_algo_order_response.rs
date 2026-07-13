@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -41,8 +41,6 @@ pub struct NewUmAlgoOrderResponse {
     pub trigger_price: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
-    #[serde(rename = "icebergQuantity", skip_serializing_if = "Option::is_none")]
-    pub iceberg_quantity: Option<String>,
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
@@ -86,7 +84,6 @@ impl NewUmAlgoOrderResponse {
             algo_status: None,
             trigger_price: None,
             price: None,
-            iceberg_quantity: None,
             self_trade_prevention_mode: None,
             working_type: None,
             price_match: None,

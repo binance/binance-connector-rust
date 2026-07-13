@@ -1,7 +1,7 @@
 /*
- * Binance Rebate REST API
+ * Rebate REST API
  *
- * OpenAPI Specification for the Binance Rebate REST API
+ * Query spot trading rebate history records.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,12 +17,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetSpotRebateHistoryRecordsResponseData {
+    /// Current page number.
     #[serde(rename = "page", skip_serializing_if = "Option::is_none")]
     pub page: Option<i64>,
+    /// Total number of records.
     #[serde(rename = "totalRecords", skip_serializing_if = "Option::is_none")]
     pub total_records: Option<i64>,
+    /// Total number of pages.
     #[serde(rename = "totalPageNum", skip_serializing_if = "Option::is_none")]
     pub total_page_num: Option<i64>,
+    /// Rebate records.
     #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
     pub data: Option<Vec<models::GetSpotRebateHistoryRecordsResponseDataDataInner>>,
 }

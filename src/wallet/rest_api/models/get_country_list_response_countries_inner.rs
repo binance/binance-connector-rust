@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,16 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetCountryListResponseCountriesInner {
+    /// ISO 2-digit country code, lowercase.
     #[serde(rename = "countryCode", skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
+    /// Country display name.
     #[serde(rename = "countryName", skip_serializing_if = "Option::is_none")]
     pub country_name: Option<String>,
+    /// `supported`, `limited`, or `blocked`.
     #[serde(rename = "blockType", skip_serializing_if = "Option::is_none")]
     pub block_type: Option<String>,
+    /// Whether deposit is allowed for this country.
     #[serde(rename = "depositAllowed", skip_serializing_if = "Option::is_none")]
     pub deposit_allowed: Option<bool>,
+    /// Whether withdrawal is allowed for this country.
     #[serde(rename = "withdrawalAllowed", skip_serializing_if = "Option::is_none")]
     pub withdrawal_allowed: Option<bool>,
+    /// Whether this country has region-level restrictions.
     #[serde(
         rename = "hasRegionRestrictions",
         skip_serializing_if = "Option::is_none"

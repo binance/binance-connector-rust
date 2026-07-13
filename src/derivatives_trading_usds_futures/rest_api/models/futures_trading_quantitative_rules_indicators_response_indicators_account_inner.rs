@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,14 +17,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct FuturesTradingQuantitativeRulesIndicatorsResponseIndicatorsAccountInner {
+    /// Too many violations under multiple symbols trigger account violation
     #[serde(rename = "indicator", skip_serializing_if = "Option::is_none")]
     pub indicator: Option<String>,
+    /// Current value
     #[serde(rename = "value", skip_serializing_if = "Option::is_none")]
     pub value: Option<i64>,
+    /// Trigger value
     #[serde(rename = "triggerValue", skip_serializing_if = "Option::is_none")]
     pub trigger_value: Option<i64>,
+    /// Planned Recover Time.
     #[serde(rename = "plannedRecoverTime", skip_serializing_if = "Option::is_none")]
     pub planned_recover_time: Option<i64>,
+    /// Is Locked.
     #[serde(rename = "isLocked", skip_serializing_if = "Option::is_none")]
     pub is_locked: Option<bool>,
 }

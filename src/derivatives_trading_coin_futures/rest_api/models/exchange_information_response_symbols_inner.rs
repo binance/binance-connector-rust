@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,57 +17,82 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseSymbolsInner {
+    /// Trading filters and constraints.
     #[serde(rename = "filters", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<models::ExchangeInformationResponseSymbolsInnerFiltersInner>>,
+    /// Supported order types.
     #[serde(rename = "orderTypes", skip_serializing_if = "Option::is_none")]
     pub order_types: Option<Vec<String>>,
+    /// Time in force
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<Vec<String>>,
+    /// liquidation fee rate
     #[serde(rename = "liquidationFee", skip_serializing_if = "Option::is_none")]
     pub liquidation_fee: Option<String>,
+    /// the max price difference rate( from mark price) a market order can make
     #[serde(rename = "marketTakeBound", skip_serializing_if = "Option::is_none")]
     pub market_take_bound: Option<String>,
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Contract type.
     #[serde(rename = "contractType", skip_serializing_if = "Option::is_none")]
     pub contract_type: Option<String>,
+    /// Delivery timestamp.
     #[serde(rename = "deliveryDate", skip_serializing_if = "Option::is_none")]
     pub delivery_date: Option<i64>,
+    /// Onboard timestamp.
     #[serde(rename = "onboardDate", skip_serializing_if = "Option::is_none")]
     pub onboard_date: Option<i64>,
+    /// Contract status.
     #[serde(rename = "contractStatus", skip_serializing_if = "Option::is_none")]
     pub contract_status: Option<String>,
+    /// Contract size.
     #[serde(rename = "contractSize", skip_serializing_if = "Option::is_none")]
     pub contract_size: Option<i64>,
+    /// Quote asset symbol.
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// Base asset symbol.
     #[serde(rename = "baseAsset", skip_serializing_if = "Option::is_none")]
     pub base_asset: Option<String>,
+    /// Margin asset.
     #[serde(rename = "marginAsset", skip_serializing_if = "Option::is_none")]
     pub margin_asset: Option<String>,
+    /// please do not use it as tickSize
     #[serde(rename = "pricePrecision", skip_serializing_if = "Option::is_none")]
     pub price_precision: Option<i64>,
+    /// please do not use it as stepSize
     #[serde(rename = "quantityPrecision", skip_serializing_if = "Option::is_none")]
     pub quantity_precision: Option<i64>,
+    /// Base asset precision.
     #[serde(rename = "baseAssetPrecision", skip_serializing_if = "Option::is_none")]
     pub base_asset_precision: Option<i64>,
+    /// Quote asset precision.
     #[serde(rename = "quotePrecision", skip_serializing_if = "Option::is_none")]
     pub quote_precision: Option<i64>,
+    /// ignore
     #[serde(rename = "equalQtyPrecision", skip_serializing_if = "Option::is_none")]
     pub equal_qty_precision: Option<i64>,
+    /// threshold for algo order with \"priceProtect\"
     #[serde(rename = "triggerProtect", skip_serializing_if = "Option::is_none")]
     pub trigger_protect: Option<String>,
+    /// ignore
     #[serde(rename = "maintMarginPercent", skip_serializing_if = "Option::is_none")]
     pub maint_margin_percent: Option<String>,
+    /// ignore
     #[serde(
         rename = "requiredMarginPercent",
         skip_serializing_if = "Option::is_none"
     )]
     pub required_margin_percent: Option<String>,
+    /// Underlying asset type.
     #[serde(rename = "underlyingType", skip_serializing_if = "Option::is_none")]
     pub underlying_type: Option<String>,
+    /// Underlying asset sub-type.
     #[serde(rename = "underlyingSubType", skip_serializing_if = "Option::is_none")]
     pub underlying_sub_type: Option<Vec<String>>,
 }

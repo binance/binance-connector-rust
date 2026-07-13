@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,42 +18,55 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationV2ResponseResult {
+    /// total initial margin required with current mark price (useless with isolated positions), only for USDT asset
     #[serde(rename = "totalInitialMargin", skip_serializing_if = "Option::is_none")]
     pub total_initial_margin: Option<String>,
+    /// the sum of USD value of all cross positions maintenance margin
     #[serde(rename = "totalMaintMargin", skip_serializing_if = "Option::is_none")]
     pub total_maint_margin: Option<String>,
+    /// total wallet balance, only for USDT asset
     #[serde(rename = "totalWalletBalance", skip_serializing_if = "Option::is_none")]
     pub total_wallet_balance: Option<String>,
+    /// total unrealized profit, only for USDT asset
     #[serde(
         rename = "totalUnrealizedProfit",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_unrealized_profit: Option<String>,
+    /// total margin balance, only for USDT asset
     #[serde(rename = "totalMarginBalance", skip_serializing_if = "Option::is_none")]
     pub total_margin_balance: Option<String>,
+    /// initial margin required for positions with current mark price, only for USDT asset
     #[serde(
         rename = "totalPositionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_position_initial_margin: Option<String>,
+    /// initial margin required for open orders with current mark price, only for USDT asset
     #[serde(
         rename = "totalOpenOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_open_order_initial_margin: Option<String>,
+    /// crossed wallet balance, only for USDT asset
     #[serde(
         rename = "totalCrossWalletBalance",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_cross_wallet_balance: Option<String>,
+    /// unrealized profit of crossed positions, only for USDT asset
     #[serde(rename = "totalCrossUnPnl", skip_serializing_if = "Option::is_none")]
     pub total_cross_un_pnl: Option<String>,
+    /// available balance, only for USDT asset
     #[serde(rename = "availableBalance", skip_serializing_if = "Option::is_none")]
     pub available_balance: Option<String>,
+    /// maximum amount for transfer out, only for USDT asset
     #[serde(rename = "maxWithdrawAmount", skip_serializing_if = "Option::is_none")]
     pub max_withdraw_amount: Option<String>,
+    /// For assets that are quote assets, USDT/USDC/BTC
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
     pub assets: Option<Vec<models::AccountInformationV2ResponseResultAssetsInner>>,
+    /// positions of all symbols user had position/ open orders are returned
     #[serde(rename = "positions", skip_serializing_if = "Option::is_none")]
     pub positions: Option<Vec<models::AccountInformationV2ResponseResultPositionsInner>>,
 }

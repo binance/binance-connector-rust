@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,12 +18,12 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MyFiltersResponse {
-    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i64>,
-    #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
-    pub result: Option<Box<models::MyFiltersResponseResult>>,
+    #[serde(rename = "exchangeFilters", skip_serializing_if = "Option::is_none")]
+    pub exchange_filters: Option<Vec<models::ExchangeFilters>>,
+    #[serde(rename = "symbolFilters", skip_serializing_if = "Option::is_none")]
+    pub symbol_filters: Option<Vec<models::SymbolFilters>>,
+    #[serde(rename = "assetFilters", skip_serializing_if = "Option::is_none")]
+    pub asset_filters: Option<Vec<models::MaxAssetFilter>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
     pub rate_limits: Option<Vec<models::RateLimits>>,
 }
@@ -37,9 +32,9 @@ impl MyFiltersResponse {
     #[must_use]
     pub fn new() -> MyFiltersResponse {
         MyFiltersResponse {
-            id: None,
-            status: None,
-            result: None,
+            exchange_filters: None,
+            symbol_filters: None,
+            asset_filters: None,
             rate_limits: None,
         }
     }

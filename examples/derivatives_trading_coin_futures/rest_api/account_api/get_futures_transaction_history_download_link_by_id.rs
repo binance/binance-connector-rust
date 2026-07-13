@@ -28,8 +28,10 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingCoinFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        GetFuturesTransactionHistoryDownloadLinkByIdParams::builder("1".to_string()).build()?;
+    let params = GetFuturesTransactionHistoryDownloadLinkByIdParams::builder(
+        "545923594199212032".to_string(),
+    )
+    .build()?;
 
     // Make the API call
     let response = rest_client

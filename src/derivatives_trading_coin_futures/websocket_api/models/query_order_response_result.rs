@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,62 +16,91 @@ use crate::derivatives_trading_coin_futures::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `QueryOrderResponseResult` : Indicates that combined is set to true.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryOrderResponseResult {
+    /// Sub-order ID
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Enum：completed，processing
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// Client order ID.
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// Latest token price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Average execution price
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
+    /// Original order quantity
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
+    /// Executed quantity
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// Cumulative filled quantity.
+    #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
+    pub cum_qty: Option<String>,
+    /// Cumulative base asset amount.
     #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
     pub cum_base: Option<String>,
+    /// Time in force
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// Order type.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// Whether the order is reduce-only.
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
+    /// if Close-All
     #[serde(rename = "closePosition", skip_serializing_if = "Option::is_none")]
     pub close_position: Option<bool>,
+    /// Trading side
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// please ignore when order type is `TRAILING_STOP_MARKET`
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
+    /// Stop trigger price type.
     #[serde(rename = "workingType", skip_serializing_if = "Option::is_none")]
     pub working_type: Option<String>,
+    /// if conditional order trigger is protected
     #[serde(rename = "priceProtect", skip_serializing_if = "Option::is_none")]
     pub price_protect: Option<bool>,
+    /// Original order type.
     #[serde(rename = "origType", skip_serializing_if = "Option::is_none")]
     pub orig_type: Option<String>,
+    /// self trading preventation mode
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<String>,
+    /// Time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// price match mode
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<String>,
 }
 
 impl QueryOrderResponseResult {
+    /// Indicates that combined is set to true.
     #[must_use]
     pub fn new() -> QueryOrderResponseResult {
         QueryOrderResponseResult {
@@ -84,6 +113,7 @@ impl QueryOrderResponseResult {
             avg_price: None,
             orig_qty: None,
             executed_qty: None,
+            cum_qty: None,
             cum_base: None,
             time_in_force: None,
             r#type: None,

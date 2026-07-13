@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryEnabledIsolatedMarginAccountLimitResponse {
+    /// enabled Account.
     #[serde(rename = "enabledAccount", skip_serializing_if = "Option::is_none")]
     pub enabled_account: Option<i64>,
+    /// max Account.
     #[serde(rename = "maxAccount", skip_serializing_if = "Option::is_none")]
     pub max_account: Option<i64>,
 }

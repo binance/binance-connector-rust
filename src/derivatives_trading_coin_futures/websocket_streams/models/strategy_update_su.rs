@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,16 +18,22 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct StrategyUpdateSu {
+    /// Strategy ID
     #[serde(rename = "si", skip_serializing_if = "Option::is_none")]
     pub si: Option<i64>,
+    /// Strategy Type
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
     pub st: Option<String>,
+    /// Strategy Status
     #[serde(rename = "ss", skip_serializing_if = "Option::is_none")]
     pub ss: Option<String>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Update Time
     #[serde(rename = "ut", skip_serializing_if = "Option::is_none")]
     pub ut: Option<i64>,
+    /// opCode
     #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
     pub c: Option<i64>,
 }

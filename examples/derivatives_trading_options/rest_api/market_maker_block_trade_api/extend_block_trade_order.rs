@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        ExtendBlockTradeOrderParams::builder("block_order_matching_key_example".to_string())
+        ExtendBlockTradeOrderParams::builder("3668822b8-1baa-6a2f-adb8-d3de6289b361".to_string())
             .build()?;
 
     // Make the API call

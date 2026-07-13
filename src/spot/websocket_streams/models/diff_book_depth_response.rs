@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket Streams
+ * Spot WebSocket Market Streams
  *
- * OpenAPI Specifications for the Binance Spot WebSocket Streams
- *
- * API documents:
- * - [Github web-socket-streams documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md)
- * - [General API information for web-socket-streams on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,18 +18,25 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DiffBookDepthResponse {
+    /// Event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// First update ID in event
     #[serde(rename = "U", skip_serializing_if = "Option::is_none")]
     pub u_uppercase: Option<i64>,
+    /// Final update ID in event
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
+    /// Bids to be updated
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<Vec<Vec<String>>>,
+    /// Asks to be updated
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<Vec<Vec<String>>>,
 }

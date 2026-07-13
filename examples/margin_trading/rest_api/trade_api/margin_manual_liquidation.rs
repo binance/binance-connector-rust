@@ -4,7 +4,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::margin_trading::{MarginTradingRestApi, rest_api::MarginManualLiquidationParams};
+use binance_sdk::margin_trading::{
+    MarginTradingRestApi,
+    rest_api::{MarginManualLiquidationParams, MarginManualLiquidationTypeEnum},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -25,7 +28,8 @@ async fn main() -> Result<()> {
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = MarginManualLiquidationParams::builder("r#type_example".to_string()).build()?;
+    let params =
+        MarginManualLiquidationParams::builder(MarginManualLiquidationTypeEnum::Margin).build()?;
 
     // Make the API call
     let response = rest_client

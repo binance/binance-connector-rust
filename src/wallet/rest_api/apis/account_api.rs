@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -72,11 +72,46 @@ impl AccountApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum DailyAccountSnapshotTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+    #[serde(rename = "FUTURES")]
+    Futures,
+}
+
+impl DailyAccountSnapshotTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+            Self::Futures => "FUTURES",
+        }
+    }
+}
+
+impl std::str::FromStr for DailyAccountSnapshotTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            "FUTURES" => Ok(Self::Futures),
+            other => Err(format!("invalid DailyAccountSnapshotTypeEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`account_api_trading_status`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_api_trading_status`](#method.account_api_trading_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountApiTradingStatusParams {
     ///
@@ -84,6 +119,7 @@ pub struct AccountApiTradingStatusParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -99,7 +135,7 @@ impl AccountApiTradingStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_info`](#method.account_info).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountInfoParams {
     ///
@@ -107,6 +143,7 @@ pub struct AccountInfoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -122,7 +159,7 @@ impl AccountInfoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_status`](#method.account_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountStatusParams {
     ///
@@ -130,6 +167,7 @@ pub struct AccountStatusParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -145,7 +183,7 @@ impl AccountStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`daily_account_snapshot`](#method.daily_account_snapshot).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DailyAccountSnapshotParams {
     ///
@@ -153,29 +191,35 @@ pub struct DailyAccountSnapshotParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
+    #[serde(rename = "type")]
+    pub r#type: DailyAccountSnapshotTypeEnum,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// min 7, max 30, default 7
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -187,7 +231,7 @@ impl DailyAccountSnapshotParams {
     /// * `r#type` — String
     ///
     #[must_use]
-    pub fn builder(r#type: String) -> DailyAccountSnapshotParamsBuilder {
+    pub fn builder(r#type: DailyAccountSnapshotTypeEnum) -> DailyAccountSnapshotParamsBuilder {
         DailyAccountSnapshotParamsBuilder::default().r#type(r#type)
     }
 }
@@ -195,7 +239,7 @@ impl DailyAccountSnapshotParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`disable_fast_withdraw_switch`](#method.disable_fast_withdraw_switch).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DisableFastWithdrawSwitchParams {
     ///
@@ -203,6 +247,7 @@ pub struct DisableFastWithdrawSwitchParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -218,7 +263,7 @@ impl DisableFastWithdrawSwitchParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`enable_fast_withdraw_switch`](#method.enable_fast_withdraw_switch).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct EnableFastWithdrawSwitchParams {
     ///
@@ -226,6 +271,7 @@ pub struct EnableFastWithdrawSwitchParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -241,7 +287,7 @@ impl EnableFastWithdrawSwitchParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_api_key_permission`](#method.get_api_key_permission).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetApiKeyPermissionParams {
     ///
@@ -249,6 +295,7 @@ pub struct GetApiKeyPermissionParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -531,7 +578,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"data":{"isLocked":false,"plannedRecoverTime":0,"triggerCondition":{"GCR":150,"IFER":150,"UFR":300},"updateTime":1547630471725}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"data":{"isLocked":false,"plannedRecoverTime":0,"triggerCondition":{"GCR":150,"IFER":150,"UFR":300},"updateTime":1547630471725}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AccountApiTradingStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountApiTradingStatusResponse");
@@ -558,7 +605,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"vipLevel":0,"isMarginEnabled":true,"isFutureEnabled":true,"isOptionsEnabled":true,"isPortfolioMarginRetailEnabled":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"vipLevel":0,"isMarginEnabled":true,"isFutureEnabled":true,"isOptionsEnabled":true,"isPortfolioMarginRetailEnabled":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AccountInfoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountInfoResponse");
@@ -585,7 +632,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"data":"Normal"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"data":"Normal"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AccountStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountStatusResponse");
@@ -612,7 +660,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"},{"asset":"USDT","free":"1.89109409","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700"},"type":"spot","updateTime":1576281599000},{"data":{"marginLevel":"2748.02909813","totalAssetOfBtc":"0.00274803","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}]},"type":"margin","updateTime":1576281599000},{"data":{"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"futures","updateTime":1576281599000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700","marginLevel":"2748.02909813","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}],"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"spot","updateTime":1576281599000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::DailyAccountSnapshotResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DailyAccountSnapshotResponse");
@@ -687,7 +735,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":false,"createTime":1698645219000,"enableReading":true,"enableWithdrawals":false,"enableInternalTransfer":false,"enableMargin":false,"enableFutures":false,"permitsUniversalTransfer":false,"enableVanillaOptions":false,"enableFixApiTrade":false,"enableFixReadOnly":true,"enableSpotAndMarginTrading":false,"enablePortfolioMarginTrading":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":false,"createTime":1623840271000,"enableReading":true,"enableWithdrawals":false,"enableInternalTransfer":true,"enableMargin":false,"enableFutures":false,"permitsUniversalTransfer":true,"enableVanillaOptions":false,"enableFixApiTrade":false,"enableFixReadOnly":true,"enableSpotAndMarginTrading":false,"enablePortfolioMarginTrading":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetApiKeyPermissionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetApiKeyPermissionResponse");
@@ -710,7 +758,7 @@ mod tests {
 
             let params = AccountApiTradingStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"data":{"isLocked":false,"plannedRecoverTime":0,"triggerCondition":{"GCR":150,"IFER":150,"UFR":300},"updateTime":1547630471725}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"data":{"isLocked":false,"plannedRecoverTime":0,"triggerCondition":{"GCR":150,"IFER":150,"UFR":300},"updateTime":1547630471725}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountApiTradingStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountApiTradingStatusResponse");
 
             let resp = client.account_api_trading_status(params).await.expect("Expected a response");
@@ -727,7 +775,7 @@ mod tests {
 
             let params = AccountApiTradingStatusParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"data":{"isLocked":false,"plannedRecoverTime":0,"triggerCondition":{"GCR":150,"IFER":150,"UFR":300},"updateTime":1547630471725}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"data":{"isLocked":false,"plannedRecoverTime":0,"triggerCondition":{"GCR":150,"IFER":150,"UFR":300},"updateTime":1547630471725}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountApiTradingStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountApiTradingStatusResponse");
 
             let resp = client.account_api_trading_status(params).await.expect("Expected a response");
@@ -760,7 +808,7 @@ mod tests {
 
             let params = AccountInfoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"vipLevel":0,"isMarginEnabled":true,"isFutureEnabled":true,"isOptionsEnabled":true,"isPortfolioMarginRetailEnabled":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"vipLevel":0,"isMarginEnabled":true,"isFutureEnabled":true,"isOptionsEnabled":true,"isPortfolioMarginRetailEnabled":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountInfoResponse");
 
             let resp = client.account_info(params).await.expect("Expected a response");
@@ -777,7 +825,7 @@ mod tests {
 
             let params = AccountInfoParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"vipLevel":0,"isMarginEnabled":true,"isFutureEnabled":true,"isOptionsEnabled":true,"isPortfolioMarginRetailEnabled":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"vipLevel":0,"isMarginEnabled":true,"isFutureEnabled":true,"isOptionsEnabled":true,"isPortfolioMarginRetailEnabled":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountInfoResponse");
 
             let resp = client.account_info(params).await.expect("Expected a response");
@@ -810,7 +858,8 @@ mod tests {
 
             let params = AccountStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"data":"Normal"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"data":"Normal"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AccountStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountStatusResponse");
@@ -835,7 +884,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"data":"Normal"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"data":"Normal"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AccountStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountStatusResponse");
@@ -871,9 +921,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = DailyAccountSnapshotParams::builder("r#type_example".to_string(),).build().unwrap();
+            let params = DailyAccountSnapshotParams::builder(DailyAccountSnapshotTypeEnum::Spot,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"},{"asset":"USDT","free":"1.89109409","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700"},"type":"spot","updateTime":1576281599000},{"data":{"marginLevel":"2748.02909813","totalAssetOfBtc":"0.00274803","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}]},"type":"margin","updateTime":1576281599000},{"data":{"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"futures","updateTime":1576281599000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700","marginLevel":"2748.02909813","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}],"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"spot","updateTime":1576281599000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::DailyAccountSnapshotResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DailyAccountSnapshotResponse");
 
             let resp = client.daily_account_snapshot(params).await.expect("Expected a response");
@@ -888,9 +938,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = DailyAccountSnapshotParams::builder("r#type_example".to_string(),).start_time(1623319461670).end_time(1641782889000).limit(7).recv_window(5000).build().unwrap();
+            let params = DailyAccountSnapshotParams::builder(DailyAccountSnapshotTypeEnum::Spot,).start_time(1623319461670).end_time(1641782889000).limit(7).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"},{"asset":"USDT","free":"1.89109409","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700"},"type":"spot","updateTime":1576281599000},{"data":{"marginLevel":"2748.02909813","totalAssetOfBtc":"0.00274803","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}]},"type":"margin","updateTime":1576281599000},{"data":{"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"futures","updateTime":1576281599000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700","marginLevel":"2748.02909813","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}],"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"spot","updateTime":1576281599000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::DailyAccountSnapshotResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DailyAccountSnapshotResponse");
 
             let resp = client.daily_account_snapshot(params).await.expect("Expected a response");
@@ -905,7 +955,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = DailyAccountSnapshotParams::builder("r#type_example".to_string())
+            let params = DailyAccountSnapshotParams::builder(DailyAccountSnapshotTypeEnum::Spot)
                 .build()
                 .unwrap();
 
@@ -1039,7 +1089,7 @@ mod tests {
 
             let params = GetApiKeyPermissionParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":false,"createTime":1698645219000,"enableReading":true,"enableWithdrawals":false,"enableInternalTransfer":false,"enableMargin":false,"enableFutures":false,"permitsUniversalTransfer":false,"enableVanillaOptions":false,"enableFixApiTrade":false,"enableFixReadOnly":true,"enableSpotAndMarginTrading":false,"enablePortfolioMarginTrading":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":false,"createTime":1623840271000,"enableReading":true,"enableWithdrawals":false,"enableInternalTransfer":true,"enableMargin":false,"enableFutures":false,"permitsUniversalTransfer":true,"enableVanillaOptions":false,"enableFixApiTrade":false,"enableFixReadOnly":true,"enableSpotAndMarginTrading":false,"enablePortfolioMarginTrading":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetApiKeyPermissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetApiKeyPermissionResponse");
 
             let resp = client.get_api_key_permission(params).await.expect("Expected a response");
@@ -1056,7 +1106,7 @@ mod tests {
 
             let params = GetApiKeyPermissionParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":false,"createTime":1698645219000,"enableReading":true,"enableWithdrawals":false,"enableInternalTransfer":false,"enableMargin":false,"enableFutures":false,"permitsUniversalTransfer":false,"enableVanillaOptions":false,"enableFixApiTrade":false,"enableFixReadOnly":true,"enableSpotAndMarginTrading":false,"enablePortfolioMarginTrading":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":false,"createTime":1623840271000,"enableReading":true,"enableWithdrawals":false,"enableInternalTransfer":true,"enableMargin":false,"enableFutures":false,"permitsUniversalTransfer":true,"enableVanillaOptions":false,"enableFixApiTrade":false,"enableFixReadOnly":true,"enableSpotAndMarginTrading":false,"enablePortfolioMarginTrading":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetApiKeyPermissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetApiKeyPermissionResponse");
 
             let resp = client.get_api_key_permission(params).await.expect("Expected a response");

@@ -4,7 +4,10 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::convert::{ConvertRestApi, rest_api::PlaceLimitOrderParams};
+use binance_sdk::convert::{
+    ConvertRestApi,
+    rest_api::{PlaceLimitOrderExpiredTypeEnum, PlaceLimitOrderParams, PlaceLimitOrderSideEnum},
+};
 use binance_sdk::logger;
 
 #[tokio::main]
@@ -27,11 +30,11 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = PlaceLimitOrderParams::builder(
-        "base_asset_example".to_string(),
-        "quote_asset_example".to_string(),
-        dec!(1.0),
-        "BUY".to_string(),
-        "expired_type_example".to_string(),
+        "BTC".to_string(),
+        "USDT".to_string(),
+        dec!(1),
+        PlaceLimitOrderSideEnum::Buy,
+        PlaceLimitOrderExpiredTypeEnum::ExpiredType1D,
     )
     .build()?;
 

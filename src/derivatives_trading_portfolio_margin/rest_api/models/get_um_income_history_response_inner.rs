@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetUmIncomeHistoryResponseInner {
+    /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Income type.
     #[serde(rename = "incomeType", skip_serializing_if = "Option::is_none")]
     pub income_type: Option<String>,
+    /// Income amount.
     #[serde(rename = "income", skip_serializing_if = "Option::is_none")]
     pub income: Option<String>,
+    /// Income asset.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Extra information.
     #[serde(rename = "info", skip_serializing_if = "Option::is_none")]
     pub info: Option<String>,
+    /// Event time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// Transaction ID.
     #[serde(rename = "tranId", skip_serializing_if = "Option::is_none")]
-    pub tran_id: Option<i64>,
+    pub tran_id: Option<String>,
+    /// Trade ID, if existing.
     #[serde(rename = "tradeId", skip_serializing_if = "Option::is_none")]
     pub trade_id: Option<String>,
 }

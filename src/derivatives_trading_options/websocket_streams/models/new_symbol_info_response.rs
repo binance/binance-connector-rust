@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,26 +18,37 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct NewSymbolInfoResponse {
+    /// Event Type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event Time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Underlying index of the contract
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// Quotation asset
     #[serde(rename = "qa", skip_serializing_if = "Option::is_none")]
     pub qa: Option<String>,
+    /// Option type
     #[serde(rename = "d", skip_serializing_if = "Option::is_none")]
     pub d: Option<String>,
+    /// Strike price
     #[serde(rename = "sp", skip_serializing_if = "Option::is_none")]
     pub sp: Option<String>,
+    /// Delivery date time
     #[serde(rename = "dt", skip_serializing_if = "Option::is_none")]
     pub dt: Option<i64>,
+    /// unit, the quantity of the underlying asset represented by a single contract.
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
+    /// onboard date time
     #[serde(rename = "ot", skip_serializing_if = "Option::is_none")]
     pub ot: Option<i64>,
+    /// Contract status
     #[serde(rename = "cs", skip_serializing_if = "Option::is_none")]
     pub cs: Option<String>,
 }

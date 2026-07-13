@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OptionMarginAccountInformationResponse {
+    /// asset
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<Vec<models::OptionMarginAccountInformationResponseAssetInner>>,
+    /// greek
     #[serde(rename = "greek", skip_serializing_if = "Option::is_none")]
     pub greek: Option<Vec<models::OptionMarginAccountInformationResponseGreekInner>>,
+    /// time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// can Trade
     #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]
     pub can_trade: Option<bool>,
+    /// can Deposit
     #[serde(rename = "canDeposit", skip_serializing_if = "Option::is_none")]
     pub can_deposit: Option<bool>,
+    /// can Withdraw
     #[serde(rename = "canWithdraw", skip_serializing_if = "Option::is_none")]
     pub can_withdraw: Option<bool>,
+    /// reduce Only
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
+    /// Trade group ID
     #[serde(rename = "tradeGroupId", skip_serializing_if = "Option::is_none")]
     pub trade_group_id: Option<i64>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -62,17 +62,117 @@ impl PublicApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum DiffBookDepthStreamsUpdateSpeedEnum {
+    #[serde(rename = "100ms")]
+    UpdateSpeed100ms,
+    #[serde(rename = "500ms")]
+    UpdateSpeed500ms,
+}
+
+impl DiffBookDepthStreamsUpdateSpeedEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::UpdateSpeed100ms => "100ms",
+            Self::UpdateSpeed500ms => "500ms",
+        }
+    }
+}
+
+impl std::str::FromStr for DiffBookDepthStreamsUpdateSpeedEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "100ms" => Ok(Self::UpdateSpeed100ms),
+            "500ms" => Ok(Self::UpdateSpeed500ms),
+            other => Err(format!("invalid DiffBookDepthStreamsUpdateSpeedEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PartialBookDepthStreamsLevelsEnum {
+    #[serde(rename = "5")]
+    Levels5,
+    #[serde(rename = "10")]
+    Levels10,
+    #[serde(rename = "20")]
+    Levels20,
+}
+
+impl PartialBookDepthStreamsLevelsEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Levels5 => "5",
+            Self::Levels10 => "10",
+            Self::Levels20 => "20",
+        }
+    }
+}
+
+impl std::str::FromStr for PartialBookDepthStreamsLevelsEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "5" => Ok(Self::Levels5),
+            "10" => Ok(Self::Levels10),
+            "20" => Ok(Self::Levels20),
+            other => Err(format!("invalid PartialBookDepthStreamsLevelsEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PartialBookDepthStreamsUpdateSpeedEnum {
+    #[serde(rename = "100ms")]
+    UpdateSpeed100ms,
+    #[serde(rename = "500ms")]
+    UpdateSpeed500ms,
+}
+
+impl PartialBookDepthStreamsUpdateSpeedEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::UpdateSpeed100ms => "100ms",
+            Self::UpdateSpeed500ms => "500ms",
+        }
+    }
+}
+
+impl std::str::FromStr for PartialBookDepthStreamsUpdateSpeedEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "100ms" => Ok(Self::UpdateSpeed100ms),
+            "500ms" => Ok(Self::UpdateSpeed500ms),
+            other => {
+                Err(format!("invalid PartialBookDepthStreamsUpdateSpeedEnum: {}", other).into())
+            }
+        }
+    }
+}
+
 /// Request parameters for the [`all_book_tickers_stream`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_book_tickers_stream`](#method.all_book_tickers_stream).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllBookTickersStreamParams {
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -88,24 +188,27 @@ impl AllBookTickersStreamParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`diff_book_depth_streams`](#method.diff_book_depth_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DiffBookDepthStreamsParams {
-    /// The symbol parameter
+    /// Trading pair symbol.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
     /// WebSocket stream update speed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub update_speed: Option<String>,
+    #[serde(rename = "updateSpeed", default)]
+    pub update_speed: Option<DiffBookDepthStreamsUpdateSpeedEnum>,
 }
 
 impl DiffBookDepthStreamsParams {
@@ -113,7 +216,7 @@ impl DiffBookDepthStreamsParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — The symbol parameter
+    /// * `symbol` — Trading pair symbol.
     ///
     #[must_use]
     pub fn builder(symbol: String) -> DiffBookDepthStreamsParamsBuilder {
@@ -124,18 +227,20 @@ impl DiffBookDepthStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`individual_symbol_book_ticker_streams`](#method.individual_symbol_book_ticker_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct IndividualSymbolBookTickerStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -155,29 +260,33 @@ impl IndividualSymbolBookTickerStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`partial_book_depth_streams`](#method.partial_book_depth_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PartialBookDepthStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// The levels parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub levels: i64,
+    #[serde(rename = "levels")]
+    pub levels: PartialBookDepthStreamsLevelsEnum,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
     /// WebSocket stream update speed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub update_speed: Option<String>,
+    #[serde(rename = "updateSpeed", default)]
+    pub update_speed: Option<PartialBookDepthStreamsUpdateSpeedEnum>,
 }
 
 impl PartialBookDepthStreamsParams {
@@ -189,7 +298,10 @@ impl PartialBookDepthStreamsParams {
     /// * `levels` — The levels parameter
     ///
     #[must_use]
-    pub fn builder(symbol: String, levels: i64) -> PartialBookDepthStreamsParamsBuilder {
+    pub fn builder(
+        symbol: String,
+        levels: PartialBookDepthStreamsLevelsEnum,
+    ) -> PartialBookDepthStreamsParamsBuilder {
         PartialBookDepthStreamsParamsBuilder::default()
             .symbol(symbol)
             .levels(levels)
@@ -199,18 +311,20 @@ impl PartialBookDepthStreamsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`rpi_diff_book_depth_streams`](#method.rpi_diff_book_depth_streams).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RpiDiffBookDepthStreamsParams {
     /// The symbol parameter
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// Unique WebSocket request ID.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -242,7 +356,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/!bookTicker", &vars);
 
@@ -277,7 +391,10 @@ impl PublicApi for PublicApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("id", id.clone()),
-            ("updateSpeed", update_speed.clone()),
+            (
+                "updateSpeed",
+                update_speed.clone().map(|v| v.as_str().to_string()),
+            ),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -285,7 +402,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@depth@<updateSpeed>", &vars);
 
@@ -322,7 +439,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@bookTicker", &vars);
 
@@ -357,9 +474,12 @@ impl PublicApi for PublicApiClient {
 
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
-            ("levels", Some(levels.to_string())),
+            ("levels", Some(levels.as_str().to_string())),
             ("id", id.clone()),
-            ("updateSpeed", update_speed.clone()),
+            (
+                "updateSpeed",
+                update_speed.clone().map(|v| v.as_str().to_string()),
+            ),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -367,7 +487,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream =
             replace_websocket_streams_placeholders("/<symbol>@depth<levels>@<updateSpeed>", &vars);
@@ -404,7 +524,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").cloned();
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@rpiDepth@500ms", &vars);
 
@@ -524,7 +644,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -575,7 +695,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -611,7 +731,10 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
+                (
+                    "updateSpeed",
+                    update_speed.clone().map(|v| v.as_str().to_string()),
+                ),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -655,7 +778,7 @@ mod tests {
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -673,7 +796,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -708,7 +831,7 @@ mod tests {
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -730,7 +853,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -817,7 +940,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"s":"BNBUSDT","ps":"BNBUSDT","E":1568014460893,"T":1568014460891,"b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","ps":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -871,7 +994,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"s":"BNBUSDT","ps":"BNBUSDT","E":1568014460893,"T":1568014460891,"b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"bookTicker","u":400900217,"E":1568014460893,"T":1568014460891,"s":"BNBUSDT","ps":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -893,10 +1016,13 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(), 10)
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = PartialBookDepthStreamsParams::builder(
+                "btcusdt".to_string(),
+                PartialBookDepthStreamsLevelsEnum::Levels5,
+            )
+            .id(Some(id.clone()))
+            .build()
+            .unwrap();
 
             let PartialBookDepthStreamsParams {
                 symbol,
@@ -907,9 +1033,12 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("levels", Some(levels.to_string())),
+                ("levels", Some(levels.as_str().to_string())),
                 ("id", id.clone()),
-                ("updateSpeed", update_speed.clone()),
+                (
+                    "updateSpeed",
+                    update_speed.clone().map(|v| v.as_str().to_string()),
+                ),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -941,7 +1070,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id.clone())).build().unwrap();
+            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),PartialBookDepthStreamsLevelsEnum::Levels5,).id(Some(id.clone())).build().unwrap();
 
             let PartialBookDepthStreamsParams {
                 symbol,levels,id,update_speed,
@@ -952,13 +1081,13 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("levels",
-                        Some(levels.to_string().to_string())
+                        Some(levels.as_str().to_string())
                 ),
                 ("id",
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -976,7 +1105,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1571889248277,"T":1571889248276,"s":"BTCUSDT","U":390497796,"u":390497878,"pu":390497794,"b":[["7403.89","0.002"],["7403.90","3.906"],["7404.00","1.428"],["7404.85","5.239"],["7405.43","2.562"]],"a":[["7405.96","3.340"],["7406.63","4.525"],["7407.08","2.475"],["7407.15","4.800"],["7407.20","0.175"]],"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1571889248277,"T":1571889248276,"s":"BTCUSDT","U":390497796,"u":390497878,"pu":390497794,"b":[["7403.89"]],"a":[["7405.96"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -997,7 +1126,7 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),10,).id(Some(id.clone())).build().unwrap();
+            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),PartialBookDepthStreamsLevelsEnum::Levels5,).id(Some(id.clone())).build().unwrap();
 
             let PartialBookDepthStreamsParams {
                 symbol,levels,id,update_speed,
@@ -1008,13 +1137,13 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("levels",
-                        Some(levels.to_string().to_string())
+                        Some(levels.as_str().to_string())
                 ),
                 ("id",
                         id.clone()
                 ),
                 ("updateSpeed",
-                        update_speed.clone()
+                        update_speed.clone().map(|v| v.as_str().to_string())
                 ),
             ];
 
@@ -1036,7 +1165,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1571889248277,"T":1571889248276,"s":"BTCUSDT","U":390497796,"u":390497878,"pu":390497794,"b":[["7403.89","0.002"],["7403.90","3.906"],["7404.00","1.428"],["7404.85","5.239"],["7405.43","2.562"]],"a":[["7405.96","3.340"],["7406.63","4.525"],["7407.08","2.475"],["7407.15","4.800"],["7407.20","0.175"]],"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1571889248277,"T":1571889248276,"s":"BTCUSDT","U":390497796,"u":390497878,"pu":390497794,"b":[["7403.89"]],"a":[["7405.96"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1123,7 +1252,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1177,7 +1306,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BTCUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap();
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,

@@ -4,7 +4,10 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::crypto_loan::{CryptoLoanRestApi, rest_api::FlexibleLoanAdjustLtvParams};
+use binance_sdk::crypto_loan::{
+    CryptoLoanRestApi,
+    rest_api::{FlexibleLoanAdjustLtvDirectionEnum, FlexibleLoanAdjustLtvParams},
+};
 use binance_sdk::logger;
 
 #[tokio::main]
@@ -27,10 +30,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = FlexibleLoanAdjustLtvParams::builder(
-        "loan_coin_example".to_string(),
-        "collateral_coin_example".to_string(),
-        dec!(1.0),
-        "direction_example".to_string(),
+        "BUSD".to_string(),
+        "BNB".to_string(),
+        dec!(1),
+        FlexibleLoanAdjustLtvDirectionEnum::Additional,
     )
     .build()?;
 

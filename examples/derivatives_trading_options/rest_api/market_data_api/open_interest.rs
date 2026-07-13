@@ -27,11 +27,8 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = OpenInterestParams::builder(
-        "underlying_asset_example".to_string(),
-        "expiration_example".to_string(),
-    )
-    .build()?;
+    let params =
+        OpenInterestParams::builder("ETH/BTC".to_string(), "221225".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

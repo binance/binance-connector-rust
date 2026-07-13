@@ -32,9 +32,9 @@ async fn main() -> Result<()> {
     let params = OrderOcoParams::builder(
         "BNBUSDT".to_string(),
         OrderOcoSideEnum::Buy,
-        dec!(1.0),
-        dec!(1.0),
-        dec!(1.0),
+        dec!(1),
+        dec!(1),
+        dec!(1),
     )
     .build()?;
 

@@ -29,8 +29,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = KlineCandlestickDataParams::builder(
-        "symbol_example".to_string(),
-        KlineCandlestickDataIntervalEnum::Interval1s,
+        "BTCUSDT".to_string(),
+        KlineCandlestickDataIntervalEnum::Interval1m,
     )
     .build()?;
 

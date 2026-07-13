@@ -28,9 +28,9 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = AddIpRestrictionForSubAccountApiKeyParams::builder(
-        "sub-account-email@email.com".to_string(),
-        "sub_account_api_key_example".to_string(),
-        "status_example".to_string(),
+        "123@test.com".to_string(),
+        "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
+        1,
     )
     .build()?;
 

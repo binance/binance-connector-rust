@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,36 +17,52 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OptionPositionInformationResponseInner {
+    /// Average entry price
     #[serde(rename = "entryPrice", skip_serializing_if = "Option::is_none")]
     pub entry_price: Option<String>,
+    /// Option trading pair
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Position direction
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Number of positions (positive numbers represent long positions, negative number represent short positions)
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<String>,
+    /// Current market value
     #[serde(rename = "markValue", skip_serializing_if = "Option::is_none")]
     pub mark_value: Option<String>,
+    /// Unrealized profit/loss
     #[serde(rename = "unrealizedPNL", skip_serializing_if = "Option::is_none")]
     pub unrealized_pnl: Option<String>,
+    /// Mark price
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
+    /// Strike price
     #[serde(rename = "strikePrice", skip_serializing_if = "Option::is_none")]
     pub strike_price: Option<String>,
+    /// Exercise time
     #[serde(rename = "expiryDate", skip_serializing_if = "Option::is_none")]
     pub expiry_date: Option<i64>,
+    /// price Scale
     #[serde(rename = "priceScale", skip_serializing_if = "Option::is_none")]
     pub price_scale: Option<i64>,
+    /// quantity Scale
     #[serde(rename = "quantityScale", skip_serializing_if = "Option::is_none")]
     pub quantity_scale: Option<i64>,
+    /// option type
     #[serde(rename = "optionSide", skip_serializing_if = "Option::is_none")]
     pub option_side: Option<String>,
+    /// quote asset
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// last update time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// buy order qty
     #[serde(rename = "bidQuantity", skip_serializing_if = "Option::is_none")]
     pub bid_quantity: Option<String>,
+    /// sell order qty
     #[serde(rename = "askQuantity", skip_serializing_if = "Option::is_none")]
     pub ask_quantity: Option<String>,
 }

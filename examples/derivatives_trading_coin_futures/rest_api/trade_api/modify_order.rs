@@ -28,8 +28,8 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingCoinFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = ModifyOrderParams::builder("symbol_example".to_string(), ModifyOrderSideEnum::Buy)
-        .build()?;
+    let params =
+        ModifyOrderParams::builder("BTCUSD_PERP".to_string(), ModifyOrderSideEnum::Buy).build()?;
 
     // Make the API call
     let response = rest_client

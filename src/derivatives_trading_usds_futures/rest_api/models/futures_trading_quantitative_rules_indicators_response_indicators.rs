@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,6 +15,7 @@
 use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `FuturesTradingQuantitativeRulesIndicatorsResponseIndicators` : indicator: quantitative rules indicators, value: user's indicators value, triggerValue: trigger indicator value threshold of quantitative rules.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct FuturesTradingQuantitativeRulesIndicatorsResponseIndicators {
     #[serde(rename = "BTCUSDT", skip_serializing_if = "Option::is_none")]
@@ -32,6 +33,7 @@ pub struct FuturesTradingQuantitativeRulesIndicatorsResponseIndicators {
 }
 
 impl FuturesTradingQuantitativeRulesIndicatorsResponseIndicators {
+    /// indicator: quantitative rules indicators, value: user's indicators value, triggerValue: trigger indicator value threshold of quantitative rules.
     #[must_use]
     pub fn new() -> FuturesTradingQuantitativeRulesIndicatorsResponseIndicators {
         FuturesTradingQuantitativeRulesIndicatorsResponseIndicators {

@@ -5,7 +5,9 @@ use tracing::info;
 use binance_sdk::config::ConfigurationWebsocketStreams;
 use binance_sdk::derivatives_trading_coin_futures::{
     DerivativesTradingCoinFuturesWsStreams,
-    websocket_streams::MarkPriceKlineCandlestickStreamsParams,
+    websocket_streams::{
+        MarkPriceKlineCandlestickStreamsIntervalEnum, MarkPriceKlineCandlestickStreamsParams,
+    },
 };
 use binance_sdk::logger;
 
@@ -27,9 +29,11 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params =
-        MarkPriceKlineCandlestickStreamsParams::builder("btcusdt".to_string(), "1m".to_string())
-            .build()?;
+    let params = MarkPriceKlineCandlestickStreamsParams::builder(
+        "btcusdt".to_string(),
+        MarkPriceKlineCandlestickStreamsIntervalEnum::Interval1m,
+    )
+    .build()?;
 
     // Subscribe to the stream
     let stream = connection

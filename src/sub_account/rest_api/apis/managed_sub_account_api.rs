@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -94,11 +94,183 @@ impl ManagedSubAccountApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum QueryManagedSubAccountSnapshotTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+    #[serde(rename = "FUTURES")]
+    Futures,
+}
+
+impl QueryManagedSubAccountSnapshotTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+            Self::Futures => "FUTURES",
+        }
+    }
+}
+
+impl std::str::FromStr for QueryManagedSubAccountSnapshotTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            "FUTURES" => Ok(Self::Futures),
+            other => {
+                Err(format!("invalid QueryManagedSubAccountSnapshotTypeEnum: {}", other).into())
+            }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum QueryManagedSubAccountTransferLogMasterAccountInvestorTransferFunctionAccountTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+    #[serde(rename = "ISOLATED_MARGIN")]
+    IsolatedMargin,
+    #[serde(rename = "USDT_FUTURE")]
+    UsdtFuture,
+    #[serde(rename = "COIN_FUTURE")]
+    CoinFuture,
+}
+
+impl QueryManagedSubAccountTransferLogMasterAccountInvestorTransferFunctionAccountTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+            Self::IsolatedMargin => "ISOLATED_MARGIN",
+            Self::UsdtFuture => "USDT_FUTURE",
+            Self::CoinFuture => "COIN_FUTURE",
+        }
+    }
+}
+
+impl std::str::FromStr
+    for QueryManagedSubAccountTransferLogMasterAccountInvestorTransferFunctionAccountTypeEnum
+{
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            "ISOLATED_MARGIN" => Ok(Self::IsolatedMargin),
+            "USDT_FUTURE" => Ok(Self::UsdtFuture),
+            "COIN_FUTURE" => Ok(Self::CoinFuture),
+            other  => Err(format!("invalid QueryManagedSubAccountTransferLogMasterAccountInvestorTransferFunctionAccountTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum QueryManagedSubAccountTransferLogMasterAccountTradingTransferFunctionAccountTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+    #[serde(rename = "ISOLATED_MARGIN")]
+    IsolatedMargin,
+    #[serde(rename = "USDT_FUTURE")]
+    UsdtFuture,
+    #[serde(rename = "COIN_FUTURE")]
+    CoinFuture,
+}
+
+impl QueryManagedSubAccountTransferLogMasterAccountTradingTransferFunctionAccountTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+            Self::IsolatedMargin => "ISOLATED_MARGIN",
+            Self::UsdtFuture => "USDT_FUTURE",
+            Self::CoinFuture => "COIN_FUTURE",
+        }
+    }
+}
+
+impl std::str::FromStr
+    for QueryManagedSubAccountTransferLogMasterAccountTradingTransferFunctionAccountTypeEnum
+{
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            "ISOLATED_MARGIN" => Ok(Self::IsolatedMargin),
+            "USDT_FUTURE" => Ok(Self::UsdtFuture),
+            "COIN_FUTURE" => Ok(Self::CoinFuture),
+            other  => Err(format!("invalid QueryManagedSubAccountTransferLogMasterAccountTradingTransferFunctionAccountTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum QueryManagedSubAccountTransferLogSubAccountTradingTransferFunctionAccountTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+    #[serde(rename = "ISOLATED_MARGIN")]
+    IsolatedMargin,
+    #[serde(rename = "USDT_FUTURE")]
+    UsdtFuture,
+    #[serde(rename = "COIN_FUTURE")]
+    CoinFuture,
+}
+
+impl QueryManagedSubAccountTransferLogSubAccountTradingTransferFunctionAccountTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+            Self::IsolatedMargin => "ISOLATED_MARGIN",
+            Self::UsdtFuture => "USDT_FUTURE",
+            Self::CoinFuture => "COIN_FUTURE",
+        }
+    }
+}
+
+impl std::str::FromStr
+    for QueryManagedSubAccountTransferLogSubAccountTradingTransferFunctionAccountTypeEnum
+{
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            "ISOLATED_MARGIN" => Ok(Self::IsolatedMargin),
+            "USDT_FUTURE" => Ok(Self::UsdtFuture),
+            "COIN_FUTURE" => Ok(Self::CoinFuture),
+            other  => Err(format!("invalid QueryManagedSubAccountTransferLogSubAccountTradingTransferFunctionAccountTypeEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`deposit_assets_into_the_managed_sub_account`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`deposit_assets_into_the_managed_sub_account`](#method.deposit_assets_into_the_managed_sub_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DepositAssetsIntoTheManagedSubAccountParams {
     ///
@@ -106,24 +278,28 @@ pub struct DepositAssetsIntoTheManagedSubAccountParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "toEmail")]
     pub to_email: String,
     ///
     /// The `asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -152,36 +328,42 @@ impl DepositAssetsIntoTheManagedSubAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_managed_sub_account_deposit_address`](#method.get_managed_sub_account_deposit_address).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetManagedSubAccountDepositAddressParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
     /// networks can be found in `GET /sapi/v1/capital/deposit/address`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "amount", default)]
     pub amount: Option<rust_decimal::Decimal>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -190,7 +372,7 @@ impl GetManagedSubAccountDepositAddressParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     /// * `coin` — String
     ///
     #[must_use]
@@ -204,19 +386,22 @@ impl GetManagedSubAccountDepositAddressParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_asset_details`](#method.query_managed_sub_account_asset_details).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountAssetDetailsParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -225,7 +410,7 @@ impl QueryManagedSubAccountAssetDetailsParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     ///
     #[must_use]
     pub fn builder(email: String) -> QueryManagedSubAccountAssetDetailsParamsBuilder {
@@ -236,18 +421,21 @@ impl QueryManagedSubAccountAssetDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_futures_asset_details`](#method.query_managed_sub_account_futures_asset_details).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountFuturesAssetDetailsParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
-    /// No input or input "MARGIN" to get Cross Margin account details. Input "`ISOLATED_MARGIN`" to get Isolated Margin account details.
+    /// No input or input "`USDT_FUTURE`" to get UM Futures account details. Input "`COIN_FUTURE`" to get CM Futures account details.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "accountType", default)]
     pub account_type: Option<String>,
 }
 
@@ -256,7 +444,7 @@ impl QueryManagedSubAccountFuturesAssetDetailsParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     ///
     #[must_use]
     pub fn builder(email: String) -> QueryManagedSubAccountFuturesAssetDetailsParamsBuilder {
@@ -267,29 +455,36 @@ impl QueryManagedSubAccountFuturesAssetDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_list`](#method.query_managed_sub_account_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountListParams {
-    /// Managed sub-account email
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "email", default)]
     pub email: Option<String>,
-    /// Default value: 1
+    ///
+    /// The `page` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "page", default)]
     pub page: Option<i64>,
-    /// Default value: 1, Max value: 200
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -305,18 +500,22 @@ impl QueryManagedSubAccountListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_margin_asset_details`](#method.query_managed_sub_account_margin_asset_details).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountMarginAssetDetailsParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
-    /// No input or input "MARGIN" to get Cross Margin account details. Input "`ISOLATED_MARGIN`" to get Isolated Margin account details.
+    /// No input or input "MARGIN" to get Cross Margin account details. Input "`ISOLATED_MARGIN`" to get Isolated
+    /// Margin account details.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "accountType", default)]
     pub account_type: Option<String>,
 }
 
@@ -325,7 +524,7 @@ impl QueryManagedSubAccountMarginAssetDetailsParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     ///
     #[must_use]
     pub fn builder(email: String) -> QueryManagedSubAccountMarginAssetDetailsParamsBuilder {
@@ -336,41 +535,48 @@ impl QueryManagedSubAccountMarginAssetDetailsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_snapshot`](#method.query_managed_sub_account_snapshot).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountSnapshotParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
-    /// "SPOT", "MARGIN"（cross）, "FUTURES"（UM）
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
-    ///
-    /// The `start_time` parameter.
+    #[serde(rename = "type")]
+    pub r#type: QueryManagedSubAccountSnapshotTypeEnum,
+    /// Query time range must be within 30 days and only supports data within the last month.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// If both startTime and endTime are omitted, records from the last 7 days are returned by default.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default value: 1, Max value: 200
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -379,11 +585,14 @@ impl QueryManagedSubAccountSnapshotParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
-    /// * `r#type` — \"SPOT\", \"MARGIN\"（cross）, \"FUTURES\"（UM）
+    /// * `email` — String
+    /// * `r#type` — String
     ///
     #[must_use]
-    pub fn builder(email: String, r#type: String) -> QueryManagedSubAccountSnapshotParamsBuilder {
+    pub fn builder(
+        email: String,
+        r#type: QueryManagedSubAccountSnapshotTypeEnum,
+    ) -> QueryManagedSubAccountSnapshotParamsBuilder {
         QueryManagedSubAccountSnapshotParamsBuilder::default()
             .email(email)
             .r#type(r#type)
@@ -393,44 +602,56 @@ impl QueryManagedSubAccountSnapshotParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_transfer_log_master_account_investor`](#method.query_managed_sub_account_transfer_log_master_account_investor).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountTransferLogMasterAccountInvestorParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     /// Start Time
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startTime")]
     pub start_time: i64,
     /// End Time (The start time and end time interval cannot exceed half a year)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endTime")]
     pub end_time: i64,
     /// Page
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "page")]
     pub page: i64,
-    /// Limit (Max: 500)
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "limit")]
     pub limit: i64,
-    /// Transfer Direction (from/to)
+    /// Transfer Direction (FROM/TO)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "transfers", default)]
     pub transfers: Option<String>,
-    /// Transfer function account type (`SPOT/MARGIN/ISOLATED_MARGIN/USDT_FUTURE/COIN_FUTURE`)
+    ///
+    /// The `transfer_function_account_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub transfer_function_account_type: Option<String>,
+    #[serde(rename = "transferFunctionAccountType", default)]
+    pub transfer_function_account_type: Option<
+        QueryManagedSubAccountTransferLogMasterAccountInvestorTransferFunctionAccountTypeEnum,
+    >,
 }
 
 impl QueryManagedSubAccountTransferLogMasterAccountInvestorParams {
@@ -438,11 +659,11 @@ impl QueryManagedSubAccountTransferLogMasterAccountInvestorParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     /// * `start_time` — Start Time
     /// * `end_time` — End Time (The start time and end time interval cannot exceed half a year)
     /// * `page` — Page
-    /// * `limit` — Limit (Max: 500)
+    /// * `limit` — i64
     ///
     #[must_use]
     pub fn builder(
@@ -464,44 +685,57 @@ impl QueryManagedSubAccountTransferLogMasterAccountInvestorParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_transfer_log_master_account_trading`](#method.query_managed_sub_account_transfer_log_master_account_trading).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountTransferLogMasterAccountTradingParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     /// Start Time
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startTime")]
     pub start_time: i64,
     /// End Time (The start time and end time interval cannot exceed half a year)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endTime")]
     pub end_time: i64,
-    /// Page
+    ///
+    /// The `page` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "page")]
     pub page: i64,
-    /// Limit (Max: 500)
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "limit")]
     pub limit: i64,
-    /// Transfer Direction (from/to)
+    /// Transfer Direction (FROM/TO)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "transfers", default)]
     pub transfers: Option<String>,
-    /// Transfer function account type (`SPOT/MARGIN/ISOLATED_MARGIN/USDT_FUTURE/COIN_FUTURE`)
+    ///
+    /// The `transfer_function_account_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub transfer_function_account_type: Option<String>,
+    #[serde(rename = "transferFunctionAccountType", default)]
+    pub transfer_function_account_type: Option<
+        QueryManagedSubAccountTransferLogMasterAccountTradingTransferFunctionAccountTypeEnum,
+    >,
 }
 
 impl QueryManagedSubAccountTransferLogMasterAccountTradingParams {
@@ -509,11 +743,11 @@ impl QueryManagedSubAccountTransferLogMasterAccountTradingParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     /// * `start_time` — Start Time
     /// * `end_time` — End Time (The start time and end time interval cannot exceed half a year)
-    /// * `page` — Page
-    /// * `limit` — Limit (Max: 500)
+    /// * `page` — i64
+    /// * `limit` — i64
     ///
     #[must_use]
     pub fn builder(
@@ -535,44 +769,55 @@ impl QueryManagedSubAccountTransferLogMasterAccountTradingParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_managed_sub_account_transfer_log_sub_account_trading`](#method.query_managed_sub_account_transfer_log_sub_account_trading).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryManagedSubAccountTransferLogSubAccountTradingParams {
     /// Start Time
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startTime")]
     pub start_time: i64,
     /// End Time (The start time and end time interval cannot exceed half a year)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endTime")]
     pub end_time: i64,
-    /// Page
+    ///
+    /// The `page` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "page")]
     pub page: i64,
-    /// Limit (Max: 500)
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "limit")]
     pub limit: i64,
     /// Transfer Direction (from/to)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "transfers", default)]
     pub transfers: Option<String>,
-    /// Transfer function account type (`SPOT/MARGIN/ISOLATED_MARGIN/USDT_FUTURE/COIN_FUTURE`)
+    ///
+    /// The `transfer_function_account_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub transfer_function_account_type: Option<String>,
+    #[serde(rename = "transferFunctionAccountType", default)]
+    pub transfer_function_account_type:
+        Option<QueryManagedSubAccountTransferLogSubAccountTradingTransferFunctionAccountTypeEnum>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -583,8 +828,8 @@ impl QueryManagedSubAccountTransferLogSubAccountTradingParams {
     ///
     /// * `start_time` — Start Time
     /// * `end_time` — End Time (The start time and end time interval cannot exceed half a year)
-    /// * `page` — Page
-    /// * `limit` — Limit (Max: 500)
+    /// * `page` — i64
+    /// * `limit` — i64
     ///
     #[must_use]
     pub fn builder(
@@ -604,7 +849,7 @@ impl QueryManagedSubAccountTransferLogSubAccountTradingParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`withdrawl_assets_from_the_managed_sub_account`](#method.withdrawl_assets_from_the_managed_sub_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct WithdrawlAssetsFromTheManagedSubAccountParams {
     ///
@@ -612,29 +857,35 @@ pub struct WithdrawlAssetsFromTheManagedSubAccountParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "fromEmail")]
     pub from_email: String,
     ///
     /// The `asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// Withdrawals is automatically occur on the transfer date(UTC0). If a date is not selected, the withdrawal occurs right now
+    /// Withdrawal will happen automatically on the selected date (UTC 0). If no date is selected,
+    /// withdrawal takes effect immediately.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "transferDate", default)]
     pub transfer_date: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1203,7 +1454,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::DepositAssetsIntoTheManagedSubAccountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::DepositAssetsIntoTheManagedSubAccountResponse",
@@ -1232,7 +1484,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"coin":"USDT","address":"0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d","tag":"","url":"https://etherscan.io/address/0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"coin":"USDT","address":"0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d","tag":"","url":"https://etherscan.io/address/0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetManagedSubAccountDepositAddressResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetManagedSubAccountDepositAddressResponse");
@@ -1261,7 +1513,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"INJ","name":"Injective Protocol","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"},{"coin":"FILDOWN","name":"FILDOWN","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"INJ","name":"Injective Protocol","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::QueryManagedSubAccountAssetDetailsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryManagedSubAccountAssetDetailsResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -1288,7 +1540,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"200","message":"OK","snapshotVos":[{"type":"FUTURES","updateTime":1672893855394,"data":{"assets":[{"asset":"USDT","marginBalance":100,"walletBalance":120}],"position":[{"symbol":"BTCUSDT","entryPrice":17000,"markPrice":17000,"positionAmt":1.0E-4}]}}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"200","message":"OK","snapshotVos":[{"type":"FUTURES","updateTime":1672893855394,"data":{"assets":[{"asset":"USDT","marginBalance":100,"walletBalance":120}],"position":[{"symbol":"BTCUSDT","entryPrice":17000,"markPrice":17000,"positionAmt":1.0E-4}]}}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryManagedSubAccountFuturesAssetDetailsResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryManagedSubAccountFuturesAssetDetailsResponse",
@@ -1316,7 +1568,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":3,"managerSubUserInfoVoList":[{"rootUserId":1000138475670,"managersubUserId":1000137842513,"bindParentUserId":1000138475669,"email":"test_0_virtual@kq3kno9imanagedsub.com","insertTimeStamp":1678435149000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false},{"rootUserId":1000138475670,"managersubUserId":1000137842514,"bindParentUserId":1000138475669,"email":"test_1_virtual@4qd2u7zxmanagedsub.com","insertTimeStamp":1678435152000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false},{"rootUserId":1000138475670,"managersubUserId":1000137842515,"bindParentUserId":1000138475669,"email":"test_2_virtual@akc05o8hmanagedsub.com","insertTimeStamp":1678435153000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":3,"managerSubUserInfoVoList":[{"rootUserId":1000138475670,"managersubUserId":1000137842513,"bindParentUserId":1000138475669,"email":"test_0_virtual@kq3kno9imanagedsub.com","insertTimeStamp":1678435149000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryManagedSubAccountListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryManagedSubAccountListResponse");
@@ -1344,7 +1596,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"marginLevel":"999","totalAssetOfBtc":"0","totalLiabilityOfBtc":"0","totalNetAssetOfBtc":"0","userAssets":[{"asset":"MATIC","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"},{"asset":"VET","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"},{"asset":"BAKE","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginLevel":"999","totalAssetOfBtc":"0","totalLiabilityOfBtc":"0","totalNetAssetOfBtc":"0","userAssets":[{"asset":"MATIC","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryManagedSubAccountMarginAssetDetailsResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryManagedSubAccountMarginAssetDetailsResponse",
@@ -1373,7 +1625,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"},{"asset":"USDT","free":"1.89109409","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700"},"type":"spot","updateTime":1576281599000},{"data":{"marginLevel":"2748.02909813","totalAssetOfBtc":"0.00274803","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}]},"type":"margin","updateTime":1576281599000},{"data":{"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"futures","updateTime":1576281599000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700","marginLevel":"2748.02909813","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}],"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"spot","updateTime":1576281599000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryManagedSubAccountSnapshotResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryManagedSubAccountSnapshotResponse");
@@ -1402,7 +1654,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : models::QueryManagedSubAccountTransferLogMasterAccountInvestorResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogMasterAccountInvestorResponse");
 
             let dummy = DummyRestApiResponse {
@@ -1429,7 +1681,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : models::QueryManagedSubAccountTransferLogMasterAccountTradingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogMasterAccountTradingResponse");
 
             let dummy = DummyRestApiResponse {
@@ -1456,7 +1708,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : models::QueryManagedSubAccountTransferLogSubAccountTradingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogSubAccountTradingResponse");
 
             let dummy = DummyRestApiResponse {
@@ -1482,7 +1734,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::WithdrawlAssetsFromTheManagedSubAccountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::WithdrawlAssetsFromTheManagedSubAccountResponse",
@@ -1505,14 +1758,15 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
             let params = DepositAssetsIntoTheManagedSubAccountParams::builder(
-                "to_email_example".to_string(),
-                "asset_example".to_string(),
+                "abc@test.com".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
             )
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::DepositAssetsIntoTheManagedSubAccountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::DepositAssetsIntoTheManagedSubAccountResponse",
@@ -1534,15 +1788,16 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
             let params = DepositAssetsIntoTheManagedSubAccountParams::builder(
-                "to_email_example".to_string(),
-                "asset_example".to_string(),
+                "abc@test.com".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
             )
             .recv_window(5000)
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::DepositAssetsIntoTheManagedSubAccountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::DepositAssetsIntoTheManagedSubAccountResponse",
@@ -1564,8 +1819,8 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
             let params = DepositAssetsIntoTheManagedSubAccountParams::builder(
-                "to_email_example".to_string(),
-                "asset_example".to_string(),
+                "abc@test.com".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
             )
             .build()
@@ -1588,9 +1843,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = GetManagedSubAccountDepositAddressParams::builder("sub-account-email@email.com".to_string(),"coin_example".to_string(),).build().unwrap();
+            let params = GetManagedSubAccountDepositAddressParams::builder("abc@test.com".to_string(),"USDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"coin":"USDT","address":"0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d","tag":"","url":"https://etherscan.io/address/0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"coin":"USDT","address":"0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d","tag":"","url":"https://etherscan.io/address/0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetManagedSubAccountDepositAddressResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetManagedSubAccountDepositAddressResponse");
 
             let resp = client.get_managed_sub_account_deposit_address(params).await.expect("Expected a response");
@@ -1605,9 +1860,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = GetManagedSubAccountDepositAddressParams::builder("sub-account-email@email.com".to_string(),"coin_example".to_string(),).network("network_example".to_string()).amount(dec!(1.0)).recv_window(5000).build().unwrap();
+            let params = GetManagedSubAccountDepositAddressParams::builder("abc@test.com".to_string(),"USDT".to_string(),).network("LIGHTNING".to_string()).amount(dec!(1.0)).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"coin":"USDT","address":"0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d","tag":"","url":"https://etherscan.io/address/0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"coin":"USDT","address":"0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d","tag":"","url":"https://etherscan.io/address/0x206c22d833bb0bb2102da6b7c7d4c3eb14bcf73d"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetManagedSubAccountDepositAddressResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetManagedSubAccountDepositAddressResponse");
 
             let resp = client.get_managed_sub_account_deposit_address(params).await.expect("Expected a response");
@@ -1623,8 +1878,8 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
             let params = GetManagedSubAccountDepositAddressParams::builder(
-                "sub-account-email@email.com".to_string(),
-                "coin_example".to_string(),
+                "abc@test.com".to_string(),
+                "USDT".to_string(),
             )
             .build()
             .unwrap();
@@ -1643,9 +1898,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountAssetDetailsParams::builder("sub-account-email@email.com".to_string(),).build().unwrap();
+            let params = QueryManagedSubAccountAssetDetailsParams::builder("abc@test.com".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"INJ","name":"Injective Protocol","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"},{"coin":"FILDOWN","name":"FILDOWN","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"INJ","name":"Injective Protocol","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryManagedSubAccountAssetDetailsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryManagedSubAccountAssetDetailsResponseInner>");
 
             let resp = client.query_managed_sub_account_asset_details(params).await.expect("Expected a response");
@@ -1660,9 +1915,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountAssetDetailsParams::builder("sub-account-email@email.com".to_string(),).recv_window(5000).build().unwrap();
+            let params = QueryManagedSubAccountAssetDetailsParams::builder("abc@test.com".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"INJ","name":"Injective Protocol","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"},{"coin":"FILDOWN","name":"FILDOWN","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"INJ","name":"Injective Protocol","totalBalance":"0","availableBalance":"0","inOrder":"0","btcValue":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryManagedSubAccountAssetDetailsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryManagedSubAccountAssetDetailsResponseInner>");
 
             let resp = client.query_managed_sub_account_asset_details(params).await.expect("Expected a response");
@@ -1677,11 +1932,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
-            let params = QueryManagedSubAccountAssetDetailsParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params =
+                QueryManagedSubAccountAssetDetailsParams::builder("abc@test.com".to_string())
+                    .build()
+                    .unwrap();
 
             match client.query_managed_sub_account_asset_details(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1697,9 +1951,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountFuturesAssetDetailsParams::builder("sub-account-email@email.com".to_string(),).build().unwrap();
+            let params = QueryManagedSubAccountFuturesAssetDetailsParams::builder("abc@test.com".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"200","message":"OK","snapshotVos":[{"type":"FUTURES","updateTime":1672893855394,"data":{"assets":[{"asset":"USDT","marginBalance":100,"walletBalance":120}],"position":[{"symbol":"BTCUSDT","entryPrice":17000,"markPrice":17000,"positionAmt":1.0E-4}]}}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"200","message":"OK","snapshotVos":[{"type":"FUTURES","updateTime":1672893855394,"data":{"assets":[{"asset":"USDT","marginBalance":100,"walletBalance":120}],"position":[{"symbol":"BTCUSDT","entryPrice":17000,"markPrice":17000,"positionAmt":1.0E-4}]}}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountFuturesAssetDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountFuturesAssetDetailsResponse");
 
             let resp = client.query_managed_sub_account_futures_asset_details(params).await.expect("Expected a response");
@@ -1714,9 +1968,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountFuturesAssetDetailsParams::builder("sub-account-email@email.com".to_string(),).account_type("account_type_example".to_string()).build().unwrap();
+            let params = QueryManagedSubAccountFuturesAssetDetailsParams::builder("abc@test.com".to_string(),).account_type("MARGIN".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"200","message":"OK","snapshotVos":[{"type":"FUTURES","updateTime":1672893855394,"data":{"assets":[{"asset":"USDT","marginBalance":100,"walletBalance":120}],"position":[{"symbol":"BTCUSDT","entryPrice":17000,"markPrice":17000,"positionAmt":1.0E-4}]}}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"200","message":"OK","snapshotVos":[{"type":"FUTURES","updateTime":1672893855394,"data":{"assets":[{"asset":"USDT","marginBalance":100,"walletBalance":120}],"position":[{"symbol":"BTCUSDT","entryPrice":17000,"markPrice":17000,"positionAmt":1.0E-4}]}}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountFuturesAssetDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountFuturesAssetDetailsResponse");
 
             let resp = client.query_managed_sub_account_futures_asset_details(params).await.expect("Expected a response");
@@ -1732,7 +1986,7 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
             let params = QueryManagedSubAccountFuturesAssetDetailsParams::builder(
-                "sub-account-email@email.com".to_string(),
+                "abc@test.com".to_string(),
             )
             .build()
             .unwrap();
@@ -1756,7 +2010,7 @@ mod tests {
 
             let params = QueryManagedSubAccountListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":3,"managerSubUserInfoVoList":[{"rootUserId":1000138475670,"managersubUserId":1000137842513,"bindParentUserId":1000138475669,"email":"test_0_virtual@kq3kno9imanagedsub.com","insertTimeStamp":1678435149000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false},{"rootUserId":1000138475670,"managersubUserId":1000137842514,"bindParentUserId":1000138475669,"email":"test_1_virtual@4qd2u7zxmanagedsub.com","insertTimeStamp":1678435152000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false},{"rootUserId":1000138475670,"managersubUserId":1000137842515,"bindParentUserId":1000138475669,"email":"test_2_virtual@akc05o8hmanagedsub.com","insertTimeStamp":1678435153000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":3,"managerSubUserInfoVoList":[{"rootUserId":1000138475670,"managersubUserId":1000137842513,"bindParentUserId":1000138475669,"email":"test_0_virtual@kq3kno9imanagedsub.com","insertTimeStamp":1678435149000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountListResponse");
 
             let resp = client.query_managed_sub_account_list(params).await.expect("Expected a response");
@@ -1771,9 +2025,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountListParams::builder().email("email_example".to_string()).page(1).limit(1).recv_window(5000).build().unwrap();
+            let params = QueryManagedSubAccountListParams::builder().email("abc@test.com".to_string()).page(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":3,"managerSubUserInfoVoList":[{"rootUserId":1000138475670,"managersubUserId":1000137842513,"bindParentUserId":1000138475669,"email":"test_0_virtual@kq3kno9imanagedsub.com","insertTimeStamp":1678435149000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false},{"rootUserId":1000138475670,"managersubUserId":1000137842514,"bindParentUserId":1000138475669,"email":"test_1_virtual@4qd2u7zxmanagedsub.com","insertTimeStamp":1678435152000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false},{"rootUserId":1000138475670,"managersubUserId":1000137842515,"bindParentUserId":1000138475669,"email":"test_2_virtual@akc05o8hmanagedsub.com","insertTimeStamp":1678435153000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":3,"managerSubUserInfoVoList":[{"rootUserId":1000138475670,"managersubUserId":1000137842513,"bindParentUserId":1000138475669,"email":"test_0_virtual@kq3kno9imanagedsub.com","insertTimeStamp":1678435149000,"bindParentEmail":"wdyw8xsh8pey@test.com","isSubUserEnabled":true,"isUserActive":true,"isMarginEnabled":false,"isFutureEnabled":false,"isSignedLVTRiskAgreement":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountListResponse");
 
             let resp = client.query_managed_sub_account_list(params).await.expect("Expected a response");
@@ -1804,9 +2058,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountMarginAssetDetailsParams::builder("sub-account-email@email.com".to_string(),).build().unwrap();
+            let params = QueryManagedSubAccountMarginAssetDetailsParams::builder("abc@test.com".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"marginLevel":"999","totalAssetOfBtc":"0","totalLiabilityOfBtc":"0","totalNetAssetOfBtc":"0","userAssets":[{"asset":"MATIC","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"},{"asset":"VET","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"},{"asset":"BAKE","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginLevel":"999","totalAssetOfBtc":"0","totalLiabilityOfBtc":"0","totalNetAssetOfBtc":"0","userAssets":[{"asset":"MATIC","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountMarginAssetDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountMarginAssetDetailsResponse");
 
             let resp = client.query_managed_sub_account_margin_asset_details(params).await.expect("Expected a response");
@@ -1821,9 +2075,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountMarginAssetDetailsParams::builder("sub-account-email@email.com".to_string(),).account_type("account_type_example".to_string()).build().unwrap();
+            let params = QueryManagedSubAccountMarginAssetDetailsParams::builder("abc@test.com".to_string(),).account_type("MARGIN".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"marginLevel":"999","totalAssetOfBtc":"0","totalLiabilityOfBtc":"0","totalNetAssetOfBtc":"0","userAssets":[{"asset":"MATIC","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"},{"asset":"VET","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"},{"asset":"BAKE","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginLevel":"999","totalAssetOfBtc":"0","totalLiabilityOfBtc":"0","totalNetAssetOfBtc":"0","userAssets":[{"asset":"MATIC","borrowed":"0","free":"0","interest":"0","locked":"0","netAsset":"0"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountMarginAssetDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountMarginAssetDetailsResponse");
 
             let resp = client.query_managed_sub_account_margin_asset_details(params).await.expect("Expected a response");
@@ -1838,11 +2092,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
-            let params = QueryManagedSubAccountMarginAssetDetailsParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params =
+                QueryManagedSubAccountMarginAssetDetailsParams::builder("abc@test.com".to_string())
+                    .build()
+                    .unwrap();
 
             match client
                 .query_managed_sub_account_margin_asset_details(params)
@@ -1861,9 +2114,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountSnapshotParams::builder("sub-account-email@email.com".to_string(),"r#type_example".to_string(),).build().unwrap();
+            let params = QueryManagedSubAccountSnapshotParams::builder("abc@test.com".to_string(),QueryManagedSubAccountSnapshotTypeEnum::Spot,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"},{"asset":"USDT","free":"1.89109409","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700"},"type":"spot","updateTime":1576281599000},{"data":{"marginLevel":"2748.02909813","totalAssetOfBtc":"0.00274803","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}]},"type":"margin","updateTime":1576281599000},{"data":{"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"futures","updateTime":1576281599000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700","marginLevel":"2748.02909813","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}],"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"spot","updateTime":1576281599000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountSnapshotResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountSnapshotResponse");
 
             let resp = client.query_managed_sub_account_snapshot(params).await.expect("Expected a response");
@@ -1878,9 +2131,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountSnapshotParams::builder("sub-account-email@email.com".to_string(),"r#type_example".to_string(),).start_time(1623319461670).end_time(1641782889000).limit(1).recv_window(5000).build().unwrap();
+            let params = QueryManagedSubAccountSnapshotParams::builder("abc@test.com".to_string(),QueryManagedSubAccountSnapshotTypeEnum::Spot,).start_time(1623319461670).end_time(1641782889000).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"},{"asset":"USDT","free":"1.89109409","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700"},"type":"spot","updateTime":1576281599000},{"data":{"marginLevel":"2748.02909813","totalAssetOfBtc":"0.00274803","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}]},"type":"margin","updateTime":1576281599000},{"data":{"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"futures","updateTime":1576281599000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"","snapshotVos":[{"data":{"balances":[{"asset":"BTC","free":"0.09905021","locked":"0.00000000"}],"totalAssetOfBtc":"0.09942700","marginLevel":"2748.02909813","totalLiabilityOfBtc":"0.00000100","totalNetAssetOfBtc":"0.00274750","userAssets":[{"asset":"XRP","borrowed":"0.00000000","free":"1.00000000","interest":"0.00000000","locked":"0.00000000","netAsset":"1.00000000"}],"assets":[{"asset":"USDT","marginBalance":"118.99782335","walletBalance":"120.23811389"}],"position":[{"entryPrice":"7130.41000000","markPrice":"7257.66239673","positionAmt":"0.01000000","symbol":"BTCUSDT","unRealizedProfit":"1.24029054"}]},"type":"spot","updateTime":1576281599000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountSnapshotResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountSnapshotResponse");
 
             let resp = client.query_managed_sub_account_snapshot(params).await.expect("Expected a response");
@@ -1896,8 +2149,8 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
             let params = QueryManagedSubAccountSnapshotParams::builder(
-                "sub-account-email@email.com".to_string(),
-                "r#type_example".to_string(),
+                "abc@test.com".to_string(),
+                QueryManagedSubAccountSnapshotTypeEnum::Spot,
             )
             .build()
             .unwrap();
@@ -1916,9 +2169,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountTransferLogMasterAccountInvestorParams::builder("sub-account-email@email.com".to_string(),1623319461670,1641782889000,789,789,).build().unwrap();
+            let params = QueryManagedSubAccountTransferLogMasterAccountInvestorParams::builder("abc@test.com".to_string(),1623319461670,1641782889000,1,1,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountTransferLogMasterAccountInvestorResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogMasterAccountInvestorResponse");
 
             let resp = client.query_managed_sub_account_transfer_log_master_account_investor(params).await.expect("Expected a response");
@@ -1933,9 +2186,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountTransferLogMasterAccountInvestorParams::builder("sub-account-email@email.com".to_string(),1623319461670,1641782889000,789,789,).transfers("transfers_example".to_string()).transfer_function_account_type("transfer_function_account_type_example".to_string()).build().unwrap();
+            let params = QueryManagedSubAccountTransferLogMasterAccountInvestorParams::builder("abc@test.com".to_string(),1623319461670,1641782889000,1,1,).transfers("transfers_example".to_string()).transfer_function_account_type(QueryManagedSubAccountTransferLogMasterAccountInvestorTransferFunctionAccountTypeEnum::Spot).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountTransferLogMasterAccountInvestorResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogMasterAccountInvestorResponse");
 
             let resp = client.query_managed_sub_account_transfer_log_master_account_investor(params).await.expect("Expected a response");
@@ -1951,11 +2204,11 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
             let params = QueryManagedSubAccountTransferLogMasterAccountInvestorParams::builder(
-                "sub-account-email@email.com".to_string(),
+                "abc@test.com".to_string(),
                 1623319461670,
                 1641782889000,
-                789,
-                789,
+                1,
+                1,
             )
             .build()
             .unwrap();
@@ -1977,9 +2230,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountTransferLogMasterAccountTradingParams::builder("sub-account-email@email.com".to_string(),1623319461670,1641782889000,789,789,).build().unwrap();
+            let params = QueryManagedSubAccountTransferLogMasterAccountTradingParams::builder("abc@test.com".to_string(),1623319461670,1641782889000,1,10,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountTransferLogMasterAccountTradingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogMasterAccountTradingResponse");
 
             let resp = client.query_managed_sub_account_transfer_log_master_account_trading(params).await.expect("Expected a response");
@@ -1994,9 +2247,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountTransferLogMasterAccountTradingParams::builder("sub-account-email@email.com".to_string(),1623319461670,1641782889000,789,789,).transfers("transfers_example".to_string()).transfer_function_account_type("transfer_function_account_type_example".to_string()).build().unwrap();
+            let params = QueryManagedSubAccountTransferLogMasterAccountTradingParams::builder("abc@test.com".to_string(),1623319461670,1641782889000,1,10,).transfers("transfers_example".to_string()).transfer_function_account_type(QueryManagedSubAccountTransferLogMasterAccountTradingTransferFunctionAccountTypeEnum::Spot).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountTransferLogMasterAccountTradingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogMasterAccountTradingResponse");
 
             let resp = client.query_managed_sub_account_transfer_log_master_account_trading(params).await.expect("Expected a response");
@@ -2012,11 +2265,11 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
             let params = QueryManagedSubAccountTransferLogMasterAccountTradingParams::builder(
-                "sub-account-email@email.com".to_string(),
+                "abc@test.com".to_string(),
                 1623319461670,
                 1641782889000,
-                789,
-                789,
+                1,
+                10,
             )
             .build()
             .unwrap();
@@ -2038,9 +2291,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountTransferLogSubAccountTradingParams::builder(1623319461670,1641782889000,789,789,).build().unwrap();
+            let params = QueryManagedSubAccountTransferLogSubAccountTradingParams::builder(1623319461670,1641782889000,1,10,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountTransferLogSubAccountTradingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogSubAccountTradingResponse");
 
             let resp = client.query_managed_sub_account_transfer_log_sub_account_trading(params).await.expect("Expected a response");
@@ -2055,9 +2308,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
-            let params = QueryManagedSubAccountTransferLogSubAccountTradingParams::builder(1623319461670,1641782889000,789,789,).transfers("transfers_example".to_string()).transfer_function_account_type("transfer_function_account_type_example".to_string()).recv_window(5000).build().unwrap();
+            let params = QueryManagedSubAccountTransferLogSubAccountTradingParams::builder(1623319461670,1641782889000,1,10,).transfers("transfers_example".to_string()).transfer_function_account_type(QueryManagedSubAccountTransferLogSubAccountTradingTransferFunctionAccountTypeEnum::Spot).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779},{"fromEmail":"wdywl0lddakh@test.com","fromAccountType":"SPOT","toEmail":"test_0_virtual@kq3kno9imanagedsub.com","toAccountType":"SPOT","asset":"BNB","amount":"1","scheduledData":1679416616000,"createTime":1679416616000,"status":"SUCCESS","tranId":91077676}],"count":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"managerSubTransferHistoryVos":[{"fromEmail":"test_0_virtual@kq3kno9imanagedsub.com","fromAccountType":"SPOT","toEmail":"wdywl0lddakh@test.com","toAccountType":"SPOT","asset":"BNB","amount":"0.01","scheduledData":1679416673000,"createTime":1679416673000,"status":"SUCCESS","tranId":91077779}],"count":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryManagedSubAccountTransferLogSubAccountTradingResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryManagedSubAccountTransferLogSubAccountTradingResponse");
 
             let resp = client.query_managed_sub_account_transfer_log_sub_account_trading(params).await.expect("Expected a response");
@@ -2075,8 +2328,8 @@ mod tests {
             let params = QueryManagedSubAccountTransferLogSubAccountTradingParams::builder(
                 1623319461670,
                 1641782889000,
-                789,
-                789,
+                1,
+                10,
             )
             .build()
             .unwrap();
@@ -2099,14 +2352,15 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
             let params = WithdrawlAssetsFromTheManagedSubAccountParams::builder(
-                "from_email_example".to_string(),
-                "asset_example".to_string(),
+                "from@test.com".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
             )
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WithdrawlAssetsFromTheManagedSubAccountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::WithdrawlAssetsFromTheManagedSubAccountResponse",
@@ -2128,8 +2382,8 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: false };
 
             let params = WithdrawlAssetsFromTheManagedSubAccountParams::builder(
-                "from_email_example".to_string(),
-                "asset_example".to_string(),
+                "from@test.com".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
             )
             .transfer_date(789)
@@ -2137,7 +2391,8 @@ mod tests {
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":66157362489}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WithdrawlAssetsFromTheManagedSubAccountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::WithdrawlAssetsFromTheManagedSubAccountResponse",
@@ -2159,8 +2414,8 @@ mod tests {
             let client = MockManagedSubAccountApiClient { force_error: true };
 
             let params = WithdrawlAssetsFromTheManagedSubAccountParams::builder(
-                "from_email_example".to_string(),
-                "asset_example".to_string(),
+                "from@test.com".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
             )
             .build()

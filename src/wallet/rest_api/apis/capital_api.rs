@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -78,11 +78,58 @@ impl CapitalApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum DepositHistoryStatusEnum {
+    #[serde(rename = "0")]
+    Status0,
+    #[serde(rename = "1")]
+    Status1,
+    #[serde(rename = "2")]
+    Status2,
+    #[serde(rename = "6")]
+    Status6,
+    #[serde(rename = "7")]
+    Status7,
+    #[serde(rename = "8")]
+    Status8,
+}
+
+impl DepositHistoryStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Status0 => "0",
+            Self::Status1 => "1",
+            Self::Status2 => "2",
+            Self::Status6 => "6",
+            Self::Status7 => "7",
+            Self::Status8 => "8",
+        }
+    }
+}
+
+impl std::str::FromStr for DepositHistoryStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "0" => Ok(Self::Status0),
+            "1" => Ok(Self::Status1),
+            "2" => Ok(Self::Status2),
+            "6" => Ok(Self::Status6),
+            "7" => Ok(Self::Status7),
+            "8" => Ok(Self::Status8),
+            other => Err(format!("invalid DepositHistoryStatusEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`all_coins_information`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_coins_information`](#method.all_coins_information).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllCoinsInformationParams {
     ///
@@ -90,6 +137,7 @@ pub struct AllCoinsInformationParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -105,32 +153,35 @@ impl AllCoinsInformationParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`deposit_address`](#method.deposit_address).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DepositAddressParams {
-    ///
-    /// The `coin` parameter.
+    /// `coin` refers to the parent network address format that the address is using
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
     ///
     /// The `network` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "amount", default)]
     pub amount: Option<rust_decimal::Decimal>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -139,7 +190,7 @@ impl DepositAddressParams {
     ///
     /// Required parameters:
     ///
-    /// * `coin` — String
+    /// * `coin` — `coin` refers to the parent network address format that the address is using
     ///
     #[must_use]
     pub fn builder(coin: String) -> DepositAddressParamsBuilder {
@@ -150,58 +201,67 @@ impl DepositAddressParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`deposit_history`](#method.deposit_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DepositHistoryParams {
-    /// Default: `false`, return `sourceAddress`field when set to `true`
+    /// return `sourceAddress` field when set to `true`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "includeSource", default)]
     pub include_source: Option<bool>,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
-    /// 0(0:Email Sent, 2:Awaiting Approval 3:Rejected 4:Processing 6:Completed)
+    /// 0: pending, 6: credited but cannot withdraw, 7: Wrong Deposit, 8: Waiting User confirm, 1: success
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub status: Option<i64>,
-    ///
-    /// The `start_time` parameter.
+    #[serde(rename = "status", default)]
+    pub status: Option<DepositHistoryStatusEnum>,
+    /// Default: 90 days from current timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Default: present timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default: 0
+    ///
+    /// The `offset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i64>,
-    /// min 7, max 30, default 7
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
     ///
     /// The `tx_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "txId", default)]
     pub tx_id: Option<String>,
 }
 
@@ -217,20 +277,20 @@ impl DepositHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`fetch_deposit_address_list_with_network`](#method.fetch_deposit_address_list_with_network).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FetchDepositAddressListWithNetworkParams {
-    ///
-    /// The `coin` parameter.
+    /// Coin name
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
-    ///
-    /// The `network` parameter.
+    /// If network is not send, return with default network of the coin. You can get network and isDefault in networkList in the response of `Get /sapi/v1/capital/config/getall`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
 }
 
@@ -239,7 +299,7 @@ impl FetchDepositAddressListWithNetworkParams {
     ///
     /// Required parameters:
     ///
-    /// * `coin` — String
+    /// * `coin` — Coin name
     ///
     #[must_use]
     pub fn builder(coin: String) -> FetchDepositAddressListWithNetworkParamsBuilder {
@@ -250,29 +310,32 @@ impl FetchDepositAddressListWithNetworkParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`one_click_arrival_deposit_apply`](#method.one_click_arrival_deposit_apply).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OneClickArrivalDepositApplyParams {
     /// Deposit record Id, priority use
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "depositId", default)]
     pub deposit_id: Option<i64>,
-    ///
-    /// The `tx_id` parameter.
+    /// Deposit txId, used when depositId is not specified
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "txId", default)]
     pub tx_id: Option<String>,
     /// Sub-accountId of Cloud user
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub sub_account_id: Option<i64>,
+    #[serde(rename = "subAccountId", default)]
+    pub sub_account_id: Option<String>,
     /// Sub-userId of parent user
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "subUserId", default)]
     pub sub_user_id: Option<i64>,
 }
 
@@ -288,7 +351,7 @@ impl OneClickArrivalDepositApplyParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`withdraw`](#method.withdraw).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct WithdrawParams {
     ///
@@ -296,55 +359,66 @@ pub struct WithdrawParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
-    ///
-    /// The `address` parameter.
+    /// Withdrawal address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "address")]
     pub address: String,
-    ///
-    /// The `amount` parameter.
+    /// Amount
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for query.
+    /// client side id for withdrawal, if provide here, can be used in GET
+    /// `/sapi/v1/capital/withdraw/history` for query.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "withdrawOrderId", default)]
     pub withdraw_order_id: Option<String>,
-    ///
-    /// The `network` parameter.
+    /// Withdrawal network
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     /// Secondary address identifier for coins like XRP,XMR etc.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "addressTag", default)]
     pub address_tag: Option<String>,
-    /// When making internal transfer, `true` for returning the fee to the destination account; `false` for returning the fee back to the departure account. Default `false`.
+    /// When making internal transfer, `true` for returning the fee to the destination account; `false` for
+    /// returning the fee back to the departure account. Default `false`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "transactionFeeFlag", default)]
     pub transaction_fee_flag: Option<bool>,
-    /// Description of the address. Address book cap is 200, space in name should be encoded into `%20`
+    ///
+    /// The `name` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "name", default)]
     pub name: Option<String>,
-    /// The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
+    /// The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current
+    /// "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "walletType", default)]
     pub wallet_type: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -354,8 +428,8 @@ impl WithdrawParams {
     /// Required parameters:
     ///
     /// * `coin` — String
-    /// * `address` — String
-    /// * `amount` — `rust_decimal::Decimal`
+    /// * `address` — Withdrawal address
+    /// * `amount` — Amount
     ///
     #[must_use]
     pub fn builder(
@@ -373,7 +447,7 @@ impl WithdrawParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`withdraw_history`](#method.withdraw_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct WithdrawHistoryParams {
     ///
@@ -381,49 +455,58 @@ pub struct WithdrawHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
-    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for query.
+    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for
+    /// query.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "withdrawOrderId", default)]
     pub withdraw_order_id: Option<String>,
     /// 0(0:Email Sent, 2:Awaiting Approval 3:Rejected 4:Processing 6:Completed)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "status", default)]
     pub status: Option<i64>,
     /// Default: 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i64>,
-    /// min 7, max 30, default 7
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     /// id list returned in the response of POST `/sapi/v1/capital/withdraw/apply`, separated by `,`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "idList", default)]
     pub id_list: Option<String>,
-    ///
-    /// The `start_time` parameter.
+    /// Default: 90 days from current timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Default: present timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -891,7 +974,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"1MBABYDOGE","depositAllEnable":true,"withdrawAllEnable":true,"name":"1M x BABYDOGE","free":"34941.1","locked":"0","freeze":"0","withdrawing":"0","ipoing":"0","ipoable":"0","storage":"0","isLegalMoney":false,"trading":true,"networkList":[{"network":"BSC","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":false,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"BNB Smart Chain (BEP20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"10","withdrawMin":"20","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":5,"unLockConfirm":0,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":1,"busy":false,"contractAddressUrl":"https://bscscan.com/token/","contractAddress":"0xc748673057861a797275cd8a068abb95a902e8de","denomination":1000000},{"network":"ETH","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":true,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"Ethereum (ERC20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"1511","withdrawMin":"3022","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":6,"unLockConfirm":64,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":2,"busy":false,"contractAddressUrl":"https://etherscan.io/address/","contractAddress":"0xac57de9c1a09fec648e93eb98875b212db0d460b","denomination":1000000}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"1MBABYDOGE","depositAllEnable":true,"withdrawAllEnable":true,"name":"1M x BABYDOGE","free":"34941.1","locked":"0","freeze":"0","withdrawing":"0","ipoing":"0","ipoable":"0","storage":"0","isLegalMoney":false,"trading":true,"networkList":[{"network":"BSC","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":false,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"BNB Smart Chain (BEP20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"10","withdrawMin":"20","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":5,"unLockConfirm":0,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":1,"busy":false,"contractAddressUrl":"https://bscscan.com/token/","contractAddress":"0xc748673057861a797275cd8a068abb95a902e8de","denomination":1000000}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::AllCoinsInformationResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AllCoinsInformationResponseInner>");
@@ -918,7 +1001,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"address":"1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv","coin":"BTC","tag":"","url":"https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"address":"1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv","coin":"BTC","tag":"","url":"https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::DepositAddressResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DepositAddressResponse");
@@ -945,7 +1028,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"769800519366885376","amount":"0.001","coin":"BNB","network":"BNB","status":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":0},{"id":"769754833590042625","amount":"0.50000000","coin":"IOTA","network":"IOTA","status":1,"address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW","addressTag":"","txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999","insertTime":1599620082000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"769800519366885376","amount":"0.001","coin":"BNB","network":"BNB","status":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::DepositHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::DepositHistoryResponseInner>");
@@ -974,7 +1057,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0},{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0},{"coin":"ETH","address":"0x00003ada75e7da97ba0db2fcde72131f712455e2","tag":"","isDefault":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::FetchDepositAddressListWithNetworkResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FetchDepositAddressListWithNetworkResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -999,7 +1082,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","addressTag":"","coin":"BTC","name":"Satoshi","network":"BTC","origin":"bla","originType":"others","whiteStatus":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","addressTag":"","coin":"BTC","name":"Satoshi","network":"BTC","origin":"bla","originType":"others","whiteStatus":true}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::FetchWithdrawAddressListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::FetchWithdrawAddressListResponseInner>");
@@ -1026,7 +1109,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"wdQuota":"10000","usedWdQuota":"1000"}"#).unwrap();
+                serde_json::from_str(r#"{"wdQuota":"10000","usedWdQuota":"1000"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FetchWithdrawQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FetchWithdrawQuotaResponse");
@@ -1056,7 +1140,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"code":"000000","message":"success","data":true,"success":true}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::OneClickArrivalDepositApplyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OneClickArrivalDepositApplyResponse");
@@ -1084,7 +1168,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"id":"7213fea8e94b4a5593d507237e5a555b"}"#).unwrap();
+                serde_json::from_str(r#"{"id":"7213fea8e94b4a5593d507237e5a555b"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::WithdrawResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WithdrawResponse");
@@ -1111,7 +1196,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","amount":"8.91000000","transactionFee":"0.004","coin":"USDT","status":6,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","amount":"0.00150000","transactionFee":"0.004","coin":"BTC","status":6,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","amount":"8.91000000","transactionFee":"0.004","coin":"USDT","status":6,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::WithdrawHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::WithdrawHistoryResponseInner>");
@@ -1134,7 +1219,7 @@ mod tests {
 
             let params = AllCoinsInformationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"1MBABYDOGE","depositAllEnable":true,"withdrawAllEnable":true,"name":"1M x BABYDOGE","free":"34941.1","locked":"0","freeze":"0","withdrawing":"0","ipoing":"0","ipoable":"0","storage":"0","isLegalMoney":false,"trading":true,"networkList":[{"network":"BSC","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":false,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"BNB Smart Chain (BEP20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"10","withdrawMin":"20","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":5,"unLockConfirm":0,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":1,"busy":false,"contractAddressUrl":"https://bscscan.com/token/","contractAddress":"0xc748673057861a797275cd8a068abb95a902e8de","denomination":1000000},{"network":"ETH","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":true,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"Ethereum (ERC20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"1511","withdrawMin":"3022","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":6,"unLockConfirm":64,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":2,"busy":false,"contractAddressUrl":"https://etherscan.io/address/","contractAddress":"0xac57de9c1a09fec648e93eb98875b212db0d460b","denomination":1000000}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"1MBABYDOGE","depositAllEnable":true,"withdrawAllEnable":true,"name":"1M x BABYDOGE","free":"34941.1","locked":"0","freeze":"0","withdrawing":"0","ipoing":"0","ipoable":"0","storage":"0","isLegalMoney":false,"trading":true,"networkList":[{"network":"BSC","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":false,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"BNB Smart Chain (BEP20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"10","withdrawMin":"20","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":5,"unLockConfirm":0,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":1,"busy":false,"contractAddressUrl":"https://bscscan.com/token/","contractAddress":"0xc748673057861a797275cd8a068abb95a902e8de","denomination":1000000}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllCoinsInformationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllCoinsInformationResponseInner>");
 
             let resp = client.all_coins_information(params).await.expect("Expected a response");
@@ -1151,7 +1236,7 @@ mod tests {
 
             let params = AllCoinsInformationParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"1MBABYDOGE","depositAllEnable":true,"withdrawAllEnable":true,"name":"1M x BABYDOGE","free":"34941.1","locked":"0","freeze":"0","withdrawing":"0","ipoing":"0","ipoable":"0","storage":"0","isLegalMoney":false,"trading":true,"networkList":[{"network":"BSC","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":false,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"BNB Smart Chain (BEP20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"10","withdrawMin":"20","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":5,"unLockConfirm":0,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":1,"busy":false,"contractAddressUrl":"https://bscscan.com/token/","contractAddress":"0xc748673057861a797275cd8a068abb95a902e8de","denomination":1000000},{"network":"ETH","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":true,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"Ethereum (ERC20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"1511","withdrawMin":"3022","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":6,"unLockConfirm":64,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":2,"busy":false,"contractAddressUrl":"https://etherscan.io/address/","contractAddress":"0xac57de9c1a09fec648e93eb98875b212db0d460b","denomination":1000000}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"1MBABYDOGE","depositAllEnable":true,"withdrawAllEnable":true,"name":"1M x BABYDOGE","free":"34941.1","locked":"0","freeze":"0","withdrawing":"0","ipoing":"0","ipoable":"0","storage":"0","isLegalMoney":false,"trading":true,"networkList":[{"network":"BSC","coin":"1MBABYDOGE","withdrawIntegerMultiple":"0.01","isDefault":false,"depositEnable":true,"withdrawEnable":true,"depositDesc":"","withdrawDesc":"","specialTips":"","specialWithdrawTips":"","name":"BNB Smart Chain (BEP20)","resetAddressStatus":false,"addressRegex":"^(0x)[0-9A-Fa-f]{40}$","memoRegex":"","withdrawFee":"10","withdrawMin":"20","withdrawMax":"9999999999","withdrawInternalMin":"0.01","depositDust":"0.01","minConfirm":5,"unLockConfirm":0,"sameAddress":false,"withdrawTag":false,"estimatedArrivalTime":1,"busy":false,"contractAddressUrl":"https://bscscan.com/token/","contractAddress":"0xc748673057861a797275cd8a068abb95a902e8de","denomination":1000000}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllCoinsInformationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllCoinsInformationResponseInner>");
 
             let resp = client.all_coins_information(params).await.expect("Expected a response");
@@ -1182,9 +1267,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: false };
 
-            let params = DepositAddressParams::builder("coin_example".to_string(),).build().unwrap();
+            let params = DepositAddressParams::builder("BTC".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"address":"1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv","coin":"BTC","tag":"","url":"https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"address":"1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv","coin":"BTC","tag":"","url":"https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::DepositAddressResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DepositAddressResponse");
 
             let resp = client.deposit_address(params).await.expect("Expected a response");
@@ -1199,9 +1284,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: false };
 
-            let params = DepositAddressParams::builder("coin_example".to_string(),).network("network_example".to_string()).amount(dec!(1.0)).recv_window(5000).build().unwrap();
+            let params = DepositAddressParams::builder("BTC".to_string(),).network("network_example".to_string()).amount(dec!(1.0)).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"address":"1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv","coin":"BTC","tag":"","url":"https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"address":"1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv","coin":"BTC","tag":"","url":"https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::DepositAddressResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DepositAddressResponse");
 
             let resp = client.deposit_address(params).await.expect("Expected a response");
@@ -1216,7 +1301,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: true };
 
-            let params = DepositAddressParams::builder("coin_example".to_string())
+            let params = DepositAddressParams::builder("BTC".to_string())
                 .build()
                 .unwrap();
 
@@ -1236,7 +1321,7 @@ mod tests {
 
             let params = DepositHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"769800519366885376","amount":"0.001","coin":"BNB","network":"BNB","status":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":0},{"id":"769754833590042625","amount":"0.50000000","coin":"IOTA","network":"IOTA","status":1,"address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW","addressTag":"","txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999","insertTime":1599620082000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"769800519366885376","amount":"0.001","coin":"BNB","network":"BNB","status":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::DepositHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::DepositHistoryResponseInner>");
 
             let resp = client.deposit_history(params).await.expect("Expected a response");
@@ -1251,9 +1336,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: false };
 
-            let params = DepositHistoryParams::builder().include_source(false).coin("coin_example".to_string()).status(789).start_time(1623319461670).end_time(1641782889000).offset(0).limit(7).recv_window(5000).tx_id("1".to_string()).build().unwrap();
+            let params = DepositHistoryParams::builder().include_source(false).coin("BTC".to_string()).status(DepositHistoryStatusEnum::Status0).start_time(1623319461670).end_time(1641782889000).offset(0).limit(1000).recv_window(5000).tx_id("1".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"769800519366885376","amount":"0.001","coin":"BNB","network":"BNB","status":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":0},{"id":"769754833590042625","amount":"0.50000000","coin":"IOTA","network":"IOTA","status":1,"address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW","addressTag":"","txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999","insertTime":1599620082000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"769800519366885376","amount":"0.001","coin":"BNB","network":"BNB","status":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"travelRuleStatus":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::DepositHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::DepositHistoryResponseInner>");
 
             let resp = client.deposit_history(params).await.expect("Expected a response");
@@ -1284,9 +1369,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: false };
 
-            let params = FetchDepositAddressListWithNetworkParams::builder("coin_example".to_string(),).build().unwrap();
+            let params = FetchDepositAddressListWithNetworkParams::builder("BTC".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0},{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0},{"coin":"ETH","address":"0x00003ada75e7da97ba0db2fcde72131f712455e2","tag":"","isDefault":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FetchDepositAddressListWithNetworkResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FetchDepositAddressListWithNetworkResponseInner>");
 
             let resp = client.fetch_deposit_address_list_with_network(params).await.expect("Expected a response");
@@ -1301,9 +1386,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: false };
 
-            let params = FetchDepositAddressListWithNetworkParams::builder("coin_example".to_string(),).network("network_example".to_string()).build().unwrap();
+            let params = FetchDepositAddressListWithNetworkParams::builder("BTC".to_string(),).network("network_example".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0},{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0},{"coin":"ETH","address":"0x00003ada75e7da97ba0db2fcde72131f712455e2","tag":"","isDefault":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"coin":"ETH","address":"0xD316E95Fd9E8E237Cb11f8200Babbc5D8D177BA4","tag":"","isDefault":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FetchDepositAddressListWithNetworkResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FetchDepositAddressListWithNetworkResponseInner>");
 
             let resp = client.fetch_deposit_address_list_with_network(params).await.expect("Expected a response");
@@ -1318,10 +1403,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: true };
 
-            let params =
-                FetchDepositAddressListWithNetworkParams::builder("coin_example".to_string())
-                    .build()
-                    .unwrap();
+            let params = FetchDepositAddressListWithNetworkParams::builder("BTC".to_string())
+                .build()
+                .unwrap();
 
             match client.fetch_deposit_address_list_with_network(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1338,7 +1422,7 @@ mod tests {
             let client = MockCapitalApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","addressTag":"","coin":"BTC","name":"Satoshi","network":"BTC","origin":"bla","originType":"others","whiteStatus":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","addressTag":"","coin":"BTC","name":"Satoshi","network":"BTC","origin":"bla","originType":"others","whiteStatus":true}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FetchWithdrawAddressListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FetchWithdrawAddressListResponseInner>");
 
             let resp = client.fetch_withdraw_address_list().await.expect("Expected a response");
@@ -1354,7 +1438,7 @@ mod tests {
             let client = MockCapitalApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"[{"address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","addressTag":"","coin":"BTC","name":"Satoshi","network":"BTC","origin":"bla","originType":"others","whiteStatus":true}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"address":"1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa","addressTag":"","coin":"BTC","name":"Satoshi","network":"BTC","origin":"bla","originType":"others","whiteStatus":true}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FetchWithdrawAddressListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FetchWithdrawAddressListResponseInner>");
 
             let resp = client.fetch_withdraw_address_list().await.expect("Expected a response");
@@ -1384,7 +1468,8 @@ mod tests {
             let client = MockCapitalApiClient { force_error: false };
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"wdQuota":"10000","usedWdQuota":"1000"}"#).unwrap();
+                serde_json::from_str(r#"{"wdQuota":"10000","usedWdQuota":"1000"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::FetchWithdrawQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FetchWithdrawQuotaResponse");
@@ -1405,7 +1490,8 @@ mod tests {
             let client = MockCapitalApiClient { force_error: false };
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"wdQuota":"10000","usedWdQuota":"1000"}"#).unwrap();
+                serde_json::from_str(r#"{"wdQuota":"10000","usedWdQuota":"1000"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::FetchWithdrawQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FetchWithdrawQuotaResponse");
@@ -1446,7 +1532,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"code":"000000","message":"success","data":true,"success":true}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::OneClickArrivalDepositApplyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OneClickArrivalDepositApplyResponse");
@@ -1469,7 +1555,7 @@ mod tests {
             let params = OneClickArrivalDepositApplyParams::builder()
                 .deposit_id(1)
                 .tx_id("1".to_string())
-                .sub_account_id(1)
+                .sub_account_id("1".to_string())
                 .sub_user_id(1)
                 .build()
                 .unwrap();
@@ -1477,7 +1563,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"code":"000000","message":"success","data":true,"success":true}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::OneClickArrivalDepositApplyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OneClickArrivalDepositApplyResponse");
@@ -1516,7 +1602,7 @@ mod tests {
             let client = MockCapitalApiClient { force_error: false };
 
             let params = WithdrawParams::builder(
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 "address_example".to_string(),
                 dec!(1.0),
             )
@@ -1524,7 +1610,8 @@ mod tests {
             .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"id":"7213fea8e94b4a5593d507237e5a555b"}"#).unwrap();
+                serde_json::from_str(r#"{"id":"7213fea8e94b4a5593d507237e5a555b"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WithdrawResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WithdrawResponse");
@@ -1542,14 +1629,14 @@ mod tests {
             let client = MockCapitalApiClient { force_error: false };
 
             let params = WithdrawParams::builder(
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 "address_example".to_string(),
                 dec!(1.0),
             )
             .withdraw_order_id("1".to_string())
             .network("network_example".to_string())
             .address_tag("address_tag_example".to_string())
-            .transaction_fee_flag(false)
+            .transaction_fee_flag(true)
             .name("name_example".to_string())
             .wallet_type(0)
             .recv_window(5000)
@@ -1557,7 +1644,8 @@ mod tests {
             .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"id":"7213fea8e94b4a5593d507237e5a555b"}"#).unwrap();
+                serde_json::from_str(r#"{"id":"7213fea8e94b4a5593d507237e5a555b"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WithdrawResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WithdrawResponse");
@@ -1575,7 +1663,7 @@ mod tests {
             let client = MockCapitalApiClient { force_error: true };
 
             let params = WithdrawParams::builder(
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 "address_example".to_string(),
                 dec!(1.0),
             )
@@ -1598,7 +1686,7 @@ mod tests {
 
             let params = WithdrawHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","amount":"8.91000000","transactionFee":"0.004","coin":"USDT","status":6,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","amount":"0.00150000","transactionFee":"0.004","coin":"BTC","status":6,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","amount":"8.91000000","transactionFee":"0.004","coin":"USDT","status":6,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::WithdrawHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryResponseInner>");
 
             let resp = client.withdraw_history(params).await.expect("Expected a response");
@@ -1613,9 +1701,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockCapitalApiClient { force_error: false };
 
-            let params = WithdrawHistoryParams::builder().coin("coin_example".to_string()).withdraw_order_id("1".to_string()).status(789).offset(0).limit(7).id_list("id_list_example".to_string()).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
+            let params = WithdrawHistoryParams::builder().coin("BTC".to_string()).withdraw_order_id("1".to_string()).status(0).offset(0).limit(1000).id_list("id_list_example".to_string()).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","amount":"8.91000000","transactionFee":"0.004","coin":"USDT","status":6,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","amount":"0.00150000","transactionFee":"0.004","coin":"BTC","status":6,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","amount":"8.91000000","transactionFee":"0.004","coin":"USDT","status":6,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::WithdrawHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryResponseInner>");
 
             let resp = client.withdraw_history(params).await.expect("Expected a response");

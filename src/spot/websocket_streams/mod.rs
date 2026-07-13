@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket Streams
+ * Spot WebSocket Market Streams
  *
- * OpenAPI Specifications for the Binance Spot WebSocket Streams
- *
- * API documents:
- * - [Github web-socket-streams documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md)
- * - [General API information for web-socket-streams on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -40,7 +35,7 @@ const HAS_TIME_UNIT: bool = true;
 
 pub struct WebsocketStreams {
     websocket_streams_base: Arc<WebsocketStreamsBase>,
-    web_socket_streams_api_client: WebSocketStreamsApiClient,
+    api_client: ApiClient,
 }
 
 impl WebsocketStreams {
@@ -64,9 +59,7 @@ impl WebsocketStreams {
 
         Ok(Self {
             websocket_streams_base: websocket_streams_base.clone(),
-            web_socket_streams_api_client: WebSocketStreamsApiClient::new(
-                websocket_streams_base.clone(),
-            ),
+            api_client: ApiClient::new(websocket_streams_base.clone()),
         })
     }
 
@@ -233,9 +226,48 @@ impl WebsocketStreams {
         self.websocket_streams_base.is_subscribed(stream).await
     }
 
-    /// WebSocket Aggregate Trade Streams
+    /// User Data Stream
     ///
-    /// The Aggregate Trade Streams push trade information that is aggregated for a single taker order.
+    /// Establishes a WebSocket stream for user-specific data events.
+    ///
+    /// # Arguments
+    ///
+    /// - `listen_key`: A unique key for identifying the user's data stream
+    /// - `id`: An optional identifier for the stream request
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<UserDataStreamEventsResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream creation fails or if parsing the response encounters issues.
+    ///
+    /// # Examples
+    ///
+    ///
+    /// let `user_stream` = `websocket_streams.user_data(listen_key`, None).await?;
+    ///
+    pub async fn user_data(
+        &self,
+        listen_key: String,
+        id: Option<String>,
+    ) -> anyhow::Result<Arc<WebsocketStream<UserDataStreamEventsResponse>>> {
+        Ok(create_stream_handler::<UserDataStreamEventsResponse>(
+            WebsocketBase::WebsocketStreams(self.websocket_streams_base.clone()),
+            listen_key,
+            id.map(StreamId::from),
+            None,
+        )
+        .await)
+    }
+
+    /// Aggregate Trade Streams
+    ///
+    /// The Aggregate Trade Streams push trade information that is aggregated
+    /// for a single taker order.
+    ///
+    /// Update Speed: Real-time
     ///
     /// # Arguments
     ///
@@ -251,19 +283,23 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#aggregate-trade-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#agg-trade).
     ///
     pub async fn agg_trade(
         &self,
         params: AggTradeParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::AggTradeResponse>>> {
-        self.web_socket_streams_api_client.agg_trade(params).await
+        self.api_client.agg_trade(params).await
     }
 
-    /// WebSocket All Market Rolling Window Statistics Streams
+    /// All Market Rolling Window Statistics Streams
     ///
-    /// Rolling window ticker statistics for all market symbols, computed over multiple windows.
+    /// Rolling window ticker statistics for all market symbols, computed over
+    /// multiple windows.
+    ///
     /// Note that only tickers that have changed will be present in the array.
+    ///
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///
@@ -279,21 +315,26 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#all-market-rolling-window-statistics-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#all-market-rolling-window-ticker).
     ///
     pub async fn all_market_rolling_window_ticker(
         &self,
         params: AllMarketRollingWindowTickerParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllMarketRollingWindowTickerResponseInner>>>>
     {
-        self.web_socket_streams_api_client
+        self.api_client
             .all_market_rolling_window_ticker(params)
             .await
     }
 
-    /// WebSocket All Market Mini Tickers Stream
+    /// All Market Mini Tickers Stream
     ///
-    /// 24hr rolling window mini-ticker statistics for all symbols that changed in an array. These are NOT the statistics of the UTC day, but a 24hr rolling window for the previous 24hrs. Note that only tickers that have changed will be present in the array.
+    /// 24hr rolling window mini-ticker statistics for all symbols that changed
+    /// in an array. These are NOT the statistics of the UTC day, but a 24hr
+    /// rolling window for the previous 24hrs. Note that only tickers that have
+    /// changed will be present in the array.
+    ///
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///
@@ -309,20 +350,20 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#all-market-mini-tickers-stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#all-mini-ticker).
     ///
     pub async fn all_mini_ticker(
         &self,
         params: AllMiniTickerParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::AllMiniTickerResponseInner>>>> {
-        self.web_socket_streams_api_client
-            .all_mini_ticker(params)
-            .await
+        self.api_client.all_mini_ticker(params).await
     }
 
-    /// WebSocket Average Price
+    /// Average Price
     ///
     /// Average price streams push changes in the average price over a fixed time interval.
+    ///
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///
@@ -338,18 +379,20 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#average-price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#avg-price).
     ///
     pub async fn avg_price(
         &self,
         params: AvgPriceParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::AvgPriceResponse>>> {
-        self.web_socket_streams_api_client.avg_price(params).await
+        self.api_client.avg_price(params).await
     }
 
-    /// WebSocket Block Trade Streams
+    /// Block Trade Streams
     ///
+    /// Block Trade Streams push block trade information in real-time.
     ///
+    /// Update Speed: Real-time
     ///
     /// # Arguments
     ///
@@ -365,19 +408,24 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#block-trade-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#block-trade).
     ///
     pub async fn block_trade(
         &self,
         params: BlockTradeParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::BlockTradeResponse>>> {
-        self.web_socket_streams_api_client.block_trade(params).await
+        self.api_client.block_trade(params).await
     }
 
-    /// WebSocket Individual Symbol Book Ticker Streams
+    /// Individual Symbol Book Ticker Streams
     ///
-    /// Pushes any update to the best bid or ask's price or quantity in real-time for a specified symbol.
-    /// Multiple `<symbol>@bookTicker` streams can be subscribed to over one connection.
+    /// Pushes any update to the best bid or ask's price or quantity in
+    /// real-time for a specified symbol.
+    ///
+    /// Multiple `<symbol>@bookTicker` streams can be subscribed to over one
+    /// connection.
+    ///
+    /// Update Speed: Real-time
     ///
     /// # Arguments
     ///
@@ -393,18 +441,20 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#individual-symbol-book-ticker-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#book-ticker).
     ///
     pub async fn book_ticker(
         &self,
         params: BookTickerParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::BookTickerResponse>>> {
-        self.web_socket_streams_api_client.book_ticker(params).await
+        self.api_client.book_ticker(params).await
     }
 
-    /// WebSocket Diff. Depth Stream
+    /// Diff. Depth Stream
     ///
     /// Order book price and quantity depth updates used to locally manage an order book.
+    ///
+    /// Update Speed: 1000ms or 100ms
     ///
     /// # Arguments
     ///
@@ -420,22 +470,21 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#diff-depth-stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#diff-book-depth).
     ///
     pub async fn diff_book_depth(
         &self,
         params: DiffBookDepthParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::DiffBookDepthResponse>>> {
-        self.web_socket_streams_api_client
-            .diff_book_depth(params)
-            .await
+        self.api_client.diff_book_depth(params).await
     }
 
-    /// WebSocket Kline/Candlestick Streams for UTC
+    /// Kline/Candlestick Streams for UTC
     ///
-    /// The Kline/Candlestick Stream push updates to the current klines/candlestick every second in `UTC+0` timezone
+    /// The Kline/Candlestick Stream push updates to the current
+    /// klines/candlestick every second in `UTC+0` timezone
     ///
-    /// <a id="kline-intervals"></a>
+    /// Update Speed: 1000ms for `1s`, 2000ms for the other intervals
     ///
     /// # Arguments
     ///
@@ -451,18 +500,29 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#klinecandlestick-streams-for-utc).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#kline).
     ///
     pub async fn kline(
         &self,
         params: KlineParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::KlineResponse>>> {
-        self.web_socket_streams_api_client.kline(params).await
+        self.api_client.kline(params).await
     }
 
-    /// WebSocket Kline/Candlestick Streams with timezone offset
+    /// Kline/Candlestick Streams with timezone offset
     ///
-    /// The Kline/Candlestick Stream push updates to the current klines/candlestick every second in `UTC+8` timezone
+    /// The Kline/Candlestick Stream push updates to the current
+    /// klines/candlestick every second in `UTC+8` timezone
+    ///
+    /// **Kline/Candlestick chart intervals:**
+    ///
+    /// Supported intervals: See Kline/Candlestick chart intervals
+    ///
+    /// **UTC+8 timezone offset:**
+    /// - Kline intervals open and close in the UTC+8 timezone. For example the 1d klines will open at the beginning of the UTC+8 day, and close at the end of the UTC+8 day.
+    /// - Note that E (event time), t (start time) and T (close time) in the payload are Unix timestamps, which are always interpreted in UTC.
+    ///
+    /// Update Speed: 1000ms for `1s`, 2000ms for the other intervals
     ///
     /// # Arguments
     ///
@@ -478,20 +538,21 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#klinecandlestick-streams-with-timezone-offset).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#kline-offset).
     ///
     pub async fn kline_offset(
         &self,
         params: KlineOffsetParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::KlineOffsetResponse>>> {
-        self.web_socket_streams_api_client
-            .kline_offset(params)
-            .await
+        self.api_client.kline_offset(params).await
     }
 
-    /// WebSocket Individual Symbol Mini Ticker Stream
+    /// Individual Symbol Mini Ticker Stream
     ///
-    /// 24hr rolling window mini-ticker statistics. These are NOT the statistics of the UTC day, but a 24hr rolling window for the previous 24hrs.
+    /// 24hr rolling window mini-ticker statistics. These are NOT the statistics
+    /// of the UTC day, but a 24hr rolling window for the previous 24hrs.
+    ///
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///
@@ -507,18 +568,20 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#individual-symbol-mini-ticker-stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#mini-ticker).
     ///
     pub async fn mini_ticker(
         &self,
         params: MiniTickerParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::MiniTickerResponse>>> {
-        self.web_socket_streams_api_client.mini_ticker(params).await
+        self.api_client.mini_ticker(params).await
     }
 
     /// WebSocket Partial Book Depth Streams
     ///
-    /// Top **\<levels\>** bids and asks, pushed every second. Valid **\<levels\>** are 5, 10, or 20.
+    /// Top **\<levels\>** bids and asks, pushed every second.
+    ///
+    /// Update Speed: 1000ms or 100ms
     ///
     /// # Arguments
     ///
@@ -534,20 +597,20 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#partial-book-depth-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#partial-book-depth).
     ///
     pub async fn partial_book_depth(
         &self,
         params: PartialBookDepthParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::PartialBookDepthResponse>>> {
-        self.web_socket_streams_api_client
-            .partial_book_depth(params)
-            .await
+        self.api_client.partial_book_depth(params).await
     }
 
-    /// WebSocket Reference Price Streams
+    /// Reference Price Streams
     ///
+    /// Reference price stream for a symbol.
     ///
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///
@@ -563,20 +626,24 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#reference-price-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#reference-price).
     ///
     pub async fn reference_price(
         &self,
         params: ReferencePriceParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::ReferencePriceResponse>>> {
-        self.web_socket_streams_api_client
-            .reference_price(params)
-            .await
+        self.api_client.reference_price(params).await
     }
 
-    /// WebSocket Individual Symbol Rolling Window Statistics Streams
+    /// Individual Symbol Rolling Window Statistics Streams
     ///
-    /// Rolling window ticker statistics for a single symbol, computed over multiple windows.
+    /// Rolling window ticker statistics for a single symbol, computed over
+    /// multiple windows.
+    ///
+    /// **Note:** This stream is different from the `<symbol>@ticker` stream. The open time `"O"` always starts on a minute, while the closing time `"C"` is the current time
+    /// of the update. As such, the effective window might be up to 59999ms wider than `<window_size>`.
+    ///
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///
@@ -592,20 +659,22 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#individual-symbol-rolling-window-statistics-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#rolling-window-ticker).
     ///
     pub async fn rolling_window_ticker(
         &self,
         params: RollingWindowTickerParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::RollingWindowTickerResponse>>> {
-        self.web_socket_streams_api_client
-            .rolling_window_ticker(params)
-            .await
+        self.api_client.rolling_window_ticker(params).await
     }
 
-    /// WebSocket Individual Symbol Ticker Streams
+    /// Individual Symbol Ticker Streams
     ///
-    /// 24hr rolling window ticker statistics for a single symbol. These are NOT the statistics of the UTC day, but a 24hr rolling window for the previous 24hrs.
+    /// 24hr rolling window ticker statistics for a single symbol. These are NOT
+    /// the statistics of the UTC day, but a 24hr rolling window for the
+    /// previous 24hrs.
+    ///
+    /// Update Speed: 1000ms
     ///
     /// # Arguments
     ///
@@ -621,18 +690,21 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#individual-symbol-ticker-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#ticker).
     ///
     pub async fn ticker(
         &self,
         params: TickerParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::TickerResponse>>> {
-        self.web_socket_streams_api_client.ticker(params).await
+        self.api_client.ticker(params).await
     }
 
-    /// WebSocket Trade Streams
+    /// Trade Streams
     ///
-    /// The Trade Streams push raw trade information; each trade has a unique buyer and seller.
+    /// The Trade Streams push raw trade information; each trade has a unique
+    /// buyer and seller.
+    ///
+    /// Update Speed: Real-time
     ///
     /// # Arguments
     ///
@@ -648,12 +720,12 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#trade-streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/~#trade).
     ///
     pub async fn trade(
         &self,
         params: TradeParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::TradeResponse>>> {
-        self.web_socket_streams_api_client.trade(params).await
+        self.api_client.trade(params).await
     }
 }

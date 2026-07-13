@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -42,28 +42,46 @@ pub struct QueryOrderResponseResult {
     pub position_side: Option<String>,
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// please ignore when order type is `TRAILING_STOP_MARKET`
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
+    /// if Close-All
     #[serde(rename = "closePosition", skip_serializing_if = "Option::is_none")]
     pub close_position: Option<bool>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// order time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// activation price, only return with `TRAILING_STOP_MARKET` order
     #[serde(rename = "activatePrice", skip_serializing_if = "Option::is_none")]
     pub activate_price: Option<String>,
+    /// callback rate, only return with `TRAILING_STOP_MARKET` order
     #[serde(rename = "priceRate", skip_serializing_if = "Option::is_none")]
     pub price_rate: Option<String>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
     #[serde(rename = "workingType", skip_serializing_if = "Option::is_none")]
     pub working_type: Option<String>,
+    /// if conditional order trigger is protected
     #[serde(rename = "priceProtect", skip_serializing_if = "Option::is_none")]
     pub price_protect: Option<bool>,
+    #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
+    pub price_match: Option<String>,
+    /// Self-trade prevention mode
+    #[serde(
+        rename = "selfTradePreventionMode",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub self_trade_prevention_mode: Option<String>,
+    /// Order good till date timestamp
+    #[serde(rename = "goodTillDate", skip_serializing_if = "Option::is_none")]
+    pub good_till_date: Option<i64>,
 }
 
 impl QueryOrderResponseResult {
@@ -93,6 +111,9 @@ impl QueryOrderResponseResult {
             update_time: None,
             working_type: None,
             price_protect: None,
+            price_match: None,
+            self_trade_prevention_mode: None,
+            good_till_date: None,
         }
     }
 }

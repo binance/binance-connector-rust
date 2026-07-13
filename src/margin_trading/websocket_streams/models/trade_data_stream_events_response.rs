@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading WebSocket Market Streams
+ * Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Margin Trading WebSocket Market Streams
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,22 +19,26 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(try_from = "Value")]
 pub enum TradeDataStreamEventsResponse {
-    #[serde(rename = "outboundAccountPosition")]
-    OutboundAccountPosition(Box<models::Outboundaccountposition>),
+    #[serde(rename = "MARGIN_LEVEL_STATUS_CHANGE")]
+    MarginLevelStatusChange(Box<models::MarginLevelStatusChange>),
+    #[serde(rename = "USER_LIABILITY_CHANGE")]
+    UserLiabilityChange(Box<models::UserLiabilityChange>),
     #[serde(rename = "balanceUpdate")]
-    BalanceUpdate(Box<models::Balanceupdate>),
-    #[serde(rename = "listenKeyExpired")]
-    ListenKeyExpired(Box<models::Listenkeyexpired>),
+    BalanceUpdate(Box<models::BalanceUpdate>),
     #[serde(rename = "executionReport")]
-    ExecutionReport(Box<models::Executionreport>),
+    ExecutionReport(Box<models::ExecutionReport>),
     #[serde(rename = "listStatus")]
-    ListStatus(Box<models::Liststatus>),
+    ListStatus(Box<models::ListStatus>),
+    #[serde(rename = "listenKeyExpired")]
+    ListenKeyExpired(Box<models::ListenKeyExpired>),
+    #[serde(rename = "outboundAccountPosition")]
+    OutboundAccountPosition(Box<models::OutboundAccountPosition>),
     Other(serde_json::Value),
 }
 
 impl Default for TradeDataStreamEventsResponse {
     fn default() -> Self {
-        Self::OutboundAccountPosition(Default::default())
+        Self::MarginLevelStatusChange(Default::default())
     }
 }
 
@@ -48,9 +52,16 @@ impl TryFrom<Value> for TradeDataStreamEventsResponse {
             .ok_or_else(|| serde_json::Error::custom("missing field `e`"))?;
 
         match tag {
-            "outboundAccountPosition" => {
+            "MARGIN_LEVEL_STATUS_CHANGE" => {
                 let payload = serde_json::from_value(v)?;
-                Ok(TradeDataStreamEventsResponse::OutboundAccountPosition(
+                Ok(TradeDataStreamEventsResponse::MarginLevelStatusChange(
+                    Box::new(payload),
+                ))
+            }
+
+            "USER_LIABILITY_CHANGE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(TradeDataStreamEventsResponse::UserLiabilityChange(
                     Box::new(payload),
                 ))
             }
@@ -58,13 +69,6 @@ impl TryFrom<Value> for TradeDataStreamEventsResponse {
             "balanceUpdate" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(TradeDataStreamEventsResponse::BalanceUpdate(Box::new(
-                    payload,
-                )))
-            }
-
-            "listenKeyExpired" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(TradeDataStreamEventsResponse::ListenKeyExpired(Box::new(
                     payload,
                 )))
             }
@@ -79,6 +83,20 @@ impl TryFrom<Value> for TradeDataStreamEventsResponse {
             "listStatus" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(TradeDataStreamEventsResponse::ListStatus(Box::new(payload)))
+            }
+
+            "listenKeyExpired" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(TradeDataStreamEventsResponse::ListenKeyExpired(Box::new(
+                    payload,
+                )))
+            }
+
+            "outboundAccountPosition" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(TradeDataStreamEventsResponse::OutboundAccountPosition(
+                    Box::new(payload),
+                ))
             }
 
             _ => Ok(TradeDataStreamEventsResponse::Other(v)),

@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -117,11 +117,13 @@ impl RestApi {
         .await
     }
 
-    /// Get Borrow Interest `Rate(USER_DATA)`
+    /// Get Borrow Interest Rate (`USER_DATA`)
     ///
     /// Get Borrow Interest Rate
     ///
-    /// Weight: 400
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -151,7 +153,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/market-data/Get-Borrow-Interest-Rate).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/market-data#get-borrow-interest-rate).
     ///
     pub async fn get_borrow_interest_rate(
         &self,
@@ -162,11 +164,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Collateral Asset `Data(USER_DATA)`
+    /// Get Collateral Asset Data (`USER_DATA`)
     ///
     /// Get Collateral Asset Data
     ///
-    /// Weight: 400
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -196,7 +200,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/market-data/Get-Collateral-Asset-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/market-data#get-collateral-asset-data).
     ///
     pub async fn get_collateral_asset_data(
         &self,
@@ -207,11 +211,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Loanable Assets `Data(USER_DATA)`
+    /// Get Loanable Assets Data (`USER_DATA`)
     ///
     /// Get interest rate and borrow limit of loanable assets. The borrow limit is shown in USD value.
     ///
-    /// Weight: 400
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -241,7 +247,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/market-data/Get-Loanable-Assets-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/market-data#get-loanable-assets-data).
     ///
     pub async fn get_loanable_assets_data(
         &self,
@@ -256,11 +262,14 @@ impl RestApi {
     ///
     /// Check VIP Loan flexible interest rate history
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned
-    /// * The max interval between startTime and end Time is 180 days.
-    /// * Time based on UTC+0.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, recent 90-day data is returned.
+    /// - The maximum interval between `startTime` and `endTime` is 180 days.
+    /// - Time is based on UTC+0.
     ///
     /// # Arguments
     ///
@@ -290,7 +299,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/market-data/Get-VIP-Loan-Interest-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/market-data#get-viploan-interest-rate-history).
     ///
     pub async fn get_vip_loan_interest_rate_history(
         &self,
@@ -301,11 +310,13 @@ impl RestApi {
             .await
     }
 
-    /// Query VIP Loan Fixed Rate `Market(USER_DATA)`
+    /// Query VIP Loan Fixed Rate Market (`USER_DATA`)
     ///
     /// Query the VIP Loan fixed rate market. Returns a paginated list of fixed-rate supply orders.
     ///
-    /// Weight: 6000
+    /// Weight(IP): 6000
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -335,7 +346,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/market-data/Query-VIP-Loan-Fixed-Rate-Market).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/market-data#query-viploan-fixed-rate-market).
     ///
     pub async fn query_vip_loan_fixed_rate_market(
         &self,
@@ -346,16 +357,19 @@ impl RestApi {
             .await
     }
 
-    /// VIP Loan Borrow(TRADE)
+    /// VIP Loan Borrow (TRADE)
     ///
     /// VIP loan is available for VIP users only.
     ///
-    /// * loanAccountId refer to loan receiving account
-    /// * Only master account applications are supported
-    /// * loanAccountId and collateralAccountId under same master account
-    /// * loanTerm is mandatory if user choose stable rate
+    /// Weight(UID): 6000
     ///
-    /// Weight: 0
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - `loanAccountId` refers to the loan receiving account.
+    /// - Only master account applications are supported.
+    /// - `loanAccountId` and `collateralAccountId` must be under the same master account.
+    /// - `loanTerm` is mandatory if the user chooses a fixed rate (`isFlexibleRate = FALSE`).
     ///
     /// # Arguments
     ///
@@ -385,7 +399,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/trade/VIP-Loan-Borrow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/trade#vip-loan-borrow).
     ///
     pub async fn vip_loan_borrow(
         &self,
@@ -394,14 +408,17 @@ impl RestApi {
         self.trade_api_client.vip_loan_borrow(params).await
     }
 
-    /// VIP Loan Fixed Rate Borrow(TRADE)
+    /// VIP Loan Fixed Rate Borrow (TRADE)
     ///
     /// Submit a fixed rate borrow request by matching market supply orders.
     ///
-    /// * **Rate limit:** 2 requests per second per account.
-    /// * When multiple `supplyRequest` entries are provided, all `requestId` values must correspond to the same `borrowCoin` and `loanTerm` (validated by collateral facade).
+    /// Weight(UID): 6000
     ///
-    /// Weight: 6000
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - **Rate limit:** 2 requests per second per account.
+    /// - When multiple `supplyRequest` entries are provided, all `requestId` values must correspond to the same `borrowCoin` and `loanTerm` (validated by collateral facade).
     ///
     /// # Arguments
     ///
@@ -431,7 +448,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/trade/VIP-Loan-Fixed-Rate-Borrow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/trade#vip-loan-fixed-rate-borrow).
     ///
     pub async fn vip_loan_fixed_rate_borrow(
         &self,
@@ -442,11 +459,13 @@ impl RestApi {
             .await
     }
 
-    /// VIP Loan Renew(TRADE)
+    /// VIP Loan Renew (TRADE)
     ///
     /// VIP loan is available for VIP users only.
     ///
-    /// Weight: 6000
+    /// Weight(UID): 6000
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -476,7 +495,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/trade/VIP-Loan-Renew).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/trade#vip-loan-renew).
     ///
     pub async fn vip_loan_renew(
         &self,
@@ -485,11 +504,13 @@ impl RestApi {
         self.trade_api_client.vip_loan_renew(params).await
     }
 
-    /// VIP Loan Repay(TRADE)
+    /// VIP Loan Repay (TRADE)
     ///
     /// VIP loan is available for VIP users only.
     ///
-    /// Weight: 6000
+    /// Weight(UID): 6000
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -519,7 +540,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/trade/VIP-Loan-Repay).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/trade#vip-loan-repay).
     ///
     pub async fn vip_loan_repay(
         &self,
@@ -532,10 +553,13 @@ impl RestApi {
     ///
     /// VIP loan is available for VIP users only
     ///
-    /// * If the login account is loan account, all collateral accounts under the loan account can be queried.
-    /// * If the login account is collateral account, only the current collateral account can be queried.
+    /// Weight(IP): 6000
     ///
-    /// Weight: 6000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If the logged-in account is a borrowing account, all collateral accounts bound to that borrowing account can be queried.
+    /// - If the logged-in account is a collateral account, only collateral assets under that account can be queried.
     ///
     /// # Arguments
     ///
@@ -565,7 +589,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/user-information/Check-Locked-Value-of-VIP-Collateral-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/user-information#check-viploan-collateral-account).
     ///
     pub async fn check_vip_loan_collateral_account(
         &self,
@@ -580,10 +604,13 @@ impl RestApi {
     ///
     /// Check VIP Loan interest record
     ///
-    /// * If startTime and endTime are not sent, the recent 90-day data will be returned.
-    /// * The max interval between startTime and endTime is 90 days.
+    /// Weight(IP): 400
     ///
-    /// Weight: 400
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, recent 90-day data is returned.
+    /// - The maximum interval between `startTime` and `endTime` is 90 days.
     ///
     /// # Arguments
     ///
@@ -613,7 +640,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/user-information/Get-VIP-Loan-Accrued-Interest).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/user-information#get-viploan-accrued-interest).
     ///
     pub async fn get_vip_loan_accrued_interest(
         &self,
@@ -624,11 +651,13 @@ impl RestApi {
             .await
     }
 
-    /// Get VIP Loan Ongoing `Orders(USER_DATA)`
+    /// Get VIP Loan Ongoing Orders (`USER_DATA`)
     ///
     /// VIP loan is available for VIP users only.
     ///
-    /// Weight: 400
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -658,7 +687,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/user-information/Get-VIP-Loan-Ongoing-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/user-information#get-viploan-ongoing-orders).
     ///
     pub async fn get_vip_loan_ongoing_orders(
         &self,
@@ -669,11 +698,64 @@ impl RestApi {
             .await
     }
 
-    /// Query Application `Status(USER_DATA)`
+    /// Get VIP Loan Repayment History (`USER_DATA`)
+    ///
+    /// VIP Loans are available only to VIP users.
+    ///
+    /// Weight(IP): 400
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `startTime` and `endTime` are not sent, recent 90-day data is returned.
+    /// - The maximum interval between `startTime` and `endTime` is 180 days.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetVipLoanRepaymentHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetVipLoanRepaymentHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/user-information#get-viploan-repayment-history).
+    ///
+    pub async fn get_vip_loan_repayment_history(
+        &self,
+        params: GetVipLoanRepaymentHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetVipLoanRepaymentHistoryResponse>> {
+        self.user_information_api_client
+            .get_vip_loan_repayment_history(params)
+            .await
+    }
+
+    /// Query Application Status (`USER_DATA`)
     ///
     /// Query Application Status
     ///
-    /// Weight: 400
+    /// Weight(UID): 400
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -703,7 +785,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/vip_loan/user-information/Query-Application-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-vip-loan/api/rest-api/user-information#query-application-status).
     ///
     pub async fn query_application_status(
         &self,

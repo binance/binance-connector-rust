@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryVipLoanFixedRateMarketResponseRowsInner {
+    /// Supply request ID
     #[serde(rename = "requestId", skip_serializing_if = "Option::is_none")]
     pub request_id: Option<i64>,
+    /// Request number
     #[serde(rename = "requestNo", skip_serializing_if = "Option::is_none")]
     pub request_no: Option<i64>,
+    /// Coin
     #[serde(rename = "coin", skip_serializing_if = "Option::is_none")]
     pub coin: Option<String>,
+    /// Annual interest rate
     #[serde(rename = "interestRate", skip_serializing_if = "Option::is_none")]
     pub interest_rate: Option<String>,
+    /// Duration in days
     #[serde(rename = "duration", skip_serializing_if = "Option::is_none")]
     pub duration: Option<i64>,
+    /// Minimum borrow amount
     #[serde(rename = "minimumAmount", skip_serializing_if = "Option::is_none")]
     pub minimum_amount: Option<String>,
+    /// Maximum available borrow amount
     #[serde(rename = "availableAmount", skip_serializing_if = "Option::is_none")]
     pub available_amount: Option<String>,
+    /// Estimated interest
     #[serde(rename = "estimatedInterest", skip_serializing_if = "Option::is_none")]
     pub estimated_interest: Option<String>,
 }

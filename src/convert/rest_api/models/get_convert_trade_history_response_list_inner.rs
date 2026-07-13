@@ -1,7 +1,7 @@
 /*
- * Binance Convert REST API
+ * Convert REST API
  *
- * OpenAPI Specification for the Binance Convert REST API
+ * Request quotes and execute cryptocurrency conversions via the Convert REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,18 +21,25 @@ pub struct GetConvertTradeHistoryResponseListInner {
     pub quote_id: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Order status
     #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
     pub order_status: Option<String>,
+    /// Source asset
     #[serde(rename = "fromAsset", skip_serializing_if = "Option::is_none")]
     pub from_asset: Option<String>,
+    /// Source amount
     #[serde(rename = "fromAmount", skip_serializing_if = "Option::is_none")]
     pub from_amount: Option<String>,
+    /// Destination asset
     #[serde(rename = "toAsset", skip_serializing_if = "Option::is_none")]
     pub to_asset: Option<String>,
+    /// Destination amount
     #[serde(rename = "toAmount", skip_serializing_if = "Option::is_none")]
     pub to_amount: Option<String>,
+    /// Price ratio
     #[serde(rename = "ratio", skip_serializing_if = "Option::is_none")]
     pub ratio: Option<String>,
+    /// Inverse price ratio
     #[serde(rename = "inverseRatio", skip_serializing_if = "Option::is_none")]
     pub inverse_ratio: Option<String>,
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]

@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginProRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = SetMarginCallLevelParams::builder(dec!(5000.0)).build()?;
+    let params = SetMarginCallLevelParams::builder(dec!(1.5)).build()?;
 
     // Make the API call
     let response = rest_client

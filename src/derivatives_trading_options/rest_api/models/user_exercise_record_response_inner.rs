@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,30 +17,43 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UserExerciseRecordResponseInner {
+    /// id
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+    /// currency
     #[serde(rename = "currency", skip_serializing_if = "Option::is_none")]
     pub currency: Option<String>,
+    /// symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// exercise Price
     #[serde(rename = "exercisePrice", skip_serializing_if = "Option::is_none")]
     pub exercise_price: Option<String>,
+    /// quantity
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<String>,
+    /// amount
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// fee
     #[serde(rename = "fee", skip_serializing_if = "Option::is_none")]
     pub fee: Option<String>,
+    /// create Date
     #[serde(rename = "createDate", skip_serializing_if = "Option::is_none")]
     pub create_date: Option<i64>,
+    /// price Scale
     #[serde(rename = "priceScale", skip_serializing_if = "Option::is_none")]
     pub price_scale: Option<i64>,
+    /// quantity Scale
     #[serde(rename = "quantityScale", skip_serializing_if = "Option::is_none")]
     pub quantity_scale: Option<i64>,
+    /// option Side
     #[serde(rename = "optionSide", skip_serializing_if = "Option::is_none")]
     pub option_side: Option<String>,
+    /// position Side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// quote Asset
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
 }

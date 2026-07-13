@@ -1,7 +1,7 @@
 /*
- * Binance Copy Trading REST API
+ * Copy Trading REST API
  *
- * OpenAPI Specification for the Binance Copy Trading REST API
+ * Automate lead trading via the Copy Trading API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,12 +17,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetFuturesLeadTraderStatusResponse {
+    /// API response code. \"000000\" indicates success.
     #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
+    /// Response message.
     #[serde(rename = "message", skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
     pub data: Option<Box<models::GetFuturesLeadTraderStatusResponseData>>,
+    /// Whether request is successful
     #[serde(rename = "success", skip_serializing_if = "Option::is_none")]
     pub success: Option<bool>,
 }

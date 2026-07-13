@@ -4,7 +4,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::wallet::{WalletRestApi, rest_api::DailyAccountSnapshotParams};
+use binance_sdk::wallet::{
+    WalletRestApi,
+    rest_api::{DailyAccountSnapshotParams, DailyAccountSnapshotTypeEnum},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -25,7 +28,7 @@ async fn main() -> Result<()> {
     let rest_client = WalletRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = DailyAccountSnapshotParams::builder("r#type_example".to_string()).build()?;
+    let params = DailyAccountSnapshotParams::builder(DailyAccountSnapshotTypeEnum::Spot).build()?;
 
     // Make the API call
     let response = rest_client

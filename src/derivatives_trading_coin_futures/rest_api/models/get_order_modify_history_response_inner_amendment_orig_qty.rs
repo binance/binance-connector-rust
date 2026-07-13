@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,15 +15,19 @@
 use crate::derivatives_trading_coin_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `GetOrderModifyHistoryResponseInnerAmendmentOrigQty` : Original order quantity
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetOrderModifyHistoryResponseInnerAmendmentOrigQty {
+    /// Before value.
     #[serde(rename = "before", skip_serializing_if = "Option::is_none")]
     pub before: Option<String>,
+    /// After value.
     #[serde(rename = "after", skip_serializing_if = "Option::is_none")]
     pub after: Option<String>,
 }
 
 impl GetOrderModifyHistoryResponseInnerAmendmentOrigQty {
+    /// Original order quantity
     #[must_use]
     pub fn new() -> GetOrderModifyHistoryResponseInnerAmendmentOrigQty {
         GetOrderModifyHistoryResponseInnerAmendmentOrigQty {

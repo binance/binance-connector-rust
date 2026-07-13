@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryMarginAccountsOcoResponse {
+    /// Order List ID.
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
+    /// Contingency Type.
     #[serde(rename = "contingencyType", skip_serializing_if = "Option::is_none")]
     pub contingency_type: Option<String>,
+    /// List Status Type.
     #[serde(rename = "listStatusType", skip_serializing_if = "Option::is_none")]
     pub list_status_type: Option<String>,
+    /// List Order Status.
     #[serde(rename = "listOrderStatus", skip_serializing_if = "Option::is_none")]
     pub list_order_status: Option<String>,
+    /// List Client Order ID.
     #[serde(rename = "listClientOrderId", skip_serializing_if = "Option::is_none")]
     pub list_client_order_id: Option<String>,
+    /// Transaction Time.
     #[serde(rename = "transactionTime", skip_serializing_if = "Option::is_none")]
     pub transaction_time: Option<i64>,
+    /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Orders.
     #[serde(rename = "orders", skip_serializing_if = "Option::is_none")]
     pub orders: Option<Vec<models::QueryMarginAccountsOcoResponseOrdersInner>>,
 }

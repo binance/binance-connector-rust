@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = ConvertRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = CancelLimitOrderParams::builder(1).build()?;
+    let params = CancelLimitOrderParams::builder(1603680255057330400).build()?;
 
     // Make the API call
     let response = rest_client

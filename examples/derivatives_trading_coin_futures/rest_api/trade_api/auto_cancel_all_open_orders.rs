@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        AutoCancelAllOpenOrdersParams::builder("symbol_example".to_string(), 789).build()?;
+        AutoCancelAllOpenOrdersParams::builder("BTCUSD_200925".to_string(), 1000).build()?;
 
     // Make the API call
     let response = rest_client

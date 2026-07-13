@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -132,10 +132,12 @@ impl RestApi {
     ///
     /// Query account funding flows.
     ///
+    /// Weight(IP): 1
     ///
-    /// * Only support querying data in the past 3 months
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Only support querying data in the past 3 months
     ///
     /// # Arguments
     ///
@@ -165,7 +167,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/account/Account-Funding-Flow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/account#account-funding-flow).
     ///
     pub async fn account_funding_flow(
         &self,
@@ -178,7 +180,9 @@ impl RestApi {
     ///
     /// Get current account information.
     ///
-    /// Weight: 3
+    /// Weight(IP): 3
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -208,7 +212,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/account/Option-Margin-Account-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/account#option-margin-account-information).
     ///
     pub async fn option_margin_account_information(
         &self,
@@ -223,7 +227,7 @@ impl RestApi {
     ///
     /// Test connectivity to the Rest API and get the current server time.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -253,7 +257,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Check-Server-Time).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#check-server-time).
     ///
     pub async fn check_server_time(
         &self,
@@ -265,7 +269,7 @@ impl RestApi {
     ///
     /// Current exchange trading rules and symbol information
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -295,7 +299,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Exchange-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#exchange-information).
     ///
     pub async fn exchange_information(
         &self,
@@ -306,10 +310,11 @@ impl RestApi {
     /// Historical Exercise Records
     ///
     /// Get historical exercise records.
+    ///
     /// * `REALISTIC_VALUE_STRICKEN` -> Exercised
     /// * `EXTRINSIC_VALUE_EXPIRED` -> Expired OTM
     ///
-    /// Weight: 3
+    /// Weight(IP): 3
     ///
     /// # Arguments
     ///
@@ -339,7 +344,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Historical-Exercise-Records).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#historical-exercise-records).
     ///
     pub async fn historical_exercise_records(
         &self,
@@ -354,7 +359,7 @@ impl RestApi {
     ///
     /// Get spot index price for option underlying.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -384,7 +389,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Symbol-Price-Ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#index-price).
     ///
     pub async fn index_price(
         &self,
@@ -395,12 +400,12 @@ impl RestApi {
 
     /// Kline/Candlestick Data
     ///
-    /// Kline/candlestick bars for an option symbol.
-    /// Klines are uniquely identified by their open time.
+    /// Kline/candlestick bars for an option symbol. Klines are uniquely identified by their open time.
     ///
-    /// * If startTime and endTime are not sent, the most recent klines are returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - If startTime and endTime are not sent, the most recent klines are returned.
     ///
     /// # Arguments
     ///
@@ -409,7 +414,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<Vec<models::KlineCandlestickDataResponseItemInner>>>`] on success.
+    /// [`RestApiResponse<Vec<Vec<models::KlineCandlestickDataItemInner>>>`] on success.
     ///
     /// # Errors
     ///
@@ -430,13 +435,12 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Kline-Candlestick-Data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#kline-candlestick-data).
     ///
     pub async fn kline_candlestick_data(
         &self,
         params: KlineCandlestickDataParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::KlineCandlestickDataResponseItemInner>>>>
-    {
+    ) -> anyhow::Result<RestApiResponse<Vec<Vec<models::KlineCandlestickDataItemInner>>>> {
         self.market_data_api_client
             .kline_candlestick_data(params)
             .await
@@ -446,7 +450,7 @@ impl RestApi {
     ///
     /// Get open interest for specific underlying asset on specific expiration date.
     ///
-    /// Weight: 0
+    /// Weight(IP): 0
     ///
     /// # Arguments
     ///
@@ -476,7 +480,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Open-Interest).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#open-interest).
     ///
     pub async fn open_interest(
         &self,
@@ -489,7 +493,7 @@ impl RestApi {
     ///
     /// Option mark price and greek info.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
     ///
     /// # Arguments
     ///
@@ -519,7 +523,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Option-Mark-Price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#option-mark-price).
     ///
     pub async fn option_mark_price(
         &self,
@@ -567,7 +571,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Order-Book).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#order-book).
     ///
     pub async fn order_book(
         &self,
@@ -580,7 +584,7 @@ impl RestApi {
     ///
     /// Get recent block trades
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
     ///
     /// # Arguments
     ///
@@ -610,7 +614,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Recent-Block-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#recent-block-trades-list).
     ///
     pub async fn recent_block_trades_list(
         &self,
@@ -625,7 +629,7 @@ impl RestApi {
     ///
     /// Get recent market trades
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
     ///
     /// # Arguments
     ///
@@ -655,7 +659,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Recent-Trades-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#recent-trades-list).
     ///
     pub async fn recent_trades_list(
         &self,
@@ -668,7 +672,7 @@ impl RestApi {
     ///
     /// Test connectivity to the Rest API.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -698,7 +702,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/Test-Connectivity).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#test-connectivity).
     ///
     pub async fn test_connectivity(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.market_data_api_client.test_connectivity().await
@@ -708,7 +712,7 @@ impl RestApi {
     ///
     /// 24 hour rolling window price change statistics.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
     ///
     /// # Arguments
     ///
@@ -738,7 +742,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-data/24hr-Ticker-Price-Change-Statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-data#ticker24hr-price-change-statistics).
     ///
     pub async fn ticker24hr_price_change_statistics(
         &self,
@@ -754,7 +758,9 @@ impl RestApi {
     ///
     /// Accept a block trade order
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -784,7 +790,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-block-trade/Accept-Block-Trade-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#accept-block-trade-order).
     ///
     pub async fn accept_block_trade_order(
         &self,
@@ -799,7 +805,9 @@ impl RestApi {
     ///
     /// Gets block trades for a specific account.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -829,7 +837,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-block-trade/Account-Block-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#account-block-trade-list).
     ///
     pub async fn account_block_trade_list(
         &self,
@@ -844,7 +852,9 @@ impl RestApi {
     ///
     /// Cancel a block trade order.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -874,7 +884,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-block-trade/Cancel-Block-Trade-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#cancel-block-trade-order).
     ///
     pub async fn cancel_block_trade_order(
         &self,
@@ -889,7 +899,9 @@ impl RestApi {
     ///
     /// Extends a block trade expire time by 30 mins from the current time.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -919,7 +931,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-block-trade/Extend-Block-Trade-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#extend-block-trade-order).
     ///
     pub async fn extend_block_trade_order(
         &self,
@@ -934,7 +946,9 @@ impl RestApi {
     ///
     /// Send in a new block trade order.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -964,7 +978,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-block-trade/New-Block-Trade-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#new-block-trade-order).
     ///
     pub async fn new_block_trade_order(
         &self,
@@ -979,7 +993,9 @@ impl RestApi {
     ///
     /// Query block trade details; returns block trade details from counterparty's perspective.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1009,7 +1025,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-block-trade/Query-Block-Trade-Detail).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#query-block-trade-details).
     ///
     pub async fn query_block_trade_details(
         &self,
@@ -1024,7 +1040,9 @@ impl RestApi {
     ///
     /// Check block trade order status.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1054,7 +1072,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-block-trade/Query-Block-Trade-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-block-trade#query-block-trade-order).
     ///
     pub async fn query_block_trade_order(
         &self,
@@ -1069,9 +1087,12 @@ impl RestApi {
     ///
     /// This endpoint resets the time from which the countdown will begin to the time this messaged is received.  It should be called repeatedly as heartbeats.  Multiple heartbeats can be updated at once by specifying the underlying symbols as a list (ex. BTCUSDT,ETHUSDT) in the underlyings parameter.
     ///
-    /// * The response will only include underlying symbols where the heartbeat has been successfully updated.
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - The response will only include underlying symbols where the heartbeat has been successfully updated.
     ///
     /// # Arguments
     ///
@@ -1101,7 +1122,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-endpoints/Auto-Cancel-All-Open-Orders-Heartbeat).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-endpoints#auto-cancel-all-open-orders).
     ///
     pub async fn auto_cancel_all_open_orders(
         &self,
@@ -1116,9 +1137,12 @@ impl RestApi {
     ///
     /// This endpoint returns the auto-cancel parameters for each underlying symbol. Note only active auto-cancel parameters will be returned, if countdownTime is set to 0 (ie. countdownTime has been turned off), the underlying symbol and corresponding countdownTime parameter will not be returned in the response.
     ///
-    /// * countdownTime = 0 means the function is disabled.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - countdownTime = 0 means the function is disabled.
     ///
     /// # Arguments
     ///
@@ -1148,7 +1172,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-endpoints/Get-Auto-Cancel-All-Open-Orders-Config).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-endpoints#get-auto-cancel-all-open-orders).
     ///
     pub async fn get_auto_cancel_all_open_orders(
         &self,
@@ -1163,7 +1187,9 @@ impl RestApi {
     ///
     /// Get config for MMP.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1193,7 +1219,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-endpoints/Get-Market-Maker-Protection-Config).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-endpoints#get-market-maker-protection-config).
     ///
     pub async fn get_market_maker_protection_config(
         &self,
@@ -1208,7 +1234,9 @@ impl RestApi {
     ///
     /// Reset MMP, start MMP order again.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1238,7 +1266,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-endpoints/Reset-Market-Maker-Protection-Config).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-endpoints#reset-market-maker-protection-config).
     ///
     pub async fn reset_market_maker_protection_config(
         &self,
@@ -1253,13 +1281,14 @@ impl RestApi {
     ///
     /// This endpoint sets the parameters of the auto-cancel feature which cancels all open orders (both market maker protection and non market maker protection order types) of the underlying symbol at the end of the specified countdown time period if no heartbeat message is sent.  After the countdown time period, all open orders will be cancelled and new orders will be rejected with error code -2010 until either a heartbeat message is sent or the auto-cancel feature is turned off by setting countdownTime to 0.
     ///
+    /// Weight(IP): 1
     ///
-    /// * This rest endpoint sets up the parameters to cancel your open orders in case of an outage or disconnection.
-    /// * Example usage:
-    /// Call this endpoint with a countdownTime value of 10000 (10 seconds) to turn on the auto-cancel feature. If the corresponding countdownCancelAllHeartBeat endpoint is not called within 10 seconds with the specified underlying symbol, all open orders of the specified symbol will be automatically canceled. If this endpoint is called with an countdownTime of 0, the countdown timer will be stopped.
-    /// * The system will check all countdowns approximately every 100 milliseconds, **please note that sufficient redundancy should be considered when using this function**. We do not recommend setting the countdown time to be too precise or too small.
+    /// Security Type: TRADE
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - This rest endpoint sets up the parameters to cancel your open orders in case of an outage or disconnection.
+    /// - Example usage: > Call this endpoint with a countdownTime value of 10000 (10 seconds) to turn on the auto-cancel feature. If the corresponding countdownCancelAllHeartBeat endpoint is not called within 10 seconds with the specified underlying symbol, all open orders of the specified symbol will be automatically canceled. If this endpoint is called with an countdownTime of 0, the countdown timer will be stopped.
+    /// - The system will check all countdowns approximately every 100 milliseconds, **please note that sufficient redundancy should be considered when using this function**. We do not recommend setting the countdown time to be too precise or too small.
     ///
     /// # Arguments
     ///
@@ -1289,7 +1318,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-endpoints/Set-Auto-Cancel-All-Open-Orders-Config).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-endpoints#set-auto-cancel-all-open-orders).
     ///
     pub async fn set_auto_cancel_all_open_orders(
         &self,
@@ -1302,10 +1331,11 @@ impl RestApi {
 
     /// Set Market Maker Protection Config (TRADE)
     ///
-    /// Set config for MMP.
-    /// Market Maker Protection(MMP) is a set of protection mechanism for option market maker, this mechanism is able to prevent mass trading in short period time. Once market maker's account branches the threshold, the Market Maker Protection will be triggered. When Market Maker Protection triggers, all the current MMP orders will be canceled, new MMP orders will be rejected. Market maker can use this time to reevaluate market and modify order price.
+    /// Set config for MMP. Market Maker Protection(MMP) is a set of protection mechanism for option market maker, this mechanism is able to prevent mass trading in short period time. Once market maker's account branches the threshold, the Market Maker Protection will be triggered. When Market Maker Protection triggers, all the current MMP orders will be canceled, new MMP orders will be rejected. Market maker can use this time to reevaluate market and modify order price.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1335,7 +1365,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/market-maker-endpoints/Set-Market-Maker-Protection-Config).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/market-maker-endpoints#set-market-maker-protection-config).
     ///
     pub async fn set_market_maker_protection_config(
         &self,
@@ -1350,9 +1380,9 @@ impl RestApi {
     ///
     /// Get trades for a specific account and symbol.
     ///
-    /// * Only support querying trades in the past 3 months
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1382,7 +1412,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Account-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#account-trade-list).
     ///
     pub async fn account_trade_list(
         &self,
@@ -1395,7 +1425,9 @@ impl RestApi {
     ///
     /// Cancel all active orders on specified underlying.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1425,7 +1457,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Cancel-All-Option-Orders-By-Underlying).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-all-option-orders-by-underlying).
     ///
     pub async fn cancel_all_option_orders_by_underlying(
         &self,
@@ -1440,7 +1472,9 @@ impl RestApi {
     ///
     /// Cancel all active order on a symbol.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1470,7 +1504,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Cancel-all-Option-orders-on-specific-symbol).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-all-option-orders-on-specific-symbol).
     ///
     pub async fn cancel_all_option_orders_on_specific_symbol(
         &self,
@@ -1486,9 +1520,12 @@ impl RestApi {
     ///
     /// Cancel multiple orders.
     ///
-    /// * At least one instance of `orderId` and `clientOrderId` must be sent.
+    /// Weight(IP): 5
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - At least one instance of `orderId` and `clientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -1518,7 +1555,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Cancel-Multiple-Option-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-multiple-option-orders).
     ///
     pub async fn cancel_multiple_option_orders(
         &self,
@@ -1533,9 +1570,12 @@ impl RestApi {
     ///
     /// Cancel an active order.
     ///
-    /// * At least one instance of `orderId` and `clientOrderId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - At least one instance of `orderId` and `clientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -1565,7 +1605,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Cancel-Option-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#cancel-option-order).
     ///
     pub async fn cancel_option_order(
         &self,
@@ -1578,7 +1618,14 @@ impl RestApi {
     ///
     /// Send a new order.
     ///
-    /// Weight: 0
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// Some parameters are mandatory depending on the order type as follows:
+    ///
+    /// Type | Mandatory parameters
+    /// ------------ | ------------
+    /// LIMIT | timeInForce, quantity, price
     ///
     /// # Arguments
     ///
@@ -1608,7 +1655,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/New-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#new-order).
     ///
     pub async fn new_order(
         &self,
@@ -1621,7 +1668,9 @@ impl RestApi {
     ///
     /// Get current position information.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1651,7 +1700,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Option-Position-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#option-position-information).
     ///
     pub async fn option_position_information(
         &self,
@@ -1662,14 +1711,23 @@ impl RestApi {
             .await
     }
 
-    /// Place Multiple Orders(TRADE)
+    /// Place Multiple Orders (TRADE)
     ///
     /// Send multiple option orders.
     ///
-    /// * Parameter rules are same with New Order
-    /// * Batch orders are processed concurrently, and the order of matching is not guaranteed.
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// Some parameters are mandatory depending on the order type as follows:
+    ///
+    /// Type | Mandatory parameters
+    /// ------------ | ------------
+    /// LIMIT | timeInForce, quantity, price
+    ///
+    /// - Parameter rules are same with New Order
+    /// - Batch orders are processed concurrently, and the order of matching is not guaranteed.
     ///
     /// # Arguments
     ///
@@ -1699,7 +1757,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Place-Multiple-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#place-multiple-orders).
     ///
     pub async fn place_multiple_orders(
         &self,
@@ -1713,6 +1771,8 @@ impl RestApi {
     /// Query current all open orders, status: ACCEPTED `PARTIALLY_FILLED`
     ///
     /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1742,7 +1802,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Query-Current-Open-Option-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#query-current-open-option-orders).
     ///
     pub async fn query_current_open_option_orders(
         &self,
@@ -1758,7 +1818,9 @@ impl RestApi {
     ///
     /// Query all finished orders within 5 days, finished status: CANCELLED FILLED REJECTED.
     ///
-    /// Weight: 3
+    /// Weight(IP): 3
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1788,7 +1850,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Query-Option-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#query-option-order-history).
     ///
     pub async fn query_option_order_history(
         &self,
@@ -1808,10 +1870,12 @@ impl RestApi {
     /// * order has NO filled trade, **AND**
     /// * created time + 3 days < current time
     ///
+    /// Weight(IP): 1
     ///
-    /// * Either `orderId` or `clientOrderId ` must be sent.
+    /// Security Type: TRADE
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Either `orderId` or `clientOrderId ` must be sent.
     ///
     /// # Arguments
     ///
@@ -1841,7 +1905,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/Query-Single-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#query-single-order).
     ///
     pub async fn query_single_order(
         &self,
@@ -1850,11 +1914,58 @@ impl RestApi {
         self.trade_api_client.query_single_order(params).await
     }
 
+    /// `TradFi` Options Contract (`USER_DATA`)
+    ///
+    /// Sign `TradFi` Options agreement contract
+    ///
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`TradfiOptionsContractParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::TradfiOptionsContractResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#tradfi-options-contract).
+    ///
+    pub async fn tradfi_options_contract(
+        &self,
+        params: TradfiOptionsContractParams,
+    ) -> anyhow::Result<RestApiResponse<models::TradfiOptionsContractResponse>> {
+        self.trade_api_client.tradfi_options_contract(params).await
+    }
+
     /// User Commission (`USER_DATA`)
     ///
     /// Get account commission.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1884,7 +1995,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/User-Commission).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#user-commission).
     ///
     pub async fn user_commission(
         &self,
@@ -1897,7 +2008,9 @@ impl RestApi {
     ///
     /// Get account exercise records.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1927,7 +2040,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/trade/User-Exercise-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/trade#user-exercise-record).
     ///
     pub async fn user_exercise_record(
         &self,
@@ -1940,7 +2053,9 @@ impl RestApi {
     ///
     /// Close out a user data stream.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -1970,7 +2085,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/user-data-streams/Close-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/user-data-streams#close-user-data-stream).
     ///
     pub async fn close_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.user_data_streams_api_client
@@ -1980,9 +2095,13 @@ impl RestApi {
 
     /// Keepalive User Data Stream (`USER_STREAM`)
     ///
-    /// Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes. It's recommended to send a ping about every 60 minutes.
+    /// Keepalive a user data stream to prevent a time out. User data streams
+    /// will close after 60 minutes. It's recommended to send a ping about every
+    /// 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -2012,7 +2131,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/user-data-streams/Keepalive-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/user-data-streams#keepalive-user-data-stream).
     ///
     pub async fn keepalive_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.user_data_streams_api_client
@@ -2024,7 +2143,9 @@ impl RestApi {
     ///
     /// Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent. If the account has an active `listenKey`, that `listenKey` will be returned and its validity will be extended for 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -2054,7 +2175,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/user-data-streams/Start-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/user-data-streams#start-user-data-stream).
     ///
     pub async fn start_user_data_stream(
         &self,

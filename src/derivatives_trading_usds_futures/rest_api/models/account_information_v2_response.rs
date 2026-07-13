@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,60 +17,81 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationV2Response {
+    /// Account commission tier.
     #[serde(rename = "feeTier", skip_serializing_if = "Option::is_none")]
     pub fee_tier: Option<i64>,
+    /// Whether fee discount is enabled.
     #[serde(rename = "feeBurn", skip_serializing_if = "Option::is_none")]
     pub fee_burn: Option<bool>,
+    /// Whether trading is enabled.
+    #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]
+    pub can_trade: Option<bool>,
+    /// Whether transfer-in is enabled.
     #[serde(rename = "canDeposit", skip_serializing_if = "Option::is_none")]
     pub can_deposit: Option<bool>,
+    /// Whether transfer-out is enabled.
     #[serde(rename = "canWithdraw", skip_serializing_if = "Option::is_none")]
     pub can_withdraw: Option<bool>,
+    /// Reserved field, ignore.
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// Whether multi-assets mode is enabled.
     #[serde(rename = "multiAssetsMargin", skip_serializing_if = "Option::is_none")]
     pub multi_assets_margin: Option<bool>,
+    /// Trade group identifier.
     #[serde(rename = "tradeGroupId", skip_serializing_if = "Option::is_none")]
     pub trade_group_id: Option<i64>,
+    /// Total initial margin requirement.
     #[serde(rename = "totalInitialMargin", skip_serializing_if = "Option::is_none")]
     pub total_initial_margin: Option<String>,
+    /// Total maintenance margin requirement.
     #[serde(rename = "totalMaintMargin", skip_serializing_if = "Option::is_none")]
     pub total_maint_margin: Option<String>,
+    /// Total wallet balance.
     #[serde(rename = "totalWalletBalance", skip_serializing_if = "Option::is_none")]
     pub total_wallet_balance: Option<String>,
+    /// Total unrealized profit.
     #[serde(
         rename = "totalUnrealizedProfit",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_unrealized_profit: Option<String>,
+    /// Total margin balance.
     #[serde(rename = "totalMarginBalance", skip_serializing_if = "Option::is_none")]
     pub total_margin_balance: Option<String>,
+    /// Initial margin required for positions.
     #[serde(
         rename = "totalPositionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_position_initial_margin: Option<String>,
+    /// Initial margin required for open orders.
     #[serde(
         rename = "totalOpenOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_open_order_initial_margin: Option<String>,
+    /// Cross wallet balance.
     #[serde(
         rename = "totalCrossWalletBalance",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_cross_wallet_balance: Option<String>,
+    /// Unrealized `PnL` for cross positions.
     #[serde(rename = "totalCrossUnPnl", skip_serializing_if = "Option::is_none")]
     pub total_cross_un_pnl: Option<String>,
+    /// Available balance.
     #[serde(rename = "availableBalance", skip_serializing_if = "Option::is_none")]
     pub available_balance: Option<String>,
+    /// Maximum transferable/withdrawable amount.
     #[serde(rename = "maxWithdrawAmount", skip_serializing_if = "Option::is_none")]
     pub max_withdraw_amount: Option<String>,
+    /// Asset-level account details.
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
     pub assets: Option<Vec<models::AccountInformationV2ResponseAssetsInner>>,
+    /// Position details for symbols. One-way mode returns BOTH; hedge mode returns LONG/SHORT.
     #[serde(rename = "positions", skip_serializing_if = "Option::is_none")]
     pub positions: Option<Vec<models::AccountInformationV2ResponsePositionsInner>>,
-    #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]
-    pub can_trade: Option<bool>,
 }
 
 impl AccountInformationV2Response {
@@ -79,6 +100,7 @@ impl AccountInformationV2Response {
         AccountInformationV2Response {
             fee_tier: None,
             fee_burn: None,
+            can_trade: None,
             can_deposit: None,
             can_withdraw: None,
             update_time: None,
@@ -97,7 +119,6 @@ impl AccountInformationV2Response {
             max_withdraw_amount: None,
             assets: None,
             positions: None,
-            can_trade: None,
         }
     }
 }

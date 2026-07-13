@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -61,17 +56,144 @@ impl GeneralApiClient {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ExchangeInfoPermissionsEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+    #[serde(rename = "LEVERAGED")]
+    Leveraged,
+    #[serde(rename = "TRD_GRP_002")]
+    TrdGrp002,
+    #[serde(rename = "TRD_GRP_003")]
+    TrdGrp003,
+    #[serde(rename = "TRD_GRP_004")]
+    TrdGrp004,
+    #[serde(rename = "TRD_GRP_005")]
+    TrdGrp005,
+    #[serde(rename = "TRD_GRP_006")]
+    TrdGrp006,
+    #[serde(rename = "TRD_GRP_007")]
+    TrdGrp007,
+    #[serde(rename = "TRD_GRP_008")]
+    TrdGrp008,
+    #[serde(rename = "TRD_GRP_009")]
+    TrdGrp009,
+    #[serde(rename = "TRD_GRP_010")]
+    TrdGrp010,
+    #[serde(rename = "TRD_GRP_011")]
+    TrdGrp011,
+    #[serde(rename = "TRD_GRP_012")]
+    TrdGrp012,
+    #[serde(rename = "TRD_GRP_013")]
+    TrdGrp013,
+    #[serde(rename = "TRD_GRP_014")]
+    TrdGrp014,
+    #[serde(rename = "TRD_GRP_015")]
+    TrdGrp015,
+    #[serde(rename = "TRD_GRP_016")]
+    TrdGrp016,
+    #[serde(rename = "TRD_GRP_017")]
+    TrdGrp017,
+    #[serde(rename = "TRD_GRP_018")]
+    TrdGrp018,
+    #[serde(rename = "TRD_GRP_019")]
+    TrdGrp019,
+    #[serde(rename = "TRD_GRP_020")]
+    TrdGrp020,
+    #[serde(rename = "TRD_GRP_021")]
+    TrdGrp021,
+    #[serde(rename = "TRD_GRP_022")]
+    TrdGrp022,
+    #[serde(rename = "TRD_GRP_023")]
+    TrdGrp023,
+    #[serde(rename = "TRD_GRP_024")]
+    TrdGrp024,
+    #[serde(rename = "TRD_GRP_025")]
+    TrdGrp025,
+}
+
+impl ExchangeInfoPermissionsEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+            Self::Leveraged => "LEVERAGED",
+            Self::TrdGrp002 => "TRD_GRP_002",
+            Self::TrdGrp003 => "TRD_GRP_003",
+            Self::TrdGrp004 => "TRD_GRP_004",
+            Self::TrdGrp005 => "TRD_GRP_005",
+            Self::TrdGrp006 => "TRD_GRP_006",
+            Self::TrdGrp007 => "TRD_GRP_007",
+            Self::TrdGrp008 => "TRD_GRP_008",
+            Self::TrdGrp009 => "TRD_GRP_009",
+            Self::TrdGrp010 => "TRD_GRP_010",
+            Self::TrdGrp011 => "TRD_GRP_011",
+            Self::TrdGrp012 => "TRD_GRP_012",
+            Self::TrdGrp013 => "TRD_GRP_013",
+            Self::TrdGrp014 => "TRD_GRP_014",
+            Self::TrdGrp015 => "TRD_GRP_015",
+            Self::TrdGrp016 => "TRD_GRP_016",
+            Self::TrdGrp017 => "TRD_GRP_017",
+            Self::TrdGrp018 => "TRD_GRP_018",
+            Self::TrdGrp019 => "TRD_GRP_019",
+            Self::TrdGrp020 => "TRD_GRP_020",
+            Self::TrdGrp021 => "TRD_GRP_021",
+            Self::TrdGrp022 => "TRD_GRP_022",
+            Self::TrdGrp023 => "TRD_GRP_023",
+            Self::TrdGrp024 => "TRD_GRP_024",
+            Self::TrdGrp025 => "TRD_GRP_025",
+        }
+    }
+}
+
+impl std::str::FromStr for ExchangeInfoPermissionsEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            "LEVERAGED" => Ok(Self::Leveraged),
+            "TRD_GRP_002" => Ok(Self::TrdGrp002),
+            "TRD_GRP_003" => Ok(Self::TrdGrp003),
+            "TRD_GRP_004" => Ok(Self::TrdGrp004),
+            "TRD_GRP_005" => Ok(Self::TrdGrp005),
+            "TRD_GRP_006" => Ok(Self::TrdGrp006),
+            "TRD_GRP_007" => Ok(Self::TrdGrp007),
+            "TRD_GRP_008" => Ok(Self::TrdGrp008),
+            "TRD_GRP_009" => Ok(Self::TrdGrp009),
+            "TRD_GRP_010" => Ok(Self::TrdGrp010),
+            "TRD_GRP_011" => Ok(Self::TrdGrp011),
+            "TRD_GRP_012" => Ok(Self::TrdGrp012),
+            "TRD_GRP_013" => Ok(Self::TrdGrp013),
+            "TRD_GRP_014" => Ok(Self::TrdGrp014),
+            "TRD_GRP_015" => Ok(Self::TrdGrp015),
+            "TRD_GRP_016" => Ok(Self::TrdGrp016),
+            "TRD_GRP_017" => Ok(Self::TrdGrp017),
+            "TRD_GRP_018" => Ok(Self::TrdGrp018),
+            "TRD_GRP_019" => Ok(Self::TrdGrp019),
+            "TRD_GRP_020" => Ok(Self::TrdGrp020),
+            "TRD_GRP_021" => Ok(Self::TrdGrp021),
+            "TRD_GRP_022" => Ok(Self::TrdGrp022),
+            "TRD_GRP_023" => Ok(Self::TrdGrp023),
+            "TRD_GRP_024" => Ok(Self::TrdGrp024),
+            "TRD_GRP_025" => Ok(Self::TrdGrp025),
+            other => Err(format!("invalid ExchangeInfoPermissionsEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ExchangeInfoSymbolStatusEnum {
     #[serde(rename = "TRADING")]
     Trading,
-    #[serde(rename = "END_OF_DAY")]
-    EndOfDay,
     #[serde(rename = "HALT")]
     Halt,
     #[serde(rename = "BREAK")]
     Break,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl ExchangeInfoSymbolStatusEnum {
@@ -79,10 +201,8 @@ impl ExchangeInfoSymbolStatusEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Trading => "TRADING",
-            Self::EndOfDay => "END_OF_DAY",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -93,10 +213,8 @@ impl std::str::FromStr for ExchangeInfoSymbolStatusEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "TRADING" => Ok(Self::Trading),
-            "END_OF_DAY" => Ok(Self::EndOfDay),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid ExchangeInfoSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -107,14 +225,10 @@ impl std::str::FromStr for ExchangeInfoSymbolStatusEnum {
 pub enum ExecutionRulesSymbolStatusEnum {
     #[serde(rename = "TRADING")]
     Trading,
-    #[serde(rename = "END_OF_DAY")]
-    EndOfDay,
     #[serde(rename = "HALT")]
     Halt,
     #[serde(rename = "BREAK")]
     Break,
-    #[serde(rename = "NON_REPRESENTABLE")]
-    NonRepresentable,
 }
 
 impl ExecutionRulesSymbolStatusEnum {
@@ -122,10 +236,8 @@ impl ExecutionRulesSymbolStatusEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Trading => "TRADING",
-            Self::EndOfDay => "END_OF_DAY",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
-            Self::NonRepresentable => "NON_REPRESENTABLE",
         }
     }
 }
@@ -136,10 +248,8 @@ impl std::str::FromStr for ExecutionRulesSymbolStatusEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "TRADING" => Ok(Self::Trading),
-            "END_OF_DAY" => Ok(Self::EndOfDay),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
-            "NON_REPRESENTABLE" => Ok(Self::NonRepresentable),
             other => Err(format!("invalid ExecutionRulesSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -149,34 +259,42 @@ impl std::str::FromStr for ExecutionRulesSymbolStatusEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`exchange_info`](#method.exchange_info).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ExchangeInfoParams {
-    /// Symbol to query
+    /// Example: curl -X GET "<https://api.binance.com/api/v3/exchangeInfo?symbol=BNBBTC>"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// List of symbols to query
+    /// Examples: curl -X GET "<https://api.binance.com/api/v3/exchangeInfo?symbols=%5B%22BNBBTC%22,%22BTCUSDT%22%5D>" or curl -g -X GET '<https://api.binance.com/api/v3/exchangeInfo?symbols>=["BTCUSDT","BNBBTC"]'
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbols", default)]
     pub symbols: Option<Vec<String>>,
-    /// List of permissions to query
+    /// Examples: curl -X GET "<https://api.binance.com/api/v3/exchangeInfo?permissions=SPOT>"
+    ///
+    /// curl -X GET "<https://api.binance.com/api/v3/exchangeInfo?permissions=%5B%22MARGIN%22%2C%22LEVERAGED%22%5D>"
+    /// or
+    /// curl -g -X GET '<https://api.binance.com/api/v3/exchangeInfo?permissions>=["MARGIN","LEVERAGED"]'
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub permissions: Option<Vec<String>>,
-    /// Controls whether the content of the `permissionSets` field is populated or not. Defaults to `true`
+    #[serde(rename = "permissions", default)]
+    pub permissions: Option<ExchangeInfoPermissionsEnum>,
+    /// Controls whether the content of the `permissionSets` field is populated or not.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "showPermissionSets", default)]
     pub show_permission_sets: Option<bool>,
-    ///
-    /// The `symbol_status` parameter.
+    /// Filters for symbols that have this `tradingStatus`. Cannot be used in combination with `symbols` or `symbol`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbolStatus", default)]
     pub symbol_status: Option<ExchangeInfoSymbolStatusEnum>,
 }
 
@@ -192,24 +310,26 @@ impl ExchangeInfoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`execution_rules`](#method.execution_rules).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ExecutionRulesParams {
-    /// Symbol to query
+    /// Query for specified symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// List of symbols to query
+    /// Query for multiple symbols.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbols", default)]
     pub symbols: Option<Vec<String>>,
-    ///
-    /// The `symbol_status` parameter.
+    /// Query for all symbols with the specified status.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbolStatus", default)]
     pub symbol_status: Option<ExecutionRulesSymbolStatusEnum>,
 }
 
@@ -401,7 +521,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}],"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000}],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[{"filterType":"PRICE_FILTER","priceExponent":8,"minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"}],"permissions":["undefined"],"permissionSets":[["SPOT"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}],"sors":[{"baseAsset":"BTC","symbols":["BTCUSDT"]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ExchangeInfoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ExchangeInfoResponse");
@@ -428,7 +548,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ExecutionRulesResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ExecutionRulesResponse");
@@ -473,7 +593,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"serverTime":1499827319559}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"serverTime":1499827319559}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TimeResponse = serde_json::from_value(resp_json.clone())
                 .expect("should parse into models::TimeResponse");
 
@@ -495,7 +616,7 @@ mod tests {
 
             let params = ExchangeInfoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}],"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000}],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[{"filterType":"PRICE_FILTER","priceExponent":8,"minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"}],"permissions":["undefined"],"permissionSets":[["SPOT"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}],"sors":[{"baseAsset":"BTC","symbols":["BTCUSDT"]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ExchangeInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExchangeInfoResponse");
 
             let resp = client.exchange_info(params).await.expect("Expected a response");
@@ -510,9 +631,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockGeneralApiClient { force_error: false };
 
-            let params = ExchangeInfoParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).permissions(["null".to_string(),].to_vec()).show_permission_sets(true).symbol_status(ExchangeInfoSymbolStatusEnum::Trading).build().unwrap();
+            let params = ExchangeInfoParams::builder().symbol("ETHBTC".to_string()).symbols(["BTCUSDT".to_string(),].to_vec()).permissions(ExchangeInfoPermissionsEnum::Spot).show_permission_sets(false).symbol_status(ExchangeInfoSymbolStatusEnum::Trading).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"RAW_REQUESTS","interval":"MINUTE","intervalNum":5,"limit":61000}],"exchangeFilters":[],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT LIMIT_MAKER MARKET STOP_LOSS STOP_LOSS_LIMIT TAKE_PROFIT TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[],"permissions":[],"permissionSets":[["SPOT","MARGIN"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"timezone":"UTC","serverTime":1565246363776,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}],"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000}],"symbols":[{"symbol":"ETHBTC","status":"TRADING","baseAsset":"ETH","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":false,"cancelReplaceAllowed":false,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[{"filterType":"PRICE_FILTER","priceExponent":8,"minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"}],"permissions":["undefined"],"permissionSets":[["SPOT"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}],"sors":[{"baseAsset":"BTC","symbols":["BTCUSDT"]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ExchangeInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExchangeInfoResponse");
 
             let resp = client.exchange_info(params).await.expect("Expected a response");
@@ -545,7 +666,7 @@ mod tests {
 
             let params = ExecutionRulesParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ExecutionRulesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExecutionRulesResponse");
 
             let resp = client.execution_rules(params).await.expect("Expected a response");
@@ -560,9 +681,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockGeneralApiClient { force_error: false };
 
-            let params = ExecutionRulesParams::builder().symbol("BNBUSDT".to_string()).symbols(["null".to_string(),].to_vec()).symbol_status(ExecutionRulesSymbolStatusEnum::Trading).build().unwrap();
+            let params = ExecutionRulesParams::builder().symbol("BAZUSD".to_string()).symbols(["BAZUSD".to_string(),].to_vec()).symbol_status(ExecutionRulesSymbolStatusEnum::Trading).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbolRules":[{"symbol":"BAZUSD","rules":[{"ruleType":"PRICE_RANGE","bidLimitMultUp":"1.0001","bidLimitMultDown":"0.9999","askLimitMultUp":"1.0001","askLimitMultDown":"0.9999"}]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ExecutionRulesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ExecutionRulesResponse");
 
             let resp = client.execution_rules(params).await.expect("Expected a response");
@@ -635,7 +756,8 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockGeneralApiClient { force_error: false };
 
-            let resp_json: Value = serde_json::from_str(r#"{"serverTime":1499827319559}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"serverTime":1499827319559}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::TimeResponse = serde_json::from_value(resp_json.clone())
                 .expect("should parse into models::TimeResponse");
 
@@ -651,7 +773,8 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockGeneralApiClient { force_error: false };
 
-            let resp_json: Value = serde_json::from_str(r#"{"serverTime":1499827319559}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"serverTime":1499827319559}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::TimeResponse = serde_json::from_value(resp_json.clone())
                 .expect("should parse into models::TimeResponse");
 

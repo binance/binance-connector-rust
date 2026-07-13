@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -29,6 +29,7 @@ pub struct ModifyOrderResponse {
     pub client_order_id: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Average execution price. Will be removed after CM migration.
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
@@ -59,13 +60,16 @@ pub struct ModifyOrderResponse {
     pub price_protect: Option<bool>,
     #[serde(rename = "origType", skip_serializing_if = "Option::is_none")]
     pub orig_type: Option<String>,
+    /// price match mode
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<String>,
+    /// self trading preventation mode
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<String>,
+    /// order pre-set auot cancel time for TIF GTD order
     #[serde(rename = "goodTillDate", skip_serializing_if = "Option::is_none")]
     pub good_till_date: Option<i64>,
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]

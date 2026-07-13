@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -124,7 +124,9 @@ impl RestApi {
     ///
     /// Get BFUSD account information.
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -154,7 +156,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/account/).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#get-bfusd-account).
     ///
     pub async fn get_bfusd_account(
         &self,
@@ -165,9 +167,11 @@ impl RestApi {
 
     /// Get BFUSD Quota Details (`USER_DATA`)
     ///
-    /// Get BFUSD quota details including subscription quota, fast redemption quota and standard redemption quota.
+    /// Get BFUSD quota details including subscription quota, fast redemption quota, and standard redemption quota.
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -197,7 +201,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/account/Get-BFUSD-Quota-Details).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#get-bfusd-quota-details).
     ///
     pub async fn get_bfusd_quota_details(
         &self,
@@ -210,12 +214,19 @@ impl RestApi {
     ///
     /// Get BFUSD rate history sorted by descending order.
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and
+    /// data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -245,7 +256,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#get-bfusd-rate-history).
     ///
     pub async fn get_bfusd_rate_history(
         &self,
@@ -256,14 +267,21 @@ impl RestApi {
 
     /// Get BFUSD Redemption History (`USER_DATA`)
     ///
-    /// Get BFUSD redemption history.
+    /// Get BFUSD redemption history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and
+    /// data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -293,7 +311,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-Redemption-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#get-bfusd-redemption-history).
     ///
     pub async fn get_bfusd_redemption_history(
         &self,
@@ -306,14 +324,21 @@ impl RestApi {
 
     /// Get BFUSD Rewards History (`USER_DATA`)
     ///
-    /// Get BFUSD rewards history.
+    /// Get BFUSD rewards history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and
+    /// data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -343,7 +368,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-Rewards-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#get-bfusd-rewards-history).
     ///
     pub async fn get_bfusd_rewards_history(
         &self,
@@ -354,16 +379,23 @@ impl RestApi {
             .await
     }
 
-    /// Get BFUSD subscription `history(USER_DATA)`
+    /// Get BFUSD subscription history (`USER_DATA`)
     ///
     /// Get BFUSD subscription history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time advanced by one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time advanced by one month,
+    /// and data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -393,7 +425,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/history/Get-BFUSD-subscription-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#get-bfusd-subscription-history).
     ///
     pub async fn get_bfusd_subscription_history(
         &self,
@@ -404,13 +436,17 @@ impl RestApi {
             .await
     }
 
-    /// Redeem BFUSD(TRADE)
+    /// Redeem BFUSD (TRADE)
     ///
     /// Redeem BFUSD to USDT
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// - This API only supports BFUSD redemption to the Spot Account. Redemptions to the Funding Account or any other account type are not supported.
     ///
     /// # Arguments
     ///
@@ -440,7 +476,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/earn/Redeem-BFUSD).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#redeem-bfusd).
     ///
     pub async fn redeem_bfusd(
         &self,
@@ -449,13 +485,17 @@ impl RestApi {
         self.bfusd_api_client.redeem_bfusd(params).await
     }
 
-    /// Subscribe BFUSD(TRADE)
+    /// Subscribe BFUSD (TRADE)
     ///
     /// Subscribe BFUSD
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// - This API only supports BFUSD subscription using assets held in the Spot Account. Subscriptions initiated from the Funding Account or any other account type are not supported.
     ///
     /// # Arguments
     ///
@@ -485,7 +525,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/bfusd/earn/Subscribe-BFUSD).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/bfusd#subscribe-bfusd).
     ///
     pub async fn subscribe_bfusd(
         &self,
@@ -494,16 +534,22 @@ impl RestApi {
         self.bfusd_api_client.subscribe_bfusd(params).await
     }
 
-    /// Get Collateral `Record(USER_DATA)`
+    /// Get Collateral Record (`USER_DATA`)
     ///
     /// Get Collateral Record
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 30 days.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 30 days.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -533,7 +579,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Collateral-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-collateral-record).
     ///
     pub async fn get_collateral_record(
         &self,
@@ -544,11 +590,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Personal Left `Quota(USER_DATA)`
+    /// Get Flexible Personal Left Quota (`USER_DATA`)
     ///
     /// Get Flexible Personal Left Quota
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -578,7 +626,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/account/Get-Flexible-Personal-Left-Quota).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-flexible-personal-left-quota).
     ///
     pub async fn get_flexible_personal_left_quota(
         &self,
@@ -589,11 +637,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Product `Position(USER_DATA)`
+    /// Get Flexible Product Position (`USER_DATA`)
     ///
     /// Get Flexible Product Position
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -623,7 +673,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/account/Get-Flexible-Product-Position).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-flexible-product-position).
     ///
     pub async fn get_flexible_product_position(
         &self,
@@ -634,16 +684,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Redemption `Record(USER_DATA)`
+    /// Get Flexible Redemption Record (`USER_DATA`)
     ///
     /// Get Flexible Redemption Record
     ///
-    /// *	The time between `startTime` and `endTime` cannot be longer than 30 days.
-    /// *	If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// *	If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// *	If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 30 days.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -673,7 +729,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Flexible-Redemption-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-flexible-redemption-record).
     ///
     pub async fn get_flexible_redemption_record(
         &self,
@@ -684,16 +740,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Rewards `History(USER_DATA)`
+    /// Get Flexible Rewards History (`USER_DATA`)
     ///
     /// Get Flexible Rewards History
     ///
-    /// *	The time between `startTime` and `endTime` cannot be longer than 30 days.
-    /// *	If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// *	If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// *	If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 30 days.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -723,7 +785,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Flexible-Rewards-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-flexible-rewards-history).
     ///
     pub async fn get_flexible_rewards_history(
         &self,
@@ -734,11 +796,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Subscription `Preview(USER_DATA)`
+    /// Get Flexible Subscription Preview (`USER_DATA`)
     ///
     /// Get Flexible Subscription Preview
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -768,7 +832,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Get-Flexible-Subscription-Preview).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-flexible-subscription-preview).
     ///
     pub async fn get_flexible_subscription_preview(
         &self,
@@ -779,16 +843,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Flexible Subscription `Record(USER_DATA)`
+    /// Get Flexible Subscription Record (`USER_DATA`)
     ///
     /// Get Flexible Subscription Record
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 30 days.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 30 days.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -818,7 +888,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Flexible-Subscription-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-flexible-subscription-record).
     ///
     pub async fn get_flexible_subscription_record(
         &self,
@@ -829,11 +899,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Locked Personal Left `Quota(USER_DATA)`
+    /// Get Locked Personal Left Quota (`USER_DATA`)
     ///
     /// Get Locked Personal Left Quota
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -863,7 +935,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/account/Get-Locked-Personal-Left-Quota).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-locked-personal-left-quota).
     ///
     pub async fn get_locked_personal_left_quota(
         &self,
@@ -874,11 +946,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Locked Product Position
+    /// Get Locked Product Position (`USER_DATA`)
     ///
     /// Get Locked Product Position
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -908,7 +982,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/account/Get-Locked-Product-Position).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-locked-product-position).
     ///
     pub async fn get_locked_product_position(
         &self,
@@ -919,16 +993,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Locked Redemption `Record(USER_DATA)`
+    /// Get Locked Redemption Record (`USER_DATA`)
     ///
     /// Get Locked Redemption Record
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 30 days.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 30 days.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -958,7 +1038,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Locked-Redemption-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-locked-redemption-record).
     ///
     pub async fn get_locked_redemption_record(
         &self,
@@ -969,16 +1049,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Locked Rewards `History(USER_DATA)`
+    /// Get Locked Rewards History (`USER_DATA`)
     ///
     /// Get Locked Rewards History
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 30 days.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 30 days.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1008,7 +1094,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Locked-Rewards-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-locked-rewards-history).
     ///
     pub async fn get_locked_rewards_history(
         &self,
@@ -1019,11 +1105,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Locked Subscription `Preview(USER_DATA)`
+    /// Get Locked Subscription Preview (`USER_DATA`)
     ///
     /// Get Locked Subscription Preview
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1053,7 +1141,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Get-Locked-Subscription-Preview).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-locked-subscription-preview).
     ///
     pub async fn get_locked_subscription_preview(
         &self,
@@ -1065,16 +1153,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Locked Subscription `Record(USER_DATA)`
+    /// Get Locked Subscription Record (`USER_DATA`)
     ///
     /// Get Locked Subscription Record
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 30 days.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 30 days.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1104,7 +1198,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Locked-Subscription-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-locked-subscription-record).
     ///
     pub async fn get_locked_subscription_record(
         &self,
@@ -1115,16 +1209,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Rate `History(USER_DATA)`
+    /// Get Rate History (`USER_DATA`)
     ///
     /// Get Rate History
     ///
-    /// * The time between startTime and endTime cannot be longer than 1 year.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between startTime and endTime cannot be longer than 1 year.
+    /// - If `startTime` and `endTime` are
+    /// both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1154,7 +1254,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/history/Get-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-rate-history).
     ///
     pub async fn get_rate_history(
         &self,
@@ -1165,11 +1265,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Simple Earn Flexible Product `List(USER_DATA)`
+    /// Get Simple Earn Flexible Product List (`USER_DATA`)
     ///
     /// Get available Simple Earn flexible product list
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1199,7 +1301,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/account/Get-Simple-Earn-Flexible-Product-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-simple-earn-flexible-product-list).
     ///
     pub async fn get_simple_earn_flexible_product_list(
         &self,
@@ -1210,13 +1312,16 @@ impl RestApi {
             .await
     }
 
-    /// Get Simple Earn Locked Product `List(USER_DATA)`
+    /// Get Simple Earn Locked Product List (`USER_DATA`)
     ///
     /// Get Simple Earn Locked Product List
     ///
-    /// * Get available Simple Earn locked product list
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Get available Simple Earn locked product list
     ///
     /// # Arguments
     ///
@@ -1246,7 +1351,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/account/Get-Simple-Earn-Locked-Product-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#get-simple-earn-locked-product-list).
     ///
     pub async fn get_simple_earn_locked_product_list(
         &self,
@@ -1257,13 +1362,16 @@ impl RestApi {
             .await
     }
 
-    /// Redeem Flexible Product(TRADE)
+    /// Redeem Flexible Product (TRADE)
     ///
     /// Redeem Flexible Product
     ///
-    /// * You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1293,7 +1401,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Redeem-Flexible-Product).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#redeem-flexible-product).
     ///
     pub async fn redeem_flexible_product(
         &self,
@@ -1304,13 +1412,16 @@ impl RestApi {
             .await
     }
 
-    /// Redeem Locked Product(TRADE)
+    /// Redeem Locked Product (TRADE)
     ///
     /// Redeem Locked Product
     ///
-    /// * You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1/3s per account
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1340,7 +1451,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Redeem-Locked-Product).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#redeem-locked-product).
     ///
     pub async fn redeem_locked_product(
         &self,
@@ -1351,11 +1462,13 @@ impl RestApi {
             .await
     }
 
-    /// Set Flexible Auto `Subscribe(USER_DATA)`
+    /// Set Flexible Auto Subscribe (`USER_DATA`)
     ///
     /// Set Flexible Auto Subscribe
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1385,7 +1498,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Set-Flexible-Auto-Subscribe).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#set-flexible-auto-subscribe).
     ///
     pub async fn set_flexible_auto_subscribe(
         &self,
@@ -1396,11 +1509,13 @@ impl RestApi {
             .await
     }
 
-    /// Set Locked Auto `Subscribe(USER_DATA)`
+    /// Set Locked Auto Subscribe (`USER_DATA`)
     ///
     /// Set locked auto subscribe
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1430,7 +1545,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Set-Locked-Auto-Subscribe).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#set-locked-auto-subscribe).
     ///
     pub async fn set_locked_auto_subscribe(
         &self,
@@ -1441,11 +1556,13 @@ impl RestApi {
             .await
     }
 
-    /// Set Locked Product Redeem `Option(USER_DATA)`
+    /// Set Locked Product Redeem Option (`USER_DATA`)
     ///
     /// Set redeem option for Locked product
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1475,7 +1592,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Set-Locked-Redeem-Option).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#set-locked-product-redeem-option).
     ///
     pub async fn set_locked_product_redeem_option(
         &self,
@@ -1486,11 +1603,13 @@ impl RestApi {
             .await
     }
 
-    /// Simple `Account(USER_DATA)`
+    /// Simple Account (`USER_DATA`)
     ///
     /// Simple Account query
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1520,7 +1639,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/account/Simple-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#simple-account).
     ///
     pub async fn simple_account(
         &self,
@@ -1529,13 +1648,16 @@ impl RestApi {
         self.flexible_locked_api_client.simple_account(params).await
     }
 
-    /// Subscribe Flexible Product(TRADE)
+    /// Subscribe Flexible Product (TRADE)
     ///
     /// Subscribe Flexible Product
     ///
-    /// * You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1565,7 +1687,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Subscribe-Flexible-Product).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#subscribe-flexible-product).
     ///
     pub async fn subscribe_flexible_product(
         &self,
@@ -1576,13 +1698,16 @@ impl RestApi {
             .await
     }
 
-    /// Subscribe Locked Product(TRADE)
+    /// Subscribe Locked Product (TRADE)
     ///
     /// Subscribe Locked Product
     ///
-    /// * You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1612,7 +1737,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/flexible-locked/earn/Subscribe-Locked-Product).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/flexible-locked#subscribe-locked-product).
     ///
     pub async fn subscribe_locked_product(
         &self,
@@ -1627,7 +1752,9 @@ impl RestApi {
     ///
     /// Get RWUSD account information.
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1657,7 +1784,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/account/).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#get-rwusd-account).
     ///
     pub async fn get_rwusd_account(
         &self,
@@ -1670,7 +1797,9 @@ impl RestApi {
     ///
     /// Get RWUSD quota details including subscription quota, fast redemption quota, and standard redemption quota.
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1700,7 +1829,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/account/Get-RWUSD-Quota-Details).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#get-rwusd-quota-details).
     ///
     pub async fn get_rwusd_quota_details(
         &self,
@@ -1713,12 +1842,19 @@ impl RestApi {
     ///
     /// Get RWUSD rate history sorted by descending order.
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and
+    /// data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1748,7 +1884,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/history/Get-RWUSD-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#get-rwusd-rate-history).
     ///
     pub async fn get_rwusd_rate_history(
         &self,
@@ -1761,12 +1897,19 @@ impl RestApi {
     ///
     /// Get RWUSD redemption history.
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and
+    /// data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1796,7 +1939,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/history/Get-RWUSD-Redemption-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#get-rwusd-redemption-history).
     ///
     pub async fn get_rwusd_redemption_history(
         &self,
@@ -1811,12 +1954,19 @@ impl RestApi {
     ///
     /// Get RWUSD rewards history.
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time minus one month, and
+    /// data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1846,7 +1996,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/history/Get-RWUSD-Rewards-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#get-rwusd-rewards-history).
     ///
     pub async fn get_rwusd_rewards_history(
         &self,
@@ -1857,16 +2007,23 @@ impl RestApi {
             .await
     }
 
-    /// Get RWUSD subscription `history(USER_DATA)`
+    /// Get RWUSD subscription history (`USER_DATA`)
     ///
     /// Get RWUSD subscription history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 6 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time advanced by one month, and data between `startTime` and `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 6 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, `endTime` will default to current time, and results from `startTime` onward will be returned.
+    /// - If
+    /// `endTime` is sent but `startTime` is not sent, `startTime` defaults to the current time advanced by one month,
+    /// and data between `startTime` and `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1896,7 +2053,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/history/Get-RWUSD-subscription-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#get-rwusd-subscription-history).
     ///
     pub async fn get_rwusd_subscription_history(
         &self,
@@ -1907,13 +2064,17 @@ impl RestApi {
             .await
     }
 
-    /// Redeem RWUSD(TRADE)
+    /// Redeem RWUSD (TRADE)
     ///
     /// Redeem RWUSD to USDC
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// - This API only supports RWUSD redemption to the Spot Account. Redemptions to the Funding Account or any other account type are not supported.
     ///
     /// # Arguments
     ///
@@ -1943,7 +2104,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/earn/Redeem-RWUSD).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#redeem-rwusd).
     ///
     pub async fn redeem_rwusd(
         &self,
@@ -1952,13 +2113,17 @@ impl RestApi {
         self.rwusd_api_client.redeem_rwusd(params).await
     }
 
-    /// Subscribe RWUSD(TRADE)
+    /// Subscribe RWUSD (TRADE)
     ///
     /// Subscribe RWUSD
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// - This API only supports RWUSD subscription using assets held in the Spot Account. Subscriptions initiated from the Funding Account or any other account type are not supported.
     ///
     /// # Arguments
     ///
@@ -1988,7 +2153,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/rwusd/earn/Subscribe-RWUSD).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/rwusd#subscribe-rwusd).
     ///
     pub async fn subscribe_rwusd(
         &self,
@@ -2001,9 +2166,9 @@ impl RestApi {
     ///
     /// Get the list of Earn Yield Arena giveaway activities currently available to the user.
     ///
-    /// Supported locales: `en`, `en-GB`, `en-AU`, `cn`, `zh`, `zh-CN`, `tw`, `zh-TW`, `zh-HK`, `ja`, `ja-JP`, `ru`, `ru-RU`, `es`, `es-ES`, `es-LA`, `pt`, `pt-BR`, `pt-PT`, `fr`, `fr-FR`, `de`, `de-DE`, `it`, `it-IT`, `id`, `id-ID`, `vi`, `vi-VN`, `ar`, `ar-SA`, `pl`, `pl-PL`, `uk`, `uk-UA`, `cs`, `cs-CZ`, `ro`, `ro-RO`, `sv`, `sv-SE`, `bg`, `bg-BG`, `da`, `da-DK`, `el`, `el-GR`, `hu`, `hu-HU`, `lv`, `lv-LV`, `sk`, `sk-SK`, `sl`, `sl-SI`.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2033,7 +2198,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/simple_earn/yield-arena/earn/Get-Yield-Arena-Activities).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api/yield-arena#get-yield-arena-activities).
     ///
     pub async fn get_yield_arena_activities(
         &self,

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -13,6 +13,8 @@
 
 pub mod account_information_response;
 pub use self::account_information_response::AccountInformationResponse;
+pub mod account_information_response_rate_limits_inner;
+pub use self::account_information_response_rate_limits_inner::AccountInformationResponseRateLimitsInner;
 pub mod account_information_response_result;
 pub use self::account_information_response_result::AccountInformationResponseResult;
 pub mod account_information_response_result_assets_inner;
@@ -21,8 +23,6 @@ pub mod account_information_response_result_positions_inner;
 pub use self::account_information_response_result_positions_inner::AccountInformationResponseResultPositionsInner;
 pub mod account_information_v2_response;
 pub use self::account_information_v2_response::AccountInformationV2Response;
-pub mod account_information_v2_response_rate_limits_inner;
-pub use self::account_information_v2_response_rate_limits_inner::AccountInformationV2ResponseRateLimitsInner;
 pub mod account_information_v2_response_result;
 pub use self::account_information_v2_response_result::AccountInformationV2ResponseResult;
 pub mod account_information_v2_response_result_assets_inner;
@@ -45,10 +45,10 @@ pub mod close_user_data_stream_response;
 pub use self::close_user_data_stream_response::CloseUserDataStreamResponse;
 pub mod futures_account_balance_response;
 pub use self::futures_account_balance_response::FuturesAccountBalanceResponse;
+pub mod futures_account_balance_response_result_inner;
+pub use self::futures_account_balance_response_result_inner::FuturesAccountBalanceResponseResultInner;
 pub mod futures_account_balance_v2_response;
 pub use self::futures_account_balance_v2_response::FuturesAccountBalanceV2Response;
-pub mod futures_account_balance_v2_response_result_inner;
-pub use self::futures_account_balance_v2_response_result_inner::FuturesAccountBalanceV2ResponseResultInner;
 pub mod keepalive_user_data_stream_response;
 pub use self::keepalive_user_data_stream_response::KeepaliveUserDataStreamResponse;
 pub mod keepalive_user_data_stream_response_result;
@@ -99,6 +99,8 @@ pub mod symbol_order_book_ticker_response1_result;
 pub use self::symbol_order_book_ticker_response1_result::SymbolOrderBookTickerResponse1Result;
 pub mod symbol_order_book_ticker_response2;
 pub use self::symbol_order_book_ticker_response2::SymbolOrderBookTickerResponse2;
+pub mod symbol_order_book_ticker_response2_result_inner;
+pub use self::symbol_order_book_ticker_response2_result_inner::SymbolOrderBookTickerResponse2ResultInner;
 pub mod symbol_price_ticker_response;
 pub use self::symbol_price_ticker_response::SymbolPriceTickerResponse;
 pub mod symbol_price_ticker_response1;
@@ -107,3 +109,5 @@ pub mod symbol_price_ticker_response1_result;
 pub use self::symbol_price_ticker_response1_result::SymbolPriceTickerResponse1Result;
 pub mod symbol_price_ticker_response2;
 pub use self::symbol_price_ticker_response2::SymbolPriceTickerResponse2;
+pub mod symbol_price_ticker_response2_result_inner;
+pub use self::symbol_price_ticker_response2_result_inner::SymbolPriceTickerResponse2ResultInner;

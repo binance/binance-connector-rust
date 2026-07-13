@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -254,10 +249,16 @@ impl WebsocketApi {
             .ok_or(WebsocketError::NoResponse)
     }
 
-    /// WebSocket Account Commission Rates
+    /// Account Commission Rates (`USER_DATA`)
     ///
     /// Get current account commission rates.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -273,7 +274,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#account-commission-rates-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#account-commission).
     ///
     pub async fn account_commission(
         &self,
@@ -282,10 +283,16 @@ impl WebsocketApi {
         self.account_api_client.account_commission(params).await
     }
 
-    /// WebSocket Unfilled Order Count
+    /// Unfilled Order Count (`USER_DATA`)
     ///
     /// Query your current unfilled order count for all intervals.
-    /// Weight: 40
+    ///
+    /// Weight(IP): 40
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -301,7 +308,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#unfilled-order-count-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#account-rate-limits-orders).
     ///
     pub async fn account_rate_limits_orders(
         &self,
@@ -313,10 +320,16 @@ impl WebsocketApi {
             .await
     }
 
-    /// WebSocket Account information
+    /// Account information (`USER_DATA`)
     ///
     /// Query information about your account.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory => Database
     ///
     /// # Arguments
     ///
@@ -332,7 +345,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#account-information-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#account-status).
     ///
     pub async fn account_status(
         &self,
@@ -341,10 +354,23 @@ impl WebsocketApi {
         self.account_api_client.account_status(params).await
     }
 
-    /// WebSocket Account order list history
+    /// Account order list history (`USER_DATA`)
     ///
     /// Query information about all your order lists, filtered by time range.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Notes:
+    /// * If `startTime` and/or `endTime` are specified, `fromId` is ignored.
+    /// Order lists are filtered by `transactionTime` of the last order list execution status update.
+    /// * If `fromId` is specified, return order lists with order list ID >= `fromId`.
+    /// * If no condition is specified, the most recent order lists are returned.
+    /// * The time between `startTime` and `endTime` can't be longer than 24 hours.
     ///
     /// # Arguments
     ///
@@ -360,7 +386,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#account-order-list-history-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#all-order-lists).
     ///
     pub async fn all_order_lists(
         &self,
@@ -369,10 +395,31 @@ impl WebsocketApi {
         self.account_api_client.all_order_lists(params).await
     }
 
-    /// WebSocket Account order history
+    /// Account order history (`USER_DATA`)
     ///
     /// Query information about all your orders – active, canceled, filled – filtered by time range.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Notes:
+    ///
+    /// * If `startTime` and/or `endTime` are specified, `orderId` is ignored.
+    ///
+    /// Orders are filtered by `time` of the last execution status update.
+    ///
+    /// * If `orderId` is specified, return orders with order ID >= `orderId`.
+    ///
+    /// * If no condition is specified, the most recent orders are returned.
+    ///
+    /// * For some historical orders the `cummulativeQuoteQty` response field may be negative,
+    /// meaning the data is not available at this time.
+    ///
+    /// * The time between `startTime` and `endTime` can't be longer than 24 hours.
     ///
     /// # Arguments
     ///
@@ -388,7 +435,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#account-order-history-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#all-orders).
     ///
     pub async fn all_orders(
         &self,
@@ -397,10 +444,30 @@ impl WebsocketApi {
         self.account_api_client.all_orders(params).await
     }
 
-    /// WebSocket Account allocations
+    /// Account allocations (`USER_DATA`)
     ///
     /// Retrieves allocations resulting from SOR order placement.
-    /// Weight: 20
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Supported parameter combinations:
+    ///
+    /// Parameters                                  | Response |
+    /// ------------------------------------------- | -------- |
+    /// `symbol`                                    | allocations from oldest to newest |
+    /// `symbol` + `startTime`                      | oldest allocations since `startTime` |
+    /// `symbol` + `endTime`                        | newest allocations until `endTime` |
+    /// `symbol` + `startTime` + `endTime`          | allocations within the time range |
+    /// `symbol` + `fromAllocationId`               | allocations by allocation ID |
+    /// `symbol` + `orderId`                        | allocations related to an order starting with oldest |
+    /// `symbol` + `orderId` + `fromAllocationId`   | allocations related to an order by allocation ID |
+    ///
+    /// **Note:** The time between `startTime` and `endTime` can't be longer than 24 hours.
     ///
     /// # Arguments
     ///
@@ -416,7 +483,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#account-allocations-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#my-allocations).
     ///
     pub async fn my_allocations(
         &self,
@@ -425,10 +492,17 @@ impl WebsocketApi {
         self.account_api_client.my_allocations(params).await
     }
 
-    /// WebSocket Query Relevant Filters
+    /// Query Relevant Filters (`USER_DATA`)
     ///
-    /// Retrieves the list of [filters](filters.md) relevant to an account on a given symbol. This is the only method that shows if an account has `MAX_ASSET` filters applied to it.
-    /// Weight: 40
+    /// Retrieves the list of [filters](/products/spot/filters) relevant to an account on a given symbol. This is the only method
+    /// that shows if an account has [`MAX_ASSET`](/products/spot/filters#max_asset) filters applied to it.
+    ///
+    /// Weight(IP): 40
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -437,23 +511,23 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Box<models::MyFiltersResponseResult>>`] on success.
+    /// [`WebsocketApiResponse<models::MyFiltersResponse>`] on success.
     ///
     /// # Errors
     ///
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#query-relevant-filters-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#my-filters).
     ///
     pub async fn my_filters(
         &self,
         params: MyFiltersParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::MyFiltersResponseResult>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<models::MyFiltersResponse>> {
         self.account_api_client.my_filters(params).await
     }
 
-    /// WebSocket Account prevented matches
+    /// Account prevented matches (`USER_DATA`)
     ///
     /// Displays the list of orders that were expired due to STP.
     ///
@@ -463,11 +537,17 @@ impl WebsocketApi {
     /// * `symbol` + `orderId`
     /// * `symbol` + `orderId` + `fromPreventedMatchId` (`limit` will default to 500)
     /// * `symbol` + `orderId` + `fromPreventedMatchId` + `limit`
+    ///
     /// Weight: Case                            | Weight
     /// ----                            | -----
     /// If `symbol` is invalid          | 2
     /// Querying by `preventedMatchId`  | 2
     /// Querying by `orderId`           | 20
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -483,7 +563,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#account-prevented-matches-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#my-prevented-matches).
     ///
     pub async fn my_prevented_matches(
         &self,
@@ -493,13 +573,28 @@ impl WebsocketApi {
         self.account_api_client.my_prevented_matches(params).await
     }
 
-    /// WebSocket Account trade history
+    /// Account trade history (`USER_DATA`)
     ///
     /// Query information about all your trades, filtered by time range.
+    ///
     /// Weight: Condition| Weight|
     /// ---| ---
     /// |Without orderId|20|
     /// |With orderId|5|
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// Data Source: Memory => Database
+    ///
+    /// Notes:
+    /// - If `fromId` is specified, return trades with trade ID >= `fromId`.
+    /// - If `startTime` and/or `endTime` are specified, trades are filtered by execution time (`time`).
+    /// - `fromId` cannot be used together with `startTime` and `endTime`.
+    /// - If `orderId` is specified, only trades related to that order are returned.
+    /// - `startTime` and `endTime` cannot be used together with `orderId`.
+    /// - If no condition is specified, the most recent trades are returned.
+    /// - The time between `startTime` and `endTime` can't be longer than 24 hours.
     ///
     /// # Arguments
     ///
@@ -515,7 +610,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#account-trade-history-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#my-trades).
     ///
     pub async fn my_trades(
         &self,
@@ -524,15 +619,21 @@ impl WebsocketApi {
         self.account_api_client.my_trades(params).await
     }
 
-    /// WebSocket Current open Order lists
+    /// Current open Order lists (`USER_DATA`)
     ///
     /// Query execution status of all open order lists.
     ///
     /// If you need to continuously monitor order status updates, please consider using WebSocket Streams:
     ///
-    /// * `userDataStream.start` request
-    /// * `executionReport` user data stream event
-    /// Weight: 6
+    /// * `userDataStream.subscribe` if on an authenticated session
+    /// * `userDataStream.subscribe.signature` if subscribing through signature subscription
+    ///
+    /// Weight(IP): 6
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory -> Database
     ///
     /// # Arguments
     ///
@@ -548,7 +649,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#current-open-order-lists-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#open-order-lists-status).
     ///
     pub async fn open_order_lists_status(
         &self,
@@ -560,20 +661,24 @@ impl WebsocketApi {
             .await
     }
 
-    /// WebSocket Current open orders
+    /// Current open orders (`USER_DATA`)
     ///
     /// Query execution status of all open orders.
     ///
     /// If you need to continuously monitor order status updates, please consider using WebSocket Streams:
     ///
-    /// * `userDataStream.start` request
-    /// * `executionReport` user data stream event
-    /// Weight: Adjusted based on the number of requested symbols:
+    /// * `userDataStream.subscribe` if on an authenticated session
+    /// * `userDataStream.subscribe.signature` if subscribing through signature subscription
     ///
-    /// | Parameter | Weight |
+    /// Weight: | Parameter | Weight |
     /// | --------- | ------ |
     /// | `symbol`  |      6 |
     /// | none      |     80 |
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// Data Source: Memory => Database
     ///
     /// # Arguments
     ///
@@ -589,7 +694,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#current-open-orders-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#open-orders-status).
     ///
     pub async fn open_orders_status(
         &self,
@@ -599,10 +704,16 @@ impl WebsocketApi {
         self.account_api_client.open_orders_status(params).await
     }
 
-    /// WebSocket Query Order Amendments
+    /// Query Order Amendments (`USER_DATA`)
     ///
     /// Queries all amendments of a single order.
-    /// Weight: 4
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -618,7 +729,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#query-order-amendments-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#order-amendments).
     ///
     pub async fn order_amendments(
         &self,
@@ -627,12 +738,25 @@ impl WebsocketApi {
         self.account_api_client.order_amendments(params).await
     }
 
-    /// WebSocket Query Order list
+    /// Query Order list (`USER_DATA`)
     ///
     /// Check execution status of an Order list.
     ///
     /// For execution status of individual orders, use `order.status`.
-    /// Weight: 4
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Notes:
+    ///
+    /// * `origClientOrderId` refers to `listClientOrderId` of the order list itself.
+    ///
+    /// * If both `origClientOrderId` and `orderListId` parameters are specified,
+    /// only `origClientOrderId` is used and `orderListId` is ignored.
     ///
     /// # Arguments
     ///
@@ -641,26 +765,39 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Box<models::AllOrderListsResponseResultInner>>`] on success.
+    /// [`WebsocketApiResponse<Box<models::OrderListStatusResponseResult>>`] on success.
     ///
     /// # Errors
     ///
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#query-order-list-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#order-list-status).
     ///
     pub async fn order_list_status(
         &self,
         params: OrderListStatusParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::AllOrderListsResponseResultInner>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::OrderListStatusResponseResult>>> {
         self.account_api_client.order_list_status(params).await
     }
 
-    /// WebSocket Query order
+    /// Query order (`USER_DATA`)
     ///
     /// Check execution status of an order.
-    /// Weight: 4
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory => Database
+    ///
+    /// Notes:
+    ///
+    /// * If both `orderId` and `origClientOrderId` are provided, the `orderId` is searched first, then the `origClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
+    ///
+    /// * For some historical orders the `cummulativeQuoteQty` response field may be negative,
+    /// meaning the data is not available at this time.
     ///
     /// # Arguments
     ///
@@ -676,7 +813,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/account-requests#query-order-user_data).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/account#order-status).
     ///
     pub async fn order_status(
         &self,
@@ -685,15 +822,24 @@ impl WebsocketApi {
         self.account_api_client.order_status(params).await
     }
 
-    /// WebSocket Log in with API key
+    /// Log in with API key (`USER_DATA`)
     ///
     /// Authenticate WebSocket connection using the provided API key.
     ///
     /// After calling `session.logon`, you can omit `apiKey` and `signature` parameters for future requests that require them.
     ///
     /// Note that only one API key can be authenticated.
+    ///
     /// Calling `session.logon` multiple times changes the current authenticated API key.
-    /// Weight: 2
+    ///
+    /// **Note:** Only Ed25519 keys are supported for this feature.
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -709,7 +855,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/authentication-requests#log-in-with-api-key-signed).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/auth#session-logon).
     ///
     pub async fn session_logon(
         &self,
@@ -718,15 +864,18 @@ impl WebsocketApi {
         self.auth_api_client.session_logon(params).await
     }
 
-    /// WebSocket Log out of the session
+    /// Log out of the session
     ///
-    /// Forget the API key previously authenticated.
-    /// If the connection is not authenticated, this request does nothing.
+    /// Forget the API key previously authenticated. If the connection is not authenticated, this request does nothing.
     ///
-    /// Note that the WebSocket connection stays open after `session.logout` request.
-    /// You can continue using the connection,
-    /// but now you will have to explicitly provide the `apiKey` and `signature` parameters where needed.
-    /// Weight: 2
+    /// Note that the WebSocket connection stays open after `session.logout` request. You can continue using the connection, but now you will have to explicitly provide the `apiKey` and `signature` parameters where needed.
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -742,7 +891,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/authentication-requests#log-out-of-the-session).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/auth#session-logout).
     ///
     pub async fn session_logout(
         &self,
@@ -751,11 +900,17 @@ impl WebsocketApi {
         self.auth_api_client.session_logout(params).await
     }
 
-    /// WebSocket Query session status
+    /// Query session status
     ///
     /// Query the status of the WebSocket connection,
     /// inspecting which API key (if any) is used to authorize requests.
-    /// Weight: 2
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -771,7 +926,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/authentication-requests#query-session-status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/auth#session-status).
     ///
     pub async fn session_status(
         &self,
@@ -780,10 +935,31 @@ impl WebsocketApi {
         self.auth_api_client.session_status(params).await
     }
 
-    /// WebSocket Exchange information
+    /// Exchange information
     ///
-    /// Query current exchange trading rules, rate limits, and symbol information.
-    /// Weight: 20
+    /// Query current exchange trading rules, rate limits, and symbol
+    /// information.
+    ///
+    /// Weight(IP): 20
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
+    /// **Notes:**
+    /// * If the value provided to `symbol` or `symbols` do not exist, the endpoint will throw an error saying the symbol is invalid.
+    /// * All parameters are optional.
+    /// * Only one of `symbol`, `symbols`, `permissions` parameters can be specified.
+    /// * Without parameters, `exchangeInfo` displays all symbols with `["SPOT", "MARGIN", "LEVERAGED"]` permissions.
+    /// * In order to list *all* active symbols on the exchange, you need to explicitly request all permissions.
+    /// * `permissions` accepts either a list of permissions, or a single permission name. E.g. `"SPOT"`.
+    ///
+    /// **Examples of Symbol Permissions Interpretation from the Response:**
+    ///
+    /// * `[["A","B"]]` means you may place an order if your account has either permission "A" **or** permission "B".
+    /// * `[["A"],["B"]]` means you can place an order if your account has permission "A" **and** permission "B".
+    /// * `[["A"],["B","C"]]` means you can place an order if your account has permission "A" **and** permission "B" or permission "C". (Inclusive or is applied here, not exclusive or, so your account may have both permission "B" and permission "C".)
     ///
     /// # Arguments
     ///
@@ -792,31 +968,39 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Box<models::ExchangeInfoResponseResult>>`] on success.
+    /// [`WebsocketApiResponse<models::ExchangeInfoResponse>`] on success.
     ///
     /// # Errors
     ///
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/general-requests#exchange-information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#exchange-info).
     ///
     pub async fn exchange_info(
         &self,
         params: ExchangeInfoParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ExchangeInfoResponseResult>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<models::ExchangeInfoResponse>> {
         self.general_api_client.exchange_info(params).await
     }
 
-    /// WebSocket Query Execution Rules
+    /// Query Execution Rules
     ///
+    /// Query execution rules for symbols.
     ///
-    /// Weight: Parameter | Weight|
-    /// ---        | ---
-    /// `symbol`  | 2
-    /// `symbols` | 2 for each `symbol`, capped at a max of 40|
-    /// `symbolStatus` |40|
-    /// None            |40|
+    /// Weight: Parameter | Weight
+    /// --- | ---
+    /// `symbol` | 2
+    /// `symbols` | 2 for each `symbol`, capped at a max of 40
+    /// `symbolStatus` | 40
+    /// None | 40
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
+    /// **Note:** No combination of multiple parameters is allowed.
     ///
     /// # Arguments
     ///
@@ -832,7 +1016,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/general-requests#query-execution-rules).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#execution-rules).
     ///
     pub async fn execution_rules(
         &self,
@@ -841,10 +1025,18 @@ impl WebsocketApi {
         self.general_api_client.execution_rules(params).await
     }
 
-    /// WebSocket Test connectivity
+    /// Test connectivity
     ///
     /// Test connectivity to the WebSocket API.
-    /// Weight: 1
+    ///
+    /// Note: You can use regular WebSocket ping frames to test connectivity as well, WebSocket API will respond with pong frames as soon as possible. ping request along with time is a safe way to test request-response handling in your application.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -860,7 +1052,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/general-requests#test-connectivity).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#ping).
     ///
     pub async fn ping(
         &self,
@@ -869,10 +1061,16 @@ impl WebsocketApi {
         self.general_api_client.ping(params).await
     }
 
-    /// WebSocket Check server time
+    /// Check server time
     ///
     /// Test connectivity to the WebSocket API and get the current server time.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -888,7 +1086,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/general-requests#check-server-time).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/general#time).
     ///
     pub async fn time(
         &self,
@@ -897,10 +1095,16 @@ impl WebsocketApi {
         self.general_api_client.time(params).await
     }
 
-    /// WebSocket Current average price
+    /// Current average price
     ///
     /// Get current average price for a symbol.
-    /// Weight: 2
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -916,7 +1120,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#current-average-price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#avg-price).
     ///
     pub async fn avg_price(
         &self,
@@ -925,10 +1129,16 @@ impl WebsocketApi {
         self.market_api_client.avg_price(params).await
     }
 
-    /// WebSocket Historical Block Trades
+    /// Historical Block Trades
     ///
     /// Get block trades.
-    /// Weight: 25
+    ///
+    /// Weight(IP): 25
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// - Data Source: Database
     ///
     /// # Arguments
     ///
@@ -944,7 +1154,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#historical-block-trades).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#block-trades-historical).
     ///
     pub async fn block_trades_historical(
         &self,
@@ -954,26 +1164,31 @@ impl WebsocketApi {
         self.market_api_client.block_trades_historical(params).await
     }
 
-    /// WebSocket Order book
+    /// Order book
     ///
     /// Get current order book.
     ///
     /// Note that this request returns limited market depth.
     ///
     /// If you need to continuously monitor order book updates, please consider using WebSocket Streams:
-    ///
     /// * `<symbol>@depth<levels>`
     /// * `<symbol>@depth`
     ///
-    /// You can use `depth` request together with `<symbol>@depth` streams to [maintain a local order book](web-socket-streams.md#how-to-manage-a-local-order-book-correctly).
+    /// You can use `depth` request together with `<symbol>@depth` streams to [maintain a local order book](/products/spot/web-socket-streams#how-to-manage-a-local-order-book-correctly).
+    ///
     /// Weight: Adjusted based on the limit:
     ///
-    /// |  Limit    | Weight |
-    /// |:---------:|:------:|
-    /// |     1–100 |      5 |
-    /// |   101–500 |      25|
-    /// |  501–1000 |     50 |
-    /// | 1001–5000 |     250 |
+    /// |Limit|Request Weight
+    /// ------|-------
+    /// 1-100|  5
+    /// 101-500| 25
+    /// 501-1000| 50
+    /// 1001-5000| 250
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -989,7 +1204,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#order-book).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#depth).
     ///
     pub async fn depth(
         &self,
@@ -998,19 +1213,44 @@ impl WebsocketApi {
         self.market_api_client.depth(params).await
     }
 
-    /// WebSocket Klines
+    /// Klines
     ///
     /// Get klines (candlestick bars).
     ///
     /// Klines are uniquely identified by their open & close time.
     ///
     /// If you need access to real-time kline updates, please consider using WebSocket Streams:
-    ///
     /// * `<symbol>@kline_<interval>`
     ///
-    /// If you need historical kline data,
-    /// please consider using [data.binance.vision](https://github.com/binance/binance-public-data/#klines).
-    /// Weight: 2
+    /// If you need historical kline data, please consider using [data.binance.vision](https://github.com/binance/binance-public-data/#klines).
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Supported kline intervals (case-sensitive):
+    ///
+    /// Interval  | `interval` value
+    /// --------- | ----------------
+    /// seconds   | `1s`
+    /// minutes   | `1m`, `3m`, `5m`, `15m`, `30m`
+    /// hours     | `1h`, `2h`, `4h`, `6h`, `8h`, `12h`
+    /// days      | `1d`, `3d`
+    /// weeks     | `1w`
+    /// months    | `1M`
+    ///
+    /// **Notes:**
+    ///
+    /// * If `startTime` and `endTime` are not sent, the most recent klines are returned.
+    /// * Supported values for `timeZone`:
+    /// * Hours and minutes (e.g. `-1:00`, `05:45`)
+    /// * Only hours (e.g. `0`, `8`, `4`)
+    /// * Accepted range is strictly [-12:00 to +14:00] inclusive
+    /// * If `timeZone` provided, kline intervals are interpreted in that timezone instead of UTC.
+    /// * Note that `startTime` and `endTime` are always interpreted in UTC, regardless of `timeZone`.
     ///
     /// # Arguments
     ///
@@ -1019,26 +1259,33 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Vec<Vec<models::KlinesItemInner>>>`] on success.
+    /// [`WebsocketApiResponse<Vec<Vec<models::KlinesResponseResultInnerInner>>>`] on success.
     ///
     /// # Errors
     ///
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#klines).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#klines).
     ///
     pub async fn klines(
         &self,
         params: KlinesParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<Vec<models::KlinesItemInner>>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<Vec<models::KlinesResponseResultInnerInner>>>>
+    {
         self.market_api_client.klines(params).await
     }
 
-    /// WebSocket Query Reference Price
+    /// Query Reference Price
     ///
+    /// Query Reference Price
     ///
-    /// Weight: 2
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1054,7 +1301,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#query-reference-price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#reference-price).
     ///
     pub async fn reference_price(
         &self,
@@ -1063,10 +1310,16 @@ impl WebsocketApi {
         self.market_api_client.reference_price(params).await
     }
 
-    /// WebSocket Query Reference Price Calculation
+    /// Query Reference Price Calculation
     ///
-    /// Describes how reference price is calculated for a given symbol.
-    /// Weight: 2
+    /// Query Reference Price Calculation
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1082,7 +1335,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#query-reference-price-calculation).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#reference-price-calculation).
     ///
     pub async fn reference_price_calculation(
         &self,
@@ -1094,18 +1347,65 @@ impl WebsocketApi {
             .await
     }
 
-    /// WebSocket Rolling window price change statistics
+    /// Rolling window price change statistics
     ///
     /// Get rolling window price change statistics with a custom window.
     ///
-    /// This request is similar to `ticker.24hr`,
-    /// but statistics are computed on demand using the arbitrary window you specify.
+    /// This request is similar to `ticker.24hr` but statistics are computed on demand using the arbitrary window you specify.
+    ///
+    /// **Note:** Window size precision is limited to 1 minute.
+    /// While the `closeTime` is the current time of the request, `openTime` always start on a minute boundary.
+    /// As such, the effective window might be up to 59999 ms wider than the requested `windowSize`.
+    ///
+    /// <details>
+    /// <summary>Window computation example</summary>
+    ///
+    /// For example, a request for `"windowSize": "7d"` might result in the following window:
+    ///
+    /// ```javascript
+    /// {
+    /// "openTime": 1659580020000,
+    /// "closeTime": 1660184865291
+    /// }
+    /// ```
+    ///
+    /// Time of the request – `closeTime` – is 1660184865291 (August 11, 2022 02:27:45.291).
+    /// Requested window size should put the `openTime` 7 days before that – August 4, 02:27:45.291 –
+    /// but due to limited precision it ends up a bit earlier: 1659580020000 (August 4, 2022 02:27:00),
+    /// exactly at the start of a minute.
+    /// </details>
+    ///
+    /// If you need to continuously monitor trading statistics, please consider using WebSocket Streams:
+    /// * `<symbol>@ticker_<window_size>` or `!ticker_<window-size>@arr`
+    ///
     /// Weight: Adjusted based on the number of requested symbols:
     ///
     /// | Symbols | Weight |
     /// |:-------:|:------:|
     /// |    1–50 | 4 per symbol |
     /// |  51–100 |    200 |
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Supported window sizes:
+    ///
+    /// Unit    | `windowSize` value
+    /// ------- | ------------------
+    /// minutes | `1m`, `2m` ... `59m`
+    /// hours   | `1h`, `2h` ... `23h`
+    /// days    | `1d`, `2d` ... `7d`
+    ///
+    /// Notes:
+    ///
+    /// * Either `symbol` or `symbols` must be specified.
+    ///
+    /// * Maximum number of symbols in one request: 200.
+    ///
+    /// * Window size units cannot be combined.
+    /// E.g., <code>1d 2h</code> is not supported.
     ///
     /// # Arguments
     ///
@@ -1121,7 +1421,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#rolling-window-price-change-statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker).
     ///
     pub async fn ticker(
         &self,
@@ -1130,25 +1430,41 @@ impl WebsocketApi {
         self.market_api_client.ticker(params).await
     }
 
-    /// WebSocket 24hr ticker price change statistics
+    /// 24hr ticker price change statistics
     ///
     /// Get 24-hour rolling window price change statistics.
     ///
     /// If you need to continuously monitor trading statistics, please consider using WebSocket Streams:
     ///
     /// * `<symbol>@ticker` or `!ticker@arr`
+    ///
     /// * `<symbol>@miniTicker` or `!miniTicker@arr`
     ///
     /// If you need different window sizes,
+    ///
     /// use the `ticker` request.
+    ///
     /// Weight: Adjusted based on the number of requested symbols:
     ///
-    /// | Symbols     | Weight |
-    /// |:-----------:|:------:|
-    /// |        1–20 |      2 |
-    /// |      21–100 |     40 |
-    /// | 101 or more |     80 |
-    /// | all symbols |     80 |
+    /// |Parameter|Symbols Provided|Weight|
+    /// |---|---|---|
+    /// |symbol| 1 |2|
+    /// | |omitted| 80|
+    /// |symbols| 1-20 |2|
+    /// | | 21-100 |40|
+    /// | | 101+ |80|
+    /// | |omitted| 80|
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
+    /// Notes:
+    ///
+    /// * `symbol` and `symbols` cannot be used together.
+    ///
+    /// * If no symbol is specified, returns information about all symbols currently trading on the exchange.
     ///
     /// # Arguments
     ///
@@ -1164,7 +1480,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#24hr-ticker-price-change-statistics).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker24hr).
     ///
     pub async fn ticker24hr(
         &self,
@@ -1173,20 +1489,33 @@ impl WebsocketApi {
         self.market_api_client.ticker24hr(params).await
     }
 
-    /// WebSocket Symbol order book ticker
+    /// Symbol order book ticker
     ///
     /// Get the current best price and quantity on the order book.
     ///
-    /// If you need access to real-time order book ticker updates, please consider using WebSocket Streams:
+    /// If you need access to real-time order book ticker updates, please
+    /// consider using WebSocket Streams:
     ///
     /// * `<symbol>@bookTicker`
+    ///
     /// Weight: Adjusted based on the number of requested symbols:
     ///
-    /// | Parameter | Weight |
-    /// | --------- |:------:|
-    /// | `symbol`  |      2 |
-    /// | `symbols` |      4 |
-    /// | none      |      4 |
+    /// |Parameter|Symbols Provided|Weight|
+    /// |---|---|---|
+    /// |symbol| 1 |2|
+    /// | |omitted| 4|
+    /// |symbols| Any |4|
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
+    /// Notes:
+    ///
+    /// * `symbol` and `symbols` cannot be used together.
+    ///
+    /// * If no symbol is specified, returns information about all symbols currently trading on the exchange.
     ///
     /// # Arguments
     ///
@@ -1202,7 +1531,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-order-book-ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-book).
     ///
     pub async fn ticker_book(
         &self,
@@ -1211,21 +1540,35 @@ impl WebsocketApi {
         self.market_api_client.ticker_book(params).await
     }
 
-    /// WebSocket Symbol price ticker
+    /// Symbol price ticker
     ///
     /// Get the latest market price for a symbol.
     ///
-    /// If you need access to real-time price updates, please consider using WebSocket Streams:
+    /// If you need access to real-time price updates, please consider using
+    /// WebSocket Streams:
     ///
     /// * `<symbol>@aggTrade`
+    ///
     /// * `<symbol>@trade`
+    ///
     /// Weight: Adjusted based on the number of requested symbols:
     ///
-    /// | Parameter | Weight |
-    /// | --------- |:------:|
-    /// | `symbol`  |      2 |
-    /// | `symbols` |      4 |
-    /// | none      |      4 |
+    /// |Parameter|Symbols Provided|Weight|
+    /// |---|---|---|
+    /// |symbol| 1 |2|
+    /// | |omitted| 4|
+    /// |symbols| Any |4|
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
+    ///
+    /// Notes:
+    ///
+    /// * `symbol` and `symbols` cannot be used together.
+    ///
+    /// * If no symbol is specified, returns information about all symbols currently trading on the exchange.
     ///
     /// # Arguments
     ///
@@ -1241,7 +1584,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#symbol-price-ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-price).
     ///
     pub async fn ticker_price(
         &self,
@@ -1250,10 +1593,23 @@ impl WebsocketApi {
         self.market_api_client.ticker_price(params).await
     }
 
-    /// WebSocket Trading Day Ticker
+    /// Trading Day Ticker
     ///
     /// Price change statistics for a trading day.
-    /// Weight: 4 for each requested <tt>symbol</tt>. <br/><br/> The weight for this request will cap at 200 once the number of `symbols` in the request is more than 50.
+    ///
+    /// Weight: 4 for each requested symbol regardless of windowSize. The weight for this request will cap at 200 once the number of symbols in the request is more than 50.
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// **Notes:**
+    ///
+    /// * Supported values for `timeZone`:
+    /// * Hours and minutes (e.g. `-1:00`, `05:45`)
+    /// * Only hours (e.g. `0`, `8`, `4`)
+    ///
     ///
     /// # Arguments
     ///
@@ -1269,7 +1625,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#trading-day-ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ticker-trading-day).
     ///
     pub async fn ticker_trading_day(
         &self,
@@ -1279,21 +1635,36 @@ impl WebsocketApi {
         self.market_api_client.ticker_trading_day(params).await
     }
 
-    /// WebSocket Aggregate trades
+    /// Aggregate trades
     ///
     /// Get aggregate trades.
     ///
-    /// An *aggregate trade* (aggtrade) represents one or more individual trades.
-    /// Trades that fill at the same time, from the same taker order, with the same price –
-    /// those trades are collected into an aggregate trade with total quantity of the individual trades.
+    /// An *aggregate trade* (aggtrade) represents one or more individual
+    /// trades.
     ///
-    /// If you need access to real-time trading activity, please consider using WebSocket Streams:
+    /// Trades that fill at the same time, from the same taker order, with the
+    /// same price –
+    ///
+    /// those trades are collected into an aggregate trade with total quantity
+    /// of the individual trades.
+    ///
+    /// If you need access to real-time trading activity, please consider using
+    /// WebSocket Streams:
     ///
     /// * `<symbol>@aggTrade`
     ///
-    /// If you need historical aggregate trade data,
-    /// please consider using [data.binance.vision](https://github.com/binance/binance-public-data/#aggtrades).
-    /// Weight: 4
+    /// If you need historical aggregate trade data, please consider using [data.binance.vision](https://github.com/binance/binance-public-data/#aggtrades).
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// - If `fromId` is specified, return aggtrades with aggregate trade ID >= `fromId`. Use `fromId` and `limit` to page through all aggtrades.
+    /// - If `startTime` and/or `endTime` are specified, aggtrades are filtered by execution time (`T`). `fromId` cannot be used together with `startTime` and `endTime`.
+    /// - If no condition is specified, the most recent aggregate trades are returned.
     ///
     /// # Arguments
     ///
@@ -1309,7 +1680,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#aggregate-trades).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#trades-aggregate).
     ///
     pub async fn trades_aggregate(
         &self,
@@ -1318,10 +1689,20 @@ impl WebsocketApi {
         self.market_api_client.trades_aggregate(params).await
     }
 
-    /// WebSocket Historical trades
+    /// Historical trades
     ///
     /// Get historical trades.
-    /// Weight: 25
+    ///
+    /// Weight(IP): 25
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// Notes:
+    ///
+    /// * If `fromId` is not specified, the most recent trades are returned.
     ///
     /// # Arguments
     ///
@@ -1337,7 +1718,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#historical-trades).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#trades-historical).
     ///
     pub async fn trades_historical(
         &self,
@@ -1347,14 +1728,21 @@ impl WebsocketApi {
         self.market_api_client.trades_historical(params).await
     }
 
-    /// WebSocket Recent trades
+    /// Recent trades
     ///
     /// Get recent trades.
     ///
-    /// If you need access to real-time trading activity, please consider using WebSocket Streams:
+    /// If you need access to real-time trading activity, please consider using
+    /// WebSocket Streams:
     ///
     /// * `<symbol>@trade`
-    /// Weight: 25
+    ///
+    /// Weight(IP): 25
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1370,7 +1758,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#recent-trades).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#trades-recent).
     ///
     pub async fn trades_recent(
         &self,
@@ -1379,13 +1767,26 @@ impl WebsocketApi {
         self.market_api_client.trades_recent(params).await
     }
 
-    /// WebSocket UI Klines
+    /// UI Klines
     ///
     /// Get klines (candlestick bars) optimized for presentation.
     ///
-    /// This request is similar to `klines`, having the same parameters and response.
-    /// `uiKlines` return modified kline data, optimized for presentation of candlestick charts.
-    /// Weight: 2
+    /// This request is similar to `klines`, having the same parameters and response. `uiKlines` return modified kline data, optimized for presentation of candlestick charts.
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Database
+    ///
+    /// - If `startTime` and `endTime` are not sent, the most recent klines are returned.
+    /// - Supported values for `timeZone`:
+    /// - Hours and minutes (e.g. `-1:00`, `05:45`)
+    /// - Only hours (e.g. `0`, `8`, `4`)
+    /// - Accepted range is strictly [-12:00 to +14:00] inclusive
+    /// - If `timeZone` provided, kline intervals are interpreted in that timezone instead of UTC.
+    /// - Note that `startTime` and `endTime` are always interpreted in UTC, regardless of `timeZone`.
     ///
     /// # Arguments
     ///
@@ -1394,27 +1795,34 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Vec<Vec<models::KlinesItemInner>>>`] on success.
+    /// [`WebsocketApiResponse<Vec<Vec<models::KlinesResponseResultInnerInner>>>`] on success.
     ///
     /// # Errors
     ///
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/market-data-requests#ui-klines).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/market#ui-klines).
     ///
     pub async fn ui_klines(
         &self,
         params: UiKlinesParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<Vec<models::KlinesItemInner>>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<Vec<models::KlinesResponseResultInnerInner>>>>
+    {
         self.market_api_client.ui_klines(params).await
     }
 
-    /// WebSocket Cancel open orders
+    /// Cancel open orders (TRADE)
     ///
     /// Cancel all open orders on a symbol.
     /// This includes orders that are part of an order list.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1430,7 +1838,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#cancel-open-orders-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#open-orders-cancel-all).
     ///
     pub async fn open_orders_cancel_all(
         &self,
@@ -1440,14 +1848,22 @@ impl WebsocketApi {
         self.trade_api_client.open_orders_cancel_all(params).await
     }
 
-    /// WebSocket Order Amend Keep Priority
+    /// Order Amend Keep Priority (TRADE)
     ///
     /// Reduce the quantity of an existing open order.
     ///
     /// This adds 0 orders to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
     ///
-    /// Read [Order Amend Keep Priority FAQ](faqs/order_amend_keep_priority.md) to learn more.
-    /// Weight: 4
+    /// Read [Order Amend Keep Priority FAQ](/products/spot/faqs/order_amend_keep_priority) to learn more.
+    ///
+    /// Weight(IP): 4
+    ///
+    /// Unfilled Order Count: 0
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1463,7 +1879,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#order-amend-keep-priority-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-amend-keep-priority).
     ///
     pub async fn order_amend_keep_priority(
         &self,
@@ -1475,10 +1891,26 @@ impl WebsocketApi {
             .await
     }
 
-    /// WebSocket Cancel order
+    /// Cancel order (TRADE)
     ///
     /// Cancel an active order.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// Notes:
+    ///
+    /// * If both `orderId` and `origClientOrderId` parameters are provided, the `orderId` is searched first, then the `origClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
+    ///
+    /// * `newClientOrderId` will replace `clientOrderId` of the canceled order, freeing it up for new orders.
+    ///
+    /// * If you cancel an order that is a part of an order list, the entire order list is canceled.
+    ///
+    /// * The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` + `origClientOrderId` will be slower.
     ///
     /// # Arguments
     ///
@@ -1494,7 +1926,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#cancel-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-cancel).
     ///
     pub async fn order_cancel(
         &self,
@@ -1503,12 +1935,222 @@ impl WebsocketApi {
         self.trade_api_client.order_cancel(params).await
     }
 
-    /// WebSocket Cancel and replace order
+    /// Cancel and replace order (TRADE)
     ///
     /// * Cancel an existing order and immediately place a new order instead of the canceled one.
     /// * A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
-    /// * You can only cancel an individual order from an orderList using this method, but the result is the same as canceling the entire orderList.
-    /// Weight: 1
+    /// * You can only cancel an individual order from an orderList using this method, but the result is the same as canceling the entire orderList.not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Unfilled Order Count: 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// Similar to the [`order.place`](#order-place) request,
+    /// additional mandatory parameters (*) are determined by the new order `type`.
+    ///
+    /// Available `cancelReplaceMode` options:
+    ///
+    /// * `STOP_ON_FAILURE` – if cancellation request fails, new order placement will not be attempted.
+    /// * `ALLOW_FAILURE` – new order placement will be attempted even if the cancel request fails.
+    ///
+    /// <table>
+    /// <thead>
+    /// <tr>
+    /// <th colspan=3 align=left>Request</th>
+    /// <th colspan=3 align=left>Response</th>
+    /// </tr>
+    /// <tr>
+    /// <th><code>cancelReplaceMode</code></th>
+    /// <th><code>orderRateLimitExceededMode</code></th>
+    /// <th>Unfilled Order Count</th>
+    /// <th><code>cancelResult</code></th>
+    /// <th><code>newOrderResult</code></th>
+    /// <th><code>status</code></th>
+    /// </tr>
+    /// </thead>
+    /// <tbody>
+    /// <tr>
+    /// <td rowspan="11"><code>STOP_ON_FAILURE</code></td>
+    /// <td rowspan="6"><code>DO_NOTHING</code></td>
+    /// <td rowspan="3">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="3">Exceeds Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="5"><code>CANCEL_ONLY</code></td>
+    /// <td rowspan="3">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="2">Exceeds Limits</td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>➖ <code>NOT_ATTEMPTED</code></td>
+    /// <td align=right><code>429</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>429</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="16"><code>ALLOW_FAILURE</code></td>
+    /// <td rowspan="8"><code>DO_NOTHING</code></td>
+    /// <td rowspan="4">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="4">Exceeds Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="8"><CODE>CANCEL_ONLY</CODE></td>
+    /// <td rowspan="4">Within Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td rowspan="4">Exceeds Limits</td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right><code>200</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>400</code></td>
+    /// </tr>
+    /// <tr>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td align=right>N/A</td>
+    /// </tr>
+    /// <tr>
+    /// <td>✅ <code>SUCCESS</code></td>
+    /// <td>❌ <code>FAILURE</code></td>
+    /// <td align=right><code>409</code></td>
+    /// </tr>
+    /// </tbody>
+    /// </table>
+    ///
+    /// Notes:
+    ///
+    /// * If both `cancelOrderId` and `cancelOrigClientOrderId` parameters are provided, the `cancelOrderId` is searched first, then the `cancelOrigClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
+    ///
+    /// * `cancelNewClientOrderId` will replace `clientOrderId` of the canceled order, freeing it up for new orders.
+    ///
+    /// * `newClientOrderId` specifies `clientOrderId` value for the placed order.
+    ///
+    /// A new order with the same `clientOrderId` is accepted only when the previous one is filled or expired.
+    ///
+    /// The new order can reuse old `clientOrderId` of the canceled order.
+    ///
+    /// * This cancel-replace operation is **not transactional**.
+    ///
+    /// If one operation succeeds but the other one fails, the successful operation is still executed.
+    ///
+    /// For example, in `STOP_ON_FAILURE` mode, if the new order placement fails, the old order is still canceled.
+    ///
+    /// * Filters and order count limits are evaluated before cancellation and order placement occurs.
+    ///
+    /// * If new order placement is not attempted, your order count is still incremented.
+    ///
+    /// * Like [`order.cancel`](#order-cancel), if you cancel an individual order from an order list, the entire order list is canceled.
+    ///
+    /// * The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` + `origClientOrderId` will be slower.
     ///
     /// # Arguments
     ///
@@ -1524,7 +2166,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#cancel-and-replace-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-cancel-replace).
     ///
     pub async fn order_cancel_replace(
         &self,
@@ -1533,10 +2175,22 @@ impl WebsocketApi {
         self.trade_api_client.order_cancel_replace(params).await
     }
 
-    /// WebSocket Cancel Order list
+    /// Cancel Order list (TRADE)
     ///
     /// Cancel an active order list.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// Notes:
+    ///
+    /// * If both `orderListId` and `listClientOrderId` parameters are provided, the `orderListId` is searched first, then the `listClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
+    ///
+    /// * Canceling an individual order with [`order.cancel`](#order-cancel) will cancel the entire order list as well.
     ///
     /// # Arguments
     ///
@@ -1552,7 +2206,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#cancel-order-list-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-list-cancel).
     ///
     pub async fn order_list_cancel(
         &self,
@@ -1561,16 +2215,49 @@ impl WebsocketApi {
         self.trade_api_client.order_list_cancel(params).await
     }
 
-    /// WebSocket Place new OCO - Deprecated
+    /// Place new OCO - Deprecated (TRADE)
     ///
     /// Send in a new one-cancels-the-other (OCO) pair:
     /// `LIMIT_MAKER` + `STOP_LOSS`/`STOP_LOSS_LIMIT` orders (called *legs*),
     /// where activation of one order immediately cancels the other.
     ///
     /// This adds 1 order to `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// Notes:
+    ///
+    /// * `listClientOrderId` parameter specifies `listClientOrderId` for the OCO pair.
+    ///
+    /// A new OCO with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired.
+    ///
+    /// `listClientOrderId` is distinct from `clientOrderId` of individual orders.
+    ///
+    /// * `limitClientOrderId` and `stopClientOrderId` specify `clientOrderId` values for both legs of the OCO.
+    ///
+    /// A new order with the same `clientOrderId` is accepted only when the previous one is filled or expired.
+    ///
+    /// * Price restrictions on the legs:
+    ///
+    /// | `side` | Price relation |
+    /// | ------ | -------------- |
+    /// | `BUY`  | `price` < market price < `stopPrice` |
+    /// | `SELL` | `price` > market price > `stopPrice` |
+    ///
+    /// * Both legs have the same `quantity`.
+    ///
+    /// However, you can set different iceberg quantity for individual legs.
+    ///
+    /// If `stopIcebergQty` is used, `stopLimitTimeInForce` must be `GTC`.
+    ///
+    /// * `trailingDelta` applies only to the `STOP_LOSS`/`STOP_LOSS_LIMIT` leg of the OCO.
     ///
     /// # Arguments
     ///
@@ -1586,7 +2273,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#place-new-oco---deprecated-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-list-place).
     ///
     /// # Deprecation
     ///
@@ -1599,23 +2286,34 @@ impl WebsocketApi {
         self.trade_api_client.order_list_place(params).await
     }
 
-    /// WebSocket Place new Order list - OCO
+    /// Place new Order list - OCO (TRADE)
     ///
     /// Send in an one-cancels-the-other (OCO) pair, where activation of one order immediately cancels the other.
     ///
     /// * An OCO has 2 orders called the **above order** and **below order**.
-    /// * One of the orders must be a `LIMIT_MAKER/TAKE_PROFIT/TAKE_PROFIT_LIMIT` order and the other must be `STOP_LOSS` or `STOP_LOSS_LIMIT` order.
+    ///
+    /// * One of the orders must be a `LIMIT_MAKER/TAKE_PROFIT/TAKE_PROFIT_LIMIT` order and the other must be
+    /// `STOP_LOSS` or `STOP_LOSS_LIMIT` order.
+    ///
     /// * Price restrictions:
     /// * If the OCO is on the `SELL` side:
-    /// * `LIMIT_MAKER/TAKE_PROFIT_LIMIT` `price` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
-    /// * `TAKE_PROFIT stopPrice` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT stopPrice`
+    /// * `LIMIT_MAKER/TAKE_PROFIT_LIMIT` `price` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT`
+    /// `stopPrice`
+    /// * `TAKE_PROFIT stopPrice` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT
+    /// stopPrice`
     /// * If the OCO is on the `BUY` side:
     /// * `LIMIT_MAKER` `price` < Last Traded Price < `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
     /// * `TAKE_PROFIT stopPrice` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT stopPrice`
-    /// * OCOs add **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    /// *  OCOs add **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and `MAX_NUM_ORDERS` filter.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 2
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1631,7 +2329,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#place-new-order-list---oco-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-list-place-oco).
     ///
     pub async fn order_list_place_oco(
         &self,
@@ -1640,14 +2338,20 @@ impl WebsocketApi {
         self.trade_api_client.order_list_place_oco(params).await
     }
 
-    /// WebSocket OPO
+    /// OPO (TRADE)
     ///
-    /// Place an [OPO](./faqs/opo.md).
+    /// Place an [OPO](/products/spot/faqs/opo).
     ///
     /// * OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 2
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1663,7 +2367,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#opo-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-list-place-opo).
     ///
     pub async fn order_list_place_opo(
         &self,
@@ -1672,12 +2376,18 @@ impl WebsocketApi {
         self.trade_api_client.order_list_place_opo(params).await
     }
 
-    /// WebSocket OPOCO
+    /// OPOCO (TRADE)
     ///
-    /// Place an [OPOCO](./faqs/opo.md).
-    /// Weight: 1
+    /// Place an [OPOCO](/products/spot/faqs/opo).
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 3
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
     ///
     /// # Arguments
     ///
@@ -1693,7 +2403,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#opoco-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-list-place-opoco).
     ///
     pub async fn order_list_place_opoco(
         &self,
@@ -1702,19 +2412,47 @@ impl WebsocketApi {
         self.trade_api_client.order_list_place_opoco(params).await
     }
 
-    /// WebSocket Place new Order list - OTO
+    /// Place new Order list - OTO (TRADE)
     ///
     /// Places an OTO.
     ///
     /// * An OTO (One-Triggers-the-Other) is an order list comprised of 2 orders.
-    /// * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
-    /// * The second order is called the **pending order**. It can be any order type except for `MARKET` orders using parameter `quoteOrderQty`. The pending order is only placed on the order book when the working order gets **fully filled**.
-    /// * If either the working order or the pending order is cancelled individually, the other order in the order list will also be canceled or expired.
-    /// * When the order list is placed, if the working order gets **immediately fully filled**, the placement response will show the working order as `FILLED` but the pending order will still appear as `PENDING_NEW`. You need to query the status of the pending order again to see its updated status.
+    ///
+    /// * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the
+    /// working order goes on the order book.
+    ///
+    /// * The second order is called the **pending order**. It can be any order type except for `MARKET` orders using
+    /// parameter `quoteOrderQty`. The pending order is only placed on the order book when the working order gets
+    /// **fully filled**.
+    ///
+    /// * If either the working order or the pending order is cancelled individually, the other order in the order list
+    /// will also be canceled or expired.
+    ///
+    /// * When the order list is placed, if the working order gets **immediately fully filled**, the placement response
+    /// will show the working order as `FILLED` but the pending order will still appear as `PENDING_NEW`. You need to
+    /// query the status of the pending order again to see its updated status.
+    ///
     /// * OTOs add **2 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 2
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// **Mandatory parameters based on `pendingType` or `workingType`**
+    ///
+    /// Depending on the `pendingType` or `workingType`, some optional parameters will become mandatory.
+    ///
+    /// |Type                                                  |Additional mandatory parameters|Additional information|
+    /// |----                                                  |----                           |------
+    /// |`workingType` = `LIMIT`                               |`workingTimeInForce`           |
+    /// |`pendingType` = `LIMIT`                                |`pendingPrice`, `pendingTimeInForce`          |
+    /// |`pendingType` = `STOP_LOSS` or `TAKE_PROFIT`           |`pendingStopPrice` and/or `pendingTrailingDelta`|
+    /// |`pendingType` =`STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`|`pendingPrice`, `pendingStopPrice` and/or `pendingTrailingDelta`, `pendingTimeInForce`|
     ///
     /// # Arguments
     ///
@@ -1730,7 +2468,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#place-new-order-list---oto-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-list-place-oto).
     ///
     pub async fn order_list_place_oto(
         &self,
@@ -1739,19 +2477,39 @@ impl WebsocketApi {
         self.trade_api_client.order_list_place_oto(params).await
     }
 
-    /// WebSocket Place new Order list - OTOCO
+    /// Place new Order list - OTOCO (TRADE)
     ///
     /// Place an OTOCO.
     ///
     /// * An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list comprised of 3 orders.
     /// * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
-    /// * The behavior of the working order is the same as the [OTO](#place-new-order-list---oto-trade).
+    /// * The behavior of the working order is the same as the [OTO](#order-list-place-oto).
     /// * OTOCO has 2 pending orders (pending above and pending below), forming an OCO pair. The pending orders are only placed on the order book when the working order gets **fully filled**.
-    /// * The rules of the pending above and pending below follow the same rules as the [Order list OCO](#new-order-list---oco-trade).
+    /// * The rules of the pending above and pending below follow the same rules as the [Order list OCO](#order-list-place-oco).
     /// * OTOCOs add **3 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 3
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// **Mandatory parameters based on `pendingAboveType`, `pendingBelowType` or `workingType`**
+    ///
+    /// Depending on the `pendingAboveType`/`pendingBelowType` or `workingType`, some optional parameters will become mandatory.
+    ///
+    /// |Type                                                       |Additional mandatory parameters|Additional information|
+    /// |----                                                       |----                           |------
+    /// |`workingType` = `LIMIT`                                    |`workingTimeInForce`           |
+    /// |`pendingAboveType`= `LIMIT_MAKER`                                |`pendingAbovePrice`          |
+    /// |`pendingAboveType` = `STOP_LOSS/TAKE_PROFIT`         |`pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`|
+    /// |`pendingAboveType=STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT`|`pendingAbovePrice`, `pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`, `pendingAboveTimeInForce`|
+    /// |`pendingBelowType`= `LIMIT_MAKER`                                |`pendingBelowPrice`          |
+    /// `pendingBelowType= STOP_LOSS/TAKE_PROFIT`         |`pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`|
+    /// |`pendingBelowType=STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT`|`pendingBelowPrice`, `pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`, `pendingBelowTimeInForce`|
     ///
     /// # Arguments
     ///
@@ -1767,7 +2525,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#place-new-order-list---otoco-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-list-place-otoco).
     ///
     pub async fn order_list_place_otoco(
         &self,
@@ -1776,12 +2534,242 @@ impl WebsocketApi {
         self.trade_api_client.order_list_place_otoco(params).await
     }
 
-    /// WebSocket Place new order
+    /// Place new order (TRADE)
     ///
     /// Send in a new order.
     ///
     /// This adds 1 order to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-    /// Weight: 1
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Unfilled Order Count: 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// <a id="order-type">Certain parameters (*)</a> become mandatory based on the order `type`:
+    ///
+    /// <table>
+    /// <thead>
+    /// <tr>
+    /// <th>Order <code>type</code></th>
+    /// <th>Mandatory parameters</th>
+    /// </tr>
+    /// </thead>
+    /// <tbody>
+    /// <tr>
+    /// <td><code>LIMIT</code></td>
+    /// <td>
+    /// <ul>
+    /// <li><code>timeInForce</code></li>
+    /// <li><code>price</code></li>
+    /// <li><code>quantity</code></li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>LIMIT_MAKER</code></td>
+    /// <td>
+    /// <ul>
+    /// <li><code>price</code></li>
+    /// <li><code>quantity</code></li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>MARKET</code></td>
+    /// <td>
+    /// <ul>
+    /// <li><code>quantity</code> or <code>quoteOrderQty</code></li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>STOP_LOSS</code></td>
+    /// <td>
+    /// <ul>
+    /// <li><code>quantity</code></li>
+    /// <li><code>stopPrice</code> or <code>trailingDelta</code></li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>STOP_LOSS_LIMIT</code></td>
+    /// <td>
+    /// <ul>
+    /// <li><code>timeInForce</code></li>
+    /// <li><code>price</code></li>
+    /// <li><code>quantity</code></li>
+    /// <li><code>stopPrice</code> or <code>trailingDelta</code></li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>TAKE_PROFIT</code></td>
+    /// <td>
+    /// <ul>
+    /// <li><code>quantity</code></li>
+    /// <li><code>stopPrice</code> or <code>trailingDelta</code></li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>TAKE_PROFIT_LIMIT</code></td>
+    /// <td>
+    /// <ul>
+    /// <li><code>timeInForce</code></li>
+    /// <li><code>price</code></li>
+    /// <li><code>quantity</code></li>
+    /// <li><code>stopPrice</code> or <code>trailingDelta</code></li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// </tbody>
+    /// </table>
+    ///
+    /// Supported order types:
+    ///
+    /// <table>
+    /// <thead>
+    /// <tr>
+    /// <th>Order <code>type</code></th>
+    /// <th>Description</th>
+    /// </tr>
+    /// </thead>
+    /// <tbody>
+    /// <tr>
+    /// <td><code>LIMIT</code></td>
+    /// <td>
+    /// <p>
+    /// Buy or sell <code>quantity</code> at the specified <code>price</code> or better.
+    /// </p>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>LIMIT_MAKER</code></td>
+    /// <td>
+    /// <p>
+    /// <code>LIMIT</code> order that will be rejected if it immediately matches and trades as a taker.
+    /// </p>
+    /// <p>
+    /// This order type is also known as a POST-ONLY order.
+    /// </p>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>MARKET</code></td>
+    /// <td>
+    /// <p>
+    /// Buy or sell at the best available market price.
+    /// </p>
+    /// <ul>
+    /// <li>
+    /// <p>
+    /// <code>MARKET</code> order with <code>quantity</code> parameter
+    /// specifies the amount of the <em>base asset</em> you want to buy or sell.
+    /// Actually executed quantity of the quote asset will be determined by available market liquidity.
+    /// </p>
+    /// <p>
+    /// E.g., a MARKET BUY order on BTCUSDT for <code>"quantity": "0.1000"</code>
+    /// specifies that you want to buy 0.1 BTC at the best available price.
+    /// If there is not enough BTC at the best price, keep buying at the next best price,
+    /// until either your order is filled, or you run out of USDT, or market runs out of BTC.
+    /// </p>
+    /// </li>
+    /// <li>
+    /// <p>
+    /// <code>MARKET</code> order with <code>quoteOrderQty</code> parameter
+    /// specifies the amount of the <em>quote asset</em> you want to spend (when buying) or receive (when selling).
+    /// Actually executed quantity of the base asset will be determined by available market liquidity.
+    /// </p>
+    /// <p>
+    /// E.g., a MARKET BUY on BTCUSDT for <code>"quoteOrderQty": "100.00"</code>
+    /// specifies that you want to buy as much BTC as you can for 100 USDT at the best available price.
+    /// Similarly, a SELL order will sell as much available BTC as needed for you to receive 100 USDT
+    /// (before commission).
+    /// </p>
+    /// </li>
+    /// </ul>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>STOP_LOSS</code></td>
+    /// <td>
+    /// <p>
+    /// Execute a <code>MARKET</code> order for given <code>quantity</code> when specified conditions are met.
+    /// </p>
+    /// <p>
+    /// I.e., when <code>stopPrice</code> is reached, or when <code>trailingDelta</code> is activated.
+    /// </p>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>STOP_LOSS_LIMIT</code></td>
+    /// <td>
+    /// <p>
+    /// Place a <code>LIMIT</code> order with given parameters when specified conditions are met.
+    /// </p>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>TAKE_PROFIT</code></td>
+    /// <td>
+    /// <p>
+    /// Like <code>STOP_LOSS</code> but activates when market price moves in the favorable direction.
+    /// </p>
+    /// </td>
+    /// </tr>
+    /// <tr>
+    /// <td><code>TAKE_PROFIT_LIMIT</code></td>
+    /// <td>
+    /// <p>
+    /// Like <code>STOP_LOSS_LIMIT</code> but activates when market price moves in the favorable direction.
+    /// </p>
+    /// </td>
+    /// </tr>
+    /// </tbody>
+    /// </table>
+    ///
+    /// <a id="pegged-orders-info"></a>
+    /// Notes on using parameters for Pegged Orders:
+    ///
+    /// * These parameters are allowed for `LIMIT`, `LIMIT_MAKER`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` orders.
+    /// * If `pegPriceType` is specified, `price` becomes optional. Otherwise, it is still mandatory.
+    /// * `pegPriceType=PRIMARY_PEG` means the primary peg, that is the best price on the same side of the order book as your order.
+    /// * `pegPriceType=MARKET_PEG` means the market peg, that is the best price on the opposite side of the order book from your order.
+    /// * Use `pegOffsetType` and `pegOffsetValue` to request a price level other than the best one. These parameters must be specified together.
+    ///
+    /// <a id="timeInForce"></a>
+    ///
+    /// Available `timeInForce` options,
+    /// setting how long the order should be active before expiration:
+    ///
+    /// TIF  | Description
+    /// ----- | --------------
+    /// `GTC` | **Good 'til Canceled** – the order will remain on the book until you cancel it, or the order is completely filled.
+    /// `IOC` | **Immediate or Cancel** – the order will be filled for as much as possible, the unfilled quantity immediately expires.
+    /// `FOK` | **Fill or Kill** – the order will expire unless it cannot be immediately filled for the entire quantity.
+    ///
+    /// Notes:
+    ///
+    /// * `newClientOrderId` specifies `clientOrderId` value for the order.
+    ///
+    /// A new order with the same `clientOrderId` is accepted only when the previous one is filled or expired.
+    ///
+    /// * Any `LIMIT` or `LIMIT_MAKER` order can be made into an iceberg order by specifying the `icebergQty`.
+    ///
+    /// An order with an `icebergQty` must have `timeInForce` set to `GTC`.
+    ///
+    /// * Trigger order price rules for `STOP_LOSS`/`TAKE_PROFIT` orders:
+    ///
+    /// * `stopPrice` must be above market price: `STOP_LOSS BUY`, `TAKE_PROFIT SELL`
+    /// * `stopPrice` must be below market price: `STOP_LOSS SELL`, `TAKE_PROFIT BUY`
+    ///
+    /// * `MARKET` orders using `quoteOrderQty` follow [`LOT_SIZE`](/products/spot/filters#lot_size) filter rules.
+    ///
+    /// The order will execute a quantity that has notional value as close as possible to requested `quoteOrderQty`.
     ///
     /// # Arguments
     ///
@@ -1797,7 +2785,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#place-new-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-place).
     ///
     pub async fn order_place(
         &self,
@@ -1806,16 +2794,22 @@ impl WebsocketApi {
         self.trade_api_client.order_place(params).await
     }
 
-    /// WebSocket Test new order
+    /// Test new order (TRADE)
     ///
     /// Test order placement.
     ///
     /// Validates new order parameters and verifies your signature
     /// but does not send the order into the matching engine.
-    /// Weight: |Condition| Request Weight|
-    /// |------------           | ------------ |
-    /// |Without `computeCommissionRates`| 1|
-    /// |With `computeCommissionRates`|20|
+    ///
+    /// Weight: | Condition | Request Weight |
+    /// | --- | --- |
+    /// | Without `computeCommissionRates` | 1 |
+    /// | With `computeCommissionRates` | 20 |
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1831,7 +2825,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#test-new-order-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#order-test).
     ///
     pub async fn order_test(
         &self,
@@ -1840,16 +2834,24 @@ impl WebsocketApi {
         self.trade_api_client.order_test(params).await
     }
 
-    /// WebSocket Place new order using SOR
+    /// Place new order using SOR (TRADE)
     ///
     /// Places an order using smart order routing (SOR).
     ///
     /// This adds 1 order to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
     ///
-    /// Read [SOR FAQ](faqs/sor_faq.md) to learn more.
-    /// Weight: 1
+    /// Read [SOR FAQ](/products/spot/faqs/sor_faq) to learn more.
+    ///
+    /// Weight(IP): 1
     ///
     /// Unfilled Order Count: 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Matching Engine
+    ///
+    /// **Note:** `sor.order.place` only supports `LIMIT` and `MARKET` orders. `quoteOrderQty` is not supported.
     ///
     /// # Arguments
     ///
@@ -1865,7 +2867,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#place-new-order-using-sor-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#sor-order-place).
     ///
     pub async fn sor_order_place(
         &self,
@@ -1874,14 +2876,20 @@ impl WebsocketApi {
         self.trade_api_client.sor_order_place(params).await
     }
 
-    /// WebSocket Test new order using SOR
+    /// Test new order using SOR (TRADE)
     ///
     /// Test new order creation and signature/recvWindow using smart order routing (SOR).
     /// Creates and validates a new order but does not send it into the matching engine.
-    /// Weight: |Condition                       | Request Weight|
-    /// |------------                    | ------------ |
-    /// |Without `computeCommissionRates`| 1            |
-    /// |With `computeCommissionRates`   |20            |
+    ///
+    /// Weight: | Condition | Request Weight |
+    /// | --- | --- |
+    /// | Without `computeCommissionRates` | 1 |
+    /// | With `computeCommissionRates` | 20 |
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1897,7 +2905,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/trading-requests#test-new-order-using-sor-trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/trade#sor-order-test).
     ///
     pub async fn sor_order_test(
         &self,
@@ -1906,13 +2914,18 @@ impl WebsocketApi {
         self.trade_api_client.sor_order_test(params).await
     }
 
-    /// WebSocket Listing all subscriptions
+    /// Listing all subscriptions
     ///
+    /// **Note:**
     ///
-    /// Weight: 2
+    /// * Users should track the corresponding subscription status of related accounts as needed.
     ///
-    /// **Data Source**:
-    /// Memory
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -1928,7 +2941,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#listing-all-subscriptions).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/user-data-stream#session-subscriptions).
     ///
     pub async fn session_subscriptions(
         &self,
@@ -1940,10 +2953,20 @@ impl WebsocketApi {
             .await
     }
 
-    /// WebSocket Subscribe to User Data Stream
+    /// Subscribe to User Data Stream
     ///
     /// Subscribe to the User Data Stream in the current WebSocket connection.
-    /// Weight: 2
+    ///
+    /// **Notes:**
+    /// - This method requires an authenticated WebSocket connection using Ed25519 keys. Please refer to [`session.logon`](/catalog/core-trading-spot-trading/api/ws-api/auth#session-logon).
+    /// - To check the subscription status, use [`session.status`](/catalog/core-trading-spot-trading/api/ws-api/auth#session-status), see the `userDataStream` flag indicating you have have an active subscription.
+    /// - User Data Stream events are available in both JSON and [SBE](/products/spot/faqs/sbe_faq) sessions.
+    /// - Please refer to [User Data Streams](/products/spot/user-data-stream) for the event format details.
+    /// - For SBE, only SBE schema 2:1 or later is supported.
+    ///
+    /// Weight(IP): 2
+    ///
+    /// Security Type: NONE
     ///
     /// # Arguments
     ///
@@ -1959,7 +2982,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#subscribe-to-user-data-stream-user_stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/user-data-stream#user-data-stream-subscribe).
     ///
     pub async fn user_data_stream_subscribe(
         &self,
@@ -1983,10 +3006,14 @@ impl WebsocketApi {
         Ok((response, stream))
     }
 
-    /// WebSocket Subscribe to User Data Stream through signature subscription
+    /// Subscribe to User Data Stream through signature subscription (`USER_STREAM`)
     ///
+    /// Weight(IP): 2
     ///
-    /// Weight: 2
+    /// Security Type: `USER_STREAM`
+    ///
+    /// Notes:
+    /// **Data Source:** Memory
     ///
     /// # Arguments
     ///
@@ -2002,7 +3029,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#subscribe-to-user-data-stream-through-signature-subscription-user_stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/user-data-stream#user-data-stream-subscribe-signature).
     ///
     pub async fn user_data_stream_subscribe_signature(
         &self,
@@ -2028,10 +3055,12 @@ impl WebsocketApi {
 
     /// WebSocket Unsubscribe from User Data Stream
     ///
-    /// Stop listening to the User Data Stream in the current WebSocket connection.
+    /// Stop listening to the User Data Stream in the current WebSocket
+    /// connection.
     ///
     /// Note that `session.logout` will only close the subscription created with `userDataStream.subscribe` but not subscriptions opened with `userDataStream.subscribe.signature`.
-    /// Weight: 2
+    ///
+    /// Weight(IP): 2
     ///
     /// # Arguments
     ///
@@ -2047,7 +3076,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-Data-Stream-requests#unsubscribe-from-user-data-stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/user-data-stream#user-data-stream-unsubscribe).
     ///
     pub async fn user_data_stream_unsubscribe(
         &self,

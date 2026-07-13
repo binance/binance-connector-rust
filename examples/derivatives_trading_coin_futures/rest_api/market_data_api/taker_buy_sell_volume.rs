@@ -31,8 +31,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = TakerBuySellVolumeParams::builder(
-        "pair_example".to_string(),
-        TakerBuySellVolumeContractTypeEnum::Perpetual,
+        "BTCUSD".to_string(),
+        TakerBuySellVolumeContractTypeEnum::All,
         TakerBuySellVolumePeriodEnum::Period5m,
     )
     .build()?;

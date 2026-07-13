@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,18 +18,25 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContractInfoStreamResponseBksInner {
+    /// Notional bracket
     #[serde(rename = "bs", skip_serializing_if = "Option::is_none")]
     pub bs: Option<i64>,
+    /// Floor notional of this bracket
     #[serde(rename = "bnf", skip_serializing_if = "Option::is_none")]
     pub bnf: Option<i64>,
+    /// Cap notional of this bracket
     #[serde(rename = "bnc", skip_serializing_if = "Option::is_none")]
     pub bnc: Option<i64>,
+    /// Maintenance ratio for this bracket
     #[serde(rename = "mmr", skip_serializing_if = "Option::is_none")]
     pub mmr: Option<rust_decimal::Decimal>,
+    /// Auxiliary number for quick calculation
     #[serde(rename = "cf", skip_serializing_if = "Option::is_none")]
     pub cf: Option<i64>,
+    /// Min leverage for this bracket
     #[serde(rename = "mi", skip_serializing_if = "Option::is_none")]
     pub mi: Option<i64>,
+    /// Max leverage for this bracket
     #[serde(rename = "ma", skip_serializing_if = "Option::is_none")]
     pub ma: Option<i64>,
 }

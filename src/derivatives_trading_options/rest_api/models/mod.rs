@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -59,8 +59,10 @@ pub mod historical_exercise_records_response_inner;
 pub use self::historical_exercise_records_response_inner::HistoricalExerciseRecordsResponseInner;
 pub mod index_price_response;
 pub use self::index_price_response::IndexPriceResponse;
-pub mod kline_candlestick_data_response_item_inner;
-pub use self::kline_candlestick_data_response_item_inner::KlineCandlestickDataResponseItemInner;
+pub mod kline_candlestick_data_item_inner;
+pub use self::kline_candlestick_data_item_inner::KlineCandlestickDataItemInner;
+pub mod new_block_trade_order_legs_parameter_inner;
+pub use self::new_block_trade_order_legs_parameter_inner::NewBlockTradeOrderLegsParameterInner;
 pub mod new_block_trade_order_response;
 pub use self::new_block_trade_order_response::NewBlockTradeOrderResponse;
 pub mod new_order_response;
@@ -109,6 +111,8 @@ pub mod start_user_data_stream_response;
 pub use self::start_user_data_stream_response::StartUserDataStreamResponse;
 pub mod ticker24hr_price_change_statistics_response_inner;
 pub use self::ticker24hr_price_change_statistics_response_inner::Ticker24hrPriceChangeStatisticsResponseInner;
+pub mod tradfi_options_contract_response;
+pub use self::tradfi_options_contract_response::TradfiOptionsContractResponse;
 pub mod user_commission_response;
 pub use self::user_commission_response::UserCommissionResponse;
 pub mod user_commission_response_commissions_inner;

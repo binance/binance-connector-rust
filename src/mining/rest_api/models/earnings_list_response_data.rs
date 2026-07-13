@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,8 +19,10 @@ use serde::{Deserialize, Serialize};
 pub struct EarningsListResponseData {
     #[serde(rename = "accountProfits", skip_serializing_if = "Option::is_none")]
     pub account_profits: Option<Vec<models::EarningsListResponseDataAccountProfitsInner>>,
+    /// Total rows
     #[serde(rename = "totalNum", skip_serializing_if = "Option::is_none")]
     pub total_num: Option<i64>,
+    /// Rows per page
     #[serde(rename = "pageSize", skip_serializing_if = "Option::is_none")]
     pub page_size: Option<i64>,
 }

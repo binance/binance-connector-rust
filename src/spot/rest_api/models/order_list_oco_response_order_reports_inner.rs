@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -53,17 +48,17 @@ pub struct OrderListOcoResponseOrderReportsInner {
     pub r#type: Option<String>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
-    #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
-    pub stop_price: Option<String>,
     #[serde(rename = "workingTime", skip_serializing_if = "Option::is_none")]
     pub working_time: Option<i64>,
-    #[serde(rename = "icebergQty", skip_serializing_if = "Option::is_none")]
-    pub iceberg_qty: Option<String>,
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<String>,
+    #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
+    pub stop_price: Option<String>,
+    #[serde(rename = "icebergQty", skip_serializing_if = "Option::is_none")]
+    pub iceberg_qty: Option<String>,
 }
 
 impl OrderListOcoResponseOrderReportsInner {
@@ -84,10 +79,10 @@ impl OrderListOcoResponseOrderReportsInner {
             time_in_force: None,
             r#type: None,
             side: None,
-            stop_price: None,
             working_time: None,
-            iceberg_qty: None,
             self_trade_prevention_mode: None,
+            stop_price: None,
+            iceberg_qty: None,
         }
     }
 }

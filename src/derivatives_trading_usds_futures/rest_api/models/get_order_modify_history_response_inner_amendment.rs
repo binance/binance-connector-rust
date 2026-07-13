@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,6 +21,7 @@ pub struct GetOrderModifyHistoryResponseInnerAmendment {
     pub price: Option<Box<models::GetOrderModifyHistoryResponseInnerAmendmentPrice>>,
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<Box<models::GetOrderModifyHistoryResponseInnerAmendmentOrigQty>>,
+    /// Order modification count, representing the number of times the order has been modified
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }

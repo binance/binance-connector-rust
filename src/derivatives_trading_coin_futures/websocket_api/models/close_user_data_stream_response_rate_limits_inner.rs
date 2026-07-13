@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,14 +18,19 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CloseUserDataStreamResponseRateLimitsInner {
+    /// Rate limit type.
     #[serde(rename = "rateLimitType", skip_serializing_if = "Option::is_none")]
     pub rate_limit_type: Option<String>,
+    /// Rate limit interval.
     #[serde(rename = "interval", skip_serializing_if = "Option::is_none")]
     pub interval: Option<String>,
+    /// Rate limit interval multiplier.
     #[serde(rename = "intervalNum", skip_serializing_if = "Option::is_none")]
     pub interval_num: Option<i64>,
+    /// Maximum allowed orders for this rule.
     #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
+    /// Total number of trades in the 24h window.
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }

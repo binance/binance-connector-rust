@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,6 +13,8 @@
 
 pub mod account_commission_response;
 pub use self::account_commission_response::AccountCommissionResponse;
+pub mod account_commission_response_rate_limits_inner;
+pub use self::account_commission_response_rate_limits_inner::AccountCommissionResponseRateLimitsInner;
 pub mod account_commission_response_result;
 pub use self::account_commission_response_result::AccountCommissionResponseResult;
 pub mod account_commission_response_result_discount;
@@ -44,12 +41,12 @@ pub mod all_order_lists_response;
 pub use self::all_order_lists_response::AllOrderListsResponse;
 pub mod all_order_lists_response_result_inner;
 pub use self::all_order_lists_response_result_inner::AllOrderListsResponseResultInner;
+pub mod all_order_lists_response_result_inner_orders_inner;
+pub use self::all_order_lists_response_result_inner_orders_inner::AllOrderListsResponseResultInnerOrdersInner;
 pub mod all_orders_response;
 pub use self::all_orders_response::AllOrdersResponse;
 pub mod all_orders_response_result_inner;
 pub use self::all_orders_response_result_inner::AllOrdersResponseResultInner;
-pub mod asset_filters;
-pub use self::asset_filters::AssetFilters;
 pub mod avg_price_response;
 pub use self::avg_price_response::AvgPriceResponse;
 pub mod avg_price_response_result;
@@ -58,6 +55,8 @@ pub mod balance_update;
 pub use self::balance_update::BalanceUpdate;
 pub mod block_trades_historical_response;
 pub use self::block_trades_historical_response::BlockTradesHistoricalResponse;
+pub mod block_trades_historical_response_rate_limits_inner;
+pub use self::block_trades_historical_response_rate_limits_inner::BlockTradesHistoricalResponseRateLimitsInner;
 pub mod block_trades_historical_response_result_inner;
 pub use self::block_trades_historical_response_result_inner::BlockTradesHistoricalResponseResultInner;
 pub mod depth_response;
@@ -70,12 +69,10 @@ pub mod exchange_filters;
 pub use self::exchange_filters::ExchangeFilters;
 pub mod exchange_info_response;
 pub use self::exchange_info_response::ExchangeInfoResponse;
-pub mod exchange_info_response_result;
-pub use self::exchange_info_response_result::ExchangeInfoResponseResult;
-pub mod exchange_info_response_result_sors_inner;
-pub use self::exchange_info_response_result_sors_inner::ExchangeInfoResponseResultSorsInner;
-pub mod exchange_info_response_result_symbols_inner;
-pub use self::exchange_info_response_result_symbols_inner::ExchangeInfoResponseResultSymbolsInner;
+pub mod exchange_info_response_sors_inner;
+pub use self::exchange_info_response_sors_inner::ExchangeInfoResponseSorsInner;
+pub mod exchange_info_response_symbols_inner;
+pub use self::exchange_info_response_symbols_inner::ExchangeInfoResponseSymbolsInner;
 pub mod exchange_max_num_algo_orders_filter;
 pub use self::exchange_max_num_algo_orders_filter::ExchangeMaxNumAlgoOrdersFilter;
 pub mod exchange_max_num_iceberg_orders_filter;
@@ -98,10 +95,10 @@ pub mod external_lock_update;
 pub use self::external_lock_update::ExternalLockUpdate;
 pub mod iceberg_parts_filter;
 pub use self::iceberg_parts_filter::IcebergPartsFilter;
-pub mod klines_item_inner;
-pub use self::klines_item_inner::KlinesItemInner;
 pub mod klines_response;
 pub use self::klines_response::KlinesResponse;
+pub mod klines_response_result_inner_inner;
+pub use self::klines_response_result_inner_inner::KlinesResponseResultInnerInner;
 pub mod list_status;
 pub use self::list_status::ListStatus;
 pub mod list_status_o_inner;
@@ -132,8 +129,6 @@ pub mod my_allocations_response_result_inner;
 pub use self::my_allocations_response_result_inner::MyAllocationsResponseResultInner;
 pub mod my_filters_response;
 pub use self::my_filters_response::MyFiltersResponse;
-pub mod my_filters_response_result;
-pub use self::my_filters_response_result::MyFiltersResponseResult;
 pub mod my_prevented_matches_response;
 pub use self::my_prevented_matches_response::MyPreventedMatchesResponse;
 pub mod my_prevented_matches_response_result_inner;
@@ -194,8 +189,6 @@ pub mod order_list_cancel_response_result;
 pub use self::order_list_cancel_response_result::OrderListCancelResponseResult;
 pub mod order_list_cancel_response_result_order_reports_inner;
 pub use self::order_list_cancel_response_result_order_reports_inner::OrderListCancelResponseResultOrderReportsInner;
-pub mod order_list_cancel_response_result_orders_inner;
-pub use self::order_list_cancel_response_result_orders_inner::OrderListCancelResponseResultOrdersInner;
 pub mod order_list_place_oco_response;
 pub use self::order_list_place_oco_response::OrderListPlaceOcoResponse;
 pub mod order_list_place_oco_response_result;
@@ -244,6 +237,8 @@ pub mod order_list_place_response_result_order_reports_inner;
 pub use self::order_list_place_response_result_order_reports_inner::OrderListPlaceResponseResultOrderReportsInner;
 pub mod order_list_status_response;
 pub use self::order_list_status_response::OrderListStatusResponse;
+pub mod order_list_status_response_result;
+pub use self::order_list_status_response_result::OrderListStatusResponseResult;
 pub mod order_place_response;
 pub use self::order_place_response::OrderPlaceResponse;
 pub mod order_place_response_result;
@@ -260,8 +255,6 @@ pub mod order_test_response_result;
 pub use self::order_test_response_result::OrderTestResponseResult;
 pub mod order_test_response_result_discount;
 pub use self::order_test_response_result_discount::OrderTestResponseResultDiscount;
-pub mod order_test_response_result_special_commission_for_order;
-pub use self::order_test_response_result_special_commission_for_order::OrderTestResponseResultSpecialCommissionForOrder;
 pub mod order_test_response_result_standard_commission_for_order;
 pub use self::order_test_response_result_standard_commission_for_order::OrderTestResponseResultStandardCommissionForOrder;
 pub mod outbound_account_position;

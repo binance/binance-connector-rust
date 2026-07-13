@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,46 +17,68 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CancelMultipleOptionOrdersResponseInner {
+    /// System order number
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Option trading pair
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Order Price
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Order Quantity
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<String>,
+    /// Number of completed quantity
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// fee
+    #[serde(rename = "fee", skip_serializing_if = "Option::is_none")]
+    pub fee: Option<String>,
+    /// Buy/sell direction
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Order type
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// Time in force method
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// Order is reduce only Y/N
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
+    /// Order Time
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
     pub create_time: Option<i64>,
+    /// Update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// Order status
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// Average price of completed trade
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
-    #[serde(rename = "source", skip_serializing_if = "Option::is_none")]
-    pub source: Option<String>,
+    /// Client order ID
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// price Scale
     #[serde(rename = "priceScale", skip_serializing_if = "Option::is_none")]
     pub price_scale: Option<i64>,
+    /// quantity Scale
     #[serde(rename = "quantityScale", skip_serializing_if = "Option::is_none")]
     pub quantity_scale: Option<i64>,
+    /// option Side
     #[serde(rename = "optionSide", skip_serializing_if = "Option::is_none")]
     pub option_side: Option<String>,
+    /// quote Asset
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// mmp
     #[serde(rename = "mmp", skip_serializing_if = "Option::is_none")]
     pub mmp: Option<bool>,
+    #[serde(rename = "source", skip_serializing_if = "Option::is_none")]
+    pub source: Option<String>,
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
@@ -73,6 +95,7 @@ impl CancelMultipleOptionOrdersResponseInner {
             price: None,
             quantity: None,
             executed_qty: None,
+            fee: None,
             side: None,
             r#type: None,
             time_in_force: None,
@@ -81,13 +104,13 @@ impl CancelMultipleOptionOrdersResponseInner {
             update_time: None,
             status: None,
             avg_price: None,
-            source: None,
             client_order_id: None,
             price_scale: None,
             quantity_scale: None,
             option_side: None,
             quote_asset: None,
             mmp: None,
+            source: None,
             self_trade_prevention_mode: None,
         }
     }

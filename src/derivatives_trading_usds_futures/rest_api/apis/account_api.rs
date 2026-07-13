@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -128,11 +128,122 @@ impl AccountApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetIncomeHistoryIncomeTypeEnum {
+    #[serde(rename = "TRANSFER")]
+    Transfer,
+    #[serde(rename = "WELCOME_BONUS")]
+    WelcomeBonus,
+    #[serde(rename = "REALIZED_PNL")]
+    RealizedPnl,
+    #[serde(rename = "FUNDING_FEE")]
+    FundingFee,
+    #[serde(rename = "COMMISSION")]
+    Commission,
+    #[serde(rename = "INSURANCE_CLEAR")]
+    InsuranceClear,
+    #[serde(rename = "REFERRAL_KICKBACK")]
+    ReferralKickback,
+    #[serde(rename = "COMMISSION_REBATE")]
+    CommissionRebate,
+    #[serde(rename = "API_REBATE")]
+    ApiRebate,
+    #[serde(rename = "CONTEST_REWARD")]
+    ContestReward,
+    #[serde(rename = "CROSS_COLLATERAL_TRANSFER")]
+    CrossCollateralTransfer,
+    #[serde(rename = "OPTIONS_PREMIUM_FEE")]
+    OptionsPremiumFee,
+    #[serde(rename = "OPTIONS_SETTLE_PROFIT")]
+    OptionsSettleProfit,
+    #[serde(rename = "INTERNAL_TRANSFER")]
+    InternalTransfer,
+    #[serde(rename = "AUTO_EXCHANGE")]
+    AutoExchange,
+    #[serde(rename = "DELIVERED_SETTELMENT")]
+    DeliveredSettelment,
+    #[serde(rename = "COIN_SWAP_DEPOSIT")]
+    CoinSwapDeposit,
+    #[serde(rename = "COIN_SWAP_WITHDRAW")]
+    CoinSwapWithdraw,
+    #[serde(rename = "POSITION_LIMIT_INCREASE_FEE")]
+    PositionLimitIncreaseFee,
+    #[serde(rename = "STRATEGY_UMFUTURES_TRANSFER")]
+    StrategyUmfuturesTransfer,
+    #[serde(rename = "FEE_RETURN")]
+    FeeReturn,
+    #[serde(rename = "BFUSD_REWARD")]
+    BfusdReward,
+}
+
+impl GetIncomeHistoryIncomeTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Transfer => "TRANSFER",
+            Self::WelcomeBonus => "WELCOME_BONUS",
+            Self::RealizedPnl => "REALIZED_PNL",
+            Self::FundingFee => "FUNDING_FEE",
+            Self::Commission => "COMMISSION",
+            Self::InsuranceClear => "INSURANCE_CLEAR",
+            Self::ReferralKickback => "REFERRAL_KICKBACK",
+            Self::CommissionRebate => "COMMISSION_REBATE",
+            Self::ApiRebate => "API_REBATE",
+            Self::ContestReward => "CONTEST_REWARD",
+            Self::CrossCollateralTransfer => "CROSS_COLLATERAL_TRANSFER",
+            Self::OptionsPremiumFee => "OPTIONS_PREMIUM_FEE",
+            Self::OptionsSettleProfit => "OPTIONS_SETTLE_PROFIT",
+            Self::InternalTransfer => "INTERNAL_TRANSFER",
+            Self::AutoExchange => "AUTO_EXCHANGE",
+            Self::DeliveredSettelment => "DELIVERED_SETTELMENT",
+            Self::CoinSwapDeposit => "COIN_SWAP_DEPOSIT",
+            Self::CoinSwapWithdraw => "COIN_SWAP_WITHDRAW",
+            Self::PositionLimitIncreaseFee => "POSITION_LIMIT_INCREASE_FEE",
+            Self::StrategyUmfuturesTransfer => "STRATEGY_UMFUTURES_TRANSFER",
+            Self::FeeReturn => "FEE_RETURN",
+            Self::BfusdReward => "BFUSD_REWARD",
+        }
+    }
+}
+
+impl std::str::FromStr for GetIncomeHistoryIncomeTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRANSFER" => Ok(Self::Transfer),
+            "WELCOME_BONUS" => Ok(Self::WelcomeBonus),
+            "REALIZED_PNL" => Ok(Self::RealizedPnl),
+            "FUNDING_FEE" => Ok(Self::FundingFee),
+            "COMMISSION" => Ok(Self::Commission),
+            "INSURANCE_CLEAR" => Ok(Self::InsuranceClear),
+            "REFERRAL_KICKBACK" => Ok(Self::ReferralKickback),
+            "COMMISSION_REBATE" => Ok(Self::CommissionRebate),
+            "API_REBATE" => Ok(Self::ApiRebate),
+            "CONTEST_REWARD" => Ok(Self::ContestReward),
+            "CROSS_COLLATERAL_TRANSFER" => Ok(Self::CrossCollateralTransfer),
+            "OPTIONS_PREMIUM_FEE" => Ok(Self::OptionsPremiumFee),
+            "OPTIONS_SETTLE_PROFIT" => Ok(Self::OptionsSettleProfit),
+            "INTERNAL_TRANSFER" => Ok(Self::InternalTransfer),
+            "AUTO_EXCHANGE" => Ok(Self::AutoExchange),
+            "DELIVERED_SETTELMENT" => Ok(Self::DeliveredSettelment),
+            "COIN_SWAP_DEPOSIT" => Ok(Self::CoinSwapDeposit),
+            "COIN_SWAP_WITHDRAW" => Ok(Self::CoinSwapWithdraw),
+            "POSITION_LIMIT_INCREASE_FEE" => Ok(Self::PositionLimitIncreaseFee),
+            "STRATEGY_UMFUTURES_TRANSFER" => Ok(Self::StrategyUmfuturesTransfer),
+            "FEE_RETURN" => Ok(Self::FeeReturn),
+            "BFUSD_REWARD" => Ok(Self::BfusdReward),
+            other => Err(format!("invalid GetIncomeHistoryIncomeTypeEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`account_information_v2`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_information_v2`](#method.account_information_v2).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountInformationV2Params {
     ///
@@ -140,6 +251,7 @@ pub struct AccountInformationV2Params {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -155,7 +267,7 @@ impl AccountInformationV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_information_v3`](#method.account_information_v3).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountInformationV3Params {
     ///
@@ -163,6 +275,7 @@ pub struct AccountInformationV3Params {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -178,7 +291,7 @@ impl AccountInformationV3Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`futures_account_balance_v2`](#method.futures_account_balance_v2).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FuturesAccountBalanceV2Params {
     ///
@@ -186,6 +299,7 @@ pub struct FuturesAccountBalanceV2Params {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -201,7 +315,7 @@ impl FuturesAccountBalanceV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`futures_account_balance_v3`](#method.futures_account_balance_v3).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FuturesAccountBalanceV3Params {
     ///
@@ -209,6 +323,7 @@ pub struct FuturesAccountBalanceV3Params {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -224,7 +339,7 @@ impl FuturesAccountBalanceV3Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`futures_account_configuration`](#method.futures_account_configuration).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FuturesAccountConfigurationParams {
     ///
@@ -232,6 +347,7 @@ pub struct FuturesAccountConfigurationParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -247,7 +363,7 @@ impl FuturesAccountConfigurationParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`futures_trading_quantitative_rules_indicators`](#method.futures_trading_quantitative_rules_indicators).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FuturesTradingQuantitativeRulesIndicatorsParams {
     ///
@@ -255,12 +371,14 @@ pub struct FuturesTradingQuantitativeRulesIndicatorsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -276,7 +394,7 @@ impl FuturesTradingQuantitativeRulesIndicatorsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_bnb_burn_status`](#method.get_bnb_burn_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBnbBurnStatusParams {
     ///
@@ -284,6 +402,7 @@ pub struct GetBnbBurnStatusParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -299,7 +418,7 @@ impl GetBnbBurnStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_current_multi_assets_mode`](#method.get_current_multi_assets_mode).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetCurrentMultiAssetsModeParams {
     ///
@@ -307,6 +426,7 @@ pub struct GetCurrentMultiAssetsModeParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -322,7 +442,7 @@ impl GetCurrentMultiAssetsModeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_current_position_mode`](#method.get_current_position_mode).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetCurrentPositionModeParams {
     ///
@@ -330,6 +450,7 @@ pub struct GetCurrentPositionModeParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -345,24 +466,27 @@ impl GetCurrentPositionModeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_download_id_for_futures_order_history`](#method.get_download_id_for_futures_order_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetDownloadIdForFuturesOrderHistoryParams {
     /// Timestamp in ms
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startTime")]
     pub start_time: i64,
     /// Timestamp in ms
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endTime")]
     pub end_time: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -388,24 +512,27 @@ impl GetDownloadIdForFuturesOrderHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_download_id_for_futures_trade_history`](#method.get_download_id_for_futures_trade_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetDownloadIdForFuturesTradeHistoryParams {
     /// Timestamp in ms
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startTime")]
     pub start_time: i64,
     /// Timestamp in ms
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endTime")]
     pub end_time: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -431,24 +558,27 @@ impl GetDownloadIdForFuturesTradeHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_download_id_for_futures_transaction_history`](#method.get_download_id_for_futures_transaction_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetDownloadIdForFuturesTransactionHistoryParams {
     /// Timestamp in ms
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "startTime")]
     pub start_time: i64,
     /// Timestamp in ms
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "endTime")]
     pub end_time: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -474,19 +604,21 @@ impl GetDownloadIdForFuturesTransactionHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_futures_order_history_download_link_by_id`](#method.get_futures_order_history_download_link_by_id).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFuturesOrderHistoryDownloadLinkByIdParams {
     /// get by download id api
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "downloadId")]
     pub download_id: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -506,19 +638,21 @@ impl GetFuturesOrderHistoryDownloadLinkByIdParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_futures_trade_download_link_by_id`](#method.get_futures_trade_download_link_by_id).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFuturesTradeDownloadLinkByIdParams {
     /// get by download id api
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "downloadId")]
     pub download_id: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -538,19 +672,21 @@ impl GetFuturesTradeDownloadLinkByIdParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_futures_transaction_history_download_link_by_id`](#method.get_futures_transaction_history_download_link_by_id).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFuturesTransactionHistoryDownloadLinkByIdParams {
     /// get by download id api
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "downloadId")]
     pub download_id: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -573,48 +709,51 @@ impl GetFuturesTransactionHistoryDownloadLinkByIdParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_income_history`](#method.get_income_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetIncomeHistoryParams {
-    ///
-    /// The `symbol` parameter.
+    /// Trading symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// TRANSFER, `WELCOME_BONUS`, `REALIZED_PNL`, `FUNDING_FEE`, COMMISSION, `INSURANCE_CLEAR`, `REFERRAL_KICKBACK`, `COMMISSION_REBATE`, `API_REBATE`, `CONTEST_REWARD`, `CROSS_COLLATERAL_TRANSFER`, `OPTIONS_PREMIUM_FEE`, `OPTIONS_SETTLE_PROFIT`, `INTERNAL_TRANSFER`, `AUTO_EXCHANGE`, `DELIVERED_SETTELMENT`, `COIN_SWAP_DEPOSIT`, `COIN_SWAP_WITHDRAW`, `POSITION_LIMIT_INCREASE_FEE`, `STRATEGY_UMFUTURES_TRANSFER，FEE_RETURN，BFUSD_REWARD`
+    /// Income type.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub income_type: Option<String>,
-    ///
-    /// The `start_time` parameter.
+    #[serde(rename = "incomeType", default)]
+    pub income_type: Option<GetIncomeHistoryIncomeTypeEnum>,
+    /// Timestamp in milliseconds (inclusive start).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Timestamp in milliseconds (inclusive end).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    ///
-    /// The `page` parameter.
+    /// Pagination page number.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "page", default)]
     pub page: Option<i64>,
-    /// Default 100; max 1000
+    /// Maximum number of records to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -630,7 +769,7 @@ impl GetIncomeHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`notional_and_leverage_brackets`](#method.notional_and_leverage_brackets).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct NotionalAndLeverageBracketsParams {
     ///
@@ -638,12 +777,14 @@ pub struct NotionalAndLeverageBracketsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -659,7 +800,7 @@ impl NotionalAndLeverageBracketsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_user_rate_limit`](#method.query_user_rate_limit).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryUserRateLimitParams {
     ///
@@ -667,6 +808,7 @@ pub struct QueryUserRateLimitParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -682,20 +824,21 @@ impl QueryUserRateLimitParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`symbol_configuration`](#method.symbol_configuration).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SymbolConfigurationParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -711,19 +854,21 @@ impl SymbolConfigurationParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`toggle_bnb_burn_on_futures_trade`](#method.toggle_bnb_burn_on_futures_trade).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ToggleBnbBurnOnFuturesTradeParams {
     /// "true": Fee Discount On; "false": Fee Discount Off
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "feeBurn")]
     pub fee_burn: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -743,20 +888,21 @@ impl ToggleBnbBurnOnFuturesTradeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`user_commission_rate`](#method.user_commission_rate).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct UserCommissionRateParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -765,7 +911,7 @@ impl UserCommissionRateParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     ///
     #[must_use]
     pub fn builder(symbol: String) -> UserCommissionRateParamsBuilder {
@@ -1535,7 +1681,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"feeBurn":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"103.12345678","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0},{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0}],"canTrade":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"feeBurn":true,"canTrade":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AccountInformationV2Response =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountInformationV2Response");
@@ -1562,7 +1708,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765},{"asset":"USDC","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AccountInformationV3Response =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountInformationV3Response");
@@ -1590,7 +1736,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::FuturesAccountBalanceV2ResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::FuturesAccountBalanceV2ResponseInner>");
@@ -1618,7 +1764,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::FuturesAccountBalanceV2ResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::FuturesAccountBalanceV2ResponseInner>");
@@ -1645,7 +1791,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"dualSidePosition":true,"updateTime":0,"multiAssetsMargin":false,"tradeGroupId":-1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"dualSidePosition":true,"updateTime":0,"multiAssetsMargin":false,"tradeGroupId":-1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FuturesAccountConfigurationResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FuturesAccountConfigurationResponse");
@@ -1674,7 +1820,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"indicators":{"BTCUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"IFER","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"GCR","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"DR","value":0.99,"triggerValue":0.99}],"ETHUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"IFER","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"GCR","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"DR","value":0.99,"triggerValue":0.99}],"ACCOUNT":[{"indicator":"TMV","value":10,"triggerValue":1,"plannedRecoverTime":1644919865000,"isLocked":true}]},"updateTime":1644913304748}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"indicators":{"BTCUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995}],"ETHUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995}],"ACCOUNT":[{"indicator":"TMV","value":10,"triggerValue":1,"plannedRecoverTime":1644919865000,"isLocked":true}]},"updateTime":1644913304748}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FuturesTradingQuantitativeRulesIndicatorsResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::FuturesTradingQuantitativeRulesIndicatorsResponse",
@@ -1702,7 +1848,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeBurn":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeBurn":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetBnbBurnStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnbBurnStatusResponse");
@@ -1729,7 +1876,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"multiAssetsMargin":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"multiAssetsMargin":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetCurrentMultiAssetsModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentMultiAssetsModeResponse");
@@ -1756,7 +1904,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"dualSidePosition":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"dualSidePosition":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetCurrentPositionModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentPositionModeResponse");
@@ -1787,7 +1936,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetDownloadIdForFuturesOrderHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesOrderHistoryResponse",
@@ -1819,7 +1968,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetDownloadIdForFuturesTradeHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesTradeHistoryResponse",
@@ -1852,7 +2001,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetDownloadIdForFuturesTransactionHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesTransactionHistoryResponse",
@@ -1881,7 +2030,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFuturesOrderHistoryDownloadLinkByIdResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetFuturesOrderHistoryDownloadLinkByIdResponse",
@@ -1910,7 +2059,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"www.binance.com","notified":false,"expirationTimestamp":1645009771000,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFuturesTradeDownloadLinkByIdResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFuturesTradeDownloadLinkByIdResponse");
@@ -1939,7 +2088,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"www.binance.com","notified":false,"expirationTimestamp":1645009771000,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : models::GetFuturesTransactionHistoryDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesTransactionHistoryDownloadLinkByIdResponse");
 
             let dummy = DummyRestApiResponse {
@@ -1964,7 +2113,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":9689322392,"tradeId":""},{"symbol":"BTCUSDT","incomeType":"COMMISSION","income":"-0.01000000","asset":"USDT","info":"COMMISSION","time":1570636800000,"tranId":9689322392,"tradeId":"2059192"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":9689322392,"tradeId":""}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetIncomeHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetIncomeHistoryResponseInner>");
@@ -1991,7 +2140,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"ETHUSDT","notionalCoef":1.5,"brackets":[{"bracket":1,"initialLeverage":75,"notionalCap":10000,"notionalFloor":0,"maintMarginRatio":0.0065,"cum":0}]}]"#).unwrap();
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"symbol":"ETHUSDT","notionalCoef":1.5,"brackets":[]}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::NotionalAndLeverageBracketsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::NotionalAndLeverageBracketsResponse");
@@ -2018,7 +2169,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":10000},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":20000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":10000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryUserRateLimitResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::QueryUserRateLimitResponseInner>");
@@ -2046,7 +2197,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::SymbolConfigurationResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::SymbolConfigurationResponseInner>");
@@ -2073,7 +2224,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ToggleBnbBurnOnFuturesTradeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ToggleBnbBurnOnFuturesTradeResponse");
@@ -2100,7 +2252,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::UserCommissionRateResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::UserCommissionRateResponse");
@@ -2123,7 +2275,7 @@ mod tests {
 
             let params = AccountInformationV2Params::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"feeBurn":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"103.12345678","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0},{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0}],"canTrade":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"feeBurn":true,"canTrade":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountInformationV2Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountInformationV2Response");
 
             let resp = client.account_information_v2(params).await.expect("Expected a response");
@@ -2140,7 +2292,7 @@ mod tests {
 
             let params = AccountInformationV2Params::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"feeBurn":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"103.12345678","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0},{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0}],"canTrade":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"feeBurn":true,"canTrade":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountInformationV2Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountInformationV2Response");
 
             let resp = client.account_information_v2(params).await.expect("Expected a response");
@@ -2173,7 +2325,7 @@ mod tests {
 
             let params = AccountInformationV3Params::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765},{"asset":"USDC","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountInformationV3Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountInformationV3Response");
 
             let resp = client.account_information_v3(params).await.expect("Expected a response");
@@ -2190,7 +2342,7 @@ mod tests {
 
             let params = AccountInformationV3Params::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765},{"asset":"USDC","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountInformationV3Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountInformationV3Response");
 
             let resp = client.account_information_v3(params).await.expect("Expected a response");
@@ -2223,7 +2375,7 @@ mod tests {
 
             let params = FuturesAccountBalanceV2Params::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FuturesAccountBalanceV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FuturesAccountBalanceV2ResponseInner>");
 
             let resp = client.futures_account_balance_v2(params).await.expect("Expected a response");
@@ -2240,7 +2392,7 @@ mod tests {
 
             let params = FuturesAccountBalanceV2Params::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FuturesAccountBalanceV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FuturesAccountBalanceV2ResponseInner>");
 
             let resp = client.futures_account_balance_v2(params).await.expect("Expected a response");
@@ -2273,7 +2425,7 @@ mod tests {
 
             let params = FuturesAccountBalanceV3Params::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FuturesAccountBalanceV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FuturesAccountBalanceV2ResponseInner>");
 
             let resp = client.futures_account_balance_v3(params).await.expect("Expected a response");
@@ -2290,7 +2442,7 @@ mod tests {
 
             let params = FuturesAccountBalanceV3Params::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FuturesAccountBalanceV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FuturesAccountBalanceV2ResponseInner>");
 
             let resp = client.futures_account_balance_v3(params).await.expect("Expected a response");
@@ -2323,7 +2475,7 @@ mod tests {
 
             let params = FuturesAccountConfigurationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"dualSidePosition":true,"updateTime":0,"multiAssetsMargin":false,"tradeGroupId":-1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"dualSidePosition":true,"updateTime":0,"multiAssetsMargin":false,"tradeGroupId":-1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FuturesAccountConfigurationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FuturesAccountConfigurationResponse");
 
             let resp = client.futures_account_configuration(params).await.expect("Expected a response");
@@ -2340,7 +2492,7 @@ mod tests {
 
             let params = FuturesAccountConfigurationParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"dualSidePosition":true,"updateTime":0,"multiAssetsMargin":false,"tradeGroupId":-1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"dualSidePosition":true,"updateTime":0,"multiAssetsMargin":false,"tradeGroupId":-1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FuturesAccountConfigurationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FuturesAccountConfigurationResponse");
 
             let resp = client.futures_account_configuration(params).await.expect("Expected a response");
@@ -2375,7 +2527,7 @@ mod tests {
 
             let params = FuturesTradingQuantitativeRulesIndicatorsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"indicators":{"BTCUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"IFER","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"GCR","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"DR","value":0.99,"triggerValue":0.99}],"ETHUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"IFER","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"GCR","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"DR","value":0.99,"triggerValue":0.99}],"ACCOUNT":[{"indicator":"TMV","value":10,"triggerValue":1,"plannedRecoverTime":1644919865000,"isLocked":true}]},"updateTime":1644913304748}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"indicators":{"BTCUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995}],"ETHUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995}],"ACCOUNT":[{"indicator":"TMV","value":10,"triggerValue":1,"plannedRecoverTime":1644919865000,"isLocked":true}]},"updateTime":1644913304748}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FuturesTradingQuantitativeRulesIndicatorsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FuturesTradingQuantitativeRulesIndicatorsResponse");
 
             let resp = client.futures_trading_quantitative_rules_indicators(params).await.expect("Expected a response");
@@ -2390,9 +2542,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = FuturesTradingQuantitativeRulesIndicatorsParams::builder().symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
+            let params = FuturesTradingQuantitativeRulesIndicatorsParams::builder().symbol("BTCUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"indicators":{"BTCUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"IFER","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"GCR","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"DR","value":0.99,"triggerValue":0.99}],"ETHUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"IFER","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"GCR","value":0.99,"triggerValue":0.99},{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"DR","value":0.99,"triggerValue":0.99}],"ACCOUNT":[{"indicator":"TMV","value":10,"triggerValue":1,"plannedRecoverTime":1644919865000,"isLocked":true}]},"updateTime":1644913304748}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"indicators":{"BTCUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995}],"ETHUSDT":[{"isLocked":true,"plannedRecoverTime":1545741270000,"indicator":"UFR","value":0.05,"triggerValue":0.995}],"ACCOUNT":[{"indicator":"TMV","value":10,"triggerValue":1,"plannedRecoverTime":1644919865000,"isLocked":true}]},"updateTime":1644913304748}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FuturesTradingQuantitativeRulesIndicatorsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FuturesTradingQuantitativeRulesIndicatorsResponse");
 
             let resp = client.futures_trading_quantitative_rules_indicators(params).await.expect("Expected a response");
@@ -2430,7 +2582,8 @@ mod tests {
 
             let params = GetBnbBurnStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeBurn":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeBurn":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBnbBurnStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnbBurnStatusResponse");
@@ -2455,7 +2608,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"feeBurn":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"feeBurn":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetBnbBurnStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetBnbBurnStatusResponse");
@@ -2493,7 +2647,8 @@ mod tests {
 
             let params = GetCurrentMultiAssetsModeParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"multiAssetsMargin":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"multiAssetsMargin":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetCurrentMultiAssetsModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentMultiAssetsModeResponse");
@@ -2518,7 +2673,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"multiAssetsMargin":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"multiAssetsMargin":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetCurrentMultiAssetsModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentMultiAssetsModeResponse");
@@ -2556,7 +2712,8 @@ mod tests {
 
             let params = GetCurrentPositionModeParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"dualSidePosition":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"dualSidePosition":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetCurrentPositionModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentPositionModeResponse");
@@ -2581,7 +2738,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"dualSidePosition":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"dualSidePosition":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetCurrentPositionModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCurrentPositionModeResponse");
@@ -2625,7 +2783,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDownloadIdForFuturesOrderHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesOrderHistoryResponse",
@@ -2655,7 +2813,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDownloadIdForFuturesOrderHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesOrderHistoryResponse",
@@ -2706,7 +2864,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDownloadIdForFuturesTradeHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesTradeHistoryResponse",
@@ -2736,7 +2894,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDownloadIdForFuturesTradeHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesTradeHistoryResponse",
@@ -2789,7 +2947,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDownloadIdForFuturesTransactionHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesTransactionHistoryResponse",
@@ -2821,7 +2979,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDownloadIdForFuturesTransactionHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetDownloadIdForFuturesTransactionHistoryResponse",
@@ -2866,9 +3024,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetFuturesOrderHistoryDownloadLinkByIdParams::builder("1".to_string(),).build().unwrap();
+            let params = GetFuturesOrderHistoryDownloadLinkByIdParams::builder("545923594199212032".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesOrderHistoryDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesOrderHistoryDownloadLinkByIdResponse");
 
             let resp = client.get_futures_order_history_download_link_by_id(params).await.expect("Expected a response");
@@ -2883,9 +3041,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetFuturesOrderHistoryDownloadLinkByIdParams::builder("1".to_string(),).recv_window(5000).build().unwrap();
+            let params = GetFuturesOrderHistoryDownloadLinkByIdParams::builder("545923594199212032".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesOrderHistoryDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesOrderHistoryDownloadLinkByIdResponse");
 
             let resp = client.get_futures_order_history_download_link_by_id(params).await.expect("Expected a response");
@@ -2900,9 +3058,11 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = GetFuturesOrderHistoryDownloadLinkByIdParams::builder("1".to_string())
-                .build()
-                .unwrap();
+            let params = GetFuturesOrderHistoryDownloadLinkByIdParams::builder(
+                "545923594199212032".to_string(),
+            )
+            .build()
+            .unwrap();
 
             match client
                 .get_futures_order_history_download_link_by_id(params)
@@ -2921,9 +3081,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetFuturesTradeDownloadLinkByIdParams::builder("1".to_string(),).build().unwrap();
+            let params = GetFuturesTradeDownloadLinkByIdParams::builder("545923594199212032".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"www.binance.com","notified":false,"expirationTimestamp":1645009771000,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesTradeDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesTradeDownloadLinkByIdResponse");
 
             let resp = client.get_futures_trade_download_link_by_id(params).await.expect("Expected a response");
@@ -2938,9 +3098,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetFuturesTradeDownloadLinkByIdParams::builder("1".to_string(),).recv_window(5000).build().unwrap();
+            let params = GetFuturesTradeDownloadLinkByIdParams::builder("545923594199212032".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"www.binance.com","notified":false,"expirationTimestamp":1645009771000,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesTradeDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesTradeDownloadLinkByIdResponse");
 
             let resp = client.get_futures_trade_download_link_by_id(params).await.expect("Expected a response");
@@ -2955,9 +3115,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = GetFuturesTradeDownloadLinkByIdParams::builder("1".to_string())
-                .build()
-                .unwrap();
+            let params =
+                GetFuturesTradeDownloadLinkByIdParams::builder("545923594199212032".to_string())
+                    .build()
+                    .unwrap();
 
             match client.get_futures_trade_download_link_by_id(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -2973,9 +3134,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetFuturesTransactionHistoryDownloadLinkByIdParams::builder("1".to_string(),).build().unwrap();
+            let params = GetFuturesTransactionHistoryDownloadLinkByIdParams::builder("545923594199212032".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"www.binance.com","notified":false,"expirationTimestamp":1645009771000,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesTransactionHistoryDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesTransactionHistoryDownloadLinkByIdResponse");
 
             let resp = client.get_futures_transaction_history_download_link_by_id(params).await.expect("Expected a response");
@@ -2990,9 +3151,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetFuturesTransactionHistoryDownloadLinkByIdParams::builder("1".to_string(),).recv_window(5000).build().unwrap();
+            let params = GetFuturesTransactionHistoryDownloadLinkByIdParams::builder("545923594199212032".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","notified":false,"expirationTimestamp":-1,"isExpired":null}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"www.binance.com","notified":false,"expirationTimestamp":1645009771000,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesTransactionHistoryDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesTransactionHistoryDownloadLinkByIdResponse");
 
             let resp = client.get_futures_transaction_history_download_link_by_id(params).await.expect("Expected a response");
@@ -3007,10 +3168,11 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params =
-                GetFuturesTransactionHistoryDownloadLinkByIdParams::builder("1".to_string())
-                    .build()
-                    .unwrap();
+            let params = GetFuturesTransactionHistoryDownloadLinkByIdParams::builder(
+                "545923594199212032".to_string(),
+            )
+            .build()
+            .unwrap();
 
             match client
                 .get_futures_transaction_history_download_link_by_id(params)
@@ -3031,7 +3193,7 @@ mod tests {
 
             let params = GetIncomeHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":9689322392,"tradeId":""},{"symbol":"BTCUSDT","incomeType":"COMMISSION","income":"-0.01000000","asset":"USDT","info":"COMMISSION","time":1570636800000,"tranId":9689322392,"tradeId":"2059192"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":9689322392,"tradeId":""}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetIncomeHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetIncomeHistoryResponseInner>");
 
             let resp = client.get_income_history(params).await.expect("Expected a response");
@@ -3046,9 +3208,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetIncomeHistoryParams::builder().symbol("symbol_example".to_string()).income_type("income_type_example".to_string()).start_time(1623319461670).end_time(1641782889000).page(789).limit(100).recv_window(5000).build().unwrap();
+            let params = GetIncomeHistoryParams::builder().symbol("BTCUSDT".to_string()).income_type(GetIncomeHistoryIncomeTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).page(1).limit(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":9689322392,"tradeId":""},{"symbol":"BTCUSDT","incomeType":"COMMISSION","income":"-0.01000000","asset":"USDT","info":"COMMISSION","time":1570636800000,"tranId":9689322392,"tradeId":"2059192"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":9689322392,"tradeId":""}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetIncomeHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetIncomeHistoryResponseInner>");
 
             let resp = client.get_income_history(params).await.expect("Expected a response");
@@ -3079,12 +3241,21 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = NotionalAndLeverageBracketsParams::builder().build().unwrap();
+            let params = NotionalAndLeverageBracketsParams::builder()
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"ETHUSDT","notionalCoef":1.5,"brackets":[{"bracket":1,"initialLeverage":75,"notionalCap":10000,"notionalFloor":0,"maintMarginRatio":0.0065,"cum":0}]}]"#).unwrap();
-            let expected_response : models::NotionalAndLeverageBracketsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NotionalAndLeverageBracketsResponse");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"symbol":"ETHUSDT","notionalCoef":1.5,"brackets":[]}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::NotionalAndLeverageBracketsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::NotionalAndLeverageBracketsResponse");
 
-            let resp = client.notional_and_leverage_brackets(params).await.expect("Expected a response");
+            let resp = client
+                .notional_and_leverage_brackets(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -3096,12 +3267,23 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = NotionalAndLeverageBracketsParams::builder().symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
+            let params = NotionalAndLeverageBracketsParams::builder()
+                .symbol("ETHUSDT".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"ETHUSDT","notionalCoef":1.5,"brackets":[{"bracket":1,"initialLeverage":75,"notionalCap":10000,"notionalFloor":0,"maintMarginRatio":0.0065,"cum":0}]}]"#).unwrap();
-            let expected_response : models::NotionalAndLeverageBracketsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NotionalAndLeverageBracketsResponse");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"symbol":"ETHUSDT","notionalCoef":1.5,"brackets":[]}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::NotionalAndLeverageBracketsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::NotionalAndLeverageBracketsResponse");
 
-            let resp = client.notional_and_leverage_brackets(params).await.expect("Expected a response");
+            let resp = client
+                .notional_and_leverage_brackets(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -3133,7 +3315,7 @@ mod tests {
 
             let params = QueryUserRateLimitParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":10000},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":20000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":10000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryUserRateLimitResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUserRateLimitResponseInner>");
 
             let resp = client.query_user_rate_limit(params).await.expect("Expected a response");
@@ -3150,7 +3332,7 @@ mod tests {
 
             let params = QueryUserRateLimitParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":10000},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":20000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":10000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryUserRateLimitResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUserRateLimitResponseInner>");
 
             let resp = client.query_user_rate_limit(params).await.expect("Expected a response");
@@ -3183,7 +3365,7 @@ mod tests {
 
             let params = SymbolConfigurationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::SymbolConfigurationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::SymbolConfigurationResponseInner>");
 
             let resp = client.symbol_configuration(params).await.expect("Expected a response");
@@ -3198,9 +3380,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = SymbolConfigurationParams::builder().symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
+            let params = SymbolConfigurationParams::builder().symbol("BTCUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","marginType":"CROSSED","isAutoAddMargin":false,"leverage":21,"maxNotionalValue":"1000000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::SymbolConfigurationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::SymbolConfigurationResponseInner>");
 
             let resp = client.symbol_configuration(params).await.expect("Expected a response");
@@ -3231,11 +3413,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = ToggleBnbBurnOnFuturesTradeParams::builder("fee_burn_example".to_string())
+            let params = ToggleBnbBurnOnFuturesTradeParams::builder("true".to_string())
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ToggleBnbBurnOnFuturesTradeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ToggleBnbBurnOnFuturesTradeResponse");
@@ -3255,12 +3438,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = ToggleBnbBurnOnFuturesTradeParams::builder("fee_burn_example".to_string())
+            let params = ToggleBnbBurnOnFuturesTradeParams::builder("true".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ToggleBnbBurnOnFuturesTradeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ToggleBnbBurnOnFuturesTradeResponse");
@@ -3280,7 +3464,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = ToggleBnbBurnOnFuturesTradeParams::builder("fee_burn_example".to_string())
+            let params = ToggleBnbBurnOnFuturesTradeParams::builder("true".to_string())
                 .build()
                 .unwrap();
 
@@ -3298,9 +3482,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = UserCommissionRateParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = UserCommissionRateParams::builder("BTCUSDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::UserCommissionRateResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::UserCommissionRateResponse");
 
             let resp = client.user_commission_rate(params).await.expect("Expected a response");
@@ -3315,9 +3499,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = UserCommissionRateParams::builder("symbol_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = UserCommissionRateParams::builder("BTCUSDT".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","makerCommissionRate":"0.0002","takerCommissionRate":"0.0004","rpiCommissionRate":"0.00005"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::UserCommissionRateResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::UserCommissionRateResponse");
 
             let resp = client.user_commission_rate(params).await.expect("Expected a response");
@@ -3332,7 +3516,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = UserCommissionRateParams::builder("symbol_example".to_string())
+            let params = UserCommissionRateParams::builder("BTCUSDT".to_string())
                 .build()
                 .unwrap();
 

@@ -5,7 +5,10 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_portfolio_margin_pro::{
     DerivativesTradingPortfolioMarginProRestApi,
-    rest_api::GetTransferableEarnAssetBalanceForPortfolioMarginParams,
+    rest_api::{
+        GetTransferableEarnAssetBalanceForPortfolioMarginParams,
+        GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum,
+    },
 };
 use binance_sdk::logger;
 
@@ -29,8 +32,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = GetTransferableEarnAssetBalanceForPortfolioMarginParams::builder(
-        "asset_example".to_string(),
-        "transfer_type_example".to_string(),
+        "LDUSDT".to_string(),
+        GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum::EarnToFuture,
     )
     .build()?;
 

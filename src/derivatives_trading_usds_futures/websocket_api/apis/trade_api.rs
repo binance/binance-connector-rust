@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -109,8 +109,6 @@ impl std::str::FromStr for ModifyOrderSideEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModifyOrderPriceMatchEnum {
-    #[serde(rename = "NONE")]
-    None,
     #[serde(rename = "OPPONENT")]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
@@ -133,7 +131,6 @@ impl ModifyOrderPriceMatchEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::None => "NONE",
             Self::Opponent => "OPPONENT",
             Self::Opponent5 => "OPPONENT_5",
             Self::Opponent10 => "OPPONENT_10",
@@ -151,7 +148,6 @@ impl std::str::FromStr for ModifyOrderPriceMatchEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "NONE" => Ok(Self::None),
             "OPPONENT" => Ok(Self::Opponent),
             "OPPONENT_5" => Ok(Self::Opponent5),
             "OPPONENT_10" => Ok(Self::Opponent10),
@@ -161,6 +157,33 @@ impl std::str::FromStr for ModifyOrderPriceMatchEnum {
             "QUEUE_10" => Ok(Self::Queue10),
             "QUEUE_20" => Ok(Self::Queue20),
             other => Err(format!("invalid ModifyOrderPriceMatchEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderAlgoTypeEnum {
+    #[serde(rename = "CONDITIONAL")]
+    Conditional,
+}
+
+impl NewAlgoOrderAlgoTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Conditional => "CONDITIONAL",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderAlgoTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "CONDITIONAL" => Ok(Self::Conditional),
+            other => Err(format!("invalid NewAlgoOrderAlgoTypeEnum: {}", other).into()),
         }
     }
 }
@@ -192,6 +215,49 @@ impl std::str::FromStr for NewAlgoOrderSideEnum {
             "BUY" => Ok(Self::Buy),
             "SELL" => Ok(Self::Sell),
             other => Err(format!("invalid NewAlgoOrderSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderTypeEnum {
+    #[serde(rename = "STOP_MARKET")]
+    StopMarket,
+    #[serde(rename = "TAKE_PROFIT_MARKET")]
+    TakeProfitMarket,
+    #[serde(rename = "STOP")]
+    Stop,
+    #[serde(rename = "TAKE_PROFIT")]
+    TakeProfit,
+    #[serde(rename = "TRAILING_STOP_MARKET")]
+    TrailingStopMarket,
+}
+
+impl NewAlgoOrderTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::StopMarket => "STOP_MARKET",
+            Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
+            Self::Stop => "STOP",
+            Self::TakeProfit => "TAKE_PROFIT",
+            Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "STOP_MARKET" => Ok(Self::StopMarket),
+            "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
+            "STOP" => Ok(Self::Stop),
+            "TAKE_PROFIT" => Ok(Self::TakeProfit),
+            "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
+            other => Err(format!("invalid NewAlgoOrderTypeEnum: {}", other).into()),
         }
     }
 }
@@ -234,30 +300,21 @@ impl std::str::FromStr for NewAlgoOrderPositionSideEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewAlgoOrderTimeInForceEnum {
-    #[serde(rename = "GTC")]
-    Gtc,
     #[serde(rename = "IOC")]
     Ioc,
+    #[serde(rename = "GTC")]
+    Gtc,
     #[serde(rename = "FOK")]
     Fok,
-    #[serde(rename = "GTX")]
-    Gtx,
-    #[serde(rename = "GTD")]
-    Gtd,
-    #[serde(rename = "RPI")]
-    Rpi,
 }
 
 impl NewAlgoOrderTimeInForceEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::Gtc => "GTC",
             Self::Ioc => "IOC",
+            Self::Gtc => "GTC",
             Self::Fok => "FOK",
-            Self::Gtx => "GTX",
-            Self::Gtd => "GTD",
-            Self::Rpi => "RPI",
         }
     }
 }
@@ -267,12 +324,9 @@ impl std::str::FromStr for NewAlgoOrderTimeInForceEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "GTC" => Ok(Self::Gtc),
             "IOC" => Ok(Self::Ioc),
+            "GTC" => Ok(Self::Gtc),
             "FOK" => Ok(Self::Fok),
-            "GTX" => Ok(Self::Gtx),
-            "GTD" => Ok(Self::Gtd),
-            "RPI" => Ok(Self::Rpi),
             other => Err(format!("invalid NewAlgoOrderTimeInForceEnum: {}", other).into()),
         }
     }
@@ -312,8 +366,6 @@ impl std::str::FromStr for NewAlgoOrderWorkingTypeEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewAlgoOrderPriceMatchEnum {
-    #[serde(rename = "NONE")]
-    None,
     #[serde(rename = "OPPONENT")]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
@@ -336,7 +388,6 @@ impl NewAlgoOrderPriceMatchEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::None => "NONE",
             Self::Opponent => "OPPONENT",
             Self::Opponent5 => "OPPONENT_5",
             Self::Opponent10 => "OPPONENT_10",
@@ -354,7 +405,6 @@ impl std::str::FromStr for NewAlgoOrderPriceMatchEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "NONE" => Ok(Self::None),
             "OPPONENT" => Ok(Self::Opponent),
             "OPPONENT_5" => Ok(Self::Opponent5),
             "OPPONENT_10" => Ok(Self::Opponent10),
@@ -364,6 +414,99 @@ impl std::str::FromStr for NewAlgoOrderPriceMatchEnum {
             "QUEUE_10" => Ok(Self::Queue10),
             "QUEUE_20" => Ok(Self::Queue20),
             other => Err(format!("invalid NewAlgoOrderPriceMatchEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderClosePositionEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderClosePositionEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderClosePositionEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderClosePositionEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderPriceProtectEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderPriceProtectEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderPriceProtectEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderPriceProtectEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderReduceOnlyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderReduceOnlyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderReduceOnlyEnum: {}", other).into()),
         }
     }
 }
@@ -402,6 +545,8 @@ impl std::str::FromStr for NewAlgoOrderNewOrderRespTypeEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewAlgoOrderSelfTradePreventionModeEnum {
+    #[serde(rename = "NONE")]
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
     ExpireTaker,
     #[serde(rename = "EXPIRE_BOTH")]
@@ -414,6 +559,7 @@ impl NewAlgoOrderSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::None => "NONE",
             Self::ExpireTaker => "EXPIRE_TAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::ExpireMaker => "EXPIRE_MAKER",
@@ -426,6 +572,7 @@ impl std::str::FromStr for NewAlgoOrderSelfTradePreventionModeEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "NONE" => Ok(Self::None),
             "EXPIRE_TAKER" => Ok(Self::ExpireTaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
@@ -463,6 +610,37 @@ impl std::str::FromStr for NewOrderSideEnum {
             "BUY" => Ok(Self::Buy),
             "SELL" => Ok(Self::Sell),
             other => Err(format!("invalid NewOrderSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewOrderTypeEnum {
+    #[serde(rename = "LIMIT")]
+    Limit,
+    #[serde(rename = "MARKET")]
+    Market,
+}
+
+impl NewOrderTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Limit => "LIMIT",
+            Self::Market => "MARKET",
+        }
+    }
+}
+
+impl std::str::FromStr for NewOrderTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "LIMIT" => Ok(Self::Limit),
+            "MARKET" => Ok(Self::Market),
+            other => Err(format!("invalid NewOrderTypeEnum: {}", other).into()),
         }
     }
 }
@@ -551,6 +729,37 @@ impl std::str::FromStr for NewOrderTimeInForceEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewOrderReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewOrderReduceOnlyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewOrderReduceOnlyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewOrderReduceOnlyEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
     Ack,
@@ -583,8 +792,6 @@ impl std::str::FromStr for NewOrderNewOrderRespTypeEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderPriceMatchEnum {
-    #[serde(rename = "NONE")]
-    None,
     #[serde(rename = "OPPONENT")]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
@@ -607,7 +814,6 @@ impl NewOrderPriceMatchEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::None => "NONE",
             Self::Opponent => "OPPONENT",
             Self::Opponent5 => "OPPONENT_5",
             Self::Opponent10 => "OPPONENT_10",
@@ -625,7 +831,6 @@ impl std::str::FromStr for NewOrderPriceMatchEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "NONE" => Ok(Self::None),
             "OPPONENT" => Ok(Self::Opponent),
             "OPPONENT_5" => Ok(Self::Opponent5),
             "OPPONENT_10" => Ok(Self::Opponent10),
@@ -642,6 +847,8 @@ impl std::str::FromStr for NewOrderPriceMatchEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderSelfTradePreventionModeEnum {
+    #[serde(rename = "NONE")]
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
     ExpireTaker,
     #[serde(rename = "EXPIRE_BOTH")]
@@ -654,6 +861,7 @@ impl NewOrderSelfTradePreventionModeEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::None => "NONE",
             Self::ExpireTaker => "EXPIRE_TAKER",
             Self::ExpireBoth => "EXPIRE_BOTH",
             Self::ExpireMaker => "EXPIRE_MAKER",
@@ -666,6 +874,7 @@ impl std::str::FromStr for NewOrderSelfTradePreventionModeEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "NONE" => Ok(Self::None),
             "EXPIRE_TAKER" => Ok(Self::ExpireTaker),
             "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
             "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
@@ -678,31 +887,32 @@ impl std::str::FromStr for NewOrderSelfTradePreventionModeEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_algo_order`](#method.cancel_algo_order).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelAlgoOrderParams {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `algo_id` parameter.
+    /// Algo Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "algoId", default)]
     pub algo_id: Option<i64>,
-    ///
-    /// The `client_algo_id` parameter.
+    /// Client Algo Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
     pub client_algo_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -718,37 +928,38 @@ impl CancelAlgoOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_order`](#method.cancel_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `order_id` parameter.
+    /// Order Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Orig Client Order Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -757,7 +968,7 @@ impl CancelOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol.
     ///
     #[must_use]
     pub fn builder(symbol: String) -> CancelOrderParamsBuilder {
@@ -768,58 +979,62 @@ impl CancelOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`modify_order`](#method.modify_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ModifyOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// `SELL`, `BUY`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: ModifyOrderSideEnum,
     /// Order quantity, cannot be sent with `closePosition=true`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quantity")]
     pub quantity: rust_decimal::Decimal,
-    ///
-    /// The `price` parameter.
+    /// Price.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "price")]
     pub price: rust_decimal::Decimal,
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `order_id` parameter.
+    /// Order Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Orig Client Order Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    /// only available for `LIMIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`/ `QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Can't be passed together with price
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "priceMatch", default)]
     pub price_match: Option<ModifyOrderPriceMatchEnum>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -828,10 +1043,10 @@ impl ModifyOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol.
     /// * `side` — `SELL`, `BUY`
     /// * `quantity` — Order quantity, cannot be sent with `closePosition=true`
-    /// * `price` — `rust_decimal::Decimal`
+    /// * `price` — Price.
     ///
     #[must_use]
     pub fn builder(
@@ -851,126 +1066,140 @@ impl ModifyOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`new_algo_order`](#method.new_algo_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct NewAlgoOrderParams {
     /// Only support `CONDITIONAL`
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub algo_type: String,
-    ///
-    /// The `symbol` parameter.
+    #[serde(rename = "algoType")]
+    pub algo_type: NewAlgoOrderAlgoTypeEnum,
+    /// Symbol.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// `SELL`, `BUY`
+    /// Side.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: NewAlgoOrderSideEnum,
-    ///
-    /// The `r#type` parameter.
+    /// For `CONDITIONAL` algoType, `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` as order type
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
-    /// Unique WebSocket request ID.
+    #[serde(rename = "type")]
+    pub r#type: NewAlgoOrderTypeEnum,
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.
+    /// Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "positionSide", default)]
     pub position_side: Option<NewAlgoOrderPositionSideEnum>,
-    ///
-    /// The `time_in_force` parameter.
+    /// `IOC` or `GTC` or `FOK`, default `GTC`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<NewAlgoOrderTimeInForceEnum>,
-    ///
-    /// The `quantity` parameter.
+    /// Cannot be sent with `closePosition`=`true`(Close-All)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
     pub quantity: Option<rust_decimal::Decimal>,
-    ///
-    /// The `price` parameter.
+    /// Price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
-    ///
-    /// The `trigger_price` parameter.
+    /// Trigger Price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "triggerPrice", default)]
     pub trigger_price: Option<rust_decimal::Decimal>,
     /// triggerPrice triggered by: `MARK_PRICE`, `CONTRACT_PRICE`. Default `CONTRACT_PRICE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "workingType", default)]
     pub working_type: Option<NewAlgoOrderWorkingTypeEnum>,
-    /// only available for `LIMIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`/ `QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Can't be passed together with price
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "priceMatch", default)]
     pub price_match: Option<NewAlgoOrderPriceMatchEnum>,
-    /// true, false；Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
+    /// Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub close_position: Option<String>,
-    /// "true" or "false", default "false". Used with `STOP_MARKET` or `TAKE_PROFIT_MARKET` order. when price reaches the triggerPrice ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the Price Protection Threshold of the symbol.
+    #[serde(rename = "closePosition", default)]
+    pub close_position: Option<NewAlgoOrderClosePositionEnum>,
+    /// Used with `STOP_MARKET` or `TAKE_PROFIT_MARKET` order. when price reaches the triggerPrice ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the Price Protection Threshold of the symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub price_protect: Option<String>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode
+    #[serde(rename = "priceProtect", default)]
+    pub price_protect: Option<NewAlgoOrderPriceProtectEnum>,
+    /// Cannot be sent in Hedge Mode; cannot be sent with closePosition=true
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub reduce_only: Option<String>,
-    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different `workingType`)
+    #[serde(rename = "reduceOnly", default)]
+    pub reduce_only: Option<NewAlgoOrderReduceOnlyEnum>,
+    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different workingType)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "activatePrice", default)]
     pub activate_price: Option<rust_decimal::Decimal>,
-    /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 10 where 1 for 1%
+    /// Used with `TRAILING_STOP_MARKET` orders
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "callbackRate", default)]
     pub callback_rate: Option<rust_decimal::Decimal>,
-    ///
-    /// The `client_algo_id` parameter.
+    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
     pub client_algo_id: Option<String>,
     /// "ACK", "RESULT", default "ACK"
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<NewAlgoOrderNewOrderRespTypeEnum>,
     /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<NewAlgoOrderSelfTradePreventionModeEnum>,
     /// order cancel time for timeInForce `GTD`, mandatory when `timeInforce` set to `GTD`; order the timestamp only retains second-level precision, ms part will be ignored; The goodTillDate timestamp must be greater than the current time plus 600 seconds and smaller than 253402300799000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "goodTillDate", default)]
     pub good_till_date: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -980,16 +1209,16 @@ impl NewAlgoOrderParams {
     /// Required parameters:
     ///
     /// * `algo_type` — Only support `CONDITIONAL`
-    /// * `symbol` — String
-    /// * `side` — `SELL`, `BUY`
-    /// * `r#type` — String
+    /// * `symbol` — Symbol.
+    /// * `side` — Side.
+    /// * `r#type` — For `CONDITIONAL` algoType, `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` as order type
     ///
     #[must_use]
     pub fn builder(
-        algo_type: String,
+        algo_type: NewAlgoOrderAlgoTypeEnum,
         symbol: String,
         side: NewAlgoOrderSideEnum,
-        r#type: String,
+        r#type: NewAlgoOrderTypeEnum,
     ) -> NewAlgoOrderParamsBuilder {
         NewAlgoOrderParamsBuilder::default()
             .algo_type(algo_type)
@@ -1002,89 +1231,101 @@ impl NewAlgoOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`new_order`](#method.new_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct NewOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// `SELL`, `BUY`
+    /// Side.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: NewOrderSideEnum,
     ///
     /// The `r#type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
-    /// Unique WebSocket request ID.
+    #[serde(rename = "type")]
+    pub r#type: NewOrderTypeEnum,
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
     /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "positionSide", default)]
     pub position_side: Option<NewOrderPositionSideEnum>,
-    ///
-    /// The `time_in_force` parameter.
+    /// Time In Force.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<NewOrderTimeInForceEnum>,
+    /// Cannot be sent in Hedge Mode
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "reduceOnly", default)]
+    pub reduce_only: Option<NewOrderReduceOnlyEnum>,
     ///
     /// The `quantity` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
     pub quantity: Option<rust_decimal::Decimal>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode
+    /// Price.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub reduce_only: Option<String>,
-    ///
-    /// The `price` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
     /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
-    /// "ACK", "RESULT", default "ACK"
+    ///
+    /// The `new_order_resp_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<NewOrderNewOrderRespTypeEnum>,
-    /// only available for `LIMIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`/ `QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only available for `LIMIT` order; Can't be passed together with `price`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "priceMatch", default)]
     pub price_match: Option<NewOrderPriceMatchEnum>,
-    /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
+    /// `NONE`:No STP / `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<NewOrderSelfTradePreventionModeEnum>,
     /// order cancel time for timeInForce `GTD`, mandatory when `timeInforce` set to `GTD`; order the timestamp only retains second-level precision, ms part will be ignored; The goodTillDate timestamp must be greater than the current time plus 600 seconds and smaller than 253402300799000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "goodTillDate", default)]
     pub good_till_date: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1093,15 +1334,15 @@ impl NewOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
-    /// * `side` — `SELL`, `BUY`
+    /// * `symbol` — Symbol.
+    /// * `side` — Side.
     /// * `r#type` — String
     ///
     #[must_use]
     pub fn builder(
         symbol: String,
         side: NewOrderSideEnum,
-        r#type: String,
+        r#type: NewOrderTypeEnum,
     ) -> NewOrderParamsBuilder {
         NewOrderParamsBuilder::default()
             .symbol(symbol)
@@ -1113,25 +1354,26 @@ impl NewOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`position_information`](#method.position_information).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PositionInformationParams {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1147,25 +1389,26 @@ impl PositionInformationParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`position_information_v2`](#method.position_information_v2).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PositionInformationV2Params {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1181,37 +1424,38 @@ impl PositionInformationV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_order`](#method.query_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `order_id` parameter.
+    /// Order Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Orig Client Order Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1220,7 +1464,7 @@ impl QueryOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol.
     ///
     #[must_use]
     pub fn builder(symbol: String) -> QueryOrderParamsBuilder {
@@ -1482,8 +1726,8 @@ impl TradeApi for TradeApiClient {
             id,
             position_side,
             time_in_force,
-            quantity,
             reduce_only,
+            quantity,
             price,
             new_client_order_id,
             new_order_resp_type,
@@ -1506,11 +1750,11 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = time_in_force {
             payload.insert("timeInForce".to_string(), serde_json::json!(value));
         }
-        if let Some(value) = quantity {
-            payload.insert("quantity".to_string(), serde_json::json!(value));
-        }
         if let Some(value) = reduce_only {
             payload.insert("reduceOnly".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = quantity {
+            payload.insert("quantity".to_string(), serde_json::json!(value));
         }
         if let Some(value) = price {
             payload.insert("price".to_string(), serde_json::json!(value));
@@ -1724,8 +1968,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/algoOrder.cancel".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"unique-cancel-request-id-5678","status":200,"result":{"algoId":2000000002162519,"clientAlgoId":"rDMG8WSde6LkyMNtk6s825","code":"200","msg":"success"},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":6}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"unique-cancel-request-id-5678","status":200,"result":{"algoId":2000000002162519,"clientAlgoId":"rDMG8WSde6LkyMNtk6s825","code":"200","msg":"success"},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":6}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -1844,7 +2087,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = CancelOrderParams::builder("symbol_example".to_string(),).build().unwrap();
+                let params = CancelOrderParams::builder("BTCUSDT".to_string(),).build().unwrap();
                 client.cancel_order(params).await
             });
 
@@ -1853,8 +2096,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.cancel".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"5633b6a2-90a9-4192-83e7-925c90b6a2fd","status":200,"result":{"clientOrderId":"myOrder1","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"5633b6a2-90a9-4192-83e7-925c90b6a2fd","status":200,"result":{"clientOrderId":"myOrder1","cumQty":"0","cumQuote":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -1888,7 +2130,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = CancelOrderParams::builder("symbol_example".to_string(),).build().unwrap();
+                let params = CancelOrderParams::builder("BTCUSDT".to_string(),).build().unwrap();
                 client.cancel_order(params).await
             });
 
@@ -1938,7 +2180,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = CancelOrderParams::builder("symbol_example".to_string())
+                let params = CancelOrderParams::builder("BTCUSDT".to_string())
                     .build()
                     .unwrap();
                 client.cancel_order(params).await
@@ -1975,7 +2217,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
+                let params = ModifyOrderParams::builder("BTCUSDT".to_string(),ModifyOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
                 client.modify_order(params).await
             });
 
@@ -1984,8 +2226,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.modify".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c8c271ba-de70-479e-870c-e64951c753d9","status":200,"result":{"orderId":328971409,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"xGHfltUMExx0TbQstQQfRX","price":"43769.10","avgPrice":"0.00","origQty":"0.110","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"SHORT","stopPrice":"0.00","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1703426756190},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300,"count":1},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200,"count":1},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c8c271ba-de70-479e-870c-e64951c753d9","status":200,"result":{"orderId":328971409,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"xGHfltUMExx0TbQstQQfRX","price":"43769.10","avgPrice":"0.00","origQty":"0.110","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"SHORT","stopPrice":"0.00","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1703426756190},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2019,7 +2260,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
+                let params = ModifyOrderParams::builder("BTCUSDT".to_string(),ModifyOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
                 client.modify_order(params).await
             });
 
@@ -2070,7 +2311,7 @@ mod tests {
 
             let handle = spawn(async move {
                 let params = ModifyOrderParams::builder(
-                    "symbol_example".to_string(),
+                    "BTCUSDT".to_string(),
                     ModifyOrderSideEnum::Buy,
                     dec!(1.0),
                     dec!(1.0),
@@ -2111,7 +2352,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = NewAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewAlgoOrderSideEnum::Buy,"r#type_example".to_string(),).build().unwrap();
+                let params = NewAlgoOrderParams::builder(NewAlgoOrderAlgoTypeEnum::Conditional,"BTCUSDT".to_string(),NewAlgoOrderSideEnum::Buy,NewAlgoOrderTypeEnum::StopMarket,).build().unwrap();
                 client.new_algo_order(params).await
             });
 
@@ -2120,8 +2361,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/algoOrder.place".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"06c9dbd8-ccbf-4ecf-a29c-fe31495ac73f","status":200,"result":{"algoId":3000000000003505,"clientAlgoId":"0Xkl1p621E4EryvufmYre1","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSDT","side":"SELL","positionSide":"SHORT","timeInForce":"GTC","quantity":"1.000","algoStatus":"NEW","triggerPrice":"120000.00","price":"160000.00","icebergQuantity":null,"selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1762507264142,"updateTime":1762507264143,"triggerTime":0,"goodTillDate":0},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"06c9dbd8-ccbf-4ecf-a29c-fe31495ac73f","status":200,"result":{"algoId":3000000000003505,"clientAlgoId":"0Xkl1p621E4EryvufmYre1","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSDT","side":"SELL","positionSide":"SHORT","timeInForce":"GTC","quantity":"1.000","algoStatus":"NEW","triggerPrice":"120000.00","price":"160000.00","icebergQuantity":"null","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1762507264142,"updateTime":1762507264143,"triggerTime":0,"goodTillDate":0},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2155,7 +2395,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = NewAlgoOrderParams::builder("algo_type_example".to_string(),"symbol_example".to_string(),NewAlgoOrderSideEnum::Buy,"r#type_example".to_string(),).build().unwrap();
+                let params = NewAlgoOrderParams::builder(NewAlgoOrderAlgoTypeEnum::Conditional,"BTCUSDT".to_string(),NewAlgoOrderSideEnum::Buy,NewAlgoOrderTypeEnum::StopMarket,).build().unwrap();
                 client.new_algo_order(params).await
             });
 
@@ -2206,10 +2446,10 @@ mod tests {
 
             let handle = spawn(async move {
                 let params = NewAlgoOrderParams::builder(
-                    "algo_type_example".to_string(),
-                    "symbol_example".to_string(),
+                    NewAlgoOrderAlgoTypeEnum::Conditional,
+                    "BTCUSDT".to_string(),
                     NewAlgoOrderSideEnum::Buy,
-                    "r#type_example".to_string(),
+                    NewAlgoOrderTypeEnum::StopMarket,
                 )
                 .build()
                 .unwrap();
@@ -2247,7 +2487,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,"r#type_example".to_string(),).build().unwrap();
+                let params = NewOrderParams::builder("BTCUSDT".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).build().unwrap();
                 client.new_order(params).await
             });
 
@@ -2256,8 +2496,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.place".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3f7df6e3-2df4-44b9-9919-d2f38f90a99a","status":200,"result":{"orderId":325078477,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"iCXL1BywlBaf2sesNUrVl3","price":"43187.00","avgPrice":"0.00","origQty":"0.100","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"BOTH","stopPrice":"0.00","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1702555534435},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300,"count":1},{"rateLimitType":"ORDERS","interval":"MINUTE","intervalNum":1,"limit":1200,"count":1},{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":1}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"3f7df6e3-2df4-44b9-9919-d2f38f90a99a","status":200,"result":{"orderId":325078477,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"iCXL1BywlBaf2sesNUrVl3","price":"43187.00","avgPrice":"0.00","origQty":"0.100","executedQty":"0.000","cumQty":"0.000","cumQuote":"0.00000","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"BOTH","stopPrice":"0.00","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1702555534435},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2291,7 +2530,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,"r#type_example".to_string(),).build().unwrap();
+                let params = NewOrderParams::builder("BTCUSDT".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).build().unwrap();
                 client.new_order(params).await
             });
 
@@ -2342,9 +2581,9 @@ mod tests {
 
             let handle = spawn(async move {
                 let params = NewOrderParams::builder(
-                    "symbol_example".to_string(),
+                    "BTCUSDT".to_string(),
                     NewOrderSideEnum::Buy,
-                    "r#type_example".to_string(),
+                    NewOrderTypeEnum::Limit,
                 )
                 .build()
                 .unwrap();
@@ -2391,8 +2630,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.position".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"entryPrice":"0.00000","breakEvenPrice":"0.0","marginType":"isolated","isAutoAddMargin":"false","isolatedMargin":"0.00000000","leverage":"10","liquidationPrice":"0","markPrice":"6679.50671178","maxNotionalValue":"20000000","positionAmt":"0.000","notional":"0","isolatedWallet":"0","symbol":"BTCUSDT","unRealizedProfit":"0.00000000","positionSide":"BOTH","updateTime":0},{"symbol":"BTCUSDT","positionAmt":"0.001","entryPrice":"22185.2","breakEvenPrice":"0.0","markPrice":"21123.05052574","unRealizedProfit":"-1.06214947","liquidationPrice":"19731.45529116","leverage":"4","maxNotionalValue":"100000000","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"LONG","notional":"21.12305052","isolatedWallet":"0","updateTime":1655217461579},{"symbol":"BTCUSDT","positionAmt":"0.000","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"21123.05052574","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"4","maxNotionalValue":"100000000","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"SHORT","notional":"0","isolatedWallet":"0","updateTime":0}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"entryPrice":"0.00000","breakEvenPrice":"0.0","marginType":"isolated","isAutoAddMargin":"false","isolatedMargin":"0.00000000","leverage":"10","liquidationPrice":"0","markPrice":"6679.50671178","maxNotionalValue":"20000000","positionAmt":"0.000","notional":"0","isolatedWallet":"0","symbol":"BTCUSDT","unRealizedProfit":"0.00000000","positionSide":"BOTH","updateTime":1625474304765}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2520,8 +2758,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/v2/account.position".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unRealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"LONG","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unRealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"SHORT","positionAmt":"1.000","entryPrice":"0.00000","breakEvenPrice":"0.0","markPrice":"6679.50671178","unRealizedProfit":"0.00000000","liquidationPrice":"0","isolatedMargin":"0.00000000","notional":"0","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","positionInitialMargin":"0","openOrderInitialMargin":"0","adl":0,"bidNotional":"0","askNotional":"0","updateTime":0}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"symbol":"ADAUSDT","positionSide":"BOTH","positionAmt":"30","entryPrice":"0.385","breakEvenPrice":"0.385077","markPrice":"0.41047590","unRealizedProfit":"0.76427700","liquidationPrice":"0","isolatedMargin":"0","notional":"12.31427700","marginAsset":"USDT","isolatedWallet":"0","initialMargin":"0.61571385","maintMargin":"0.08004280","positionInitialMargin":"0.61571385","openOrderInitialMargin":"0","adl":2,"bidNotional":"0","askNotional":"0","updateTime":1720736417660}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2640,7 +2877,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = QueryOrderParams::builder("symbol_example".to_string(),).build().unwrap();
+                let params = QueryOrderParams::builder("BTCUSDT".to_string(),).build().unwrap();
                 client.query_order(params).await
             });
 
@@ -2649,8 +2886,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"avgPrice":"0.00000","clientOrderId":"abc","cumQuote":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"avgPrice":"0.00000","clientOrderId":"abc","cumQuote":"0","executedQty":"0","orderId":1573346959,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -2684,7 +2920,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = QueryOrderParams::builder("symbol_example".to_string(),).build().unwrap();
+                let params = QueryOrderParams::builder("BTCUSDT".to_string(),).build().unwrap();
                 client.query_order(params).await
             });
 
@@ -2734,7 +2970,7 @@ mod tests {
             let client = TradeApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = QueryOrderParams::builder("symbol_example".to_string())
+                let params = QueryOrderParams::builder("BTCUSDT".to_string())
                     .build()
                     .unwrap();
                 client.query_order(params).await

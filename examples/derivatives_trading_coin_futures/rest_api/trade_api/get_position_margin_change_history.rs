@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingCoinFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        GetPositionMarginChangeHistoryParams::builder("symbol_example".to_string()).build()?;
+    let params = GetPositionMarginChangeHistoryParams::builder("BTCUSD".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

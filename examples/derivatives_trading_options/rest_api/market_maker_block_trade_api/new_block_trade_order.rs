@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsRestApi, rest_api::NewBlockTradeOrderParams,
+    DerivativesTradingOptionsRestApi,
+    rest_api::{NewBlockTradeOrderLiquidityEnum, NewBlockTradeOrderParams},
 };
 use binance_sdk::logger;
 
@@ -27,8 +28,8 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        NewBlockTradeOrderParams::builder("liquidity_example".to_string(), [].to_vec()).build()?;
+    let params = NewBlockTradeOrderParams::builder(NewBlockTradeOrderLiquidityEnum::Maker, vec![])
+        .build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -73,8 +73,8 @@ pub mod composite_index_symbol_information_response_inner_base_asset_list_inner;
 pub use self::composite_index_symbol_information_response_inner_base_asset_list_inner::CompositeIndexSymbolInformationResponseInnerBaseAssetListInner;
 pub mod compressed_aggregate_trades_list_response_inner;
 pub use self::compressed_aggregate_trades_list_response_inner::CompressedAggregateTradesListResponseInner;
-pub mod continuous_contract_kline_candlestick_data_response_item_inner;
-pub use self::continuous_contract_kline_candlestick_data_response_item_inner::ContinuousContractKlineCandlestickDataResponseItemInner;
+pub mod continuous_contract_kline_candlestick_data_item_inner;
+pub use self::continuous_contract_kline_candlestick_data_item_inner::ContinuousContractKlineCandlestickDataItemInner;
 pub mod current_all_algo_open_orders_response_inner;
 pub use self::current_all_algo_open_orders_response_inner::CurrentAllAlgoOpenOrdersResponseInner;
 pub mod exchange_information_response;
@@ -91,6 +91,8 @@ pub mod futures_account_balance_v2_response_inner;
 pub use self::futures_account_balance_v2_response_inner::FuturesAccountBalanceV2ResponseInner;
 pub mod futures_account_configuration_response;
 pub use self::futures_account_configuration_response::FuturesAccountConfigurationResponse;
+pub mod futures_tradfi_perps_contract_response;
+pub use self::futures_tradfi_perps_contract_response::FuturesTradfiPerpsContractResponse;
 pub mod futures_trading_quantitative_rules_indicators_response;
 pub use self::futures_trading_quantitative_rules_indicators_response::FuturesTradingQuantitativeRulesIndicatorsResponse;
 pub mod futures_trading_quantitative_rules_indicators_response_indicators;
@@ -133,18 +135,18 @@ pub mod get_order_modify_history_response_inner_amendment_price;
 pub use self::get_order_modify_history_response_inner_amendment_price::GetOrderModifyHistoryResponseInnerAmendmentPrice;
 pub mod get_position_margin_change_history_response_inner;
 pub use self::get_position_margin_change_history_response_inner::GetPositionMarginChangeHistoryResponseInner;
-pub mod index_price_kline_candlestick_data_response_item_inner;
-pub use self::index_price_kline_candlestick_data_response_item_inner::IndexPriceKlineCandlestickDataResponseItemInner;
+pub mod index_price_kline_candlestick_data_item_inner;
+pub use self::index_price_kline_candlestick_data_item_inner::IndexPriceKlineCandlestickDataItemInner;
 pub mod keepalive_user_data_stream_response;
 pub use self::keepalive_user_data_stream_response::KeepaliveUserDataStreamResponse;
-pub mod kline_candlestick_data_response_item_inner;
-pub use self::kline_candlestick_data_response_item_inner::KlineCandlestickDataResponseItemInner;
+pub mod kline_candlestick_data_item_inner;
+pub use self::kline_candlestick_data_item_inner::KlineCandlestickDataItemInner;
 pub mod list_all_convert_pairs_response_inner;
 pub use self::list_all_convert_pairs_response_inner::ListAllConvertPairsResponseInner;
 pub mod long_short_ratio_response_inner;
 pub use self::long_short_ratio_response_inner::LongShortRatioResponseInner;
-pub mod mark_price_kline_candlestick_data_response_item_inner;
-pub use self::mark_price_kline_candlestick_data_response_item_inner::MarkPriceKlineCandlestickDataResponseItemInner;
+pub mod mark_price_kline_candlestick_data_item_inner;
+pub use self::mark_price_kline_candlestick_data_item_inner::MarkPriceKlineCandlestickDataItemInner;
 pub mod mark_price_response;
 pub use self::mark_price_response::MarkPriceResponse;
 pub mod mark_price_response1;
@@ -195,8 +197,8 @@ pub mod position_information_v2_response_inner;
 pub use self::position_information_v2_response_inner::PositionInformationV2ResponseInner;
 pub mod position_information_v3_response_inner;
 pub use self::position_information_v3_response_inner::PositionInformationV3ResponseInner;
-pub mod premium_index_kline_data_response_item_inner;
-pub use self::premium_index_kline_data_response_item_inner::PremiumIndexKlineDataResponseItemInner;
+pub mod premium_index_kline_data_item_inner;
+pub use self::premium_index_kline_data_item_inner::PremiumIndexKlineDataItemInner;
 pub mod quarterly_contract_settlement_price_response_inner;
 pub use self::quarterly_contract_settlement_price_response_inner::QuarterlyContractSettlementPriceResponseInner;
 pub mod query_algo_order_response;
@@ -243,12 +245,12 @@ pub mod symbol_price_ticker_response;
 pub use self::symbol_price_ticker_response::SymbolPriceTickerResponse;
 pub mod symbol_price_ticker_response1;
 pub use self::symbol_price_ticker_response1::SymbolPriceTickerResponse1;
+pub mod symbol_price_ticker_response2_inner;
+pub use self::symbol_price_ticker_response2_inner::SymbolPriceTickerResponse2Inner;
 pub mod symbol_price_ticker_v2_response;
 pub use self::symbol_price_ticker_v2_response::SymbolPriceTickerV2Response;
 pub mod symbol_price_ticker_v2_response1;
 pub use self::symbol_price_ticker_v2_response1::SymbolPriceTickerV2Response1;
-pub mod symbol_price_ticker_v2_response2_inner;
-pub use self::symbol_price_ticker_v2_response2_inner::SymbolPriceTickerV2Response2Inner;
 pub mod taker_buy_sell_volume_response_inner;
 pub use self::taker_buy_sell_volume_response_inner::TakerBuySellVolumeResponseInner;
 pub mod test_order_response;

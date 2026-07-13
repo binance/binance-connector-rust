@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,23 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct BasisResponseInner {
+    /// index price
     #[serde(rename = "indexPrice", skip_serializing_if = "Option::is_none")]
     pub index_price: Option<String>,
+    /// Contract type.
     #[serde(rename = "contractType", skip_serializing_if = "Option::is_none")]
     pub contract_type: Option<String>,
+    /// Basis rate.
     #[serde(rename = "basisRate", skip_serializing_if = "Option::is_none")]
     pub basis_rate: Option<String>,
+    /// Futures price.
     #[serde(rename = "futuresPrice", skip_serializing_if = "Option::is_none")]
     pub futures_price: Option<String>,
+    /// Annualized basis rate.
     #[serde(
         rename = "annualizedBasisRate",
         skip_serializing_if = "Option::is_none"
     )]
     pub annualized_basis_rate: Option<String>,
+    /// Basis value.
     #[serde(rename = "basis", skip_serializing_if = "Option::is_none")]
     pub basis: Option<String>,
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Timestamp in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }

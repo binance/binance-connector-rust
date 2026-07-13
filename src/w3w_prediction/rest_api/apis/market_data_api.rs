@@ -145,13 +145,14 @@ impl std::str::FromStr for ListPredictionMarketsOrderByEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_market_detail`](#method.get_market_detail).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetMarketDetailParams {
     /// Market topic ID. Must be > 0
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "marketTopicId")]
     pub market_topic_id: i64,
 }
 
@@ -171,38 +172,44 @@ impl GetMarketDetailParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`list_prediction_markets`](#method.list_prediction_markets).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ListPredictionMarketsParams {
     /// Level-1 category filter
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "l1Category", default)]
     pub l1_category: Option<String>,
     /// Level-2 category filter
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "l2Category", default)]
     pub l2_category: Option<String>,
     /// Sort field. Enum: `RECOMMENDED`, `VOLUME`, `PARTICIPANTS`, `CREATED_TIME`, `END_DATE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "sortBy", default)]
     pub sort_by: Option<ListPredictionMarketsSortByEnum>,
     /// Sort direction. Enum: `ASC`, `DESC`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderBy", default)]
     pub order_by: Option<ListPredictionMarketsOrderByEnum>,
     /// Pagination offset. Default `0`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i32>,
     /// Page size. Default `20`, range 1–100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
 }
 
@@ -218,18 +225,20 @@ impl ListPredictionMarketsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`market_search`](#method.market_search).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MarketSearchParams {
     /// Search keyword. Not blank
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "query")]
     pub query: String,
     /// Max number of results to return. Default `20`, range 1–50
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "topK", default)]
     pub top_k: Option<i32>,
 }
 
@@ -249,13 +258,14 @@ impl MarketSearchParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_last_trade_price`](#method.query_last_trade_price).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryLastTradePriceParams {
     /// Market ID. Must be > 0
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "marketId")]
     pub market_id: i64,
 }
 
@@ -275,23 +285,26 @@ impl QueryLastTradePriceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_order_book`](#method.query_order_book).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryOrderBookParams {
     /// Vendor identifier (e.g. `predict_fun`)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "vendor")]
     pub vendor: String,
     /// Market ID. Must be > 0
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "marketId")]
     pub market_id: i64,
     /// Prediction outcome token ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "tokenId")]
     pub token_id: String,
 }
 

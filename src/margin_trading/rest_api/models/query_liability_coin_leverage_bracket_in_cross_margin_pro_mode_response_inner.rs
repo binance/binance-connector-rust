@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,10 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner {
+    /// asset Names list.
     #[serde(rename = "assetNames", skip_serializing_if = "Option::is_none")]
     pub asset_names: Option<Vec<String>>,
+    /// rank.
     #[serde(rename = "rank", skip_serializing_if = "Option::is_none")]
     pub rank: Option<i64>,
+    /// brackets list.
     #[serde(rename = "brackets", skip_serializing_if = "Option::is_none")]
     pub brackets: Option<
         Vec<

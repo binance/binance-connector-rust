@@ -5,7 +5,9 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_usds_futures::{
     DerivativesTradingUsdsFuturesRestApi,
-    rest_api::{NewAlgoOrderParams, NewAlgoOrderSideEnum},
+    rest_api::{
+        NewAlgoOrderAlgoTypeEnum, NewAlgoOrderParams, NewAlgoOrderSideEnum, NewAlgoOrderTypeEnum,
+    },
 };
 use binance_sdk::logger;
 
@@ -29,10 +31,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = NewAlgoOrderParams::builder(
-        "algo_type_example".to_string(),
-        "symbol_example".to_string(),
+        NewAlgoOrderAlgoTypeEnum::Conditional,
+        "BNBUSDT".to_string(),
         NewAlgoOrderSideEnum::Buy,
-        "r#type_example".to_string(),
+        NewAlgoOrderTypeEnum::Limit,
     )
     .build()?;
 

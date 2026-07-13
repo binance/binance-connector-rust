@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_portfolio_margin_pro::{
-    DerivativesTradingPortfolioMarginProRestApi, rest_api::SwitchDeltaModeParams,
+    DerivativesTradingPortfolioMarginProRestApi,
+    rest_api::{SwitchDeltaModeDeltaEnabledEnum, SwitchDeltaModeParams},
 };
 use binance_sdk::logger;
 
@@ -27,7 +28,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginProRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = SwitchDeltaModeParams::builder("delta_enabled_example".to_string()).build()?;
+    let params = SwitchDeltaModeParams::builder(SwitchDeltaModeDeltaEnabledEnum::True).build()?;
 
     // Make the API call
     let response = rest_client

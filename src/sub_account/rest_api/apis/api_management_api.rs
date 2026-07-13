@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -35,14 +35,30 @@ pub trait ApiManagementApi: Send + Sync {
         &self,
         params: AddIpRestrictionForSubAccountApiKeyParams,
     ) -> anyhow::Result<RestApiResponse<models::AddIpRestrictionForSubAccountApiKeyResponse>>;
+    async fn create_sub_account_api_key(
+        &self,
+        params: CreateSubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyResponse>>;
     async fn delete_ip_list_for_a_sub_account_api_key(
         &self,
         params: DeleteIpListForASubAccountApiKeyParams,
     ) -> anyhow::Result<RestApiResponse<models::DeleteIpListForASubAccountApiKeyResponse>>;
+    async fn delete_sub_account_api_key(
+        &self,
+        params: DeleteSubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<serde_json::Value>>;
     async fn get_ip_restriction_for_a_sub_account_api_key(
         &self,
         params: GetIpRestrictionForASubAccountApiKeyParams,
     ) -> anyhow::Result<RestApiResponse<models::GetIpRestrictionForASubAccountApiKeyResponse>>;
+    async fn modify_sub_account_api_key_permission(
+        &self,
+        params: ModifySubAccountApiKeyPermissionParams,
+    ) -> anyhow::Result<RestApiResponse<models::ModifySubAccountApiKeyPermissionResponse>>;
+    async fn query_sub_account_api_key(
+        &self,
+        params: QuerySubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<models::QuerySubAccountApiKeyResponse>>;
 }
 
 #[derive(Debug, Clone)]
@@ -60,35 +76,41 @@ impl ApiManagementApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`add_ip_restriction_for_sub_account_api_key`](#method.add_ip_restriction_for_sub_account_api_key).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AddIpRestrictionForSubAccountApiKeyParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     ///
     /// The `sub_account_api_key` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "subAccountApiKey")]
     pub sub_account_api_key: String,
     /// IP Restriction status. 1 = IP Unrestricted. 2 = Restrict access to trusted IPs only.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub status: String,
+    #[serde(rename = "status")]
+    pub status: i64,
     /// Insert static IP in batch, separated by commas.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "ipAddress", default)]
     pub ip_address: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -97,7 +119,7 @@ impl AddIpRestrictionForSubAccountApiKeyParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     /// * `sub_account_api_key` — String
     /// * `status` — IP Restriction status. 1 = IP Unrestricted. 2 = Restrict access to trusted IPs only.
     ///
@@ -105,7 +127,7 @@ impl AddIpRestrictionForSubAccountApiKeyParams {
     pub fn builder(
         email: String,
         sub_account_api_key: String,
-        status: String,
+        status: i64,
     ) -> AddIpRestrictionForSubAccountApiKeyParamsBuilder {
         AddIpRestrictionForSubAccountApiKeyParamsBuilder::default()
             .email(email)
@@ -113,34 +135,142 @@ impl AddIpRestrictionForSubAccountApiKeyParams {
             .status(status)
     }
 }
+/// Request parameters for the [`create_sub_account_api_key`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`create_sub_account_api_key`](#method.create_sub_account_api_key).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CreateSubAccountApiKeyParams {
+    /// Sub-account email
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "email")]
+    pub email: String,
+    /// API Key name
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "apiName")]
+    pub api_name: String,
+    /// IP restriction status. 1 = unrestricted, 2 = restricted to trusted IPs, 3 = third-party IP restriction
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "status")]
+    pub status: i64,
+    /// Spot & Margin trading permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canTrade", default)]
+    pub can_trade: Option<bool>,
+    /// Margin borrow/repay permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canMarginLoanRepay", default)]
+    pub can_margin_loan_repay: Option<bool>,
+    /// Futures trading permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFuturesTrade", default)]
+    pub can_futures_trade: Option<bool>,
+    /// Universal transfer permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canUniversalTransfer", default)]
+    pub can_universal_transfer: Option<bool>,
+    /// Vanilla options permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canVanillaOptions", default)]
+    pub can_vanilla_options: Option<bool>,
+    /// Required when status=2. IP address list, max 500 chars
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "ipAddress", default)]
+    pub ip_address: Option<String>,
+    /// Required when status=3. Third-party name
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "thirdPartyName", default)]
+    pub third_party_name: Option<String>,
+    /// Ed25519 public key (optional, for Ed25519 type API Key)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "publicKey", default)]
+    pub public_key: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CreateSubAccountApiKeyParams {
+    /// Create a builder for [`create_sub_account_api_key`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `email` — Sub-account email
+    /// * `api_name` — API Key name
+    /// * `status` — IP restriction status. 1 = unrestricted, 2 = restricted to trusted IPs, 3 = third-party IP restriction
+    ///
+    #[must_use]
+    pub fn builder(
+        email: String,
+        api_name: String,
+        status: i64,
+    ) -> CreateSubAccountApiKeyParamsBuilder {
+        CreateSubAccountApiKeyParamsBuilder::default()
+            .email(email)
+            .api_name(api_name)
+            .status(status)
+    }
+}
 /// Request parameters for the [`delete_ip_list_for_a_sub_account_api_key`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`delete_ip_list_for_a_sub_account_api_key`](#method.delete_ip_list_for_a_sub_account_api_key).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DeleteIpListForASubAccountApiKeyParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     ///
     /// The `sub_account_api_key` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "subAccountApiKey")]
     pub sub_account_api_key: String,
     /// IPs to be deleted. Can be added in batches, separated by commas
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "ipAddress")]
     pub ip_address: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -149,7 +279,7 @@ impl DeleteIpListForASubAccountApiKeyParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     /// * `sub_account_api_key` — String
     /// * `ip_address` — IPs to be deleted. Can be added in batches, separated by commas
     ///
@@ -165,29 +295,79 @@ impl DeleteIpListForASubAccountApiKeyParams {
             .ip_address(ip_address)
     }
 }
-/// Request parameters for the [`get_ip_restriction_for_a_sub_account_api_key`] operation.
+/// Request parameters for the [`delete_sub_account_api_key`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
-/// [`get_ip_restriction_for_a_sub_account_api_key`](#method.get_ip_restriction_for_a_sub_account_api_key).
-#[derive(Clone, Debug, Builder)]
+/// [`delete_sub_account_api_key`](#method.delete_sub_account_api_key).
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct GetIpRestrictionForASubAccountApiKeyParams {
-    /// [Sub-account email](#email-address)
+pub struct DeleteSubAccountApiKeyParams {
+    /// Sub-account email
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
-    ///
-    /// The `sub_account_api_key` parameter.
+    /// The sub-account API Key to be deleted
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "subAccountApiKey")]
     pub sub_account_api_key: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl DeleteSubAccountApiKeyParams {
+    /// Create a builder for [`delete_sub_account_api_key`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `email` — Sub-account email
+    /// * `sub_account_api_key` — The sub-account API Key to be deleted
+    ///
+    #[must_use]
+    pub fn builder(
+        email: String,
+        sub_account_api_key: String,
+    ) -> DeleteSubAccountApiKeyParamsBuilder {
+        DeleteSubAccountApiKeyParamsBuilder::default()
+            .email(email)
+            .sub_account_api_key(sub_account_api_key)
+    }
+}
+/// Request parameters for the [`get_ip_restriction_for_a_sub_account_api_key`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_ip_restriction_for_a_sub_account_api_key`](#method.get_ip_restriction_for_a_sub_account_api_key).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetIpRestrictionForASubAccountApiKeyParams {
+    ///
+    /// The `email` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "email")]
+    pub email: String,
+    ///
+    /// The `sub_account_api_key` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "subAccountApiKey")]
+    pub sub_account_api_key: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -196,7 +376,7 @@ impl GetIpRestrictionForASubAccountApiKeyParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     /// * `sub_account_api_key` — String
     ///
     #[must_use]
@@ -207,6 +387,134 @@ impl GetIpRestrictionForASubAccountApiKeyParams {
         GetIpRestrictionForASubAccountApiKeyParamsBuilder::default()
             .email(email)
             .sub_account_api_key(sub_account_api_key)
+    }
+}
+/// Request parameters for the [`modify_sub_account_api_key_permission`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`modify_sub_account_api_key_permission`](#method.modify_sub_account_api_key_permission).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct ModifySubAccountApiKeyPermissionParams {
+    /// Sub-account email
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "email")]
+    pub email: String,
+    /// Sub-account API Key
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "subAccountApiKey")]
+    pub sub_account_api_key: String,
+    /// Spot & Margin trading permission
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canTrade", default)]
+    pub can_trade: Option<bool>,
+    /// Margin borrow/repay permission
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canMarginLoanRepay", default)]
+    pub can_margin_loan_repay: Option<bool>,
+    /// Futures trading permission
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFuturesTrade", default)]
+    pub can_futures_trade: Option<bool>,
+    /// Universal transfer permission
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canUniversalTransfer", default)]
+    pub can_universal_transfer: Option<bool>,
+    /// Vanilla options permission
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canVanillaOptions", default)]
+    pub can_vanilla_options: Option<bool>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl ModifySubAccountApiKeyPermissionParams {
+    /// Create a builder for [`modify_sub_account_api_key_permission`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `email` — Sub-account email
+    /// * `sub_account_api_key` — Sub-account API Key
+    ///
+    #[must_use]
+    pub fn builder(
+        email: String,
+        sub_account_api_key: String,
+    ) -> ModifySubAccountApiKeyPermissionParamsBuilder {
+        ModifySubAccountApiKeyPermissionParamsBuilder::default()
+            .email(email)
+            .sub_account_api_key(sub_account_api_key)
+    }
+}
+/// Request parameters for the [`query_sub_account_api_key`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_sub_account_api_key`](#method.query_sub_account_api_key).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QuerySubAccountApiKeyParams {
+    /// Sub-account email
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "email")]
+    pub email: String,
+    /// Specify an API Key for exact match
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "subAccountApiKey", default)]
+    pub sub_account_api_key: Option<String>,
+    /// Page number, default 1, minimum 1
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "page", default)]
+    pub page: Option<i64>,
+    /// Page size, default 30, maximum 100
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
+    pub size: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QuerySubAccountApiKeyParams {
+    /// Create a builder for [`query_sub_account_api_key`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `email` — Sub-account email
+    ///
+    #[must_use]
+    pub fn builder(email: String) -> QuerySubAccountApiKeyParamsBuilder {
+        QuerySubAccountApiKeyParamsBuilder::default().email(email)
     }
 }
 
@@ -244,6 +552,86 @@ impl ApiManagementApi for ApiManagementApiClient {
         send_request::<models::AddIpRestrictionForSubAccountApiKeyResponse>(
             &self.configuration,
             "/sapi/v2/sub-account/subAccountApi/ipRestriction",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn create_sub_account_api_key(
+        &self,
+        params: CreateSubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyResponse>> {
+        let CreateSubAccountApiKeyParams {
+            email,
+            api_name,
+            status,
+            can_trade,
+            can_margin_loan_repay,
+            can_futures_trade,
+            can_universal_transfer,
+            can_vanilla_options,
+            ip_address,
+            third_party_name,
+            public_key,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("email".to_string(), json!(email));
+
+        query_params.insert("apiName".to_string(), json!(api_name));
+
+        query_params.insert("status".to_string(), json!(status));
+
+        if let Some(rw) = can_trade {
+            query_params.insert("canTrade".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_margin_loan_repay {
+            query_params.insert("canMarginLoanRepay".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_futures_trade {
+            query_params.insert("canFuturesTrade".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_universal_transfer {
+            query_params.insert("canUniversalTransfer".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_vanilla_options {
+            query_params.insert("canVanillaOptions".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = ip_address {
+            query_params.insert("ipAddress".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = third_party_name {
+            query_params.insert("thirdPartyName".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = public_key {
+            query_params.insert("publicKey".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::CreateSubAccountApiKeyResponse>(
+            &self.configuration,
+            "/sapi/v1/sub-account/subAccountApi",
             reqwest::Method::POST,
             query_params,
             body_params,
@@ -297,6 +685,43 @@ impl ApiManagementApi for ApiManagementApiClient {
         .await
     }
 
+    async fn delete_sub_account_api_key(
+        &self,
+        params: DeleteSubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<serde_json::Value>> {
+        let DeleteSubAccountApiKeyParams {
+            email,
+            sub_account_api_key,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("email".to_string(), json!(email));
+
+        query_params.insert("subAccountApiKey".to_string(), json!(sub_account_api_key));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<serde_json::Value>(
+            &self.configuration,
+            "/sapi/v1/sub-account/subAccountApi",
+            reqwest::Method::DELETE,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn get_ip_restriction_for_a_sub_account_api_key(
         &self,
         params: GetIpRestrictionForASubAccountApiKeyParams,
@@ -321,6 +746,117 @@ impl ApiManagementApi for ApiManagementApiClient {
         send_request::<models::GetIpRestrictionForASubAccountApiKeyResponse>(
             &self.configuration,
             "/sapi/v1/sub-account/subAccountApi/ipRestriction",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn modify_sub_account_api_key_permission(
+        &self,
+        params: ModifySubAccountApiKeyPermissionParams,
+    ) -> anyhow::Result<RestApiResponse<models::ModifySubAccountApiKeyPermissionResponse>> {
+        let ModifySubAccountApiKeyPermissionParams {
+            email,
+            sub_account_api_key,
+            can_trade,
+            can_margin_loan_repay,
+            can_futures_trade,
+            can_universal_transfer,
+            can_vanilla_options,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("email".to_string(), json!(email));
+
+        query_params.insert("subAccountApiKey".to_string(), json!(sub_account_api_key));
+
+        if let Some(rw) = can_trade {
+            query_params.insert("canTrade".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_margin_loan_repay {
+            query_params.insert("canMarginLoanRepay".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_futures_trade {
+            query_params.insert("canFuturesTrade".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_universal_transfer {
+            query_params.insert("canUniversalTransfer".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_vanilla_options {
+            query_params.insert("canVanillaOptions".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::ModifySubAccountApiKeyPermissionResponse>(
+            &self.configuration,
+            "/sapi/v1/sub-account/subAccountApiPermission",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn query_sub_account_api_key(
+        &self,
+        params: QuerySubAccountApiKeyParams,
+    ) -> anyhow::Result<RestApiResponse<models::QuerySubAccountApiKeyResponse>> {
+        let QuerySubAccountApiKeyParams {
+            email,
+            sub_account_api_key,
+            page,
+            size,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("email".to_string(), json!(email));
+
+        if let Some(rw) = sub_account_api_key {
+            query_params.insert("subAccountApiKey".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = page {
+            query_params.insert("page".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = size {
+            query_params.insert("size".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::QuerySubAccountApiKeyResponse>(
+            &self.configuration,
+            "/sapi/v1/sub-account/subAccountApi",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -380,11 +916,38 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":"2","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":"2","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AddIpRestrictionForSubAccountApiKeyResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::AddIpRestrictionForSubAccountApiKeyResponse",
                 );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn create_sub_account_api_key(
+            &self,
+            _params: CreateSubAccountApiKeyParams,
+        ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::CreateSubAccountApiKeyResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CreateSubAccountApiKeyResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -409,10 +972,37 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::DeleteIpListForASubAccountApiKeyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DeleteIpListForASubAccountApiKeyResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn delete_sub_account_api_key(
+            &self,
+            _params: DeleteSubAccountApiKeyParams,
+        ) -> anyhow::Result<RestApiResponse<serde_json::Value>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value =
+                serde_json::from_str(r"").unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: serde_json::Value = serde_json::from_value(resp_json.clone())
+                .expect("should parse into serde_json::Value");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -437,11 +1027,66 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetIpRestrictionForASubAccountApiKeyResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetIpRestrictionForASubAccountApiKeyResponse",
                 );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn modify_sub_account_api_key_permission(
+            &self,
+            _params: ModifySubAccountApiKeyPermissionParams,
+        ) -> anyhow::Result<RestApiResponse<models::ModifySubAccountApiKeyPermissionResponse>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::ModifySubAccountApiKeyPermissionResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ModifySubAccountApiKeyPermissionResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_sub_account_api_key(
+            &self,
+            _params: QuerySubAccountApiKeyParams,
+        ) -> anyhow::Result<RestApiResponse<models::QuerySubAccountApiKeyResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::QuerySubAccountApiKeyResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::QuerySubAccountApiKeyResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -459,9 +1104,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = AddIpRestrictionForSubAccountApiKeyParams::builder("sub-account-email@email.com".to_string(),"sub_account_api_key_example".to_string(),"status_example".to_string(),).build().unwrap();
+            let params = AddIpRestrictionForSubAccountApiKeyParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),1,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":"2","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":"2","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AddIpRestrictionForSubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AddIpRestrictionForSubAccountApiKeyResponse");
 
             let resp = client.add_ip_restriction_for_sub_account_api_key(params).await.expect("Expected a response");
@@ -476,9 +1121,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = AddIpRestrictionForSubAccountApiKeyParams::builder("sub-account-email@email.com".to_string(),"sub_account_api_key_example".to_string(),"status_example".to_string(),).ip_address("ip_address_example".to_string()).recv_window(5000).build().unwrap();
+            let params = AddIpRestrictionForSubAccountApiKeyParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),1,).ip_address("69.210.67.14".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":"2","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":"2","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AddIpRestrictionForSubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AddIpRestrictionForSubAccountApiKeyResponse");
 
             let resp = client.add_ip_restriction_for_sub_account_api_key(params).await.expect("Expected a response");
@@ -494,9 +1139,9 @@ mod tests {
             let client = MockApiManagementApiClient { force_error: true };
 
             let params = AddIpRestrictionForSubAccountApiKeyParams::builder(
-                "sub-account-email@email.com".to_string(),
-                "sub_account_api_key_example".to_string(),
-                "status_example".to_string(),
+                "123@test.com".to_string(),
+                "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
+                1,
             )
             .build()
             .unwrap();
@@ -514,13 +1159,69 @@ mod tests {
     }
 
     #[test]
+    fn create_sub_account_api_key_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = CreateSubAccountApiKeyParams::builder("123@test.com".to_string(),"myKey".to_string(),2,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CreateSubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateSubAccountApiKeyResponse");
+
+            let resp = client.create_sub_account_api_key(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn create_sub_account_api_key_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = CreateSubAccountApiKeyParams::builder("123@test.com".to_string(),"myKey".to_string(),2,).can_trade(true).can_margin_loan_repay(false).can_futures_trade(false).can_universal_transfer(false).can_vanilla_options(false).ip_address("69.210.67.14".to_string()).third_party_name("thirdParty".to_string()).public_key(String::new()).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CreateSubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateSubAccountApiKeyResponse");
+
+            let resp = client.create_sub_account_api_key(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn create_sub_account_api_key_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: true };
+
+            let params = CreateSubAccountApiKeyParams::builder(
+                "123@test.com".to_string(),
+                "myKey".to_string(),
+                2,
+            )
+            .build()
+            .unwrap();
+
+            match client.create_sub_account_api_key(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn delete_ip_list_for_a_sub_account_api_key_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = DeleteIpListForASubAccountApiKeyParams::builder("sub-account-email@email.com".to_string(),"sub_account_api_key_example".to_string(),"ip_address_example".to_string(),).build().unwrap();
+            let params = DeleteIpListForASubAccountApiKeyParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),"69.210.67.14".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::DeleteIpListForASubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DeleteIpListForASubAccountApiKeyResponse");
 
             let resp = client.delete_ip_list_for_a_sub_account_api_key(params).await.expect("Expected a response");
@@ -535,9 +1236,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = DeleteIpListForASubAccountApiKeyParams::builder("sub-account-email@email.com".to_string(),"sub_account_api_key_example".to_string(),"ip_address_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = DeleteIpListForASubAccountApiKeyParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),"69.210.67.14".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::DeleteIpListForASubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::DeleteIpListForASubAccountApiKeyResponse");
 
             let resp = client.delete_ip_list_for_a_sub_account_api_key(params).await.expect("Expected a response");
@@ -553,9 +1254,9 @@ mod tests {
             let client = MockApiManagementApiClient { force_error: true };
 
             let params = DeleteIpListForASubAccountApiKeyParams::builder(
-                "sub-account-email@email.com".to_string(),
-                "sub_account_api_key_example".to_string(),
-                "ip_address_example".to_string(),
+                "123@test.com".to_string(),
+                "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
+                "69.210.67.14".to_string(),
             )
             .build()
             .unwrap();
@@ -573,13 +1274,89 @@ mod tests {
     }
 
     #[test]
+    fn delete_sub_account_api_key_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = DeleteSubAccountApiKeyParams::builder(
+                "123@test.com".to_string(),
+                "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
+            )
+            .build()
+            .unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r"").unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: serde_json::Value = serde_json::from_value(resp_json.clone())
+                .expect("should parse into serde_json::Value");
+
+            let resp = client
+                .delete_sub_account_api_key(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn delete_sub_account_api_key_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = DeleteSubAccountApiKeyParams::builder(
+                "123@test.com".to_string(),
+                "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
+            )
+            .recv_window(5000)
+            .build()
+            .unwrap();
+
+            let resp_json: Value =
+                serde_json::from_str(r"").unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: serde_json::Value = serde_json::from_value(resp_json.clone())
+                .expect("should parse into serde_json::Value");
+
+            let resp = client
+                .delete_sub_account_api_key(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn delete_sub_account_api_key_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: true };
+
+            let params = DeleteSubAccountApiKeyParams::builder(
+                "123@test.com".to_string(),
+                "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
+            )
+            .build()
+            .unwrap();
+
+            match client.delete_sub_account_api_key(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn get_ip_restriction_for_a_sub_account_api_key_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = GetIpRestrictionForASubAccountApiKeyParams::builder("sub-account-email@email.com".to_string(),"sub_account_api_key_example".to_string(),).build().unwrap();
+            let params = GetIpRestrictionForASubAccountApiKeyParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetIpRestrictionForASubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetIpRestrictionForASubAccountApiKeyResponse");
 
             let resp = client.get_ip_restriction_for_a_sub_account_api_key(params).await.expect("Expected a response");
@@ -594,9 +1371,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = GetIpRestrictionForASubAccountApiKeyParams::builder("sub-account-email@email.com".to_string(),"sub_account_api_key_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = GetIpRestrictionForASubAccountApiKeyParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14","8.34.21.10"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"ipRestrict":"true","ipList":["69.210.67.14"],"updateTime":1636371437000,"apiKey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetIpRestrictionForASubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetIpRestrictionForASubAccountApiKeyResponse");
 
             let resp = client.get_ip_restriction_for_a_sub_account_api_key(params).await.expect("Expected a response");
@@ -612,8 +1389,8 @@ mod tests {
             let client = MockApiManagementApiClient { force_error: true };
 
             let params = GetIpRestrictionForASubAccountApiKeyParams::builder(
-                "sub-account-email@email.com".to_string(),
-                "sub_account_api_key_example".to_string(),
+                "123@test.com".to_string(),
+                "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
             )
             .build()
             .unwrap();
@@ -622,6 +1399,113 @@ mod tests {
                 .get_ip_restriction_for_a_sub_account_api_key(params)
                 .await
             {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn modify_sub_account_api_key_permission_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = ModifySubAccountApiKeyPermissionParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::ModifySubAccountApiKeyPermissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifySubAccountApiKeyPermissionResponse");
+
+            let resp = client.modify_sub_account_api_key_permission(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn modify_sub_account_api_key_permission_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = ModifySubAccountApiKeyPermissionParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),).can_trade(true).can_margin_loan_repay(false).can_futures_trade(true).can_universal_transfer(false).can_vanilla_options(false).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::ModifySubAccountApiKeyPermissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifySubAccountApiKeyPermissionResponse");
+
+            let resp = client.modify_sub_account_api_key_permission(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn modify_sub_account_api_key_permission_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: true };
+
+            let params = ModifySubAccountApiKeyPermissionParams::builder(
+                "123@test.com".to_string(),
+                "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),
+            )
+            .build()
+            .unwrap();
+
+            match client.modify_sub_account_api_key_permission(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_sub_account_api_key_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = QuerySubAccountApiKeyParams::builder("123@test.com".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::QuerySubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountApiKeyResponse");
+
+            let resp = client.query_sub_account_api_key(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_sub_account_api_key_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = QuerySubAccountApiKeyParams::builder("123@test.com".to_string(),).sub_account_api_key("k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string()).page(1).size(30).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::QuerySubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountApiKeyResponse");
+
+            let resp = client.query_sub_account_api_key(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_sub_account_api_key_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: true };
+
+            let params = QuerySubAccountApiKeyParams::builder("123@test.com".to_string())
+                .build()
+                .unwrap();
+
+            match client.query_sub_account_api_key(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

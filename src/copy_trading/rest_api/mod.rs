@@ -1,7 +1,7 @@
 /*
- * Binance Copy Trading REST API
+ * Copy Trading REST API
  *
- * OpenAPI Specification for the Binance Copy Trading REST API
+ * Automate lead trading via the Copy Trading API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -111,11 +111,13 @@ impl RestApi {
         .await
     }
 
-    /// Get Futures Lead Trader Status(TRADE)
+    /// Get Futures Lead Trader Status (TRADE)
     ///
     /// Get Futures Lead Trader Status
     ///
-    /// Weight: 20
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -145,7 +147,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/copy_trading/future-copy-trading/Get-Futures-Lead-Trader-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-copy-trading/api/rest-api/future-copy-trading#get-futures-lead-trader-status).
     ///
     pub async fn get_futures_lead_trader_status(
         &self,
@@ -156,11 +158,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Futures Lead Trading Symbol `Whitelist(USER_DATA)`
+    /// Get Futures Lead Trading Symbol Whitelist (`USER_DATA`)
     ///
     /// Get Futures Lead Trading Symbol Whitelist
     ///
-    /// Weight: 20
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -190,7 +194,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/copy_trading/future-copy-trading/Get-Futures-Lead-Trading-Symbol-Whitelist).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-copy-trading/api/rest-api/future-copy-trading#get-futures-lead-trading-symbol-whitelist).
     ///
     pub async fn get_futures_lead_trading_symbol_whitelist(
         &self,

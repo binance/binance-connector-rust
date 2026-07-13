@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -113,8 +113,6 @@ pub mod get_region_list_response;
 pub use self::get_region_list_response::GetRegionListResponse;
 pub mod get_region_list_response_regions_inner;
 pub use self::get_region_list_response_regions_inner::GetRegionListResponseRegionsInner;
-pub mod get_spot_delist_schedule_response_inner;
-pub use self::get_spot_delist_schedule_response_inner::GetSpotDelistScheduleResponseInner;
 pub mod get_symbols_delist_schedule_for_spot_response_inner;
 pub use self::get_symbols_delist_schedule_for_spot_response_inner::GetSymbolsDelistScheduleForSpotResponseInner;
 pub mod one_click_arrival_deposit_apply_response;
@@ -149,8 +147,8 @@ pub mod vasp_list_response_inner;
 pub use self::vasp_list_response_inner::VaspListResponseInner;
 pub mod withdraw_history_response_inner;
 pub use self::withdraw_history_response_inner::WithdrawHistoryResponseInner;
-pub mod withdraw_history_v2_response_inner;
-pub use self::withdraw_history_v2_response_inner::WithdrawHistoryV2ResponseInner;
+pub mod withdraw_history_v1_response_inner;
+pub use self::withdraw_history_v1_response_inner::WithdrawHistoryV1ResponseInner;
 pub mod withdraw_response;
 pub use self::withdraw_response::WithdrawResponse;
 pub mod withdraw_travel_rule_response;

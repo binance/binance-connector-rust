@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -27,6 +27,7 @@ pub struct GetVipLoanAccruedInterestResponseRowsInner {
     pub annual_interest_rate: Option<String>,
     #[serde(rename = "accrualTime", skip_serializing_if = "Option::is_none")]
     pub accrual_time: Option<i64>,
+    /// Latest order ID for the renewal order.
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
 }

@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = NewOrderParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSD_200925".to_string(),
         NewOrderSideEnum::Buy,
         NewOrderTypeEnum::Limit,
     )

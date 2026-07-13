@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -165,57 +165,6 @@ impl std::str::FromStr for ChangeMarginTypeMarginTypeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum ModifyIsolatedPositionMarginTypeEnum {
-    #[serde(rename = "LIMIT")]
-    Limit,
-    #[serde(rename = "MARKET")]
-    Market,
-    #[serde(rename = "STOP")]
-    Stop,
-    #[serde(rename = "STOP_MARKET")]
-    StopMarket,
-    #[serde(rename = "TAKE_PROFIT")]
-    TakeProfit,
-    #[serde(rename = "TAKE_PROFIT_MARKET")]
-    TakeProfitMarket,
-    #[serde(rename = "TRAILING_STOP_MARKET")]
-    TrailingStopMarket,
-}
-
-impl ModifyIsolatedPositionMarginTypeEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Limit => "LIMIT",
-            Self::Market => "MARKET",
-            Self::Stop => "STOP",
-            Self::StopMarket => "STOP_MARKET",
-            Self::TakeProfit => "TAKE_PROFIT",
-            Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
-            Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
-        }
-    }
-}
-
-impl std::str::FromStr for ModifyIsolatedPositionMarginTypeEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "LIMIT" => Ok(Self::Limit),
-            "MARKET" => Ok(Self::Market),
-            "STOP" => Ok(Self::Stop),
-            "STOP_MARKET" => Ok(Self::StopMarket),
-            "TAKE_PROFIT" => Ok(Self::TakeProfit),
-            "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
-            "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
-            other => Err(format!("invalid ModifyIsolatedPositionMarginTypeEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModifyIsolatedPositionMarginPositionSideEnum {
     #[serde(rename = "BOTH")]
     Both,
@@ -287,8 +236,6 @@ impl std::str::FromStr for ModifyOrderSideEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModifyOrderPriceMatchEnum {
-    #[serde(rename = "NONE")]
-    None,
     #[serde(rename = "OPPONENT")]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
@@ -311,7 +258,6 @@ impl ModifyOrderPriceMatchEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::None => "NONE",
             Self::Opponent => "OPPONENT",
             Self::Opponent5 => "OPPONENT_5",
             Self::Opponent10 => "OPPONENT_10",
@@ -329,7 +275,6 @@ impl std::str::FromStr for ModifyOrderPriceMatchEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "NONE" => Ok(Self::None),
             "OPPONENT" => Ok(Self::Opponent),
             "OPPONENT_5" => Ok(Self::Opponent5),
             "OPPONENT_10" => Ok(Self::Opponent10),
@@ -462,6 +407,37 @@ impl std::str::FromStr for NewOrderPositionSideEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewOrderReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewOrderReduceOnlyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewOrderReduceOnlyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewOrderReduceOnlyEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderTimeInForceEnum {
     #[serde(rename = "GTC")]
     Gtc,
@@ -532,6 +508,37 @@ impl std::str::FromStr for NewOrderWorkingTypeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewOrderPriceProtectEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewOrderPriceProtectEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewOrderPriceProtectEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewOrderPriceProtectEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderNewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
     Ack,
@@ -564,8 +571,6 @@ impl std::str::FromStr for NewOrderNewOrderRespTypeEnum {
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewOrderPriceMatchEnum {
-    #[serde(rename = "NONE")]
-    None,
     #[serde(rename = "OPPONENT")]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
@@ -588,7 +593,6 @@ impl NewOrderPriceMatchEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::None => "NONE",
             Self::Opponent => "OPPONENT",
             Self::Opponent5 => "OPPONENT_5",
             Self::Opponent10 => "OPPONENT_10",
@@ -606,7 +610,6 @@ impl std::str::FromStr for NewOrderPriceMatchEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "NONE" => Ok(Self::None),
             "OPPONENT" => Ok(Self::Opponent),
             "OPPONENT_5" => Ok(Self::Opponent5),
             "OPPONENT_10" => Ok(Self::Opponent10),
@@ -694,54 +697,57 @@ impl std::str::FromStr for UsersForceOrdersAutoCloseTypeEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_trade_list`](#method.account_trade_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountTradeListParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    ///
-    /// The `pair` parameter.
+    /// pair
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pair", default)]
     pub pair: Option<String>,
-    ///
-    /// The `order_id` parameter.
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<String>,
-    ///
-    /// The `start_time` parameter.
+    /// Start time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// End time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// ID to get aggregate trades from INCLUSIVE.
+    /// Trade id to fetch from. Default gets most recent trades.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromId", default)]
     pub from_id: Option<i64>,
-    /// Default 100; max 1000
+    /// Maximum number of records to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -757,49 +763,52 @@ impl AccountTradeListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_orders`](#method.all_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllOrdersParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    ///
-    /// The `pair` parameter.
+    /// Pair
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pair", default)]
     pub pair: Option<String>,
     ///
     /// The `order_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `start_time` parameter.
+    /// Start time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// End time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default 100; max 1000
+    /// Maximum number of records to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -815,7 +824,7 @@ impl AllOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`auto_cancel_all_open_orders`](#method.auto_cancel_all_open_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AutoCancelAllOpenOrdersParams {
     ///
@@ -823,17 +832,20 @@ pub struct AutoCancelAllOpenOrdersParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// countdown time, 1000 for 1 second. 0 to cancel the timer
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "countdownTime")]
     pub countdown_time: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -856,20 +868,21 @@ impl AutoCancelAllOpenOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_all_open_orders`](#method.cancel_all_open_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelAllOpenOrdersParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -878,7 +891,7 @@ impl CancelAllOpenOrdersParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     ///
     #[must_use]
     pub fn builder(symbol: String) -> CancelAllOpenOrdersParamsBuilder {
@@ -889,30 +902,33 @@ impl CancelAllOpenOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_multiple_orders`](#method.cancel_multiple_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelMultipleOrdersParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// max length 10 <br /> e.g. [1234567,2345678]
+    /// Order IDs to cancel.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderIdList", default)]
     pub order_id_list: Option<Vec<i64>>,
-    /// max length 10<br /> e.g. ["`my_id_1","my_id_2`"], encode the double quotes. No space after comma.
+    /// Original client order IDs to cancel.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderIdList", default)]
     pub orig_client_order_id_list: Option<Vec<String>>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -921,7 +937,7 @@ impl CancelMultipleOrdersParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     ///
     #[must_use]
     pub fn builder(symbol: String) -> CancelMultipleOrdersParamsBuilder {
@@ -932,32 +948,33 @@ impl CancelMultipleOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_order`](#method.cancel_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `order_id` parameter.
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Client order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -966,7 +983,7 @@ impl CancelOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     ///
     #[must_use]
     pub fn builder(symbol: String) -> CancelOrderParamsBuilder {
@@ -977,25 +994,27 @@ impl CancelOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`change_initial_leverage`](#method.change_initial_leverage).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ChangeInitialLeverageParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// target initial leverage: int from 1 to 125
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "leverage")]
     pub leverage: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1004,7 +1023,7 @@ impl ChangeInitialLeverageParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     /// * `leverage` — target initial leverage: int from 1 to 125
     ///
     #[must_use]
@@ -1018,25 +1037,28 @@ impl ChangeInitialLeverageParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`change_margin_type`](#method.change_margin_type).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ChangeMarginTypeParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// ISOLATED, CROSSED
+    ///
+    /// The `margin_type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "marginType")]
     pub margin_type: ChangeMarginTypeMarginTypeEnum,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1045,8 +1067,8 @@ impl ChangeMarginTypeParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
-    /// * `margin_type` — ISOLATED, CROSSED
+    /// * `symbol` — Symbol
+    /// * `margin_type` — String
     ///
     #[must_use]
     pub fn builder(
@@ -1062,19 +1084,21 @@ impl ChangeMarginTypeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`change_position_mode`](#method.change_position_mode).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ChangePositionModeParams {
     /// "true": Hedge Mode; "false": One-way Mode
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "dualSidePosition")]
     pub dual_side_position: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1094,26 +1118,27 @@ impl ChangePositionModeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`current_all_open_orders`](#method.current_all_open_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CurrentAllOpenOrdersParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol. **After CM migration, an invalid `symbol` returns `-1121` (previously a silent `200`).**
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    ///
-    /// The `pair` parameter.
+    /// Pair
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pair", default)]
     pub pair: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1129,49 +1154,51 @@ impl CurrentAllOpenOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_order_modify_history`](#method.get_order_modify_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetOrderModifyHistoryParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `order_id` parameter.
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Client order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    ///
-    /// The `start_time` parameter.
+    /// Timestamp in ms to get modification history from INCLUSIVE
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Timestamp in ms to get modification history until INCLUSIVE
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default 100; max 1000
+    /// Maximum number of records to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1180,7 +1207,7 @@ impl GetOrderModifyHistoryParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     ///
     #[must_use]
     pub fn builder(symbol: String) -> GetOrderModifyHistoryParamsBuilder {
@@ -1191,7 +1218,7 @@ impl GetOrderModifyHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_position_margin_change_history`](#method.get_position_margin_change_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetPositionMarginChangeHistoryParams {
     ///
@@ -1199,34 +1226,38 @@ pub struct GetPositionMarginChangeHistoryParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
     /// 1: Add position margin,2: Reduce position margin
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "type", default)]
     pub r#type: Option<i64>,
-    ///
-    /// The `start_time` parameter.
+    /// Start time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// End time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default 100; max 1000
+    /// Maximum number of records to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1246,36 +1277,39 @@ impl GetPositionMarginChangeHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`modify_isolated_position_margin`](#method.modify_isolated_position_margin).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ModifyIsolatedPositionMarginParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `amount` parameter.
+    /// Margin asset
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// **After CM migration, stop-type values (`STOP`, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`, `TRAILING_STOP_MARKET`) are no longer accepted by this endpoint and will return `-4120`. Use the new `/dapi/v1/algoOrder` endpoint instead.**
+    /// 1: Add position margin,2: Reduce position margin
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: ModifyIsolatedPositionMarginTypeEnum,
+    #[serde(rename = "type")]
+    pub r#type: i64,
     /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent with Hedge Mode.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "positionSide", default)]
     pub position_side: Option<ModifyIsolatedPositionMarginPositionSideEnum>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1284,15 +1318,15 @@ impl ModifyIsolatedPositionMarginParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
-    /// * `amount` — `rust_decimal::Decimal`
-    /// * `r#type` — **After CM migration, stop-type values (`STOP`, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`, `TRAILING_STOP_MARKET`) are no longer accepted by this endpoint and will return `-4120`. Use the new `/dapi/v1/algoOrder` endpoint instead.**
+    /// * `symbol` — Symbol
+    /// * `amount` — Margin asset
+    /// * `r#type` — 1: Add position margin,2: Reduce position margin
     ///
     #[must_use]
     pub fn builder(
         symbol: String,
         amount: rust_decimal::Decimal,
-        r#type: ModifyIsolatedPositionMarginTypeEnum,
+        r#type: i64,
     ) -> ModifyIsolatedPositionMarginParamsBuilder {
         ModifyIsolatedPositionMarginParamsBuilder::default()
             .symbol(symbol)
@@ -1304,19 +1338,21 @@ impl ModifyIsolatedPositionMarginParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`modify_multiple_orders`](#method.modify_multiple_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ModifyMultipleOrdersParams {
     /// order list. Max 5 orders
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "batchOrders")]
     pub batch_orders: Vec<models::ModifyMultipleOrdersBatchOrdersParameterInner>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1338,53 +1374,58 @@ impl ModifyMultipleOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`modify_order`](#method.modify_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ModifyOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// `SELL`, `BUY`
+    ///
+    /// The `side` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: ModifyOrderSideEnum,
-    ///
-    /// The `order_id` parameter.
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Client order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
-    /// quantity measured by contract number, Cannot be sent with `closePosition`=`true`
+    /// Order quantity, cannot be sent with `closePosition=true`. **After CM migration, this parameter becomes mandatory** (must be sent together with `price`).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
     pub quantity: Option<rust_decimal::Decimal>,
-    ///
-    /// The `price` parameter.
+    /// Order price. **After CM migration, this parameter becomes mandatory** (must be sent together with `quantity`).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
-    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`: /`QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; Can't be passed together with `price`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "priceMatch", default)]
     pub price_match: Option<ModifyOrderPriceMatchEnum>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1393,8 +1434,8 @@ impl ModifyOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
-    /// * `side` — `SELL`, `BUY`
+    /// * `symbol` — Symbol
+    /// * `side` — String
     ///
     #[must_use]
     pub fn builder(symbol: String, side: ModifyOrderSideEnum) -> ModifyOrderParamsBuilder {
@@ -1407,107 +1448,135 @@ impl ModifyOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`new_order`](#method.new_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct NewOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// `SELL`, `BUY`
+    ///
+    /// The `side` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: NewOrderSideEnum,
     /// **After CM migration, stop-type values (`STOP`, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`, `TRAILING_STOP_MARKET`) are no longer accepted by this endpoint and will return `-4120`. Use the new `/dapi/v1/algoOrder` endpoint instead.**
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "type")]
     pub r#type: NewOrderTypeEnum,
-    /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent with Hedge Mode.
+    /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "positionSide", default)]
     pub position_side: Option<NewOrderPositionSideEnum>,
-    ///
-    /// The `time_in_force` parameter.
+    /// "true" or "false". Cannot be sent in Hedge
+    /// Mode; cannot be sent with `closePosition`=`true`(Close-All)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub time_in_force: Option<NewOrderTimeInForceEnum>,
+    #[serde(rename = "reduceOnly", default)]
+    pub reduce_only: Option<NewOrderReduceOnlyEnum>,
     /// quantity measured by contract number, Cannot be sent with `closePosition`=`true`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
     pub quantity: Option<rust_decimal::Decimal>,
-    /// "true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`(Close-All)
+    /// Order price
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub reduce_only: Option<String>,
-    ///
-    /// The `price` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
     pub price: Option<rust_decimal::Decimal>,
-    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
+    /// A unique id among open orders. Automatically generated if
+    /// not sent. Can only be string following the rule:
+    /// `^[\.A-Z\:/a-z0-9_-]{1,36}$`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newClientOrderId", default)]
     pub new_client_order_id: Option<String>,
     /// Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "stopPrice", default)]
     pub stop_price: Option<rust_decimal::Decimal>,
     /// `true`, `false`；Close-All,used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "closePosition", default)]
     pub close_position: Option<String>,
-    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different `workingType`)
+    /// Used with `TRAILING_STOP_MARKET` orders, default as the
+    /// latest price(supporting different `workingType`)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "activationPrice", default)]
     pub activation_price: Option<rust_decimal::Decimal>,
     /// Used with `TRAILING_STOP_MARKET` orders, min 0.1, max 10 where 1 for 1%
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "callbackRate", default)]
     pub callback_rate: Option<rust_decimal::Decimal>,
-    /// stopPrice triggered by: "`MARK_PRICE`", "`CONTRACT_PRICE`". Default "`CONTRACT_PRICE`"
+    ///
+    /// The `time_in_force` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
+    pub time_in_force: Option<NewOrderTimeInForceEnum>,
+    /// 'stopPrice triggered by: "`MARK_PRICE`", "`CONTRACT_PRICE`".
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "workingType", default)]
     pub working_type: Option<NewOrderWorkingTypeEnum>,
-    /// "true" or "false", default "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
+    /// "true" or "false". Used with
+    /// `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET`
+    /// orders.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub price_protect: Option<String>,
-    /// "ACK", "RESULT", default "ACK"
+    #[serde(rename = "priceProtect", default)]
+    pub price_protect: Option<NewOrderPriceProtectEnum>,
+    ///
+    /// The `new_order_resp_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<NewOrderNewOrderRespTypeEnum>,
-    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`: /`QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
+    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order;
+    /// Can't be passed together with `price`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "priceMatch", default)]
     pub price_match: Option<NewOrderPriceMatchEnum>,
-    /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `EXPIRE_MAKER`
+    /// `EXPIRE_TAKER`:expire taker order when STP triggers/
+    /// `EXPIRE_MAKER`:expire taker order when STP triggers/
+    /// `EXPIRE_BOTH`:expire both orders when STP triggers
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<NewOrderSelfTradePreventionModeEnum>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1516,8 +1585,8 @@ impl NewOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
-    /// * `side` — `SELL`, `BUY`
+    /// * `symbol` — Symbol
+    /// * `side` — String
     /// * `r#type` — **After CM migration, stop-type values (`STOP`, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`, `TRAILING_STOP_MARKET`) are no longer accepted by this endpoint and will return `-4120`. Use the new `/dapi/v1/algoOrder` endpoint instead.**
     ///
     #[must_use]
@@ -1536,19 +1605,21 @@ impl NewOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`place_multiple_orders`](#method.place_multiple_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PlaceMultipleOrdersParams {
     /// order list. Max 5 orders
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "batchOrders")]
     pub batch_orders: Vec<models::PlaceMultipleOrdersBatchOrdersParameterInner>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1570,7 +1641,7 @@ impl PlaceMultipleOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`position_adl_quantile_estimation`](#method.position_adl_quantile_estimation).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PositionAdlQuantileEstimationParams {
     ///
@@ -1578,12 +1649,14 @@ pub struct PositionAdlQuantileEstimationParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1599,7 +1672,7 @@ impl PositionAdlQuantileEstimationParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`position_information`](#method.position_information).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PositionInformationParams {
     ///
@@ -1607,18 +1680,21 @@ pub struct PositionInformationParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "marginAsset", default)]
     pub margin_asset: Option<String>,
     ///
     /// The `pair` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pair", default)]
     pub pair: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1634,32 +1710,33 @@ impl PositionInformationParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_current_open_order`](#method.query_current_open_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryCurrentOpenOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `order_id` parameter.
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Client order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1668,7 +1745,7 @@ impl QueryCurrentOpenOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     ///
     #[must_use]
     pub fn builder(symbol: String) -> QueryCurrentOpenOrderParamsBuilder {
@@ -1679,32 +1756,33 @@ impl QueryCurrentOpenOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_order`](#method.query_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryOrderParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `order_id` parameter.
+    /// Order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<i64>,
-    ///
-    /// The `orig_client_order_id` parameter.
+    /// Client order ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "origClientOrderId", default)]
     pub orig_client_order_id: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1713,7 +1791,7 @@ impl QueryOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol
     ///
     #[must_use]
     pub fn builder(symbol: String) -> QueryOrderParamsBuilder {
@@ -1724,7 +1802,7 @@ impl QueryOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`users_force_orders`](#method.users_force_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct UsersForceOrdersParams {
     ///
@@ -1732,34 +1810,41 @@ pub struct UsersForceOrdersParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
-    /// "LIQUIDATION" for liquidation orders, "ADL" for ADL orders.
+    ///
+    /// The `auto_close_type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "autoCloseType", default)]
     pub auto_close_type: Option<UsersForceOrdersAutoCloseTypeEnum>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default 100; max 1000
+    /// Maximum number of records to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -2473,15 +2558,15 @@ impl TradeApi for TradeApiClient {
             side,
             r#type,
             position_side,
-            time_in_force,
-            quantity,
             reduce_only,
+            quantity,
             price,
             new_client_order_id,
             stop_price,
             close_position,
             activation_price,
             callback_rate,
+            time_in_force,
             working_type,
             price_protect,
             new_order_resp_type,
@@ -2503,16 +2588,12 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("type".to_string(), json!(r#type));
 
-        if let Some(rw) = time_in_force {
-            query_params.insert("timeInForce".to_string(), json!(rw));
+        if let Some(rw) = reduce_only {
+            query_params.insert("reduceOnly".to_string(), json!(rw));
         }
 
         if let Some(rw) = quantity {
             query_params.insert("quantity".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = reduce_only {
-            query_params.insert("reduceOnly".to_string(), json!(rw));
         }
 
         if let Some(rw) = price {
@@ -2537,6 +2618,10 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = callback_rate {
             query_params.insert("callbackRate".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = time_in_force {
+            query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
         if let Some(rw) = working_type {
@@ -2880,7 +2965,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200626","id":6,"orderId":28,"pair":"BTCUSD","side":"SELL","price":"8800","qty":"1","realizedPnl":"0","marginAsset":"BTC","baseQty":"0.01136364","commission":"0.00000454","commissionAsset":"BTC","time":1590743483586,"positionSide":"BOTH","buyer":false,"maker":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200626","id":6,"orderId":28,"pair":"BTCUSD","side":"SELL","price":"8800","qty":"1","realizedPnl":"0","marginAsset":"BTC","baseQty":"0.01136364","commission":"0.00000454","commissionAsset":"BTC","time":1590743483586,"positionSide":"BOTH","buyer":false,"maker":false}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::AccountTradeListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AccountTradeListResponseInner>");
@@ -2907,7 +2992,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::AllOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AllOrdersResponseInner>");
@@ -2936,7 +3021,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"symbol":"BTCUSD_200925","countdownTime":"100000"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
@@ -2966,7 +3051,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelAllOpenOrdersResponse");
@@ -2994,7 +3079,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1571110484038},{"code":-2011,"msg":"Unknown order sent."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","origType":"TRAILING_STOP_MARKET","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1571110484038,"code":-2011,"msg":"Unknown order sent."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::CancelMultipleOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::CancelMultipleOrdersResponseInner>");
@@ -3021,7 +3106,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","origType":"TRAILING_STOP_MARKET","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CancelOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelOrderResponse");
@@ -3050,7 +3135,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"leverage":21,"maxQty":"1000","symbol":"BTCUSD_200925"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ChangeInitialLeverageResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeInitialLeverageResponse");
@@ -3077,7 +3162,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ChangeMarginTypeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeMarginTypeResponse");
@@ -3104,7 +3190,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ChangePositionModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangePositionModeResponse");
@@ -3131,7 +3218,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::AllOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AllOrdersResponseInner>");
@@ -3159,7 +3246,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}},{"amendmentId":5361,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184533946,"amendment":{"price":{"before":"30005","after":"30004"},"origQty":{"before":"1","after":"1"},"count":2}},{"amendmentId":5325,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629182711787,"amendment":{"price":{"before":"30002","after":"30005"},"origQty":{"before":"1","after":"1"},"count":1}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetOrderModifyHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetOrderModifyHistoryResponseInner>");
@@ -3187,7 +3274,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amount":"23.36332311","asset":"BTC","symbol":"BTCUSD_200925","time":1578047897183,"type":1,"positionSide":"BOTH"},{"amount":"100","asset":"BTC","symbol":"BTCUSD_200925","time":1578047900425,"type":1,"positionSide":"LONG"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"amount":"23.36332311","asset":"BTC","symbol":"BTCUSD_200925","time":1578047897183,"type":1,"positionSide":"BOTH"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetPositionMarginChangeHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetPositionMarginChangeHistoryResponseInner>",
@@ -3215,7 +3302,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ModifyIsolatedPositionMarginResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ModifyIsolatedPositionMarginResponse");
@@ -3243,7 +3330,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600,"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::ModifyMultipleOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::ModifyMultipleOrdersResponseInner>");
@@ -3270,7 +3357,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ModifyOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ModifyOrderResponse");
@@ -3297,7 +3384,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"SHORT","status":"NEW","stopPrice":"0","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::NewOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::NewOrderResponse");
@@ -3325,7 +3412,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"SELL","positionSide":"SHORT","status":"NEW","stopPrice":"0","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::PlaceMultipleOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
@@ -3353,7 +3440,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200925","adlQuantile":{"LONG":3,"SHORT":3,"HEDGE":0}},{"symbol":"BTCUSD_201225","adlQuantile":{"LONG":1,"SHORT":2,"BOTH":0}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200925","adlQuantile":{"LONG":3,"SHORT":3,"HEDGE":0,"BOTH":0}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::PositionAdlQuantileEstimationResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::PositionAdlQuantileEstimationResponseInner>",
@@ -3382,7 +3469,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","updateTime":0},{"symbol":"BTCUSD_201225","positionAmt":"1","entryPrice":"11707.70000003","breakEvenPrice":"11707.80000005","markPrice":"11788.66626667","unRealizedProfit":"0.00005866","liquidationPrice":"11667.63509587","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"LONG","updateTime":1627026881327},{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"SHORT","updateTime":1627026881327}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","updateTime":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::PositionInformationResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::PositionInformationResponseInner>");
@@ -3409,7 +3496,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryCurrentOpenOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryCurrentOpenOrderResponse");
@@ -3436,7 +3523,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1573346959,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryOrderResponse");
@@ -3463,7 +3550,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":165123080,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1596542005017000006","price":"11326.9","avgPrice":"11326.9","origQty":"1","executedQty":"1","cumBase":"0.00882854","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1596542005019,"updateTime":1596542005050},{"orderId":207251986,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1597307316020000006","price":"11619.4","avgPrice":"11661.2","origQty":"1","executedQty":"1","cumBase":"0.00857544","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1597307316022,"updateTime":1597307316035}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":165123080,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1596542005017000006","price":"11326.9","avgPrice":"11326.9","origQty":"1","executedQty":"1","cumBase":"0.00882854","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1596542005019,"updateTime":1596542005050}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::UsersForceOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::UsersForceOrdersResponseInner>");
@@ -3486,7 +3573,7 @@ mod tests {
 
             let params = AccountTradeListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200626","id":6,"orderId":28,"pair":"BTCUSD","side":"SELL","price":"8800","qty":"1","realizedPnl":"0","marginAsset":"BTC","baseQty":"0.01136364","commission":"0.00000454","commissionAsset":"BTC","time":1590743483586,"positionSide":"BOTH","buyer":false,"maker":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200626","id":6,"orderId":28,"pair":"BTCUSD","side":"SELL","price":"8800","qty":"1","realizedPnl":"0","marginAsset":"BTC","baseQty":"0.01136364","commission":"0.00000454","commissionAsset":"BTC","time":1590743483586,"positionSide":"BOTH","buyer":false,"maker":false}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountTradeListResponseInner>");
 
             let resp = client.account_trade_list(params).await.expect("Expected a response");
@@ -3501,9 +3588,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = AccountTradeListParams::builder().symbol("symbol_example".to_string()).pair("pair_example".to_string()).order_id("1".to_string()).start_time(1623319461670).end_time(1641782889000).from_id(1).limit(100).recv_window(5000).build().unwrap();
+            let params = AccountTradeListParams::builder().symbol("BTCUSD_200626".to_string()).pair("BTCUSD".to_string()).order_id("1".to_string()).start_time(1623319461670).end_time(1641782889000).from_id(6).limit(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200626","id":6,"orderId":28,"pair":"BTCUSD","side":"SELL","price":"8800","qty":"1","realizedPnl":"0","marginAsset":"BTC","baseQty":"0.01136364","commission":"0.00000454","commissionAsset":"BTC","time":1590743483586,"positionSide":"BOTH","buyer":false,"maker":false}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200626","id":6,"orderId":28,"pair":"BTCUSD","side":"SELL","price":"8800","qty":"1","realizedPnl":"0","marginAsset":"BTC","baseQty":"0.01136364","commission":"0.00000454","commissionAsset":"BTC","time":1590743483586,"positionSide":"BOTH","buyer":false,"maker":false}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountTradeListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountTradeListResponseInner>");
 
             let resp = client.account_trade_list(params).await.expect("Expected a response");
@@ -3536,7 +3623,7 @@ mod tests {
 
             let params = AllOrdersParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllOrdersResponseInner>");
 
             let resp = client.all_orders(params).await.expect("Expected a response");
@@ -3551,9 +3638,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = AllOrdersParams::builder().symbol("symbol_example".to_string()).pair("pair_example".to_string()).order_id(1).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
+            let params = AllOrdersParams::builder().symbol("BTCUSD_200925".to_string()).pair("BTCUSD".to_string()).order_id(1917641).start_time(1623319461670).end_time(1641782889000).limit(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllOrdersResponseInner>");
 
             let resp = client.all_orders(params).await.expect("Expected a response");
@@ -3584,13 +3671,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = AutoCancelAllOpenOrdersParams::builder("symbol_example".to_string(), 789)
+            let params = AutoCancelAllOpenOrdersParams::builder("BTCUSD_200925".to_string(), 1000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"symbol":"BTCUSD_200925","countdownTime":"100000"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
@@ -3610,14 +3697,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = AutoCancelAllOpenOrdersParams::builder("symbol_example".to_string(), 789)
+            let params = AutoCancelAllOpenOrdersParams::builder("BTCUSD_200925".to_string(), 1000)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"symbol":"BTCUSD_200925","countdownTime":"100000"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::AutoCancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AutoCancelAllOpenOrdersResponse");
@@ -3637,7 +3724,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = AutoCancelAllOpenOrdersParams::builder("symbol_example".to_string(), 789)
+            let params = AutoCancelAllOpenOrdersParams::builder("BTCUSD_200925".to_string(), 1000)
                 .build()
                 .unwrap();
 
@@ -3655,14 +3742,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelAllOpenOrdersParams::builder("symbol_example".to_string())
+            let params = CancelAllOpenOrdersParams::builder("BTCUSD_200925".to_string())
                 .build()
                 .unwrap();
 
             let resp_json: Value = serde_json::from_str(
                 r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelAllOpenOrdersResponse");
@@ -3682,7 +3769,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelAllOpenOrdersParams::builder("symbol_example".to_string())
+            let params = CancelAllOpenOrdersParams::builder("BTCUSD_200925".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
@@ -3690,7 +3777,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CancelAllOpenOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelAllOpenOrdersResponse");
@@ -3710,7 +3797,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = CancelAllOpenOrdersParams::builder("symbol_example".to_string())
+            let params = CancelAllOpenOrdersParams::builder("BTCUSD_200925".to_string())
                 .build()
                 .unwrap();
 
@@ -3728,9 +3815,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelMultipleOrdersParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = CancelMultipleOrdersParams::builder("BTCUSD_200925".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1571110484038},{"code":-2011,"msg":"Unknown order sent."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","origType":"TRAILING_STOP_MARKET","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1571110484038,"code":-2011,"msg":"Unknown order sent."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::CancelMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CancelMultipleOrdersResponseInner>");
 
             let resp = client.cancel_multiple_orders(params).await.expect("Expected a response");
@@ -3745,9 +3832,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelMultipleOrdersParams::builder("symbol_example".to_string(),).order_id_list([1234567,].to_vec()).orig_client_order_id_list(["my_id_1".to_string(),].to_vec()).recv_window(5000).build().unwrap();
+            let params = CancelMultipleOrdersParams::builder("BTCUSD_200925".to_string(),).order_id_list([1234567,].to_vec()).orig_client_order_id_list(["my_id_1".to_string(),].to_vec()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1571110484038},{"code":-2011,"msg":"Unknown order sent."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","origType":"TRAILING_STOP_MARKET","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1571110484038,"code":-2011,"msg":"Unknown order sent."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::CancelMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CancelMultipleOrdersResponseInner>");
 
             let resp = client.cancel_multiple_orders(params).await.expect("Expected a response");
@@ -3762,7 +3849,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = CancelMultipleOrdersParams::builder("symbol_example".to_string())
+            let params = CancelMultipleOrdersParams::builder("BTCUSD_200925".to_string())
                 .build()
                 .unwrap();
 
@@ -3780,9 +3867,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelOrderParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = CancelOrderParams::builder("BTCUSD_200925".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","origType":"TRAILING_STOP_MARKET","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CancelOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelOrderResponse");
 
             let resp = client.cancel_order(params).await.expect("Expected a response");
@@ -3797,9 +3884,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CancelOrderParams::builder("symbol_example".to_string(),).order_id(1).orig_client_order_id("1".to_string()).recv_window(5000).build().unwrap();
+            let params = CancelOrderParams::builder("BTCUSD_200925".to_string(),).order_id(283194212).orig_client_order_id("myOrder1".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"myOrder1","cumQty":"0","cumBase":"0","executedQty":"0","orderId":283194212,"origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"CANCELED","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","origType":"TRAILING_STOP_MARKET","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1571110484038,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CancelOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelOrderResponse");
 
             let resp = client.cancel_order(params).await.expect("Expected a response");
@@ -3814,7 +3901,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = CancelOrderParams::builder("symbol_example".to_string())
+            let params = CancelOrderParams::builder("BTCUSD_200925".to_string())
                 .build()
                 .unwrap();
 
@@ -3832,13 +3919,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ChangeInitialLeverageParams::builder("symbol_example".to_string(), 789)
+            let params = ChangeInitialLeverageParams::builder("BTCUSD_200925".to_string(), 1)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"leverage":21,"maxQty":"1000","symbol":"BTCUSD_200925"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeInitialLeverageResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeInitialLeverageResponse");
@@ -3858,14 +3945,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ChangeInitialLeverageParams::builder("symbol_example".to_string(), 789)
+            let params = ChangeInitialLeverageParams::builder("BTCUSD_200925".to_string(), 1)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"leverage":21,"maxQty":"1000","symbol":"BTCUSD_200925"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeInitialLeverageResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeInitialLeverageResponse");
@@ -3885,7 +3972,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = ChangeInitialLeverageParams::builder("symbol_example".to_string(), 789)
+            let params = ChangeInitialLeverageParams::builder("BTCUSD_200925".to_string(), 1)
                 .build()
                 .unwrap();
 
@@ -3904,13 +3991,14 @@ mod tests {
             let client = MockTradeApiClient { force_error: false };
 
             let params = ChangeMarginTypeParams::builder(
-                "symbol_example".to_string(),
+                "BTCUSD_200925".to_string(),
                 ChangeMarginTypeMarginTypeEnum::Isolated,
             )
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeMarginTypeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeMarginTypeResponse");
@@ -3931,14 +4019,15 @@ mod tests {
             let client = MockTradeApiClient { force_error: false };
 
             let params = ChangeMarginTypeParams::builder(
-                "symbol_example".to_string(),
+                "BTCUSD_200925".to_string(),
                 ChangeMarginTypeMarginTypeEnum::Isolated,
             )
             .recv_window(5000)
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeMarginTypeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeMarginTypeResponse");
@@ -3959,7 +4048,7 @@ mod tests {
             let client = MockTradeApiClient { force_error: true };
 
             let params = ChangeMarginTypeParams::builder(
-                "symbol_example".to_string(),
+                "BTCUSD_200925".to_string(),
                 ChangeMarginTypeMarginTypeEnum::Isolated,
             )
             .build()
@@ -3979,12 +4068,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params =
-                ChangePositionModeParams::builder("dual_side_position_example".to_string())
-                    .build()
-                    .unwrap();
+            let params = ChangePositionModeParams::builder("true".to_string())
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangePositionModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangePositionModeResponse");
@@ -4004,13 +4093,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params =
-                ChangePositionModeParams::builder("dual_side_position_example".to_string())
-                    .recv_window(5000)
-                    .build()
-                    .unwrap();
+            let params = ChangePositionModeParams::builder("true".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":200,"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangePositionModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangePositionModeResponse");
@@ -4030,10 +4119,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params =
-                ChangePositionModeParams::builder("dual_side_position_example".to_string())
-                    .build()
-                    .unwrap();
+            let params = ChangePositionModeParams::builder("true".to_string())
+                .build()
+                .unwrap();
 
             match client.change_position_mode(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -4051,7 +4139,7 @@ mod tests {
 
             let params = CurrentAllOpenOrdersParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllOrdersResponseInner>");
 
             let resp = client.current_all_open_orders(params).await.expect("Expected a response");
@@ -4066,9 +4154,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = CurrentAllOpenOrdersParams::builder().symbol("symbol_example".to_string()).pair("pair_example".to_string()).recv_window(5000).build().unwrap();
+            let params = CurrentAllOpenOrdersParams::builder().symbol("BTCUSD_200925".to_string()).pair("BTCUSD".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllOrdersResponseInner>");
 
             let resp = client.current_all_open_orders(params).await.expect("Expected a response");
@@ -4099,9 +4187,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = GetOrderModifyHistoryParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = GetOrderModifyHistoryParams::builder("BTCUSD_PERP".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}},{"amendmentId":5361,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184533946,"amendment":{"price":{"before":"30005","after":"30004"},"origQty":{"before":"1","after":"1"},"count":2}},{"amendmentId":5325,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629182711787,"amendment":{"price":{"before":"30002","after":"30005"},"origQty":{"before":"1","after":"1"},"count":1}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetOrderModifyHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetOrderModifyHistoryResponseInner>");
 
             let resp = client.get_order_modify_history(params).await.expect("Expected a response");
@@ -4116,9 +4204,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = GetOrderModifyHistoryParams::builder("symbol_example".to_string(),).order_id(1).orig_client_order_id("1".to_string()).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
+            let params = GetOrderModifyHistoryParams::builder("BTCUSD_PERP".to_string(),).order_id(20072994037).orig_client_order_id("LJ9R4QZDihCaS8UAOOLpgW".to_string()).start_time(1623319461670).end_time(1641782889000).limit(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}},{"amendmentId":5361,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184533946,"amendment":{"price":{"before":"30005","after":"30004"},"origQty":{"before":"1","after":"1"},"count":2}},{"amendmentId":5325,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629182711787,"amendment":{"price":{"before":"30002","after":"30005"},"origQty":{"before":"1","after":"1"},"count":1}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetOrderModifyHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetOrderModifyHistoryResponseInner>");
 
             let resp = client.get_order_modify_history(params).await.expect("Expected a response");
@@ -4133,7 +4221,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = GetOrderModifyHistoryParams::builder("symbol_example".to_string())
+            let params = GetOrderModifyHistoryParams::builder("BTCUSD_PERP".to_string())
                 .build()
                 .unwrap();
 
@@ -4151,9 +4239,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = GetPositionMarginChangeHistoryParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = GetPositionMarginChangeHistoryParams::builder("BTCUSD".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amount":"23.36332311","asset":"BTC","symbol":"BTCUSD_200925","time":1578047897183,"type":1,"positionSide":"BOTH"},{"amount":"100","asset":"BTC","symbol":"BTCUSD_200925","time":1578047900425,"type":1,"positionSide":"LONG"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"amount":"23.36332311","asset":"BTC","symbol":"BTCUSD_200925","time":1578047897183,"type":1,"positionSide":"BOTH"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetPositionMarginChangeHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPositionMarginChangeHistoryResponseInner>");
 
             let resp = client.get_position_margin_change_history(params).await.expect("Expected a response");
@@ -4168,9 +4256,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = GetPositionMarginChangeHistoryParams::builder("symbol_example".to_string(),).r#type(789).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
+            let params = GetPositionMarginChangeHistoryParams::builder("BTCUSD".to_string(),).r#type(1).start_time(1623319461670).end_time(1641782889000).limit(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amount":"23.36332311","asset":"BTC","symbol":"BTCUSD_200925","time":1578047897183,"type":1,"positionSide":"BOTH"},{"amount":"100","asset":"BTC","symbol":"BTCUSD_200925","time":1578047900425,"type":1,"positionSide":"LONG"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"amount":"23.36332311","asset":"BTC","symbol":"BTCUSD_200925","time":1578047897183,"type":1,"positionSide":"BOTH"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetPositionMarginChangeHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPositionMarginChangeHistoryResponseInner>");
 
             let resp = client.get_position_margin_change_history(params).await.expect("Expected a response");
@@ -4185,10 +4273,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params =
-                GetPositionMarginChangeHistoryParams::builder("symbol_example".to_string())
-                    .build()
-                    .unwrap();
+            let params = GetPositionMarginChangeHistoryParams::builder("BTCUSD".to_string())
+                .build()
+                .unwrap();
 
             match client.get_position_margin_change_history(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -4204,9 +4291,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyIsolatedPositionMarginParams::builder("symbol_example".to_string(),dec!(1.0),ModifyIsolatedPositionMarginTypeEnum::Limit,).build().unwrap();
+            let params = ModifyIsolatedPositionMarginParams::builder("BTCUSDT".to_string(),dec!(1.0),1,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyIsolatedPositionMarginResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyIsolatedPositionMarginResponse");
 
             let resp = client.modify_isolated_position_margin(params).await.expect("Expected a response");
@@ -4221,9 +4308,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyIsolatedPositionMarginParams::builder("symbol_example".to_string(),dec!(1.0),ModifyIsolatedPositionMarginTypeEnum::Limit,).position_side(ModifyIsolatedPositionMarginPositionSideEnum::Both).recv_window(5000).build().unwrap();
+            let params = ModifyIsolatedPositionMarginParams::builder("BTCUSDT".to_string(),dec!(1.0),1,).position_side(ModifyIsolatedPositionMarginPositionSideEnum::Both).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"amount":100,"code":200,"msg":"Successfully modify position margin.","type":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyIsolatedPositionMarginResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyIsolatedPositionMarginResponse");
 
             let resp = client.modify_isolated_position_margin(params).await.expect("Expected a response");
@@ -4238,13 +4325,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = ModifyIsolatedPositionMarginParams::builder(
-                "symbol_example".to_string(),
-                dec!(1.0),
-                ModifyIsolatedPositionMarginTypeEnum::Limit,
-            )
-            .build()
-            .unwrap();
+            let params =
+                ModifyIsolatedPositionMarginParams::builder("BTCUSDT".to_string(), dec!(1.0), 1)
+                    .build()
+                    .unwrap();
 
             match client.modify_isolated_position_margin(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -4262,7 +4346,7 @@ mod tests {
 
             let params = ModifyMultipleOrdersParams::builder(vec![],).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600,"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::ModifyMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::ModifyMultipleOrdersResponseInner>");
 
             let resp = client.modify_multiple_orders(params).await.expect("Expected a response");
@@ -4279,7 +4363,7 @@ mod tests {
 
             let params = ModifyMultipleOrdersParams::builder(vec![],).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600,"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::ModifyMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::ModifyMultipleOrdersResponseInner>");
 
             let resp = client.modify_multiple_orders(params).await.expect("Expected a response");
@@ -4310,9 +4394,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::Buy,).build().unwrap();
+            let params = ModifyOrderParams::builder("BTCUSD_PERP".to_string(),ModifyOrderSideEnum::Buy,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyOrderResponse");
 
             let resp = client.modify_order(params).await.expect("Expected a response");
@@ -4327,9 +4411,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyOrderParams::builder("symbol_example".to_string(),ModifyOrderSideEnum::Buy,).order_id(1).orig_client_order_id("1".to_string()).quantity(dec!(1.0)).price(dec!(1.0)).price_match(ModifyOrderPriceMatchEnum::None).recv_window(5000).build().unwrap();
+            let params = ModifyOrderParams::builder("BTCUSD_PERP".to_string(),ModifyOrderSideEnum::Buy,).order_id(1).orig_client_order_id("1".to_string()).quantity(dec!(1.0)).price(dec!(1.0)).price_match(ModifyOrderPriceMatchEnum::Opponent).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyOrderResponse");
 
             let resp = client.modify_order(params).await.expect("Expected a response");
@@ -4345,7 +4429,7 @@ mod tests {
             let client = MockTradeApiClient { force_error: true };
 
             let params =
-                ModifyOrderParams::builder("symbol_example".to_string(), ModifyOrderSideEnum::Buy)
+                ModifyOrderParams::builder("BTCUSD_PERP".to_string(), ModifyOrderSideEnum::Buy)
                     .build()
                     .unwrap();
 
@@ -4363,9 +4447,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).build().unwrap();
+            let params = NewOrderParams::builder("BTCUSD_200925".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"SHORT","status":"NEW","stopPrice":"0","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
 
             let resp = client.new_order(params).await.expect("Expected a response");
@@ -4380,9 +4464,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewOrderParams::builder("symbol_example".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).position_side(NewOrderPositionSideEnum::Both).time_in_force(NewOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).reduce_only("false".to_string()).price(dec!(1.0)).new_client_order_id("1".to_string()).stop_price(dec!(1.0)).close_position("close_position_example".to_string()).activation_price(dec!(1.0)).callback_rate(dec!(1.0)).working_type(NewOrderWorkingTypeEnum::MarkPrice).price_protect("false".to_string()).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).price_match(NewOrderPriceMatchEnum::None).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
+            let params = NewOrderParams::builder("BTCUSD_200925".to_string(),NewOrderSideEnum::Buy,NewOrderTypeEnum::Limit,).position_side(NewOrderPositionSideEnum::Both).reduce_only(NewOrderReduceOnlyEnum::True).quantity(dec!(1.0)).price(dec!(1.0)).new_client_order_id("1".to_string()).stop_price(dec!(1.0)).close_position("true".to_string()).activation_price(dec!(1.0)).callback_rate(dec!(5000.0)).time_in_force(NewOrderTimeInForceEnum::Gtc).working_type(NewOrderWorkingTypeEnum::MarkPrice).price_protect(NewOrderPriceProtectEnum::True).new_order_resp_type(NewOrderNewOrderRespTypeEnum::Ack).price_match(NewOrderPriceMatchEnum::Opponent).self_trade_prevention_mode(NewOrderSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"SHORT","status":"NEW","stopPrice":"0","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::NewOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewOrderResponse");
 
             let resp = client.new_order(params).await.expect("Expected a response");
@@ -4398,7 +4482,7 @@ mod tests {
             let client = MockTradeApiClient { force_error: true };
 
             let params = NewOrderParams::builder(
-                "symbol_example".to_string(),
+                "BTCUSD_200925".to_string(),
                 NewOrderSideEnum::Buy,
                 NewOrderTypeEnum::Limit,
             )
@@ -4421,7 +4505,7 @@ mod tests {
 
             let params = PlaceMultipleOrdersParams::builder(vec![],).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"SELL","positionSide":"SHORT","status":"NEW","stopPrice":"0","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
 
             let resp = client.place_multiple_orders(params).await.expect("Expected a response");
@@ -4438,7 +4522,7 @@ mod tests {
 
             let params = PlaceMultipleOrdersParams::builder(vec![],).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"},{"code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"clientOrderId":"testOrder","cumQty":"0","cumBase":"0","executedQty":"0","orderId":22542179,"avgPrice":"0.0","origQty":"10","price":"0","reduceOnly":false,"side":"SELL","positionSide":"SHORT","status":"NEW","stopPrice":"0","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","timeInForce":"GTC","type":"TRAILING_STOP_MARKET","origType":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","code":-2022,"msg":"ReduceOnly Order is rejected."}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PlaceMultipleOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PlaceMultipleOrdersResponseInner>");
 
             let resp = client.place_multiple_orders(params).await.expect("Expected a response");
@@ -4471,7 +4555,7 @@ mod tests {
 
             let params = PositionAdlQuantileEstimationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200925","adlQuantile":{"LONG":3,"SHORT":3,"HEDGE":0}},{"symbol":"BTCUSD_201225","adlQuantile":{"LONG":1,"SHORT":2,"BOTH":0}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200925","adlQuantile":{"LONG":3,"SHORT":3,"HEDGE":0,"BOTH":0}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PositionAdlQuantileEstimationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PositionAdlQuantileEstimationResponseInner>");
 
             let resp = client.position_adl_quantile_estimation(params).await.expect("Expected a response");
@@ -4486,9 +4570,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = PositionAdlQuantileEstimationParams::builder().symbol("symbol_example".to_string()).recv_window(5000).build().unwrap();
+            let params = PositionAdlQuantileEstimationParams::builder().symbol("BTCUSD_200925".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200925","adlQuantile":{"LONG":3,"SHORT":3,"HEDGE":0}},{"symbol":"BTCUSD_201225","adlQuantile":{"LONG":1,"SHORT":2,"BOTH":0}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_200925","adlQuantile":{"LONG":3,"SHORT":3,"HEDGE":0,"BOTH":0}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PositionAdlQuantileEstimationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PositionAdlQuantileEstimationResponseInner>");
 
             let resp = client.position_adl_quantile_estimation(params).await.expect("Expected a response");
@@ -4523,7 +4607,7 @@ mod tests {
 
             let params = PositionInformationParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","updateTime":0},{"symbol":"BTCUSD_201225","positionAmt":"1","entryPrice":"11707.70000003","breakEvenPrice":"11707.80000005","markPrice":"11788.66626667","unRealizedProfit":"0.00005866","liquidationPrice":"11667.63509587","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"LONG","updateTime":1627026881327},{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"SHORT","updateTime":1627026881327}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","updateTime":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PositionInformationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PositionInformationResponseInner>");
 
             let resp = client.position_information(params).await.expect("Expected a response");
@@ -4538,9 +4622,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = PositionInformationParams::builder().margin_asset("margin_asset_example".to_string()).pair("pair_example".to_string()).recv_window(5000).build().unwrap();
+            let params = PositionInformationParams::builder().margin_asset("USDT".to_string()).pair("BTCUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","updateTime":0},{"symbol":"BTCUSD_201225","positionAmt":"1","entryPrice":"11707.70000003","breakEvenPrice":"11707.80000005","markPrice":"11788.66626667","unRealizedProfit":"0.00005866","liquidationPrice":"11667.63509587","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"LONG","updateTime":1627026881327},{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"SHORT","updateTime":1627026881327}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSD_201225","positionAmt":"0","entryPrice":"0.0","breakEvenPrice":"0.0","markPrice":"0.00000000","unRealizedProfit":"0.00000000","liquidationPrice":"0","leverage":"125","maxQty":"50","marginType":"cross","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","updateTime":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PositionInformationResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PositionInformationResponseInner>");
 
             let resp = client.position_information(params).await.expect("Expected a response");
@@ -4571,9 +4655,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = QueryCurrentOpenOrderParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = QueryCurrentOpenOrderParams::builder("BTCUSD_200925".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCurrentOpenOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentOpenOrderResponse");
 
             let resp = client.query_current_open_order(params).await.expect("Expected a response");
@@ -4588,9 +4672,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = QueryCurrentOpenOrderParams::builder("symbol_example".to_string(),).order_id(1).orig_client_order_id("1".to_string()).recv_window(5000).build().unwrap();
+            let params = QueryCurrentOpenOrderParams::builder("BTCUSD_200925".to_string(),).order_id(1).orig_client_order_id("1".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCurrentOpenOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentOpenOrderResponse");
 
             let resp = client.query_current_open_order(params).await.expect("Expected a response");
@@ -4605,7 +4689,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = QueryCurrentOpenOrderParams::builder("symbol_example".to_string())
+            let params = QueryCurrentOpenOrderParams::builder("BTCUSD_200925".to_string())
                 .build()
                 .unwrap();
 
@@ -4623,9 +4707,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = QueryOrderParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = QueryOrderParams::builder("BTCUSD_200925".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1573346959,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryOrderResponse");
 
             let resp = client.query_order(params).await.expect("Expected a response");
@@ -4640,9 +4724,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = QueryOrderParams::builder("symbol_example".to_string(),).order_id(1).orig_client_order_id("1".to_string()).recv_window(5000).build().unwrap();
+            let params = QueryOrderParams::builder("BTCUSD_200925".to_string(),).order_id(1).orig_client_order_id("1".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"avgPrice":"0.0","clientOrderId":"abc","cumBase":"0","executedQty":"0","orderId":1573346959,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSD_200925","pair":"BTCUSD","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryOrderResponse");
 
             let resp = client.query_order(params).await.expect("Expected a response");
@@ -4657,7 +4741,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = QueryOrderParams::builder("symbol_example".to_string())
+            let params = QueryOrderParams::builder("BTCUSD_200925".to_string())
                 .build()
                 .unwrap();
 
@@ -4677,7 +4761,7 @@ mod tests {
 
             let params = UsersForceOrdersParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":165123080,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1596542005017000006","price":"11326.9","avgPrice":"11326.9","origQty":"1","executedQty":"1","cumBase":"0.00882854","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1596542005019,"updateTime":1596542005050},{"orderId":207251986,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1597307316020000006","price":"11619.4","avgPrice":"11661.2","origQty":"1","executedQty":"1","cumBase":"0.00857544","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1597307316022,"updateTime":1597307316035}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":165123080,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1596542005017000006","price":"11326.9","avgPrice":"11326.9","origQty":"1","executedQty":"1","cumBase":"0.00882854","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1596542005019,"updateTime":1596542005050}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::UsersForceOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::UsersForceOrdersResponseInner>");
 
             let resp = client.users_force_orders(params).await.expect("Expected a response");
@@ -4692,9 +4776,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = UsersForceOrdersParams::builder().symbol("symbol_example".to_string()).auto_close_type(UsersForceOrdersAutoCloseTypeEnum::Liquidation).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
+            let params = UsersForceOrdersParams::builder().symbol("BTCUSD_200925".to_string()).auto_close_type(UsersForceOrdersAutoCloseTypeEnum::Liquidation).start_time(1623319461670).end_time(1641782889000).limit(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"orderId":165123080,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1596542005017000006","price":"11326.9","avgPrice":"11326.9","origQty":"1","executedQty":"1","cumBase":"0.00882854","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1596542005019,"updateTime":1596542005050},{"orderId":207251986,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1597307316020000006","price":"11619.4","avgPrice":"11661.2","origQty":"1","executedQty":"1","cumBase":"0.00857544","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1597307316022,"updateTime":1597307316035}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"orderId":165123080,"symbol":"BTCUSD_200925","pair":"BTCUSD","status":"FILLED","clientOrderId":"autoclose-1596542005017000006","price":"11326.9","avgPrice":"11326.9","origQty":"1","executedQty":"1","cumBase":"0.00882854","timeInForce":"IOC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"BOTH","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","time":1596542005019,"updateTime":1596542005050}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::UsersForceOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::UsersForceOrdersResponseInner>");
 
             let resp = client.users_force_orders(params).await.expect("Expected a response");

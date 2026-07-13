@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -45,18 +45,6 @@ pub struct QueryCurrentUmOpenAlgoOrderResponse {
     pub trigger_price: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
-    #[serde(rename = "icebergQuantity", skip_serializing_if = "Option::is_none")]
-    pub iceberg_quantity: Option<String>,
-    #[serde(rename = "tpTriggerPrice", skip_serializing_if = "Option::is_none")]
-    pub tp_trigger_price: Option<String>,
-    #[serde(rename = "tpPrice", skip_serializing_if = "Option::is_none")]
-    pub tp_price: Option<String>,
-    #[serde(rename = "slTriggerPrice", skip_serializing_if = "Option::is_none")]
-    pub sl_trigger_price: Option<String>,
-    #[serde(rename = "slPrice", skip_serializing_if = "Option::is_none")]
-    pub sl_price: Option<String>,
-    #[serde(rename = "tpOrderType", skip_serializing_if = "Option::is_none")]
-    pub tp_order_type: Option<String>,
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
@@ -100,12 +88,6 @@ impl QueryCurrentUmOpenAlgoOrderResponse {
             actual_price: None,
             trigger_price: None,
             price: None,
-            iceberg_quantity: None,
-            tp_trigger_price: None,
-            tp_price: None,
-            sl_trigger_price: None,
-            sl_price: None,
-            tp_order_type: None,
             self_trade_prevention_mode: None,
             working_type: None,
             price_match: None,

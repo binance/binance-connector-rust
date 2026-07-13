@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket API")?;
 
     // Setup the WS API parameters
-    let params = BlockTradesHistoricalParams::builder("BNBUSDT".to_string(), 1).build()?;
+    let params = BlockTradesHistoricalParams::builder("BNBBTC".to_string(), 582).build()?;
 
     // Make the WS API call
     let response = connection

@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params = ReferencePriceParams::builder("bnbusdt".to_string()).build()?;
+    let params = ReferencePriceParams::builder("bazusd".to_string()).build()?;
 
     // Subscribe to the stream
     let stream = connection

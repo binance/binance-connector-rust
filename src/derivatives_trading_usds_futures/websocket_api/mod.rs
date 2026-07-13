@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -245,11 +245,13 @@ impl WebsocketApi {
             .ok_or(WebsocketError::NoResponse)
     }
 
-    /// Account `Information(USER_DATA)`
+    /// Account Information (`USER_DATA`)
     ///
     /// Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in response section for detail.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -265,7 +267,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Account-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/account#account-information).
     ///
     pub async fn account_information(
         &self,
@@ -274,11 +276,13 @@ impl WebsocketApi {
         self.account_api_client.account_information(params).await
     }
 
-    /// Account Information `V2(USER_DATA)`
+    /// Account Information V2 (`USER_DATA`)
     ///
     /// Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in response section for detail.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -294,7 +298,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Account-Information-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/account#account-information-v2).
     ///
     pub async fn account_information_v2(
         &self,
@@ -303,11 +307,13 @@ impl WebsocketApi {
         self.account_api_client.account_information_v2(params).await
     }
 
-    /// Futures Account `Balance(USER_DATA)`
+    /// Futures Account Balance (`USER_DATA`)
     ///
-    /// Query account balance info
+    /// Futures Account Balance
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -316,30 +322,32 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>`] on success.
+    /// [`WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>`] on success.
     ///
     /// # Errors
     ///
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Futures-Account-Balance).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/account#futures-account-balance).
     ///
     pub async fn futures_account_balance(
         &self,
         params: FuturesAccountBalanceParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>>
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>>
     {
         self.account_api_client
             .futures_account_balance(params)
             .await
     }
 
-    /// Futures Account Balance `V2(USER_DATA)`
+    /// Futures Account Balance V2 (`USER_DATA`)
     ///
-    /// Query account balance info
+    /// Futures Account Balance V2
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -348,19 +356,19 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>`] on success.
+    /// [`WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>`] on success.
     ///
     /// # Errors
     ///
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Futures-Account-Balance-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/account#futures-account-balance-v2).
     ///
     pub async fn futures_account_balance_v2(
         &self,
         params: FuturesAccountBalanceV2Params,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>>
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>>
     {
         self.account_api_client
             .futures_account_balance_v2(params)
@@ -369,16 +377,24 @@ impl WebsocketApi {
 
     /// Order Book
     ///
-    /// Get current order book. Note that this request returns limited market depth.
-    /// If you need to continuously monitor order book updates, please consider using Websocket Market Streams:
+    /// Get current order book. Note that this request returns limited market
+    /// depth.
+    ///
+    /// If you need to continuously monitor order book updates, please consider
+    /// using Websocket Market Streams:
     /// * `<symbol>@depth<levels>`
     /// * `<symbol>@depth`
     ///
-    /// You can use `depth` request together with `<symbol>@depth` streams to maintain a local order book.
+    /// You can use `depth` request together with `<symbol>@depth` streams to
+    /// maintain a local order book.
     ///
-    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
+    /// **Note:**
+    ///
+    /// - Retail Price Improvement(RPI) orders are not visible and excluded in
+    /// the response message.
     ///
     /// Weight: Adjusted based on the limit:
+    ///
     /// | Limit         | Weight |
     /// | ------------- | ------ |
     /// | 5, 10, 20, 50 | 2      |
@@ -400,7 +416,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/websocket-api/Order-Book).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/market-data#order-book).
     ///
     pub async fn order_book(
         &self,
@@ -413,12 +429,20 @@ impl WebsocketApi {
     ///
     /// Best price/qty on the order book for a symbol or symbols.
     ///
-    /// Retail Price Improvement(RPI) orders are not visible and excluded in the response message.
-    /// * If the symbol is not sent, bookTickers for all symbols will be returned in an array.
-    /// * The field `X-MBX-USED-WEIGHT-1M` in response header is not accurate from this endpoint, please ignore.
+    /// **Note:**
     ///
-    /// Weight: 2 for a single symbol;
-    /// 5 when the symbol parameter is omitted
+    /// - Retail Price Improvement(RPI) orders are not visible and excluded in
+    /// the response message.
+    ///
+    /// Weight: **2** for a single symbol;
+    /// **5** when the symbol parameter is omitted
+    ///
+    /// Notes:
+    /// - If the symbol is not sent, bookTickers for all symbols will be
+    /// returned in an array.
+    ///
+    /// - The field `X-MBX-USED-WEIGHT-1M` in response header is not accurate
+    /// from this endpoint, please ignore.
     ///
     /// # Arguments
     ///
@@ -434,7 +458,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/websocket-api/Symbol-Order-Book-Ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/market-data#symbol-order-book-ticker).
     ///
     pub async fn symbol_order_book_ticker(
         &self,
@@ -449,10 +473,11 @@ impl WebsocketApi {
     ///
     /// Latest price for a symbol or symbols.
     ///
-    /// * If the symbol is not sent, prices for all symbols will be returned in an array.
+    /// Weight: **1** for a single symbol;
+    /// **2** when the symbol parameter is omitted
     ///
-    /// Weight: 1 for a single symbol;
-    /// 2 when the symbol parameter is omitted
+    /// Notes:
+    /// - If the symbol is not sent, prices for all symbols will be returned in an array.
     ///
     /// # Arguments
     ///
@@ -468,7 +493,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/websocket-api/Symbol-Price-Ticker).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/market-data#symbol-price-ticker).
     ///
     pub async fn symbol_price_ticker(
         &self,
@@ -483,9 +508,12 @@ impl WebsocketApi {
     ///
     /// Cancel an active algo order.
     ///
-    /// * Either `algoId` or `clientAlgoId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `algoId` or `clientAlgoId` must be sent.
     ///
     /// # Arguments
     ///
@@ -501,7 +529,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Cancel-Algo-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#cancel-algo-order).
     ///
     pub async fn cancel_algo_order(
         &self,
@@ -514,9 +542,12 @@ impl WebsocketApi {
     ///
     /// Cancel an active order.
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -532,7 +563,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Cancel-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#cancel-order).
     ///
     pub async fn cancel_order(
         &self,
@@ -545,17 +576,32 @@ impl WebsocketApi {
     ///
     /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
-    /// * Both `quantity` and `price` must be sent. *(After CM migration, the dapi modify order endpoint follows the same rule.)*
-    /// * When the new `quantity` or `price` doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
-    /// * However the order will be cancelled by the amendment in the following situations:
-    /// * when the order is in partially filled status and the new `quantity` <= `executedQty`
-    /// * When the order is `GTX` and the new price will cause it to be executed immediately
-    /// * One order can only be modfied for less than 10000 times
-    ///
     /// Weight: 1 on 10s order rate limit(X-MBX-ORDER-COUNT-10S);
     /// 1 on 1min order rate limit(X-MBX-ORDER-COUNT-1M);
     /// 0 on IP rate limit(x-mbx-used-weight-1m)
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent, and the
+    /// `orderId` will prevail if both are sent.
+    ///
+    /// - Both `quantity` and `price` must be sent. *(After CM migration, the dapi modify order endpoint follows the same rule.)*
+    ///
+    /// - When the new `quantity` or `price` doesn't satisfy `PRICE_FILTER` /
+    /// `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will
+    /// stay as it is.
+    ///
+    /// - However the order will be cancelled by the amendment in the following
+    /// situations:
+    ///
+    /// - when the order is in partially filled status and the new `quantity` <=
+    /// `executedQty`
+    ///
+    /// - When the order is `GTX` and the new price will cause it to be executed
+    /// immediately
+    ///
+    /// - One order can only be modfied for less than 10000 times
     ///
     /// # Arguments
     ///
@@ -571,7 +617,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Modify-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#modify-order).
     ///
     pub async fn modify_order(
         &self,
@@ -580,41 +626,83 @@ impl WebsocketApi {
         self.trade_api_client.modify_order(params).await
     }
 
-    /// New Algo Order(TRADE)
+    /// New Algo Order (TRADE)
     ///
     /// Send in a new algo order.
     ///
-    /// * Condition orders will be triggered when:
+    /// Weight(IP): 0
     ///
-    /// * If parameter`priceProtect`is sent as true:
-    /// * when price reaches the `triggerPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
-    /// * "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
+    /// Security Type: TRADE
     ///
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
-    /// * `TRAILING_STOP_MARKET`:
-    /// * BUY: the lowest price after order placed <= `activatePrice`, and the latest price >= the lowest price * (1 + `callbackRate`)
-    /// * SELL: the highest price after order placed >= `activatePrice`, and the latest price <= the highest price * (1 - `callbackRate`)
+    /// Notes:
+    /// - Condition orders will be triggered when:
     ///
-    /// * For `TRAILING_STOP_MARKET`, if you got such error code.
-    /// ``{"code": -2021, "msg": "Order would immediately trigger."}``
-    /// means that the parameters you send do not meet the following requirements:
-    /// * BUY: `activatePrice` should be smaller than latest price.
-    /// * SELL: `activatePrice` should be larger than latest price.
+    /// >
     ///
-    /// * `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
-    /// * Follow the same rules for condition orders.
-    /// * If triggered，**close all** current long position( if `SELL`) or current short position( if `BUY`).
-    /// * Cannot be used with `quantity` paremeter
-    /// * Cannot be used with `reduceOnly` parameter
-    /// * In Hedge Mode,cannot be used with `BUY` orders in `LONG` position side. and cannot be used with `SELL` orders in `SHORT` position side
-    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
+    /// - If parameter`priceProtect`is sent as true:
     ///
-    /// Weight: 0
+    /// - when price reaches the `triggerPrice` ，the difference rate between
+    /// "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the
+    /// "triggerProtect" of the symbol
+    ///
+    /// - "triggerProtect" of a symbol can be got from `GET
+    /// /fapi/v1/exchangeInfo`
+    ///
+    /// >
+    ///
+    /// - `STOP`, `STOP_MARKET`:
+    ///
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
+    ///
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <=
+    /// `triggerPrice`
+    ///
+    /// - `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
+    ///
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
+    ///
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >=
+    /// `triggerPrice`
+    ///
+    /// - `TRAILING_STOP_MARKET`:
+    ///
+    /// - BUY: the lowest price after order placed <= `activatePrice`, and the
+    /// latest price >= the lowest price * (1 + `callbackRate`)
+    ///
+    /// - SELL: the highest price after order placed >= `activatePrice`, and the
+    /// latest price <= the highest price * (1 - `callbackRate`)
+    ///
+    /// >
+    ///
+    /// - For `TRAILING_STOP_MARKET`, if you got such error code.
+    ///
+    /// >   ``{"code": -2021, "msg": "Order would immediately trigger."}``
+    ///
+    /// >   means that the parameters you send do not meet the following
+    /// requirements:
+    ///
+    /// - BUY: `activatePrice` should be smaller than latest price.
+    ///
+    /// - SELL: `activatePrice` should be larger than latest price.
+    ///
+    /// >
+    ///
+    /// - `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
+    ///
+    /// - Follow the same rules for condition orders.
+    ///
+    /// - If triggered，**close all** current long position( if `SELL`) or
+    /// current short position( if `BUY`).
+    ///
+    /// - Cannot be used with `quantity` paremeter
+    ///
+    /// - Cannot be used with `reduceOnly` parameter
+    ///
+    /// - In Hedge Mode,cannot be used with `BUY` orders in `LONG` position
+    /// side. and cannot be used with `SELL` orders in `SHORT` position side
+    ///
+    /// - `selfTradePreventionMode` is only effective when `timeInForce` set to
+    /// `IOC` or `GTC` or `GTD`.
     ///
     /// # Arguments
     ///
@@ -630,7 +718,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/New-Algo-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#new-algo-order).
     ///
     pub async fn new_algo_order(
         &self,
@@ -639,18 +727,26 @@ impl WebsocketApi {
         self.trade_api_client.new_algo_order(params).await
     }
 
-    /// New Order(TRADE)
+    /// New Order (TRADE)
     ///
     /// Send in a new order.
     ///
-    /// * If `newOrderRespType ` is sent as `RESULT` :
-    /// * `MARKET` order: the final FILLED result of the order will be return directly.
-    /// * `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+    /// Weight(IP): 0
     ///
-    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
-    /// * In extreme market conditions, timeInForce `GTD` order auto cancel time might be delayed comparing to `goodTillDate`
+    /// Security Type: TRADE
     ///
-    /// Weight: 0
+    /// Notes:
+    /// Additional mandatory parameters based on `type`:
+    ///
+    /// - `LIMIT`: `timeInForce`, `quantity`, `price`
+    /// - `MARKET`: `quantity`
+    ///
+    /// > * If `newOrderRespType` is sent as `RESULT`:
+    /// >   * `MARKET` order: the final FILLED result of the order will be return directly.
+    /// >   * `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+    /// >
+    /// > * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
+    /// > * In extreme market conditions, timeInForce `GTD` order auto cancel time might be delayed comparing to `goodTillDate`
     ///
     /// # Arguments
     ///
@@ -666,7 +762,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/New-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#new-order).
     ///
     pub async fn new_order(
         &self,
@@ -679,9 +775,13 @@ impl WebsocketApi {
     ///
     /// Get current position information.
     ///
-    /// * Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Please use with user data stream `ACCOUNT_UPDATE` to meet your
+    /// timeliness and accuracy needs.
     ///
     /// # Arguments
     ///
@@ -697,7 +797,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Position-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#position-information).
     ///
     pub async fn position_information(
         &self,
@@ -709,11 +809,16 @@ impl WebsocketApi {
 
     /// Position Information V2 (`USER_DATA`)
     ///
-    /// Get current position information(only symbol that has position or open orders will be returned).
+    /// Get current position information(only symbol that has position or open
+    /// orders will be returned).
     ///
-    /// * Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Please use with user data stream `ACCOUNT_UPDATE` to meet your
+    /// timeliness and accuracy needs.
     ///
     /// # Arguments
     ///
@@ -729,7 +834,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Position-Info-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#position-information-v2).
     ///
     pub async fn position_information_v2(
         &self,
@@ -747,10 +852,14 @@ impl WebsocketApi {
     /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time
     /// * order create time + 90 days < current time
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
-    /// * `orderId` is self-increment for each specific `symbol`
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - `orderId` is self-increment for each specific `symbol`
     ///
     /// # Arguments
     ///
@@ -766,7 +875,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Query-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/trade#query-order).
     ///
     pub async fn query_order(
         &self,
@@ -779,7 +888,9 @@ impl WebsocketApi {
     ///
     /// Close out a user data stream.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -795,7 +906,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Close-User-Data-Stream-Wsp).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/user-data-streams#close-user-data-stream).
     ///
     pub async fn close_user_data_stream(
         &self,
@@ -810,7 +921,9 @@ impl WebsocketApi {
     ///
     /// Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes. It's recommended to send a ping about every 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -826,7 +939,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Keepalive-User-Data-Stream-Wsp).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/user-data-streams#keepalive-user-data-stream).
     ///
     pub async fn keepalive_user_data_stream(
         &self,
@@ -842,7 +955,9 @@ impl WebsocketApi {
     ///
     /// Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent. If the account has an active `listenKey`, that `listenKey` will be returned and its validity will be extended for 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -858,7 +973,7 @@ impl WebsocketApi {
     /// Returns an [`anyhow::Error`] if the WebSocket request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/usds-margined-futures/user-data-streams/Start-User-Data-Stream-Wsp).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/user-data-streams#start-user-data-stream).
     ///
     pub async fn start_user_data_stream(
         &self,

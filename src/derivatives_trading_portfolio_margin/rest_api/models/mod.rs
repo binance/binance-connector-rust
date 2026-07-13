@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -105,12 +105,12 @@ pub mod get_margin_borrow_loan_interest_history_response_rows_inner;
 pub use self::get_margin_borrow_loan_interest_history_response_rows_inner::GetMarginBorrowLoanInterestHistoryResponseRowsInner;
 pub mod get_um_account_detail_response;
 pub use self::get_um_account_detail_response::GetUmAccountDetailResponse;
+pub mod get_um_account_detail_response_assets_inner;
+pub use self::get_um_account_detail_response_assets_inner::GetUmAccountDetailResponseAssetsInner;
 pub mod get_um_account_detail_response_positions_inner;
 pub use self::get_um_account_detail_response_positions_inner::GetUmAccountDetailResponsePositionsInner;
 pub mod get_um_account_detail_v2_response;
 pub use self::get_um_account_detail_v2_response::GetUmAccountDetailV2Response;
-pub mod get_um_account_detail_v2_response_assets_inner;
-pub use self::get_um_account_detail_v2_response_assets_inner::GetUmAccountDetailV2ResponseAssetsInner;
 pub mod get_um_account_detail_v2_response_positions_inner;
 pub use self::get_um_account_detail_v2_response_positions_inner::GetUmAccountDetailV2ResponsePositionsInner;
 pub mod get_um_current_position_mode_response;

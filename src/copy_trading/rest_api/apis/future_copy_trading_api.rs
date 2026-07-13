@@ -1,7 +1,7 @@
 /*
- * Binance Copy Trading REST API
+ * Copy Trading REST API
  *
- * OpenAPI Specification for the Binance Copy Trading REST API
+ * Automate lead trading via the Copy Trading API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -56,14 +56,14 @@ impl FutureCopyTradingApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_futures_lead_trader_status`](#method.get_futures_lead_trader_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFuturesLeadTraderStatusParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -79,14 +79,14 @@ impl GetFuturesLeadTraderStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_futures_lead_trading_symbol_whitelist`](#method.get_futures_lead_trading_symbol_whitelist).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFuturesLeadTradingSymbolWhitelistParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -204,7 +204,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"isLeadTrader":true,"time":1717382310843},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"isLeadTrader":true,"time":1717382310843},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFuturesLeadTraderStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFuturesLeadTraderStatusResponse");
@@ -232,7 +232,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"symbol":"BTCUSDT","baseAsset":"BTC","quoteAsset":"USDT"},{"symbol":"ETHUSDT","baseAsset":"ETH","quoteAsset":"USDT"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"symbol":"BTCUSDT","baseAsset":"BTC","quoteAsset":"USDT"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFuturesLeadTradingSymbolWhitelistResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetFuturesLeadTradingSymbolWhitelistResponse",
@@ -256,7 +256,7 @@ mod tests {
 
             let params = GetFuturesLeadTraderStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"isLeadTrader":true,"time":1717382310843},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"isLeadTrader":true,"time":1717382310843},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesLeadTraderStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesLeadTraderStatusResponse");
 
             let resp = client.get_futures_lead_trader_status(params).await.expect("Expected a response");
@@ -273,7 +273,7 @@ mod tests {
 
             let params = GetFuturesLeadTraderStatusParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"isLeadTrader":true,"time":1717382310843},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"isLeadTrader":true,"time":1717382310843},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesLeadTraderStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesLeadTraderStatusResponse");
 
             let resp = client.get_futures_lead_trader_status(params).await.expect("Expected a response");
@@ -306,7 +306,7 @@ mod tests {
 
             let params = GetFuturesLeadTradingSymbolWhitelistParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"symbol":"BTCUSDT","baseAsset":"BTC","quoteAsset":"USDT"},{"symbol":"ETHUSDT","baseAsset":"ETH","quoteAsset":"USDT"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"symbol":"BTCUSDT","baseAsset":"BTC","quoteAsset":"USDT"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesLeadTradingSymbolWhitelistResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesLeadTradingSymbolWhitelistResponse");
 
             let resp = client.get_futures_lead_trading_symbol_whitelist(params).await.expect("Expected a response");
@@ -323,7 +323,7 @@ mod tests {
 
             let params = GetFuturesLeadTradingSymbolWhitelistParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"symbol":"BTCUSDT","baseAsset":"BTC","quoteAsset":"USDT"},{"symbol":"ETHUSDT","baseAsset":"ETH","quoteAsset":"USDT"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"symbol":"BTCUSDT","baseAsset":"BTC","quoteAsset":"USDT"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesLeadTradingSymbolWhitelistResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesLeadTradingSymbolWhitelistResponse");
 
             let resp = client.get_futures_lead_trading_symbol_whitelist(params).await.expect("Expected a response");

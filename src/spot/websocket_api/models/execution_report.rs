@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,114 +18,169 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExecutionReport {
+    /// Event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Client order ID
     #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
     pub c: Option<String>,
+    /// Side
     #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
     pub s_uppercase: Option<String>,
+    /// Order type
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+    /// Time in force
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<String>,
+    /// Order quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Order price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Stop price
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
     pub p_uppercase: Option<String>,
+    /// Iceberg quantity
     #[serde(rename = "F", skip_serializing_if = "Option::is_none")]
     pub f_uppercase: Option<String>,
+    /// `OrderListId`
     #[serde(rename = "g", skip_serializing_if = "Option::is_none")]
     pub g: Option<i64>,
+    /// Original client order ID; This is the ID of the order being canceled
     #[serde(rename = "C", skip_serializing_if = "Option::is_none")]
     pub c_uppercase: Option<String>,
+    /// Current execution type
     #[serde(rename = "x", skip_serializing_if = "Option::is_none")]
     pub x: Option<String>,
+    /// Current order status
     #[serde(rename = "X", skip_serializing_if = "Option::is_none")]
     pub x_uppercase: Option<String>,
+    /// Order reject reason; Please see Order Reject Reason for more information.
     #[serde(rename = "r", skip_serializing_if = "Option::is_none")]
     pub r: Option<String>,
+    /// Order ID
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<i64>,
+    /// Last executed quantity
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<String>,
+    /// Cumulative filled quantity
     #[serde(rename = "z", skip_serializing_if = "Option::is_none")]
     pub z: Option<String>,
+    /// Last executed price
     #[serde(rename = "L", skip_serializing_if = "Option::is_none")]
     pub l_uppercase: Option<String>,
+    /// Commission amount
     #[serde(rename = "n", skip_serializing_if = "Option::is_none")]
     pub n: Option<String>,
+    /// Commission asset
     #[serde(rename = "N", skip_serializing_if = "Option::is_none")]
     pub n_uppercase: Option<String>,
+    /// Transaction time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Trade ID
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
     pub t: Option<i64>,
+    /// Prevented Match Id; This is only visible if the order expired due to STP
     #[serde(rename = "v", skip_serializing_if = "Option::is_none")]
     pub v: Option<i64>,
+    /// Execution Id
     #[serde(rename = "I", skip_serializing_if = "Option::is_none")]
     pub i_uppercase: Option<i64>,
+    /// Is the order on the book?
     #[serde(rename = "w", skip_serializing_if = "Option::is_none")]
     pub w: Option<bool>,
+    /// Is this trade the maker side?
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
+    /// Ignore
     #[serde(rename = "M", skip_serializing_if = "Option::is_none")]
     pub m_uppercase: Option<bool>,
+    /// Order creation time
     #[serde(rename = "O", skip_serializing_if = "Option::is_none")]
     pub o_uppercase: Option<i64>,
+    /// Cumulative quote asset transacted quantity
     #[serde(rename = "Z", skip_serializing_if = "Option::is_none")]
     pub z_uppercase: Option<String>,
+    /// Last quote asset transacted quantity (i.e. lastPrice * lastQty)
     #[serde(rename = "Y", skip_serializing_if = "Option::is_none")]
     pub y_uppercase: Option<String>,
+    /// Quote Order Quantity
     #[serde(rename = "Q", skip_serializing_if = "Option::is_none")]
     pub q_uppercase: Option<String>,
+    /// Working Time; This is only visible if the order has been placed on the book.
     #[serde(rename = "W", skip_serializing_if = "Option::is_none")]
     pub w_uppercase: Option<i64>,
+    /// `SelfTradePreventionMode`
     #[serde(rename = "V", skip_serializing_if = "Option::is_none")]
     pub v_uppercase: Option<String>,
+    /// Trailing Delta
     #[serde(rename = "d", skip_serializing_if = "Option::is_none")]
     pub d: Option<i64>,
+    /// Trailing Time
     #[serde(rename = "D", skip_serializing_if = "Option::is_none")]
     pub d_uppercase: Option<i64>,
+    /// Strategy Id
     #[serde(rename = "j", skip_serializing_if = "Option::is_none")]
     pub j: Option<i64>,
+    /// Strategy Type
     #[serde(rename = "J", skip_serializing_if = "Option::is_none")]
     pub j_uppercase: Option<i64>,
+    /// Prevented Quantity
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
+    /// Last Prevented Quantity
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<String>,
+    /// Trade Group Id
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
+    /// Counter Order Id
     #[serde(rename = "U", skip_serializing_if = "Option::is_none")]
     pub u_uppercase: Option<i64>,
+    /// Counter Symbol
     #[serde(rename = "Cs", skip_serializing_if = "Option::is_none")]
     pub cs: Option<String>,
+    /// Prevented Execution Quantity
     #[serde(rename = "pl", skip_serializing_if = "Option::is_none")]
     pub pl: Option<String>,
+    /// Prevented Execution Price
     #[serde(rename = "pL", skip_serializing_if = "Option::is_none")]
     pub p_l: Option<String>,
+    /// Prevented Execution Quote Qty
     #[serde(rename = "pY", skip_serializing_if = "Option::is_none")]
     pub p_y: Option<String>,
+    /// Match Type
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<String>,
+    /// Allocation ID
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<i64>,
+    /// Working Floor
     #[serde(rename = "k", skip_serializing_if = "Option::is_none")]
     pub k: Option<String>,
+    /// `UsedSor`
     #[serde(rename = "uS", skip_serializing_if = "Option::is_none")]
     pub u_s: Option<bool>,
+    /// Pegged Price Type
     #[serde(rename = "gP", skip_serializing_if = "Option::is_none")]
     pub g_p: Option<String>,
+    /// Pegged Offset Type
     #[serde(rename = "gOT", skip_serializing_if = "Option::is_none")]
     pub g_ot: Option<String>,
+    /// Pegged Offset Value
     #[serde(rename = "gOV", skip_serializing_if = "Option::is_none")]
     pub g_ov: Option<i64>,
+    /// Pegged Price
     #[serde(rename = "gp", skip_serializing_if = "Option::is_none")]
     pub gp: Option<String>,
+    /// Expiry Reason. Appears when the order has expired.
     #[serde(rename = "eR", skip_serializing_if = "Option::is_none")]
     pub e_r: Option<String>,
 }

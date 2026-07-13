@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,48 +17,68 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CancelMarginAccountAllOpenOrdersOnASymbolResponseInner {
+    /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Orig Client Order ID.
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
+    /// Normal orderID after trigger if appliable, only have when the strategy is triggered
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Order List ID.
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
+    /// Client Order ID.
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// Price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Orig Qty.
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
+    /// Executed Qty.
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// Cummulative Quote Qty.
     #[serde(
         rename = "cummulativeQuoteQty",
         skip_serializing_if = "Option::is_none"
     )]
     pub cummulative_quote_qty: Option<String>,
+    /// Enum：completed，processing
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// Time In Force.
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// Normal order type after trigger if appliable
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// Side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Contingency Type.
     #[serde(rename = "contingencyType", skip_serializing_if = "Option::is_none")]
     pub contingency_type: Option<String>,
+    /// List Status Type.
     #[serde(rename = "listStatusType", skip_serializing_if = "Option::is_none")]
     pub list_status_type: Option<String>,
+    /// List Order Status.
     #[serde(rename = "listOrderStatus", skip_serializing_if = "Option::is_none")]
     pub list_order_status: Option<String>,
+    /// List Client Order ID.
     #[serde(rename = "listClientOrderId", skip_serializing_if = "Option::is_none")]
     pub list_client_order_id: Option<String>,
+    /// Transaction Time.
     #[serde(rename = "transactionTime", skip_serializing_if = "Option::is_none")]
     pub transaction_time: Option<i64>,
+    /// Orders.
     #[serde(rename = "orders", skip_serializing_if = "Option::is_none")]
     pub orders:
         Option<Vec<models::CancelMarginAccountAllOpenOrdersOnASymbolResponseInnerOrdersInner>>,
+    /// Order Reports.
     #[serde(rename = "orderReports", skip_serializing_if = "Option::is_none")]
     pub order_reports: Option<
         Vec<models::CancelMarginAccountAllOpenOrdersOnASymbolResponseInnerOrderReportsInner>,

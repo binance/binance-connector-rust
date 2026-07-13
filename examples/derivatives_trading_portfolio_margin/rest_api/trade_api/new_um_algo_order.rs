@@ -6,7 +6,10 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_portfolio_margin::{
     DerivativesTradingPortfolioMarginRestApi,
-    rest_api::{NewUmAlgoOrderParams, NewUmAlgoOrderSideEnum, NewUmAlgoOrderTypeEnum},
+    rest_api::{
+        NewUmAlgoOrderAlgoTypeEnum, NewUmAlgoOrderParams, NewUmAlgoOrderSideEnum,
+        NewUmAlgoOrderTypeEnum,
+    },
 };
 use binance_sdk::logger;
 
@@ -30,11 +33,11 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = NewUmAlgoOrderParams::builder(
-        "algo_type_example".to_string(),
-        "symbol_example".to_string(),
+        NewUmAlgoOrderAlgoTypeEnum::Conditional,
+        "BNBUSDT".to_string(),
         NewUmAlgoOrderSideEnum::Buy,
-        NewUmAlgoOrderTypeEnum::Limit,
-        dec!(1.0),
+        NewUmAlgoOrderTypeEnum::Stop,
+        dec!(0.01),
     )
     .build()?;
 

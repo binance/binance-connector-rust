@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,26 +17,36 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseSymbolsInnerFiltersInner {
+    /// Filter Type.
     #[serde(rename = "filterType", skip_serializing_if = "Option::is_none")]
     pub filter_type: Option<String>,
+    /// Max Price.
     #[serde(rename = "maxPrice", skip_serializing_if = "Option::is_none")]
     pub max_price: Option<String>,
+    /// Min Price.
     #[serde(rename = "minPrice", skip_serializing_if = "Option::is_none")]
     pub min_price: Option<String>,
+    /// Tick Size.
     #[serde(rename = "tickSize", skip_serializing_if = "Option::is_none")]
     pub tick_size: Option<String>,
+    /// Max Qty.
     #[serde(rename = "maxQty", skip_serializing_if = "Option::is_none")]
     pub max_qty: Option<String>,
+    /// Min Qty.
     #[serde(rename = "minQty", skip_serializing_if = "Option::is_none")]
     pub min_qty: Option<String>,
+    /// Step Size.
     #[serde(rename = "stepSize", skip_serializing_if = "Option::is_none")]
     pub step_size: Option<String>,
+    /// Limit.
     #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
     #[serde(rename = "notional", skip_serializing_if = "Option::is_none")]
     pub notional: Option<String>,
+    /// Multiplier Up.
     #[serde(rename = "multiplierUp", skip_serializing_if = "Option::is_none")]
     pub multiplier_up: Option<String>,
+    /// Multiplier Down.
     #[serde(rename = "multiplierDown", skip_serializing_if = "Option::is_none")]
     pub multiplier_down: Option<String>,
     #[serde(rename = "multiplierDecimal", skip_serializing_if = "Option::is_none")]

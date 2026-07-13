@@ -1,7 +1,7 @@
 /*
  * Binance Pay REST API
  *
- * OpenAPI Specification for the Binance Pay REST API
+ * Query Binance Pay transaction history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,17 +15,22 @@
 use crate::pay::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `GetPayTradeHistoryResponseDataInnerReceiverInfoExtend` : Extension fields.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetPayTradeHistoryResponseDataInnerReceiverInfoExtend {
+    /// Bank name or digital wallet name.
     #[serde(rename = "institutionName", skip_serializing_if = "Option::is_none")]
     pub institution_name: Option<String>,
+    /// Card number.
     #[serde(rename = "cardNumber", skip_serializing_if = "Option::is_none")]
     pub card_number: Option<String>,
+    /// Digital wallet ID.
     #[serde(rename = "digitalWalletId", skip_serializing_if = "Option::is_none")]
     pub digital_wallet_id: Option<String>,
 }
 
 impl GetPayTradeHistoryResponseDataInnerReceiverInfoExtend {
+    /// Extension fields.
     #[must_use]
     pub fn new() -> GetPayTradeHistoryResponseDataInnerReceiverInfoExtend {
         GetPayTradeHistoryResponseDataInnerReceiverInfoExtend {

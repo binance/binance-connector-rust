@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = QueryMarginAccountsOrderParams::builder("symbol_example".to_string()).build()?;
+    let params = QueryMarginAccountsOrderParams::builder("BNBBTC".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

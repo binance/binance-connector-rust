@@ -1,7 +1,7 @@
 /*
  * Binance Pay REST API
  *
- * OpenAPI Specification for the Binance Pay REST API
+ * Query Binance Pay transaction history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,13 +17,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetPayTradeHistoryResponseDataInnerFundsDetailInner {
+    /// Asset.
     #[serde(rename = "currency", skip_serializing_if = "Option::is_none")]
     pub currency: Option<String>,
+    /// Asset amount.
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Asset cost details per wallet type. Keys are wallet type IDs (e.g. \"1\", \"2\"), values are cost amounts.
     #[serde(rename = "walletAssetCost", skip_serializing_if = "Option::is_none")]
-    pub wallet_asset_cost:
-        Option<Box<models::GetPayTradeHistoryResponseDataInnerFundsDetailInnerWalletAssetCost>>,
+    pub wallet_asset_cost: Option<std::collections::HashMap<String, String>>,
 }
 
 impl GetPayTradeHistoryResponseDataInnerFundsDetailInner {

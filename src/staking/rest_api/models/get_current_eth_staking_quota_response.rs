@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,11 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetCurrentEthStakingQuotaResponse {
+    /// Show min (Daily available limit, total personal staking quota)
     #[serde(
         rename = "leftStakingPersonalQuota",
         skip_serializing_if = "Option::is_none"
     )]
     pub left_staking_personal_quota: Option<String>,
+    /// Show min (Daily personal redeem quota, total redemption limit)
     #[serde(
         rename = "leftRedemptionPersonalQuota",
         skip_serializing_if = "Option::is_none"

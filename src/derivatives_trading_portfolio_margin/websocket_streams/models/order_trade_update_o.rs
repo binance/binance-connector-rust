@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Portfolio Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,62 +18,91 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderTradeUpdateO {
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Client Order Id
     #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
     pub c: Option<String>,
+    /// Side
     #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
     pub s_uppercase: Option<String>,
+    /// Order Type
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+    /// Time in Force
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<String>,
+    /// Original Quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Original Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Average Price
     #[serde(rename = "ap", skip_serializing_if = "Option::is_none")]
     pub ap: Option<String>,
+    /// Ignore
     #[serde(rename = "sp", skip_serializing_if = "Option::is_none")]
     pub sp: Option<String>,
+    /// Execution Type
     #[serde(rename = "x", skip_serializing_if = "Option::is_none")]
     pub x: Option<String>,
+    /// Order Status
     #[serde(rename = "X", skip_serializing_if = "Option::is_none")]
     pub x_uppercase: Option<String>,
+    /// Order Id
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<i64>,
+    /// Order Last Filled Quantity
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<String>,
+    /// Order Filled Accumulated Quantity
     #[serde(rename = "z", skip_serializing_if = "Option::is_none")]
     pub z: Option<String>,
+    /// Last Filled Price
     #[serde(rename = "L", skip_serializing_if = "Option::is_none")]
     pub l_uppercase: Option<String>,
+    /// Commission Asset, will not push if no commission
     #[serde(rename = "N", skip_serializing_if = "Option::is_none")]
     pub n_uppercase: Option<String>,
+    /// Commission, will not push if no commission
     #[serde(rename = "n", skip_serializing_if = "Option::is_none")]
     pub n: Option<String>,
+    /// Order Trade Time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Trade Id
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
     pub t: Option<i64>,
+    /// Bids Notional
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<String>,
+    /// Ask Notional
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    /// Is this trade the maker side?
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
+    /// Is this reduce only
     #[serde(rename = "R", skip_serializing_if = "Option::is_none")]
     pub r_uppercase: Option<bool>,
+    /// Position Side
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// Realized Profit of the trade
     #[serde(rename = "rp", skip_serializing_if = "Option::is_none")]
     pub rp: Option<String>,
+    /// Strategy type, only pushed with conditional order triggered
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
     pub st: Option<String>,
+    /// `StrategyId`, only pushed with conditional order triggered
     #[serde(rename = "si", skip_serializing_if = "Option::is_none")]
     pub si: Option<i64>,
+    /// STP mode
     #[serde(rename = "V", skip_serializing_if = "Option::is_none")]
     pub v_uppercase: Option<String>,
+    /// TIF GTD order auto cancel time
     #[serde(rename = "gtd", skip_serializing_if = "Option::is_none")]
     pub gtd: Option<i64>,
 }

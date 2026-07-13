@@ -64,38 +64,44 @@ impl WalletApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_portfolio`](#method.get_portfolio).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetPortfolioParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Filter by prediction token ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "tokenId", default)]
     pub token_id: Option<String>,
     /// Filter by market ID. Must be > 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "marketId", default)]
     pub market_id: Option<i64>,
     /// Filter by market topic ID. Must be > 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "marketTopicId", default)]
     pub market_topic_id: Option<i64>,
     /// If `true`, return only active (unresolved) positions
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "activeOnly", default)]
     pub active_only: Option<bool>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -115,13 +121,14 @@ impl GetPortfolioParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_quota_status`](#method.get_quota_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetQuotaStatusParams {
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -137,13 +144,14 @@ impl GetQuotaStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`list_prediction_wallets`](#method.list_prediction_wallets).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ListPredictionWalletsParams {
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -159,13 +167,14 @@ impl ListPredictionWalletsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_payment_option_balances`](#method.query_payment_option_balances).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPaymentOptionBalancesParams {
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 

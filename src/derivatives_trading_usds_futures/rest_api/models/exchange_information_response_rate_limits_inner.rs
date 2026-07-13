@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,19 +15,25 @@
 use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `ExchangeInformationResponseRateLimitsInner` : API
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseRateLimitsInner {
+    /// Interval.
     #[serde(rename = "interval", skip_serializing_if = "Option::is_none")]
     pub interval: Option<String>,
+    /// Interval Num.
     #[serde(rename = "intervalNum", skip_serializing_if = "Option::is_none")]
     pub interval_num: Option<i64>,
+    /// Limit.
     #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
+    /// Rate Limit Type.
     #[serde(rename = "rateLimitType", skip_serializing_if = "Option::is_none")]
     pub rate_limit_type: Option<String>,
 }
 
 impl ExchangeInformationResponseRateLimitsInner {
+    /// API
     #[must_use]
     pub fn new() -> ExchangeInformationResponseRateLimitsInner {
         ExchangeInformationResponseRateLimitsInner {

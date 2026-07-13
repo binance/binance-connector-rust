@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,15 +15,19 @@
 use crate::derivatives_trading_portfolio_margin::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponseIndicators` : Indicators.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponseIndicators {
+/// BTCUSDT.
     #[serde(rename = "BTCUSDT", skip_serializing_if = "Option::is_none")]
     pub btcusdt: Option<Vec<models::PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponseIndicatorsBtcusdtInner>>,
+/// ACCOUNT.
     #[serde(rename = "ACCOUNT", skip_serializing_if = "Option::is_none")]
     pub account: Option<Vec<models::PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponseIndicatorsAccountInner>>,
 }
 
 impl PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponseIndicators {
+    /// Indicators.
     #[must_use]
     pub fn new() -> PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponseIndicators {
         PortfolioMarginUmTradingQuantitativeRulesIndicatorsResponseIndicators {

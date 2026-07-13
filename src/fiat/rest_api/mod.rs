@@ -1,7 +1,7 @@
 /*
- * Binance Fiat REST API
+ * Fiat REST API
  *
- * OpenAPI Specification for the Binance Fiat REST API
+ * Query Binance fiat deposit and withdrawal history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -28,16 +28,16 @@ pub use models::*;
 #[derive(Debug, Clone)]
 pub struct RestApi {
     configuration: ConfigurationRestApi,
-    fiat_api_client: FiatApiClient,
+    api_client: ApiClient,
 }
 
 impl RestApi {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
-        let fiat_api_client = FiatApiClient::new(configuration.clone());
+        let api_client = ApiClient::new(configuration.clone());
 
         Self {
             configuration,
-            fiat_api_client,
+            api_client,
         }
     }
 
@@ -111,19 +111,21 @@ impl RestApi {
         .await
     }
 
-    /// Deposit(TRADE)
+    /// Deposit (TRADE)
     ///
     /// Submit deposit request, in this version, we only support BRL deposit via pix.
     ///
-    ///
-    ///
     /// For BRL deposit via pix, you need to place an order before making a transfer from your bank.
     ///
-    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your fiat service on our website.
+    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your
+    /// fiat service on our website.
     ///
-    /// * `timestamp`, `signature` and `recvWindow` are sent as query-string parameters, while the business fields (`currency`, `apiPaymentMethod`, `amount`, `ext`) are sent in the JSON request body with `Content-Type: application/json`.
+    /// Weight(UID): 45000
     ///
-    /// Weight: 45000
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - `timestamp`, `signature` and `recvWindow` are sent as query-string parameters, while the business fields (`currency`, `apiPaymentMethod`, `amount`, `ext`) are sent in the JSON request body with `Content-Type: application/json`.
     ///
     /// # Arguments
     ///
@@ -153,26 +155,28 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Fiat-Deposit).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-fiat/api/rest-api/~#deposit).
     ///
     pub async fn deposit(
         &self,
         params: DepositParams,
     ) -> anyhow::Result<RestApiResponse<models::DepositResponse>> {
-        self.fiat_api_client.deposit(params).await
+        self.api_client.deposit(params).await
     }
 
-    /// Fiat Withdraw(WITHDRAW)
+    /// Fiat Withdraw (TRADE)
     ///
     /// Submit withdraw request, in this version, we support BRL,ARS,MXN withdrawal via `bank_transfer`.
     ///
-    /// You need to call this api first, and call query order detail api in a loop to get the status of the order until this order is successful.
+    /// You need to call this api first, and call query order detail api in a loop to get the status of the order until
+    /// this order is successful.
     ///
-    /// Before calling this API, please ensure you have completed your KYC or KYB, activated your fiat service, and verified your destination bank account on our website.
+    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your
+    /// fiat service on our website.
     ///
-    /// you need to bind your bank account on web/app before using the corresponding account number
+    /// Weight(UID): 45000
     ///
-    /// Weight: 45000
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -202,22 +206,25 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Fiat-Withdraw).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-fiat/api/rest-api/~#fiat-withdraw).
     ///
     pub async fn fiat_withdraw(
         &self,
         params: FiatWithdrawParams,
     ) -> anyhow::Result<RestApiResponse<models::FiatWithdrawResponse>> {
-        self.fiat_api_client.fiat_withdraw(params).await
+        self.api_client.fiat_withdraw(params).await
     }
 
     /// Get Fiat Deposit/Withdraw History (`USER_DATA`)
     ///
     /// Get Fiat Deposit/Withdraw History
     ///
-    /// * If beginTime and endTime are not sent, the recent 30-day data will be returned.
+    /// Weight(UID): 45000
     ///
-    /// Weight: 45000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `beginTime` and `endTime` are not sent, recent 30-day data is returned.
     ///
     /// # Arguments
     ///
@@ -247,29 +254,29 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Get-Fiat-Deposit-Withdraw-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-fiat/api/rest-api/~#get-fiat-deposit-withdraw-history).
     ///
     pub async fn get_fiat_deposit_withdraw_history(
         &self,
         params: GetFiatDepositWithdrawHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetFiatDepositWithdrawHistoryResponse>> {
-        self.fiat_api_client
+        self.api_client
             .get_fiat_deposit_withdraw_history(params)
             .await
     }
 
     /// Get Fiat Payments History (`USER_DATA`)
     ///
-    /// Get Fiat Deposit/Withdraw History
+    /// Get Fiat Payments History
     ///
-    /// * If beginTime and endTime are not sent, the recent 30-day data will be returned.
-    /// * paymentMethod: Only when requesting payments history for buy (transactionType=0), response contains paymentMethod representing the way of purchase. Now we have:
-    /// * Cash Balance
-    /// * Credit Card
-    /// * Online Banking
-    /// * Bank Transfer
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `beginTime` and `endTime` are not sent, recent 30-day data is returned.
+    /// - `paymentMethod` is returned only when querying buy history (`transactionType=0`).
+    /// - Supported payment methods: `Cash Balance`, `Credit Card`, `Online Banking`, `Bank Transfer`.
     ///
     /// # Arguments
     ///
@@ -299,22 +306,25 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Get-Fiat-Payments-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-fiat/api/rest-api/~#get-fiat-payments-history).
     ///
     pub async fn get_fiat_payments_history(
         &self,
         params: GetFiatPaymentsHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetFiatPaymentsHistoryResponse>> {
-        self.fiat_api_client.get_fiat_payments_history(params).await
+        self.api_client.get_fiat_payments_history(params).await
     }
 
-    /// Get Order `Detail(USER_DATA)`
+    /// Get Order Detail (`USER_DATA`)
     ///
     /// Get Order Detail
     ///
-    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your fiat service on our website.
+    /// Before calling this api, please make sure you have already completed your KYC or KYB, and already activated your
+    /// fiat service on our website.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -344,12 +354,12 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/fiat/rest-api/Get-Order-Detail).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-fiat/api/rest-api/~#get-order-detail).
     ///
     pub async fn get_order_detail(
         &self,
         params: GetOrderDetailParams,
     ) -> anyhow::Result<RestApiResponse<models::GetOrderDetailResponse>> {
-        self.fiat_api_client.get_order_detail(params).await
+        self.api_client.get_order_detail(params).await
     }
 }

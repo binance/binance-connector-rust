@@ -26,12 +26,12 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = VipLoanFixedRateBorrowParams::builder(
-        "supply_request_example".to_string(),
-        "borrow_coin_example".to_string(),
-        789,
-        789,
-        "collateral_coin_example".to_string(),
-        "1".to_string(),
+        "1212:0.12:100;3434:0.13:50".to_string(),
+        "BUSD".to_string(),
+        30,
+        12345678,
+        "BNB,ETH,BTC".to_string(),
+        "12345,67890,13579".to_string(),
     )
     .build()?;
 

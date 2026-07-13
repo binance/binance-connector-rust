@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -37,6 +37,10 @@ pub mod get_vip_loan_ongoing_orders_response;
 pub use self::get_vip_loan_ongoing_orders_response::GetVipLoanOngoingOrdersResponse;
 pub mod get_vip_loan_ongoing_orders_response_rows_inner;
 pub use self::get_vip_loan_ongoing_orders_response_rows_inner::GetVipLoanOngoingOrdersResponseRowsInner;
+pub mod get_vip_loan_repayment_history_response;
+pub use self::get_vip_loan_repayment_history_response::GetVipLoanRepaymentHistoryResponse;
+pub mod get_vip_loan_repayment_history_response_rows_inner;
+pub use self::get_vip_loan_repayment_history_response_rows_inner::GetVipLoanRepaymentHistoryResponseRowsInner;
 pub mod query_application_status_response;
 pub use self::query_application_status_response::QueryApplicationStatusResponse;
 pub mod query_application_status_response_rows_inner;

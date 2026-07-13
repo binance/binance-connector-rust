@@ -5,8 +5,7 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_coin_futures::{
-    DerivativesTradingCoinFuturesRestApi,
-    rest_api::{ModifyIsolatedPositionMarginParams, ModifyIsolatedPositionMarginTypeEnum},
+    DerivativesTradingCoinFuturesRestApi, rest_api::ModifyIsolatedPositionMarginParams,
 };
 use binance_sdk::logger;
 
@@ -29,12 +28,8 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingCoinFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = ModifyIsolatedPositionMarginParams::builder(
-        "symbol_example".to_string(),
-        dec!(1.0),
-        ModifyIsolatedPositionMarginTypeEnum::Limit,
-    )
-    .build()?;
+    let params =
+        ModifyIsolatedPositionMarginParams::builder("BTCUSDT".to_string(), dec!(1.0), 1).build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -20,6 +15,7 @@
 use crate::spot::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `OrderTestResponseStandardCommissionForOrder` : Standard commission rates on trades from the order.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderTestResponseStandardCommissionForOrder {
     #[serde(rename = "maker", skip_serializing_if = "Option::is_none")]
@@ -29,6 +25,7 @@ pub struct OrderTestResponseStandardCommissionForOrder {
 }
 
 impl OrderTestResponseStandardCommissionForOrder {
+    /// Standard commission rates on trades from the order.
     #[must_use]
     pub fn new() -> OrderTestResponseStandardCommissionForOrder {
         OrderTestResponseStandardCommissionForOrder {

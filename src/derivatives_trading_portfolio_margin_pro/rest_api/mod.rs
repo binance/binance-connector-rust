@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Portfolio Margin Pro REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -114,14 +114,16 @@ impl RestApi {
         .await
     }
 
-    /// BNB `transfer(USER_DATA)`
+    /// BNB transfer (`USER_DATA`)
     ///
     /// BNB transfer can be between Margin Account and USDM Account
     ///
+    /// Weight(IP): 1500
     ///
-    /// * You can only use this function 2 times per 10 minutes in a rolling manner
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1500
+    /// Notes:
+    /// - You can only use this function 2 times per 10 minutes in a rolling manner
     ///
     /// # Arguments
     ///
@@ -151,7 +153,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/BNB-transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#bnb-transfer).
     ///
     pub async fn bnb_transfer(
         &self,
@@ -160,11 +162,13 @@ impl RestApi {
         self.account_api_client.bnb_transfer(params).await
     }
 
-    /// Change Auto-repay-futures Status(TRADE)
+    /// Change Auto-repay-futures Status (TRADE)
     ///
     /// Change Auto-repay-futures Status
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -194,7 +198,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Change-Auto-repay-futures-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#change-auto-repay-futures-status).
     ///
     pub async fn change_auto_repay_futures_status(
         &self,
@@ -209,7 +213,9 @@ impl RestApi {
     ///
     /// Delete the margin call level for a Portfolio Margin account.
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -239,7 +245,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Delete-Margin-Call-Level).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#delete-margin-call-level).
     ///
     pub async fn delete_margin_call_level(
         &self,
@@ -250,14 +256,17 @@ impl RestApi {
             .await
     }
 
-    /// Fund Auto-collection(USER_DATA)
+    /// Fund Auto-collection (`USER_DATA`)
     ///
     /// Transfers all assets from Futures Account to Margin account
     ///
-    /// * The BNB would not be collected from UM-PM account to the Portfolio Margin account.
-    /// * You can only use this function 500 times per hour in a rolling manner.
+    /// Weight(IP): 1500
     ///
-    /// Weight: 1500
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The BNB would not be collected from UM-PM account to the Portfolio Margin account.
+    /// - You can only use this function 500 times per hour in a rolling manner.
     ///
     /// # Arguments
     ///
@@ -287,7 +296,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Fund-Auto-collection).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#fund-auto-collection).
     ///
     pub async fn fund_auto_collection(
         &self,
@@ -296,13 +305,16 @@ impl RestApi {
         self.account_api_client.fund_auto_collection(params).await
     }
 
-    /// Fund Collection by `Asset(USER_DATA)`
+    /// Fund Collection by Asset (`USER_DATA`)
     ///
     /// Transfers specific asset from Futures Account to Margin account
     ///
-    /// * The BNB transfer is not be supported
+    /// Weight(IP): 60
     ///
-    /// Weight: 60
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The BNB transfer is not be supported
     ///
     /// # Arguments
     ///
@@ -332,7 +344,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Fund-Collection-by-Asset).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#fund-collection-by-asset).
     ///
     pub async fn fund_collection_by_asset(
         &self,
@@ -343,11 +355,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Auto-repay-futures `Status(USER_DATA)`
+    /// Get Auto-repay-futures Status (`USER_DATA`)
     ///
     /// Query Auto-repay-futures Status
     ///
-    /// Weight: 30
+    /// Weight(IP): 30
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -377,7 +391,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Auto-repay-futures-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#get-auto-repay-futures-status).
     ///
     pub async fn get_auto_repay_futures_status(
         &self,
@@ -388,11 +402,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Delta Mode `Status(USER_DATA)`
+    /// Get Delta Mode Status (`USER_DATA`)
     ///
     /// Query the Delta mode status of current account.
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -422,7 +438,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Delta-Mode-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#get-delta-mode-status).
     ///
     pub async fn get_delta_mode_status(
         &self,
@@ -435,7 +451,9 @@ impl RestApi {
     ///
     /// Get the margin call level for a Portfolio Margin account.
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -465,7 +483,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Margin-Call-Level).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#get-margin-call-level).
     ///
     pub async fn get_margin_call_level(
         &self,
@@ -474,11 +492,13 @@ impl RestApi {
         self.account_api_client.get_margin_call_level(params).await
     }
 
-    /// Get Portfolio Margin Pro Account `Balance(USER_DATA)`
+    /// Get Portfolio Margin Pro Account Balance (`USER_DATA`)
     ///
     /// Query Portfolio Margin Pro account balance
     ///
-    /// Weight: 20
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -508,7 +528,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Classic-Portfolio-Margin-Balance-Info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#get-portfolio-margin-pro-account-balance).
     ///
     pub async fn get_portfolio_margin_pro_account_balance(
         &self,
@@ -521,11 +541,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Portfolio Margin Pro Account `Info(USER_DATA)`
+    /// Get Portfolio Margin Pro Account Info (`USER_DATA`)
     ///
     /// Get Portfolio Margin Pro Account Info
     ///
-    /// Weight: 5
+    /// Weight(UID): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -555,7 +577,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Classic-Portfolio-Margin-Account-Info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#get-portfolio-margin-pro-account-info).
     ///
     pub async fn get_portfolio_margin_pro_account_info(
         &self,
@@ -566,11 +588,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Portfolio Margin Pro SPAN Account `Info(USER_DATA)`
+    /// Get Portfolio Margin Pro SPAN Account Info (`USER_DATA`)
     ///
     /// Get Portfolio Margin Pro SPAN Account Info (For Portfolio Margin Pro SPAN users only)
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -600,7 +624,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Classic-Portfolio-Margin-Account-Info-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#get-portfolio-margin-pro-span-account-info).
     ///
     pub async fn get_portfolio_margin_pro_span_account_info(
         &self,
@@ -615,7 +639,9 @@ impl RestApi {
     ///
     /// Get transferable earn asset balance for all types of Portfolio Margin account
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -645,7 +671,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Transferable-Earn-Asset-Balance-for-Portfolio-Margin).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#get-transferable-earn-asset-balance-for-portfolio-margin).
     ///
     pub async fn get_transferable_earn_asset_balance_for_portfolio_margin(
         &self,
@@ -658,13 +684,16 @@ impl RestApi {
             .await
     }
 
-    /// Portfolio Margin Pro Bankruptcy Loan Repay
+    /// Portfolio Margin Pro Bankruptcy Loan Repay (TRADE)
     ///
     /// Repay Portfolio Margin Pro Bankruptcy Loan
     ///
-    /// * Please note that the API Key has enabled Spot & Margin Trading permissions to access this endpoint.
+    /// Weight(UID): 3000
     ///
-    /// Weight: 3000
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Please note that the API Key has enabled Spot & Margin Trading permissions to access this endpoint.
     ///
     /// # Arguments
     ///
@@ -694,7 +723,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Classic-Portfolio-Margin-Bankruptcy-Loan-Repay).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#portfolio-margin-pro-bankruptcy-loan-repay).
     ///
     pub async fn portfolio_margin_pro_bankruptcy_loan_repay(
         &self,
@@ -706,13 +735,16 @@ impl RestApi {
             .await
     }
 
-    /// Query Portfolio Margin Pro Bankruptcy Loan `Amount(USER_DATA)`
+    /// Query Portfolio Margin Pro Bankruptcy Loan Amount (`USER_DATA`)
     ///
     /// Query Portfolio Margin Pro Bankruptcy Loan Amount
     ///
-    /// * If there’s no classic portfolio margin bankruptcy loan, the amount would be 0
+    /// Weight(UID): 500
     ///
-    /// Weight: 500
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If there’s no classic portfolio margin bankruptcy loan, the amount would be 0
     ///
     /// # Arguments
     ///
@@ -742,7 +774,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Query-Classic-Portfolio-Margin-Bankruptcy-Loan-Amount).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#query-portfolio-margin-pro-bankruptcy-loan-amount).
     ///
     pub async fn query_portfolio_margin_pro_bankruptcy_loan_amount(
         &self,
@@ -754,16 +786,19 @@ impl RestApi {
             .await
     }
 
-    /// Query Portfolio Margin Pro Bankruptcy Loan Repay `History(USER_DATA)`
+    /// Query Portfolio Margin Pro Bankruptcy Loan Repay History (`USER_DATA`)
     ///
     /// Query repay history of pmloan for portfolio margin pro.
     ///
-    /// * `startTime` and `endTime` cannot be longer than 360 days
-    /// * If `startTime` and `endTime` not sent, return records of the last 30 days by default.
-    /// * If `startTime`is sent and `endTime` is not sent, return records of [startTime, startTime+30d].
-    /// * If `startTime` is not sent and `endTime` is sent, return records of [endTime-30d, endTime].
+    /// Weight(IP): 500
     ///
-    /// Weight: 500
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `startTime` and `endTime` cannot be longer than 360 days
+    /// - If `startTime` and `endTime` not sent, return records of the last 30 days by default.
+    /// - If `startTime`is sent and `endTime` is not sent, return records of [startTime, startTime+30d].
+    /// - If `startTime` is not sent and `endTime` is sent, return records of [endTime-30d, endTime].
     ///
     /// # Arguments
     ///
@@ -793,7 +828,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Query-Portfolio-Margin-Pro-Bankruptcy-Loan-Repay-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#query-portfolio-margin-pro-bankruptcy-loan-repay-history).
     ///
     pub async fn query_portfolio_margin_pro_bankruptcy_loan_repay_history(
         &self,
@@ -806,11 +841,13 @@ impl RestApi {
             .await
     }
 
-    /// Query Portfolio Margin Pro Negative Balance Interest `History(USER_DATA)`
+    /// Query Portfolio Margin Pro Negative Balance Interest History (`USER_DATA`)
     ///
     /// Query interest history of negative balance for portfolio margin.
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -840,7 +877,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Query-Classic-Portfolio-Margin-Negative-Balance-Interest-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#query-portfolio-margin-pro-negative-balance-interest-history).
     ///
     pub async fn query_portfolio_margin_pro_negative_balance_interest_history(
         &self,
@@ -855,11 +892,13 @@ impl RestApi {
             .await
     }
 
-    /// Repay futures Negative `Balance(USER_DATA)`
+    /// Repay futures Negative Balance (`USER_DATA`)
     ///
     /// Repay futures Negative Balance
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -889,7 +928,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Repay-futures-Negative-Balance).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#repay-futures-negative-balance).
     ///
     pub async fn repay_futures_negative_balance(
         &self,
@@ -904,7 +943,9 @@ impl RestApi {
     ///
     /// Set the margin call level for a Portfolio Margin account. When the account's uniMMR drops to the specified level, a notification will be sent via email and SMS.
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -934,7 +975,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Set-Margin-Call-Level).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#set-margin-call-level).
     ///
     pub async fn set_margin_call_level(
         &self,
@@ -943,11 +984,13 @@ impl RestApi {
         self.account_api_client.set_margin_call_level(params).await
     }
 
-    /// Switch Delta Mode(TRADE)
+    /// Switch Delta Mode (TRADE)
     ///
     /// Switch the Delta mode for existing PM PRO / PM RETAIL accounts.
     ///
-    /// Weight: 1500
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -977,7 +1020,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Switch-Delta-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#switch-delta-mode).
     ///
     pub async fn switch_delta_mode(
         &self,
@@ -986,11 +1029,13 @@ impl RestApi {
         self.account_api_client.switch_delta_mode(params).await
     }
 
-    /// Transfer LDUSDT/RWUSD for Portfolio Margin(TRADE)
+    /// Transfer LDUSDT/RWUSD for Portfolio Margin (TRADE)
     ///
     /// Transfer LDUSDT/RWUSD as collateral for all types of Portfolio Margin account
     ///
-    /// Weight: 1500
+    /// Weight(UID): 1500
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -1020,7 +1065,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Transfer-LDUSDT-Portfolio-Margin).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/account#transfer-ldusdt-rwusd-for-portfolio-margin).
     ///
     pub async fn transfer_ldusdt_rwusd_for_portfolio_margin(
         &self,
@@ -1032,11 +1077,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Portfolio Margin Asset `Leverage(USER_DATA)`
+    /// Get Portfolio Margin Asset Leverage (`USER_DATA`)
     ///
     /// Get Portfolio Margin Asset Leverage
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1066,7 +1113,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data/Get-Portfolio-Margin-Asset-Leverage).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/market-data#get-portfolio-margin-asset-leverage).
     ///
     pub async fn get_portfolio_margin_asset_leverage(
         &self,
@@ -1077,11 +1124,13 @@ impl RestApi {
             .await
     }
 
-    /// Portfolio Margin Collateral `Rate(MARKET_DATA)`
+    /// Portfolio Margin Collateral Rate (`MARKET_DATA`)
     ///
     /// Portfolio Margin Collateral Rate
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1111,7 +1160,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data/Classic-Portfolio-Margin-Collateral-Rate).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/market-data#portfolio-margin-collateral-rate).
     ///
     pub async fn portfolio_margin_collateral_rate(
         &self,
@@ -1122,11 +1171,13 @@ impl RestApi {
             .await
     }
 
-    /// Portfolio Margin Pro Tiered Collateral `Rate(USER_DATA)`
+    /// Portfolio Margin Pro Tiered Collateral Rate (`USER_DATA`)
     ///
     /// Portfolio Margin PRO Tiered Collateral Rate
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1156,7 +1207,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data/Portfolio-Margin-Pro-Tiered-Collateral-Rate).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/market-data#portfolio-margin-pro-tiered-collateral-rate).
     ///
     pub async fn portfolio_margin_pro_tiered_collateral_rate(
         &self,
@@ -1173,7 +1224,10 @@ impl RestApi {
     ///
     /// Query Portfolio Margin Asset Index Price
     ///
-    /// Weight: 1 if send asset or 50 if not send asset
+    /// Weight: - 1 if `asset` is sent
+    /// - 50 if `asset` is not sent
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -1203,7 +1257,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data/Query-Portfolio-Margin-Asset-Index-Price).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/market-data#query-portfolio-margin-asset-index-price).
     ///
     pub async fn query_portfolio_margin_asset_index_price(
         &self,

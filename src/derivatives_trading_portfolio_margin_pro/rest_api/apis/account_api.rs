@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Portfolio Margin Pro REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -134,11 +134,279 @@ impl AccountApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum BnbTransferTransferSideEnum {
+    #[serde(rename = "TO_UM")]
+    ToUm,
+    #[serde(rename = "FROM_UM")]
+    FromUm,
+}
+
+impl BnbTransferTransferSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::ToUm => "TO_UM",
+            Self::FromUm => "FROM_UM",
+        }
+    }
+}
+
+impl std::str::FromStr for BnbTransferTransferSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TO_UM" => Ok(Self::ToUm),
+            "FROM_UM" => Ok(Self::FromUm),
+            other => Err(format!("invalid BnbTransferTransferSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ChangeAutoRepayFuturesStatusAutoRepayEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl ChangeAutoRepayFuturesStatusAutoRepayEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for ChangeAutoRepayFuturesStatusAutoRepayEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!(
+                "invalid ChangeAutoRepayFuturesStatusAutoRepayEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum {
+    #[serde(rename = "EARN_TO_FUTURE")]
+    EarnToFuture,
+    #[serde(rename = "FUTURE_TO_EARN")]
+    FutureToEarn,
+}
+
+impl GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::EarnToFuture => "EARN_TO_FUTURE",
+            Self::FutureToEarn => "FUTURE_TO_EARN",
+        }
+    }
+}
+
+impl std::str::FromStr for GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "EARN_TO_FUTURE" => Ok(Self::EarnToFuture),
+            "FUTURE_TO_EARN" => Ok(Self::FutureToEarn),
+            other => Err(format!(
+                "invalid GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PortfolioMarginProBankruptcyLoanRepayFromEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+}
+
+impl PortfolioMarginProBankruptcyLoanRepayFromEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+        }
+    }
+}
+
+impl std::str::FromStr for PortfolioMarginProBankruptcyLoanRepayFromEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            other => Err(format!(
+                "invalid PortfolioMarginProBankruptcyLoanRepayFromEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum RepayFuturesNegativeBalanceFromEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "MARGIN")]
+    Margin,
+}
+
+impl RepayFuturesNegativeBalanceFromEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Margin => "MARGIN",
+        }
+    }
+}
+
+impl std::str::FromStr for RepayFuturesNegativeBalanceFromEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "MARGIN" => Ok(Self::Margin),
+            other => Err(format!("invalid RepayFuturesNegativeBalanceFromEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SwitchDeltaModeDeltaEnabledEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl SwitchDeltaModeDeltaEnabledEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for SwitchDeltaModeDeltaEnabledEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid SwitchDeltaModeDeltaEnabledEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TransferLdusdtRwusdForPortfolioMarginAssetEnum {
+    #[serde(rename = "LDUSDT")]
+    Ldusdt,
+    #[serde(rename = "RWUSD")]
+    Rwusd,
+}
+
+impl TransferLdusdtRwusdForPortfolioMarginAssetEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ldusdt => "LDUSDT",
+            Self::Rwusd => "RWUSD",
+        }
+    }
+}
+
+impl std::str::FromStr for TransferLdusdtRwusdForPortfolioMarginAssetEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "LDUSDT" => Ok(Self::Ldusdt),
+            "RWUSD" => Ok(Self::Rwusd),
+            other => Err(format!(
+                "invalid TransferLdusdtRwusdForPortfolioMarginAssetEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum {
+    #[serde(rename = "EARN_TO_FUTURE")]
+    EarnToFuture,
+    #[serde(rename = "FUTURE_TO_EARN")]
+    FutureToEarn,
+}
+
+impl TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::EarnToFuture => "EARN_TO_FUTURE",
+            Self::FutureToEarn => "FUTURE_TO_EARN",
+        }
+    }
+}
+
+impl std::str::FromStr for TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "EARN_TO_FUTURE" => Ok(Self::EarnToFuture),
+            "FUTURE_TO_EARN" => Ok(Self::FutureToEarn),
+            other => Err(format!(
+                "invalid TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`bnb_transfer`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`bnb_transfer`](#method.bnb_transfer).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct BnbTransferParams {
     ///
@@ -146,17 +414,21 @@ pub struct BnbTransferParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// "`TO_UM","FROM_UM`"
+    ///
+    /// The `transfer_side` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub transfer_side: String,
+    #[serde(rename = "transferSide")]
+    pub transfer_side: BnbTransferTransferSideEnum,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -166,12 +438,12 @@ impl BnbTransferParams {
     /// Required parameters:
     ///
     /// * `amount` — `rust_decimal::Decimal`
-    /// * `transfer_side` — \"`TO_UM`\",\"`FROM_UM`\"
+    /// * `transfer_side` — String
     ///
     #[must_use]
     pub fn builder(
         amount: rust_decimal::Decimal,
-        transfer_side: String,
+        transfer_side: BnbTransferTransferSideEnum,
     ) -> BnbTransferParamsBuilder {
         BnbTransferParamsBuilder::default()
             .amount(amount)
@@ -182,19 +454,21 @@ impl BnbTransferParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`change_auto_repay_futures_status`](#method.change_auto_repay_futures_status).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ChangeAutoRepayFuturesStatusParams {
-    /// Default: `true`; `false` for turn off the auto-repay futures negative balance function
+    /// `false` for turn off the auto-repay futures negative balance function
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub auto_repay: String,
+    #[serde(rename = "autoRepay")]
+    pub auto_repay: ChangeAutoRepayFuturesStatusAutoRepayEnum,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -203,10 +477,12 @@ impl ChangeAutoRepayFuturesStatusParams {
     ///
     /// Required parameters:
     ///
-    /// * `auto_repay` — Default: `true`; `false` for turn off the auto-repay futures negative balance function
+    /// * `auto_repay` — `false` for turn off the auto-repay futures negative balance function
     ///
     #[must_use]
-    pub fn builder(auto_repay: String) -> ChangeAutoRepayFuturesStatusParamsBuilder {
+    pub fn builder(
+        auto_repay: ChangeAutoRepayFuturesStatusAutoRepayEnum,
+    ) -> ChangeAutoRepayFuturesStatusParamsBuilder {
         ChangeAutoRepayFuturesStatusParamsBuilder::default().auto_repay(auto_repay)
     }
 }
@@ -214,14 +490,14 @@ impl ChangeAutoRepayFuturesStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`delete_margin_call_level`](#method.delete_margin_call_level).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DeleteMarginCallLevelParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -237,7 +513,7 @@ impl DeleteMarginCallLevelParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`fund_auto_collection`](#method.fund_auto_collection).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FundAutoCollectionParams {
     ///
@@ -245,6 +521,7 @@ pub struct FundAutoCollectionParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -260,19 +537,22 @@ impl FundAutoCollectionParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`fund_collection_by_asset`](#method.fund_collection_by_asset).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FundCollectionByAssetParams {
-    /// `LDUSDT` and `RWUSD`
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -281,7 +561,7 @@ impl FundCollectionByAssetParams {
     ///
     /// Required parameters:
     ///
-    /// * `asset` — `LDUSDT` and `RWUSD`
+    /// * `asset` — String
     ///
     #[must_use]
     pub fn builder(asset: String) -> FundCollectionByAssetParamsBuilder {
@@ -292,7 +572,7 @@ impl FundCollectionByAssetParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_auto_repay_futures_status`](#method.get_auto_repay_futures_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetAutoRepayFuturesStatusParams {
     ///
@@ -300,6 +580,7 @@ pub struct GetAutoRepayFuturesStatusParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -315,7 +596,7 @@ impl GetAutoRepayFuturesStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_delta_mode_status`](#method.get_delta_mode_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetDeltaModeStatusParams {
     ///
@@ -323,6 +604,7 @@ pub struct GetDeltaModeStatusParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -338,14 +620,14 @@ impl GetDeltaModeStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_margin_call_level`](#method.get_margin_call_level).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetMarginCallLevelParams {
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -361,7 +643,7 @@ impl GetMarginCallLevelParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_portfolio_margin_pro_account_balance`](#method.get_portfolio_margin_pro_account_balance).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetPortfolioMarginProAccountBalanceParams {
     ///
@@ -369,12 +651,14 @@ pub struct GetPortfolioMarginProAccountBalanceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -390,7 +674,7 @@ impl GetPortfolioMarginProAccountBalanceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_portfolio_margin_pro_account_info`](#method.get_portfolio_margin_pro_account_info).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetPortfolioMarginProAccountInfoParams {
     ///
@@ -398,6 +682,7 @@ pub struct GetPortfolioMarginProAccountInfoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -413,7 +698,7 @@ impl GetPortfolioMarginProAccountInfoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_portfolio_margin_pro_span_account_info`](#method.get_portfolio_margin_pro_span_account_info).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetPortfolioMarginProSpanAccountInfoParams {
     ///
@@ -421,6 +706,7 @@ pub struct GetPortfolioMarginProSpanAccountInfoParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -436,24 +722,28 @@ impl GetPortfolioMarginProSpanAccountInfoParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_transferable_earn_asset_balance_for_portfolio_margin`](#method.get_transferable_earn_asset_balance_for_portfolio_margin).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetTransferableEarnAssetBalanceForPortfolioMarginParams {
-    /// `LDUSDT` and `RWUSD`
+    /// `LDUSDT` only
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
-    /// `EARN_TO_FUTURE` /`FUTURE_TO_EARN`
+    ///
+    /// The `transfer_type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub transfer_type: String,
+    #[serde(rename = "transferType")]
+    pub transfer_type: GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -462,13 +752,13 @@ impl GetTransferableEarnAssetBalanceForPortfolioMarginParams {
     ///
     /// Required parameters:
     ///
-    /// * `asset` — `LDUSDT` and `RWUSD`
-    /// * `transfer_type` — `EARN_TO_FUTURE` /`FUTURE_TO_EARN`
+    /// * `asset` — `LDUSDT` only
+    /// * `transfer_type` — String
     ///
     #[must_use]
     pub fn builder(
         asset: String,
-        transfer_type: String,
+        transfer_type: GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum,
     ) -> GetTransferableEarnAssetBalanceForPortfolioMarginParamsBuilder {
         GetTransferableEarnAssetBalanceForPortfolioMarginParamsBuilder::default()
             .asset(asset)
@@ -479,19 +769,22 @@ impl GetTransferableEarnAssetBalanceForPortfolioMarginParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`portfolio_margin_pro_bankruptcy_loan_repay`](#method.portfolio_margin_pro_bankruptcy_loan_repay).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PortfolioMarginProBankruptcyLoanRepayParams {
-    /// SPOT or MARGIN，default SPOT
+    ///
+    /// The `from` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub from: Option<String>,
+    #[serde(rename = "from", default)]
+    pub from: Option<PortfolioMarginProBankruptcyLoanRepayFromEnum>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -507,7 +800,7 @@ impl PortfolioMarginProBankruptcyLoanRepayParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_portfolio_margin_pro_bankruptcy_loan_amount`](#method.query_portfolio_margin_pro_bankruptcy_loan_amount).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPortfolioMarginProBankruptcyLoanAmountParams {
     ///
@@ -515,6 +808,7 @@ pub struct QueryPortfolioMarginProBankruptcyLoanAmountParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -530,36 +824,39 @@ impl QueryPortfolioMarginProBankruptcyLoanAmountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_portfolio_margin_pro_bankruptcy_loan_repay_history`](#method.query_portfolio_margin_pro_bankruptcy_loan_repay_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams {
-    ///
-    /// The `start_time` parameter.
+    /// Start time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// End time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Number of results returned.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub current: Option<i64>,
-    /// Default:10 Max:100
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
+    /// Currently querying page. Start from 1.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
+    pub current: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -575,7 +872,7 @@ impl QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_portfolio_margin_pro_negative_balance_interest_history`](#method.query_portfolio_margin_pro_negative_balance_interest_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPortfolioMarginProNegativeBalanceInterestHistoryParams {
     ///
@@ -583,29 +880,32 @@ pub struct QueryPortfolioMarginProNegativeBalanceInterestHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    ///
-    /// The `start_time` parameter.
+    /// Start time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// End time
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default:10 Max:100
+    /// Number of results returned.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -621,19 +921,22 @@ impl QueryPortfolioMarginProNegativeBalanceInterestHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`repay_futures_negative_balance`](#method.repay_futures_negative_balance).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RepayFuturesNegativeBalanceParams {
-    /// SPOT or MARGIN，default SPOT
+    ///
+    /// The `from` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub from: Option<String>,
+    #[serde(rename = "from", default)]
+    pub from: Option<RepayFuturesNegativeBalanceFromEnum>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -649,19 +952,20 @@ impl RepayFuturesNegativeBalanceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_margin_call_level`](#method.set_margin_call_level).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetMarginCallLevelParams {
-    /// The value of marginCallLevel must be within the range [1.1, 2.0].
+    /// The value must be within the range [1.1, 2.0].
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "marginCallLevel")]
     pub margin_call_level: rust_decimal::Decimal,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -670,7 +974,7 @@ impl SetMarginCallLevelParams {
     ///
     /// Required parameters:
     ///
-    /// * `margin_call_level` — The value of marginCallLevel must be within the range [1.1, 2.0].
+    /// * `margin_call_level` — The value must be within the range [1.1, 2.0].
     ///
     #[must_use]
     pub fn builder(margin_call_level: rust_decimal::Decimal) -> SetMarginCallLevelParamsBuilder {
@@ -681,19 +985,21 @@ impl SetMarginCallLevelParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`switch_delta_mode`](#method.switch_delta_mode).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SwitchDeltaModeParams {
     /// `true` to enable Delta mode; `false` to disable Delta mode
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub delta_enabled: String,
+    #[serde(rename = "deltaEnabled")]
+    pub delta_enabled: SwitchDeltaModeDeltaEnabledEnum,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -705,7 +1011,7 @@ impl SwitchDeltaModeParams {
     /// * `delta_enabled` — `true` to enable Delta mode; `false` to disable Delta mode
     ///
     #[must_use]
-    pub fn builder(delta_enabled: String) -> SwitchDeltaModeParamsBuilder {
+    pub fn builder(delta_enabled: SwitchDeltaModeDeltaEnabledEnum) -> SwitchDeltaModeParamsBuilder {
         SwitchDeltaModeParamsBuilder::default().delta_enabled(delta_enabled)
     }
 }
@@ -713,30 +1019,36 @@ impl SwitchDeltaModeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`transfer_ldusdt_rwusd_for_portfolio_margin`](#method.transfer_ldusdt_rwusd_for_portfolio_margin).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct TransferLdusdtRwusdForPortfolioMarginParams {
-    /// `LDUSDT` and `RWUSD`
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub asset: String,
-    /// `EARN_TO_FUTURE` /`FUTURE_TO_EARN`
+    #[serde(rename = "asset")]
+    pub asset: TransferLdusdtRwusdForPortfolioMarginAssetEnum,
+    ///
+    /// The `transfer_type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub transfer_type: String,
+    #[serde(rename = "transferType")]
+    pub transfer_type: TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -745,14 +1057,14 @@ impl TransferLdusdtRwusdForPortfolioMarginParams {
     ///
     /// Required parameters:
     ///
-    /// * `asset` — `LDUSDT` and `RWUSD`
-    /// * `transfer_type` — `EARN_TO_FUTURE` /`FUTURE_TO_EARN`
+    /// * `asset` — String
+    /// * `transfer_type` — String
     /// * `amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
-        asset: String,
-        transfer_type: String,
+        asset: TransferLdusdtRwusdForPortfolioMarginAssetEnum,
+        transfer_type: TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum,
         amount: rust_decimal::Decimal,
     ) -> TransferLdusdtRwusdForPortfolioMarginParamsBuilder {
         TransferLdusdtRwusdForPortfolioMarginParamsBuilder::default()
@@ -1216,8 +1528,8 @@ impl AccountApi for AccountApiClient {
         let QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams {
             start_time,
             end_time,
-            current,
             size,
+            current,
             recv_window,
         } = params;
 
@@ -1232,12 +1544,12 @@ impl AccountApi for AccountApiClient {
             query_params.insert("endTime".to_string(), json!(rw));
         }
 
-        if let Some(rw) = current {
-            query_params.insert("current".to_string(), json!(rw));
-        }
-
         if let Some(rw) = size {
             query_params.insert("size".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = current {
+            query_params.insert("current".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -1504,7 +1816,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::BnbTransferResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::BnbTransferResponse");
@@ -1531,7 +1844,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ChangeAutoRepayFuturesStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeAutoRepayFuturesStatusResponse");
@@ -1558,7 +1872,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::DeleteMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DeleteMarginCallLevelResponse");
@@ -1585,7 +1900,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FundAutoCollectionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FundAutoCollectionResponse");
@@ -1612,7 +1928,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FundCollectionByAssetResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FundCollectionByAssetResponse");
@@ -1639,7 +1956,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"autoRepay":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"autoRepay":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetAutoRepayFuturesStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetAutoRepayFuturesStatusResponse");
@@ -1666,7 +1984,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"deltaEnabled":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"deltaEnabled":false}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetDeltaModeStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetDeltaModeStatusResponse");
@@ -1693,8 +2012,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetMarginCallLevelResponse");
@@ -1723,7 +2042,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","totalWalletBalance":"100","crossMarginAsset":"100","crossMarginBorrowed":"0","crossMarginFree":"100","crossMarginInterest":"0","crossMarginLocked":"0","umWalletBalance":"0","umUnrealizedPNL":"0","cmWalletBalance":"0","cmUnrealizedPNL":"0","updateTime":0,"negativeBalance":"0","optionWalletBalance":"0","optionEquity":"0"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"122607.35137903","crossMarginAsset":"92.27530794","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0","optionWalletBalance":"0","optionEquity":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::GetPortfolioMarginProAccountBalanceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPortfolioMarginProAccountBalanceResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -1749,7 +2068,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","accountInitialMargin":"47.44938412","totalAvailableBalance":"122,559.90199491","accountStatus":"NORMAL","accountType":"PM_1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","accountInitialMargin":"47.44938412","totalAvailableBalance":"122,559.90199491","accountStatus":"NORMAL","accountType":"PM_1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetPortfolioMarginProAccountInfoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetPortfolioMarginProAccountInfoResponse");
@@ -1777,7 +2096,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","riskUnitMMList":[{"asset":"BTC","uniMaintainUsd":"23.72469206"}],"marginMM":"0.00000000","otherMM":"0.00000000","accountStatus":"NORMAL","accountType":"PM_3"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","riskUnitMMList":[{"asset":"BTC","uniMaintainUsd":"23.72469206"}],"marginMM":"0.00000000","otherMM":"0.00000000","accountStatus":"NORMAL","accountType":"PM_3"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetPortfolioMarginProSpanAccountInfoResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetPortfolioMarginProSpanAccountInfoResponse",
@@ -1807,8 +2126,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"asset":"LDUSDT","amount":"0.55"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":"LDUSDT","amount":"0.55"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : models::GetTransferableEarnAssetBalanceForPortfolioMarginResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetTransferableEarnAssetBalanceForPortfolioMarginResponse");
 
             let dummy = DummyRestApiResponse {
@@ -1834,7 +2153,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":58203331886213500}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":58203331886213500}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::PortfolioMarginProBankruptcyLoanRepayResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::PortfolioMarginProBankruptcyLoanRepayResponse",
@@ -1864,8 +2184,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"asset":"BUSD","amount":"579.45"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":"BUSD","amount":"579.45"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryPortfolioMarginProBankruptcyLoanAmountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryPortfolioMarginProBankruptcyLoanAmountResponse",
@@ -1895,7 +2215,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":3,"rows":[{"asset":"USDT","amount":"404.80294503","repayTime":1731336427804},{"asset":"USDT","amount":"4620.41204574","repayTime":1726125090016}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":3,"rows":[{"asset":"USDT","amount":"404.80294503","repayTime":1731336427804}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : models::QueryPortfolioMarginProBankruptcyLoanRepayHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryPortfolioMarginProBankruptcyLoanRepayHistoryResponse");
 
             let dummy = DummyRestApiResponse {
@@ -1924,7 +2244,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","interest":"24.4440","interestAccruedTime":1670227200000,"interestRate":"0.0001164","principal":"210000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","interest":"24.4440","interestAccruedTime":1670227200000,"interestRate":"0.0001164","principal":"210000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -1949,7 +2269,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RepayFuturesNegativeBalanceResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RepayFuturesNegativeBalanceResponse");
@@ -1976,8 +2297,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetMarginCallLevelResponse");
@@ -2004,7 +2325,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SwitchDeltaModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SwitchDeltaModeResponse");
@@ -2032,7 +2354,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TransferLdusdtRwusdForPortfolioMarginResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::TransferLdusdtRwusdForPortfolioMarginResponse",
@@ -2054,11 +2377,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = BnbTransferParams::builder(dec!(1.0), "transfer_side_example".to_string())
+            let params = BnbTransferParams::builder(dec!(1.0), BnbTransferTransferSideEnum::ToUm)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::BnbTransferResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::BnbTransferResponse");
@@ -2078,12 +2402,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = BnbTransferParams::builder(dec!(1.0), "transfer_side_example".to_string())
+            let params = BnbTransferParams::builder(dec!(1.0), BnbTransferTransferSideEnum::ToUm)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::BnbTransferResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::BnbTransferResponse");
@@ -2103,7 +2428,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = BnbTransferParams::builder(dec!(1.0), "transfer_side_example".to_string())
+            let params = BnbTransferParams::builder(dec!(1.0), BnbTransferTransferSideEnum::ToUm)
                 .build()
                 .unwrap();
 
@@ -2121,11 +2446,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = ChangeAutoRepayFuturesStatusParams::builder("true".to_string())
-                .build()
-                .unwrap();
+            let params = ChangeAutoRepayFuturesStatusParams::builder(
+                ChangeAutoRepayFuturesStatusAutoRepayEnum::True,
+            )
+            .build()
+            .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeAutoRepayFuturesStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeAutoRepayFuturesStatusResponse");
@@ -2145,12 +2473,15 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = ChangeAutoRepayFuturesStatusParams::builder("true".to_string())
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = ChangeAutoRepayFuturesStatusParams::builder(
+                ChangeAutoRepayFuturesStatusAutoRepayEnum::True,
+            )
+            .recv_window(5000)
+            .build()
+            .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeAutoRepayFuturesStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeAutoRepayFuturesStatusResponse");
@@ -2170,9 +2501,11 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = ChangeAutoRepayFuturesStatusParams::builder("true".to_string())
-                .build()
-                .unwrap();
+            let params = ChangeAutoRepayFuturesStatusParams::builder(
+                ChangeAutoRepayFuturesStatusAutoRepayEnum::True,
+            )
+            .build()
+            .unwrap();
 
             match client.change_auto_repay_futures_status(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -2190,7 +2523,8 @@ mod tests {
 
             let params = DeleteMarginCallLevelParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::DeleteMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DeleteMarginCallLevelResponse");
@@ -2215,7 +2549,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::DeleteMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::DeleteMarginCallLevelResponse");
@@ -2253,7 +2588,8 @@ mod tests {
 
             let params = FundAutoCollectionParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::FundAutoCollectionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FundAutoCollectionResponse");
@@ -2278,7 +2614,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::FundAutoCollectionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FundAutoCollectionResponse");
@@ -2314,11 +2651,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = FundCollectionByAssetParams::builder("asset_example".to_string())
+            let params = FundCollectionByAssetParams::builder("USDT".to_string())
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::FundCollectionByAssetResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FundCollectionByAssetResponse");
@@ -2338,12 +2676,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = FundCollectionByAssetParams::builder("asset_example".to_string())
+            let params = FundCollectionByAssetParams::builder("USDT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::FundCollectionByAssetResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FundCollectionByAssetResponse");
@@ -2363,7 +2702,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = FundCollectionByAssetParams::builder("asset_example".to_string())
+            let params = FundCollectionByAssetParams::builder("USDT".to_string())
                 .build()
                 .unwrap();
 
@@ -2383,7 +2722,8 @@ mod tests {
 
             let params = GetAutoRepayFuturesStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"autoRepay":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"autoRepay":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetAutoRepayFuturesStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetAutoRepayFuturesStatusResponse");
@@ -2408,7 +2748,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"autoRepay":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"autoRepay":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetAutoRepayFuturesStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetAutoRepayFuturesStatusResponse");
@@ -2446,7 +2787,8 @@ mod tests {
 
             let params = GetDeltaModeStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"deltaEnabled":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"deltaEnabled":false}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDeltaModeStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetDeltaModeStatusResponse");
@@ -2471,7 +2813,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"deltaEnabled":false}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"deltaEnabled":false}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetDeltaModeStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetDeltaModeStatusResponse");
@@ -2509,8 +2852,8 @@ mod tests {
 
             let params = GetMarginCallLevelParams::builder().build().unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetMarginCallLevelResponse");
@@ -2535,8 +2878,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetMarginCallLevelResponse");
@@ -2574,7 +2917,7 @@ mod tests {
 
             let params = GetPortfolioMarginProAccountBalanceParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","totalWalletBalance":"100","crossMarginAsset":"100","crossMarginBorrowed":"0","crossMarginFree":"100","crossMarginInterest":"0","crossMarginLocked":"0","umWalletBalance":"0","umUnrealizedPNL":"0","cmWalletBalance":"0","cmUnrealizedPNL":"0","updateTime":0,"negativeBalance":"0","optionWalletBalance":"0","optionEquity":"0"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"122607.35137903","crossMarginAsset":"92.27530794","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0","optionWalletBalance":"0","optionEquity":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetPortfolioMarginProAccountBalanceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPortfolioMarginProAccountBalanceResponseInner>");
 
             let resp = client.get_portfolio_margin_pro_account_balance(params).await.expect("Expected a response");
@@ -2589,9 +2932,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetPortfolioMarginProAccountBalanceParams::builder().asset("asset_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetPortfolioMarginProAccountBalanceParams::builder().asset("BTC".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","totalWalletBalance":"100","crossMarginAsset":"100","crossMarginBorrowed":"0","crossMarginFree":"100","crossMarginInterest":"0","crossMarginLocked":"0","umWalletBalance":"0","umUnrealizedPNL":"0","cmWalletBalance":"0","cmUnrealizedPNL":"0","updateTime":0,"negativeBalance":"0","optionWalletBalance":"0","optionEquity":"0"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"122607.35137903","crossMarginAsset":"92.27530794","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0","optionWalletBalance":"0","optionEquity":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetPortfolioMarginProAccountBalanceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPortfolioMarginProAccountBalanceResponseInner>");
 
             let resp = client.get_portfolio_margin_pro_account_balance(params).await.expect("Expected a response");
@@ -2629,7 +2972,7 @@ mod tests {
 
             let params = GetPortfolioMarginProAccountInfoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","accountInitialMargin":"47.44938412","totalAvailableBalance":"122,559.90199491","accountStatus":"NORMAL","accountType":"PM_1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","accountInitialMargin":"47.44938412","totalAvailableBalance":"122,559.90199491","accountStatus":"NORMAL","accountType":"PM_1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetPortfolioMarginProAccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetPortfolioMarginProAccountInfoResponse");
 
             let resp = client.get_portfolio_margin_pro_account_info(params).await.expect("Expected a response");
@@ -2646,7 +2989,7 @@ mod tests {
 
             let params = GetPortfolioMarginProAccountInfoParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","accountInitialMargin":"47.44938412","totalAvailableBalance":"122,559.90199491","accountStatus":"NORMAL","accountType":"PM_1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","accountInitialMargin":"47.44938412","totalAvailableBalance":"122,559.90199491","accountStatus":"NORMAL","accountType":"PM_1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetPortfolioMarginProAccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetPortfolioMarginProAccountInfoResponse");
 
             let resp = client.get_portfolio_margin_pro_account_info(params).await.expect("Expected a response");
@@ -2681,7 +3024,7 @@ mod tests {
 
             let params = GetPortfolioMarginProSpanAccountInfoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","riskUnitMMList":[{"asset":"BTC","uniMaintainUsd":"23.72469206"}],"marginMM":"0.00000000","otherMM":"0.00000000","accountStatus":"NORMAL","accountType":"PM_3"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","riskUnitMMList":[{"asset":"BTC","uniMaintainUsd":"23.72469206"}],"marginMM":"0.00000000","otherMM":"0.00000000","accountStatus":"NORMAL","accountType":"PM_3"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetPortfolioMarginProSpanAccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetPortfolioMarginProSpanAccountInfoResponse");
 
             let resp = client.get_portfolio_margin_pro_span_account_info(params).await.expect("Expected a response");
@@ -2698,7 +3041,7 @@ mod tests {
 
             let params = GetPortfolioMarginProSpanAccountInfoParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","riskUnitMMList":[{"asset":"BTC","uniMaintainUsd":"23.72469206"}],"marginMM":"0.00000000","otherMM":"0.00000000","accountStatus":"NORMAL","accountType":"PM_3"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"uniMMR":"5167.92171923","accountEquity":"122607.35137903","actualEquity":"142607.35137903","accountMaintMargin":"23.72469206","riskUnitMMList":[{"asset":"BTC","uniMaintainUsd":"23.72469206"}],"marginMM":"0.00000000","otherMM":"0.00000000","accountStatus":"NORMAL","accountType":"PM_3"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetPortfolioMarginProSpanAccountInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetPortfolioMarginProSpanAccountInfoResponse");
 
             let resp = client.get_portfolio_margin_pro_span_account_info(params).await.expect("Expected a response");
@@ -2734,9 +3077,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetTransferableEarnAssetBalanceForPortfolioMarginParams::builder("asset_example".to_string(),"transfer_type_example".to_string(),).build().unwrap();
+            let params = GetTransferableEarnAssetBalanceForPortfolioMarginParams::builder("LDUSDT".to_string(),GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum::EarnToFuture,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":"LDUSDT","amount":"0.55"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":"LDUSDT","amount":"0.55"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetTransferableEarnAssetBalanceForPortfolioMarginResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetTransferableEarnAssetBalanceForPortfolioMarginResponse");
 
             let resp = client.get_transferable_earn_asset_balance_for_portfolio_margin(params).await.expect("Expected a response");
@@ -2751,9 +3094,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetTransferableEarnAssetBalanceForPortfolioMarginParams::builder("asset_example".to_string(),"transfer_type_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = GetTransferableEarnAssetBalanceForPortfolioMarginParams::builder("LDUSDT".to_string(),GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum::EarnToFuture,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"asset":"LDUSDT","amount":"0.55"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":"LDUSDT","amount":"0.55"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetTransferableEarnAssetBalanceForPortfolioMarginResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetTransferableEarnAssetBalanceForPortfolioMarginResponse");
 
             let resp = client.get_transferable_earn_asset_balance_for_portfolio_margin(params).await.expect("Expected a response");
@@ -2769,8 +3112,8 @@ mod tests {
             let client = MockAccountApiClient { force_error: true };
 
             let params = GetTransferableEarnAssetBalanceForPortfolioMarginParams::builder(
-                "asset_example".to_string(),
-                "transfer_type_example".to_string(),
+                "LDUSDT".to_string(),
+                GetTransferableEarnAssetBalanceForPortfolioMarginTransferTypeEnum::EarnToFuture,
             )
             .build()
             .unwrap();
@@ -2796,7 +3139,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":58203331886213500}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":58203331886213500}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::PortfolioMarginProBankruptcyLoanRepayResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::PortfolioMarginProBankruptcyLoanRepayResponse",
@@ -2818,12 +3162,13 @@ mod tests {
             let client = MockAccountApiClient { force_error: false };
 
             let params = PortfolioMarginProBankruptcyLoanRepayParams::builder()
-                .from("SPOT".to_string())
+                .from(PortfolioMarginProBankruptcyLoanRepayFromEnum::Spot)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":58203331886213500}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":58203331886213500}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::PortfolioMarginProBankruptcyLoanRepayResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::PortfolioMarginProBankruptcyLoanRepayResponse",
@@ -2869,8 +3214,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"asset":"BUSD","amount":"579.45"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":"BUSD","amount":"579.45"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryPortfolioMarginProBankruptcyLoanAmountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryPortfolioMarginProBankruptcyLoanAmountResponse",
@@ -2896,8 +3241,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"asset":"BUSD","amount":"579.45"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"asset":"BUSD","amount":"579.45"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryPortfolioMarginProBankruptcyLoanAmountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryPortfolioMarginProBankruptcyLoanAmountResponse",
@@ -2941,7 +3286,7 @@ mod tests {
 
             let params = QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":3,"rows":[{"asset":"USDT","amount":"404.80294503","repayTime":1731336427804},{"asset":"USDT","amount":"4620.41204574","repayTime":1726125090016}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":3,"rows":[{"asset":"USDT","amount":"404.80294503","repayTime":1731336427804}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryPortfolioMarginProBankruptcyLoanRepayHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryPortfolioMarginProBankruptcyLoanRepayHistoryResponse");
 
             let resp = client.query_portfolio_margin_pro_bankruptcy_loan_repay_history(params).await.expect("Expected a response");
@@ -2956,9 +3301,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = QueryPortfolioMarginProBankruptcyLoanRepayHistoryParams::builder().start_time(1623319461670).end_time(1641782889000).size(10).current(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":3,"rows":[{"asset":"USDT","amount":"404.80294503","repayTime":1731336427804},{"asset":"USDT","amount":"4620.41204574","repayTime":1726125090016}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":3,"rows":[{"asset":"USDT","amount":"404.80294503","repayTime":1731336427804}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryPortfolioMarginProBankruptcyLoanRepayHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryPortfolioMarginProBankruptcyLoanRepayHistoryResponse");
 
             let resp = client.query_portfolio_margin_pro_bankruptcy_loan_repay_history(params).await.expect("Expected a response");
@@ -2996,7 +3341,7 @@ mod tests {
 
             let params = QueryPortfolioMarginProNegativeBalanceInterestHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","interest":"24.4440","interestAccruedTime":1670227200000,"interestRate":"0.0001164","principal":"210000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","interest":"24.4440","interestAccruedTime":1670227200000,"interestRate":"0.0001164","principal":"210000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner>");
 
             let resp = client.query_portfolio_margin_pro_negative_balance_interest_history(params).await.expect("Expected a response");
@@ -3011,9 +3356,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = QueryPortfolioMarginProNegativeBalanceInterestHistoryParams::builder().asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).size(10).recv_window(5000).build().unwrap();
+            let params = QueryPortfolioMarginProNegativeBalanceInterestHistoryParams::builder().asset("USDT".to_string()).start_time(1623319461670).end_time(1641782889000).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","interest":"24.4440","interestAccruedTime":1670227200000,"interestRate":"0.0001164","principal":"210000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","interest":"24.4440","interestAccruedTime":1670227200000,"interestRate":"0.0001164","principal":"210000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner>");
 
             let resp = client.query_portfolio_margin_pro_negative_balance_interest_history(params).await.expect("Expected a response");
@@ -3053,7 +3398,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RepayFuturesNegativeBalanceResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RepayFuturesNegativeBalanceResponse");
@@ -3074,12 +3420,13 @@ mod tests {
             let client = MockAccountApiClient { force_error: false };
 
             let params = RepayFuturesNegativeBalanceParams::builder()
-                .from("SPOT".to_string())
+                .from(RepayFuturesNegativeBalanceFromEnum::Spot)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RepayFuturesNegativeBalanceResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RepayFuturesNegativeBalanceResponse");
@@ -3117,12 +3464,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = SetMarginCallLevelParams::builder(dec!(5000.0))
+            let params = SetMarginCallLevelParams::builder(dec!(1.5))
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetMarginCallLevelResponse");
@@ -3142,13 +3489,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = SetMarginCallLevelParams::builder(dec!(5000.0))
+            let params = SetMarginCallLevelParams::builder(dec!(1.5))
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"marginCallLevel":"1.67354637"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetMarginCallLevelResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetMarginCallLevelResponse");
@@ -3168,7 +3515,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = SetMarginCallLevelParams::builder(dec!(5000.0))
+            let params = SetMarginCallLevelParams::builder(dec!(1.5))
                 .build()
                 .unwrap();
 
@@ -3186,11 +3533,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = SwitchDeltaModeParams::builder("delta_enabled_example".to_string())
+            let params = SwitchDeltaModeParams::builder(SwitchDeltaModeDeltaEnabledEnum::True)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SwitchDeltaModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SwitchDeltaModeResponse");
@@ -3210,12 +3558,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = SwitchDeltaModeParams::builder("delta_enabled_example".to_string())
+            let params = SwitchDeltaModeParams::builder(SwitchDeltaModeDeltaEnabledEnum::True)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SwitchDeltaModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SwitchDeltaModeResponse");
@@ -3235,7 +3584,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: true };
 
-            let params = SwitchDeltaModeParams::builder("delta_enabled_example".to_string())
+            let params = SwitchDeltaModeParams::builder(SwitchDeltaModeDeltaEnabledEnum::True)
                 .build()
                 .unwrap();
 
@@ -3254,14 +3603,15 @@ mod tests {
             let client = MockAccountApiClient { force_error: false };
 
             let params = TransferLdusdtRwusdForPortfolioMarginParams::builder(
-                "asset_example".to_string(),
-                "transfer_type_example".to_string(),
-                dec!(1.0),
+                TransferLdusdtRwusdForPortfolioMarginAssetEnum::Ldusdt,
+                TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum::EarnToFuture,
+                dec!(1),
             )
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::TransferLdusdtRwusdForPortfolioMarginResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::TransferLdusdtRwusdForPortfolioMarginResponse",
@@ -3283,15 +3633,16 @@ mod tests {
             let client = MockAccountApiClient { force_error: false };
 
             let params = TransferLdusdtRwusdForPortfolioMarginParams::builder(
-                "asset_example".to_string(),
-                "transfer_type_example".to_string(),
-                dec!(1.0),
+                TransferLdusdtRwusdForPortfolioMarginAssetEnum::Ldusdt,
+                TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum::EarnToFuture,
+                dec!(1),
             )
             .recv_window(5000)
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"msg":"success"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::TransferLdusdtRwusdForPortfolioMarginResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::TransferLdusdtRwusdForPortfolioMarginResponse",
@@ -3313,9 +3664,9 @@ mod tests {
             let client = MockAccountApiClient { force_error: true };
 
             let params = TransferLdusdtRwusdForPortfolioMarginParams::builder(
-                "asset_example".to_string(),
-                "transfer_type_example".to_string(),
-                dec!(1.0),
+                TransferLdusdtRwusdForPortfolioMarginAssetEnum::Ldusdt,
+                TransferLdusdtRwusdForPortfolioMarginTransferTypeEnum::EarnToFuture,
+                dec!(1),
             )
             .build()
             .unwrap();

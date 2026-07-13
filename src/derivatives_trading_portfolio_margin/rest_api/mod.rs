@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -120,11 +120,13 @@ impl RestApi {
         .await
     }
 
-    /// Account `Balance(USER_DATA)`
+    /// Account Balance (`USER_DATA`)
     ///
     /// Query account balance
     ///
-    /// Weight: 20
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -154,7 +156,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Account-Balance).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#account-balance).
     ///
     pub async fn account_balance(
         &self,
@@ -163,11 +165,13 @@ impl RestApi {
         self.account_api_client.account_balance(params).await
     }
 
-    /// Account `Information(USER_DATA)`
+    /// Account Information (`USER_DATA`)
     ///
     /// Query account information
     ///
-    /// Weight: 20
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -197,7 +201,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Account-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#account-information).
     ///
     pub async fn account_information(
         &self,
@@ -210,9 +214,12 @@ impl RestApi {
     ///
     /// Transfer BNB in and out of UM
     ///
-    /// * The endpoint can only be called 10 times per 10 minutes in a rolling manner
+    /// Weight(IP): 750
     ///
-    /// Weight: 750
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - The endpoint can only be called 10 times per 10 minutes in a rolling manner
     ///
     /// # Arguments
     ///
@@ -242,7 +249,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/BNB-transfer).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#bnb-transfer).
     ///
     pub async fn bnb_transfer(
         &self,
@@ -251,11 +258,13 @@ impl RestApi {
         self.account_api_client.bnb_transfer(params).await
     }
 
-    /// Change Auto-repay-futures Status(TRADE)
+    /// Change Auto-repay-futures Status (TRADE)
     ///
     /// Change Auto-repay-futures Status
     ///
-    /// Weight: 750
+    /// Weight(IP): 750
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -285,7 +294,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-Auto-repay-futures-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#change-auto-repay-futures-status).
     ///
     pub async fn change_auto_repay_futures_status(
         &self,
@@ -300,7 +309,9 @@ impl RestApi {
     ///
     /// Change user's initial leverage of specific symbol in CM.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -330,7 +341,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-CM-Initial-Leverage).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#change-cm-initial-leverage).
     ///
     pub async fn change_cm_initial_leverage(
         &self,
@@ -341,11 +352,13 @@ impl RestApi {
             .await
     }
 
-    /// Change CM Position Mode(TRADE)
+    /// Change CM Position Mode (TRADE)
     ///
     /// Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -375,7 +388,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-CM-Position-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#change-cm-position-mode).
     ///
     pub async fn change_cm_position_mode(
         &self,
@@ -386,11 +399,13 @@ impl RestApi {
             .await
     }
 
-    /// Change UM Initial Leverage(TRADE)
+    /// Change UM Initial Leverage (TRADE)
     ///
     /// Change user's initial leverage of specific symbol in UM.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -420,7 +435,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-UM-Initial-Leverage).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#change-um-initial-leverage).
     ///
     pub async fn change_um_initial_leverage(
         &self,
@@ -431,11 +446,13 @@ impl RestApi {
             .await
     }
 
-    /// Change UM Position Mode(TRADE)
+    /// Change UM Position Mode (TRADE)
     ///
     /// Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -465,7 +482,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-UM-Position-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#change-um-position-mode).
     ///
     pub async fn change_um_position_mode(
         &self,
@@ -476,11 +493,13 @@ impl RestApi {
             .await
     }
 
-    /// CM Notional and Leverage `Brackets(USER_DATA)`
+    /// CM Notional and Leverage Brackets (`USER_DATA`)
     ///
     /// Query CM notional and leverage brackets
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -510,7 +529,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/CM-Notional-and-Leverage-Brackets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#cm-notional-and-leverage-brackets).
     ///
     pub async fn cm_notional_and_leverage_brackets(
         &self,
@@ -522,14 +541,17 @@ impl RestApi {
             .await
     }
 
-    /// Fund Auto-collection(TRADE)
+    /// Fund Auto-collection (TRADE)
     ///
     /// Fund collection for Portfolio Margin
     ///
-    /// * The BNB would not be collected from UM-PM account to the Portfolio Margin account.
-    /// * You can only use this function 500 times per hour in a rolling manner.
+    /// Weight(IP): 750
     ///
-    /// Weight: 750
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - BNB assets will not be auto-collected.
+    /// - Rolling window endpoint can be called at most 500 times per hour.
     ///
     /// # Arguments
     ///
@@ -559,7 +581,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Fund-Auto-collection).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#fund-auto-collection).
     ///
     pub async fn fund_auto_collection(
         &self,
@@ -568,13 +590,16 @@ impl RestApi {
         self.account_api_client.fund_auto_collection(params).await
     }
 
-    /// Fund Collection by Asset(TRADE)
+    /// Fund Collection by Asset (TRADE)
     ///
     /// Transfers specific asset from Futures Account to Margin account
     ///
-    /// * The BNB transfer is not be supported
+    /// Weight(IP): 30
     ///
-    /// Weight: 30
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - The BNB transfer is not be supported
     ///
     /// # Arguments
     ///
@@ -604,7 +629,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Fund-Collection-by-Asset).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#fund-collection-by-asset).
     ///
     pub async fn fund_collection_by_asset(
         &self,
@@ -615,11 +640,13 @@ impl RestApi {
             .await
     }
 
-    /// Get Auto-repay-futures `Status(USER_DATA)`
+    /// Get Auto-repay-futures Status (`USER_DATA`)
     ///
     /// Query Auto-repay-futures Status
     ///
-    /// Weight: 30
+    /// Weight(IP): 30
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -649,7 +676,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Auto-repay-futures-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-auto-repay-futures-status).
     ///
     pub async fn get_auto_repay_futures_status(
         &self,
@@ -660,11 +687,13 @@ impl RestApi {
             .await
     }
 
-    /// Get CM Account `Detail(USER_DATA)`
+    /// Get CM Account Detail (`USER_DATA`)
     ///
     /// Get current CM account asset and position information.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -694,7 +723,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-CM-Account-Detail).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-cm-account-detail).
     ///
     pub async fn get_cm_account_detail(
         &self,
@@ -703,11 +732,13 @@ impl RestApi {
         self.account_api_client.get_cm_account_detail(params).await
     }
 
-    /// Get CM Current Position `Mode(USER_DATA)`
+    /// Get CM Current Position Mode (`USER_DATA`)
     ///
     /// Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM
     ///
-    /// Weight: 30
+    /// Weight(IP): 30
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -737,7 +768,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-CM-Current-Position-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-cm-current-position-mode).
     ///
     pub async fn get_cm_current_position_mode(
         &self,
@@ -748,17 +779,19 @@ impl RestApi {
             .await
     }
 
-    /// Get CM Income `History(USER_DATA)`
+    /// Get CM Income History (`USER_DATA`)
     ///
-    /// Get CM Income History
+    /// Get CM Income History.
     ///
+    /// Weight(IP): 30
     ///
-    /// * If `incomeType` is not sent, all kinds of flow will be returned
-    /// * "trandId" is unique in the same "incomeType" for a user
-    /// * The interval between `startTime` and `endTime` can not exceed 200 days:
-    /// * If `startTime` and `endTime` are not sent, the last 200 days will be returned
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 30
+    /// Notes:
+    /// - If `incomeType` is not sent, all kinds of flow will be returned
+    /// - "trandId" is unique in the same "incomeType" for a user
+    /// - The interval between `startTime` and `endTime` can not exceed 200 days:
+    /// - If `startTime` and `endTime` are not sent, the last 200 days will be returned
     ///
     /// # Arguments
     ///
@@ -788,7 +821,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-CM-Income-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-cm-income-history).
     ///
     pub async fn get_cm_income_history(
         &self,
@@ -801,10 +834,13 @@ impl RestApi {
     ///
     /// Get download id for UM futures order history
     ///
-    /// * Request Limitation is 10 times per month, shared by front end download page and rest api
-    /// * The time between `startTime` and `endTime` can not be longer than 1 year
+    /// Weight(IP): 1500
     ///
-    /// Weight: 1500
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 10 times per month, shared by front end download page and rest api
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
     ///
     /// # Arguments
     ///
@@ -834,7 +870,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-download-id-for-um-futures-order-history).
     ///
     pub async fn get_download_id_for_um_futures_order_history(
         &self,
@@ -850,10 +886,13 @@ impl RestApi {
     ///
     /// Get download id for UM futures trade history
     ///
-    /// * Request Limitation is 5 times per month, shared by front end download page and rest api
-    /// * The time between `startTime` and `endTime` can not be longer than 1 year
+    /// Weight(IP): 1500
     ///
-    /// Weight: 1500
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 5 times per month, shared by front end download page and rest api
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
     ///
     /// # Arguments
     ///
@@ -883,7 +922,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Trade-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-download-id-for-um-futures-trade-history).
     ///
     pub async fn get_download_id_for_um_futures_trade_history(
         &self,
@@ -899,10 +938,13 @@ impl RestApi {
     ///
     /// Get download id for UM futures transaction history
     ///
-    /// * Request Limitation is 5 times per month, shared by front end download page and rest api
-    /// * The time between `startTime` and `endTime` can not be longer than 1 year
+    /// Weight(IP): 1500
     ///
-    /// Weight: 1500
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 5 times per month, shared by front end download page and rest api
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
     ///
     /// # Arguments
     ///
@@ -932,7 +974,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Transaction-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-download-id-for-um-futures-transaction-history).
     ///
     pub async fn get_download_id_for_um_futures_transaction_history(
         &self,
@@ -944,24 +986,26 @@ impl RestApi {
             .await
     }
 
-    /// Get Margin Borrow/Loan Interest `History(USER_DATA)`
+    /// Get Margin Borrow/Loan Interest History (`USER_DATA`)
     ///
     /// Get Margin Borrow/Loan Interest History
     ///
+    /// Weight(IP): 1
     ///
-    /// * Response in descending order
-    /// * The max interval between startTime and endTime is 30 days. It is a MUST to ensure data correctness.
-    /// * If `startTime` and `endTime` not sent, return records of the last 7 days by default
-    /// * If `startTime` is sent and `endTime` is not sent, the records from `startTime` to the present will be returned; if `startTime` is more than 30 days ago, the records of the past 30 days will be returned.
-    /// * If `startTime` is not sent and `endTime` is sent, the records of the 7 days before `endTime` is returned.
-    /// * Type in response has 5 enums:
-    /// * `PERIODIC` interest charged per hour
-    /// * `ON_BORROW` first interest charged on borrow
-    /// * `PERIODIC_CONVERTED` interest charged per hour converted into BNB
-    /// * `ON_BORROW_CONVERTED` first interest charged on borrow converted into BNB
-    /// * `PORTFOLIO` Portfolio Margin negative balance daily interest
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Response in descending order
+    /// - The max interval between startTime and endTime is 30 days. It is a MUST to ensure data correctness.
+    /// - If `startTime` and `endTime` not sent, return records of the last 7 days by default
+    /// - If `startTime` is sent and `endTime` is not sent, the records from `startTime` to the present will be returned; if `startTime` is more than 30 days ago, the records of the past 30 days will be returned.
+    /// - If `startTime` is not sent and `endTime` is sent, the records of the 7 days before `endTime` is returned.
+    /// - Type in response has 5 enums:
+    /// - `PERIODIC` interest charged per hour
+    /// - `ON_BORROW` first interest charged on borrow
+    /// - `PERIODIC_CONVERTED` interest charged per hour converted into BNB
+    /// - `ON_BORROW_CONVERTED` first interest charged on borrow converted into BNB
+    /// - `PORTFOLIO` Portfolio Margin negative balance daily interest
     ///
     /// # Arguments
     ///
@@ -991,7 +1035,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Margin-BorrowLoan-Interest-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-margin-borrow-loan-interest-history).
     ///
     pub async fn get_margin_borrow_loan_interest_history(
         &self,
@@ -1002,11 +1046,13 @@ impl RestApi {
             .await
     }
 
-    /// Get UM Account `Detail(USER_DATA)`
+    /// Get UM Account Detail (`USER_DATA`)
     ///
     /// Get current UM account asset and position information.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1036,7 +1082,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-um-account-detail).
     ///
     pub async fn get_um_account_detail(
         &self,
@@ -1045,11 +1091,13 @@ impl RestApi {
         self.account_api_client.get_um_account_detail(params).await
     }
 
-    /// Get UM Account Detail `V2(USER_DATA)`
+    /// Get UM Account Detail V2 (`USER_DATA`)
     ///
     /// Get current UM account asset and position information.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1079,7 +1127,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail-V2).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-um-account-detail-v2).
     ///
     pub async fn get_um_account_detail_v2(
         &self,
@@ -1090,11 +1138,13 @@ impl RestApi {
             .await
     }
 
-    /// Get UM Current Position `Mode(USER_DATA)`
+    /// Get UM Current Position Mode (`USER_DATA`)
     ///
     /// Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM
     ///
-    /// Weight: 30
+    /// Weight(IP): 30
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1124,7 +1174,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Current-Position-Mode).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-um-current-position-mode).
     ///
     pub async fn get_um_current_position_mode(
         &self,
@@ -1135,13 +1185,16 @@ impl RestApi {
             .await
     }
 
-    /// Get UM Futures Order Download Link by `Id(USER_DATA)`
+    /// Get UM Futures Order Download Link by Id (`USER_DATA`)
     ///
     /// Get UM futures order download link by Id
     ///
-    /// * Download link expiration: 7 days
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
     ///
     /// # Arguments
     ///
@@ -1171,7 +1224,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Order-Download-Link-by-Id).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-um-futures-order-download-link-by-id).
     ///
     pub async fn get_um_futures_order_download_link_by_id(
         &self,
@@ -1182,13 +1235,16 @@ impl RestApi {
             .await
     }
 
-    /// Get UM Futures Trade Download Link by `Id(USER_DATA)`
+    /// Get UM Futures Trade Download Link by Id (`USER_DATA`)
     ///
     /// Get UM futures trade download link by Id
     ///
-    /// * Download link expiration: 7 days
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
     ///
     /// # Arguments
     ///
@@ -1218,7 +1274,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Trade-Download-Link-by-Id).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-um-futures-trade-download-link-by-id).
     ///
     pub async fn get_um_futures_trade_download_link_by_id(
         &self,
@@ -1229,13 +1285,16 @@ impl RestApi {
             .await
     }
 
-    /// Get UM Futures Transaction Download Link by `Id(USER_DATA)`
+    /// Get UM Futures Transaction Download Link by Id (`USER_DATA`)
     ///
     /// Get UM futures Transaction download link by Id
     ///
-    /// * Download link expiration: 7 days
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
     ///
     /// # Arguments
     ///
@@ -1265,7 +1324,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Transaction-Download-Link-by-Id).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-um-futures-transaction-download-link-by-id).
     ///
     pub async fn get_um_futures_transaction_download_link_by_id(
         &self,
@@ -1277,16 +1336,19 @@ impl RestApi {
             .await
     }
 
-    /// Get UM Income `History(USER_DATA)`
+    /// Get UM Income History (`USER_DATA`)
     ///
-    /// Get UM Income History
+    /// Get UM Income History.
     ///
-    /// * If neither `startTime` nor `endTime` is sent, the recent 7-day data will be returned.
-    /// * If `incomeType` is not sent, all kinds of flow will be returned
-    /// * "trandId" is unique in the same incomeType for a user
-    /// * Income history only contains data for the last three months
+    /// Weight(IP): 30
     ///
-    /// Weight: 30
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If neither `startTime` nor `endTime` is sent, the recent 7-day data will be returned.
+    /// - If `incomeType` is not sent, all kinds of flow will be returned
+    /// - "trandId" is unique in the same incomeType for a user
+    /// - Income history only contains data for the last three months
     ///
     /// # Arguments
     ///
@@ -1316,7 +1378,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Income-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-um-income-history).
     ///
     pub async fn get_um_income_history(
         &self,
@@ -1325,11 +1387,13 @@ impl RestApi {
         self.account_api_client.get_um_income_history(params).await
     }
 
-    /// Get User Commission Rate for `CM(USER_DATA)`
+    /// Get User Commission Rate for CM (`USER_DATA`)
     ///
     /// Get User Commission Rate for CM
     ///
-    /// Weight: 20
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1359,7 +1423,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-User-Commission-Rate-for-CM).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-user-commission-rate-for-cm).
     ///
     pub async fn get_user_commission_rate_for_cm(
         &self,
@@ -1370,11 +1434,13 @@ impl RestApi {
             .await
     }
 
-    /// Get User Commission Rate for `UM(USER_DATA)`
+    /// Get User Commission Rate for UM (`USER_DATA`)
     ///
     /// Get User Commission Rate for UM
     ///
-    /// Weight: 20
+    /// Weight(IP): 20
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1404,7 +1470,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-User-Commission-Rate-for-UM).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-user-commission-rate-for-um).
     ///
     pub async fn get_user_commission_rate_for_um(
         &self,
@@ -1415,11 +1481,13 @@ impl RestApi {
             .await
     }
 
-    /// Margin Max `Borrow(USER_DATA)`
+    /// Margin Max Borrow (`USER_DATA`)
     ///
     /// Query margin max borrow
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1449,7 +1517,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Margin-Max-Borrow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#margin-max-borrow).
     ///
     pub async fn margin_max_borrow(
         &self,
@@ -1458,12 +1526,14 @@ impl RestApi {
         self.account_api_client.margin_max_borrow(params).await
     }
 
-    /// Portfolio Margin UM Trading Quantitative Rules `Indicators(USER_DATA)`
+    /// Portfolio Margin UM Trading Quantitative Rules Indicators (`USER_DATA`)
     ///
     /// Portfolio Margin UM Trading Quantitative Rules Indicators
     ///
-    /// Weight: 1 for a single symbol
-    /// 10 when the symbol parameter is omitted
+    /// Weight: - 1 for a single `symbol`
+    /// - 10 when `symbol` is omitted
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1493,7 +1563,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Portfolio-Margin-UM-Trading-Quantitative-Rules-Indicators).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#portfolio-margin-um-trading-quantitative-rules-indicators).
     ///
     pub async fn portfolio_margin_um_trading_quantitative_rules_indicators(
         &self,
@@ -1506,16 +1576,19 @@ impl RestApi {
             .await
     }
 
-    /// Query CM Position `Information(USER_DATA)`
+    /// Query CM Position Information (`USER_DATA`)
     ///
     /// Get current CM position information.
     ///
-    /// * If neither `marginAsset` nor `pair` is sent, positions of all symbols with `TRADING` status will be returned.
-    /// * for One-way Mode user, the response will only show the "BOTH" positions
-    /// * for Hedge Mode user, the response will show "LONG", and "SHORT" positions.
-    /// * Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If neither `marginAsset` nor `pair` is sent, positions of all symbols with `TRADING` status will be returned.
+    /// - for One-way Mode user, the response will only show the "BOTH" positions
+    /// - for Hedge Mode user, the response will show "LONG", and "SHORT" positions. **Note**
+    /// - Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
     ///
     /// # Arguments
     ///
@@ -1545,7 +1618,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-CM-Position-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-cm-position-information).
     ///
     pub async fn query_cm_position_information(
         &self,
@@ -1556,17 +1629,20 @@ impl RestApi {
             .await
     }
 
-    /// Query Margin Loan `Record(USER_DATA)`
+    /// Query Margin Loan Record (`USER_DATA`)
     ///
     /// Query margin loan record
     ///
-    /// * txId or startTime must be sent. txId takes precedence.
-    /// * Response in descending order
-    /// * The max interval between `startTime` and `endTime` is 30 days.
-    /// * If `startTime` and `endTime` not sent, return records of the last 7 days by default
-    /// * Set `archived` to `true` to query data from 6 months ago
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - txId or startTime must be sent. txId takes precedence.
+    /// - Response in descending order
+    /// - The max interval between `startTime` and `endTime` is 30 days.
+    /// - If `startTime` and `endTime` not sent, return records of the last 7 days by default
+    /// - Set `archived` to `true` to query data from 6 months ago
     ///
     /// # Arguments
     ///
@@ -1596,7 +1672,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Margin-Loan-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-margin-loan-record).
     ///
     pub async fn query_margin_loan_record(
         &self,
@@ -1607,11 +1683,13 @@ impl RestApi {
             .await
     }
 
-    /// Query Margin Max `Withdraw(USER_DATA)`
+    /// Query Margin Max Withdraw (`USER_DATA`)
     ///
     /// Query Margin Max Withdraw
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1641,7 +1719,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Margin-Max-Withdraw).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-margin-max-withdraw).
     ///
     pub async fn query_margin_max_withdraw(
         &self,
@@ -1652,17 +1730,20 @@ impl RestApi {
             .await
     }
 
-    /// Query Margin repay `Record(USER_DATA)`
+    /// Query Margin repay Record (`USER_DATA`)
     ///
     /// Query margin repay record.
     ///
-    /// * txId or startTime must be sent. txId takes precedence.
-    /// * Response in descending order
-    /// * The max interval between `startTime` and `endTime` is 30 days.
-    /// * If `startTime` and `endTime` not sent, return records of the last 7 days by default
-    /// * Set `archived` to `true` to query data from 6 months ago
+    /// Weight(IP): 10
     ///
-    /// Weight: 10
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - txId or startTime must be sent. txId takes precedence.
+    /// - Response in descending order
+    /// - The max interval between `startTime` and `endTime` is 30 days.
+    /// - If `startTime` and `endTime` not sent, return records of the last 7 days by default
+    /// - Set `archived` to `true` to query data from 6 months ago
     ///
     /// # Arguments
     ///
@@ -1692,7 +1773,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Margin-repay-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-margin-repay-record).
     ///
     pub async fn query_margin_repay_record(
         &self,
@@ -1703,17 +1784,20 @@ impl RestApi {
             .await
     }
 
-    /// Query Portfolio Margin Negative Balance Interest `History(USER_DATA)`
+    /// Query Portfolio Margin Negative Balance Interest History (`USER_DATA`)
     ///
     /// Query interest history of negative balance for portfolio margin.
     ///
-    /// * Response in descending order
-    /// * The max interval between startTime and endTime is 30 days. It is a MUST to ensure data correctness.
-    /// * If `startTime` and `endTime` not sent, return records of the last 7 days by default
-    /// * If `startTime` is sent and `endTime` is not sent, the records from `startTime` to the present will be returned; if `startTime` is more than 30 days ago, the records of the past 30 days will be returned.
-    /// * If `startTime` is not sent and `endTime` is sent, the records of the 7 days before `endTime` is returned.
+    /// Weight(IP): 50
     ///
-    /// Weight: 50
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Results are returned in descending order.
+    /// - The query range cannot exceed 30 days to ensure data correctness.
+    /// - If both `startTime` and `endTime` are omitted, the most recent 7 days are returned by default.
+    /// - If `startTime` is provided but `endTime` is omitted, records from `startTime` to now are returned; if that exceeds 30 days, only the most recent 30 days are returned.
+    /// - If `endTime` is provided but `startTime` is omitted, records from the 7 days before `endTime` are returned.
     ///
     /// # Arguments
     ///
@@ -1743,7 +1827,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Portfolio-Margin-Negative-Balance-Interest-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-portfolio-margin-negative-balance-interest-history).
     ///
     pub async fn query_portfolio_margin_negative_balance_interest_history(
         &self,
@@ -1758,15 +1842,18 @@ impl RestApi {
             .await
     }
 
-    /// Query UM Position `Information(USER_DATA)`
+    /// Query UM Position Information (`USER_DATA`)
     ///
     /// Get current UM position information.
     ///
-    /// * Please use with user data stream `ACCOUNT_UPDATE` to meet your timeliness and accuracy needs.
-    /// * for One-way Mode user, the response will only show the "BOTH" positions
-    /// * for Hedge Mode user, the response will show "LONG", and "SHORT" positions.
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Please use with account push event `ACCOUNT_UPDATE` for timeliness and accuracy.
+    /// - In One-way Mode, only positions with side `BOTH` are shown.
+    /// - In Hedge Mode, positions with sides `BOTH`, `LONG`, and `SHORT` are shown.
     ///
     /// # Arguments
     ///
@@ -1796,7 +1883,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-UM-Position-Information).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-um-position-information).
     ///
     pub async fn query_um_position_information(
         &self,
@@ -1811,10 +1898,13 @@ impl RestApi {
     ///
     /// Query user negative balance auto exchange record
     ///
-    /// * Response in descending order
-    /// * The max interval between `startTime` and `endTime` is 3 months.
+    /// Weight(IP): 100
     ///
-    /// Weight: 100
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Response in descending order
+    /// - The max interval between `startTime` and `endTime` is 3 months.
     ///
     /// # Arguments
     ///
@@ -1844,7 +1934,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-User-Negative-Balance-Auto-Exchange-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-user-negative-balance-auto-exchange-record).
     ///
     pub async fn query_user_negative_balance_auto_exchange_record(
         &self,
@@ -1860,7 +1950,9 @@ impl RestApi {
     ///
     /// Query User Rate Limit
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1890,7 +1982,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-User-Rate-Limit).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#query-user-rate-limit).
     ///
     pub async fn query_user_rate_limit(
         &self,
@@ -1899,11 +1991,13 @@ impl RestApi {
         self.account_api_client.query_user_rate_limit(params).await
     }
 
-    /// Repay futures Negative `Balance(USER_DATA)`
+    /// Repay futures Negative Balance (`USER_DATA`)
     ///
     /// Repay futures Negative Balance
     ///
-    /// Weight: 750
+    /// Weight(IP): 750
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1933,7 +2027,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Repay-futures-Negative-Balance).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#repay-futures-negative-balance).
     ///
     pub async fn repay_futures_negative_balance(
         &self,
@@ -1944,11 +2038,13 @@ impl RestApi {
             .await
     }
 
-    /// UM Futures Account `Configuration(USER_DATA)`
+    /// UM Futures Account Configuration (`USER_DATA`)
     ///
     /// Query UM Futures account configuration
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1978,7 +2074,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Account-Config).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#um-futures-account-configuration).
     ///
     pub async fn um_futures_account_configuration(
         &self,
@@ -1989,11 +2085,13 @@ impl RestApi {
             .await
     }
 
-    /// UM Futures Symbol `Configuration(USER_DATA)`
+    /// UM Futures Symbol Configuration (`USER_DATA`)
     ///
     /// Get current UM account symbol configuration.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2023,7 +2121,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Symbol-Config).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#um-futures-symbol-configuration).
     ///
     pub async fn um_futures_symbol_configuration(
         &self,
@@ -2039,7 +2137,9 @@ impl RestApi {
     ///
     /// Query UM notional and leverage brackets
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2069,7 +2169,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/account/UM-Notional-and-Leverage-Brackets).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#um-notional-and-leverage-brackets).
     ///
     pub async fn um_notional_and_leverage_brackets(
         &self,
@@ -2085,7 +2185,7 @@ impl RestApi {
     ///
     /// Test connectivity to the Rest API.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
     ///
     /// # Arguments
     ///
@@ -2115,17 +2215,19 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/market-data/Test-Connectivity).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/market-data#test-connectivity).
     ///
     pub async fn test_connectivity(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.market_data_api_client.test_connectivity().await
     }
 
-    /// Cancel All CM Open Conditional Orders(TRADE)
+    /// Cancel All CM Open Conditional Orders (TRADE)
     ///
     /// Cancel All CM Open Conditional Orders
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2155,7 +2257,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-CM-Open-Conditional-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-all-cm-open-conditional-orders).
     ///
     pub async fn cancel_all_cm_open_conditional_orders(
         &self,
@@ -2166,11 +2268,13 @@ impl RestApi {
             .await
     }
 
-    /// Cancel All CM Open Orders(TRADE)
+    /// Cancel All CM Open Orders (TRADE)
     ///
     /// Cancel all active LIMIT orders on specific symbol
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2200,7 +2304,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-CM-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-all-cm-open-orders).
     ///
     pub async fn cancel_all_cm_open_orders(
         &self,
@@ -2215,7 +2319,9 @@ impl RestApi {
     ///
     /// Cancel All UM Algo Open Orders
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2245,7 +2351,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-UM-Algo-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-all-um-algo-open-orders).
     ///
     pub async fn cancel_all_um_algo_open_orders(
         &self,
@@ -2256,11 +2362,13 @@ impl RestApi {
             .await
     }
 
-    /// Cancel All UM Open Conditional Orders
+    /// Cancel All UM Open Conditional Orders (TRADE)
     ///
     /// Cancel All UM Open Conditional Orders
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2290,12 +2398,8 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-UM-Open-Conditional-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-all-um-open-conditional-orders).
     ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
     pub async fn cancel_all_um_open_conditional_orders(
         &self,
         params: CancelAllUmOpenConditionalOrdersParams,
@@ -2305,11 +2409,13 @@ impl RestApi {
             .await
     }
 
-    /// Cancel All UM Open Orders(TRADE)
+    /// Cancel All UM Open Orders (TRADE)
     ///
     /// Cancel all active LIMIT orders on specific symbol
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2339,7 +2445,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-UM-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-all-um-open-orders).
     ///
     pub async fn cancel_all_um_open_orders(
         &self,
@@ -2350,13 +2456,16 @@ impl RestApi {
             .await
     }
 
-    /// Cancel CM Conditional Order(TRADE)
+    /// Cancel CM Conditional Order (TRADE)
     ///
     /// Cancel CM Conditional Order
     ///
-    /// * Either `strategyId` or `newClientStrategyId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `strategyId` or `newClientStrategyId` must be sent.
     ///
     /// # Arguments
     ///
@@ -2386,7 +2495,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-CM-Conditional-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-cm-conditional-order).
     ///
     pub async fn cancel_cm_conditional_order(
         &self,
@@ -2397,13 +2506,16 @@ impl RestApi {
             .await
     }
 
-    /// Cancel CM Order(TRADE)
+    /// Cancel CM Order (TRADE)
     ///
     /// Cancel an active LIMIT order
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -2433,7 +2545,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-CM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-cm-order).
     ///
     pub async fn cancel_cm_order(
         &self,
@@ -2442,11 +2554,13 @@ impl RestApi {
         self.trade_api_client.cancel_cm_order(params).await
     }
 
-    /// Cancel Margin Account All Open Orders on a Symbol(TRADE)
+    /// Cancel Margin Account All Open Orders on a Symbol (TRADE)
     ///
     /// Cancel Margin Account All Open Orders on a Symbol
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -2476,7 +2590,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-Margin-Account-All-Open-Orders-on-a-Symbol).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-margin-account-all-open-orders-on-asymbol).
     ///
     pub async fn cancel_margin_account_all_open_orders_on_a_symbol(
         &self,
@@ -2489,13 +2603,16 @@ impl RestApi {
             .await
     }
 
-    /// Cancel Margin Account OCO Orders(TRADE)
+    /// Cancel Margin Account OCO Orders (TRADE)
     ///
     /// Cancel Margin Account OCO Orders
     ///
-    /// * Additional notes: Canceling an individual leg will cancel the entire OCO
+    /// Weight(IP): 2
     ///
-    /// Weight: 2
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Additional notes: Canceling an individual leg will cancel the entire OCO
     ///
     /// # Arguments
     ///
@@ -2525,7 +2642,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-Margin-Account-OCO-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-margin-account-oco-orders).
     ///
     pub async fn cancel_margin_account_oco_orders(
         &self,
@@ -2536,13 +2653,16 @@ impl RestApi {
             .await
     }
 
-    /// Cancel Margin Account Order(TRADE)
+    /// Cancel Margin Account Order (TRADE)
     ///
     /// Cancel Margin Account Order
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
+    /// Weight(IP): 2
     ///
-    /// Weight: 2
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -2572,7 +2692,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-Margin-Account-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-margin-account-order).
     ///
     pub async fn cancel_margin_account_order(
         &self,
@@ -2585,11 +2705,14 @@ impl RestApi {
 
     /// Cancel UM Algo Order (TRADE)
     ///
-    /// Cancel an active UM algo order.
+    /// Cancel an active UM algo order
     ///
-    /// * Either `algoId` or `clientAlgoId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `algoId` or `clientAlgoId` must be sent.
     ///
     /// # Arguments
     ///
@@ -2619,7 +2742,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-UM-Algo-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-um-algo-order).
     ///
     pub async fn cancel_um_algo_order(
         &self,
@@ -2628,13 +2751,16 @@ impl RestApi {
         self.trade_api_client.cancel_um_algo_order(params).await
     }
 
-    /// Cancel UM Conditional Order
+    /// Cancel UM Conditional Order (TRADE)
     ///
     /// Cancel UM Conditional Order
     ///
-    /// * Either `strategyId` or `newClientStrategyId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `strategyId` or `newClientStrategyId` must be sent.
     ///
     /// # Arguments
     ///
@@ -2664,12 +2790,8 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-UM-Conditional-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-um-conditional-order).
     ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
     pub async fn cancel_um_conditional_order(
         &self,
         params: CancelUmConditionalOrderParams,
@@ -2679,13 +2801,16 @@ impl RestApi {
             .await
     }
 
-    /// Cancel UM Order(TRADE)
+    /// Cancel UM Order (TRADE)
     ///
     /// Cancel an active UM LIMIT order
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
     ///
     /// # Arguments
     ///
@@ -2715,7 +2840,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-UM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-um-order).
     ///
     pub async fn cancel_um_order(
         &self,
@@ -2724,20 +2849,24 @@ impl RestApi {
         self.trade_api_client.cancel_um_order(params).await
     }
 
-    /// CM Account Trade `List(USER_DATA)`
+    /// CM Account Trade List (`USER_DATA`)
     ///
     /// Get trades for a specific account and CM symbol.
     ///
-    /// * Either `symbol` or `pair` must be sent
-    /// * `symbol` and `pair` cannot be sent together
-    /// * `pair` and `fromId` cannot be sent together
-    /// * `OrderId` can only be sent together with symbol
-    /// * If a `pair` is sent, tickers for all symbols of the `pair` will be returned
-    /// * The parameter `fromId` cannot be sent with `startTime` or `endTime`
-    /// * If `startTime` and `endTime` are both not sent, then the last '24 hours' data will be returned.
-    /// * The time between `startTime` and `endTime` cannot be longer than 24 hours.
+    /// Weight: - 20 with `symbol`
+    /// - 40 with `pair`
     ///
-    /// Weight: 20 with symbol, 40 with pair
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `symbol` or `pair` must be sent
+    /// - `symbol` and `pair` cannot be sent together
+    /// - `pair` and `fromId` cannot be sent together
+    /// - `OrderId` can only be sent together with symbol
+    /// - If a `pair` is sent, tickers for all symbols of the `pair` will be returned
+    /// - The parameter `fromId` cannot be sent with `startTime` or `endTime`
+    /// - If `startTime` and `endTime` are both not sent, then the last '24 hours' data will be returned.
+    /// - The time between `startTime` and `endTime` cannot be longer than 24 hours.
     ///
     /// # Arguments
     ///
@@ -2767,7 +2896,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/CM-Account-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cm-account-trade-list).
     ///
     pub async fn cm_account_trade_list(
         &self,
@@ -2776,7 +2905,7 @@ impl RestApi {
         self.trade_api_client.cm_account_trade_list(params).await
     }
 
-    /// CM Position ADL Quantile `Estimation(USER_DATA)`
+    /// CM Position ADL Quantile Estimation (`USER_DATA`)
     ///
     /// Query CM Position ADL Quantile Estimation
     /// * Values update every 30s.
@@ -2786,7 +2915,9 @@ impl RestApi {
     /// * "HEDGE" as a sign will be returned instead of "BOTH";
     /// * A same value caculated on unrealized pnls on long and short sides' positions will be shown for "LONG" and "SHORT" when there are positions in both of long and short sides.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2816,7 +2947,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/CM-Position-ADL-Quantile-Estimation).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cm-position-adl-quantile-estimation).
     ///
     pub async fn cm_position_adl_quantile_estimation(
         &self,
@@ -2828,11 +2959,13 @@ impl RestApi {
             .await
     }
 
-    /// Futures `TradFi` Perps `Contract(USER_DATA)`
+    /// Futures `TradFi` Perps Contract (`USER_DATA`)
     ///
     /// Sign TradFi-Perps agreement contract
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2862,7 +2995,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Futures-TradFi-Perps-Contract).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#futures-tradfi-perps-contract).
     ///
     pub async fn futures_tradfi_perps_contract(
         &self,
@@ -2877,7 +3010,9 @@ impl RestApi {
     ///
     /// Get user's BNB Fee Discount for UM Futures (Fee Discount On or Fee Discount Off )
     ///
-    /// Weight: 30
+    /// Weight(IP): 30
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -2907,7 +3042,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Get-UM-Futures-BNB-Burn-Status).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#get-um-futures-bnb-burn-status).
     ///
     pub async fn get_um_futures_bnb_burn_status(
         &self,
@@ -2918,11 +3053,13 @@ impl RestApi {
             .await
     }
 
-    /// Margin Account Borrow(MARGIN)
+    /// Margin Account Borrow (MARGIN)
     ///
     /// Apply for a margin loan.
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: MARGIN
     ///
     /// # Arguments
     ///
@@ -2952,7 +3089,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Borrow).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#margin-account-borrow).
     ///
     pub async fn margin_account_borrow(
         &self,
@@ -2961,20 +3098,23 @@ impl RestApi {
         self.trade_api_client.margin_account_borrow(params).await
     }
 
-    /// Margin Account New OCO(TRADE)
+    /// Margin Account New OCO (TRADE)
     ///
     /// Send in a new OCO for a margin account
     ///
-    /// * Price Restrictions:
-    /// * `SELL`: Limit Price > Last Price > Stop Price
-    /// * `BUY`: Limit Price < Last Price < Stop Price
-    /// * Quantity Restrictions:
-    /// * Both legs must have the same quantity
-    /// * `ICEBERG` quantities however do not have to be the same.
-    /// * Order Rate Limit
-    /// * `OCO` counts as 2 orders against the order rate limit.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Other Info:
+    /// - Price Restrictions:
+    /// - `SELL`: Limit Price > Last Price > Stop Price
+    /// - `BUY`: Limit Price  * Quantity Restrictions:
+    /// - Both legs must have the same quantity
+    /// - `ICEBERG` quantities however do not have to be the same.
+    /// - Order Rate Limit
+    /// - `OCO` counts as 2 orders against the order rate limit.
     ///
     /// # Arguments
     ///
@@ -3004,7 +3144,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-New-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#margin-account-new-oco).
     ///
     pub async fn margin_account_new_oco(
         &self,
@@ -3013,11 +3153,13 @@ impl RestApi {
         self.trade_api_client.margin_account_new_oco(params).await
     }
 
-    /// Margin Account Repay(MARGIN)
+    /// Margin Account Repay (MARGIN)
     ///
     /// Repay for a margin loan.
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: MARGIN
     ///
     /// # Arguments
     ///
@@ -3047,7 +3189,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Repay).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#margin-account-repay).
     ///
     pub async fn margin_account_repay(
         &self,
@@ -3056,16 +3198,19 @@ impl RestApi {
         self.trade_api_client.margin_account_repay(params).await
     }
 
-    /// Margin Account Repay Debt(TRADE)
+    /// Margin Account Repay Debt (TRADE)
     ///
     /// Repay debt for a margin loan.
     ///
-    /// * The repay asset amount cannot exceed 50000 USD equivalent value for a single request.
-    /// * If `amount` is not sent, all the asset loan will be repaid if having enough specific repay assets.
-    /// * If `amount` is sent, only the certain amount of the asset loan will be repaid if having enough specific repay assets.
-    /// * The system will use the same asset to repay the loan first (if have) no matter whether put the asset in `specifyRepayAssets`
+    /// Weight(IP): 3000
     ///
-    /// Weight: 3000
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - The repay asset amount cannot exceed 50000 USD equivalent value for a single request.
+    /// - If `amount` is not sent, all the asset loan will be repaid if having enough specific repay assets.
+    /// - If `amount` is sent, only the certain amount of the asset loan will be repaid if having enough specific repay assets.
+    /// - The system will use the same asset to repay the loan first (if have) no matter whether put the asset in `specifyRepayAssets`
     ///
     /// # Arguments
     ///
@@ -3095,7 +3240,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Repay-Debt).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#margin-account-repay-debt).
     ///
     pub async fn margin_account_repay_debt(
         &self,
@@ -3110,7 +3255,13 @@ impl RestApi {
     ///
     /// Margin Account Trade List
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - **Note:** * If `fromId` is set, returns orders with id >= `fromId`; otherwise returns recent order history.
+    /// - The interval between `startTime` and `endTime` must be less than 24 hours.
     ///
     /// # Arguments
     ///
@@ -3140,7 +3291,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#margin-account-trade-list).
     ///
     pub async fn margin_account_trade_list(
         &self,
@@ -3151,18 +3302,20 @@ impl RestApi {
             .await
     }
 
-    /// Modify CM Order(TRADE)
+    /// Modify CM Order (TRADE)
     ///
     /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
-    /// * Both `quantity` and `price` must be sent
-    /// * When the new `quantity` or `price` doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
-    /// * However the order will be cancelled by the amendment in the following situations:
-    /// * when the order is in partially filled status and the new `quantity` <= `executedQty`
-    /// * When the order is `GTX` and the new price will cause it to be executed immediately
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
+    /// - Both `quantity` and `price` must be sent
+    /// - When the new `quantity` or `price` doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
+    /// - However the order will be cancelled by the amendment in the following situations:
+    /// - when the order is in partially filled status and the new `quantity`  * When the order is `GTX` and the new price will cause it to be executed immediately
     ///
     /// # Arguments
     ///
@@ -3192,7 +3345,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Modify-CM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#modify-cm-order).
     ///
     pub async fn modify_cm_order(
         &self,
@@ -3201,18 +3354,20 @@ impl RestApi {
         self.trade_api_client.modify_cm_order(params).await
     }
 
-    /// Modify UM Order(TRADE)
+    /// Modify UM Order (TRADE)
     ///
     /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
     ///
-    /// * Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
-    /// * Both quantity and price must be sent
-    /// * When the new quantity or price doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
-    /// * However the order will be cancelled by the amendment in the following situations:
-    /// * when the order is in partially filled status and the new quantity <= executedQty
-    /// * When the order is GTX and the new price will cause it to be executed immediately
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
+    /// - Both quantity and price must be sent
+    /// - When the new quantity or price doesn't satisfy `PRICE_FILTER` / `PERCENT_FILTER` / `LOT_SIZE`, amendment will be rejected and the order will stay as it is.
+    /// - However the order will be cancelled by the amendment in the following situations:
+    /// - when the order is in partially filled status and the new quantity  * When the order is GTX and the new price will cause it to be executed immediately
     ///
     /// # Arguments
     ///
@@ -3242,7 +3397,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Modify-UM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#modify-um-order).
     ///
     pub async fn modify_um_order(
         &self,
@@ -3251,36 +3406,26 @@ impl RestApi {
         self.trade_api_client.modify_um_order(params).await
     }
 
-    /// New CM Conditional Order(TRADE)
+    /// New CM Conditional Order (TRADE)
     ///
     /// New CM Conditional Order
     ///
-    /// * Order with type `STOP/TAKE_PROFIT`, parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Condition orders will be triggered when:
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: "`MARK_PRICE`"  >= `stopPrice`
-    /// * SELL: "`MARK_PRICE`" <= `stopPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: "`MARK_PRICE`" <= `stopPrice`
-    /// * SELL: "`MARK_PRICE`" >= `stopPrice`
-    /// * `TRAILING_STOP_MARKET`:
-    /// * BUY: the lowest mark price after order placed `<= `activationPrice`, and the latest mark price >`= the lowest mark price * (1 + `callbackRate`)
-    /// * SELL: the highest mark price after order placed >= `activationPrice`, and the latest mark price <= the highest mark price * (1 - `callbackRate`)
-    /// * For `TRAILING_STOP_MARKET`, if you got such error code. `{"code": -2021, "msg": "Order would immediately trigger."}` means that the parameters you send do not meet the following requirements:
-    /// * BUY: `activationPrice` should be smaller than latest mark price.
-    /// * SELL: `activationPrice` should be larger than latest mark price.
-    /// * Condition orders will be triggered when:
-    /// * If parameter`priceProtect`is sent as true:
-    /// * when price reaches the `stopPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
-    /// * "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Additional mandatory parameters based on type:
+    /// - Order with type `STOP/TAKE_PROFIT`, parameter `timeInForce` can be sent ( default `GTC`).
+    /// - Condition orders will be triggered when:
+    /// - `STOP`, `STOP_MARKET`:
+    /// - BUY: "`MARK_PRICE`" >= `stopPrice`
+    /// - SELL: "`MARK_PRICE`" = `stopPrice`
+    /// - `TRAILING_STOP_MARKET`:
+    /// - BUY: the lowest mark price after order placed ``= the lowest mark price
+    /// - (1 + `callbackRate`)
+    /// - SELL: the highest mark price after order placed >= `activationPrice`, and the latest mark price = `stopPrice`
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") = `stopPrice`
     ///
     /// # Arguments
     ///
@@ -3310,7 +3455,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Conditional-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#new-cm-conditional-order).
     ///
     pub async fn new_cm_conditional_order(
         &self,
@@ -3319,15 +3464,19 @@ impl RestApi {
         self.trade_api_client.new_cm_conditional_order(params).await
     }
 
-    /// New CM Order(TRADE)
+    /// New CM Order (TRADE)
     ///
     /// Place new CM order
     ///
-    /// * If `newOrderRespType` is sent as `RESULT` :
-    /// * `MARKET` order: the final FILLED result of the order will be return directly.
-    /// * `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Additional mandatory parameters based on `type`:
+    /// - If `newOrderRespType` is sent as `RESULT` :
+    /// - `MARKET` order: the final FILLED result of the order will be return directly.
+    /// - `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
     ///
     /// # Arguments
     ///
@@ -3357,7 +3506,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#new-cm-order).
     ///
     pub async fn new_cm_order(
         &self,
@@ -3366,11 +3515,13 @@ impl RestApi {
         self.trade_api_client.new_cm_order(params).await
     }
 
-    /// New Margin Order(TRADE)
+    /// New Margin Order (TRADE)
     ///
     /// New Margin Order
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -3400,7 +3551,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-Margin-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#new-margin-order).
     ///
     pub async fn new_margin_order(
         &self,
@@ -3413,33 +3564,18 @@ impl RestApi {
     ///
     /// Place new UM conditional order
     ///
-    /// * Algo order with type `STOP`,  parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Algo order with type `TAKE_PROFIT`,  parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Condition orders will be triggered when:
+    /// Weight(IP): 1
     ///
-    /// * If parameter`priceProtect`is sent as true:
-    /// * when price reaches the `triggerPrice` , the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
-    /// * "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
+    /// Security Type: TRADE
     ///
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
-    /// * `TRAILING_STOP_MARKET`:
-    /// * BUY: the lowest price after order placed <= `activatePrice`, and the latest price >= the lowest price * (1 + `callbackRate`)
-    /// * SELL: the highest price after order placed >= `activatePrice`, and the latest price <= the highest price * (1 - `callbackRate`)
-    ///
-    /// * For `TRAILING_STOP_MARKET`, if you got such error code.
-    /// ``{"code": -2021, "msg": "Order would immediately trigger."}``
-    /// means that the parameters you send do not meet the following requirements:
-    /// * BUY: `activatePrice` should be smaller than latest price.
-    /// * SELL: `activatePrice` should be larger than latest price.
-    ///
-    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
-    ///
-    /// Weight: 1
+    /// Notes:
+    /// - Algo order with type `STOP`, parameter `timeInForce` can be sent (default `GTC`).
+    /// - Algo order with type `TAKE_PROFIT`, parameter `timeInForce` can be sent (default `GTC`).
+    /// - Condition orders will be triggered when price reaches the `triggerPrice`.
+    /// - `STOP`, `STOP_MARKET`: BUY: latest price >= `triggerPrice`; SELL: latest price <= `triggerPrice`.
+    /// - `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`: BUY: latest price <= `triggerPrice`; SELL: latest price >= `triggerPrice`.
+    /// - `TRAILING_STOP_MARKET`: BUY: lowest price after order placed <= `activatePrice`, and latest price >= lowest price * (1 + `callbackRate`); SELL: highest price after order placed >= `activatePrice`, and latest price <= highest price * (1 - `callbackRate`).
+    /// - `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
     ///
     /// # Arguments
     ///
@@ -3469,7 +3605,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Algo-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#new-um-algo-order).
     ///
     pub async fn new_um_algo_order(
         &self,
@@ -3478,38 +3614,28 @@ impl RestApi {
         self.trade_api_client.new_um_algo_order(params).await
     }
 
-    /// New UM Conditional Order
+    /// New UM Conditional Order (TRADE)
     ///
     /// Place new UM conditional order
     ///
-    /// * Order with type `STOP/TAKE_PROFIT`, parameter `timeInForce` can be sent ( default `GTC`).
-    /// * Condition orders will be triggered when:
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: "`MARK_PRICE`"  >= `stopPrice`
-    /// * SELL: "`MARK_PRICE`" <= `stopPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: "`MARK_PRICE`" <= `stopPrice`
-    /// * SELL: "`MARK_PRICE`" >= `stopPrice`
-    /// * `TRAILING_STOP_MARKET`:
-    /// * BUY: the lowest mark price after order placed `<= `activationPrice`, and the latest mark price >`= the lowest mark price * (1 + `callbackRate`)
-    /// * SELL: the highest mark price after order placed >= `activationPrice`, and the latest mark price <= the highest mark price * (1 - `callbackRate`)
-    /// * For `TRAILING_STOP_MARKET`, if you got such error code. `{"code": -2021, "msg": "Order would immediately trigger."}` means that the parameters you send do not meet the following requirements:
-    /// * BUY: `activationPrice` should be smaller than latest mark price.
-    /// * SELL: `activationPrice` should be larger than latest mark price.
-    /// * Condition orders will be triggered when:
-    /// * If parameter`priceProtect`is sent as true:
-    /// * when price reaches the `stopPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
-    /// * "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
-    /// * `STOP`, `STOP_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// * BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
-    /// * SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
-    /// * In extreme market conditions, timeInForce `GTD` order auto cancel time might be delayed comparing to `goodTillDate`
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Additional mandatory parameters based on type:
+    /// - Order with type `STOP/TAKE_PROFIT`, parameter `timeInForce` can be sent ( default `GTC`).
+    /// - Condition orders will be triggered when:
+    /// - `STOP`, `STOP_MARKET`:
+    /// - BUY: "`MARK_PRICE`" >= `stopPrice`
+    /// - SELL: "`MARK_PRICE`" = `stopPrice`
+    /// - `TRAILING_STOP_MARKET`:
+    /// - BUY: the lowest mark price after order placed ``= the lowest mark price
+    /// - (1 + `callbackRate`)
+    /// - SELL: the highest mark price after order placed >= `activationPrice`, and the latest mark price = `stopPrice`
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") = `stopPrice`
+    /// - `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
+    /// - In extreme market conditions, timeInForce `GTD` order auto cancel time might be delayed comparing to `goodTillDate`
     ///
     /// # Arguments
     ///
@@ -3539,12 +3665,8 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Conditional-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#new-um-conditional-order).
     ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
     pub async fn new_um_conditional_order(
         &self,
         params: NewUmConditionalOrderParams,
@@ -3556,13 +3678,17 @@ impl RestApi {
     ///
     /// Place new UM order
     ///
-    /// * If `newOrderRespType` is sent as `RESULT` :
-    /// * `MARKET` order: the final FILLED result of the order will be return directly.
-    /// * `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
-    /// * `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
-    /// * In extreme market conditions, timeInForce `GTD` order auto cancel time might be delayed comparing to `goodTillDate`
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Additional mandatory parameters based on type:
+    /// - If `newOrderRespType` is sent as `RESULT` :
+    /// - `MARKET` order: the final FILLED result of the order will be return directly.
+    /// - `LIMIT` order with special `timeInForce`: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+    /// - `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC` or `GTD`.
+    /// - In extreme market conditions, timeInForce `GTD` order auto cancel time might be delayed comparing to `goodTillDate`
     ///
     /// # Arguments
     ///
@@ -3592,7 +3718,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#new-um-order).
     ///
     pub async fn new_um_order(
         &self,
@@ -3601,17 +3727,20 @@ impl RestApi {
         self.trade_api_client.new_um_order(params).await
     }
 
-    /// Query All CM Conditional `Orders(USER_DATA)`
+    /// Query All CM Conditional Orders (`USER_DATA`)
     ///
     /// Query All CM Conditional Orders
     ///
-    /// * These orders will not be found:
-    /// * order strategyStatus is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 7 days < current time
-    /// * The query time period must be less than 7 days( default as the recent 7 days).
+    /// Weight: - 1 for a single `symbol`
+    /// - 40 when `symbol` is omitted
     ///
-    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - These orders will not be found:
+    /// - order strategyStatus is `CANCELED` or `EXPIRED`, **AND**
+    /// - order has NO filled trade, **AND**
+    /// - created time + 7 days  * The query time period must be less than 7 days( default as the recent 7 days).
     ///
     /// # Arguments
     ///
@@ -3641,7 +3770,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-CM-Conditional-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-cm-conditional-orders).
     ///
     pub async fn query_all_cm_conditional_orders(
         &self,
@@ -3657,14 +3786,18 @@ impl RestApi {
     ///
     /// Get all account CM orders; active, canceled, or filled.
     ///
-    /// * Either `symbol` or `pair` must be sent.
-    /// * If `orderId` is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
-    /// * These orders will not be found:
-    /// * order status is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 3 days < current time
+    /// Weight: - 20 with `symbol`
+    /// - 40 with `pair`
     ///
-    /// Weight: 20 with symbol, 40 with pair
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `symbol` or `pair` must be sent.
+    /// - If `orderId` is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+    /// - These orders will not be found:
+    /// - order status is `CANCELED` or `EXPIRED`, **AND**
+    /// - order has NO filled trade, **AND**
+    /// - created time + 3 days < current time
     ///
     /// # Arguments
     ///
@@ -3694,7 +3827,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-CM-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-cm-orders).
     ///
     pub async fn query_all_cm_orders(
         &self,
@@ -3707,9 +3840,13 @@ impl RestApi {
     ///
     /// Get all open conditional orders on a symbol. **Careful** when accessing this with no symbol.
     ///
-    /// * If the symbol is not sent, orders for all symbols will be returned in an array.
+    /// Weight: - 1 for a single `symbol`
+    /// - 40 when `symbol` is omitted
     ///
-    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If the symbol is not sent, orders for all symbols will be returned in an array.
     ///
     /// # Arguments
     ///
@@ -3739,7 +3876,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-CM-Open-Conditional-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-current-cm-open-conditional-orders).
     ///
     pub async fn query_all_current_cm_open_conditional_orders(
         &self,
@@ -3752,14 +3889,16 @@ impl RestApi {
             .await
     }
 
-    /// Query All Current CM Open `Orders(USER_DATA)`
+    /// Query All Current CM Open Orders (`USER_DATA`)
     ///
     /// Get all open orders on a symbol.
     ///
     /// * If the symbol is not sent, orders for all symbols will be returned in an array.
     ///
-    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
-    /// Careful when accessing this with no symbol.
+    /// Weight: - 1 for a single `symbol`
+    /// - 40 when `symbol` is omitted
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -3789,7 +3928,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-CM-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-current-cm-open-orders).
     ///
     pub async fn query_all_current_cm_open_orders(
         &self,
@@ -3802,12 +3941,14 @@ impl RestApi {
 
     /// Query All Current UM Open Algo Orders (`USER_DATA`)
     ///
-    /// Get all UM open algo orders on a symbol.
+    /// Get all UM open algo orders on a symbol. If the symbol is not sent, orders for all symbols will be returned.
     ///
-    /// * If the symbol is not sent, orders for all symbols will be returned in an array.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
-    /// Careful when accessing this with no symbol.
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Weight: 1 for a single symbol; 40 when the symbol parameter is omitted.
     ///
     /// # Arguments
     ///
@@ -3837,7 +3978,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-UM-Open-Algo-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-current-um-open-algo-orders).
     ///
     pub async fn query_all_current_um_open_algo_orders(
         &self,
@@ -3849,14 +3990,17 @@ impl RestApi {
             .await
     }
 
-    /// Query All Current UM Open Conditional Orders
+    /// Query All Current UM Open Conditional Orders (`USER_DATA`)
     ///
     /// Get all open conditional orders on a symbol.
     ///
-    /// * If the symbol is not sent, orders for all symbols will be returned in an array.
+    /// Weight: - 1 for a single `symbol`
+    /// - 40 when `symbol` is omitted
     ///
-    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
-    /// Careful when accessing this with no symbol.
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `symbol` is not provided, conditional open orders for all symbols are returned.
     ///
     /// # Arguments
     ///
@@ -3886,12 +4030,8 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-UM-Open-Conditional-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-current-um-open-conditional-orders).
     ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
     pub async fn query_all_current_um_open_conditional_orders(
         &self,
         params: QueryAllCurrentUmOpenConditionalOrdersParams,
@@ -3903,14 +4043,17 @@ impl RestApi {
             .await
     }
 
-    /// Query All Current UM Open `Orders(USER_DATA)`
+    /// Query All Current UM Open Orders (`USER_DATA`)
     ///
     /// Get all open orders on a symbol.
     ///
+    /// Weight: - 1 for a single `symbol`
+    /// - 40 when `symbol` is omitted
     ///
-    /// * If the symbol is not sent, orders for all symbols will be returned in an array.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+    /// Notes:
+    /// - If the symbol is not sent, orders for all symbols will be returned in an array.
     ///
     /// # Arguments
     ///
@@ -3940,7 +4083,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-UM-Open-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-current-um-open-orders).
     ///
     pub async fn query_all_current_um_open_orders(
         &self,
@@ -3956,7 +4099,13 @@ impl RestApi {
     ///
     /// Query All Margin Account Orders
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `orderId` is set, returns orders with id >= `orderId`; otherwise returns recent order history.
+    /// - For some historical orders, `cummulativeQuoteQty < 0` means the data is unavailable at this time.
     ///
     /// # Arguments
     ///
@@ -3986,7 +4135,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Margin-Account-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-margin-account-orders).
     ///
     pub async fn query_all_margin_account_orders(
         &self,
@@ -3998,17 +4147,20 @@ impl RestApi {
             .await
     }
 
-    /// Query All UM Conditional Orders
+    /// Query All UM Conditional Orders (`USER_DATA`)
     ///
     /// Query All UM Conditional Orders
     ///
-    /// * These orders will not be found:
-    /// * order strategyStatus is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 7 days < current time
-    /// * The query time period must be less than 7 days( default as the recent 7 days).
+    /// Weight: - 1 for a single `symbol`
+    /// - 40 when `symbol` is omitted
     ///
-    /// Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - These orders will not be found:
+    /// - order strategyStatus is `CANCELED` or `EXPIRED`, **AND**
+    /// - order has NO filled trade, **AND**
+    /// - created time + 7 days  * The query time period must be less than 7 days( default as the recent 7 days).
     ///
     /// # Arguments
     ///
@@ -4038,12 +4190,8 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-UM-Conditional-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-um-conditional-orders).
     ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
     pub async fn query_all_um_conditional_orders(
         &self,
         params: QueryAllUmConditionalOrdersParams,
@@ -4054,18 +4202,17 @@ impl RestApi {
             .await
     }
 
-    /// Query All UM `Orders(USER_DATA)`
+    /// Query All UM Orders (`USER_DATA`)
     ///
     /// Get all account UM orders; active, canceled, or filled.
-    /// * These orders will not be found:
-    /// * order status is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 3 days < current time
     ///
-    /// * If `orderId` is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
-    /// * The query time period must be less then 7 days( default as the recent 7 days).
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `orderId` is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+    /// - The query time period must be less then 7 days( default as the recent 7 days).
     ///
     /// # Arguments
     ///
@@ -4095,7 +4242,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-UM-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-um-orders).
     ///
     pub async fn query_all_um_orders(
         &self,
@@ -4105,19 +4252,21 @@ impl RestApi {
         self.trade_api_client.query_all_um_orders(params).await
     }
 
-    /// Query CM Conditional Order `History(USER_DATA)`
+    /// Query CM Conditional Order History (`USER_DATA`)
     ///
     /// Query CM Conditional Order History
     ///
+    /// Weight(IP): 1
     ///
-    /// * Either `strategyId` or `newClientStrategyId` must be sent.
-    /// * `NEW` orders will not be found.
-    /// * These orders will not be found:
-    /// * order status is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 7 days < current time
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Either `strategyId` or `newClientStrategyId` must be sent.
+    /// - `NEW` orders will not be found.
+    /// - These orders will not be found:
+    /// - order status is `CANCELED` or `EXPIRED`, **AND**
+    /// - order has NO filled trade, **AND**
+    /// - created time + 7 days < current time
     ///
     /// # Arguments
     ///
@@ -4147,7 +4296,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Conditional-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-cm-conditional-order-history).
     ///
     pub async fn query_cm_conditional_order_history(
         &self,
@@ -4158,13 +4307,16 @@ impl RestApi {
             .await
     }
 
-    /// Query CM Modify Order History(TRADE)
+    /// Query CM Modify Order History (TRADE)
     ///
     /// Get order modification history
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
     ///
     /// # Arguments
     ///
@@ -4194,7 +4346,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Modify-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-cm-modify-order-history).
     ///
     pub async fn query_cm_modify_order_history(
         &self,
@@ -4205,17 +4357,20 @@ impl RestApi {
             .await
     }
 
-    /// Query CM `Order(USER_DATA)`
+    /// Query CM Order (`USER_DATA`)
     ///
     /// Check an CM order's status.
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
-    /// * These orders will not be found:
-    /// * order status is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 3 days < current time
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - These orders will not be found:
+    /// - order status is `CANCELED` or `EXPIRED`, **AND**
+    /// - order has NO filled trade, **AND**
+    /// - created time + 3 days < current time
     ///
     /// # Arguments
     ///
@@ -4245,7 +4400,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-cm-order).
     ///
     pub async fn query_cm_order(
         &self,
@@ -4254,14 +4409,17 @@ impl RestApi {
         self.trade_api_client.query_cm_order(params).await
     }
 
-    /// Query Current CM Open Conditional `Order(USER_DATA)`
+    /// Query Current CM Open Conditional Order (`USER_DATA`)
     ///
     /// Query Current CM Open Conditional Order
     ///
-    /// * Either `strategyId` or `newClientStrategyId` must be sent.
-    /// * If the queried order has been triggered, cancelled or expired, the error message "Order does not exist" will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `strategyId` or `newClientStrategyId` must be sent.
+    /// - If the queried order has been triggered, cancelled or expired, the error message "Order does not exist" will be returned.
     ///
     /// # Arguments
     ///
@@ -4291,7 +4449,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-CM-Open-Conditional-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-current-cm-open-conditional-order).
     ///
     pub async fn query_current_cm_open_conditional_order(
         &self,
@@ -4306,10 +4464,13 @@ impl RestApi {
     ///
     /// Query current CM open order
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
-    /// * If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
     ///
     /// # Arguments
     ///
@@ -4339,7 +4500,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-CM-Open-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-current-cm-open-order).
     ///
     pub async fn query_current_cm_open_order(
         &self,
@@ -4354,7 +4515,13 @@ impl RestApi {
     ///
     /// Query Current Margin Open Order
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `symbol` is not sent, order records for all symbols are returned.
+    /// - When returning all symbols, the request count charged to the rate limiter equals the number of symbols currently trading on the exchange.
     ///
     /// # Arguments
     ///
@@ -4384,7 +4551,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-Margin-Open-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-current-margin-open-order).
     ///
     pub async fn query_current_margin_open_order(
         &self,
@@ -4398,16 +4565,14 @@ impl RestApi {
 
     /// Query Current UM Open Algo Order (`USER_DATA`)
     ///
-    /// Check an UM algo order's status.
+    /// Check an UM algo order's status. Orders will not be found if: status is CANCELED/EXPIRED with no fills and created 3+ days ago; or created 90+ days ago.
     ///
-    /// * These orders will not be found:
-    /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time
-    /// * order create time + 90 days < current time
+    /// Weight(IP): 1
     ///
-    /// * Either `algoId` or `clientAlgoId` must be sent.
-    /// * `algoId` is self-increment for each specific `symbol`
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Either `algoId` or `clientAlgoId` must be sent. `algoId` is self-increment for each specific `symbol`.
     ///
     /// # Arguments
     ///
@@ -4437,7 +4602,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-UM-Open-Algo-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-current-um-open-algo-order).
     ///
     pub async fn query_current_um_open_algo_order(
         &self,
@@ -4448,14 +4613,17 @@ impl RestApi {
             .await
     }
 
-    /// Query Current UM Open Conditional Order
+    /// Query Current UM Open Conditional Order (`USER_DATA`)
     ///
     /// Query Current UM Open Conditional Order
     ///
-    /// * Either `strategyId` or `newClientStrategyId` must be sent.
-    /// * If the queried order has been `CANCELED`, `TRIGGERED` or `EXPIRED`, the error message "Order does not exist" will be returned.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `strategyId` or `newClientStrategyId` must be sent.
+    /// - If the queried order has been `CANCELED`, `TRIGGERED` or `EXPIRED`, the error message "Order does not exist" will be returned.
     ///
     /// # Arguments
     ///
@@ -4485,12 +4653,8 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-UM-Open-Conditional-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-current-um-open-conditional-order).
     ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
     pub async fn query_current_um_open_conditional_order(
         &self,
         params: QueryCurrentUmOpenConditionalOrderParams,
@@ -4500,15 +4664,17 @@ impl RestApi {
             .await
     }
 
-    /// Query Current UM Open `Order(USER_DATA)`
+    /// Query Current UM Open Order (`USER_DATA`)
     ///
     /// Query current UM open order
     ///
+    /// Weight(IP): 1
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent.
-    /// * If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
     ///
     /// # Arguments
     ///
@@ -4538,7 +4704,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-UM-Open-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-current-um-open-order).
     ///
     pub async fn query_current_um_open_order(
         &self,
@@ -4553,7 +4719,13 @@ impl RestApi {
     ///
     /// Query Margin Account Order
     ///
-    /// Weight: 10
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - For some historical orders, `cummulativeQuoteQty < 0` means the data is unavailable at this time.
     ///
     /// # Arguments
     ///
@@ -4583,7 +4755,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-margin-account-order).
     ///
     pub async fn query_margin_account_order(
         &self,
@@ -4598,7 +4770,9 @@ impl RestApi {
     ///
     /// Query all OCO for a specific margin account based on provided optional parameters
     ///
-    /// Weight: 100
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -4628,7 +4802,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-all-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-margin-accounts-all-oco).
     ///
     pub async fn query_margin_accounts_all_oco(
         &self,
@@ -4643,7 +4817,9 @@ impl RestApi {
     ///
     /// Retrieves a specific OCO based on provided optional parameters
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -4673,7 +4849,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-margin-accounts-oco).
     ///
     pub async fn query_margin_accounts_oco(
         &self,
@@ -4688,7 +4864,9 @@ impl RestApi {
     ///
     /// Query Margin Account's Open OCO
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -4718,7 +4896,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-Open-OCO).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-margin-accounts-open-oco).
     ///
     pub async fn query_margin_accounts_open_oco(
         &self,
@@ -4731,12 +4909,15 @@ impl RestApi {
 
     /// Query UM Algo Order History (`USER_DATA`)
     ///
-    /// Get all algo orders; ACTIVE, CANCELED, TRIGGERED or FINISHED .
+    /// Get all algo orders: ACTIVE, CANCELED, TRIGGERED or FINISHED.
     ///
-    /// * If `algoId` is set, it will get orders >= that `algoId`. Otherwise most recent orders are returned.
-    /// * The query time period must be less then 7 days( default as the recent 7 days).
+    /// Weight(IP): 5
     ///
-    /// Weight: 5
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `algoId` is set, it will get orders >= that `algoId`. Otherwise most recent orders are returned.
+    /// - The query time period must be less than 7 days (default as the recent 7 days).
     ///
     /// # Arguments
     ///
@@ -4766,7 +4947,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Algo-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-um-algo-order-history).
     ///
     pub async fn query_um_algo_order_history(
         &self,
@@ -4777,18 +4958,21 @@ impl RestApi {
             .await
     }
 
-    /// Query UM Conditional Order History
+    /// Query UM Conditional Order History (`USER_DATA`)
     ///
     /// Query UM Conditional Order History
     ///
-    /// * Either `strategyId` or `newClientStrategyId` must be sent.
-    /// * `NEW` orders will not be found.
-    /// * These orders will not be found:
-    /// * order status is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 7 days < current time
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `strategyId` or `newClientStrategyId` must be sent.
+    /// - `NEW` orders will not be found.
+    /// - These orders will not be found:
+    /// - order status is `CANCELED` or `EXPIRED`, **AND**
+    /// - order has NO filled trade, **AND**
+    /// - created time + 7 days < current time
     ///
     /// # Arguments
     ///
@@ -4818,12 +5002,8 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Conditional-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-um-conditional-order-history).
     ///
-    /// # Deprecation
-    ///
-    /// **Deprecated:** This method may be removed in a future version.
-    #[deprecated]
     pub async fn query_um_conditional_order_history(
         &self,
         params: QueryUmConditionalOrderHistoryParams,
@@ -4833,13 +5013,16 @@ impl RestApi {
             .await
     }
 
-    /// Query UM Modify Order History(TRADE)
+    /// Query UM Modify Order History (TRADE)
     ///
     /// Get order modification history
     ///
-    /// * Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `orderId` or `origClientOrderId` must be sent, and the `orderId` will prevail if both are sent.
     ///
     /// # Arguments
     ///
@@ -4869,7 +5052,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Modify-Order-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-um-modify-order-history).
     ///
     pub async fn query_um_modify_order_history(
         &self,
@@ -4884,13 +5067,16 @@ impl RestApi {
     ///
     /// Check an UM order's status.
     ///
-    /// * These orders will not be found:
-    /// * Either `orderId` or `origClientOrderId` must be sent.
-    /// * order status is `CANCELED` or `EXPIRED`, **AND**
-    /// * order has NO filled trade, **AND**
-    /// * created time + 3 days < current time
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - These orders will not be found:
+    /// - Either `orderId` or `origClientOrderId` must be sent.
+    /// - order status is `CANCELED` or `EXPIRED`, **AND**
+    /// - order has NO filled trade, **AND**
+    /// - created time + 3 days < current time
     ///
     /// # Arguments
     ///
@@ -4920,7 +5106,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Order).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-um-order).
     ///
     pub async fn query_um_order(
         &self,
@@ -4929,15 +5115,18 @@ impl RestApi {
         self.trade_api_client.query_um_order(params).await
     }
 
-    /// Query User's CM Force `Orders(USER_DATA)`
+    /// Query User's CM Force Orders (`USER_DATA`)
     ///
     /// Query User's CM Force Orders
     ///
-    /// * If "autoCloseType" is not sent, orders with both of the types will be returned
-    /// * If "startTime" is not sent, data within 7 days before "endTime" can be queried
-    /// * Only support querying data in the past 90 days
+    /// Weight: - 20 with `symbol`
+    /// - 50 without `symbol`
     ///
-    /// Weight: 20 with symbol, 50 without symbol
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If "autoCloseType" is not sent, orders with both of the types will be returned
+    /// - If "startTime" is not sent, data within 7 days before "endTime" can be queried
     ///
     /// # Arguments
     ///
@@ -4967,7 +5156,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Users-CM-Force-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-users-cm-force-orders).
     ///
     pub async fn query_users_cm_force_orders(
         &self,
@@ -4978,11 +5167,13 @@ impl RestApi {
             .await
     }
 
-    /// Query User's Margin Force `Orders(USER_DATA)`
+    /// Query User's Margin Force Orders (`USER_DATA`)
     ///
     /// Query user's margin force orders
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -5012,7 +5203,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Users-Margin-Force-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-users-margin-force-orders).
     ///
     pub async fn query_users_margin_force_orders(
         &self,
@@ -5027,11 +5218,14 @@ impl RestApi {
     ///
     /// Query User's UM Force Orders
     ///
-    /// * If `autoCloseType` is not sent, orders with both of the types will be returned
-    /// * If `startTime` is not sent, data within 7 days before `endTime` can be queried
-    /// * Only support querying data in the past 90 days
+    /// Weight: - 20 with `symbol`
+    /// - 50 without `symbol`
     ///
-    /// Weight: 20 with symbol, 50 without symbol
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `autoCloseType` is not sent, orders with both of the types will be returned
+    /// - If `startTime` is not sent, data within 7 days before `endTime` can be queried
     ///
     /// # Arguments
     ///
@@ -5061,7 +5255,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Users-UM-Force-Orders).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-users-um-force-orders).
     ///
     pub async fn query_users_um_force_orders(
         &self,
@@ -5076,10 +5270,12 @@ impl RestApi {
     ///
     /// Change user's BNB Fee Discount for UM Futures (Fee Discount On or Fee Discount Off ) on ***EVERY symbol***
     ///
+    /// Weight(IP): 1
     ///
-    /// * The BNB would not be collected from UM-PM account to the Portfolio Margin account.
+    /// Security Type: TRADE
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - The BNB would not be collected from UM-PM account to the Portfolio Margin account.
     ///
     /// # Arguments
     ///
@@ -5109,7 +5305,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Toggle-BNB-Burn-On-UM-Futures-Trade).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#toggle-bnb-burn-on-um-futures-trade).
     ///
     pub async fn toggle_bnb_burn_on_um_futures_trade(
         &self,
@@ -5120,16 +5316,18 @@ impl RestApi {
             .await
     }
 
-    /// UM Account Trade `List(USER_DATA)`
+    /// UM Account Trade List (`USER_DATA`)
     ///
     /// Get trades for a specific account and UM symbol.
     ///
+    /// Weight(IP): 5
     ///
-    /// * If `startTime` and `endTime` are both not sent, then the last '7 days' data will be returned.
-    /// * The time between `startTime` and `endTime` cannot be longer than 7 days.
-    /// * The parameter `fromId` cannot be sent with `startTime` or `endTime`.
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 5
+    /// Notes:
+    /// - If `startTime` and `endTime` are both not sent, then the last '7 days' data will be returned.
+    /// - The time between `startTime` and `endTime` cannot be longer than 7 days.
+    /// - The parameter `fromId` cannot be sent with `startTime` or `endTime`.
     ///
     /// # Arguments
     ///
@@ -5159,7 +5357,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/UM-Account-Trade-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#um-account-trade-list).
     ///
     pub async fn um_account_trade_list(
         &self,
@@ -5168,7 +5366,7 @@ impl RestApi {
         self.trade_api_client.um_account_trade_list(params).await
     }
 
-    /// UM Position ADL Quantile `Estimation(USER_DATA)`
+    /// UM Position ADL Quantile Estimation (`USER_DATA`)
     ///
     /// Query UM Position ADL Quantile Estimation
     ///
@@ -5179,7 +5377,9 @@ impl RestApi {
     /// * "HEDGE" as a sign will be returned instead of "BOTH";
     /// * A same value caculated on unrealized pnls on long and short sides' positions will be shown for "LONG" and "SHORT" when there are positions in both of long and short sides.
     ///
-    /// Weight: 5
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -5209,7 +5409,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/trade/UM-Position-ADL-Quantile-Estimation).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#um-position-adl-quantile-estimation).
     ///
     pub async fn um_position_adl_quantile_estimation(
         &self,
@@ -5221,11 +5421,13 @@ impl RestApi {
             .await
     }
 
-    /// Close User Data `Stream(USER_STREAM)`
+    /// Close User Data Stream (`USER_STREAM`)
     ///
     /// Close out a user data stream.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -5255,7 +5457,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/user-data-streams/Close-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/user-data-streams#close-user-data-stream).
     ///
     pub async fn close_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.user_data_streams_api_client
@@ -5265,9 +5467,13 @@ impl RestApi {
 
     /// Keepalive User Data Stream (`USER_STREAM`)
     ///
-    /// Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes. It's recommended to send a ping about every 60 minutes.
+    /// Keepalive a user data stream to prevent a time out. User data streams
+    /// will close after 60 minutes. It's recommended to send a ping about every
+    /// 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -5297,7 +5503,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/user-data-streams/Keepalive-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/user-data-streams#keepalive-user-data-stream).
     ///
     pub async fn keepalive_user_data_stream(&self) -> anyhow::Result<RestApiResponse<Value>> {
         self.user_data_streams_api_client
@@ -5305,11 +5511,13 @@ impl RestApi {
             .await
     }
 
-    /// Start User Data `Stream(USER_STREAM)`
+    /// Start User Data Stream (`USER_STREAM`)
     ///
     /// Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent. If the account has an active `listenKey`, that `listenKey` will be returned and its validity will be extended for 60 minutes.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -5339,7 +5547,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/portfolio-margin/user-data-streams/Start-User-Data-Stream).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/user-data-streams#start-user-data-stream).
     ///
     pub async fn start_user_data_stream(
         &self,

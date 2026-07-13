@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -52,13 +52,22 @@ impl YieldArenaApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_yield_arena_activities`](#method.get_yield_arena_activities).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetYieldArenaActivitiesParams {
-    /// The value cannot be greater than 60000 (ms)
+    /// Locale tag for `title` and `description` (e.g. `en`, `zh-CN`, `pt-BR`). Default: `en`.
+    /// If the value is missing, malformed, or has no translation configured, content is returned in `en`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "lang", default)]
+    pub lang: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -77,13 +86,17 @@ impl YieldArenaApi for YieldArenaApiClient {
         &self,
         params: GetYieldArenaActivitiesParams,
     ) -> anyhow::Result<RestApiResponse<models::GetYieldArenaActivitiesResponse>> {
-        let GetYieldArenaActivitiesParams { recv_window } = params;
+        let GetYieldArenaActivitiesParams { lang, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
+        let mut body_params = BTreeMap::new();
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = lang {
+            body_params.insert("lang".to_string(), json!(rw));
         }
 
         send_request::<models::GetYieldArenaActivitiesResponse>(
@@ -147,7 +160,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"activities":[{"activityId":10001,"activityType":"AIRDROP","title":"Hold FDUSD & Earn BNB Airdrop","description":"Subscribe to FDUSD Flexible and earn bonus BNB airdrop.","rewardPoolInUsd":"50000","rewardToken":["BNB"],"redirectUrl":"https://www.binance.com/en/earn/arena/airdrop-123","startTime":1713052800000,"endTime":1713657600000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"activities":[{"activityId":10001,"activityType":"AIRDROP","title":"Hold FDUSD & Earn BNB Airdrop","description":"Subscribe to FDUSD Flexible and earn bonus BNB airdrop.","rewardPoolInUsd":"50000","rewardToken":["BNB"],"redirectUrl":"https://www.binance.com/en/earn/arena/airdrop-123","startTime":1713052800000,"endTime":1713657600000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetYieldArenaActivitiesResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetYieldArenaActivitiesResponse");
@@ -170,7 +183,7 @@ mod tests {
 
             let params = GetYieldArenaActivitiesParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"activities":[{"activityId":10001,"activityType":"AIRDROP","title":"Hold FDUSD & Earn BNB Airdrop","description":"Subscribe to FDUSD Flexible and earn bonus BNB airdrop.","rewardPoolInUsd":"50000","rewardToken":["BNB"],"redirectUrl":"https://www.binance.com/en/earn/arena/airdrop-123","startTime":1713052800000,"endTime":1713657600000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"activities":[{"activityId":10001,"activityType":"AIRDROP","title":"Hold FDUSD & Earn BNB Airdrop","description":"Subscribe to FDUSD Flexible and earn bonus BNB airdrop.","rewardPoolInUsd":"50000","rewardToken":["BNB"],"redirectUrl":"https://www.binance.com/en/earn/arena/airdrop-123","startTime":1713052800000,"endTime":1713657600000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetYieldArenaActivitiesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetYieldArenaActivitiesResponse");
 
             let resp = client.get_yield_arena_activities(params).await.expect("Expected a response");
@@ -185,9 +198,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockYieldArenaApiClient { force_error: false };
 
-            let params = GetYieldArenaActivitiesParams::builder().recv_window(5000).build().unwrap();
+            let params = GetYieldArenaActivitiesParams::builder().lang("en".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"activities":[{"activityId":10001,"activityType":"AIRDROP","title":"Hold FDUSD & Earn BNB Airdrop","description":"Subscribe to FDUSD Flexible and earn bonus BNB airdrop.","rewardPoolInUsd":"50000","rewardToken":["BNB"],"redirectUrl":"https://www.binance.com/en/earn/arena/airdrop-123","startTime":1713052800000,"endTime":1713657600000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"activities":[{"activityId":10001,"activityType":"AIRDROP","title":"Hold FDUSD & Earn BNB Airdrop","description":"Subscribe to FDUSD Flexible and earn bonus BNB airdrop.","rewardPoolInUsd":"50000","rewardToken":["BNB"],"redirectUrl":"https://www.binance.com/en/earn/arena/airdrop-123","startTime":1713052800000,"endTime":1713657600000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetYieldArenaActivitiesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetYieldArenaActivitiesResponse");
 
             let resp = client.get_yield_arena_activities(params).await.expect("Expected a response");

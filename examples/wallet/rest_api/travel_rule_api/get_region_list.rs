@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = WalletRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = GetRegionListParams::builder("country_code_example".to_string()).build()?;
+    let params = GetRegionListParams::builder("au".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

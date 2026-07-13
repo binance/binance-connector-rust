@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -140,11 +140,254 @@ impl FlexibleLockedApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetFlexibleRewardsHistoryTypeEnum {
+    #[serde(rename = "BONUS")]
+    Bonus,
+    #[serde(rename = "REALTIME")]
+    Realtime,
+    #[serde(rename = "REWARDS")]
+    Rewards,
+    #[serde(rename = "ALL")]
+    All,
+}
+
+impl GetFlexibleRewardsHistoryTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Bonus => "BONUS",
+            Self::Realtime => "REALTIME",
+            Self::Rewards => "REWARDS",
+            Self::All => "ALL",
+        }
+    }
+}
+
+impl std::str::FromStr for GetFlexibleRewardsHistoryTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BONUS" => Ok(Self::Bonus),
+            "REALTIME" => Ok(Self::Realtime),
+            "REWARDS" => Ok(Self::Rewards),
+            "ALL" => Ok(Self::All),
+            other => Err(format!("invalid GetFlexibleRewardsHistoryTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetRateHistoryAprPeriodEnum {
+    #[serde(rename = "DAY")]
+    Day,
+    #[serde(rename = "YEAR")]
+    Year,
+}
+
+impl GetRateHistoryAprPeriodEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Day => "DAY",
+            Self::Year => "YEAR",
+        }
+    }
+}
+
+impl std::str::FromStr for GetRateHistoryAprPeriodEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "DAY" => Ok(Self::Day),
+            "YEAR" => Ok(Self::Year),
+            other => Err(format!("invalid GetRateHistoryAprPeriodEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum RedeemFlexibleProductDestAccountEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FUND")]
+    Fund,
+}
+
+impl RedeemFlexibleProductDestAccountEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Fund => "FUND",
+        }
+    }
+}
+
+impl std::str::FromStr for RedeemFlexibleProductDestAccountEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FUND" => Ok(Self::Fund),
+            other => Err(format!("invalid RedeemFlexibleProductDestAccountEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SetLockedProductRedeemOptionRedeemToEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FLEXIBLE")]
+    Flexible,
+}
+
+impl SetLockedProductRedeemOptionRedeemToEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Flexible => "FLEXIBLE",
+        }
+    }
+}
+
+impl std::str::FromStr for SetLockedProductRedeemOptionRedeemToEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FLEXIBLE" => Ok(Self::Flexible),
+            other => Err(format!(
+                "invalid SetLockedProductRedeemOptionRedeemToEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SubscribeFlexibleProductSourceAccountEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FUND")]
+    Fund,
+    #[serde(rename = "ALL")]
+    All,
+}
+
+impl SubscribeFlexibleProductSourceAccountEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Fund => "FUND",
+            Self::All => "ALL",
+        }
+    }
+}
+
+impl std::str::FromStr for SubscribeFlexibleProductSourceAccountEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FUND" => Ok(Self::Fund),
+            "ALL" => Ok(Self::All),
+            other => Err(format!(
+                "invalid SubscribeFlexibleProductSourceAccountEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SubscribeLockedProductSourceAccountEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FUND")]
+    Fund,
+    #[serde(rename = "ALL")]
+    All,
+}
+
+impl SubscribeLockedProductSourceAccountEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Fund => "FUND",
+            Self::All => "ALL",
+        }
+    }
+}
+
+impl std::str::FromStr for SubscribeLockedProductSourceAccountEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FUND" => Ok(Self::Fund),
+            "ALL" => Ok(Self::All),
+            other => {
+                Err(format!("invalid SubscribeLockedProductSourceAccountEnum: {}", other).into())
+            }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SubscribeLockedProductRedeemToEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FLEXIBLE")]
+    Flexible,
+}
+
+impl SubscribeLockedProductRedeemToEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Flexible => "FLEXIBLE",
+        }
+    }
+}
+
+impl std::str::FromStr for SubscribeLockedProductRedeemToEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FLEXIBLE" => Ok(Self::Flexible),
+            other => Err(format!("invalid SubscribeLockedProductRedeemToEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`get_collateral_record`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_collateral_record`](#method.get_collateral_record).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetCollateralRecordParams {
     ///
@@ -152,33 +395,39 @@ pub struct GetCollateralRecordParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "productId", default)]
     pub product_id: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -194,7 +443,7 @@ impl GetCollateralRecordParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_personal_left_quota`](#method.get_flexible_personal_left_quota).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexiblePersonalLeftQuotaParams {
     ///
@@ -202,11 +451,13 @@ pub struct GetFlexiblePersonalLeftQuotaParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "productId")]
     pub product_id: String,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -226,34 +477,40 @@ impl GetFlexiblePersonalLeftQuotaParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_product_position`](#method.get_flexible_product_position).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleProductPositionParams {
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `product_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "productId", default)]
     pub product_id: Option<String>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -269,7 +526,7 @@ impl GetFlexibleProductPositionParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_redemption_record`](#method.get_flexible_redemption_record).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleRedemptionRecordParams {
     ///
@@ -277,44 +534,53 @@ pub struct GetFlexibleRedemptionRecordParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "productId", default)]
     pub product_id: Option<String>,
     ///
     /// The `redeem_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "redeemId", default)]
     pub redeem_id: Option<String>,
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -330,71 +596,76 @@ impl GetFlexibleRedemptionRecordParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_rewards_history`](#method.get_flexible_rewards_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleRewardsHistoryParams {
-    /// FAST or STANDARD, defaults to STANDARD
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub r#type: String,
     ///
     /// The `product_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "productId", default)]
     pub product_id: Option<String>,
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// `BONUS` - Bonus tiered APR, `REALTIME` - Real-time APR, `REWARDS` - Historical rewards, `ALL` - All types. Default: `ALL`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "type", default)]
+    pub r#type: Option<GetFlexibleRewardsHistoryTypeEnum>,
+    /// Currently querying page. Starts from 1.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
 impl GetFlexibleRewardsHistoryParams {
     /// Create a builder for [`get_flexible_rewards_history`].
     ///
-    /// Required parameters:
-    ///
-    /// * `r#type` — FAST or STANDARD, defaults to STANDARD
-    ///
     #[must_use]
-    pub fn builder(r#type: String) -> GetFlexibleRewardsHistoryParamsBuilder {
-        GetFlexibleRewardsHistoryParamsBuilder::default().r#type(r#type)
+    pub fn builder() -> GetFlexibleRewardsHistoryParamsBuilder {
+        GetFlexibleRewardsHistoryParamsBuilder::default()
     }
 }
 /// Request parameters for the [`get_flexible_subscription_preview`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_subscription_preview`](#method.get_flexible_subscription_preview).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleSubscriptionPreviewParams {
     ///
@@ -402,16 +673,20 @@ pub struct GetFlexibleSubscriptionPreviewParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "productId")]
     pub product_id: String,
-    /// Amount
+    ///
+    /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -421,7 +696,7 @@ impl GetFlexibleSubscriptionPreviewParams {
     /// Required parameters:
     ///
     /// * `product_id` — String
-    /// * `amount` — Amount
+    /// * `amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
@@ -437,7 +712,7 @@ impl GetFlexibleSubscriptionPreviewParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_subscription_record`](#method.get_flexible_subscription_record).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleSubscriptionRecordParams {
     ///
@@ -445,44 +720,53 @@ pub struct GetFlexibleSubscriptionRecordParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "productId", default)]
     pub product_id: Option<String>,
     ///
     /// The `purchase_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "purchaseId", default)]
     pub purchase_id: Option<String>,
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -498,7 +782,7 @@ impl GetFlexibleSubscriptionRecordParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_locked_personal_left_quota`](#method.get_locked_personal_left_quota).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetLockedPersonalLeftQuotaParams {
     ///
@@ -506,11 +790,13 @@ pub struct GetLockedPersonalLeftQuotaParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "projectId")]
     pub project_id: String,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -530,40 +816,47 @@ impl GetLockedPersonalLeftQuotaParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_locked_product_position`](#method.get_locked_product_position).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetLockedProductPositionParams {
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `position_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub position_id: Option<i64>,
+    #[serde(rename = "positionId", default)]
+    pub position_id: Option<String>,
     ///
     /// The `project_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "projectId", default)]
     pub project_id: Option<String>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -579,7 +872,7 @@ impl GetLockedProductPositionParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_locked_redemption_record`](#method.get_locked_redemption_record).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetLockedRedemptionRecordParams {
     ///
@@ -587,44 +880,53 @@ pub struct GetLockedRedemptionRecordParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub position_id: Option<i64>,
+    #[serde(rename = "positionId", default)]
+    pub position_id: Option<String>,
     ///
     /// The `redeem_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "redeemId", default)]
     pub redeem_id: Option<String>,
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -640,7 +942,7 @@ impl GetLockedRedemptionRecordParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_locked_rewards_history`](#method.get_locked_rewards_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetLockedRewardsHistoryParams {
     ///
@@ -648,38 +950,46 @@ pub struct GetLockedRewardsHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub position_id: Option<i64>,
-    /// USDC or USDT
+    #[serde(rename = "positionId", default)]
+    pub position_id: Option<String>,
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -695,7 +1005,7 @@ impl GetLockedRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_locked_subscription_preview`](#method.get_locked_subscription_preview).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetLockedSubscriptionPreviewParams {
     ///
@@ -703,21 +1013,26 @@ pub struct GetLockedSubscriptionPreviewParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "projectId")]
     pub project_id: String,
-    /// Amount
+    ///
+    /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// true or false, default true.
+    /// default true.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "autoSubscribe", default)]
     pub auto_subscribe: Option<bool>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -727,7 +1042,7 @@ impl GetLockedSubscriptionPreviewParams {
     /// Required parameters:
     ///
     /// * `project_id` — String
-    /// * `amount` — Amount
+    /// * `amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
@@ -743,7 +1058,7 @@ impl GetLockedSubscriptionPreviewParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_locked_subscription_record`](#method.get_locked_subscription_record).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetLockedSubscriptionRecordParams {
     ///
@@ -751,38 +1066,46 @@ pub struct GetLockedSubscriptionRecordParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "purchaseId", default)]
     pub purchase_id: Option<String>,
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -798,7 +1121,7 @@ impl GetLockedSubscriptionRecordParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_rate_history`](#method.get_rate_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetRateHistoryParams {
     ///
@@ -806,38 +1129,46 @@ pub struct GetRateHistoryParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "productId")]
     pub product_id: String,
-    /// "DAY","YEAR",default"DAY"
+    ///
+    /// The `apr_period` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub apr_period: Option<String>,
+    #[serde(rename = "aprPeriod", default)]
+    pub apr_period: Option<GetRateHistoryAprPeriodEnum>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -857,28 +1188,33 @@ impl GetRateHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_simple_earn_flexible_product_list`](#method.get_simple_earn_flexible_product_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSimpleEarnFlexibleProductListParams {
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -894,28 +1230,33 @@ impl GetSimpleEarnFlexibleProductListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_simple_earn_locked_product_list`](#method.get_simple_earn_locked_product_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSimpleEarnLockedProductListParams {
-    /// USDC or USDT
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// Currently querying page. Starts from 1. Default: 1
+    /// Currently querying page. Starts from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Number of results per page. Default: 10, Max: 100
+    /// Number of results per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -931,7 +1272,7 @@ impl GetSimpleEarnLockedProductListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_flexible_product`](#method.redeem_flexible_product).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemFlexibleProductParams {
     ///
@@ -939,26 +1280,33 @@ pub struct RedeemFlexibleProductParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "productId")]
     pub product_id: String,
-    /// true or false, default to false
+    ///
+    /// The `redeem_all` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "redeemAll", default)]
     pub redeem_all: Option<bool>,
     /// if redeemAll is false, amount is mandatory
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "amount", default)]
     pub amount: Option<rust_decimal::Decimal>,
-    /// `SPOT`,`FUND`, default `SPOT`
+    ///
+    /// The `dest_account` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub dest_account: Option<String>,
-    /// The value cannot be greater than 60000 (ms)
+    #[serde(rename = "destAccount", default)]
+    pub dest_account: Option<RedeemFlexibleProductDestAccountEnum>,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -978,19 +1326,20 @@ impl RedeemFlexibleProductParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_locked_product`](#method.redeem_locked_product).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemLockedProductParams {
-    ///
-    /// The `position_id` parameter.
+    /// Locked product position ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "positionId")]
     pub position_id: String,
-    /// The value cannot be greater than 60000 (ms)
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -999,7 +1348,7 @@ impl RedeemLockedProductParams {
     ///
     /// Required parameters:
     ///
-    /// * `position_id` — String
+    /// * `position_id` — Locked product position ID
     ///
     #[must_use]
     pub fn builder(position_id: String) -> RedeemLockedProductParamsBuilder {
@@ -1010,7 +1359,7 @@ impl RedeemLockedProductParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_flexible_auto_subscribe`](#method.set_flexible_auto_subscribe).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetFlexibleAutoSubscribeParams {
     ///
@@ -1018,16 +1367,20 @@ pub struct SetFlexibleAutoSubscribeParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "productId")]
     pub product_id: String,
-    /// true or false
+    ///
+    /// The `auto_subscribe` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "autoSubscribe")]
     pub auto_subscribe: bool,
-    /// The value cannot be greater than 60000 (ms)
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1037,7 +1390,7 @@ impl SetFlexibleAutoSubscribeParams {
     /// Required parameters:
     ///
     /// * `product_id` — String
-    /// * `auto_subscribe` — true or false
+    /// * `auto_subscribe` — bool
     ///
     #[must_use]
     pub fn builder(
@@ -1053,7 +1406,7 @@ impl SetFlexibleAutoSubscribeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_locked_auto_subscribe`](#method.set_locked_auto_subscribe).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetLockedAutoSubscribeParams {
     ///
@@ -1061,16 +1414,20 @@ pub struct SetLockedAutoSubscribeParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "positionId")]
     pub position_id: String,
-    /// true or false
+    ///
+    /// The `auto_subscribe` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "autoSubscribe")]
     pub auto_subscribe: bool,
-    /// The value cannot be greater than 60000 (ms)
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1080,7 +1437,7 @@ impl SetLockedAutoSubscribeParams {
     /// Required parameters:
     ///
     /// * `position_id` — String
-    /// * `auto_subscribe` — true or false
+    /// * `auto_subscribe` — bool
     ///
     #[must_use]
     pub fn builder(
@@ -1096,7 +1453,7 @@ impl SetLockedAutoSubscribeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_locked_product_redeem_option`](#method.set_locked_product_redeem_option).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetLockedProductRedeemOptionParams {
     ///
@@ -1104,16 +1461,20 @@ pub struct SetLockedProductRedeemOptionParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "positionId")]
     pub position_id: String,
-    /// `SPOT`,'FLEXIBLE'
+    ///
+    /// The `redeem_to` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub redeem_to: String,
-    /// The value cannot be greater than 60000 (ms)
+    #[serde(rename = "redeemTo")]
+    pub redeem_to: SetLockedProductRedeemOptionRedeemToEnum,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1123,12 +1484,12 @@ impl SetLockedProductRedeemOptionParams {
     /// Required parameters:
     ///
     /// * `position_id` — String
-    /// * `redeem_to` — `SPOT`,'FLEXIBLE'
+    /// * `redeem_to` — String
     ///
     #[must_use]
     pub fn builder(
         position_id: String,
-        redeem_to: String,
+        redeem_to: SetLockedProductRedeemOptionRedeemToEnum,
     ) -> SetLockedProductRedeemOptionParamsBuilder {
         SetLockedProductRedeemOptionParamsBuilder::default()
             .position_id(position_id)
@@ -1139,13 +1500,14 @@ impl SetLockedProductRedeemOptionParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`simple_account`](#method.simple_account).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SimpleAccountParams {
     /// The value cannot be greater than 60000 (ms)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1161,7 +1523,7 @@ impl SimpleAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_flexible_product`](#method.subscribe_flexible_product).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeFlexibleProductParams {
     ///
@@ -1169,26 +1531,34 @@ pub struct SubscribeFlexibleProductParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "productId")]
     pub product_id: String,
-    /// Amount
+    ///
+    /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// true or false, default true.
+    ///
+    /// The `auto_subscribe` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "autoSubscribe", default)]
     pub auto_subscribe: Option<bool>,
-    /// `SPOT`,`FUND`,`ALL`, default `SPOT`
+    ///
+    /// The `source_account` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub source_account: Option<String>,
-    /// The value cannot be greater than 60000 (ms)
+    #[serde(rename = "sourceAccount", default)]
+    pub source_account: Option<SubscribeFlexibleProductSourceAccountEnum>,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1198,7 +1568,7 @@ impl SubscribeFlexibleProductParams {
     /// Required parameters:
     ///
     /// * `product_id` — String
-    /// * `amount` — Amount
+    /// * `amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
@@ -1214,7 +1584,7 @@ impl SubscribeFlexibleProductParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_locked_product`](#method.subscribe_locked_product).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeLockedProductParams {
     ///
@@ -1222,31 +1592,41 @@ pub struct SubscribeLockedProductParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "projectId")]
     pub project_id: String,
-    /// Amount
+    ///
+    /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
-    /// true or false, default true.
+    ///
+    /// The `auto_subscribe` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "autoSubscribe", default)]
     pub auto_subscribe: Option<bool>,
-    /// `SPOT`,`FUND`,`ALL`, default `SPOT`
+    ///
+    /// The `source_account` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub source_account: Option<String>,
-    /// `SPOT`,`FLEXIBLE`, default `SPOT`
+    #[serde(rename = "sourceAccount", default)]
+    pub source_account: Option<SubscribeLockedProductSourceAccountEnum>,
+    ///
+    /// The `redeem_to` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub redeem_to: Option<String>,
-    /// The value cannot be greater than 60000 (ms)
+    #[serde(rename = "redeemTo", default)]
+    pub redeem_to: Option<SubscribeLockedProductRedeemToEnum>,
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1256,7 +1636,7 @@ impl SubscribeLockedProductParams {
     /// Required parameters:
     ///
     /// * `project_id` — String
-    /// * `amount` — Amount
+    /// * `amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
@@ -1483,11 +1863,11 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
         params: GetFlexibleRewardsHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetFlexibleRewardsHistoryResponse>> {
         let GetFlexibleRewardsHistoryParams {
-            r#type,
             product_id,
             asset,
             start_time,
             end_time,
+            r#type,
             current,
             size,
             recv_window,
@@ -1512,7 +1892,9 @@ impl FlexibleLockedApi for FlexibleLockedApiClient {
             query_params.insert("endTime".to_string(), json!(rw));
         }
 
-        query_params.insert("type".to_string(), json!(r#type));
+        if let Some(rw) = r#type {
+            query_params.insert("type".to_string(), json!(rw));
+        }
 
         if let Some(rw) = current {
             query_params.insert("current".to_string(), json!(rw));
@@ -2484,7 +2866,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","productId":"BUSD001","asset":"USDT","createTime":1575018510000,"type":"REPAY","productName":"USDT","orderId":26055}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","productId":"BUSD001","asset":"USDT","createTime":1575018510000,"type":"REPAY","productName":"USDT","orderId":26055}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetCollateralRecordResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCollateralRecordResponse");
@@ -2511,7 +2893,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexiblePersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexiblePersonalLeftQuotaResponse");
@@ -2538,7 +2921,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"totalAmount":"75.46000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"latestAnnualPercentageRate":"0.02599895","yesterdayAirdropPercentageRate":"0.02599895","asset":"USDT","airDropAsset":"BETH","canRedeem":true,"collateralAmount":"232.23123213","productId":"USDT001","yesterdayRealTimeRewards":"0.10293829","cumulativeBonusRewards":"0.22759183","cumulativeRealTimeRewards":"0.22759183","cumulativeTotalRewards":"0.45459183","autoSubscribe":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"totalAmount":"75.46000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"latestAnnualPercentageRate":"0.02599895","yesterdayAirdropPercentageRate":"0.02599895","asset":"USDT","airDropAsset":"BETH","canRedeem":true,"collateralAmount":"232.23123213","productId":"USDT001","yesterdayRealTimeRewards":"0.10293829","cumulativeBonusRewards":"0.22759183","cumulativeRealTimeRewards":"0.22759183","cumulativeTotalRewards":"0.45459183","autoSubscribe":true}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleProductPositionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleProductPositionResponse");
@@ -2565,7 +2948,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"10.54000000","asset":"USDT","time":1577257222000,"projectId":"USDT001","redeemId":40607,"destAccount":"SPOT","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"10.54000000","asset":"USDT","time":1577257222000,"projectId":"USDT001","redeemId":40607,"destAccount":"SPOT","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleRedemptionRecordResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleRedemptionRecordResponse");
@@ -2592,7 +2975,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BUSD","rewards":"0.00006408","projectId":"USDT001","type":"BONUS","time":1577233578000},{"asset":"USDT","rewards":"0.00687654","projectId":"USDT001","type":"REALTIME","time":1577233562000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BUSD","rewards":"0.00006408","projectId":"USDT001","type":"BONUS","time":1577233578000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleRewardsHistoryResponse");
@@ -2620,7 +3003,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmount":"1232.32230982","rewardAsset":"BUSD","airDropAsset":"BETH","estDailyBonusRewards":"0.22759183","estDailyRealTimeRewards":"0.22759183","estDailyAirdropRewards":"0.22759183"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmount":"1232.32230982","rewardAsset":"BUSD","airDropAsset":"BETH","estDailyBonusRewards":"0.22759183","estDailyRealTimeRewards":"0.22759183","estDailyAirdropRewards":"0.22759183"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleSubscriptionPreviewResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleSubscriptionPreviewResponse");
@@ -2648,7 +3031,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","asset":"USDT","time":1575018510000,"purchaseId":26055,"productId":"USDT001","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","asset":"USDT","time":1575018510000,"purchaseId":26055,"productId":"USDT001","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleSubscriptionRecordResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleSubscriptionRecordResponse");
@@ -2675,7 +3058,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetLockedPersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedPersonalLeftQuotaResponse");
@@ -2702,7 +3086,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetLockedProductPositionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedProductPositionResponse");
@@ -2729,7 +3113,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetLockedRedemptionRecordResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedRedemptionRecordResponse");
@@ -2756,7 +3140,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","type":"Locked Rewards"},{"positionId":123123,"time":1575018510000,"asset":"BNB","amount":"1.23223","type":"Boost Rewards"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","type":"Locked Rewards"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetLockedRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedRewardsHistoryResponse");
@@ -2784,7 +3168,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetLockedSubscriptionPreviewResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetLockedSubscriptionPreviewResponseInner>",
@@ -2812,7 +3196,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"purchaseId":"26055","projectId":"Axs*90","time":1575018510000,"asset":"BNB","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"purchaseId":"26055","projectId":"Axs*90","time":1575018510000,"asset":"BNB","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetLockedSubscriptionRecordResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedSubscriptionRecordResponse");
@@ -2839,7 +3223,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"productId":"BUSD001","asset":"BUSD","annualPercentageRate":"0.00006408","time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"productId":"BUSD001","asset":"BUSD","annualPercentageRate":"0.00006408","time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetRateHistoryResponse");
@@ -2867,7 +3251,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BTC","latestAnnualPercentageRate":"0.05000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"airDropPercentageRate":"0.05000000","canPurchase":true,"canRedeem":true,"isSoldOut":true,"hot":true,"minPurchaseAmount":"0.01000000","productId":"BTC001","subscriptionStartTime":1646182276000,"status":"PURCHASING"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BTC","latestAnnualPercentageRate":"0.05000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"airDropPercentageRate":"0.05000000","canPurchase":true,"canRedeem":true,"isSoldOut":true,"hot":true,"minPurchaseAmount":"0.01000000","productId":"BTC001","subscriptionStartTime":1646182276000,"status":"PURCHASING"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSimpleEarnFlexibleProductListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSimpleEarnFlexibleProductListResponse");
@@ -2895,7 +3279,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Axs*90","detail":{"asset":"AXS","rewardAsset":"AXS","duration":90,"renewable":true,"isSoldOut":true,"apr":"1.2069","status":"CREATED","subscriptionStartTime":1646182276000,"extraRewardAsset":"BNB","extraRewardAPR":"0.23","boostRewardAsset":"AXS","boostApr":"0.0121","boostEndTime":1646182276000},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Axs*90","detail":{"asset":"AXS","rewardAsset":"AXS","duration":90,"renewable":true,"isSoldOut":true,"apr":"1.2069","status":"CREATED","subscriptionStartTime":1646182276000,"extraRewardAsset":"BNB","extraRewardAPR":"0.23","boostRewardAsset":"AXS","boostApr":"0.0121","boostEndTime":1646182276000},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSimpleEarnLockedProductListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSimpleEarnLockedProductListResponse");
@@ -2922,8 +3306,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemFlexibleProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemFlexibleProductResponse");
@@ -2950,8 +3334,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemLockedProductResponse");
@@ -2978,7 +3362,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetFlexibleAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetFlexibleAutoSubscribeResponse");
@@ -3005,7 +3390,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetLockedAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetLockedAutoSubscribeResponse");
@@ -3032,7 +3418,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetLockedProductRedeemOptionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetLockedProductRedeemOptionResponse");
@@ -3059,7 +3446,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SimpleAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SimpleAccountResponse");
@@ -3086,8 +3473,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"purchaseId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeFlexibleProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeFlexibleProductResponse");
@@ -3116,7 +3503,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","success":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeLockedProductResponse");
@@ -3139,7 +3526,7 @@ mod tests {
 
             let params = GetCollateralRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","productId":"BUSD001","asset":"USDT","createTime":1575018510000,"type":"REPAY","productName":"USDT","orderId":26055}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","productId":"BUSD001","asset":"USDT","createTime":1575018510000,"type":"REPAY","productName":"USDT","orderId":26055}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCollateralRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCollateralRecordResponse");
 
             let resp = client.get_collateral_record(params).await.expect("Expected a response");
@@ -3156,7 +3543,7 @@ mod tests {
 
             let params = GetCollateralRecordParams::builder().product_id("1".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","productId":"BUSD001","asset":"USDT","createTime":1575018510000,"type":"REPAY","productName":"USDT","orderId":26055}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","productId":"BUSD001","asset":"USDT","createTime":1575018510000,"type":"REPAY","productName":"USDT","orderId":26055}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCollateralRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCollateralRecordResponse");
 
             let resp = client.get_collateral_record(params).await.expect("Expected a response");
@@ -3191,7 +3578,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetFlexiblePersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexiblePersonalLeftQuotaResponse");
@@ -3216,7 +3604,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetFlexiblePersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexiblePersonalLeftQuotaResponse");
@@ -3256,7 +3645,7 @@ mod tests {
 
             let params = GetFlexibleProductPositionParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"totalAmount":"75.46000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"latestAnnualPercentageRate":"0.02599895","yesterdayAirdropPercentageRate":"0.02599895","asset":"USDT","airDropAsset":"BETH","canRedeem":true,"collateralAmount":"232.23123213","productId":"USDT001","yesterdayRealTimeRewards":"0.10293829","cumulativeBonusRewards":"0.22759183","cumulativeRealTimeRewards":"0.22759183","cumulativeTotalRewards":"0.45459183","autoSubscribe":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"totalAmount":"75.46000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"latestAnnualPercentageRate":"0.02599895","yesterdayAirdropPercentageRate":"0.02599895","asset":"USDT","airDropAsset":"BETH","canRedeem":true,"collateralAmount":"232.23123213","productId":"USDT001","yesterdayRealTimeRewards":"0.10293829","cumulativeBonusRewards":"0.22759183","cumulativeRealTimeRewards":"0.22759183","cumulativeTotalRewards":"0.45459183","autoSubscribe":true}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleProductPositionResponse");
 
             let resp = client.get_flexible_product_position(params).await.expect("Expected a response");
@@ -3271,9 +3660,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetFlexibleProductPositionParams::builder().asset("asset_example".to_string()).product_id("1".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleProductPositionParams::builder().asset("USDC".to_string()).product_id("1".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"totalAmount":"75.46000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"latestAnnualPercentageRate":"0.02599895","yesterdayAirdropPercentageRate":"0.02599895","asset":"USDT","airDropAsset":"BETH","canRedeem":true,"collateralAmount":"232.23123213","productId":"USDT001","yesterdayRealTimeRewards":"0.10293829","cumulativeBonusRewards":"0.22759183","cumulativeRealTimeRewards":"0.22759183","cumulativeTotalRewards":"0.45459183","autoSubscribe":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"totalAmount":"75.46000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"latestAnnualPercentageRate":"0.02599895","yesterdayAirdropPercentageRate":"0.02599895","asset":"USDT","airDropAsset":"BETH","canRedeem":true,"collateralAmount":"232.23123213","productId":"USDT001","yesterdayRealTimeRewards":"0.10293829","cumulativeBonusRewards":"0.22759183","cumulativeRealTimeRewards":"0.22759183","cumulativeTotalRewards":"0.45459183","autoSubscribe":true}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleProductPositionResponse");
 
             let resp = client.get_flexible_product_position(params).await.expect("Expected a response");
@@ -3306,7 +3695,7 @@ mod tests {
 
             let params = GetFlexibleRedemptionRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"10.54000000","asset":"USDT","time":1577257222000,"projectId":"USDT001","redeemId":40607,"destAccount":"SPOT","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"10.54000000","asset":"USDT","time":1577257222000,"projectId":"USDT001","redeemId":40607,"destAccount":"SPOT","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleRedemptionRecordResponse");
 
             let resp = client.get_flexible_redemption_record(params).await.expect("Expected a response");
@@ -3321,9 +3710,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetFlexibleRedemptionRecordParams::builder().product_id("1".to_string()).redeem_id("1".to_string()).asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleRedemptionRecordParams::builder().product_id("1".to_string()).redeem_id("1".to_string()).asset("USDC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"10.54000000","asset":"USDT","time":1577257222000,"projectId":"USDT001","redeemId":40607,"destAccount":"SPOT","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"10.54000000","asset":"USDT","time":1577257222000,"projectId":"USDT001","redeemId":40607,"destAccount":"SPOT","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleRedemptionRecordResponse");
 
             let resp = client.get_flexible_redemption_record(params).await.expect("Expected a response");
@@ -3356,9 +3745,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetFlexibleRewardsHistoryParams::builder("s".to_string(),).build().unwrap();
+            let params = GetFlexibleRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BUSD","rewards":"0.00006408","projectId":"USDT001","type":"BONUS","time":1577233578000},{"asset":"USDT","rewards":"0.00687654","projectId":"USDT001","type":"REALTIME","time":1577233562000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BUSD","rewards":"0.00006408","projectId":"USDT001","type":"BONUS","time":1577233578000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleRewardsHistoryResponse");
 
             let resp = client.get_flexible_rewards_history(params).await.expect("Expected a response");
@@ -3373,9 +3762,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetFlexibleRewardsHistoryParams::builder("s".to_string(),).product_id("1".to_string()).asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleRewardsHistoryParams::builder().product_id("1".to_string()).asset("USDC".to_string()).start_time(1623319461670).end_time(1641782889000).r#type(GetFlexibleRewardsHistoryTypeEnum::Bonus).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BUSD","rewards":"0.00006408","projectId":"USDT001","type":"BONUS","time":1577233578000},{"asset":"USDT","rewards":"0.00687654","projectId":"USDT001","type":"REALTIME","time":1577233562000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BUSD","rewards":"0.00006408","projectId":"USDT001","type":"BONUS","time":1577233578000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleRewardsHistoryResponse");
 
             let resp = client.get_flexible_rewards_history(params).await.expect("Expected a response");
@@ -3390,9 +3779,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: true };
 
-            let params = GetFlexibleRewardsHistoryParams::builder("s".to_string())
-                .build()
-                .unwrap();
+            let params = GetFlexibleRewardsHistoryParams::builder().build().unwrap();
 
             match client.get_flexible_rewards_history(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -3410,7 +3797,7 @@ mod tests {
 
             let params = GetFlexibleSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmount":"1232.32230982","rewardAsset":"BUSD","airDropAsset":"BETH","estDailyBonusRewards":"0.22759183","estDailyRealTimeRewards":"0.22759183","estDailyAirdropRewards":"0.22759183"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmount":"1232.32230982","rewardAsset":"BUSD","airDropAsset":"BETH","estDailyBonusRewards":"0.22759183","estDailyRealTimeRewards":"0.22759183","estDailyAirdropRewards":"0.22759183"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleSubscriptionPreviewResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleSubscriptionPreviewResponse");
 
             let resp = client.get_flexible_subscription_preview(params).await.expect("Expected a response");
@@ -3427,7 +3814,7 @@ mod tests {
 
             let params = GetFlexibleSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmount":"1232.32230982","rewardAsset":"BUSD","airDropAsset":"BETH","estDailyBonusRewards":"0.22759183","estDailyRealTimeRewards":"0.22759183","estDailyAirdropRewards":"0.22759183"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmount":"1232.32230982","rewardAsset":"BUSD","airDropAsset":"BETH","estDailyBonusRewards":"0.22759183","estDailyRealTimeRewards":"0.22759183","estDailyAirdropRewards":"0.22759183"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleSubscriptionPreviewResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleSubscriptionPreviewResponse");
 
             let resp = client.get_flexible_subscription_preview(params).await.expect("Expected a response");
@@ -3462,7 +3849,7 @@ mod tests {
 
             let params = GetFlexibleSubscriptionRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","asset":"USDT","time":1575018510000,"purchaseId":26055,"productId":"USDT001","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","asset":"USDT","time":1575018510000,"purchaseId":26055,"productId":"USDT001","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleSubscriptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleSubscriptionRecordResponse");
 
             let resp = client.get_flexible_subscription_record(params).await.expect("Expected a response");
@@ -3477,9 +3864,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetFlexibleSubscriptionRecordParams::builder().product_id("1".to_string()).purchase_id("1".to_string()).asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleSubscriptionRecordParams::builder().product_id("1".to_string()).purchase_id("1".to_string()).asset("USDC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","asset":"USDT","time":1575018510000,"purchaseId":26055,"productId":"USDT001","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"100.00000000","asset":"USDT","time":1575018510000,"purchaseId":26055,"productId":"USDT001","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleSubscriptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleSubscriptionRecordResponse");
 
             let resp = client.get_flexible_subscription_record(params).await.expect("Expected a response");
@@ -3516,7 +3903,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetLockedPersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedPersonalLeftQuotaResponse");
@@ -3541,7 +3929,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"leftPersonalQuota":"1000"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::GetLockedPersonalLeftQuotaResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLockedPersonalLeftQuotaResponse");
@@ -3581,7 +3970,7 @@ mod tests {
 
             let params = GetLockedProductPositionParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedProductPositionResponse");
 
             let resp = client.get_locked_product_position(params).await.expect("Expected a response");
@@ -3596,9 +3985,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetLockedProductPositionParams::builder().asset("asset_example".to_string()).position_id(1).project_id("1".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetLockedProductPositionParams::builder().asset("USDC".to_string()).position_id("1".to_string()).project_id("1".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"parentPositionId":123122,"projectId":"Axs*90","asset":"AXS","amount":"122.09202928","purchaseTime":1646182276000,"duration":"60","accrualDays":"4","rewardAsset":"AXS","APY":"0.2032","rewardAmt":"5.17181528","extraRewardAsset":"BNB","extraRewardAPR":"0.0203","estExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","boostApr":"0.0121","totalBoostRewardAmt":"3.98201829","nextPay":"1.29295383","nextPayDate":1646697600000,"payPeriod":"1","redeemAmountEarly":"2802.24068892","rewardsEndDate":1651449600000,"deliverDate":1651536000000,"redeemPeriod":"1","redeemingAmt":"232.2323","redeemTo":"FLEXIBLE","partialAmtDeliverDate":1651536000000,"canRedeemEarly":true,"canFastRedemption":true,"autoSubscribe":true,"type":"AUTO","status":"HOLDING","canReStake":true}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedProductPositionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedProductPositionResponse");
 
             let resp = client.get_locked_product_position(params).await.expect("Expected a response");
@@ -3631,7 +4020,7 @@ mod tests {
 
             let params = GetLockedRedemptionRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedRedemptionRecordResponse");
 
             let resp = client.get_locked_redemption_record(params).await.expect("Expected a response");
@@ -3646,9 +4035,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetLockedRedemptionRecordParams::builder().position_id(1).redeem_id("1".to_string()).asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetLockedRedemptionRecordParams::builder().position_id("1".to_string()).redeem_id("1".to_string()).asset("USDC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"redeemId":40607,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","originalAmount":"21312.23223","type":"MATURE","deliverDate":1575018510000,"lossAmount":"0.00001232","isComplete":true,"rewardAsset":"AXS","rewardAmt":"5.17181528","extraRewardAsset":"BNB","estExtraRewardAmt":"5.17181528","status":"PAID"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedRedemptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedRedemptionRecordResponse");
 
             let resp = client.get_locked_redemption_record(params).await.expect("Expected a response");
@@ -3681,7 +4070,7 @@ mod tests {
 
             let params = GetLockedRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","type":"Locked Rewards"},{"positionId":123123,"time":1575018510000,"asset":"BNB","amount":"1.23223","type":"Boost Rewards"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","type":"Locked Rewards"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedRewardsHistoryResponse");
 
             let resp = client.get_locked_rewards_history(params).await.expect("Expected a response");
@@ -3696,9 +4085,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetLockedRewardsHistoryParams::builder().position_id(1).asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetLockedRewardsHistoryParams::builder().position_id("1".to_string()).asset("USDC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","type":"Locked Rewards"},{"positionId":123123,"time":1575018510000,"asset":"BNB","amount":"1.23223","type":"Boost Rewards"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"time":1575018510000,"asset":"BNB","lockPeriod":"30","amount":"21312.23223","type":"Locked Rewards"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedRewardsHistoryResponse");
 
             let resp = client.get_locked_rewards_history(params).await.expect("Expected a response");
@@ -3731,7 +4120,7 @@ mod tests {
 
             let params = GetLockedSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetLockedSubscriptionPreviewResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetLockedSubscriptionPreviewResponseInner>");
 
             let resp = client.get_locked_subscription_preview(params).await.expect("Expected a response");
@@ -3748,7 +4137,7 @@ mod tests {
 
             let params = GetLockedSubscriptionPreviewParams::builder("1".to_string(),dec!(1.0),).auto_subscribe(true).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"rewardAsset":"AXS","totalRewardAmt":"5.17181528","extraRewardAsset":"BNB","estTotalExtraRewardAmt":"5.17181528","boostRewardAsset":"AXS","estDailyRewardAmt":"1.20928901","nextPay":"1.29295383","nextPayDate":1646697600000,"valueDate":1646697600000,"rewardsEndDate":1651449600000,"deliverDate":1651536000000,"nextSubscriptionDate":1651536000000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetLockedSubscriptionPreviewResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetLockedSubscriptionPreviewResponseInner>");
 
             let resp = client.get_locked_subscription_preview(params).await.expect("Expected a response");
@@ -3783,7 +4172,7 @@ mod tests {
 
             let params = GetLockedSubscriptionRecordParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"purchaseId":"26055","projectId":"Axs*90","time":1575018510000,"asset":"BNB","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"purchaseId":"26055","projectId":"Axs*90","time":1575018510000,"asset":"BNB","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedSubscriptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedSubscriptionRecordResponse");
 
             let resp = client.get_locked_subscription_record(params).await.expect("Expected a response");
@@ -3798,9 +4187,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetLockedSubscriptionRecordParams::builder().purchase_id("1".to_string()).asset("asset_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetLockedSubscriptionRecordParams::builder().purchase_id("1".to_string()).asset("USDC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"purchaseId":"26055","projectId":"Axs*90","time":1575018510000,"asset":"BNB","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"positionId":123123,"purchaseId":"26055","projectId":"Axs*90","time":1575018510000,"asset":"BNB","amount":"21312.23223","lockPeriod":"30","type":"AUTO","sourceAccount":"SPOT","amtFromSpot":"30","amtFromFunding":"70","status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLockedSubscriptionRecordResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLockedSubscriptionRecordResponse");
 
             let resp = client.get_locked_subscription_record(params).await.expect("Expected a response");
@@ -3835,7 +4224,7 @@ mod tests {
 
             let params = GetRateHistoryParams::builder("1".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"productId":"BUSD001","asset":"BUSD","annualPercentageRate":"0.00006408","time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"productId":"BUSD001","asset":"BUSD","annualPercentageRate":"0.00006408","time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRateHistoryResponse");
 
             let resp = client.get_rate_history(params).await.expect("Expected a response");
@@ -3850,9 +4239,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetRateHistoryParams::builder("1".to_string(),).apr_period("DAY".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetRateHistoryParams::builder("1".to_string(),).apr_period(GetRateHistoryAprPeriodEnum::Day).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"productId":"BUSD001","asset":"BUSD","annualPercentageRate":"0.00006408","time":1577233578000}],"total":"1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"productId":"BUSD001","asset":"BUSD","annualPercentageRate":"0.00006408","time":1577233578000}],"total":"1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRateHistoryResponse");
 
             let resp = client.get_rate_history(params).await.expect("Expected a response");
@@ -3887,7 +4276,7 @@ mod tests {
 
             let params = GetSimpleEarnFlexibleProductListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BTC","latestAnnualPercentageRate":"0.05000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"airDropPercentageRate":"0.05000000","canPurchase":true,"canRedeem":true,"isSoldOut":true,"hot":true,"minPurchaseAmount":"0.01000000","productId":"BTC001","subscriptionStartTime":1646182276000,"status":"PURCHASING"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BTC","latestAnnualPercentageRate":"0.05000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"airDropPercentageRate":"0.05000000","canPurchase":true,"canRedeem":true,"isSoldOut":true,"hot":true,"minPurchaseAmount":"0.01000000","productId":"BTC001","subscriptionStartTime":1646182276000,"status":"PURCHASING"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSimpleEarnFlexibleProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSimpleEarnFlexibleProductListResponse");
 
             let resp = client.get_simple_earn_flexible_product_list(params).await.expect("Expected a response");
@@ -3902,9 +4291,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetSimpleEarnFlexibleProductListParams::builder().asset("asset_example".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSimpleEarnFlexibleProductListParams::builder().asset("USDC".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BTC","latestAnnualPercentageRate":"0.05000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"airDropPercentageRate":"0.05000000","canPurchase":true,"canRedeem":true,"isSoldOut":true,"hot":true,"minPurchaseAmount":"0.01000000","productId":"BTC001","subscriptionStartTime":1646182276000,"status":"PURCHASING"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BTC","latestAnnualPercentageRate":"0.05000000","tierAnnualPercentageRate":{"0-5BTC":0.05,"5-10BTC":0.03},"airDropPercentageRate":"0.05000000","canPurchase":true,"canRedeem":true,"isSoldOut":true,"hot":true,"minPurchaseAmount":"0.01000000","productId":"BTC001","subscriptionStartTime":1646182276000,"status":"PURCHASING"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSimpleEarnFlexibleProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSimpleEarnFlexibleProductListResponse");
 
             let resp = client.get_simple_earn_flexible_product_list(params).await.expect("Expected a response");
@@ -3939,7 +4328,7 @@ mod tests {
 
             let params = GetSimpleEarnLockedProductListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Axs*90","detail":{"asset":"AXS","rewardAsset":"AXS","duration":90,"renewable":true,"isSoldOut":true,"apr":"1.2069","status":"CREATED","subscriptionStartTime":1646182276000,"extraRewardAsset":"BNB","extraRewardAPR":"0.23","boostRewardAsset":"AXS","boostApr":"0.0121","boostEndTime":1646182276000},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Axs*90","detail":{"asset":"AXS","rewardAsset":"AXS","duration":90,"renewable":true,"isSoldOut":true,"apr":"1.2069","status":"CREATED","subscriptionStartTime":1646182276000,"extraRewardAsset":"BNB","extraRewardAPR":"0.23","boostRewardAsset":"AXS","boostApr":"0.0121","boostEndTime":1646182276000},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSimpleEarnLockedProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSimpleEarnLockedProductListResponse");
 
             let resp = client.get_simple_earn_locked_product_list(params).await.expect("Expected a response");
@@ -3954,9 +4343,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
-            let params = GetSimpleEarnLockedProductListParams::builder().asset("asset_example".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSimpleEarnLockedProductListParams::builder().asset("USDC".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Axs*90","detail":{"asset":"AXS","rewardAsset":"AXS","duration":90,"renewable":true,"isSoldOut":true,"apr":"1.2069","status":"CREATED","subscriptionStartTime":1646182276000,"extraRewardAsset":"BNB","extraRewardAPR":"0.23","boostRewardAsset":"AXS","boostApr":"0.0121","boostEndTime":1646182276000},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"projectId":"Axs*90","detail":{"asset":"AXS","rewardAsset":"AXS","duration":90,"renewable":true,"isSoldOut":true,"apr":"1.2069","status":"CREATED","subscriptionStartTime":1646182276000,"extraRewardAsset":"BNB","extraRewardAPR":"0.23","boostRewardAsset":"AXS","boostApr":"0.0121","boostEndTime":1646182276000},"quota":{"totalPersonalQuota":"2","minimum":"0.001"}}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSimpleEarnLockedProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSimpleEarnLockedProductListResponse");
 
             let resp = client.get_simple_earn_locked_product_list(params).await.expect("Expected a response");
@@ -3993,8 +4382,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RedeemFlexibleProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemFlexibleProductResponse");
@@ -4017,13 +4406,13 @@ mod tests {
             let params = RedeemFlexibleProductParams::builder("1".to_string())
                 .redeem_all(false)
                 .amount(dec!(1.0))
-                .dest_account("SPOT".to_string())
+                .dest_account(RedeemFlexibleProductDestAccountEnum::Spot)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RedeemFlexibleProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemFlexibleProductResponse");
@@ -4065,8 +4454,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RedeemLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemLockedProductResponse");
@@ -4091,8 +4480,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"redeemId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"redeemId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::RedeemLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemLockedProductResponse");
@@ -4134,7 +4523,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetFlexibleAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetFlexibleAutoSubscribeResponse");
@@ -4159,7 +4549,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetFlexibleAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetFlexibleAutoSubscribeResponse");
@@ -4201,7 +4592,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetLockedAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetLockedAutoSubscribeResponse");
@@ -4226,7 +4618,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetLockedAutoSubscribeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetLockedAutoSubscribeResponse");
@@ -4266,12 +4659,13 @@ mod tests {
 
             let params = SetLockedProductRedeemOptionParams::builder(
                 "1".to_string(),
-                "redeem_to_example".to_string(),
+                SetLockedProductRedeemOptionRedeemToEnum::Spot,
             )
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetLockedProductRedeemOptionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetLockedProductRedeemOptionResponse");
@@ -4293,13 +4687,14 @@ mod tests {
 
             let params = SetLockedProductRedeemOptionParams::builder(
                 "1".to_string(),
-                "redeem_to_example".to_string(),
+                SetLockedProductRedeemOptionRedeemToEnum::Spot,
             )
             .recv_window(5000)
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetLockedProductRedeemOptionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetLockedProductRedeemOptionResponse");
@@ -4321,7 +4716,7 @@ mod tests {
 
             let params = SetLockedProductRedeemOptionParams::builder(
                 "1".to_string(),
-                "redeem_to_example".to_string(),
+                SetLockedProductRedeemOptionRedeemToEnum::Spot,
             )
             .build()
             .unwrap();
@@ -4342,7 +4737,7 @@ mod tests {
 
             let params = SimpleAccountParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SimpleAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SimpleAccountResponse");
 
             let resp = client.simple_account(params).await.expect("Expected a response");
@@ -4359,7 +4754,7 @@ mod tests {
 
             let params = SimpleAccountParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230","totalFlexibleAmountInBTC":"0.00000000","totalFlexibleAmountInUSDT":"0.00000000","totalLockedInBTC":"0.01067982","totalLockedInUSDT":"77.13289230"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SimpleAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SimpleAccountResponse");
 
             let resp = client.simple_account(params).await.expect("Expected a response");
@@ -4394,8 +4789,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"purchaseId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeFlexibleProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeFlexibleProductResponse");
@@ -4417,13 +4812,13 @@ mod tests {
 
             let params = SubscribeFlexibleProductParams::builder("1".to_string(), dec!(1.0))
                 .auto_subscribe(true)
-                .source_account("SPOT".to_string())
+                .source_account(SubscribeFlexibleProductSourceAccountEnum::Spot)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"purchaseId":40607,"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"purchaseId":40607,"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeFlexibleProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeFlexibleProductResponse");
@@ -4467,7 +4862,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","success":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeLockedProductResponse");
@@ -4488,16 +4883,16 @@ mod tests {
             let client = MockFlexibleLockedApiClient { force_error: false };
 
             let params = SubscribeLockedProductParams::builder("1".to_string(), dec!(1.0))
-                .auto_subscribe(true)
-                .source_account("SPOT".to_string())
-                .redeem_to("SPOT".to_string())
+                .auto_subscribe(false)
+                .source_account(SubscribeLockedProductSourceAccountEnum::Spot)
+                .redeem_to(SubscribeLockedProductRedeemToEnum::Spot)
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"purchaseId":40607,"positionId":"12345","success":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubscribeLockedProductResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeLockedProductResponse");

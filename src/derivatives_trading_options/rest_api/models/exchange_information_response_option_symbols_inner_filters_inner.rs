@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,18 +17,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseOptionSymbolsInnerFiltersInner {
+    /// filter Type
     #[serde(rename = "filterType", skip_serializing_if = "Option::is_none")]
     pub filter_type: Option<String>,
+    /// min Price
     #[serde(rename = "minPrice", skip_serializing_if = "Option::is_none")]
     pub min_price: Option<String>,
+    /// max Price
     #[serde(rename = "maxPrice", skip_serializing_if = "Option::is_none")]
     pub max_price: Option<String>,
+    /// tick Size
     #[serde(rename = "tickSize", skip_serializing_if = "Option::is_none")]
     pub tick_size: Option<String>,
+    /// Minimum order quantity
     #[serde(rename = "minQty", skip_serializing_if = "Option::is_none")]
     pub min_qty: Option<String>,
+    /// Maximum order quantity
     #[serde(rename = "maxQty", skip_serializing_if = "Option::is_none")]
     pub max_qty: Option<String>,
+    /// step Size
     #[serde(rename = "stepSize", skip_serializing_if = "Option::is_none")]
     pub step_size: Option<String>,
 }

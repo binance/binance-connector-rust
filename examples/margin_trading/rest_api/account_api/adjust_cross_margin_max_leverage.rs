@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = AdjustCrossMarginMaxLeverageParams::builder(789).build()?;
+    let params = AdjustCrossMarginMaxLeverageParams::builder(3).build()?;
 
     // Make the API call
     let response = rest_client

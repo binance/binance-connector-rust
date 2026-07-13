@@ -4,7 +4,13 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::margin_trading::{MarginTradingRestApi, rest_api::MarginAccountBorrowRepayParams};
+use binance_sdk::margin_trading::{
+    MarginTradingRestApi,
+    rest_api::{
+        MarginAccountBorrowRepayIsIsolatedEnum, MarginAccountBorrowRepayParams,
+        MarginAccountBorrowRepayTypeEnum,
+    },
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -26,11 +32,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = MarginAccountBorrowRepayParams::builder(
-        "asset_example".to_string(),
-        "FALSE".to_string(),
-        "symbol_example".to_string(),
-        "amount_example".to_string(),
-        "r#type_example".to_string(),
+        "USDT".to_string(),
+        MarginAccountBorrowRepayIsIsolatedEnum::True,
+        "1.0".to_string(),
+        MarginAccountBorrowRepayTypeEnum::Borrow,
     )
     .build()?;
 

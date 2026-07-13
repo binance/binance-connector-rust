@@ -1,7 +1,7 @@
 /*
- * Binance Algo REST API
+ * Algo Trading REST API
  *
- * OpenAPI Specification for the Binance Algo REST API
+ * Programmatic access to Binance’s execution algorithms for creating and managing Spot and Futures algo orders.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,32 +17,46 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryHistoricalAlgoOrdersFutureAlgoResponseOrdersInner {
+    /// Algo order ID
     #[serde(rename = "algoId", skip_serializing_if = "Option::is_none")]
     pub algo_id: Option<i64>,
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Trading side
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// Total order quantity
     #[serde(rename = "totalQty", skip_serializing_if = "Option::is_none")]
     pub total_qty: Option<String>,
+    /// Executed quantity
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// Executed amount
     #[serde(rename = "executedAmt", skip_serializing_if = "Option::is_none")]
     pub executed_amt: Option<String>,
+    /// Average execution price
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
+    /// Client-defined algo order ID
     #[serde(rename = "clientAlgoId", skip_serializing_if = "Option::is_none")]
     pub client_algo_id: Option<String>,
+    /// Order creation time
     #[serde(rename = "bookTime", skip_serializing_if = "Option::is_none")]
     pub book_time: Option<i64>,
+    /// End time
     #[serde(rename = "endTime", skip_serializing_if = "Option::is_none")]
     pub end_time: Option<i64>,
+    /// Algo order status
     #[serde(rename = "algoStatus", skip_serializing_if = "Option::is_none")]
     pub algo_status: Option<String>,
+    /// Algo order type
     #[serde(rename = "algoType", skip_serializing_if = "Option::is_none")]
     pub algo_type: Option<String>,
+    /// Execution urgency
     #[serde(rename = "urgency", skip_serializing_if = "Option::is_none")]
     pub urgency: Option<String>,
 }

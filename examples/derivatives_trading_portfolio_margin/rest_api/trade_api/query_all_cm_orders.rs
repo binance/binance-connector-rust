@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = QueryAllCmOrdersParams::builder("symbol_example".to_string()).build()?;
+    let params = QueryAllCmOrdersParams::default();
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,39 +15,55 @@
 use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `ExchangeInformationResponseSymbolsInner` : symbols.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseSymbolsInner {
+    /// Symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair.
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Contract Type.
     #[serde(rename = "contractType", skip_serializing_if = "Option::is_none")]
     pub contract_type: Option<String>,
+    /// Delivery Date.
     #[serde(rename = "deliveryDate", skip_serializing_if = "Option::is_none")]
     pub delivery_date: Option<i64>,
+    /// Onboard Date.
     #[serde(rename = "onboardDate", skip_serializing_if = "Option::is_none")]
     pub onboard_date: Option<i64>,
+    /// Status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// ignore
     #[serde(rename = "maintMarginPercent", skip_serializing_if = "Option::is_none")]
     pub maint_margin_percent: Option<String>,
+    /// ignore
     #[serde(
         rename = "requiredMarginPercent",
         skip_serializing_if = "Option::is_none"
     )]
     pub required_margin_percent: Option<String>,
+    /// Base Asset.
     #[serde(rename = "baseAsset", skip_serializing_if = "Option::is_none")]
     pub base_asset: Option<String>,
+    /// Quote Asset.
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// Margin Asset.
     #[serde(rename = "marginAsset", skip_serializing_if = "Option::is_none")]
     pub margin_asset: Option<String>,
+    /// please do not use it as tickSize
     #[serde(rename = "pricePrecision", skip_serializing_if = "Option::is_none")]
     pub price_precision: Option<i64>,
+    /// please do not use it as stepSize
     #[serde(rename = "quantityPrecision", skip_serializing_if = "Option::is_none")]
     pub quantity_precision: Option<i64>,
+    /// Base Asset Precision.
     #[serde(rename = "baseAssetPrecision", skip_serializing_if = "Option::is_none")]
     pub base_asset_precision: Option<i64>,
+    /// Quote Precision.
     #[serde(rename = "quotePrecision", skip_serializing_if = "Option::is_none")]
     pub quote_precision: Option<i64>,
     #[serde(rename = "underlyingType", skip_serializing_if = "Option::is_none")]
@@ -56,21 +72,26 @@ pub struct ExchangeInformationResponseSymbolsInner {
     pub underlying_sub_type: Option<Vec<String>>,
     #[serde(rename = "settlePlan", skip_serializing_if = "Option::is_none")]
     pub settle_plan: Option<i64>,
+    /// threshold for algo order with \"priceProtect\"
     #[serde(rename = "triggerProtect", skip_serializing_if = "Option::is_none")]
     pub trigger_protect: Option<String>,
     #[serde(rename = "filters", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<models::ExchangeInformationResponseSymbolsInnerFiltersInner>>,
     #[serde(rename = "orderTypes", skip_serializing_if = "Option::is_none")]
     pub order_types: Option<Vec<String>>,
+    /// Time In Force.
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<Vec<String>>,
+    /// liquidation fee rate
     #[serde(rename = "liquidationFee", skip_serializing_if = "Option::is_none")]
     pub liquidation_fee: Option<String>,
+    /// the max price difference rate( from mark price) a market order can make
     #[serde(rename = "marketTakeBound", skip_serializing_if = "Option::is_none")]
     pub market_take_bound: Option<String>,
 }
 
 impl ExchangeInformationResponseSymbolsInner {
+    /// symbols.
     #[must_use]
     pub fn new() -> ExchangeInformationResponseSymbolsInner {
         ExchangeInformationResponseSymbolsInner {

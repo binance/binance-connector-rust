@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,54 +18,79 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AlgoUpdateO {
+    /// Client Algo Id
     #[serde(rename = "caid", skip_serializing_if = "Option::is_none")]
     pub caid: Option<String>,
+    /// Algo Id
     #[serde(rename = "aid", skip_serializing_if = "Option::is_none")]
     pub aid: Option<i64>,
+    /// Algo Type
     #[serde(rename = "at", skip_serializing_if = "Option::is_none")]
     pub at: Option<String>,
+    /// Order Type
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Side
     #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
     pub s_uppercase: Option<String>,
+    /// Position Side
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// Time in force
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<String>,
+    /// Quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Algo Status
     #[serde(rename = "X", skip_serializing_if = "Option::is_none")]
     pub x_uppercase: Option<String>,
+    /// Order Id
     #[serde(rename = "ai", skip_serializing_if = "Option::is_none")]
     pub ai: Option<String>,
+    /// Avg fill price in matching engine, only display when order is triggered and placed in matching engine
     #[serde(rename = "ap", skip_serializing_if = "Option::is_none")]
     pub ap: Option<String>,
+    /// Executed quantity in matching engine, only display when order is triggered and placed in matching engine
     #[serde(rename = "aq", skip_serializing_if = "Option::is_none")]
     pub aq: Option<String>,
+    /// Actual order type in matching engine, only display when order is triggered and placed in matching engine
     #[serde(rename = "act", skip_serializing_if = "Option::is_none")]
     pub act: Option<String>,
+    /// Trigger Price
     #[serde(rename = "tp", skip_serializing_if = "Option::is_none")]
     pub tp: Option<String>,
+    /// Order Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// STP mode
     #[serde(rename = "V", skip_serializing_if = "Option::is_none")]
     pub v_uppercase: Option<String>,
+    /// Working type
     #[serde(rename = "wt", skip_serializing_if = "Option::is_none")]
     pub wt: Option<String>,
+    /// Price match mode
     #[serde(rename = "pm", skip_serializing_if = "Option::is_none")]
     pub pm: Option<String>,
+    /// If Close-All
     #[serde(rename = "cp", skip_serializing_if = "Option::is_none")]
     pub cp: Option<bool>,
+    /// If price protection is turned on
     #[serde(rename = "pP", skip_serializing_if = "Option::is_none")]
     pub p_p: Option<bool>,
+    /// Is this reduce only
     #[serde(rename = "R", skip_serializing_if = "Option::is_none")]
     pub r_uppercase: Option<bool>,
+    /// Trigger time
     #[serde(rename = "tt", skip_serializing_if = "Option::is_none")]
     pub tt: Option<i64>,
+    /// Good till time for GTD time in force
     #[serde(rename = "gtd", skip_serializing_if = "Option::is_none")]
     pub gtd: Option<i64>,
+    /// Algo order failed reason
     #[serde(rename = "rm", skip_serializing_if = "Option::is_none")]
     pub rm: Option<String>,
 }

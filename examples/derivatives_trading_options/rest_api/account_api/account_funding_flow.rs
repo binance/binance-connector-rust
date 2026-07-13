@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsRestApi, rest_api::AccountFundingFlowParams,
+    DerivativesTradingOptionsRestApi,
+    rest_api::{AccountFundingFlowCurrencyEnum, AccountFundingFlowParams},
 };
 use binance_sdk::logger;
 
@@ -27,7 +28,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = AccountFundingFlowParams::builder("currency_example".to_string()).build()?;
+    let params = AccountFundingFlowParams::builder(AccountFundingFlowCurrencyEnum::Usdt).build()?;
 
     // Make the API call
     let response = rest_client

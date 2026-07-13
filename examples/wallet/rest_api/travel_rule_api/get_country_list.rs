@@ -4,7 +4,7 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::wallet::WalletRestApi;
+use binance_sdk::wallet::{WalletRestApi, rest_api::GetCountryListParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -24,9 +24,12 @@ async fn main() -> Result<()> {
     // Create the Wallet REST API client
     let rest_client = WalletRestApi::production(rest_conf);
 
+    // Setup the API parameters
+    let params = GetCountryListParams::default();
+
     // Make the API call
     let response = rest_client
-        .get_country_list()
+        .get_country_list(params)
         .await
         .context("get_country_list request failed")?;
 

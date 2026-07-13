@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,30 +17,40 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct VipLoanFixedRateBorrowResponse {
+    /// Echo of input parameter
     #[serde(rename = "borrowCoin", skip_serializing_if = "Option::is_none")]
     pub borrow_coin: Option<String>,
+    /// Actual total borrow amount (aggregated when multiple supplyRequest)
     #[serde(rename = "borrowAmount", skip_serializing_if = "Option::is_none")]
     pub borrow_amount: Option<String>,
+    /// Actual received amount
     #[serde(
         rename = "actualReceivedAmount",
         skip_serializing_if = "Option::is_none"
     )]
     pub actual_received_amount: Option<String>,
+    /// Echo of input parameter, comma-separated
     #[serde(rename = "collateralCoin", skip_serializing_if = "Option::is_none")]
     pub collateral_coin: Option<String>,
+    /// Echo of input parameter, comma-separated
     #[serde(
         rename = "collateralAccountId",
         skip_serializing_if = "Option::is_none"
     )]
     pub collateral_account_id: Option<String>,
+    /// Actual borrow interest rate (weighted average when multiple)
     #[serde(rename = "borrowInterestRate", skip_serializing_if = "Option::is_none")]
     pub borrow_interest_rate: Option<String>,
+    /// `{loanTerm}Days`, e.g. \"30Days\"
     #[serde(rename = "duration", skip_serializing_if = "Option::is_none")]
     pub duration: Option<String>,
+    /// Echo of input parameter
     #[serde(rename = "autoRepay", skip_serializing_if = "Option::is_none")]
     pub auto_repay: Option<bool>,
+    /// Order ID
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// `Succeeds` / `Failed` / `Processing`
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

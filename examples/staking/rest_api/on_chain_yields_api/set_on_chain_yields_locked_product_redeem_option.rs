@@ -5,7 +5,11 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
 use binance_sdk::staking::{
-    StakingRestApi, rest_api::SetOnChainYieldsLockedProductRedeemOptionParams,
+    StakingRestApi,
+    rest_api::{
+        SetOnChainYieldsLockedProductRedeemOptionParams,
+        SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum,
+    },
 };
 
 #[tokio::main]
@@ -29,7 +33,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = SetOnChainYieldsLockedProductRedeemOptionParams::builder(
         "1".to_string(),
-        "redeem_to_example".to_string(),
+        SetOnChainYieldsLockedProductRedeemOptionRedeemToEnum::Spot,
     )
     .build()?;
 

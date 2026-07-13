@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -294,7 +294,7 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Index-Price-Streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#index-price-streams).
     ///
     pub async fn index_price_streams(
         &self,
@@ -323,7 +323,7 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Kline-Candlestick-Streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#kline-candlestick-streams).
     ///
     pub async fn kline_candlestick_streams(
         &self,
@@ -332,35 +332,6 @@ impl WebsocketStreams {
         self.market_api_client
             .kline_candlestick_streams(params)
             .await
-    }
-
-    /// Mark Price
-    ///
-    /// The mark price for all option symbols on specific underlying asset. E.g.[btcusdt@optionMarkPrice](wss://fstream.binance.com/market/stream?streams=btcusdt@optionMarkPrice)
-    ///
-    /// Update Speed: 1000ms
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`MarkPriceParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<Vec<models::MarkPriceResponseInner>>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Mark-Price).
-    ///
-    pub async fn mark_price(
-        &self,
-        params: MarkPriceParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::MarkPriceResponseInner>>>> {
-        self.market_api_client.mark_price(params).await
     }
 
     /// New Symbol Info
@@ -383,7 +354,7 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/New-Symbol-Info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#new-symbol-info).
     ///
     pub async fn new_symbol_info(
         &self,
@@ -412,13 +383,42 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Open-Interest).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#open-interest).
     ///
     pub async fn open_interest(
         &self,
         params: OpenInterestParams,
     ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::OpenInterestResponseInner>>>> {
         self.market_api_client.open_interest(params).await
+    }
+
+    /// Option Mark Price
+    ///
+    /// The mark price for all option symbols on specific underlying asset. E.g.[btcusdt@optionMarkPrice](wss://fstream.binance.com/market/stream?streams=btcusdt@optionMarkPrice)
+    ///
+    /// Update Speed: 1000ms
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`OptionMarkPriceParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<Vec<models::OptionMarkPriceResponseInner>>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/market#option-mark-price).
+    ///
+    pub async fn option_mark_price(
+        &self,
+        params: OptionMarkPriceParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<Vec<models::OptionMarkPriceResponseInner>>>> {
+        self.market_api_client.option_mark_price(params).await
     }
 
     /// Diff Book Depth Streams
@@ -441,13 +441,42 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Diff-Book-Depth-Streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#diff-book-depth-streams).
     ///
     pub async fn diff_book_depth_streams(
         &self,
         params: DiffBookDepthStreamsParams,
     ) -> anyhow::Result<Arc<WebsocketStream<models::DiffBookDepthStreamsResponse>>> {
         self.public_api_client.diff_book_depth_streams(params).await
+    }
+
+    /// 24-hour TICKER
+    ///
+    /// 24hr ticker info for all symbols. Only symbols whose ticker info changed will be sent.
+    ///
+    /// Update Speed: 1000ms
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`Hour24TickerParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`Arc<WebsocketStream<models::Hour24TickerResponse>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#hour24-ticker).
+    ///
+    pub async fn hour24_ticker(
+        &self,
+        params: Hour24TickerParams,
+    ) -> anyhow::Result<Arc<WebsocketStream<models::Hour24TickerResponse>>> {
+        self.public_api_client.hour24_ticker(params).await
     }
 
     /// Individual Symbol Book Ticker Streams
@@ -470,7 +499,7 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Individual-Symbol-Book-Ticker-Streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#individual-symbol-book-ticker-streams).
     ///
     pub async fn individual_symbol_book_ticker_streams(
         &self,
@@ -484,7 +513,7 @@ impl WebsocketStreams {
 
     /// Partial Book Depth Streams
     ///
-    /// Top **<levels\>** bids and asks, Valid levels are **<levels\>** are 5, 10, 20.
+    /// Top <levels> bids and asks. Valid <levels> are 5, 10, 20.
     ///
     /// Update Speed: 100ms or 500ms
     ///
@@ -502,7 +531,7 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Partial-Book-Depth-Streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#partial-book-depth-streams).
     ///
     pub async fn partial_book_depth_streams(
         &self,
@@ -511,35 +540,6 @@ impl WebsocketStreams {
         self.public_api_client
             .partial_book_depth_streams(params)
             .await
-    }
-
-    /// 24-hour TICKER
-    ///
-    /// 24hr ticker info for all symbols. Only symbols whose ticker info changed will be sent.
-    ///
-    /// Update Speed: 1000ms
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`Ticker24HourParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`Arc<WebsocketStream<models::Ticker24HourResponse>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/24-hour-TICKER).
-    ///
-    pub async fn ticker24_hour(
-        &self,
-        params: Ticker24HourParams,
-    ) -> anyhow::Result<Arc<WebsocketStream<models::Ticker24HourResponse>>> {
-        self.public_api_client.ticker24_hour(params).await
     }
 
     /// Trade Streams
@@ -562,7 +562,7 @@ impl WebsocketStreams {
     /// Returns an [`anyhow::Error`] if the stream request fails, if parameters are invalid, or if parsing the response fails.
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/derivatives/options-trading/websocket-market-streams/Trade-Streams).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/public#trade-streams).
     ///
     pub async fn trade_streams(
         &self,

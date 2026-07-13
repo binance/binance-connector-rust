@@ -5,7 +5,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_portfolio_margin::{
-    DerivativesTradingPortfolioMarginRestApi, rest_api::BnbTransferParams,
+    DerivativesTradingPortfolioMarginRestApi,
+    rest_api::{BnbTransferParams, BnbTransferTransferSideEnum},
 };
 use binance_sdk::logger;
 
@@ -29,7 +30,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        BnbTransferParams::builder(dec!(1.0), "transfer_side_example".to_string()).build()?;
+        BnbTransferParams::builder(dec!(1.0), BnbTransferTransferSideEnum::ToUm).build()?;
 
     // Make the API call
     let response = rest_client

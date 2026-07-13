@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = GiftCardRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = FetchTokenLimitParams::builder("base_token_example".to_string()).build()?;
+    let params = FetchTokenLimitParams::builder("BUSD".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

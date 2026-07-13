@@ -1,7 +1,7 @@
 /*
- * Binance Dual Investment REST API
+ * Dual Investment REST API
  *
- * OpenAPI Specification for the Binance Dual Investment REST API
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetDualInvestmentPositionsResponseListInner {
+    /// positionId
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     #[serde(rename = "investCoin", skip_serializing_if = "Option::is_none")]
@@ -31,6 +32,7 @@ pub struct GetDualInvestmentPositionsResponseListInner {
     pub duration: Option<i64>,
     #[serde(rename = "settleDate", skip_serializing_if = "Option::is_none")]
     pub settle_date: Option<i64>,
+    /// Purchase status. Possible values include PENDING, `PURCHASE_SUCCESS`, SETTLED, `PURCHASE_FAIL`, REFUNDING, `REFUND_SUCCESS`, and SETTLING.
     #[serde(rename = "purchaseStatus", skip_serializing_if = "Option::is_none")]
     pub purchase_status: Option<String>,
     #[serde(rename = "apr", skip_serializing_if = "Option::is_none")]
@@ -41,8 +43,11 @@ pub struct GetDualInvestmentPositionsResponseListInner {
     pub purchase_end_time: Option<i64>,
     #[serde(rename = "optionType", skip_serializing_if = "Option::is_none")]
     pub option_type: Option<String>,
+    /// NULL, STANDARD, ADVANCED
     #[serde(rename = "autoCompoundPlan", skip_serializing_if = "Option::is_none")]
     pub auto_compound_plan: Option<String>,
+    #[serde(rename = "subscriptionTime", skip_serializing_if = "Option::is_none")]
+    pub subscription_time: Option<i64>,
 }
 
 impl GetDualInvestmentPositionsResponseListInner {
@@ -62,6 +67,7 @@ impl GetDualInvestmentPositionsResponseListInner {
             purchase_end_time: None,
             option_type: None,
             auto_compound_plan: None,
+            subscription_time: None,
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Convert REST API
+ * Convert REST API
  *
- * OpenAPI Specification for the Binance Convert REST API
+ * Request quotes and execute cryptocurrency conversions via the Convert REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -58,18 +58,20 @@ impl MarketDataApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`list_all_convert_pairs`](#method.list_all_convert_pairs).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ListAllConvertPairsParams {
     /// User spends coin
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromAsset", default)]
     pub from_asset: Option<String>,
     /// User receives coin
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "toAsset", default)]
     pub to_asset: Option<String>,
 }
 
@@ -85,13 +87,14 @@ impl ListAllConvertPairsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_order_quantity_precision_per_asset`](#method.query_order_quantity_precision_per_asset).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryOrderQuantityPrecisionPerAssetParams {
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -219,7 +222,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"9E+24"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::ListAllConvertPairsResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::ListAllConvertPairsResponseInner>");
@@ -248,10 +251,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"[{"asset":"BTC","fraction":8},{"asset":"SHIB","fraction":2}]"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","fraction":8}]"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::QueryOrderQuantityPrecisionPerAssetResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryOrderQuantityPrecisionPerAssetResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -272,7 +273,7 @@ mod tests {
 
             let params = ListAllConvertPairsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"9E+24"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::ListAllConvertPairsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::ListAllConvertPairsResponseInner>");
 
             let resp = client.list_all_convert_pairs(params).await.expect("Expected a response");
@@ -287,9 +288,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = ListAllConvertPairsParams::builder().from_asset("from_asset_example".to_string()).to_asset("to_asset_example".to_string()).build().unwrap();
+            let params = ListAllConvertPairsParams::builder().from_asset("BTC".to_string()).to_asset("USDT".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"9E+24"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::ListAllConvertPairsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::ListAllConvertPairsResponseInner>");
 
             let resp = client.list_all_convert_pairs(params).await.expect("Expected a response");
@@ -322,7 +323,7 @@ mod tests {
 
             let params = QueryOrderQuantityPrecisionPerAssetParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","fraction":8},{"asset":"SHIB","fraction":2}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","fraction":8}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryOrderQuantityPrecisionPerAssetResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryOrderQuantityPrecisionPerAssetResponseInner>");
 
             let resp = client.query_order_quantity_precision_per_asset(params).await.expect("Expected a response");
@@ -339,7 +340,7 @@ mod tests {
 
             let params = QueryOrderQuantityPrecisionPerAssetParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","fraction":8},{"asset":"SHIB","fraction":2}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","fraction":8}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryOrderQuantityPrecisionPerAssetResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryOrderQuantityPrecisionPerAssetResponseInner>");
 
             let resp = client.query_order_quantity_precision_per_asset(params).await.expect("Expected a response");

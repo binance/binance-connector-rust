@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,26 +17,37 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TokenListResponseDataInner {
+    /// Unique token identifier.
     #[serde(rename = "tokenId", skip_serializing_if = "Option::is_none")]
     pub token_id: Option<String>,
+    /// Chain ID.
     #[serde(rename = "chainId", skip_serializing_if = "Option::is_none")]
     pub chain_id: Option<String>,
+    /// Chain icon URL.
     #[serde(rename = "chainIconUrl", skip_serializing_if = "Option::is_none")]
     pub chain_icon_url: Option<String>,
+    /// Chain name.
     #[serde(rename = "chainName", skip_serializing_if = "Option::is_none")]
     pub chain_name: Option<String>,
+    /// Token contract address.
     #[serde(rename = "contractAddress", skip_serializing_if = "Option::is_none")]
     pub contract_address: Option<String>,
+    /// Token name.
     #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+    /// Token symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Token icon URL.
     #[serde(rename = "iconUrl", skip_serializing_if = "Option::is_none")]
     pub icon_url: Option<String>,
+    /// Latest token price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// 24-hour price change percentage.
     #[serde(rename = "percentChange24h", skip_serializing_if = "Option::is_none")]
     pub percent_change24h: Option<String>,
+    /// 24-hour trading volume.
     #[serde(rename = "volume24h", skip_serializing_if = "Option::is_none")]
     pub volume24h: Option<String>,
     #[serde(rename = "marketCap", skip_serializing_if = "Option::is_none")]
@@ -67,6 +78,7 @@ pub struct TokenListResponseDataInner {
     pub offline: Option<bool>,
     #[serde(rename = "tradeDecimal", skip_serializing_if = "Option::is_none")]
     pub trade_decimal: Option<i64>,
+    /// ALPHA token ID, e.g. `ALPHA_175`.
     #[serde(rename = "alphaId", skip_serializing_if = "Option::is_none")]
     pub alpha_id: Option<String>,
     #[serde(rename = "offsell", skip_serializing_if = "Option::is_none")]

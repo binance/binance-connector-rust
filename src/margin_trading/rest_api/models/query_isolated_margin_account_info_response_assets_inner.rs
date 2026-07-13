@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -22,24 +22,34 @@ pub struct QueryIsolatedMarginAccountInfoResponseAssetsInner {
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset:
         Option<Box<models::QueryIsolatedMarginAccountInfoResponseAssetsInnerQuoteAsset>>,
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// isolated Created.
     #[serde(rename = "isolatedCreated", skip_serializing_if = "Option::is_none")]
     pub isolated_created: Option<bool>,
+    /// true-enabled, false-disabled
     #[serde(rename = "enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
+    /// margin Level.
     #[serde(rename = "marginLevel", skip_serializing_if = "Option::is_none")]
     pub margin_level: Option<String>,
+    /// \"EXCESSIVE\", \"NORMAL\", \"`MARGIN_CALL`\", \"`PRE_LIQUIDATION`\", \"`FORCE_LIQUIDATION`\"
     #[serde(rename = "marginLevelStatus", skip_serializing_if = "Option::is_none")]
     pub margin_level_status: Option<String>,
+    /// margin Ratio.
     #[serde(rename = "marginRatio", skip_serializing_if = "Option::is_none")]
     pub margin_ratio: Option<String>,
+    /// index Price.
     #[serde(rename = "indexPrice", skip_serializing_if = "Option::is_none")]
     pub index_price: Option<String>,
+    /// liquidate Price.
     #[serde(rename = "liquidatePrice", skip_serializing_if = "Option::is_none")]
     pub liquidate_price: Option<String>,
+    /// liquidate Rate.
     #[serde(rename = "liquidateRate", skip_serializing_if = "Option::is_none")]
     pub liquidate_rate: Option<String>,
+    /// trade Enabled.
     #[serde(rename = "tradeEnabled", skip_serializing_if = "Option::is_none")]
     pub trade_enabled: Option<bool>,
 }

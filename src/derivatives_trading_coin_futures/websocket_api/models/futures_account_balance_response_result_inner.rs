@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,20 +18,28 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct FuturesAccountBalanceResponseResultInner {
+    /// unique account code
     #[serde(rename = "accountAlias", skip_serializing_if = "Option::is_none")]
     pub account_alias: Option<String>,
+    /// asset name
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Account balance.
     #[serde(rename = "balance", skip_serializing_if = "Option::is_none")]
     pub balance: Option<String>,
+    /// Available amount for withdrawal.
     #[serde(rename = "withdrawAvailable", skip_serializing_if = "Option::is_none")]
     pub withdraw_available: Option<String>,
+    /// wallet balance for crossed margin
     #[serde(rename = "crossWalletBalance", skip_serializing_if = "Option::is_none")]
     pub cross_wallet_balance: Option<String>,
+    /// total unrealized profit or loss of crossed positions
     #[serde(rename = "crossUnPnl", skip_serializing_if = "Option::is_none")]
     pub cross_un_pnl: Option<String>,
+    /// available margin balance
     #[serde(rename = "availableBalance", skip_serializing_if = "Option::is_none")]
     pub available_balance: Option<String>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

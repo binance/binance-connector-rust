@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -34,8 +29,6 @@ pub mod all_order_list_response_inner_orders_inner;
 pub use self::all_order_list_response_inner_orders_inner::AllOrderListResponseInnerOrdersInner;
 pub mod all_orders_response_inner;
 pub use self::all_orders_response_inner::AllOrdersResponseInner;
-pub mod asset_filters;
-pub use self::asset_filters::AssetFilters;
 pub mod avg_price_response;
 pub use self::avg_price_response::AvgPriceResponse;
 pub mod delete_open_orders_response_inner;
@@ -54,6 +47,8 @@ pub mod exchange_filters;
 pub use self::exchange_filters::ExchangeFilters;
 pub mod exchange_info_response;
 pub use self::exchange_info_response::ExchangeInfoResponse;
+pub mod exchange_info_response_sors_inner;
+pub use self::exchange_info_response_sors_inner::ExchangeInfoResponseSorsInner;
 pub mod exchange_info_response_symbols_inner;
 pub use self::exchange_info_response_symbols_inner::ExchangeInfoResponseSymbolsInner;
 pub mod exchange_max_num_algo_orders_filter;
@@ -76,16 +71,18 @@ pub mod get_account_response_balances_inner;
 pub use self::get_account_response_balances_inner::GetAccountResponseBalancesInner;
 pub mod get_account_response_commission_rates;
 pub use self::get_account_response_commission_rates::GetAccountResponseCommissionRates;
+pub mod get_open_orders_response_inner;
+pub use self::get_open_orders_response_inner::GetOpenOrdersResponseInner;
 pub mod get_order_list_response;
 pub use self::get_order_list_response::GetOrderListResponse;
 pub mod get_order_list_response_orders_inner;
 pub use self::get_order_list_response_orders_inner::GetOrderListResponseOrdersInner;
 pub mod get_order_response;
 pub use self::get_order_response::GetOrderResponse;
+pub mod get_trades_response_inner;
+pub use self::get_trades_response_inner::GetTradesResponseInner;
 pub mod historical_block_trades_response_inner;
 pub use self::historical_block_trades_response_inner::HistoricalBlockTradesResponseInner;
-pub mod historical_trades_response_inner;
-pub use self::historical_trades_response_inner::HistoricalTradesResponseInner;
 pub mod iceberg_parts_filter;
 pub use self::iceberg_parts_filter::IcebergPartsFilter;
 pub mod klines_item_inner;
@@ -114,6 +111,14 @@ pub mod my_allocations_response_inner;
 pub use self::my_allocations_response_inner::MyAllocationsResponseInner;
 pub mod my_filters_response;
 pub use self::my_filters_response::MyFiltersResponse;
+pub mod my_filters_response_asset_filters_inner;
+pub use self::my_filters_response_asset_filters_inner::MyFiltersResponseAssetFiltersInner;
+pub mod my_filters_response_exchange_filters_inner;
+pub use self::my_filters_response_exchange_filters_inner::MyFiltersResponseExchangeFiltersInner;
+pub mod my_filters_response_rate_limits_inner;
+pub use self::my_filters_response_rate_limits_inner::MyFiltersResponseRateLimitsInner;
+pub mod my_filters_response_symbol_filters_inner;
+pub use self::my_filters_response_symbol_filters_inner::MyFiltersResponseSymbolFiltersInner;
 pub mod my_prevented_matches_response_inner;
 pub use self::my_prevented_matches_response_inner::MyPreventedMatchesResponseInner;
 pub mod my_trades_response_inner;
@@ -142,14 +147,10 @@ pub mod order_cancel_replace_response;
 pub use self::order_cancel_replace_response::OrderCancelReplaceResponse;
 pub mod order_cancel_replace_response_cancel_response;
 pub use self::order_cancel_replace_response_cancel_response::OrderCancelReplaceResponseCancelResponse;
-pub mod order_cancel_replace_response_data;
-pub use self::order_cancel_replace_response_data::OrderCancelReplaceResponseData;
-pub mod order_cancel_replace_response_data_cancel_response;
-pub use self::order_cancel_replace_response_data_cancel_response::OrderCancelReplaceResponseDataCancelResponse;
-pub mod order_cancel_replace_response_data_new_order_response;
-pub use self::order_cancel_replace_response_data_new_order_response::OrderCancelReplaceResponseDataNewOrderResponse;
 pub mod order_cancel_replace_response_new_order_response;
 pub use self::order_cancel_replace_response_new_order_response::OrderCancelReplaceResponseNewOrderResponse;
+pub mod order_cancel_replace_response_new_order_response_fills_inner;
+pub use self::order_cancel_replace_response_new_order_response_fills_inner::OrderCancelReplaceResponseNewOrderResponseFillsInner;
 pub mod order_list_oco_response;
 pub use self::order_list_oco_response::OrderListOcoResponse;
 pub mod order_list_oco_response_order_reports_inner;
@@ -194,6 +195,8 @@ pub mod order_test_response_special_commission_for_order;
 pub use self::order_test_response_special_commission_for_order::OrderTestResponseSpecialCommissionForOrder;
 pub mod order_test_response_standard_commission_for_order;
 pub use self::order_test_response_standard_commission_for_order::OrderTestResponseStandardCommissionForOrder;
+pub mod order_test_response_tax_commission_for_order;
+pub use self::order_test_response_tax_commission_for_order::OrderTestResponseTaxCommissionForOrder;
 pub mod percent_price_by_side_filter;
 pub use self::percent_price_by_side_filter::PercentPriceBySideFilter;
 pub mod percent_price_filter;

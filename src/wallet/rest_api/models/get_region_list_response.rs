@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,10 +17,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetRegionListResponse {
+    /// Echoed country code (lowercase).
     #[serde(rename = "countryCode", skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
     #[serde(rename = "regions", skip_serializing_if = "Option::is_none")]
     pub regions: Option<Vec<models::GetRegionListResponseRegionsInner>>,
+    /// Last data update timestamp (epoch milliseconds); 0 if empty.
     #[serde(rename = "lastUpdated", skip_serializing_if = "Option::is_none")]
     pub last_updated: Option<i64>,
 }

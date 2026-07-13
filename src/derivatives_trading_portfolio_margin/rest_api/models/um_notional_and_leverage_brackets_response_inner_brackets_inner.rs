@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,16 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UmNotionalAndLeverageBracketsResponseInnerBracketsInner {
+    /// Notional bracket
     #[serde(rename = "bracket", skip_serializing_if = "Option::is_none")]
     pub bracket: Option<i64>,
+    /// Max initial leverage for this bracket
     #[serde(rename = "initialLeverage", skip_serializing_if = "Option::is_none")]
     pub initial_leverage: Option<i64>,
+    /// Cap notional of this bracket
     #[serde(rename = "notionalCap", skip_serializing_if = "Option::is_none")]
     pub notional_cap: Option<i64>,
+    /// Notional threshold of this bracket
     #[serde(rename = "notionalFloor", skip_serializing_if = "Option::is_none")]
     pub notional_floor: Option<i64>,
+    /// Maintenance ratio for this bracket
     #[serde(rename = "maintMarginRatio", skip_serializing_if = "Option::is_none")]
     pub maint_margin_ratio: Option<rust_decimal::Decimal>,
+    /// Auxiliary number for quick calculation
     #[serde(rename = "cum", skip_serializing_if = "Option::is_none")]
     pub cum: Option<i64>,
 }

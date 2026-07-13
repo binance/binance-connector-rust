@@ -316,23 +316,26 @@ impl std::str::FromStr for QueryOrderHistoryOrderTypeEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`batch_cancel_orders`](#method.batch_cancel_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct BatchCancelOrdersParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Wallet ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletId")]
     pub wallet_id: String,
     /// List of orders to cancel (index `i` starts from 0)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "cancelInfoList", default)]
     pub cancel_info_list: Option<Vec<models::BatchCancelOrdersCancelInfoListParameterInner>>,
 }
 
@@ -355,63 +358,74 @@ impl BatchCancelOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_quote`](#method.get_quote).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetQuoteParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Prediction outcome token ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "tokenId")]
     pub token_id: String,
     /// Trade direction. Enum: `BUY`, `SELL`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "side")]
     pub side: GetQuoteSideEnum,
     /// Input amount in wei (18 decimals). Must be > 0. For `MARKET` orders, minimum is approximately 1.5 USDT (varies by market depth). Example: `1000000000000000000` = 1 USDT
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amountIn")]
     pub amount_in: String,
     /// Order type. Enum: `MARKET`, `LIMIT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "orderType")]
     pub order_type: GetQuoteOrderTypeEnum,
     /// Slippage tolerance in basis points. Range 1–10000
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "slippageBps")]
     pub slippage_bps: i32,
     /// Limit price. Required when `orderType=LIMIT`. Must be > 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "priceLimit", default)]
     pub price_limit: Option<String>,
     /// Chain ID. Default `56` (BSC)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "chainId", default)]
     pub chain_id: Option<String>,
     /// Fee rate in basis points. Default `200`, range 1–10000
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "feeRateBps", default)]
     pub fee_rate_bps: Option<i32>,
     /// Funding source. Enum: `MPC`, `CEX`. Default `MPC`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fundingSource", default)]
     pub funding_source: Option<GetQuoteFundingSourceEnum>,
     /// Auto-transfer amount before order (wei). Must be > 0 if provided
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fundTransferAmount", default)]
     pub fund_transfer_amount: Option<String>,
 }
 
@@ -449,58 +463,68 @@ impl GetQuoteParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`place_order`](#method.place_order).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PlaceOrderParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Wallet ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletId")]
     pub wallet_id: String,
     /// Quote ID obtained from `Get Quote`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quoteId")]
     pub quote_id: String,
     /// Must match `orderType`: `FOK` for `MARKET`, `GTC` for `LIMIT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "timeInForce")]
     pub time_in_force: String,
     /// Payment account type. Enum: `SPOT`, `FUNDING`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "accountType")]
     pub account_type: PlaceOrderAccountTypeEnum,
     /// Order type. Enum: `MARKET`, `LIMIT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "orderType")]
     pub order_type: PlaceOrderOrderTypeEnum,
     /// Slippage tolerance in basis points. Range 1–10000
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "slippageBps")]
     pub slippage_bps: i32,
     /// Limit price. Required when `orderType=LIMIT`. Must be > 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "priceLimit", default)]
     pub price_limit: Option<String>,
     /// Funding source. Enum: `MPC`, `CEX`. Default `MPC`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fundingSource", default)]
     pub funding_source: Option<PlaceOrderFundingSourceEnum>,
     /// Auto-transfer amount before order (wei). Must be > 0 if provided
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fundTransferAmount", default)]
     pub fund_transfer_amount: Option<String>,
 }
 
@@ -541,43 +565,50 @@ impl PlaceOrderParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_active_orders`](#method.query_active_orders).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryActiveOrdersParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Filter by trade side. Enum: `BUY`, `SELL`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "tradeSide", default)]
     pub trade_side: Option<QueryActiveOrdersTradeSideEnum>,
     /// Filter by level-1 category
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "l1Category", default)]
     pub l1_category: Option<String>,
     /// Filter by market ID
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "marketId", default)]
     pub market_id: Option<i64>,
     /// Pagination offset. Default `0`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i32>,
     /// Page size. Default `20`, range 1–100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -597,53 +628,62 @@ impl QueryActiveOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_order_history`](#method.query_order_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryOrderHistoryParams {
     /// User's prediction wallet address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "walletAddress")]
     pub wallet_address: String,
     /// Filter by level-1 category
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "l1Category", default)]
     pub l1_category: Option<String>,
     /// Filter by order type. Enum: `MARKET`, `LIMIT`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderType", default)]
     pub order_type: Option<QueryOrderHistoryOrderTypeEnum>,
     /// Filter by order status
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "status", default)]
     pub status: Option<String>,
     /// Start date. Format: `yyyy-MM-dd`. Must be ≤ `endDate`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startDate", default)]
     pub start_date: Option<String>,
     /// End date. Format: `yyyy-MM-dd`. Must be ≥ `startDate`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endDate", default)]
     pub end_date: Option<String>,
     /// Pagination offset. Default `0`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i32>,
     /// Page size. Default `20`, range 1–100
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i32>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 

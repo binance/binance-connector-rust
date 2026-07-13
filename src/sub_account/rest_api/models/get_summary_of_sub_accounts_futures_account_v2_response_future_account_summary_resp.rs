@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,22 +19,35 @@ use serde::{Deserialize, Serialize};
 pub struct GetSummaryOfSubAccountsFuturesAccountV2ResponseFutureAccountSummaryResp {
     #[serde(rename = "totalInitialMargin", skip_serializing_if = "Option::is_none")]
     pub total_initial_margin: Option<String>,
-    #[serde(rename = "totalMaintenanceMargin", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "totalMaintenanceMargin",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub total_maintenance_margin: Option<String>,
     #[serde(rename = "totalMarginBalance", skip_serializing_if = "Option::is_none")]
     pub total_margin_balance: Option<String>,
-    #[serde(rename = "totalOpenOrderInitialMargin", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "totalOpenOrderInitialMargin",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub total_open_order_initial_margin: Option<String>,
-    #[serde(rename = "totalPositionInitialMargin", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "totalPositionInitialMargin",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub total_position_initial_margin: Option<String>,
-    #[serde(rename = "totalUnrealizedProfit", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "totalUnrealizedProfit",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub total_unrealized_profit: Option<String>,
     #[serde(rename = "totalWalletBalance", skip_serializing_if = "Option::is_none")]
     pub total_wallet_balance: Option<String>,
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
     #[serde(rename = "subAccountList", skip_serializing_if = "Option::is_none")]
-    pub sub_account_list: Option<Vec<models::GetSummaryOfSubAccountsFuturesAccountV2ResponseFutureAccountSummaryRespSubAccountListInner>>,
+    pub sub_account_list:
+        Option<Vec<models::GetSummaryOfSubAccountsFuturesAccountResponseSubAccountListInner>>,
 }
 
 impl GetSummaryOfSubAccountsFuturesAccountV2ResponseFutureAccountSummaryResp {

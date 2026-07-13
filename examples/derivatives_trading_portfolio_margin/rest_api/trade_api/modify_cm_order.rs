@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = ModifyCmOrderParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSD_PERP".to_string(),
         ModifyCmOrderSideEnum::Buy,
         dec!(1.0),
         dec!(1.0),

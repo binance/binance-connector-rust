@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,35 +16,49 @@ use crate::derivatives_trading_coin_futures::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `AllMarketLiquidationOrderStreamsResponseO` : Order Type
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AllMarketLiquidationOrderStreamsResponseO {
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Pair
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// Side
     #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
     pub s_uppercase: Option<String>,
+    /// Order Type
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+    /// Time in Force
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<String>,
+    /// Original Quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Average Price
     #[serde(rename = "ap", skip_serializing_if = "Option::is_none")]
     pub ap: Option<String>,
+    /// Order Status
     #[serde(rename = "X", skip_serializing_if = "Option::is_none")]
     pub x_uppercase: Option<String>,
+    /// Order Last Filled Quantity
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<String>,
+    /// Order Filled Accumulated Quantity
     #[serde(rename = "z", skip_serializing_if = "Option::is_none")]
     pub z: Option<String>,
+    /// Order Trade Time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
 }
 
 impl AllMarketLiquidationOrderStreamsResponseO {
+    /// Order Type
     #[must_use]
     pub fn new() -> AllMarketLiquidationOrderStreamsResponseO {
         AllMarketLiquidationOrderStreamsResponseO {

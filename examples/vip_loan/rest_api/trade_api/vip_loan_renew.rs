@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = VIPLoanRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = VipLoanRenewParams::builder(1, 789).build()?;
+    let params = VipLoanRenewParams::builder(1, 30).build()?;
 
     // Make the API call
     let response = rest_client

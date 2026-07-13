@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsRestApi, rest_api::KlineCandlestickDataParams,
+    DerivativesTradingOptionsRestApi,
+    rest_api::{KlineCandlestickDataIntervalEnum, KlineCandlestickDataParams},
 };
 use binance_sdk::logger;
 
@@ -28,8 +29,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = KlineCandlestickDataParams::builder(
-        "symbol_example".to_string(),
-        "interval_example".to_string(),
+        "BTC-200730-9000-C".to_string(),
+        KlineCandlestickDataIntervalEnum::Interval1m,
     )
     .build()?;
 

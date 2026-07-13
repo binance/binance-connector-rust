@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -68,23 +68,161 @@ impl BorrowRepayApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetFutureHourlyInterestRateIsIsolatedEnum {
+    #[serde(rename = "TRUE")]
+    True,
+    #[serde(rename = "FALSE")]
+    False,
+}
+
+impl GetFutureHourlyInterestRateIsIsolatedEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "TRUE",
+            Self::False => "FALSE",
+        }
+    }
+}
+
+impl std::str::FromStr for GetFutureHourlyInterestRateIsIsolatedEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRUE" => Ok(Self::True),
+            "FALSE" => Ok(Self::False),
+            other => Err(format!(
+                "invalid GetFutureHourlyInterestRateIsIsolatedEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum MarginAccountBorrowRepayIsIsolatedEnum {
+    #[serde(rename = "TRUE")]
+    True,
+    #[serde(rename = "FALSE")]
+    False,
+}
+
+impl MarginAccountBorrowRepayIsIsolatedEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "TRUE",
+            Self::False => "FALSE",
+        }
+    }
+}
+
+impl std::str::FromStr for MarginAccountBorrowRepayIsIsolatedEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "TRUE" => Ok(Self::True),
+            "FALSE" => Ok(Self::False),
+            other => {
+                Err(format!("invalid MarginAccountBorrowRepayIsIsolatedEnum: {}", other).into())
+            }
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum MarginAccountBorrowRepayTypeEnum {
+    #[serde(rename = "BORROW")]
+    Borrow,
+    #[serde(rename = "REPAY")]
+    Repay,
+}
+
+impl MarginAccountBorrowRepayTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Borrow => "BORROW",
+            Self::Repay => "REPAY",
+        }
+    }
+}
+
+impl std::str::FromStr for MarginAccountBorrowRepayTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BORROW" => Ok(Self::Borrow),
+            "REPAY" => Ok(Self::Repay),
+            other => Err(format!("invalid MarginAccountBorrowRepayTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum QueryBorrowRepayRecordsInMarginAccountTypeEnum {
+    #[serde(rename = "BORROW")]
+    Borrow,
+    #[serde(rename = "REPAY")]
+    Repay,
+}
+
+impl QueryBorrowRepayRecordsInMarginAccountTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Borrow => "BORROW",
+            Self::Repay => "REPAY",
+        }
+    }
+}
+
+impl std::str::FromStr for QueryBorrowRepayRecordsInMarginAccountTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BORROW" => Ok(Self::Borrow),
+            "REPAY" => Ok(Self::Repay),
+            other => Err(format!(
+                "invalid QueryBorrowRepayRecordsInMarginAccountTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`get_future_hourly_interest_rate`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_future_hourly_interest_rate`](#method.get_future_hourly_interest_rate).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFutureHourlyInterestRateParams {
-    /// List of assets, separated by commas, up to 20
+    ///
+    /// The `assets` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "assets")]
     pub assets: String,
-    /// for isolated margin or not, "TRUE", "FALSE"
+    ///
+    /// The `is_isolated` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub is_isolated: bool,
+    #[serde(rename = "isIsolated")]
+    pub is_isolated: GetFutureHourlyInterestRateIsIsolatedEnum,
 }
 
 impl GetFutureHourlyInterestRateParams {
@@ -92,11 +230,14 @@ impl GetFutureHourlyInterestRateParams {
     ///
     /// Required parameters:
     ///
-    /// * `assets` — List of assets, separated by commas, up to 20
-    /// * `is_isolated` — for isolated margin or not, \"TRUE\", \"FALSE\"
+    /// * `assets` — String
+    /// * `is_isolated` — String
     ///
     #[must_use]
-    pub fn builder(assets: String, is_isolated: bool) -> GetFutureHourlyInterestRateParamsBuilder {
+    pub fn builder(
+        assets: String,
+        is_isolated: GetFutureHourlyInterestRateIsIsolatedEnum,
+    ) -> GetFutureHourlyInterestRateParamsBuilder {
         GetFutureHourlyInterestRateParamsBuilder::default()
             .assets(assets)
             .is_isolated(is_isolated)
@@ -106,7 +247,7 @@ impl GetFutureHourlyInterestRateParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_interest_history`](#method.get_interest_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetInterestHistoryParams {
     ///
@@ -114,37 +255,48 @@ pub struct GetInterestHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// isolated symbol
+    ///
+    /// The `isolated_symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "isolatedSymbol", default)]
     pub isolated_symbol: Option<String>,
     /// Only supports querying data from the past 90 days.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    ///
+    /// The `current` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10 Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -160,7 +312,7 @@ impl GetInterestHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`margin_account_borrow_repay`](#method.margin_account_borrow_repay).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct MarginAccountBorrowRepayParams {
     ///
@@ -168,33 +320,40 @@ pub struct MarginAccountBorrowRepayParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
-    /// `TRUE` for Isolated Margin, `FALSE` for Cross Margin, Default `FALSE`
+    /// `TRUE` for Isolated Margin, `FALSE` for Cross Margin
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub is_isolated: String,
-    ///
-    /// The `symbol` parameter.
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub symbol: String,
+    #[serde(rename = "isIsolated")]
+    pub is_isolated: MarginAccountBorrowRepayIsIsolatedEnum,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: String,
-    /// `MARGIN`,`ISOLATED`
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
-    /// No more than 60000
+    #[serde(rename = "type")]
+    pub r#type: MarginAccountBorrowRepayTypeEnum,
+    /// Only for Isolated margin
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
+    pub symbol: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -204,23 +363,20 @@ impl MarginAccountBorrowRepayParams {
     /// Required parameters:
     ///
     /// * `asset` — String
-    /// * `is_isolated` — `TRUE` for Isolated Margin, `FALSE` for Cross Margin, Default `FALSE`
-    /// * `symbol` — String
+    /// * `is_isolated` — `TRUE` for Isolated Margin, `FALSE` for Cross Margin
     /// * `amount` — String
-    /// * `r#type` — `MARGIN`,`ISOLATED`
+    /// * `r#type` — String
     ///
     #[must_use]
     pub fn builder(
         asset: String,
-        is_isolated: String,
-        symbol: String,
+        is_isolated: MarginAccountBorrowRepayIsIsolatedEnum,
         amount: String,
-        r#type: String,
+        r#type: MarginAccountBorrowRepayTypeEnum,
     ) -> MarginAccountBorrowRepayParamsBuilder {
         MarginAccountBorrowRepayParamsBuilder::default()
             .asset(asset)
             .is_isolated(is_isolated)
-            .symbol(symbol)
             .amount(amount)
             .r#type(r#type)
     }
@@ -229,55 +385,71 @@ impl MarginAccountBorrowRepayParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_borrow_repay_records_in_margin_account`](#method.query_borrow_repay_records_in_margin_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryBorrowRepayRecordsInMarginAccountParams {
-    /// `MARGIN`,`ISOLATED`
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub r#type: String,
+    #[serde(rename = "type")]
+    pub r#type: QueryBorrowRepayRecordsInMarginAccountTypeEnum,
     ///
     /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// isolated symbol
+    ///
+    /// The `isolated_symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "isolatedSymbol", default)]
     pub isolated_symbol: Option<String>,
-    /// `tranId` in `POST /sapi/v1/margin/loan`
+    ///
+    /// The `tx_id` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "txId", default)]
     pub tx_id: Option<i64>,
-    /// Only supports querying data from the past 90 days.
+    ///
+    /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    ///
+    /// The `current` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10 Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -286,10 +458,12 @@ impl QueryBorrowRepayRecordsInMarginAccountParams {
     ///
     /// Required parameters:
     ///
-    /// * `r#type` — `MARGIN`,`ISOLATED`
+    /// * `r#type` — String
     ///
     #[must_use]
-    pub fn builder(r#type: String) -> QueryBorrowRepayRecordsInMarginAccountParamsBuilder {
+    pub fn builder(
+        r#type: QueryBorrowRepayRecordsInMarginAccountTypeEnum,
+    ) -> QueryBorrowRepayRecordsInMarginAccountParamsBuilder {
         QueryBorrowRepayRecordsInMarginAccountParamsBuilder::default().r#type(r#type)
     }
 }
@@ -297,7 +471,7 @@ impl QueryBorrowRepayRecordsInMarginAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_margin_interest_rate_history`](#method.query_margin_interest_rate_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMarginInterestRateHistoryParams {
     ///
@@ -305,27 +479,35 @@ pub struct QueryMarginInterestRateHistoryParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
-    /// User's current specific margin data will be returned if vipLevel is omitted
+    ///
+    /// The `vip_level` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "vipLevel", default)]
     pub vip_level: Option<i64>,
-    /// Only supports querying data from the past 90 days.
+    ///
+    /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -345,7 +527,7 @@ impl QueryMarginInterestRateHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_max_borrow`](#method.query_max_borrow).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMaxBorrowParams {
     ///
@@ -353,16 +535,21 @@ pub struct QueryMaxBorrowParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
-    /// isolated symbol
+    ///
+    /// The `isolated_symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "isolatedSymbol", default)]
     pub isolated_symbol: Option<String>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -482,9 +669,9 @@ impl BorrowRepayApi for BorrowRepayApiClient {
         let MarginAccountBorrowRepayParams {
             asset,
             is_isolated,
-            symbol,
             amount,
             r#type,
+            symbol,
             recv_window,
         } = params;
 
@@ -495,7 +682,9 @@ impl BorrowRepayApi for BorrowRepayApiClient {
 
         query_params.insert("isIsolated".to_string(), json!(is_isolated));
 
-        query_params.insert("symbol".to_string(), json!(symbol));
+        if let Some(rw) = symbol {
+            query_params.insert("symbol".to_string(), json!(rw));
+        }
 
         query_params.insert("amount".to_string(), json!(amount));
 
@@ -726,7 +915,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"},{"asset":"ETH","nextHourlyInterestRate":"0.00000578"}]"#).unwrap();
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetFutureHourlyInterestRateResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetFutureHourlyInterestRateResponseInner>",
@@ -754,7 +945,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"txId":1352286576452864800,"interestAccuredTime":1672160400000,"asset":"USDT","rawAsset":"USDT","principal":"45.3313","interest":"0.00024995","interestRate":"0.00013233","type":"ON_BORROW","isolatedSymbol":"BNBUSDT"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"txId":1352286576452864800,"interestAccuredTime":1672160400000,"asset":"USDT","rawAsset":"USDT","principal":"45.3313","interest":"0.00024995","interestRate":"0.00013233","type":"ON_BORROW","isolatedSymbol":"BNBUSDT"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetInterestHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetInterestHistoryResponse");
@@ -781,7 +972,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::MarginAccountBorrowRepayResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::MarginAccountBorrowRepayResponse");
@@ -809,7 +1001,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"type":"AUTO","isolatedSymbol":"BNBUSDT","amount":"14.00000000","asset":"BNB","interest":"0.01866667","principal":"13.98133333","status":"CONFIRMED","timestamp":1563438204000,"txId":2970933056}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"type":"AUTO","isolatedSymbol":"BNBUSDT","amount":"14.00000000","asset":"BNB","interest":"0.01866667","principal":"13.98133333","status":"CONFIRMED","timestamp":1563438204000,"txId":2970933056}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryBorrowRepayRecordsInMarginAccountResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QueryBorrowRepayRecordsInMarginAccountResponse",
@@ -838,7 +1030,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","dailyInterestRate":"0.00025000","timestamp":1611544731000,"vipLevel":1},{"asset":"BTC","dailyInterestRate":"0.00035000","timestamp":1610248118000,"vipLevel":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","dailyInterestRate":"0.00025000","timestamp":1611544731000,"vipLevel":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryMarginInterestRateHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryMarginInterestRateHistoryResponseInner>",
@@ -867,7 +1059,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"amount":"1.69248805","borrowLimit":"60"}"#).unwrap();
+                serde_json::from_str(r#"{"amount":"1.69248805","borrowLimit":"60"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryMaxBorrowResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMaxBorrowResponse");
@@ -888,12 +1081,25 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = GetFutureHourlyInterestRateParams::builder("assets_example".to_string(),false).build().unwrap();
+            let params = GetFutureHourlyInterestRateParams::builder(
+                "BTC,ETH".to_string(),
+                GetFutureHourlyInterestRateIsIsolatedEnum::True,
+            )
+            .build()
+            .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"},{"asset":"ETH","nextHourlyInterestRate":"0.00000578"}]"#).unwrap();
-            let expected_response : Vec<models::GetFutureHourlyInterestRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFutureHourlyInterestRateResponseInner>");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::GetFutureHourlyInterestRateResponseInner> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<models::GetFutureHourlyInterestRateResponseInner>",
+                );
 
-            let resp = client.get_future_hourly_interest_rate(params).await.expect("Expected a response");
+            let resp = client
+                .get_future_hourly_interest_rate(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -905,12 +1111,25 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = GetFutureHourlyInterestRateParams::builder("assets_example".to_string(),false).build().unwrap();
+            let params = GetFutureHourlyInterestRateParams::builder(
+                "BTC,ETH".to_string(),
+                GetFutureHourlyInterestRateIsIsolatedEnum::True,
+            )
+            .build()
+            .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"},{"asset":"ETH","nextHourlyInterestRate":"0.00000578"}]"#).unwrap();
-            let expected_response : Vec<models::GetFutureHourlyInterestRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFutureHourlyInterestRateResponseInner>");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"asset":"BTC","nextHourlyInterestRate":"0.00000571"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::GetFutureHourlyInterestRateResponseInner> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<models::GetFutureHourlyInterestRateResponseInner>",
+                );
 
-            let resp = client.get_future_hourly_interest_rate(params).await.expect("Expected a response");
+            let resp = client
+                .get_future_hourly_interest_rate(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -922,10 +1141,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: true };
 
-            let params =
-                GetFutureHourlyInterestRateParams::builder("assets_example".to_string(), false)
-                    .build()
-                    .unwrap();
+            let params = GetFutureHourlyInterestRateParams::builder(
+                "BTC,ETH".to_string(),
+                GetFutureHourlyInterestRateIsIsolatedEnum::True,
+            )
+            .build()
+            .unwrap();
 
             match client.get_future_hourly_interest_rate(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -943,7 +1164,7 @@ mod tests {
 
             let params = GetInterestHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"txId":1352286576452864800,"interestAccuredTime":1672160400000,"asset":"USDT","rawAsset":"USDT","principal":"45.3313","interest":"0.00024995","interestRate":"0.00013233","type":"ON_BORROW","isolatedSymbol":"BNBUSDT"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"txId":1352286576452864800,"interestAccuredTime":1672160400000,"asset":"USDT","rawAsset":"USDT","principal":"45.3313","interest":"0.00024995","interestRate":"0.00013233","type":"ON_BORROW","isolatedSymbol":"BNBUSDT"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetInterestHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetInterestHistoryResponse");
 
             let resp = client.get_interest_history(params).await.expect("Expected a response");
@@ -958,9 +1179,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = GetInterestHistoryParams::builder().asset("asset_example".to_string()).isolated_symbol("isolated_symbol_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetInterestHistoryParams::builder().asset("USDT".to_string()).isolated_symbol("BNBUSDT".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"txId":1352286576452864800,"interestAccuredTime":1672160400000,"asset":"USDT","rawAsset":"USDT","principal":"45.3313","interest":"0.00024995","interestRate":"0.00013233","type":"ON_BORROW","isolatedSymbol":"BNBUSDT"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"txId":1352286576452864800,"interestAccuredTime":1672160400000,"asset":"USDT","rawAsset":"USDT","principal":"45.3313","interest":"0.00024995","interestRate":"0.00013233","type":"ON_BORROW","isolatedSymbol":"BNBUSDT"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetInterestHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetInterestHistoryResponse");
 
             let resp = client.get_interest_history(params).await.expect("Expected a response");
@@ -992,16 +1213,16 @@ mod tests {
             let client = MockBorrowRepayApiClient { force_error: false };
 
             let params = MarginAccountBorrowRepayParams::builder(
-                "asset_example".to_string(),
-                "FALSE".to_string(),
-                "symbol_example".to_string(),
-                "amount_example".to_string(),
-                "r#type_example".to_string(),
+                "USDT".to_string(),
+                MarginAccountBorrowRepayIsIsolatedEnum::True,
+                "1.0".to_string(),
+                MarginAccountBorrowRepayTypeEnum::Borrow,
             )
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::MarginAccountBorrowRepayResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::MarginAccountBorrowRepayResponse");
@@ -1022,17 +1243,18 @@ mod tests {
             let client = MockBorrowRepayApiClient { force_error: false };
 
             let params = MarginAccountBorrowRepayParams::builder(
-                "asset_example".to_string(),
-                "FALSE".to_string(),
-                "symbol_example".to_string(),
-                "amount_example".to_string(),
-                "r#type_example".to_string(),
+                "USDT".to_string(),
+                MarginAccountBorrowRepayIsIsolatedEnum::True,
+                "1.0".to_string(),
+                MarginAccountBorrowRepayTypeEnum::Borrow,
             )
+            .symbol("BTCUSDT".to_string())
             .recv_window(5000)
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"tranId":100000001}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::MarginAccountBorrowRepayResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::MarginAccountBorrowRepayResponse");
@@ -1053,11 +1275,10 @@ mod tests {
             let client = MockBorrowRepayApiClient { force_error: true };
 
             let params = MarginAccountBorrowRepayParams::builder(
-                "asset_example".to_string(),
-                "FALSE".to_string(),
-                "symbol_example".to_string(),
-                "amount_example".to_string(),
-                "r#type_example".to_string(),
+                "USDT".to_string(),
+                MarginAccountBorrowRepayIsIsolatedEnum::True,
+                "1.0".to_string(),
+                MarginAccountBorrowRepayTypeEnum::Borrow,
             )
             .build()
             .unwrap();
@@ -1076,9 +1297,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = QueryBorrowRepayRecordsInMarginAccountParams::builder("r#type_example".to_string(),).build().unwrap();
+            let params = QueryBorrowRepayRecordsInMarginAccountParams::builder(QueryBorrowRepayRecordsInMarginAccountTypeEnum::Borrow,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"type":"AUTO","isolatedSymbol":"BNBUSDT","amount":"14.00000000","asset":"BNB","interest":"0.01866667","principal":"13.98133333","status":"CONFIRMED","timestamp":1563438204000,"txId":2970933056}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"type":"AUTO","isolatedSymbol":"BNBUSDT","amount":"14.00000000","asset":"BNB","interest":"0.01866667","principal":"13.98133333","status":"CONFIRMED","timestamp":1563438204000,"txId":2970933056}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryBorrowRepayRecordsInMarginAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryBorrowRepayRecordsInMarginAccountResponse");
 
             let resp = client.query_borrow_repay_records_in_margin_account(params).await.expect("Expected a response");
@@ -1093,9 +1314,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = QueryBorrowRepayRecordsInMarginAccountParams::builder("r#type_example".to_string(),).asset("asset_example".to_string()).isolated_symbol("isolated_symbol_example".to_string()).tx_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = QueryBorrowRepayRecordsInMarginAccountParams::builder(QueryBorrowRepayRecordsInMarginAccountTypeEnum::Borrow,).asset("BNB".to_string()).isolated_symbol("BNBUSDT".to_string()).tx_id(1).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"type":"AUTO","isolatedSymbol":"BNBUSDT","amount":"14.00000000","asset":"BNB","interest":"0.01866667","principal":"13.98133333","status":"CONFIRMED","timestamp":1563438204000,"txId":2970933056}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"type":"AUTO","isolatedSymbol":"BNBUSDT","amount":"14.00000000","asset":"BNB","interest":"0.01866667","principal":"13.98133333","status":"CONFIRMED","timestamp":1563438204000,"txId":2970933056}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryBorrowRepayRecordsInMarginAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryBorrowRepayRecordsInMarginAccountResponse");
 
             let resp = client.query_borrow_repay_records_in_margin_account(params).await.expect("Expected a response");
@@ -1110,10 +1331,11 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: true };
 
-            let params =
-                QueryBorrowRepayRecordsInMarginAccountParams::builder("r#type_example".to_string())
-                    .build()
-                    .unwrap();
+            let params = QueryBorrowRepayRecordsInMarginAccountParams::builder(
+                QueryBorrowRepayRecordsInMarginAccountTypeEnum::Borrow,
+            )
+            .build()
+            .unwrap();
 
             match client
                 .query_borrow_repay_records_in_margin_account(params)
@@ -1132,9 +1354,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = QueryMarginInterestRateHistoryParams::builder("asset_example".to_string(),).build().unwrap();
+            let params = QueryMarginInterestRateHistoryParams::builder("BTC".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","dailyInterestRate":"0.00025000","timestamp":1611544731000,"vipLevel":1},{"asset":"BTC","dailyInterestRate":"0.00035000","timestamp":1610248118000,"vipLevel":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","dailyInterestRate":"0.00025000","timestamp":1611544731000,"vipLevel":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryMarginInterestRateHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryMarginInterestRateHistoryResponseInner>");
 
             let resp = client.query_margin_interest_rate_history(params).await.expect("Expected a response");
@@ -1149,9 +1371,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = QueryMarginInterestRateHistoryParams::builder("asset_example".to_string(),).vip_level(1).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
+            let params = QueryMarginInterestRateHistoryParams::builder("BTC".to_string(),).vip_level(1).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","dailyInterestRate":"0.00025000","timestamp":1611544731000,"vipLevel":1},{"asset":"BTC","dailyInterestRate":"0.00035000","timestamp":1610248118000,"vipLevel":1}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","dailyInterestRate":"0.00025000","timestamp":1611544731000,"vipLevel":1}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryMarginInterestRateHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryMarginInterestRateHistoryResponseInner>");
 
             let resp = client.query_margin_interest_rate_history(params).await.expect("Expected a response");
@@ -1166,7 +1388,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: true };
 
-            let params = QueryMarginInterestRateHistoryParams::builder("asset_example".to_string())
+            let params = QueryMarginInterestRateHistoryParams::builder("BTC".to_string())
                 .build()
                 .unwrap();
 
@@ -1184,12 +1406,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = QueryMaxBorrowParams::builder("asset_example".to_string())
+            let params = QueryMaxBorrowParams::builder("BTC".to_string())
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"amount":"1.69248805","borrowLimit":"60"}"#).unwrap();
+                serde_json::from_str(r#"{"amount":"1.69248805","borrowLimit":"60"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryMaxBorrowResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMaxBorrowResponse");
@@ -1209,14 +1432,15 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: false };
 
-            let params = QueryMaxBorrowParams::builder("asset_example".to_string())
-                .isolated_symbol("isolated_symbol_example".to_string())
+            let params = QueryMaxBorrowParams::builder("BTC".to_string())
+                .isolated_symbol("BTCUSDT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"amount":"1.69248805","borrowLimit":"60"}"#).unwrap();
+                serde_json::from_str(r#"{"amount":"1.69248805","borrowLimit":"60"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryMaxBorrowResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMaxBorrowResponse");
@@ -1236,7 +1460,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockBorrowRepayApiClient { force_error: true };
 
-            let params = QueryMaxBorrowParams::builder("asset_example".to_string())
+            let params = QueryMaxBorrowParams::builder("BTC".to_string())
                 .build()
                 .unwrap();
 

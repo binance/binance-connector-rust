@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,10 +16,13 @@ use crate::derivatives_trading_coin_futures::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `AccountUpdateA` : Update Data
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountUpdateA {
+    /// Event reason type
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<String>,
+    /// Balances
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<Vec<models::AccountUpdateABInner>>,
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
@@ -27,6 +30,7 @@ pub struct AccountUpdateA {
 }
 
 impl AccountUpdateA {
+    /// Update Data
     #[must_use]
     pub fn new() -> AccountUpdateA {
         AccountUpdateA {

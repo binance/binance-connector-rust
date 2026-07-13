@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,28 +18,39 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DiffBookDepthStreamsResponse {
+    /// Event type.
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time.
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Transaction time.
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Symbol.
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// First update ID in the event.
     #[serde(rename = "U", skip_serializing_if = "Option::is_none")]
     pub u_uppercase: Option<i64>,
+    /// Final update ID in the event.
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<i64>,
+    /// Final update ID in the previous stream event.
     #[serde(rename = "pu", skip_serializing_if = "Option::is_none")]
     pub pu: Option<i64>,
+    /// Bid updates.
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<Vec<Vec<String>>>,
+    /// Ask updates.
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<Vec<Vec<String>>>,
+    /// (After CM migration) Pair symbol
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// (After CM migration) Symbol type: 1 = UM, 2 = CM
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
-    pub st: Option<i64>,
+    pub st: Option<i32>,
 }
 
 impl DiffBookDepthStreamsResponse {

@@ -1,7 +1,7 @@
 /*
- * Binance Rebate REST API
+ * Rebate REST API
  *
- * OpenAPI Specification for the Binance Rebate REST API
+ * Query spot trading rebate history records.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -28,16 +28,16 @@ pub use models::*;
 #[derive(Debug, Clone)]
 pub struct RestApi {
     configuration: ConfigurationRestApi,
-    rebate_api_client: RebateApiClient,
+    api_client: ApiClient,
 }
 
 impl RestApi {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
-        let rebate_api_client = RebateApiClient::new(configuration.clone());
+        let api_client = ApiClient::new(configuration.clone());
 
         Self {
             configuration,
-            rebate_api_client,
+            api_client,
         }
     }
 
@@ -115,12 +115,15 @@ impl RestApi {
     ///
     /// Get Spot Rebate History Records
     ///
-    /// * The max interval between startTime and endTime is 30 days.
-    /// * If startTime and endTime are not sent, the recent 7 days' data will be returned.
-    /// * The earliest startTime is supported on June 10, 2020
-    /// * Return up to 200 records per request.
+    /// Weight(UID): 12000
     ///
-    /// Weight: 12000
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The max interval between `startTime` and `endTime` is 30 days.
+    /// - If `startTime` and `endTime` are not sent, the recent 7 days' data will be returned.
+    /// - The earliest supported `startTime` is June 10, 2020.
+    /// - Return up to 200 records per request.
     ///
     /// # Arguments
     ///
@@ -150,13 +153,13 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/rebate/rest-api/Get-Spot-Rebate-History-Records).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-rebate/api/rest-api/~#get-spot-rebate-history-records).
     ///
     pub async fn get_spot_rebate_history_records(
         &self,
         params: GetSpotRebateHistoryRecordsParams,
     ) -> anyhow::Result<RestApiResponse<models::GetSpotRebateHistoryRecordsResponse>> {
-        self.rebate_api_client
+        self.api_client
             .get_spot_rebate_history_records(params)
             .await
     }

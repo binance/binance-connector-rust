@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,8 +23,9 @@ pub struct TakerBuySellVolumeResponseInner {
     pub buy_vol: Option<String>,
     #[serde(rename = "sellVol", skip_serializing_if = "Option::is_none")]
     pub sell_vol: Option<String>,
+    /// Timestamp in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<String>,
+    pub timestamp: Option<i64>,
 }
 
 impl TakerBuySellVolumeResponseInner {

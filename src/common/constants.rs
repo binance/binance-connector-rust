@@ -3,6 +3,7 @@ pub const ALGO_REST_API_PROD_URL: &str = "https://api.binance.com";
 
 // Alpha constants
 pub const ALPHA_REST_API_PROD_URL: &str = "https://www.binance.com";
+pub const ALPHA_WS_STREAMS_PROD_URL: &str = "wss://nbstream.binance.com/w3w/wsa";
 
 // C2C constants
 pub const C2C_REST_API_PROD_URL: &str = "https://api.binance.com";

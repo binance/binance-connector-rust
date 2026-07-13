@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,36 +17,46 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationResponse {
+    /// Portfolio margin account maintenance margin rate
     #[serde(rename = "uniMMR", skip_serializing_if = "Option::is_none")]
     pub uni_mmr: Option<String>,
+    /// Account equity, in USD value
     #[serde(rename = "accountEquity", skip_serializing_if = "Option::is_none")]
     pub account_equity: Option<String>,
+    /// Account equity without collateral rate, in USD value
     #[serde(rename = "actualEquity", skip_serializing_if = "Option::is_none")]
     pub actual_equity: Option<String>,
+    /// Account Initial Margin.
     #[serde(
         rename = "accountInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub account_initial_margin: Option<String>,
+    /// Portfolio margin account maintenance margin, unit：USD
     #[serde(rename = "accountMaintMargin", skip_serializing_if = "Option::is_none")]
     pub account_maint_margin: Option<String>,
+    /// Portfolio margin account status:\"NORMAL\", \"`MARGIN_CALL`\", \"`SUPPLY_MARGIN`\", \"`REDUCE_ONLY`\", \"`ACTIVE_LIQUIDATION`\", \"`FORCE_LIQUIDATION`\", \"BANKRUPTED\"
     #[serde(rename = "accountStatus", skip_serializing_if = "Option::is_none")]
     pub account_status: Option<String>,
+    /// Portfolio margin maximum amount for transfer out in USD
     #[serde(
         rename = "virtualMaxWithdrawAmount",
         skip_serializing_if = "Option::is_none"
     )]
     pub virtual_max_withdraw_amount: Option<String>,
+    /// Total Available Balance.
     #[serde(
         rename = "totalAvailableBalance",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_available_balance: Option<String>,
+    /// in USD margin open order
     #[serde(
         rename = "totalMarginOpenLoss",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_margin_open_loss: Option<String>,
+    /// last update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }
