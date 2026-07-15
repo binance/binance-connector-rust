@@ -35,9 +35,6 @@ pub struct ModifyOrderResponse {
     /// Latest token price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
-    /// Average execution price. Will be removed after CM migration.
-    #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
-    pub avg_price: Option<String>,
     /// Original order quantity
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
@@ -47,9 +44,6 @@ pub struct ModifyOrderResponse {
     /// Cumulative filled quantity.
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    /// Cumulative base asset amount. Will be removed after CM migration.
-    #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
-    pub cum_base: Option<String>,
     /// Time in force
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
@@ -104,11 +98,9 @@ impl ModifyOrderResponse {
             status: None,
             client_order_id: None,
             price: None,
-            avg_price: None,
             orig_qty: None,
             executed_qty: None,
             cum_qty: None,
-            cum_base: None,
             time_in_force: None,
             r#type: None,
             reduce_only: None,

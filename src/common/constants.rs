@@ -85,9 +85,6 @@ pub const MARGIN_TRADING_RISK_WS_STREAMS_PROD_URL: &str = "wss://margin-stream.b
 // Mining constants
 pub const MINING_REST_API_PROD_URL: &str = "https://api.binance.com";
 
-// NFT constants
-pub const NFT_REST_API_PROD_URL: &str = "https://api.binance.com";
-
 // Pay constants
 pub const PAY_REST_API_PROD_URL: &str = "https://api.binance.com";
 

@@ -17,18 +17,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CancelUmOrderResponse {
-    /// Avg Price.
-    #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
-    pub avg_price: Option<String>,
     /// Client Order ID.
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     /// Cum Qty.
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    /// Cum Quote.
-    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
-    pub cum_quote: Option<String>,
     /// Executed Qty.
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
@@ -83,10 +77,8 @@ impl CancelUmOrderResponse {
     #[must_use]
     pub fn new() -> CancelUmOrderResponse {
         CancelUmOrderResponse {
-            avg_price: None,
             client_order_id: None,
             cum_qty: None,
-            cum_quote: None,
             executed_qty: None,
             order_id: None,
             orig_qty: None,

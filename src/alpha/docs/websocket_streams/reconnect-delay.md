@@ -1,7 +1,7 @@
 # Reconnect Delay Configuration
 
 ```rust
-use binance_sdk::derivatives_trading_options;
+use binance_sdk::alpha;
 use binance_sdk::config;
 
 let configuration = config::ConfigurationWebsocketStreams::builder()
@@ -10,8 +10,8 @@ let configuration = config::ConfigurationWebsocketStreams::builder()
     .reconnect_delay(3000) // Set reconnect delay to 3 seconds
     .build()?;
 
-let client = derivatives_trading_options::DerivativesTradingOptionsWsStreams::production(configuration);
+let client = alpha::AlphaWsStreams::production(configuration);
 let connection = client.connect().await?;
-let params = derivatives_trading_options::websocket_streams::NewSymbolInfoParams::default();
-let stream = connection.new_symbol_info(params).await?;
+let params = alpha::websocket_streams::AllBookTickerStreamParams::default();
+let stream = connection.all_book_ticker_stream(params).await?;
 ```

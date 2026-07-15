@@ -1,7 +1,7 @@
 # Connection Mode Configuration
 
 ```rust
-use binance_sdk::spot;
+use binance_sdk::alpha;
 use binance_sdk::config;
 
 let configuration = config::ConfigurationWebsocketStreams::builder()
@@ -10,8 +10,8 @@ let configuration = config::ConfigurationWebsocketStreams::builder()
     .mode(models::WebsocketMode::Pool(3)) // Use pool mode with a pool size of 3
     .build()?;
 
-let client = spot::SpotWsStreams::production(configuration);
+let client = alpha::AlphaWsStreams::production(configuration);
 let connection = client.connect().await?;
-let params = spot::websocket_streams::AggTradeParams::default();
-let stream = connection.agg_trade(params).await?;
+let params = alpha::websocket_streams::AllBookTickerStreamParams::default();
+let stream = connection.all_book_ticker_stream(params).await?;
 ```

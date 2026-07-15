@@ -16,7 +16,7 @@ let native_tls = TlsConnector::builder()
     .build()?;
 let ws_connector = Connector::NativeTls(native_tls);
 
-let configuration = config::ConfigurationWebsocketApi::builder()
+let configuration = config::ConfigurationWebsocketStreams::builder()
     .api_key("your-api-key")
     .api_secret("your-api-secret")
     .agent(config::AgentConnector(ws_connector))

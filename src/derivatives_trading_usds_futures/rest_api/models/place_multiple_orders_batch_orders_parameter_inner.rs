@@ -73,24 +73,23 @@ impl PlaceMultipleOrdersBatchOrdersParameterInner {
     }
 }
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    #[default]
     Buy,
     #[serde(rename = "SELL")]
     Sell,
 }
 
+impl Default for SideEnum {
+    fn default() -> SideEnum {
+        Self::Buy
+    }
+}
 /// Default `BOTH` for One-way Mode; `LONG` or `SHORT` for Hedge Mode.
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PositionSideEnum {
     #[serde(rename = "BOTH")]
-    #[default]
     Both,
     #[serde(rename = "LONG")]
     Long,
@@ -98,13 +97,15 @@ pub enum PositionSideEnum {
     Short,
 }
 
+impl Default for PositionSideEnum {
+    fn default() -> PositionSideEnum {
+        Self::Both
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TypeEnum {
     #[serde(rename = "LIMIT")]
-    #[default]
     Limit,
     #[serde(rename = "MARKET")]
     Market,
@@ -120,13 +121,15 @@ pub enum TypeEnum {
     TrailingStopMarket,
 }
 
+impl Default for TypeEnum {
+    fn default() -> TypeEnum {
+        Self::Limit
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TimeInForceEnum {
     #[serde(rename = "GTC")]
-    #[default]
     Gtc,
     #[serde(rename = "IOC")]
     Ioc,
@@ -140,37 +143,43 @@ pub enum TimeInForceEnum {
     Rpi,
 }
 
+impl Default for TimeInForceEnum {
+    fn default() -> TimeInForceEnum {
+        Self::Gtc
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum ReduceOnlyEnum {
     #[serde(rename = "true")]
-    #[default]
     True,
     #[serde(rename = "false")]
     False,
 }
 
+impl Default for ReduceOnlyEnum {
+    fn default() -> ReduceOnlyEnum {
+        Self::True
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    #[default]
     Ack,
     #[serde(rename = "RESULT")]
     Result,
 }
 
+impl Default for NewOrderRespTypeEnum {
+    fn default() -> NewOrderRespTypeEnum {
+        Self::Ack
+    }
+}
 /// only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Can't be passed together with price
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PriceMatchEnum {
     #[serde(rename = "OPPONENT")]
-    #[default]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
     Opponent5,
@@ -188,13 +197,15 @@ pub enum PriceMatchEnum {
     Queue20,
 }
 
+impl Default for PriceMatchEnum {
+    fn default() -> PriceMatchEnum {
+        Self::Opponent
+    }
+}
 /// `EXPIRE_TAKER:expire` taker order when STP triggers/ `EXPIRE_MAKER:expire` taker order when STP triggers/ `EXPIRE_BOTH:expire` both orders when STP triggers; default NONE
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SelfTradePreventionModeEnum {
     #[serde(rename = "NONE")]
-    #[default]
     None,
     #[serde(rename = "EXPIRE_TAKER")]
     ExpireTaker,
@@ -202,4 +213,10 @@ pub enum SelfTradePreventionModeEnum {
     ExpireBoth,
     #[serde(rename = "EXPIRE_MAKER")]
     ExpireMaker,
+}
+
+impl Default for SelfTradePreventionModeEnum {
+    fn default() -> SelfTradePreventionModeEnum {
+        Self::None
+    }
 }

@@ -23,18 +23,12 @@ pub struct NewCmOrderResponse {
     /// Cum Qty.
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    /// Cum Base.
-    #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
-    pub cum_base: Option<String>,
     /// Executed Qty.
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
     /// Normal orderID after trigger if appliable, only have when the strategy is triggered
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
-    /// Avg Price.
-    #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
-    pub avg_price: Option<String>,
     /// Orig Qty.
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
@@ -76,10 +70,8 @@ impl NewCmOrderResponse {
         NewCmOrderResponse {
             client_order_id: None,
             cum_qty: None,
-            cum_base: None,
             executed_qty: None,
             order_id: None,
-            avg_price: None,
             orig_qty: None,
             price: None,
             reduce_only: None,

@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "61.0.0"
+version = "62.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -159,7 +159,6 @@ fiat = [ ]
 gift_card = [ ]
 margin_trading = [ ]
 mining = [ ]
-nft = [ ]
 pay = [ ]
 rebate = [ ]
 simple_earn = [ ]
@@ -186,7 +185,6 @@ all = [
   "gift_card",
   "margin_trading",
   "mining",
-  "nft",
   "pay",
   "rebate",
   "simple_earn",
@@ -3022,26 +3020,6 @@ required-features = [ "mining" ]
 name = "mining_rest_api_statistic_list"
 path = "examples/mining/rest_api/statistic_list.rs"
 required-features = [ "mining" ]
-
-[[example]]
-name = "nft_rest_api_nft_api_get_nft_asset"
-path = "examples/nft/rest_api/nft_api/get_nft_asset.rs"
-required-features = [ "nft" ]
-
-[[example]]
-name = "nft_rest_api_nft_api_get_nft_deposit_history"
-path = "examples/nft/rest_api/nft_api/get_nft_deposit_history.rs"
-required-features = [ "nft" ]
-
-[[example]]
-name = "nft_rest_api_nft_api_get_nft_transaction_history"
-path = "examples/nft/rest_api/nft_api/get_nft_transaction_history.rs"
-required-features = [ "nft" ]
-
-[[example]]
-name = "nft_rest_api_nft_api_get_nft_withdraw_history"
-path = "examples/nft/rest_api/nft_api/get_nft_withdraw_history.rs"
-required-features = [ "nft" ]
 
 [[example]]
 name = "pay_rest_api_get_pay_trade_history"

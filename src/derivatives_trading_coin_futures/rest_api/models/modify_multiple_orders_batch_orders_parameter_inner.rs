@@ -62,13 +62,16 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
     }
 }
 /// Trading side
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    #[default]
     Buy,
     #[serde(rename = "SELL")]
     Sell,
+}
+
+impl Default for SideEnum {
+    fn default() -> SideEnum {
+        Self::Buy
+    }
 }

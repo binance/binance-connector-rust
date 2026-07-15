@@ -98,24 +98,23 @@ impl PlaceMultipleOrdersBatchOrdersParameterInner {
     }
 }
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    #[default]
     Buy,
     #[serde(rename = "SELL")]
     Sell,
 }
 
+impl Default for SideEnum {
+    fn default() -> SideEnum {
+        Self::Buy
+    }
+}
 /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent with Hedge Mode.
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PositionSideEnum {
     #[serde(rename = "BOTH")]
-    #[default]
     Both,
     #[serde(rename = "LONG")]
     Long,
@@ -123,13 +122,15 @@ pub enum PositionSideEnum {
     Short,
 }
 
+impl Default for PositionSideEnum {
+    fn default() -> PositionSideEnum {
+        Self::Both
+    }
+}
 /// **After CM migration, stop-type values (`STOP`, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`, `TRAILING_STOP_MARKET`) are no longer accepted on a per-element basis and will return element-level `-4120`. Use the new `/dapi/v1/algoOrder` endpoint instead.**
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TypeEnum {
     #[serde(rename = "LIMIT")]
-    #[default]
     Limit,
     #[serde(rename = "MARKET")]
     Market,
@@ -145,13 +146,15 @@ pub enum TypeEnum {
     TrailingStopMarket,
 }
 
+impl Default for TypeEnum {
+    fn default() -> TypeEnum {
+        Self::Limit
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TimeInForceEnum {
     #[serde(rename = "GTC")]
-    #[default]
     Gtc,
     #[serde(rename = "IOC")]
     Ioc,
@@ -161,61 +164,71 @@ pub enum TimeInForceEnum {
     Gtx,
 }
 
+impl Default for TimeInForceEnum {
+    fn default() -> TimeInForceEnum {
+        Self::Gtc
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum ReduceOnlyEnum {
     #[serde(rename = "true")]
-    #[default]
     True,
     #[serde(rename = "false")]
     False,
 }
 
+impl Default for ReduceOnlyEnum {
+    fn default() -> ReduceOnlyEnum {
+        Self::True
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum WorkingTypeEnum {
     #[serde(rename = "MARK_PRICE")]
-    #[default]
     MarkPrice,
     #[serde(rename = "CONTRACT_PRICE")]
     ContractPrice,
 }
 
+impl Default for WorkingTypeEnum {
+    fn default() -> WorkingTypeEnum {
+        Self::MarkPrice
+    }
+}
 /// Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PriceProtectEnum {
     #[serde(rename = "true")]
-    #[default]
     True,
     #[serde(rename = "false")]
     False,
 }
 
+impl Default for PriceProtectEnum {
+    fn default() -> PriceProtectEnum {
+        Self::True
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    #[default]
     Ack,
     #[serde(rename = "RESULT")]
     Result,
 }
 
+impl Default for NewOrderRespTypeEnum {
+    fn default() -> NewOrderRespTypeEnum {
+        Self::Ack
+    }
+}
 /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can't be passed together with `price`
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PriceMatchEnum {
     #[serde(rename = "OPPONENT")]
-    #[default]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
     Opponent5,
@@ -233,16 +246,24 @@ pub enum PriceMatchEnum {
     Queue20,
 }
 
+impl Default for PriceMatchEnum {
+    fn default() -> PriceMatchEnum {
+        Self::Opponent
+    }
+}
 /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SelfTradePreventionModeEnum {
     #[serde(rename = "EXPIRE_TAKER")]
-    #[default]
     ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
     ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
     ExpireBoth,
+}
+
+impl Default for SelfTradePreventionModeEnum {
+    fn default() -> SelfTradePreventionModeEnum {
+        Self::ExpireTaker
+    }
 }

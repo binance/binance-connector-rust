@@ -1,5 +1,132 @@
 # Changelog
 
+## 62.0.0 - 2026-07-15
+
+**Derivatives Trading Coin Futures**
+
+### Changed (9)
+
+#### REST API
+
+- Modified response for `cancel_multiple_orders()` (`DELETE /dapi/v1/batchOrders`):
+  - items: property `avgPrice` deleted
+  - items: property `cumBase` deleted
+  - items: item property `avgPrice` deleted
+  - items: item property `cumBase` deleted
+
+- Modified response for `place_multiple_orders()` (`POST /dapi/v1/batchOrders`):
+  - items: property `avgPrice` deleted
+  - items: property `cumBase` deleted
+  - items: item property `avgPrice` deleted
+  - items: item property `cumBase` deleted
+
+- Modified response for `modify_multiple_orders()` (`PUT /dapi/v1/batchOrders`):
+  - items: property `avgPrice` deleted
+  - items: property `cumBase` deleted
+  - items: item property `avgPrice` deleted
+  - items: item property `cumBase` deleted
+
+- Modified response for `cancel_order()` (`DELETE /dapi/v1/order`):
+  - property `cumBase` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `new_order()` (`POST /dapi/v1/order`):
+  - property `cumBase` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `modify_order()` (`PUT /dapi/v1/order`):
+  - property `cumBase` deleted
+  - property `avgPrice` deleted
+
+#### WebSocket API
+
+- Modified response for `cancel_order()` (`order.cancel` method):
+  - `result`: property `cumBase` deleted
+  - `result`: property `avgPrice` deleted
+
+- Modified response for `modify_order()` (`order.modify` method):
+  - `result`: property `avgPrice` deleted
+  - `result`: property `cumBase` deleted
+
+- Modified response for `new_order()` (`order.place` method):
+  - `result`: property `avgPrice` deleted
+  - `result`: property `cumBase` deleted
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (4)
+
+#### REST API
+
+- Modified response for `cancel_cm_order()` (`DELETE /papi/v1/cm/order`):
+  - property `cumBase` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `new_cm_order()` (`POST /papi/v1/cm/order`):
+  - property `cumBase` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `cancel_um_order()` (`DELETE /papi/v1/um/order`):
+  - property `cumQuote` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `new_um_order()` (`POST /papi/v1/um/order`):
+  - property `cumQuote` deleted
+  - property `avgPrice` deleted
+
+**Derivatives Trading Usds Futures**
+
+### Changed (9)
+
+#### REST API
+
+- Modified response for `cancel_multiple_orders()` (`DELETE /fapi/v1/batchOrders`):
+  - items: property `cumQuote` deleted
+  - items: item property `cumQuote` deleted
+
+- Modified response for `place_multiple_orders()` (`POST /fapi/v1/batchOrders`):
+  - items: property `cumQuote` deleted
+  - items: property `avgPrice` deleted
+  - items: item property `cumQuote` deleted
+  - items: item property `avgPrice` deleted
+
+- Modified response for `modify_multiple_orders()` (`PUT /fapi/v1/batchOrders`):
+  - items: property `cumBase` deleted
+  - items: property `avgPrice` deleted
+  - items: item property `cumBase` deleted
+  - items: item property `avgPrice` deleted
+
+- Modified response for `cancel_order()` (`DELETE /fapi/v1/order`):
+  - property `cumQuote` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `new_order()` (`POST /fapi/v1/order`):
+  - property `cumQuote` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `modify_order()` (`PUT /fapi/v1/order`):
+  - property `cumBase` deleted
+  - property `avgPrice` deleted
+
+#### WebSocket API
+
+- Modified response for `cancel_order()` (`order.cancel` method):
+  - `result`: property `cumQuote` deleted
+
+- Modified response for `modify_order()` (`order.modify` method):
+  - `result`: property `cumQuote` deleted
+  - `result`: property `avgPrice` deleted
+
+- Modified response for `new_order()` (`order.place` method):
+  - `result`: property `avgPrice` deleted
+  - `result`: property `cumQuote` deleted
+
+**NFT**
+
+### Deleted (1)
+
+- Removed NFT REST API module.
+
 ## 61.0.0 - 2026-07-13
 
 ### Added (14)

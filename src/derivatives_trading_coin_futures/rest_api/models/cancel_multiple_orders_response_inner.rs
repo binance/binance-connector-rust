@@ -17,18 +17,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CancelMultipleOrdersResponseInner {
-    /// Average execution price. Will be removed after CM migration.
-    #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
-    pub avg_price: Option<String>,
     /// Client order ID.
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     /// Cumulative filled quantity.
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    /// Cumulative base asset amount. Will be removed after CM migration.
-    #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
-    pub cum_base: Option<String>,
     /// Executed quantity
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
@@ -110,10 +104,8 @@ impl CancelMultipleOrdersResponseInner {
     #[must_use]
     pub fn new() -> CancelMultipleOrdersResponseInner {
         CancelMultipleOrdersResponseInner {
-            avg_price: None,
             client_order_id: None,
             cum_qty: None,
-            cum_base: None,
             executed_qty: None,
             order_id: None,
             orig_qty: None,

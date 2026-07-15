@@ -62,24 +62,23 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
     }
 }
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    #[default]
     Buy,
     #[serde(rename = "SELL")]
     Sell,
 }
 
+impl Default for SideEnum {
+    fn default() -> SideEnum {
+        Self::Buy
+    }
+}
 /// Only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Cannot be sent together with `price`.
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PriceMatchEnum {
     #[serde(rename = "OPPONENT")]
-    #[default]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
     Opponent5,
@@ -95,4 +94,10 @@ pub enum PriceMatchEnum {
     Queue10,
     #[serde(rename = "QUEUE_20")]
     Queue20,
+}
+
+impl Default for PriceMatchEnum {
+    fn default() -> PriceMatchEnum {
+        Self::Opponent
+    }
 }

@@ -22,9 +22,6 @@ pub struct CancelOrderResponseResult {
     pub client_order_id: Option<String>,
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    /// Cum Quote. Will be removed after CM migration.
-    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
-    pub cum_quote: Option<String>,
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
@@ -80,7 +77,6 @@ impl CancelOrderResponseResult {
         CancelOrderResponseResult {
             client_order_id: None,
             cum_qty: None,
-            cum_quote: None,
             executed_qty: None,
             order_id: None,
             orig_qty: None,

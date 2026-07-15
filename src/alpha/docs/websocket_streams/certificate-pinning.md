@@ -5,7 +5,7 @@ use std::fs;
 use tokio_tungstenite::Connector;
 use native_tls::{Certificate, TlsConnector, Protocol};
 
-use binance_sdk::derivatives_trading_options;
+use binance_sdk::alpha;
 use binance_sdk::config;
 
 let cert_pem = fs::read("/path/to/pinned_cert.pem")?;
@@ -22,8 +22,8 @@ let configuration = config::ConfigurationWebsocketStreams::builder()
     .agent(config::AgentConnector(ws_connector))
     .build()?;
 
-let client = derivatives_trading_options::DerivativesTradingOptionsWsStreams::production(configuration);
+let client = alpha::AlphaWsStreams::production(configuration);
 let connection = client.connect().await?;
-let params = derivatives_trading_options::websocket_streams::NewSymbolInfoParams::default();
-let stream = connection.new_symbol_info(params).await?;
+let params = alpha::websocket_streams::AllBookTickerStreamParams::default();
+let stream = connection.all_book_ticker_stream(params).await?;
 ```

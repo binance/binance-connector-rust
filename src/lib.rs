@@ -42,8 +42,6 @@ pub mod gift_card;
 pub mod margin_trading;
 #[cfg(feature = "mining")]
 pub mod mining;
-#[cfg(feature = "nft")]
-pub mod nft;
 #[cfg(feature = "pay")]
 pub mod pay;
 #[cfg(feature = "rebate")]
