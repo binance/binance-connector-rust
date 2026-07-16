@@ -389,7 +389,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@depth@<updateSpeed>", &vars);
 
@@ -432,7 +432,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/<symbol>@optionTicker<expirationDate>", &vars);
@@ -470,7 +470,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@bookTicker", &vars);
 
@@ -515,7 +515,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/<symbol>@depth<level>@<updateSpeed>", &vars);
@@ -554,7 +554,7 @@ impl PublicApi for PublicApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@optionTrade", &vars);
 

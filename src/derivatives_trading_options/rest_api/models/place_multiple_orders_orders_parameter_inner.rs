@@ -76,34 +76,35 @@ impl PlaceMultipleOrdersOrdersParameterInner {
     }
 }
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    #[default]
     Buy,
     #[serde(rename = "SELL")]
     Sell,
 }
 
+impl Default for SideEnum {
+    fn default() -> SideEnum {
+        Self::Buy
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TypeEnum {
     #[serde(rename = "LIMIT")]
-    #[default]
     Limit,
 }
 
+impl Default for TypeEnum {
+    fn default() -> TypeEnum {
+        Self::Limit
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TimeInForceEnum {
     #[serde(rename = "GTC")]
-    #[default]
     Gtc,
     #[serde(rename = "IOC")]
     Ioc,
@@ -113,28 +114,38 @@ pub enum TimeInForceEnum {
     Gtx,
 }
 
+impl Default for TimeInForceEnum {
+    fn default() -> TimeInForceEnum {
+        Self::Gtc
+    }
+}
 ///
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
-    #[default]
     Ack,
     #[serde(rename = "RESULT")]
     Result,
 }
 
+impl Default for NewOrderRespTypeEnum {
+    fn default() -> NewOrderRespTypeEnum {
+        Self::Ack
+    }
+}
 /// `EXPIRE_TAKER:expire` taker order when STP triggers/ `EXPIRE_MAKER:expire` maker order when STP triggers/ `EXPIRE_BOTH:expire` both orders when STP triggers; Default `EXPIRE_MAKER`
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SelfTradePreventionModeEnum {
     #[serde(rename = "EXPIRE_TAKER")]
-    #[default]
     ExpireTaker,
     #[serde(rename = "EXPIRE_MAKER")]
     ExpireMaker,
     #[serde(rename = "EXPIRE_BOTH")]
     ExpireBoth,
+}
+
+impl Default for SelfTradePreventionModeEnum {
+    fn default() -> SelfTradePreventionModeEnum {
+        Self::ExpireTaker
+    }
 }

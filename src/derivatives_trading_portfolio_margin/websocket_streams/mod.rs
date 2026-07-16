@@ -164,7 +164,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous subscription to the specified WebSocket streams.
@@ -184,7 +184,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous unsubscription from the specified WebSocket streams.

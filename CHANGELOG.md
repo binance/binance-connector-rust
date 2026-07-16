@@ -1,5 +1,55 @@
 # Changelog
 
+## 63.0.0 - 2026-07-16
+
+**Alpha**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified parameter `id`:
+  - type `string` → `integer`
+  - affected methods:
+    - `all_book_ticker_stream()` (`!bookTicker` stream)
+    - `all_mini_ticker_stream()` (`!miniTicker@arr` stream)
+    - `all_ticker_stream()` (`!ticker@arr` stream)
+    - `aggregate_trade_stream()` (`<symbol>@aggTrade` stream)
+    - `book_ticker_stream()` (`<symbol>@bookTicker` stream)
+    - `partial_depth_stream()` (`<symbol>@depth<levels>@<interval>` stream)
+    - `full_depth_stream()` (`<symbol>@fulldepth@<interval>` stream)
+    - `kline_stream()` (`<symbol>@kline_<interval>` stream)
+    - `mini_ticker_stream()` (`<symbol>@miniTicker` stream)
+    - `ticker_stream()` (`<symbol>@ticker` stream)
+    - `trade_stream()` (`<symbol>@trade` stream)
+    - `contract_kline_stream()` (`came@<contractAddress>@<chainId>@kline_<interval>` stream)
+    - `all_tokens_24h_ticker_stream()` (`came@allTokens@ticker24` stream)
+
+**Derivatives Trading Options**
+
+### Added(2)
+
+#### WebSocket Streams
+
+- Added `subscribe_with_path()` that subscribes to specified WebSocket streams on a specific URL path.
+- Added `unsubscribe_with_path()` that unsubscribes from specified WebSocket streams on a specific URL path.
+
+**Derivatives Trading Usds Futures**
+
+### Added(2)
+
+#### WebSocket Streams
+
+- Added `subscribe_with_path()` that subscribes to specified WebSocket streams on a specific URL path.
+- Added `unsubscribe_with_path()` that unsubscribes from specified WebSocket streams on a specific URL path.
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `trading_schedule()` (`GET /fapi/v1/tradingSchedule`):
+  - `marketSchedules`: property `HK_EQUITY` added
+
 ## 62.0.0 - 2026-07-15
 
 **Derivatives Trading Coin Futures**

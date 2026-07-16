@@ -351,7 +351,7 @@ pub struct AggregateTradeStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl AggregateTradeStreamParams {
@@ -378,7 +378,7 @@ pub struct AllBookTickerStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl AllBookTickerStreamParams {
@@ -401,7 +401,7 @@ pub struct AllMiniTickerStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl AllMiniTickerStreamParams {
@@ -424,7 +424,7 @@ pub struct AllTickerStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl AllTickerStreamParams {
@@ -447,7 +447,7 @@ pub struct AllTokens24hTickerStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl AllTokens24hTickerStreamParams {
@@ -476,7 +476,7 @@ pub struct BookTickerStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl BookTickerStreamParams {
@@ -521,7 +521,7 @@ pub struct ContractKlineStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl ContractKlineStreamParams {
@@ -569,7 +569,7 @@ pub struct FullDepthStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl FullDepthStreamParams {
@@ -614,7 +614,7 @@ pub struct KlineStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl KlineStreamParams {
@@ -650,7 +650,7 @@ pub struct MiniTickerStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl MiniTickerStreamParams {
@@ -695,7 +695,7 @@ pub struct PartialDepthStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl PartialDepthStreamParams {
@@ -737,7 +737,7 @@ pub struct TickerStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl TickerStreamParams {
@@ -770,7 +770,7 @@ pub struct TradeStreamParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
-    pub id: Option<String>,
+    pub id: Option<u32>,
 }
 
 impl TradeStreamParams {
@@ -794,8 +794,10 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::AggregateTradeStreamResponse>>> {
         let AggregateTradeStreamParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -830,7 +832,7 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::AllBookTickerStreamResponse>>> {
         let AllBookTickerStreamParams { id } = params;
 
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -865,7 +867,7 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::AllMiniTickerStreamResponse>>> {
         let AllMiniTickerStreamParams { id } = params;
 
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -900,7 +902,7 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::AllTickerStreamResponse>>> {
         let AllTickerStreamParams { id } = params;
 
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -933,7 +935,7 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::AllTokens24hTickerStreamResponse>>> {
         let AllTokens24hTickerStreamParams { id } = params;
 
-        let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -968,8 +970,10 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::BookTickerStreamResponse>>> {
         let BookTickerStreamParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -1011,7 +1015,7 @@ impl Api for ApiClient {
             ("contractAddress", Some(contract_address.clone())),
             ("chainId", Some(chain_id.clone())),
             ("interval", Some(interval.as_str().to_string())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1057,7 +1061,7 @@ impl Api for ApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("interval", Some(interval.as_str().to_string())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1099,7 +1103,7 @@ impl Api for ApiClient {
         let pairs: &[(&str, Option<String>)] = &[
             ("symbol", Some(symbol.clone())),
             ("interval", Some(interval.as_str().to_string())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1133,8 +1137,10 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::MiniTickerStreamResponse>>> {
         let MiniTickerStreamParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -1176,7 +1182,7 @@ impl Api for ApiClient {
             ("symbol", Some(symbol.clone())),
             ("levels", Some(levels.as_str().to_string())),
             ("interval", Some(interval.as_str().to_string())),
-            ("id", id.clone()),
+            ("id", id.map(|v| v.to_string())),
         ];
 
         let vars: HashMap<_, _> = pairs
@@ -1211,8 +1217,10 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::TickerStreamResponse>>> {
         let TickerStreamParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -1245,8 +1253,10 @@ impl Api for ApiClient {
     ) -> anyhow::Result<Arc<WebsocketStream<models::TradeStreamResponse>>> {
         let TradeStreamParams { symbol, id } = params;
 
-        let pairs: &[(&str, Option<String>)] =
-            &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+        let pairs: &[(&str, Option<String>)] = &[
+            ("symbol", Some(symbol.clone())),
+            ("id", id.map(|v| v.to_string())),
+        ];
 
         let vars: HashMap<_, _> = pairs
             .iter()
@@ -1303,17 +1313,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let AggregateTradeStreamParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1329,7 +1341,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1339,9 +1351,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let AggregateTradeStreamParams {
                 symbol,id,
@@ -1352,7 +1364,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1389,9 +1401,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let AggregateTradeStreamParams {
                 symbol,id,
@@ -1402,7 +1414,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1444,16 +1456,16 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = AllBookTickerStreamParams::builder()
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let AllBookTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1469,7 +1481,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1479,9 +1491,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllBookTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllBookTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllBookTickerStreamParams {
                 id,
@@ -1489,7 +1501,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1526,9 +1538,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllBookTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllBookTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllBookTickerStreamParams {
                 id,
@@ -1536,7 +1548,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1578,16 +1590,16 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = AllMiniTickerStreamParams::builder()
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let AllMiniTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1603,7 +1615,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1613,9 +1625,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllMiniTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllMiniTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllMiniTickerStreamParams {
                 id,
@@ -1623,7 +1635,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1660,9 +1672,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllMiniTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllMiniTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllMiniTickerStreamParams {
                 id,
@@ -1670,7 +1682,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1712,16 +1724,16 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = AllTickerStreamParams::builder()
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let AllTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1737,7 +1749,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1747,9 +1759,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllTickerStreamParams {
                 id,
@@ -1757,7 +1769,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1794,9 +1806,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllTickerStreamParams {
                 id,
@@ -1804,7 +1816,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1846,16 +1858,16 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = AllTokens24hTickerStreamParams::builder()
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let AllTokens24hTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1871,7 +1883,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -1881,9 +1893,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllTokens24hTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllTokens24hTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllTokens24hTickerStreamParams {
                 id,
@@ -1891,7 +1903,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1928,9 +1940,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = AllTokens24hTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = AllTokens24hTickerStreamParams::builder().id(Some(id)).build().unwrap();
 
             let AllTokens24hTickerStreamParams {
                 id,
@@ -1938,7 +1950,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1980,17 +1992,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = BookTickerStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let BookTickerStreamParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2006,7 +2020,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -2016,9 +2030,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let BookTickerStreamParams {
                 symbol,id,
@@ -2029,7 +2043,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2066,9 +2080,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let BookTickerStreamParams {
                 symbol,id,
@@ -2079,7 +2093,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2121,14 +2135,14 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = ContractKlineStreamParams::builder(
                 "G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),
                 "CT_501".to_string(),
                 ContractKlineStreamIntervalEnum::Interval1s,
             )
-            .id(Some(id.clone()))
+            .id(Some(id))
             .build()
             .unwrap();
 
@@ -2143,7 +2157,7 @@ mod tests {
                 ("contractAddress", Some(contract_address.clone())),
                 ("chainId", Some(chain_id.clone())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2163,7 +2177,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -2173,9 +2187,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
+            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id)).build().unwrap();
 
             let ContractKlineStreamParams {
                 contract_address,chain_id,interval,id,
@@ -2192,7 +2206,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2229,9 +2243,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
+            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id)).build().unwrap();
 
             let ContractKlineStreamParams {
                 contract_address,chain_id,interval,id,
@@ -2248,7 +2262,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2290,13 +2304,13 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = FullDepthStreamParams::builder(
                 "alpha_116usdt".to_string(),
                 FullDepthStreamIntervalEnum::Interval0ms,
             )
-            .id(Some(id.clone()))
+            .id(Some(id))
             .build()
             .unwrap();
 
@@ -2309,7 +2323,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2327,7 +2341,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -2337,9 +2351,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
+            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
 
             let FullDepthStreamParams {
                 symbol,interval,id,
@@ -2353,7 +2367,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2390,9 +2404,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
+            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
 
             let FullDepthStreamParams {
                 symbol,interval,id,
@@ -2406,7 +2420,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2448,13 +2462,13 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = KlineStreamParams::builder(
                 "alpha_116usdt".to_string(),
                 KlineStreamIntervalEnum::Interval1m,
             )
-            .id(Some(id.clone()))
+            .id(Some(id))
             .build()
             .unwrap();
 
@@ -2467,7 +2481,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2485,7 +2499,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -2495,9 +2509,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
+            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
 
             let KlineStreamParams {
                 symbol,interval,id,
@@ -2511,7 +2525,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2548,9 +2562,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
+            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
 
             let KlineStreamParams {
                 symbol,interval,id,
@@ -2564,7 +2578,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2606,17 +2620,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let MiniTickerStreamParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2632,7 +2648,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -2642,9 +2658,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let MiniTickerStreamParams {
                 symbol,id,
@@ -2655,7 +2671,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2692,9 +2708,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let MiniTickerStreamParams {
                 symbol,id,
@@ -2705,7 +2721,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2747,14 +2763,14 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = PartialDepthStreamParams::builder(
                 "alpha_116usdt".to_string(),
                 PartialDepthStreamLevelsEnum::Levels5,
                 PartialDepthStreamIntervalEnum::Interval0ms,
             )
-            .id(Some(id.clone()))
+            .id(Some(id))
             .build()
             .unwrap();
 
@@ -2769,7 +2785,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.as_str().to_string())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.clone()),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2787,7 +2803,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -2797,9 +2813,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
+            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
 
             let PartialDepthStreamParams {
                 symbol,levels,interval,id,
@@ -2816,7 +2832,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2853,9 +2869,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
+            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
 
             let PartialDepthStreamParams {
                 symbol,levels,interval,id,
@@ -2872,7 +2888,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -2914,17 +2930,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = TickerStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let TickerStreamParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2940,7 +2958,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -2950,9 +2968,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let TickerStreamParams {
                 symbol,id,
@@ -2963,7 +2981,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -3000,9 +3018,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let TickerStreamParams {
                 symbol,id,
@@ -3013,7 +3031,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -3055,17 +3073,19 @@ mod tests {
             let (streams_base, _) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
             let params = TradeStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let TradeStreamParams { symbol, id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol", Some(symbol.clone())),
+                ("id", id.map(|v| v.to_string())),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -3081,7 +3101,7 @@ mod tests {
                 streams_base.is_subscribed(&stream).await,
                 "expected stream '{stream}' to be subscribed"
             );
-            assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
+            assert_eq!(ws_stream.id, Some(StreamId::Number(123456u32)));
         });
     }
 
@@ -3091,9 +3111,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let TradeStreamParams {
                 symbol,id,
@@ -3104,7 +3124,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -3141,9 +3161,9 @@ mod tests {
             let (streams_base, conn) = make_streams_base().await;
             let api = ApiClient::new(streams_base.clone());
 
-            let id = "test-id-123".to_string();
+            let id = 123456u32;
 
-            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
 
             let TradeStreamParams {
                 symbol,id,
@@ -3154,7 +3174,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.clone()
+                        id.map(|v| v.to_string())
                 ),
             ];
 

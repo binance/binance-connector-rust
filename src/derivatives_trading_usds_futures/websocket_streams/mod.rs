@@ -182,7 +182,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous subscription to the specified WebSocket streams.
@@ -190,6 +190,35 @@ impl WebsocketStreams {
     pub fn subscribe(&self, streams: Vec<String>, id: Option<String>) {
         let base = Arc::clone(&self.websocket_streams_base);
         spawn(async move { base.subscribe(streams, id.map(StreamId::from), None).await });
+    }
+
+    /// Subscribes to specified WebSocket streams on a specific URL path.
+    ///
+    /// # Arguments
+    ///
+    /// * `streams` - A vector of stream names to subscribe to
+    /// * `id` - An optional identifier for the subscription request
+    /// * `url_path` - An optional URL path for the subscription
+    ///
+    /// # Examples
+    ///
+    ///
+    /// `websocket_streams.subscribe_with_path(vec`!["`btcusdt@trade".to_string()`], None, `Some("market".to_string())`);
+    ///
+    ///
+    /// This method initiates an asynchronous subscription to the specified WebSocket streams.
+    /// The subscription is performed in a separate task using `spawn`.
+    pub fn subscribe_with_path(
+        &self,
+        streams: Vec<String>,
+        id: Option<String>,
+        url_path: Option<String>,
+    ) {
+        let base = Arc::clone(&self.websocket_streams_base);
+        spawn(async move {
+            base.subscribe(streams, id.map(StreamId::from), url_path.as_deref())
+                .await;
+        });
     }
 
     /// Unsubscribes from specified WebSocket streams.
@@ -202,7 +231,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous unsubscription from the specified WebSocket streams.
@@ -211,6 +240,35 @@ impl WebsocketStreams {
         let base = Arc::clone(&self.websocket_streams_base);
         spawn(async move {
             base.unsubscribe(streams, id.map(StreamId::from), None)
+                .await;
+        });
+    }
+
+    /// Unsubscribes from specified WebSocket streams on a specific URL path.
+    ///
+    /// # Arguments
+    ///
+    /// * `streams` - A vector of stream names to unsubscribe from
+    /// * `id` - An optional identifier for the unsubscription request
+    /// * `url_path` - An optional URL path for the unsubscription
+    ///
+    /// # Examples
+    ///
+    ///
+    /// `websocket_streams.unsubscribe_with_path(vec`!["`btcusdt@trade".to_string()`], None, `Some("market".to_string())`);
+    ///
+    ///
+    /// This method initiates an asynchronous unsubscription from the specified WebSocket streams.
+    /// The unsubscription is performed in a separate task using `spawn`.
+    pub fn unsubscribe_with_path(
+        &self,
+        streams: Vec<String>,
+        id: Option<String>,
+        url_path: Option<String>,
+    ) {
+        let base = Arc::clone(&self.websocket_streams_base);
+        spawn(async move {
+            base.unsubscribe(streams, id.map(StreamId::from), url_path.as_deref())
                 .await;
         });
     }
@@ -736,13 +794,14 @@ impl WebsocketStreams {
 
     /// Trading Session Stream
     ///
-    /// Trading session information for the underlying assets of `TradFi` Perpetual contracts, covering the U.S. equity market, Korean equity market, and the commodity market, is updated every second. Trading session information for different underlying markets is pushed in separate messages.
+    /// Trading session information for the underlying assets of `TradFi` Perpetual contracts, covering the U.S. equity market, Korean equity market, Hong Kong equity market, and the commodity market, is updated every second. Trading session information for different underlying markets is pushed in separate messages.
     ///
     /// **Event type:**
     ///
     /// - `EquityUpdate`: Session types for the U.S. equity market include "`PRE_MARKET`", "REGULAR", "`AFTER_MARKET`", "OVERNIGHT", and "`NO_TRADING`".
     /// - `CommodityUpdate`: Session types for the commodity market include "REGULAR" and "`NO_TRADING`".
     /// - `KR_EquityUpdate`: Session types for the Korean equity market include "REGULAR" and "`NO_TRADING`".
+    /// - `HK_EquityUpdate`: Session types for the Hong Kong equity market include "REGULAR" and "`NO_TRADING`".
     ///
     /// Update Speed: 1s
     ///

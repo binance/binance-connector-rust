@@ -18,7 +18,7 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TradingSessionStreamResponse {
-    /// Event type, can also be `CommodityUpdate` or `KR_EquityUpdate`
+    /// Event type, can also be `CommodityUpdate`, `KR_EquityUpdate` or `HK_EquityUpdate`
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
     /// Event time

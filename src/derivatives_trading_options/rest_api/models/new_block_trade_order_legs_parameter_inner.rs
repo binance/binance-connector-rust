@@ -52,23 +52,28 @@ impl NewBlockTradeOrderLegsParameterInner {
     }
 }
 /// Buy/sell direction
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]
-    #[default]
     Buy,
     #[serde(rename = "SELL")]
     Sell,
 }
 
+impl Default for SideEnum {
+    fn default() -> SideEnum {
+        Self::Buy
+    }
+}
 /// Order type
-#[derive(
-    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TypeEnum {
     #[serde(rename = "LIMIT")]
-    #[default]
     Limit,
+}
+
+impl Default for TypeEnum {
+    fn default() -> TypeEnum {
+        Self::Limit
+    }
 }

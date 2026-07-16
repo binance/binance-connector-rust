@@ -54,7 +54,9 @@ impl WebsocketStreams {
         }
 
         let websocket_streams_base = WebsocketStreamsBase::new(cfg, vec![], vec![]);
-
+        websocket_streams_base
+            .stream_id_is_strictly_number
+            .store(true, Ordering::Relaxed);
         websocket_streams_base.clone().connect(streams).await?;
 
         Ok(Self {
@@ -172,12 +174,12 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous subscription to the specified WebSocket streams.
     /// The subscription is performed in a separate task using `spawn`.
-    pub fn subscribe(&self, streams: Vec<String>, id: Option<String>) {
+    pub fn subscribe(&self, streams: Vec<String>, id: Option<u32>) {
         let base = Arc::clone(&self.websocket_streams_base);
         spawn(async move { base.subscribe(streams, id.map(StreamId::from), None).await });
     }
@@ -192,12 +194,12 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous unsubscription from the specified WebSocket streams.
     /// The unsubscription is performed in a separate task using `spawn`.
-    pub fn unsubscribe(&self, streams: Vec<String>, id: Option<String>) {
+    pub fn unsubscribe(&self, streams: Vec<String>, id: Option<u32>) {
         let base = Arc::clone(&self.websocket_streams_base);
         spawn(async move {
             base.unsubscribe(streams, id.map(StreamId::from), None)
