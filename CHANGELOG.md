@@ -1,5 +1,97 @@
 # Changelog
 
+## 64.0.0 - 2026-07-22
+
+**Derivatives Trading Coin Futures**
+
+### Changed (7)
+
+#### REST API
+
+- Added parameter `modifyId`
+  - affected methods:
+    - `modify_order()` (`PUT /dapi/v1/order`)
+- Modified parameter `batchOrders`:
+  - items: property `modifyId` added
+  - items: item property `modifyId` added
+  - affected methods:
+    - `modify_multiple_orders()` (`PUT /dapi/v1/batchOrders`)
+- Modified response for `modify_multiple_orders()` (`PUT /dapi/v1/batchOrders`):
+  - items: property `modifyId` added
+  - items: item property `modifyId` added
+
+- Modified response for `modify_order()` (`PUT /dapi/v1/order`):
+  - property `modifyId` added
+
+- Modified response for `get_order_modify_history()` (`GET /dapi/v1/orderAmendment`):
+  - items.`amendment`: property `modifyId` added
+  - items.`amendment`: property `modifyId` added
+
+#### WebSocket API
+
+- Added parameter `modifyId`
+  - affected methods:
+    - `modify_order()` (`order.modify` method)
+- Modified response for `modify_order()` (`order.modify` method):
+  - `result`: property `modifyId` added
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (5)
+
+#### REST API
+
+- Added parameter `modifyId`
+  - affected methods:
+    - `modify_cm_order()` (`PUT /papi/v1/cm/order`)
+    - `modify_um_order()` (`PUT /papi/v1/um/order`)
+- Modified response for `modify_cm_order()` (`PUT /papi/v1/cm/order`):
+  - property `modifyId` added
+
+- Modified response for `query_cm_modify_order_history()` (`GET /papi/v1/cm/orderAmendment`):
+  - items.`amendment`: property `modifyId` added
+  - items.`amendment`: property `modifyId` added
+
+- Modified response for `modify_um_order()` (`PUT /papi/v1/um/order`):
+  - property `modifyId` added
+
+- Modified response for `query_um_modify_order_history()` (`GET /papi/v1/um/orderAmendment`):
+  - items.`amendment`: property `modifyId` added
+  - items.`amendment`: property `modifyId` added
+
+**Derivatives Trading Usds Futures**
+
+### Changed (7)
+
+#### REST API
+
+- Added parameter `modifyId`
+  - affected methods:
+    - `modify_order()` (`PUT /fapi/v1/order`)
+- Modified parameter `batchOrders`:
+  - items: property `modifyId` added
+  - items: item property `modifyId` added
+  - affected methods:
+    - `modify_multiple_orders()` (`PUT /fapi/v1/batchOrders`)
+- Modified response for `modify_multiple_orders()` (`PUT /fapi/v1/batchOrders`):
+  - items: property `modifyId` added
+  - items: item property `modifyId` added
+
+- Modified response for `modify_order()` (`PUT /fapi/v1/order`):
+  - property `modifyId` added
+
+- Modified response for `get_order_modify_history()` (`GET /fapi/v1/orderAmendment`):
+  - items.`amendment`: property `modifyId` added
+  - items.`amendment`: property `modifyId` added
+
+#### WebSocket API
+
+- Added parameter `modifyId`
+  - affected methods:
+    - `modify_order()` (`order.modify` method)
+- Modified response for `modify_order()` (`order.modify` method):
+  - `result`: property `modifyId` added
+
 ## 63.0.0 - 2026-07-16
 
 **Alpha**

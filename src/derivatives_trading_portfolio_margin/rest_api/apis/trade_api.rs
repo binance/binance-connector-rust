@@ -3536,6 +3536,12 @@ pub struct ModifyCmOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "priceMatch", default)]
     pub price_match: Option<ModifyCmOrderPriceMatchEnum>,
+    /// User-defined modification identifier, returned as-is in the response. Optional; not validated for uniqueness.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "modifyId", default)]
+    pub modify_id: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -3619,6 +3625,12 @@ pub struct ModifyUmOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "priceMatch", default)]
     pub price_match: Option<ModifyUmOrderPriceMatchEnum>,
+    /// User-defined modification identifier, returned as-is in the response. Optional; not validated for uniqueness.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "modifyId", default)]
+    pub modify_id: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -6932,6 +6944,7 @@ impl TradeApi for TradeApiClient {
             order_id,
             orig_client_order_id,
             price_match,
+            modify_id,
             recv_window,
         } = params;
 
@@ -6956,6 +6969,10 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = price_match {
             query_params.insert("priceMatch".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = modify_id {
+            query_params.insert("modifyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -6990,6 +7007,7 @@ impl TradeApi for TradeApiClient {
             order_id,
             orig_client_order_id,
             price_match,
+            modify_id,
             recv_window,
         } = params;
 
@@ -7014,6 +7032,10 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = price_match {
             query_params.insert("priceMatch".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = modify_id {
+            query_params.insert("modifyId".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -9820,7 +9842,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","modifyId":1,"price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ModifyCmOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ModifyCmOrderResponse");
@@ -9847,7 +9869,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumQuote":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1629182711600,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","modifyId":1,"price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumQuote":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1629182711600,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ModifyUmOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ModifyUmOrderResponse");
@@ -10348,7 +10370,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3,"modifyId":123}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryCmModifyOrderHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryCmModifyOrderHistoryResponseInner>",
@@ -10738,7 +10760,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSDT","pair":"BTCUSDT","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3},"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSDT","pair":"BTCUSDT","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3,"modifyId":123},"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryUmModifyOrderHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryUmModifyOrderHistoryResponseInner>",
@@ -12251,7 +12273,7 @@ mod tests {
 
             let params = ModifyCmOrderParams::builder("BTCUSD_PERP".to_string(),ModifyCmOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","modifyId":1,"price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyCmOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyCmOrderResponse");
 
             let resp = client.modify_cm_order(params).await.expect("Expected a response");
@@ -12266,9 +12288,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyCmOrderParams::builder("BTCUSD_PERP".to_string(),ModifyCmOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).order_id(1).orig_client_order_id("1".to_string()).price_match(ModifyCmOrderPriceMatchEnum::Opponent).recv_window(5000).build().unwrap();
+            let params = ModifyCmOrderParams::builder("BTCUSD_PERP".to_string(),ModifyCmOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).order_id(1).orig_client_order_id("1".to_string()).price_match(ModifyCmOrderPriceMatchEnum::Opponent).modify_id(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSD_PERP","pair":"BTCUSD","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","modifyId":1,"price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumBase":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyCmOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyCmOrderResponse");
 
             let resp = client.modify_cm_order(params).await.expect("Expected a response");
@@ -12308,7 +12330,7 @@ mod tests {
 
             let params = ModifyUmOrderParams::builder("BTCUSDT".to_string(),ModifyUmOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumQuote":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1629182711600,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","modifyId":1,"price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumQuote":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1629182711600,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyUmOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyUmOrderResponse");
 
             let resp = client.modify_um_order(params).await.expect("Expected a response");
@@ -12323,9 +12345,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyUmOrderParams::builder("BTCUSDT".to_string(),ModifyUmOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).order_id(1).orig_client_order_id("1".to_string()).price_match(ModifyUmOrderPriceMatchEnum::Opponent).recv_window(5000).build().unwrap();
+            let params = ModifyUmOrderParams::builder("BTCUSDT".to_string(),ModifyUmOrderSideEnum::Buy,dec!(1.0),dec!(1.0),).order_id(1).orig_client_order_id("1".to_string()).price_match(ModifyUmOrderPriceMatchEnum::Opponent).modify_id(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumQuote":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1629182711600,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","modifyId":1,"price":"30005","avgPrice":"0.0","origQty":"1","executedQty":"0","cumQty":"0","cumQuote":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"side":"BUY","positionSide":"LONG","origType":"LIMIT","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1629182711600,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyUmOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyUmOrderResponse");
 
             let resp = client.modify_um_order(params).await.expect("Expected a response");
@@ -13279,7 +13301,7 @@ mod tests {
 
             let params = QueryCmModifyOrderHistoryParams::builder("BTCUSDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3,"modifyId":123}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryCmModifyOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCmModifyOrderHistoryResponseInner>");
 
             let resp = client.query_cm_modify_order_history(params).await.expect("Expected a response");
@@ -13296,7 +13318,7 @@ mod tests {
 
             let params = QueryCmModifyOrderHistoryParams::builder("BTCUSDT".to_string(),).order_id(1).orig_client_order_id("1".to_string()).start_time(1623319461670).end_time(1641782889000).limit(500).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3}}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSD_PERP","pair":"BTCUSD","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3,"modifyId":123}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryCmModifyOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryCmModifyOrderHistoryResponseInner>");
 
             let resp = client.query_cm_modify_order_history(params).await.expect("Expected a response");
@@ -14002,7 +14024,7 @@ mod tests {
 
             let params = QueryUmModifyOrderHistoryParams::builder("BTCUSDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSDT","pair":"BTCUSDT","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3},"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSDT","pair":"BTCUSDT","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3,"modifyId":123},"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryUmModifyOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUmModifyOrderHistoryResponseInner>");
 
             let resp = client.query_um_modify_order_history(params).await.expect("Expected a response");
@@ -14019,7 +14041,7 @@ mod tests {
 
             let params = QueryUmModifyOrderHistoryParams::builder("BTCUSDT".to_string(),).order_id(1).orig_client_order_id("1".to_string()).start_time(1623319461670).end_time(1641782889000).limit(500).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSDT","pair":"BTCUSDT","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3},"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"amendmentId":5363,"symbol":"BTCUSDT","pair":"BTCUSDT","orderId":20072994037,"clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","time":1629184560899,"amendment":{"price":{"before":"30004","after":"30003.2"},"origQty":{"before":"1","after":"1"},"count":3,"modifyId":123},"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryUmModifyOrderHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUmModifyOrderHistoryResponseInner>");
 
             let resp = client.query_um_modify_order_history(params).await.expect("Expected a response");

@@ -35,6 +35,9 @@ pub struct ModifyMultipleOrdersBatchOrdersParameterInner {
     /// Latest token price. **After CM migration, this parameter becomes mandatory** (each batch element must send both `price` and `quantity`).
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<rust_decimal::Decimal>,
+    /// User-defined modification identifier, returned as-is in the response. Optional; not validated for uniqueness.
+    #[serde(rename = "modifyId", skip_serializing_if = "Option::is_none")]
+    pub modify_id: Option<i64>,
     #[serde(rename = "recvWindow", skip_serializing_if = "Option::is_none")]
     pub recv_window: Option<i64>,
     /// Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.
@@ -56,6 +59,7 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
             side,
             quantity: None,
             price: None,
+            modify_id: None,
             recv_window: None,
             timestamp,
         }

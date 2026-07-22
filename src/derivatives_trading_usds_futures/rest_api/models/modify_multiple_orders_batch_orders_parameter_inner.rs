@@ -36,6 +36,9 @@ pub struct ModifyMultipleOrdersBatchOrdersParameterInner {
     /// stop price, only STOP, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET` need
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<rust_decimal::Decimal>,
+    /// User-defined modification identifier, returned as-is in the response. Optional; not validated for uniqueness.
+    #[serde(rename = "modifyId", skip_serializing_if = "Option::is_none")]
+    pub modify_id: Option<i64>,
     /// Validity window in milliseconds.
     #[serde(rename = "recvWindow", skip_serializing_if = "Option::is_none")]
     pub recv_window: Option<i64>,
@@ -56,6 +59,7 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
             price: None,
             price_match: None,
             stop_price: None,
+            modify_id: None,
             recv_window: None,
             timestamp: None,
         }

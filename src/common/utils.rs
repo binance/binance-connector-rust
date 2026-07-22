@@ -55,6 +55,10 @@ use super::websocket::WebsocketMessageSendOptions;
 pub(crate) static ID_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^[0-9a-f]{32}$").unwrap());
 static PLACEHOLDER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(@)?<([^>]+)>").unwrap());
+static CLI_SKILL_UA_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^binance-(?:cli|skill)(?:/[A-Za-z0-9._-]+){0,2} \([^;()]+; [^;()]+; [^;()]+\)$")
+        .unwrap()
+});
 
 /// A generator for creating cryptographic signatures with support for various key types and configurations.
 ///
@@ -388,6 +392,12 @@ pub fn build_client(
 ///
 #[must_use]
 pub fn build_user_agent(product: &str) -> String {
+    if let Ok(override_ua) = std::env::var("BINANCE_CONNECTOR_RUST_USER_AGENT") {
+        let trimmed = override_ua.trim().to_string();
+        if CLI_SKILL_UA_RE.is_match(&trimmed) {
+            return trimmed;
+        }
+    }
     format!(
         "{}/{}/{} (Rust/{}; {}; {})",
         env!("CARGO_PKG_NAME"),
@@ -1318,6 +1328,9 @@ mod tests {
 
     mod build_user_agent {
         use crate::common::utils::build_user_agent;
+        use std::sync::Mutex;
+
+        static ENV_LOCK: Mutex<()> = Mutex::new(());
 
         #[test]
         fn build_user_agent_contains_crate_product_and_rust_info() {
@@ -1359,6 +1372,67 @@ mod tests {
             assert_eq!(
                 user_agent1, user_agent2,
                 "user agent should be the same on repeated calls"
+            );
+        }
+
+        #[test]
+        fn env_override_cli_is_used_when_valid() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            let valid = "binance-cli/1.2.3 (linux; x86_64; extra)";
+            unsafe { std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", valid) };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert_eq!(ua, valid);
+        }
+
+        #[test]
+        fn env_override_skill_is_used_when_valid() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            let valid = "binance-skill/2.0 (darwin; aarch64; v2)";
+            unsafe { std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", valid) };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert_eq!(ua, valid);
+        }
+
+        #[test]
+        fn env_override_with_leading_whitespace_is_trimmed_and_used() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            let valid = "binance-cli/1.0 (linux; x86_64; v1)";
+            unsafe {
+                std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", format!("  {valid}  "));
+            };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert_eq!(ua, valid);
+        }
+
+        #[test]
+        fn invalid_env_override_falls_back_to_default() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            unsafe {
+                std::env::set_var(
+                    "BINANCE_CONNECTOR_RUST_USER_AGENT",
+                    "not-binance-cli/1.0 (linux; x86_64; v1)",
+                );
+            };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert!(
+                ua.starts_with(env!("CARGO_PKG_NAME")),
+                "should fall back to default: {ua}"
+            );
+        }
+
+        #[test]
+        fn empty_env_override_falls_back_to_default() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            unsafe { std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", "") };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert!(
+                ua.starts_with(env!("CARGO_PKG_NAME")),
+                "should fall back to default: {ua}"
             );
         }
     }

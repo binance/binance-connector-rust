@@ -27,6 +27,9 @@ pub struct ModifyOrderResponse {
     pub status: Option<String>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// user-defined modification identifier, only returned if provided in the request
+    #[serde(rename = "modifyId", skip_serializing_if = "Option::is_none")]
+    pub modify_id: Option<i64>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
@@ -80,6 +83,7 @@ impl ModifyOrderResponse {
             pair: None,
             status: None,
             client_order_id: None,
+            modify_id: None,
             price: None,
             orig_qty: None,
             executed_qty: None,

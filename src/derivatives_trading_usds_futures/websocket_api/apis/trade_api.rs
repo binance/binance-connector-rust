@@ -1030,6 +1030,12 @@ pub struct ModifyOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "priceMatch", default)]
     pub price_match: Option<ModifyOrderPriceMatchEnum>,
+    /// User-defined modification identifier, returned as-is in the response. Optional; not validated for uniqueness.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "modifyId", default)]
+    pub modify_id: Option<i64>,
     /// Recv Window.
     ///
     /// This field is **optional.
@@ -1569,6 +1575,7 @@ impl TradeApi for TradeApiClient {
             order_id,
             orig_client_order_id,
             price_match,
+            modify_id,
             recv_window,
         } = params;
 
@@ -1588,6 +1595,9 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = price_match {
             payload.insert("priceMatch".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = modify_id {
+            payload.insert("modifyId".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
@@ -2226,7 +2236,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/order.modify".trim_start_matches('/'));
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c8c271ba-de70-479e-870c-e64951c753d9","status":200,"result":{"orderId":328971409,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"xGHfltUMExx0TbQstQQfRX","price":"43769.10","origQty":"0.110","executedQty":"0.000","cumQty":"0.000","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"SHORT","stopPrice":"0.00","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1703426756190},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c8c271ba-de70-479e-870c-e64951c753d9","status":200,"result":{"orderId":328971409,"symbol":"BTCUSDT","status":"NEW","clientOrderId":"xGHfltUMExx0TbQstQQfRX","modifyId":1,"price":"43769.10","origQty":"0.110","executedQty":"0.000","cumQty":"0.000","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"SELL","positionSide":"SHORT","stopPrice":"0.00","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1703426756190},"rateLimits":[{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":300,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

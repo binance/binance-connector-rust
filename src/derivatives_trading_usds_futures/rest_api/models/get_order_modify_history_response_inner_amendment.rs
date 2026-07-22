@@ -24,6 +24,9 @@ pub struct GetOrderModifyHistoryResponseInnerAmendment {
     /// Order modification count, representing the number of times the order has been modified
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
+    /// user-defined modification identifier, only returned if provided in the request
+    #[serde(rename = "modifyId", skip_serializing_if = "Option::is_none")]
+    pub modify_id: Option<i64>,
 }
 
 impl GetOrderModifyHistoryResponseInnerAmendment {
@@ -33,6 +36,7 @@ impl GetOrderModifyHistoryResponseInnerAmendment {
             price: None,
             orig_qty: None,
             count: None,
+            modify_id: None,
         }
     }
 }

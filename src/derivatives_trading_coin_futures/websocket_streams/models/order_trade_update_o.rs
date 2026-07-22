@@ -54,6 +54,9 @@ pub struct OrderTradeUpdateO {
     /// Order Id
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<i64>,
+    /// modifyId, only pushed for AMENDMENT (order modification) events when a modifyId was provided in the request
+    #[serde(rename = "M", skip_serializing_if = "Option::is_none")]
+    pub m_uppercase: Option<String>,
     /// Order Last Filled Quantity
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<String>,
@@ -141,6 +144,7 @@ impl OrderTradeUpdateO {
             x: None,
             x_uppercase: None,
             i: None,
+            m_uppercase: None,
             l: None,
             z: None,
             l_uppercase: None,

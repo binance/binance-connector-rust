@@ -2752,6 +2752,7 @@ impl RestApi {
     /// - Batch modify orders are processed concurrently, and the order of matching is not guaranteed.
     /// - The order of returned contents for batch modify orders is the same as the order of the order list.
     /// - One order can only be modfied for less than 10000 times
+    /// - `modifyId` is an optional user-defined identifier passed through as-is; the server does not validate its uniqueness. If omitted, it is not included in the response.
     ///
     /// # Arguments
     ///
