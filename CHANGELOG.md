@@ -1,5 +1,17 @@
 # Changelog
 
+## 65.0.0 - 2026-07-24
+
+**Derivatives Trading Usds Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Modified response for `get_funding_rate_history()` (`GET /fapi/v1/fundingRate`):
+  - items: property `rateType` added
+  - items: item property `rateType` added
+
 ## 64.0.0 - 2026-07-22
 
 **Derivatives Trading Coin Futures**

@@ -3745,7 +3745,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","fundingRate":"-0.03750000","fundingTime":1570608000000,"markPrice":"34287.54619963"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","fundingRate":"-0.03750000","fundingTime":1570608000000,"markPrice":"34287.54619963","rateType":"Regular"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetFundingRateHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetFundingRateHistoryResponseInner>");
@@ -4909,7 +4909,7 @@ mod tests {
 
             let params = GetFundingRateHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","fundingRate":"-0.03750000","fundingTime":1570608000000,"markPrice":"34287.54619963"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","fundingRate":"-0.03750000","fundingTime":1570608000000,"markPrice":"34287.54619963","rateType":"Regular"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetFundingRateHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFundingRateHistoryResponseInner>");
 
             let resp = client.get_funding_rate_history(params).await.expect("Expected a response");
@@ -4926,7 +4926,7 @@ mod tests {
 
             let params = GetFundingRateHistoryParams::builder().symbol("BTCUSDT".to_string()).start_time(1623319461670).end_time(1641782889000).limit(50).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","fundingRate":"-0.03750000","fundingTime":1570608000000,"markPrice":"34287.54619963"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"symbol":"BTCUSDT","fundingRate":"-0.03750000","fundingTime":1570608000000,"markPrice":"34287.54619963","rateType":"Regular"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetFundingRateHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFundingRateHistoryResponseInner>");
 
             let resp = client.get_funding_rate_history(params).await.expect("Expected a response");
