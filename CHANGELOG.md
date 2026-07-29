@@ -1,5 +1,15 @@
 # Changelog
 
+## 66.0.0 - 2026-07-29
+
+**Sub Account**
+
+### Changed (1)
+
+- Modified response for `query_sub_account_api_key()` (`GET /sapi/v1/sub-account/subAccountApi`):
+  - property `rows` added
+  - property `list` deleted
+
 ## 65.0.0 - 2026-07-24
 
 **Derivatives Trading Usds Futures**

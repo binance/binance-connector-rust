@@ -16,7 +16,7 @@ use crate::sub_account::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct QuerySubAccountApiKeyResponseListInner {
+pub struct QuerySubAccountApiKeyResponseRowsInner {
     #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
     #[serde(rename = "apiName", skip_serializing_if = "Option::is_none")]
@@ -40,10 +40,10 @@ pub struct QuerySubAccountApiKeyResponseListInner {
     pub timestamp: Option<i64>,
 }
 
-impl QuerySubAccountApiKeyResponseListInner {
+impl QuerySubAccountApiKeyResponseRowsInner {
     #[must_use]
-    pub fn new() -> QuerySubAccountApiKeyResponseListInner {
-        QuerySubAccountApiKeyResponseListInner {
+    pub fn new() -> QuerySubAccountApiKeyResponseRowsInner {
+        QuerySubAccountApiKeyResponseRowsInner {
             email: None,
             api_name: None,
             apikey: None,

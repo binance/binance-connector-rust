@@ -19,8 +19,8 @@ use serde::{Deserialize, Serialize};
 pub struct QuerySubAccountApiKeyResponse {
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<i64>,
-    #[serde(rename = "list", skip_serializing_if = "Option::is_none")]
-    pub list: Option<Vec<models::QuerySubAccountApiKeyResponseListInner>>,
+    #[serde(rename = "rows", skip_serializing_if = "Option::is_none")]
+    pub rows: Option<Vec<models::QuerySubAccountApiKeyResponseRowsInner>>,
 }
 
 impl QuerySubAccountApiKeyResponse {
@@ -28,7 +28,7 @@ impl QuerySubAccountApiKeyResponse {
     pub fn new() -> QuerySubAccountApiKeyResponse {
         QuerySubAccountApiKeyResponse {
             total: None,
-            list: None,
+            rows: None,
         }
     }
 }

@@ -1083,7 +1083,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QuerySubAccountApiKeyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QuerySubAccountApiKeyResponse");
@@ -1469,7 +1469,7 @@ mod tests {
 
             let params = QuerySubAccountApiKeyParams::builder("123@test.com".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountApiKeyResponse");
 
             let resp = client.query_sub_account_api_key(params).await.expect("Expected a response");
@@ -1486,7 +1486,7 @@ mod tests {
 
             let params = QuerySubAccountApiKeyParams::builder("123@test.com".to_string(),).sub_account_api_key("k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string()).page(1).size(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountApiKeyResponse");
 
             let resp = client.query_sub_account_api_key(params).await.expect("Expected a response");
