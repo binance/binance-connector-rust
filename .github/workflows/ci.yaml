@@ -15,36 +15,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          fetch-depth: 2 
+          fetch-depth: 0
+
+      - name: Test target detector
+        run: |
+          bash -n \
+            .github/scripts/detect-modified-targets.sh \
+            .github/scripts/resolve-diff-range.sh \
+            .github/scripts/test-detect-modified-targets.sh
+          bash .github/scripts/test-detect-modified-targets.sh
 
       - name: Detect modified targets
         id: filter
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PULL_REQUEST_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          MODIFIED_TARGETS=()
+          set -euo pipefail
 
-          # Ensure HEAD^ exists
-          if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
-            BASE_COMMIT="HEAD^"
-          else
-            BASE_COMMIT=$(git rev-list --max-parents=0 HEAD) # First commit
-          fi
+          DIFF_RANGE="$(
+            bash .github/scripts/resolve-diff-range.sh \
+              --repo "$GITHUB_WORKSPACE" \
+              --event-name "$EVENT_NAME" \
+              --pull-request-base-sha "$PULL_REQUEST_BASE_SHA" \
+              --pull-request-head-sha "$PULL_REQUEST_HEAD_SHA"
+          )"
+          read -r BASE_SHA HEAD_SHA <<<"$DIFF_RANGE"
 
-          # Check each client dynamically
-          for client in src/*; do
-            CLIENT_NAME=$(basename "$client")
-            [ -d "$client" ] || continue
-            
-            if ! git diff --quiet "$BASE_COMMIT" HEAD -- "$client"; then
-              echo "Changes detected in $CLIENT_NAME"
-              MODIFIED_TARGETS+=("$CLIENT_NAME")
-            fi
-          done
+          MODIFIED_TARGETS="$(
+            bash .github/scripts/detect-modified-targets.sh \
+              --repo "$GITHUB_WORKSPACE" \
+              --base "$BASE_SHA" \
+              --head "$HEAD_SHA"
+          )"
+          jq -e 'type == "array" and all(.[]; type == "string")' \
+            <<<"$MODIFIED_TARGETS" >/dev/null
 
-          # Convert to JSON array format
-          MODIFIED_TARGETS_JSON=$(printf '%s\n' "${MODIFIED_TARGETS[@]}" | jq -R -s -c 'split("\n") | map(select(. != ""))')
-
-          echo "Detected modified targets: $MODIFIED_TARGETS_JSON"
-          echo "modified_targets=$MODIFIED_TARGETS_JSON" >> $GITHUB_OUTPUT
+          echo "Detected modified targets: $MODIFIED_TARGETS"
+          printf 'modified_targets=%s\n' "$MODIFIED_TARGETS" >>"$GITHUB_OUTPUT"
 
   build-target:
     runs-on: ubuntu-latest
@@ -85,7 +94,7 @@ jobs:
           if [ -d "src/${{ matrix.target }}" ]; then \
             find src/${{ matrix.target }} -name "*.rs" -exec rustfmt --check -- {} +; \
           fi
-      
+
       - name: Lint Check
         run: |
           TARGET="${{ matrix.target }}"
