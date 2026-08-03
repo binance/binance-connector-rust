@@ -38,9 +38,6 @@ pub struct ModifyCmOrderResponse {
     /// Price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
-    /// Avg Price.
-    #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
-    pub avg_price: Option<String>,
     /// Orig Qty.
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
@@ -50,9 +47,6 @@ pub struct ModifyCmOrderResponse {
     /// Cum Qty.
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    /// Cum Base.
-    #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
-    pub cum_base: Option<String>,
     /// Time In Force.
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
@@ -87,11 +81,9 @@ impl ModifyCmOrderResponse {
             client_order_id: None,
             modify_id: None,
             price: None,
-            avg_price: None,
             orig_qty: None,
             executed_qty: None,
             cum_qty: None,
-            cum_base: None,
             time_in_force: None,
             r#type: None,
             reduce_only: None,

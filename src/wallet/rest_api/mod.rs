@@ -1227,7 +1227,7 @@ impl RestApi {
     ///
     /// User universal transfer
     ///
-    /// Weight(UID): 900
+    /// Weight(UID): 300
     ///
     /// Security Type: `USER_DATA`
     ///

@@ -1,5 +1,21 @@
 # Changelog
 
+## 67.0.0 - 2026-08-03
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (2)
+
+#### REST API
+
+- Modified response for `modify_cm_order()` (`PUT /papi/v1/cm/order`):
+  - property `cumBase` deleted
+  - property `avgPrice` deleted
+
+- Modified response for `modify_um_order()` (`PUT /papi/v1/um/order`):
+  - property `cumQuote` deleted
+  - property `avgPrice` deleted
+
 ## 66.0.0 - 2026-07-29
 
 **Sub Account**
