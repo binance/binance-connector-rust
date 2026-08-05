@@ -44,6 +44,12 @@ pub struct AccountTradeListResponseInner {
     /// Quote Qty.
     #[serde(rename = "quoteQty", skip_serializing_if = "Option::is_none")]
     pub quote_qty: Option<String>,
+    /// Base Qty.
+    #[serde(rename = "baseQty", skip_serializing_if = "Option::is_none")]
+    pub base_qty: Option<String>,
+    /// Margin Asset.
+    #[serde(rename = "marginAsset", skip_serializing_if = "Option::is_none")]
+    pub margin_asset: Option<String>,
     /// Realized Pnl.
     #[serde(rename = "realizedPnl", skip_serializing_if = "Option::is_none")]
     pub realized_pnl: Option<String>,
@@ -56,6 +62,9 @@ pub struct AccountTradeListResponseInner {
     /// Symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair.
+    #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
+    pub pair: Option<String>,
     /// Time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
@@ -74,10 +83,13 @@ impl AccountTradeListResponseInner {
             price: None,
             qty: None,
             quote_qty: None,
+            base_qty: None,
+            margin_asset: None,
             realized_pnl: None,
             side: None,
             position_side: None,
             symbol: None,
+            pair: None,
             time: None,
         }
     }

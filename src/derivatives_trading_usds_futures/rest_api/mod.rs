@@ -2072,7 +2072,7 @@ impl RestApi {
     ///
     /// Get older market historical trades.
     ///
-    /// Weight(IP): 20
+    /// Weight(IP): 200
     ///
     /// Security Type: `MARKET_DATA`
     ///
@@ -3728,7 +3728,7 @@ impl RestApi {
     ///
     /// # Returns
     ///
-    /// [`RestApiResponse<Vec<models::AllOrdersResponseInner>>`] on success.
+    /// [`RestApiResponse<Vec<models::CurrentAllOpenOrdersResponseInner>>`] on success.
     ///
     /// # Errors
     ///
@@ -3754,7 +3754,7 @@ impl RestApi {
     pub async fn current_all_open_orders(
         &self,
         params: CurrentAllOpenOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::AllOrdersResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::CurrentAllOpenOrdersResponseInner>>> {
         self.trade_api_client.current_all_open_orders(params).await
     }
 

@@ -77,6 +77,8 @@ pub mod continuous_contract_kline_candlestick_data_item_inner;
 pub use self::continuous_contract_kline_candlestick_data_item_inner::ContinuousContractKlineCandlestickDataItemInner;
 pub mod current_all_algo_open_orders_response_inner;
 pub use self::current_all_algo_open_orders_response_inner::CurrentAllAlgoOpenOrdersResponseInner;
+pub mod current_all_open_orders_response_inner;
+pub use self::current_all_open_orders_response_inner::CurrentAllOpenOrdersResponseInner;
 pub mod exchange_information_response;
 pub use self::exchange_information_response::ExchangeInformationResponse;
 pub mod exchange_information_response_assets_inner;

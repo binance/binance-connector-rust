@@ -34,7 +34,7 @@ pub struct OpenInterestStatisticsResponseInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub cmc_circulating_supply: Option<String>,
-    /// Timestamp in milliseconds.
+    /// End time of the period, in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }

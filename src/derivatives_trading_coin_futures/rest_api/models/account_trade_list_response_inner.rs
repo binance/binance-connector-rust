@@ -47,6 +47,9 @@ pub struct AccountTradeListResponseInner {
     /// Base asset quantity.
     #[serde(rename = "baseQty", skip_serializing_if = "Option::is_none")]
     pub base_qty: Option<String>,
+    /// Quote asset quantity.
+    #[serde(rename = "quoteQty", skip_serializing_if = "Option::is_none")]
+    pub quote_qty: Option<String>,
     /// Transaction Fee (in Crypto)
     #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
     pub commission: Option<String>,
@@ -81,6 +84,7 @@ impl AccountTradeListResponseInner {
             realized_pnl: None,
             margin_asset: None,
             base_qty: None,
+            quote_qty: None,
             commission: None,
             commission_asset: None,
             time: None,

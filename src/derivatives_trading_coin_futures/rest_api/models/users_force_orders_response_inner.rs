@@ -47,6 +47,9 @@ pub struct UsersForceOrdersResponseInner {
     /// Cumulative base asset amount.
     #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
     pub cum_base: Option<String>,
+    /// Cumulative quote asset amount.
+    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
+    pub cum_quote: Option<String>,
     /// Time in force
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
@@ -83,6 +86,9 @@ pub struct UsersForceOrdersResponseInner {
     /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// order pre-set auto cancel time for TIF GTD order
+    #[serde(rename = "goodTillDate", skip_serializing_if = "Option::is_none")]
+    pub good_till_date: Option<i64>,
 }
 
 impl UsersForceOrdersResponseInner {
@@ -99,6 +105,7 @@ impl UsersForceOrdersResponseInner {
             orig_qty: None,
             executed_qty: None,
             cum_base: None,
+            cum_quote: None,
             time_in_force: None,
             r#type: None,
             reduce_only: None,
@@ -111,6 +118,7 @@ impl UsersForceOrdersResponseInner {
             orig_type: None,
             time: None,
             update_time: None,
+            good_till_date: None,
         }
     }
 }

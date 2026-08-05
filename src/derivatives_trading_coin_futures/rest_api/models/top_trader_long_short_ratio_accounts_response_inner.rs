@@ -29,7 +29,7 @@ pub struct TopTraderLongShortRatioAccountsResponseInner {
     /// 35.58%
     #[serde(rename = "shortAccount", skip_serializing_if = "Option::is_none")]
     pub short_account: Option<String>,
-    /// Timestamp in milliseconds.
+    /// End time of the period, in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }

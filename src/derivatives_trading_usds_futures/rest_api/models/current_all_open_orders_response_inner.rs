@@ -16,7 +16,7 @@ use crate::derivatives_trading_usds_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AllOrdersResponseInner {
+pub struct CurrentAllOpenOrdersResponseInner {
     /// Avg Price.
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
@@ -26,9 +26,6 @@ pub struct AllOrdersResponseInner {
     /// Cum Quote.
     #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
     pub cum_quote: Option<String>,
-    /// Cum Base.
-    #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
-    pub cum_base: Option<String>,
     /// Executed Qty.
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
@@ -65,9 +62,6 @@ pub struct AllOrdersResponseInner {
     /// Symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
-    /// Pair.
-    #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
-    pub pair: Option<String>,
     /// order time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
@@ -106,14 +100,13 @@ pub struct AllOrdersResponseInner {
     pub good_till_date: Option<i64>,
 }
 
-impl AllOrdersResponseInner {
+impl CurrentAllOpenOrdersResponseInner {
     #[must_use]
-    pub fn new() -> AllOrdersResponseInner {
-        AllOrdersResponseInner {
+    pub fn new() -> CurrentAllOpenOrdersResponseInner {
+        CurrentAllOpenOrdersResponseInner {
             avg_price: None,
             client_order_id: None,
             cum_quote: None,
-            cum_base: None,
             executed_qty: None,
             order_id: None,
             orig_qty: None,
@@ -126,7 +119,6 @@ impl AllOrdersResponseInner {
             stop_price: None,
             close_position: None,
             symbol: None,
-            pair: None,
             time: None,
             time_in_force: None,
             r#type: None,

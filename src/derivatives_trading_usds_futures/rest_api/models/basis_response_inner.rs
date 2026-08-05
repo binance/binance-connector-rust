@@ -34,6 +34,7 @@ pub struct BasisResponseInner {
     pub basis: Option<String>,
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Start time of the period, in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }

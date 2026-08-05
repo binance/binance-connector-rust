@@ -17,49 +17,49 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationV3Response {
-    /// Total initial margin requirement.
+    /// Total initial margin requirement. USDT only in single-asset mode; the sum of USD value of all cross positions/open order initial margin in multi-assets mode.
     #[serde(rename = "totalInitialMargin", skip_serializing_if = "Option::is_none")]
     pub total_initial_margin: Option<String>,
-    /// Total maintenance margin requirement.
+    /// Total maintenance margin requirement. USDT only in single-asset mode; the sum of USD value of all cross positions maintenance margin in multi-assets mode.
     #[serde(rename = "totalMaintMargin", skip_serializing_if = "Option::is_none")]
     pub total_maint_margin: Option<String>,
-    /// Total wallet balance.
+    /// Total wallet balance. USDT only in single-asset mode; USD-denominated in multi-assets mode.
     #[serde(rename = "totalWalletBalance", skip_serializing_if = "Option::is_none")]
     pub total_wallet_balance: Option<String>,
-    /// Total unrealized profit.
+    /// Total unrealized profit. USDT only in single-asset mode; USD-denominated in multi-assets mode.
     #[serde(
         rename = "totalUnrealizedProfit",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_unrealized_profit: Option<String>,
-    /// Total margin balance.
+    /// Total margin balance. USDT only in single-asset mode; USD-denominated in multi-assets mode.
     #[serde(rename = "totalMarginBalance", skip_serializing_if = "Option::is_none")]
     pub total_margin_balance: Option<String>,
-    /// Initial margin required for positions.
+    /// Initial margin required for positions. USDT only in single-asset mode; the sum of USD value of all cross positions initial margin in multi-assets mode.
     #[serde(
         rename = "totalPositionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_position_initial_margin: Option<String>,
-    /// Initial margin required for open orders.
+    /// Initial margin required for open orders. USDT only in single-asset mode; USD-denominated in multi-assets mode.
     #[serde(
         rename = "totalOpenOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_open_order_initial_margin: Option<String>,
-    /// Cross wallet balance.
+    /// Cross wallet balance. USDT only in single-asset mode; USD-denominated in multi-assets mode.
     #[serde(
         rename = "totalCrossWalletBalance",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_cross_wallet_balance: Option<String>,
-    /// Unrealized `PnL` for cross positions.
+    /// Unrealized `PnL` for cross positions. USDT only in single-asset mode; USD-denominated in multi-assets mode.
     #[serde(rename = "totalCrossUnPnl", skip_serializing_if = "Option::is_none")]
     pub total_cross_un_pnl: Option<String>,
-    /// Available balance.
+    /// Available balance. USDT only in single-asset mode; USD-denominated in multi-assets mode.
     #[serde(rename = "availableBalance", skip_serializing_if = "Option::is_none")]
     pub available_balance: Option<String>,
-    /// Maximum transferable/withdrawable amount.
+    /// Maximum transferable/withdrawable amount. USDT only in single-asset mode; a maximum virtual USD amount in multi-assets mode.
     #[serde(rename = "maxWithdrawAmount", skip_serializing_if = "Option::is_none")]
     pub max_withdraw_amount: Option<String>,
     /// Asset-level account details.

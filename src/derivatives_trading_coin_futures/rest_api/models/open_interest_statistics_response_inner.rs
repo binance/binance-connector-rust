@@ -32,7 +32,7 @@ pub struct OpenInterestStatisticsResponseInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub sum_open_interest_value: Option<String>,
-    /// Timestamp in milliseconds.
+    /// End time of the period, in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }

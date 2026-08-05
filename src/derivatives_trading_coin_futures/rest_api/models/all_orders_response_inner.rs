@@ -26,6 +26,9 @@ pub struct AllOrdersResponseInner {
     /// Cumulative base asset amount.
     #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
     pub cum_base: Option<String>,
+    /// Cumulative quote asset amount.
+    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
+    pub cum_quote: Option<String>,
     /// Executed quantity
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
@@ -98,6 +101,9 @@ pub struct AllOrdersResponseInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<String>,
+    /// order pre-set auto cancel time for TIF GTD order
+    #[serde(rename = "goodTillDate", skip_serializing_if = "Option::is_none")]
+    pub good_till_date: Option<i64>,
 }
 
 impl AllOrdersResponseInner {
@@ -107,6 +113,7 @@ impl AllOrdersResponseInner {
             avg_price: None,
             client_order_id: None,
             cum_base: None,
+            cum_quote: None,
             executed_qty: None,
             order_id: None,
             orig_qty: None,
@@ -130,6 +137,7 @@ impl AllOrdersResponseInner {
             price_protect: None,
             price_match: None,
             self_trade_prevention_mode: None,
+            good_till_date: None,
         }
     }
 }

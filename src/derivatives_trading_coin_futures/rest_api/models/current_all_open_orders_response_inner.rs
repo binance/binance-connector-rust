@@ -1,7 +1,7 @@
 /*
- * Futures (USDⓈ-M) REST API
+ * Futures (COIN-M) REST API
  *
- * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -12,48 +12,45 @@
  */
 
 #![allow(unused_imports)]
-use crate::derivatives_trading_usds_futures::rest_api::models;
+use crate::derivatives_trading_coin_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct AllOrdersResponseInner {
-    /// Avg Price.
+pub struct CurrentAllOpenOrdersResponseInner {
+    /// Average execution price
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
-    /// Client Order Id.
+    /// Client order ID.
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
-    /// Cum Quote.
-    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
-    pub cum_quote: Option<String>,
-    /// Cum Base.
+    /// Cumulative base asset amount.
     #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
     pub cum_base: Option<String>,
-    /// Executed Qty.
+    /// Executed quantity
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
-    /// Order Id.
+    /// Sub-order ID
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
-    /// Orig Qty.
+    /// Original order quantity
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
-    /// Orig Type.
+    /// Original order type.
     #[serde(rename = "origType", skip_serializing_if = "Option::is_none")]
     pub orig_type: Option<String>,
-    /// Price.
+    /// Latest token price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
-    /// Reduce Only.
+    /// Whether the order is reduce-only.
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
-    /// Side.
+    /// Trading side
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
-    /// Position Side.
+    /// Position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
-    /// Status.
+    /// Enum：completed，processing
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// please ignore when order type is `TRAILING_STOP_MARKET`
@@ -62,19 +59,19 @@ pub struct AllOrdersResponseInner {
     /// if Close-All
     #[serde(rename = "closePosition", skip_serializing_if = "Option::is_none")]
     pub close_position: Option<bool>,
-    /// Symbol.
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
-    /// Pair.
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
-    /// order time
+    /// Time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
-    /// Time In Force.
+    /// Time in force
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
-    /// Type.
+    /// Order type.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     /// activation price, only return with `TRAILING_STOP_MARKET` order
@@ -86,7 +83,7 @@ pub struct AllOrdersResponseInner {
     /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
-    /// Working Type.
+    /// Stop trigger price type.
     #[serde(rename = "workingType", skip_serializing_if = "Option::is_none")]
     pub working_type: Option<String>,
     /// if conditional order trigger is protected
@@ -101,18 +98,14 @@ pub struct AllOrdersResponseInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<String>,
-    /// order pre-set auot cancel time for TIF GTD order
-    #[serde(rename = "goodTillDate", skip_serializing_if = "Option::is_none")]
-    pub good_till_date: Option<i64>,
 }
 
-impl AllOrdersResponseInner {
+impl CurrentAllOpenOrdersResponseInner {
     #[must_use]
-    pub fn new() -> AllOrdersResponseInner {
-        AllOrdersResponseInner {
+    pub fn new() -> CurrentAllOpenOrdersResponseInner {
+        CurrentAllOpenOrdersResponseInner {
             avg_price: None,
             client_order_id: None,
-            cum_quote: None,
             cum_base: None,
             executed_qty: None,
             order_id: None,
@@ -137,7 +130,6 @@ impl AllOrdersResponseInner {
             price_protect: None,
             price_match: None,
             self_trade_prevention_mode: None,
-            good_till_date: None,
         }
     }
 }

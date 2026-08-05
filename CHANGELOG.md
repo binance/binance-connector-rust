@@ -1,5 +1,55 @@
 # Changelog
 
+## 68.0.0 - 2026-08-05
+
+**Derivatives Trading Coin Futures**
+
+### Changed (3)
+
+#### REST API
+
+- Modified response for `all_orders()` (`GET /dapi/v1/allOrders`):
+  - items: property `goodTillDate` added
+  - items: property `cumQuote` added
+  - items: item property `goodTillDate` added
+  - items: item property `cumQuote` added
+
+- Modified response for `users_force_orders()` (`GET /dapi/v1/forceOrders`):
+  - items: property `goodTillDate` added
+  - items: property `cumQuote` added
+  - items: item property `goodTillDate` added
+  - items: item property `cumQuote` added
+
+- Modified response for `account_trade_list()` (`GET /dapi/v1/userTrades`):
+  - items: property `quoteQty` added
+  - items: item property `quoteQty` added
+
+**Derivatives Trading Usds Futures**
+
+### Changed (3)
+
+#### REST API
+
+- Modified response for `all_orders()` (`GET /fapi/v1/allOrders`):
+  - items: property `cumBase` added
+  - items: property `pair` added
+  - items: item property `cumBase` added
+  - items: item property `pair` added
+
+- Modified response for `users_force_orders()` (`GET /fapi/v1/forceOrders`):
+  - items: property `cumBase` added
+  - items: property `pair` added
+  - items: item property `cumBase` added
+  - items: item property `pair` added
+
+- Modified response for `account_trade_list()` (`GET /fapi/v1/userTrades`):
+  - items: property `marginAsset` added
+  - items: property `baseQty` added
+  - items: property `pair` added
+  - items: item property `marginAsset` added
+  - items: item property `baseQty` added
+  - items: item property `pair` added
+
 ## 67.0.0 - 2026-08-03
 
 **Derivatives Trading Portfolio Margin**

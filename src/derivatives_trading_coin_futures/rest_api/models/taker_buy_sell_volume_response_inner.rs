@@ -35,7 +35,7 @@ pub struct TakerBuySellVolumeResponseInner {
     /// unit: base asset
     #[serde(rename = "takerSellVolValue", skip_serializing_if = "Option::is_none")]
     pub taker_sell_vol_value: Option<String>,
-    /// Timestamp in milliseconds.
+    /// Start time of the period, in milliseconds.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }
