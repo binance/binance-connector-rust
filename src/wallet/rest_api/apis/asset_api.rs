@@ -70,6 +70,10 @@ pub trait AssetApi: Send + Sync {
     async fn get_open_symbol_list(
         &self,
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetOpenSymbolListResponseInner>>>;
+    async fn get_spot_asset_tags(
+        &self,
+        params: GetSpotAssetTagsParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetSpotAssetTagsResponseInner>>>;
     async fn query_user_delegation_history(
         &self,
         params: QueryUserDelegationHistoryParams,
@@ -929,6 +933,29 @@ impl GetCloudMiningPaymentAndRefundHistoryParams {
             .end_time(end_time)
     }
 }
+/// Request parameters for the [`get_spot_asset_tags`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_spot_asset_tags`](#method.get_spot_asset_tags).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetSpotAssetTagsParams {
+    /// Tag filter. Supports multiple comma-separated tags with OR semantics (an asset is returned if it matches any one tag); leading/trailing whitespace around each tag is ignored. Returns all eligible assets when omitted.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "tag", default)]
+    pub tag: Option<String>,
+}
+
+impl GetSpotAssetTagsParams {
+    /// Create a builder for [`get_spot_asset_tags`].
+    ///
+    #[must_use]
+    pub fn builder() -> GetSpotAssetTagsParamsBuilder {
+        GetSpotAssetTagsParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`query_user_delegation_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1720,6 +1747,35 @@ impl AssetApi for AssetApiClient {
         .await
     }
 
+    async fn get_spot_asset_tags(
+        &self,
+        params: GetSpotAssetTagsParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetSpotAssetTagsResponseInner>>> {
+        let GetSpotAssetTagsParams { tag } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = tag {
+            query_params.insert("tag".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::GetSpotAssetTagsResponseInner>>(
+            &self.configuration,
+            "/sapi/v1/spot/asset/tags",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
     async fn query_user_delegation_history(
         &self,
         params: QueryUserDelegationHistoryParams,
@@ -2344,6 +2400,33 @@ mod tests {
             let dummy_response: Vec<models::GetOpenSymbolListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetOpenSymbolListResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_spot_asset_tags(
+            &self,
+            _params: GetSpotAssetTagsParams,
+        ) -> anyhow::Result<RestApiResponse<Vec<models::GetSpotAssetTagsResponseInner>>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"assetCode":"BNB","assetName":"BNB","trading":true,"tags":["Layer1_Layer2","BSC"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: Vec<models::GetSpotAssetTagsResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::GetSpotAssetTagsResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -3075,6 +3158,56 @@ mod tests {
             let client = MockAssetApiClient { force_error: true };
 
             match client.get_open_symbol_list().await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_spot_asset_tags_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: false };
+
+            let params = GetSpotAssetTagsParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"assetCode":"BNB","assetName":"BNB","trading":true,"tags":["Layer1_Layer2","BSC"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::GetSpotAssetTagsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetSpotAssetTagsResponseInner>");
+
+            let resp = client.get_spot_asset_tags(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_spot_asset_tags_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: false };
+
+            let params = GetSpotAssetTagsParams::builder().tag("Layer1_Layer2,BSC".to_string()).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"assetCode":"BNB","assetName":"BNB","trading":true,"tags":["Layer1_Layer2","BSC"]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::GetSpotAssetTagsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetSpotAssetTagsResponseInner>");
+
+            let resp = client.get_spot_asset_tags(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_spot_asset_tags_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAssetApiClient { force_error: true };
+
+            let params = GetSpotAssetTagsParams::builder().build().unwrap();
+
+            match client.get_spot_asset_tags(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

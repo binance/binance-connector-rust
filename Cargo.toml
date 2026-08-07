@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "68.0.0"
+version = "68.1.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -4539,6 +4539,11 @@ required-features = [ "wallet" ]
 [[example]]
 name = "wallet_rest_api_asset_api_get_open_symbol_list"
 path = "examples/wallet/rest_api/asset_api/get_open_symbol_list.rs"
+required-features = [ "wallet" ]
+
+[[example]]
+name = "wallet_rest_api_asset_api_get_spot_asset_tags"
+path = "examples/wallet/rest_api/asset_api/get_spot_asset_tags.rs"
 required-features = [ "wallet" ]
 
 [[example]]

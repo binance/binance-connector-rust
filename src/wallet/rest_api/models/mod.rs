@@ -113,6 +113,8 @@ pub mod get_region_list_response;
 pub use self::get_region_list_response::GetRegionListResponse;
 pub mod get_region_list_response_regions_inner;
 pub use self::get_region_list_response_regions_inner::GetRegionListResponseRegionsInner;
+pub mod get_spot_asset_tags_response_inner;
+pub use self::get_spot_asset_tags_response_inner::GetSpotAssetTagsResponseInner;
 pub mod get_symbols_delist_schedule_for_spot_response_inner;
 pub use self::get_symbols_delist_schedule_for_spot_response_inner::GetSymbolsDelistScheduleForSpotResponseInner;
 pub mod one_click_arrival_deposit_apply_response;

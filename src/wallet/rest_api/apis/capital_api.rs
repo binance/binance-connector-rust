@@ -217,7 +217,7 @@ pub struct DepositHistoryParams {
     #[builder(setter(into), default)]
     #[serde(rename = "coin", default)]
     pub coin: Option<String>,
-    /// 0: pending, 6: credited but cannot withdraw, 7: Wrong Deposit, 8: Waiting User confirm, 1: success
+    /// 0: pending, 1: success, 2: rejected, 6: credited but cannot withdraw, 7: Wrong Deposit, 8: Waiting User confirm
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

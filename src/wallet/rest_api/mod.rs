@@ -931,6 +931,51 @@ impl RestApi {
         self.asset_api_client.get_open_symbol_list().await
     }
 
+    /// Get Spot Asset Tags (`MARKET_DATA`)
+    ///
+    /// Get the tags configured for spot-tradable assets.
+    ///
+    /// Weight(IP): 100
+    ///
+    /// Security Type: `MARKET_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetSpotAssetTagsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::GetSpotAssetTagsResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/asset#get-spot-asset-tags).
+    ///
+    pub async fn get_spot_asset_tags(
+        &self,
+        params: GetSpotAssetTagsParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetSpotAssetTagsResponseInner>>> {
+        self.asset_api_client.get_spot_asset_tags(params).await
+    }
+
     /// Query User Delegation History(For Master Account) (`USER_DATA`)
     ///
     /// Query User Delegation History

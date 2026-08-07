@@ -1,5 +1,13 @@
 # Changelog
 
+## 68.1.0 - 2026-08-07
+
+**Wallet**
+
+### Added (1)
+
+- `get_spot_asset_tags()` (`GET /sapi/v1/spot/asset/tags`)
+
 ## 68.0.0 - 2026-08-05
 
 **Derivatives Trading Coin Futures**
