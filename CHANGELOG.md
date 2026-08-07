@@ -1,5 +1,55 @@
 # Changelog
 
+## 68.1.1 - 2026-08-07
+
+**Derivatives Trading Coin Futures**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified response field `a`:
+  - property `S` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `accountUpdate`
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (2)
+
+#### WebSocket Streams
+
+- Modified response field `a`:
+  - property `S` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `accountUpdate`
+
+- Modified response field `ao`:
+  - property `ia` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `algoOrderUpdate`
+
+**Derivatives Trading Usds Futures**
+
+### Changed (2)
+
+#### WebSocket Streams
+
+- Modified response field `a`:
+  - property `S` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `accountUpdate`
+
+- Modified response field `o`:
+  - property `ia` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `algoUpdate`
+
 ## 68.1.0 - 2026-08-07
 
 **Wallet**

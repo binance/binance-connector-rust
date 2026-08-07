@@ -93,6 +93,9 @@ pub struct AlgoUpdateO {
     /// Algo order failed reason
     #[serde(rename = "rm", skip_serializing_if = "Option::is_none")]
     pub rm: Option<String>,
+    /// Is activated or not, only meaningful for trailing order
+    #[serde(rename = "ia", skip_serializing_if = "Option::is_none")]
+    pub ia: Option<bool>,
 }
 
 impl AlgoUpdateO {
@@ -124,6 +127,7 @@ impl AlgoUpdateO {
             tt: None,
             gtd: None,
             rm: None,
+            ia: None,
         }
     }
 }

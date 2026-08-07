@@ -21,7 +21,6 @@ pub struct FuturesAccountBalanceResponse {
     /// positionId
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
-    /// Enum：completed，processing
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
     /// Indicates that combined is set to true.

@@ -50,7 +50,7 @@ pub struct QueryOrderResponse {
     /// Position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
-    /// Enum：completed，processing
+    /// Status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// please ignore when order type is `TRAILING_STOP_MARKET`

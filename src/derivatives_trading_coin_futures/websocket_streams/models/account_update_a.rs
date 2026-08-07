@@ -27,6 +27,9 @@ pub struct AccountUpdateA {
     pub b_uppercase: Option<Vec<models::AccountUpdateABInner>>,
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
     pub p_uppercase: Option<Vec<models::AccountUpdateAPInner>>,
+    /// Symbol associated with `FUNDING_FEE` event
+    #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
+    pub s_uppercase: Option<String>,
 }
 
 impl AccountUpdateA {
@@ -37,6 +40,7 @@ impl AccountUpdateA {
             m: None,
             b_uppercase: None,
             p_uppercase: None,
+            s_uppercase: None,
         }
     }
 }

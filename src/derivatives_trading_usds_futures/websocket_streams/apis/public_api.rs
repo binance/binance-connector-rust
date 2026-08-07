@@ -796,7 +796,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -853,7 +853,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1252,7 +1252,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1306,7 +1306,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024"]],"a":[["0.0026"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":123456789,"T":123456788,"s":"BNBUSDT","U":157,"u":160,"pu":149,"b":[["0.0024","10"]],"a":[["0.0026","100"]],"ps":"BTCUSDT","st":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,

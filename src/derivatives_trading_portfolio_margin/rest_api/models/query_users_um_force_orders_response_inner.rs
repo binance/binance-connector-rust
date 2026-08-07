@@ -23,7 +23,7 @@ pub struct QueryUsersUmForceOrdersResponseInner {
     /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
-    /// Enum：completed，processing
+    /// Status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// Client Order ID.

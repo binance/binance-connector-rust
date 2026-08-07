@@ -47,7 +47,7 @@ pub struct CancelMarginAccountAllOpenOrdersOnASymbolResponseInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub cummulative_quote_qty: Option<String>,
-    /// Enum：completed，processing
+    /// Status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// Time In Force.

@@ -26,7 +26,7 @@ pub struct UsersForceOrdersResponseInner {
     /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
-    /// Enum：completed，processing
+    /// Status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// Client order ID.

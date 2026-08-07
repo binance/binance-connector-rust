@@ -50,7 +50,7 @@ pub struct QueryCurrentUmOpenOrderResponse {
     /// BOTH means that it is the position of One-way Mode
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
-    /// Enum：completed，processing
+    /// Status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// Trade symbol, if existing.

@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "68.1.0"
+version = "68.1.1"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"

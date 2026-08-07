@@ -47,7 +47,7 @@ pub struct QueryMarginAccountOrderResponse {
     /// Side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
-    /// Enum：completed，processing
+    /// Status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     /// please ignore when order type is `TRAILING_STOP_MARKET`
