@@ -2362,9 +2362,11 @@ impl RestApi {
             .await
     }
 
-    /// Cancel All UM Open Conditional Orders (TRADE)
+    /// Cancel All UM Open Conditional Orders - Deprecated (TRADE)
     ///
     /// Cancel All UM Open Conditional Orders
+    ///
+    /// > **Deprecated:** This endpoint has returned HTTP 404 since 2026-04-28 and is no longer available. Use `DELETE /papi/v1/um/algo/allOpenOrders` instead. Field changes: `strategyId` -> `algoId`, `newClientStrategyId` -> `clientAlgoId`, `strategyStatus` -> `algoStatus`, `stopPrice` -> `triggerPrice`, `activationPrice` -> `activatePrice` (TRAILING_STOP_MARKET orders). `algoType` is a new fixed-value field (`CONDITIONAL`), not a rename of `strategyType` -- the order type now lives in `type` (request) / `orderType` (response).
     ///
     /// Weight(IP): 1
     ///
@@ -2400,6 +2402,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-all-um-open-conditional-orders).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn cancel_all_um_open_conditional_orders(
         &self,
         params: CancelAllUmOpenConditionalOrdersParams,
@@ -2751,9 +2757,11 @@ impl RestApi {
         self.trade_api_client.cancel_um_algo_order(params).await
     }
 
-    /// Cancel UM Conditional Order (TRADE)
+    /// Cancel UM Conditional Order - Deprecated (TRADE)
     ///
     /// Cancel UM Conditional Order
+    ///
+    /// > **Deprecated:** This endpoint has returned HTTP 404 since 2026-04-28 and is no longer available. Use `DELETE /papi/v1/um/algo/order` instead. Field changes: `strategyId` -> `algoId`, `newClientStrategyId` -> `clientAlgoId`, `strategyStatus` -> `algoStatus`, `stopPrice` -> `triggerPrice`, `activationPrice` -> `activatePrice` (TRAILING_STOP_MARKET orders). `algoType` is a new fixed-value field (`CONDITIONAL`), not a rename of `strategyType` -- the order type now lives in `type` (request) / `orderType` (response).
     ///
     /// Weight(IP): 1
     ///
@@ -2792,6 +2800,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#cancel-um-conditional-order).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn cancel_um_conditional_order(
         &self,
         params: CancelUmConditionalOrderParams,
@@ -3617,9 +3629,11 @@ impl RestApi {
         self.trade_api_client.new_um_algo_order(params).await
     }
 
-    /// New UM Conditional Order (TRADE)
+    /// New UM Conditional Order - Deprecated (TRADE)
     ///
     /// Place new UM conditional order
+    ///
+    /// > **Deprecated:** This endpoint has returned HTTP 404 since 2026-04-28 and is no longer available. Use `POST /papi/v1/um/algo/order` instead. Field changes: `strategyId` -> `algoId`, `newClientStrategyId` -> `clientAlgoId`, `strategyStatus` -> `algoStatus`, `stopPrice` -> `triggerPrice`, `activationPrice` -> `activatePrice` (TRAILING_STOP_MARKET orders). `algoType` is a new fixed-value field (`CONDITIONAL`), not a rename of `strategyType` -- the order type now lives in `type` (request) / `orderType` (response).
     ///
     /// Weight(IP): 1
     ///
@@ -3670,6 +3684,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#new-um-conditional-order).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn new_um_conditional_order(
         &self,
         params: NewUmConditionalOrderParams,
@@ -3993,9 +4011,11 @@ impl RestApi {
             .await
     }
 
-    /// Query All Current UM Open Conditional Orders (`USER_DATA`)
+    /// Query All Current UM Open Conditional Orders - Deprecated (`USER_DATA`)
     ///
     /// Get all open conditional orders on a symbol.
+    ///
+    /// > **Deprecated:** This endpoint has returned HTTP 404 since 2026-04-28 and is no longer available. Use `GET /papi/v1/um/algo/openAlgoOrders` instead. Field changes: `strategyId` -> `algoId`, `newClientStrategyId` -> `clientAlgoId`, `strategyStatus` -> `algoStatus`, `stopPrice` -> `triggerPrice`, `activationPrice` -> `activatePrice` (TRAILING_STOP_MARKET orders). `algoType` is a new fixed-value field (`CONDITIONAL`), not a rename of `strategyType` -- the order type now lives in `type` (request) / `orderType` (response).
     ///
     /// Weight: - 1 for a single `symbol`
     /// - 40 when `symbol` is omitted
@@ -4035,6 +4055,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-current-um-open-conditional-orders).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_all_current_um_open_conditional_orders(
         &self,
         params: QueryAllCurrentUmOpenConditionalOrdersParams,
@@ -4150,9 +4174,11 @@ impl RestApi {
             .await
     }
 
-    /// Query All UM Conditional Orders (`USER_DATA`)
+    /// Query All UM Conditional Orders - Deprecated (`USER_DATA`)
     ///
     /// Query All UM Conditional Orders
+    ///
+    /// > **Deprecated:** This endpoint has returned HTTP 404 since 2026-04-28 and is no longer available. Use `GET /papi/v1/um/algo/allAlgoOrders` instead. Field changes: `strategyId` -> `algoId`, `newClientStrategyId` -> `clientAlgoId`, `strategyStatus` -> `algoStatus`, `stopPrice` -> `triggerPrice`, `activationPrice` -> `activatePrice` (TRAILING_STOP_MARKET orders). `algoType` is a new fixed-value field (`CONDITIONAL`), not a rename of `strategyType` -- the order type now lives in `type` (request) / `orderType` (response).
     ///
     /// Weight: - 1 for a single `symbol`
     /// - 40 when `symbol` is omitted
@@ -4195,6 +4221,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-all-um-conditional-orders).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_all_um_conditional_orders(
         &self,
         params: QueryAllUmConditionalOrdersParams,
@@ -4616,9 +4646,11 @@ impl RestApi {
             .await
     }
 
-    /// Query Current UM Open Conditional Order (`USER_DATA`)
+    /// Query Current UM Open Conditional Order - Deprecated (`USER_DATA`)
     ///
     /// Query Current UM Open Conditional Order
+    ///
+    /// > **Deprecated:** This endpoint has returned HTTP 404 since 2026-04-28 and is no longer available. Use `GET /papi/v1/um/algo/algoOrder` instead. Field changes: `strategyId` -> `algoId`, `newClientStrategyId` -> `clientAlgoId`, `strategyStatus` -> `algoStatus`, `stopPrice` -> `triggerPrice`, `activationPrice` -> `activatePrice` (TRAILING_STOP_MARKET orders). `algoType` is a new fixed-value field (`CONDITIONAL`), not a rename of `strategyType` -- the order type now lives in `type` (request) / `orderType` (response).
     ///
     /// Weight(IP): 1
     ///
@@ -4658,6 +4690,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-current-um-open-conditional-order).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_current_um_open_conditional_order(
         &self,
         params: QueryCurrentUmOpenConditionalOrderParams,
@@ -4961,9 +4997,11 @@ impl RestApi {
             .await
     }
 
-    /// Query UM Conditional Order History (`USER_DATA`)
+    /// Query UM Conditional Order History - Deprecated (`USER_DATA`)
     ///
     /// Query UM Conditional Order History
+    ///
+    /// > **Deprecated:** This endpoint has returned HTTP 404 since 2026-04-28 and is no longer available. Use `GET /papi/v1/um/algo/allAlgoOrders` instead. Field changes: `strategyId` -> `algoId`, `newClientStrategyId` -> `clientAlgoId`, `strategyStatus` -> `algoStatus`, `stopPrice` -> `triggerPrice`, `activationPrice` -> `activatePrice` (TRAILING_STOP_MARKET orders). `algoType` is a new fixed-value field (`CONDITIONAL`), not a rename of `strategyType` -- the order type now lives in `type` (request) / `orderType` (response).
     ///
     /// Weight(IP): 1
     ///
@@ -5007,6 +5045,10 @@ impl RestApi {
     ///
     /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/trade#query-um-conditional-order-history).
     ///
+    /// # Deprecation
+    ///
+    /// **Deprecated:** This method may be removed in a future version.
+    #[deprecated]
     pub async fn query_um_conditional_order_history(
         &self,
         params: QueryUmConditionalOrderHistoryParams,

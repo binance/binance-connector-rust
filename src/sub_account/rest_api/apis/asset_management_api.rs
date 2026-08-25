@@ -140,9 +140,46 @@ impl AssetManagementApiClient {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetMovePositionHistoryForSubAccountProductTypeEnum {
+    #[serde(rename = "UM")]
+    Um,
+    #[serde(rename = "OPTION")]
+    Option,
+}
+
+impl GetMovePositionHistoryForSubAccountProductTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Um => "UM",
+            Self::Option => "OPTION",
+        }
+    }
+}
+
+impl std::str::FromStr for GetMovePositionHistoryForSubAccountProductTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "UM" => Ok(Self::Um),
+            "OPTION" => Ok(Self::Option),
+            other => Err(format!(
+                "invalid GetMovePositionHistoryForSubAccountProductTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MovePositionForSubAccountProductTypeEnum {
     #[serde(rename = "UM")]
     Um,
+    #[serde(rename = "OPTION")]
+    Option,
 }
 
 impl MovePositionForSubAccountProductTypeEnum {
@@ -150,6 +187,7 @@ impl MovePositionForSubAccountProductTypeEnum {
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Um => "UM",
+            Self::Option => "OPTION",
         }
     }
 }
@@ -160,6 +198,7 @@ impl std::str::FromStr for MovePositionForSubAccountProductTypeEnum {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "UM" => Ok(Self::Um),
+            "OPTION" => Ok(Self::Option),
             other => Err(format!(
                 "invalid MovePositionForSubAccountProductTypeEnum: {}",
                 other
@@ -461,13 +500,18 @@ pub struct GetMovePositionHistoryForSubAccountParams {
     #[builder(setter(into))]
     #[serde(rename = "page")]
     pub page: i64,
-    ///
-    /// The `rows` parameter.
+    /// Max 100.
     ///
     /// This field is **required.
     #[builder(setter(into))]
     #[serde(rename = "rows")]
     pub rows: i64,
+    /// Default UM.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "productType", default)]
+    pub product_type: Option<GetMovePositionHistoryForSubAccountProductTypeEnum>,
     ///
     /// The `start_time` parameter.
     ///
@@ -498,7 +542,7 @@ impl GetMovePositionHistoryForSubAccountParams {
     ///
     /// * `symbol` — String
     /// * `page` — i64
-    /// * `rows` — i64
+    /// * `rows` — Max 100.
     ///
     #[must_use]
     pub fn builder(
@@ -863,8 +907,7 @@ pub struct MovePositionForSubAccountParams {
     #[builder(setter(into))]
     #[serde(rename = "toUserEmail")]
     pub to_user_email: String,
-    ///
-    /// The `product_type` parameter.
+    /// A single request cannot mix UM and OPTION positions.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -898,7 +941,7 @@ impl MovePositionForSubAccountParams {
     ///
     /// * `from_user_email` — String
     /// * `to_user_email` — String
-    /// * `product_type` — String
+    /// * `product_type` — A single request cannot mix UM and OPTION positions.
     /// * `order_args` — Max 10 positions supported. When input request parameter,orderArgs.symbol should be STRING, orderArgs.quantity should be BIGDECIMAL, and orderArgs.positionSide should be STRING, positionSide support BOTH,LONG and SHORT. Each entry should be like orderArgs[0].symbol=BTCUSDT,orderArgs[0].quantity=0.001,orderArgs[0].positionSide=BOTH. Example of the request parameter array: orderArgs[0].symbol=BTCUSDT orderArgs[0].quantity=0.001 orderArgs[0].positionSide=BOTH orderArgs[1].symbol=ETHUSDT orderArgs[1].quantity=0.01 orderArgs[1].positionSide=BOTH
     ///
     #[must_use]
@@ -1732,6 +1775,7 @@ impl AssetManagementApi for AssetManagementApiClient {
             symbol,
             page,
             rows,
+            product_type,
             start_time,
             end_time,
             recv_window,
@@ -1741,6 +1785,10 @@ impl AssetManagementApi for AssetManagementApiClient {
         let body_params = BTreeMap::new();
 
         query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = product_type {
+            query_params.insert("productType".to_string(), json!(rw));
+        }
 
         if let Some(rw) = start_time {
             query_params.insert("startTime".to_string(), json!(rw));
@@ -3601,7 +3649,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetManagementApiClient { force_error: false };
 
-            let params = GetMovePositionHistoryForSubAccountParams::builder("BTCUSDT".to_string(),1,1,).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
+            let params = GetMovePositionHistoryForSubAccountParams::builder("BTCUSDT".to_string(),1,1,).product_type(GetMovePositionHistoryForSubAccountProductTypeEnum::Um).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"total":3,"futureMovePositionOrderVoList":[{"fromUserEmail":"testFrom@google.com","toUserEmail":"testTo@google.com","productType":"UM","symbol":"BTCUSDT","price":"105025.50981609","quantity":"0.00100000","positionSide":"BOTH","side":"SELL","timeStamp":1737544712000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetMovePositionHistoryForSubAccountResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetMovePositionHistoryForSubAccountResponse");

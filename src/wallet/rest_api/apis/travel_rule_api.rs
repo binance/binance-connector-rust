@@ -503,7 +503,7 @@ pub struct SubmitDepositQuestionnaireParams {
     #[builder(setter(into))]
     #[serde(rename = "questionnaire")]
     pub questionnaire: String,
-    /// JSON format beneficiary Pii.
+    /// JSON format beneficiary Pii, see `StandardPii` section below
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -554,7 +554,7 @@ impl SubmitDepositQuestionnaireParams {
     /// * `sub_account_id` — External user ID.
     /// * `deposit_id` — Wallet deposit ID.
     /// * `questionnaire` — JSON format questionnaire answers.
-    /// * `beneficiary_pii` — JSON format beneficiary Pii.
+    /// * `beneficiary_pii` — JSON format beneficiary Pii, see `StandardPii` section below
     ///
     #[must_use]
     pub fn builder(

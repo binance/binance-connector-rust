@@ -1,5 +1,148 @@
 # Changelog
 
+## 69.0.0 - 2026-08-25
+
+**Derivatives Trading Coin Futures**
+
+### Changed (4)
+
+- Added parameter `contractType`
+  - affected methods:
+    - `long_short_ratio()` (`GET /futures/data/globalLongShortAccountRatio`)
+    - `top_trader_long_short_ratio_accounts()` (`GET /futures/data/topLongShortAccountRatio`)
+    - `top_trader_long_short_ratio_positions()` (`GET /futures/data/topLongShortPositionRatio`)
+- Added parameter `pair`
+  - affected methods:
+    - `top_trader_long_short_ratio_accounts()` (`GET /futures/data/topLongShortAccountRatio`)
+- Deleted parameter `symbol`
+  - affected methods:
+    - `top_trader_long_short_ratio_accounts()` (`GET /futures/data/topLongShortAccountRatio`)
+- Modified parameter `contractType`:
+  - required: `true` → `false`
+  - enum removed: `ALL`
+  - affected methods:
+    - `open_interest_statistics()` (`GET /futures/data/openInterestHist`)
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (10)
+
+#### REST API
+
+- Marked `cancel_all_um_open_conditional_orders()` (`DELETE /papi/v1/um/conditional/allOpenOrders`) as deprecated.
+- Marked `cancel_um_conditional_order()` (`DELETE /papi/v1/um/conditional/order`) as deprecated.
+- Marked `new_um_conditional_order()` (`POST /papi/v1/um/conditional/order`) as deprecated.
+- Marked `query_all_current_um_open_conditional_orders()` (`GET /papi/v1/um/conditional/openOrders`) as deprecated.
+- Marked `query_all_um_conditional_orders()` (`GET /papi/v1/um/conditional/allOrders`) as deprecated.
+- Marked `query_current_um_open_conditional_order()` (`GET /papi/v1/um/conditional/openOrder`) as deprecated.
+- Marked `query_um_conditional_order_history()` (`GET /papi/v1/um/conditional/orderHistory`) as deprecated.
+
+#### WebSocket Streams
+
+- Modified response field `a`:
+  - property `S` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `accountUpdate`
+- Modified response field `ao`:
+  - property `ia` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `algoOrderUpdate`
+- Modified response field `o`:
+  - property `ia` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `algoUpdate`
+
+**Derivatives Trading Usds Futures**
+
+### Changed (2)
+
+- Modified response for `trading_schedule()` (`GET /fapi/v1/tradingSchedule`):
+  - `marketSchedules`: property `CN_EQUITY` added
+
+- Modified response field `marketSchedules`:
+  - property `CN_EQUITY` added
+  - affected events:
+    - `tradingScheduleResponse`
+
+**Margin Trading**
+
+### Changed (1)
+
+#### REST API
+
+- Modified parameter `sideEffectType`:
+  - enum added: `AUTO_BORROW_REPAY`
+  - affected methods:
+    - `margin_account_new_oto()` (`POST /sapi/v1/margin/order/oto`)
+    - `margin_account_new_otoco()` (`POST /sapi/v1/margin/order/otoco`)
+
+**Sub Account**
+
+### Changed (4)
+
+- Added parameter `productType`
+  - affected methods:
+    - `get_move_position_history_for_sub_account()` (`GET /sapi/v1/sub-account/futures/move-position`)
+- Modified parameter `productType`:
+  - enum added: `OPTION`
+  - affected methods:
+    - `move_position_for_sub_account()` (`POST /sapi/v1/sub-account/futures/move-position`)
+- Modified response for `move_position_for_sub_account()` (`POST /sapi/v1/sub-account/futures/move-position`):
+  - `movePositionOrders`.items.`positionSide`: nullable `false` → `true`
+  - `movePositionOrders`.items.`positionSide`: nullable `false` → `true`
+
+- Modified response field `movePositionOrders`:
+  - items.`positionSide`: nullable `false` → `true`
+  - items.`positionSide`: nullable `false` → `true`
+  - affected events:
+    - `movePositionForSubAccountResponse`
+
+**W3W Prediction**
+
+### Added (10)
+
+- `apply_mm_deposit()` (`POST /sapi/v1/w3w/wallet/prediction/deposit/apply`)
+- `apply_mm_withdraw()` (`POST /sapi/v1/w3w/wallet/prediction/withdraw/apply`)
+- `create_otc_blocktrade()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/create`)
+- `fulfil_otc_blocktrade()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/fulfil`)
+- `get_otc_blocktrade_detail()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/detail`)
+- `get_otc_blocktrade_events()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/events`)
+- `get_otc_reserved_balances()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/reserved-balances`)
+- `list_otc_blocktrades()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/list`)
+- `preview_otc_blocktrade()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/preview`)
+- `remove_otc_blocktrades()` (`POST /sapi/v1/w3w/wallet/prediction/otc/blocktrade/remove`)
+
+### Changed (10)
+
+- Added response schema `getOtcReservedBalancesResponse`
+- Added response schema `applyMmDepositResponse`
+- Added response schema `getOtcBlocktradeEventsResponse`
+- Added response schema `removeOtcBlocktradesResponse`
+- Added response schema `applyMmWithdrawResponse`
+- Added response schema `previewOtcBlocktradeResponse`
+- Added response schema `listOtcBlocktradesResponse`
+- Added response schema `fulfilOtcBlocktradeResponse`
+- Added response schema `getOtcBlocktradeDetailResponse`
+- Added response schema `createOtcBlocktradeResponse`
+
+**Wallet**
+
+### Changed (5)
+
+- Added parameter `needBalanceDetail`
+  - affected methods:
+    - `query_user_wallet_balance()` (`GET /sapi/v1/asset/wallet/balance`)
+- Modified response for `query_user_wallet_balance()` (`GET /sapi/v1/asset/wallet/balance`):
+  - items: property `assetBalances` added
+  - items: item property `assetBalances` added
+
+- Modified response schema `queryUserWalletBalanceResponse`:
+  - items: property `assetBalances` added
+  - items: item property `assetBalances` added
+
 ## 68.1.1 - 2026-08-07
 
 **Derivatives Trading Coin Futures**

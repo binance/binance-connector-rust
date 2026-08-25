@@ -31,6 +31,14 @@ const HAS_TIME_UNIT: bool = false;
 
 #[async_trait]
 pub trait TransferApi: Send + Sync {
+    async fn apply_mm_deposit(
+        &self,
+        params: ApplyMmDepositParams,
+    ) -> anyhow::Result<RestApiResponse<models::ApplyMmDepositResponse>>;
+    async fn apply_mm_withdraw(
+        &self,
+        params: ApplyMmWithdrawParams,
+    ) -> anyhow::Result<RestApiResponse<models::ApplyMmWithdrawResponse>>;
     async fn create_inbound_transfer(
         &self,
         params: CreateInboundTransferParams,
@@ -57,6 +65,68 @@ pub struct TransferApiClient {
 impl TransferApiClient {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
         Self { configuration }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ApplyMmDepositAccountTypeEnum {
+    #[serde(rename = "SPOT")]
+    Spot,
+    #[serde(rename = "FUNDING")]
+    Funding,
+}
+
+impl ApplyMmDepositAccountTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Spot => "SPOT",
+            Self::Funding => "FUNDING",
+        }
+    }
+}
+
+impl std::str::FromStr for ApplyMmDepositAccountTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "SPOT" => Ok(Self::Spot),
+            "FUNDING" => Ok(Self::Funding),
+            other => Err(format!("invalid ApplyMmDepositAccountTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ApplyMmWithdrawWalletTypeEnum {
+    #[serde(rename = "0")]
+    WalletType0,
+    #[serde(rename = "1")]
+    WalletType1,
+}
+
+impl ApplyMmWithdrawWalletTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::WalletType0 => "0",
+            Self::WalletType1 => "1",
+        }
+    }
+}
+
+impl std::str::FromStr for ApplyMmWithdrawWalletTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "0" => Ok(Self::WalletType0),
+            "1" => Ok(Self::WalletType1),
+            other => Err(format!("invalid ApplyMmWithdrawWalletTypeEnum: {}", other).into()),
+        }
     }
 }
 
@@ -186,6 +256,131 @@ impl std::str::FromStr for QueryTransferListDirectionEnum {
     }
 }
 
+/// Request parameters for the [`apply_mm_deposit`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`apply_mm_deposit`](#method.apply_mm_deposit).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct ApplyMmDepositParams {
+    /// Source token symbol (e.g. `USDT`)
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "fromToken")]
+    pub from_token: String,
+    /// Source token amount in WEI (18 decimals). Example: `1000000000000000000` = 1 USDT
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "fromTokenAmount")]
+    pub from_token_amount: String,
+    /// Target token symbol (e.g. `USDT`)
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "toToken")]
+    pub to_token: String,
+    /// Target CEX account type. Enum: `SPOT`, `FUNDING`
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "accountType")]
+    pub account_type: ApplyMmDepositAccountTypeEnum,
+    /// Chain ID. Default `56` (BSC)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "chainId", default)]
+    pub chain_id: Option<String>,
+}
+
+impl ApplyMmDepositParams {
+    /// Create a builder for [`apply_mm_deposit`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `from_token` — Source token symbol (e.g. `USDT`)
+    /// * `from_token_amount` — Source token amount in WEI (18 decimals). Example: `1000000000000000000` = 1 USDT
+    /// * `to_token` — Target token symbol (e.g. `USDT`)
+    /// * `account_type` — Target CEX account type. Enum: `SPOT`, `FUNDING`
+    ///
+    #[must_use]
+    pub fn builder(
+        from_token: String,
+        from_token_amount: String,
+        to_token: String,
+        account_type: ApplyMmDepositAccountTypeEnum,
+    ) -> ApplyMmDepositParamsBuilder {
+        ApplyMmDepositParamsBuilder::default()
+            .from_token(from_token)
+            .from_token_amount(from_token_amount)
+            .to_token(to_token)
+            .account_type(account_type)
+    }
+}
+/// Request parameters for the [`apply_mm_withdraw`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`apply_mm_withdraw`](#method.apply_mm_withdraw).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct ApplyMmWithdrawParams {
+    /// Coin to withdraw (e.g. `USDT`)
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "coin")]
+    pub coin: String,
+    /// Network (e.g. `BEP20`)
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "network")]
+    pub network: String,
+    /// Amount to withdraw (must be > 0)
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "amount")]
+    pub amount: String,
+    /// Client withdraw order id (idempotency key)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "withdrawOrderId", default)]
+    pub withdraw_order_id: Option<String>,
+    /// Source CEX account type. Enum: `0` (SPOT), `1` (FUNDING). Default `0`. Must be `0` or `1`; any other value is rejected
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "walletType", default)]
+    pub wallet_type: Option<ApplyMmWithdrawWalletTypeEnum>,
+    /// Remark for the withdraw
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "name", default)]
+    pub name: Option<String>,
+}
+
+impl ApplyMmWithdrawParams {
+    /// Create a builder for [`apply_mm_withdraw`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `coin` — Coin to withdraw (e.g. `USDT`)
+    /// * `network` — Network (e.g. `BEP20`)
+    /// * `amount` — Amount to withdraw (must be > 0)
+    ///
+    #[must_use]
+    pub fn builder(coin: String, network: String, amount: String) -> ApplyMmWithdrawParamsBuilder {
+        ApplyMmWithdrawParamsBuilder::default()
+            .coin(coin)
+            .network(network)
+            .amount(amount)
+    }
+}
 /// Request parameters for the [`create_inbound_transfer`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -459,6 +654,99 @@ impl QueryTransferStatusParams {
 
 #[async_trait]
 impl TransferApi for TransferApiClient {
+    async fn apply_mm_deposit(
+        &self,
+        params: ApplyMmDepositParams,
+    ) -> anyhow::Result<RestApiResponse<models::ApplyMmDepositResponse>> {
+        let ApplyMmDepositParams {
+            from_token,
+            from_token_amount,
+            to_token,
+            account_type,
+            chain_id,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("fromToken".to_string(), json!(from_token));
+
+        query_params.insert("fromTokenAmount".to_string(), json!(from_token_amount));
+
+        query_params.insert("toToken".to_string(), json!(to_token));
+
+        query_params.insert("accountType".to_string(), json!(account_type));
+
+        if let Some(rw) = chain_id {
+            query_params.insert("chainId".to_string(), json!(rw));
+        }
+
+        send_request::<models::ApplyMmDepositResponse>(
+            &self.configuration,
+            "/sapi/v1/w3w/wallet/prediction/deposit/apply",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn apply_mm_withdraw(
+        &self,
+        params: ApplyMmWithdrawParams,
+    ) -> anyhow::Result<RestApiResponse<models::ApplyMmWithdrawResponse>> {
+        let ApplyMmWithdrawParams {
+            coin,
+            network,
+            amount,
+            withdraw_order_id,
+            wallet_type,
+            name,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("coin".to_string(), json!(coin));
+
+        query_params.insert("network".to_string(), json!(network));
+
+        query_params.insert("amount".to_string(), json!(amount));
+
+        if let Some(rw) = withdraw_order_id {
+            query_params.insert("withdrawOrderId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = wallet_type {
+            query_params.insert("walletType".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = name {
+            query_params.insert("name".to_string(), json!(rw));
+        }
+
+        send_request::<models::ApplyMmWithdrawResponse>(
+            &self.configuration,
+            "/sapi/v1/w3w/wallet/prediction/withdraw/apply",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn create_inbound_transfer(
         &self,
         params: CreateInboundTransferParams,
@@ -695,6 +983,63 @@ mod tests {
 
     #[async_trait]
     impl TransferApi for MockTransferApiClient {
+        async fn apply_mm_deposit(
+            &self,
+            _params: ApplyMmDepositParams,
+        ) -> anyhow::Result<RestApiResponse<models::ApplyMmDepositResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"transferId":"26080400000000454343","status":"PROCESSING"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::ApplyMmDepositResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ApplyMmDepositResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn apply_mm_withdraw(
+            &self,
+            _params: ApplyMmWithdrawParams,
+        ) -> anyhow::Result<RestApiResponse<models::ApplyMmWithdrawResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"id":"123456789","walletId":"0ecd3be8e3674b54b1258e24f9c3706b","walletAddress":"0x2ac3a1fb164da5c4e76f67ae6dbe6be821c000c8","transferId":"26080400000000454344"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::ApplyMmWithdrawResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ApplyMmWithdrawResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn create_inbound_transfer(
             &self,
             _params: CreateInboundTransferParams,
@@ -808,6 +1153,150 @@ mod tests {
 
             Ok(dummy.into())
         }
+    }
+
+    #[test]
+    fn apply_mm_deposit_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTransferApiClient { force_error: false };
+
+            let params = ApplyMmDepositParams::builder(
+                "USDT".to_string(),
+                "1000000000000000000".to_string(),
+                "USDT".to_string(),
+                ApplyMmDepositAccountTypeEnum::Spot,
+            )
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"transferId":"26080400000000454343","status":"PROCESSING"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::ApplyMmDepositResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ApplyMmDepositResponse");
+
+            let resp = client
+                .apply_mm_deposit(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn apply_mm_deposit_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTransferApiClient { force_error: false };
+
+            let params = ApplyMmDepositParams::builder(
+                "USDT".to_string(),
+                "1000000000000000000".to_string(),
+                "USDT".to_string(),
+                ApplyMmDepositAccountTypeEnum::Spot,
+            )
+            .chain_id("56".to_string())
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"transferId":"26080400000000454343","status":"PROCESSING"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::ApplyMmDepositResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::ApplyMmDepositResponse");
+
+            let resp = client
+                .apply_mm_deposit(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn apply_mm_deposit_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTransferApiClient { force_error: true };
+
+            let params = ApplyMmDepositParams::builder(
+                "USDT".to_string(),
+                "1000000000000000000".to_string(),
+                "USDT".to_string(),
+                ApplyMmDepositAccountTypeEnum::Spot,
+            )
+            .build()
+            .unwrap();
+
+            match client.apply_mm_deposit(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn apply_mm_withdraw_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTransferApiClient { force_error: false };
+
+            let params = ApplyMmWithdrawParams::builder("USDT".to_string(),"BEP20".to_string(),"100.00".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"id":"123456789","walletId":"0ecd3be8e3674b54b1258e24f9c3706b","walletAddress":"0x2ac3a1fb164da5c4e76f67ae6dbe6be821c000c8","transferId":"26080400000000454344"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::ApplyMmWithdrawResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ApplyMmWithdrawResponse");
+
+            let resp = client.apply_mm_withdraw(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn apply_mm_withdraw_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTransferApiClient { force_error: false };
+
+            let params = ApplyMmWithdrawParams::builder("USDT".to_string(),"BEP20".to_string(),"100.00".to_string(),).withdraw_order_id("wd_20260814_001".to_string()).wallet_type(ApplyMmWithdrawWalletTypeEnum::WalletType0).name("MM withdraw".to_string()).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"id":"123456789","walletId":"0ecd3be8e3674b54b1258e24f9c3706b","walletAddress":"0x2ac3a1fb164da5c4e76f67ae6dbe6be821c000c8","transferId":"26080400000000454344"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::ApplyMmWithdrawResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ApplyMmWithdrawResponse");
+
+            let resp = client.apply_mm_withdraw(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn apply_mm_withdraw_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTransferApiClient { force_error: true };
+
+            let params = ApplyMmWithdrawParams::builder(
+                "USDT".to_string(),
+                "BEP20".to_string(),
+                "100.00".to_string(),
+            )
+            .build()
+            .unwrap();
+
+            match client.apply_mm_withdraw(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
     }
 
     #[test]

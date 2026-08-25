@@ -21,6 +21,7 @@ pub struct MovePositionForSubAccountOrderArgsParameterInner {
     pub symbol: Option<String>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<rust_decimal::Decimal>,
+    /// Required when productType=UM. Optional and ignored when productType=OPTION (the response returns positionSide as null).
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
 }

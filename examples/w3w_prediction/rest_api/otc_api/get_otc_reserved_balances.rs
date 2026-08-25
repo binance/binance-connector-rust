@@ -3,11 +3,8 @@ use std::env;
 use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
-use binance_sdk::derivatives_trading_coin_futures::{
-    DerivativesTradingCoinFuturesRestApi,
-    rest_api::{OpenInterestStatisticsParams, OpenInterestStatisticsPeriodEnum},
-};
 use binance_sdk::logger;
+use binance_sdk::w3w_prediction::{W3WPredictionRestApi, rest_api::GetOtcReservedBalancesParams};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -24,25 +21,21 @@ async fn main() -> Result<()> {
         .api_secret(api_secret)
         .build()?;
 
-    // Create the DerivativesTradingCoinFutures REST API client
-    let rest_client = DerivativesTradingCoinFuturesRestApi::production(rest_conf);
+    // Create the W3WPrediction REST API client
+    let rest_client = W3WPredictionRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = OpenInterestStatisticsParams::builder(
-        "BTCUSD".to_string(),
-        OpenInterestStatisticsPeriodEnum::Period5m,
-    )
-    .build()?;
+    let params = GetOtcReservedBalancesParams::builder(vec![]).build()?;
 
     // Make the API call
     let response = rest_client
-        .open_interest_statistics(params)
+        .get_otc_reserved_balances(params)
         .await
-        .context("open_interest_statistics request failed")?;
+        .context("get_otc_reserved_balances request failed")?;
 
-    info!(?response.rate_limits, "open_interest_statistics rate limits");
+    info!(?response.rate_limits, "get_otc_reserved_balances rate limits");
     let data = response.data().await?;
-    info!(?data, "open_interest_statistics data");
+    info!(?data, "get_otc_reserved_balances data");
 
     Ok(())
 }

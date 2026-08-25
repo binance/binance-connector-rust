@@ -13,6 +13,8 @@
 
 pub mod market_data_api;
 pub use market_data_api::*;
+pub mod otc_api;
+pub use otc_api::*;
 pub mod position_api;
 pub use position_api::*;
 pub mod redeem_api;

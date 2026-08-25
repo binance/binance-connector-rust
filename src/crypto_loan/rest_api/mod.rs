@@ -122,6 +122,9 @@ impl RestApi {
     ///
     /// Security Type: `USER_DATA`
     ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
+    ///
     /// # Arguments
     ///
     /// - `params`: [`CheckCollateralRepayRateParams`]
@@ -171,6 +174,7 @@ impl RestApi {
     ///
     /// Notes:
     /// - API key needs Spot & Margin Trading permission for this endpoint.
+    /// - Rate limit: 1 request per second per loan position (account + loan coin + collateral coin combination).
     ///
     /// # Arguments
     ///
@@ -222,6 +226,7 @@ impl RestApi {
     /// Notes:
     /// - This endpoint is available for both master and sub-accounts.
     /// - You can customize LTV by entering `loanAmount` and `collateralAmount`.
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -272,6 +277,7 @@ impl RestApi {
     ///
     /// Notes:
     /// - `repayAmount` is mandatory even when `fullRepayment = FALSE`.
+    /// - Rate limit: 1 request per second per loan position (account + loan coin + collateral coin combination).
     ///
     /// # Arguments
     ///
@@ -319,6 +325,9 @@ impl RestApi {
     /// Weight(IP): 400
     ///
     /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -370,6 +379,7 @@ impl RestApi {
     /// Notes:
     /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
     /// - The max interval between `startTime` and `endTime` is 180 days.
+    /// - Rate limit: 5 requests per second per account.
     ///
     /// # Arguments
     ///
@@ -418,6 +428,9 @@ impl RestApi {
     /// Weight(IP): 400
     ///
     /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -518,6 +531,9 @@ impl RestApi {
     ///
     /// Security Type: `USER_DATA`
     ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
+    ///
     /// # Arguments
     ///
     /// - `params`: [`GetFlexibleLoanLiquidationHistoryParams`]
@@ -568,6 +584,7 @@ impl RestApi {
     /// Notes:
     /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
     /// - The max interval between `startTime` and `endTime` is 180 days.
+    /// - Rate limit: 5 requests per second per account.
     ///
     /// # Arguments
     ///
@@ -615,6 +632,9 @@ impl RestApi {
     /// Weight(IP): 300
     ///
     /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Rate limit: 10 requests per second per account.
     ///
     /// # Arguments
     ///
@@ -666,6 +686,7 @@ impl RestApi {
     /// Notes:
     /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
     /// - The max interval between `startTime` and `endTime` is 180 days.
+    /// - Rate limit: 5 requests per second per account.
     ///
     /// # Arguments
     ///

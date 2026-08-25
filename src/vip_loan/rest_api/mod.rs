@@ -125,6 +125,9 @@ impl RestApi {
     ///
     /// Security Type: `USER_DATA`
     ///
+    /// Notes:
+    /// - Rate limit: 5 requests per second per account.
+    ///
     /// # Arguments
     ///
     /// - `params`: [`GetBorrowInterestRateParams`]
@@ -172,6 +175,9 @@ impl RestApi {
     ///
     /// Security Type: `USER_DATA`
     ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
+    ///
     /// # Arguments
     ///
     /// - `params`: [`GetCollateralAssetDataParams`]
@@ -218,6 +224,9 @@ impl RestApi {
     /// Weight(IP): 400
     ///
     /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -370,6 +379,7 @@ impl RestApi {
     /// - Only master account applications are supported.
     /// - `loanAccountId` and `collateralAccountId` must be under the same master account.
     /// - `loanTerm` is mandatory if the user chooses a fixed rate (`isFlexibleRate = FALSE`).
+    /// - Rate limit: 1 request per 2 seconds per account.
     ///
     /// # Arguments
     ///
@@ -466,6 +476,9 @@ impl RestApi {
     /// Weight(UID): 6000
     ///
     /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -611,6 +624,7 @@ impl RestApi {
     /// Notes:
     /// - If `startTime` and `endTime` are not sent, recent 90-day data is returned.
     /// - The maximum interval between `startTime` and `endTime` is 90 days.
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -658,6 +672,9 @@ impl RestApi {
     /// Weight(IP): 400
     ///
     /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -756,6 +773,9 @@ impl RestApi {
     /// Weight(UID): 400
     ///
     /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Rate limit: 5 requests per second per account.
     ///
     /// # Arguments
     ///

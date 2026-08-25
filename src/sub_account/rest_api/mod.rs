@@ -1057,7 +1057,7 @@ impl RestApi {
     /// Security Type: `USER_DATA`
     ///
     /// Notes:
-    /// - If `startTime` and `endTime` are both omitted, records from the last 90 days are returned by default (up to 1000 records).
+    /// - If `startTime` and `endTime` are both omitted, records from the last 90 days are returned by default (up to 100 records).
     /// - If `startTime` is sent and `endTime` is omitted, records in `[max(startTime, now-90d), now]` are returned.
     /// - If `startTime` is omitted and `endTime` is sent, records in `[max(now, endTime-90d), endTime]` are returned.
     ///

@@ -31,8 +31,14 @@ pub struct MovePositionForSubAccountResponseMovePositionOrdersInner {
     pub price: Option<String>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<String>,
-    #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
-    pub position_side: Option<String>,
+    /// null when productType=OPTION.
+    #[serde(
+        rename = "positionSide",
+        default,
+        with = "::serde_with::rust::double_option",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub position_side: Option<Option<String>>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
     #[serde(rename = "success", skip_serializing_if = "Option::is_none")]

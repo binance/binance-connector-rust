@@ -1887,6 +1887,42 @@ impl RestApi {
     /// - Questionnaire is different for each local entity, please refer to the `Withdraw Questionnaire Contents` page.
     /// - If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`, please try to verify the format of the questionnaire and use URL-encoded format.
     ///
+    /// **`StandardPii`**
+    ///
+    /// **For Natural Person**
+    ///
+    /// - `piiType` (INTEGER, Mandatory): Fix to 0: Natural Person
+    /// - `latinNames` (List<PiiName>, Mandatory): In case a person have complicated names or multiple names, this parameter is a list
+    /// - `localNames` (List<PiiName>, Optional): In case a person have complicated names or multiple names, this parameter is a list
+    /// - `nationality` (STRING, Optional)
+    /// - `residenceCountry` (STRING, Mandatory)
+    /// - `nationalIdentifier` (STRING, Optional)
+    /// - `nationalIdentifierType` (STRING, Optional)
+    /// - `nationalIdentifierIssueCountry` (STRING, Optional)
+    /// - `dateOfBirth` (STRING, Optional): yyyy-mm-dd. Not required but strongly recommended. Providing DOB could greatly reduce false positive rate during risk checking process.
+    /// - `placeOfBirth` (STRING, Optional)
+    /// - `address` (STRING, Optional)
+    ///
+    /// **For Legal Person**
+    ///
+    /// - `piiType` (INTEGER, Mandatory): Fix to 1: Legal Person
+    /// - `latinName` (STRING, Mandatory): It's company name for Legal Person
+    /// - `localName` (STRING, Optional)
+    /// - `registrationCountry` (STRING, Mandatory)
+    /// - `nationalIdentifier` (STRING, Optional)
+    /// - `nationalIdentifierType` (STRING, Optional)
+    /// - `nationalIdentifierIssueCountry` (STRING, Optional)
+    /// - `registrationDate` (STRING, Optional): yyyy-mm-dd. Not required but strongly recommended.
+    /// - `address` (STRING, Optional)
+    /// - `walletAddress` (STRING, Optional)
+    /// - `walletTag` (STRING, Optional)
+    ///
+    /// **`PiiName`**
+    ///
+    /// - `firstName` (STRING, Mandatory): Mandatory for Natural person
+    /// - `middleName` (STRING, Optional)
+    /// - `lastName` (STRING, Optional)
+    ///
     /// # Arguments
     ///
     /// - `params`: [`BrokerWithdrawParams`]
@@ -2226,6 +2262,42 @@ impl RestApi {
     /// Notes:
     /// - Questionnaire is different for each local entity, please refer to `Deposit Questionnaire Content` page.
     /// - If getting error like `Questionnaire format not valid.` or `Questionnaire must not be blank`, please try to verify the format of the questionnaire and use URL-encoded format.
+    ///
+    /// **`StandardPii`**
+    ///
+    /// **For Natural Person**
+    ///
+    /// - `piiType` (INTEGER, Mandatory): Fix to 0: Natural Person
+    /// - `latinNames` (List<PiiName>, Mandatory): In case a person have complicated names or multiple names, this parameter is a list
+    /// - `localNames` (List<PiiName>, Optional): In case a person have complicated names or multiple names, this parameter is a list
+    /// - `nationality` (STRING, Optional)
+    /// - `residenceCountry` (STRING, Mandatory)
+    /// - `nationalIdentifier` (STRING, Optional)
+    /// - `nationalIdentifierType` (STRING, Optional)
+    /// - `nationalIdentifierIssueCountry` (STRING, Optional)
+    /// - `dateOfBirth` (STRING, Optional): yyyy-mm-dd. Not required but strongly recommended. Providing DOB could greatly reduce false positive rate during risk checking process.
+    /// - `placeOfBirth` (STRING, Optional)
+    /// - `address` (STRING, Optional)
+    ///
+    /// **For Legal Person**
+    ///
+    /// - `piiType` (INTEGER, Mandatory): Fix to 1: Legal Person
+    /// - `latinName` (STRING, Mandatory): It's company name for Legal Person
+    /// - `localName` (STRING, Optional)
+    /// - `registrationCountry` (STRING, Mandatory)
+    /// - `nationalIdentifier` (STRING, Optional)
+    /// - `nationalIdentifierType` (STRING, Optional)
+    /// - `nationalIdentifierIssueCountry` (STRING, Optional)
+    /// - `registrationDate` (STRING, Optional): yyyy-mm-dd. Not required but strongly recommended.
+    /// - `address` (STRING, Optional)
+    /// - `walletAddress` (STRING, Optional)
+    /// - `walletTag` (STRING, Optional)
+    ///
+    /// **`PiiName`**
+    ///
+    /// - `firstName` (STRING, Mandatory): Mandatory for Natural person
+    /// - `middleName` (STRING, Optional)
+    /// - `lastName` (STRING, Optional)
     ///
     /// # Arguments
     ///

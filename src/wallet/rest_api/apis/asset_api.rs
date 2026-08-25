@@ -1133,6 +1133,13 @@ pub struct QueryUserWalletBalanceParams {
     #[builder(setter(into), default)]
     #[serde(rename = "quoteAsset", default)]
     pub quote_asset: Option<String>,
+    /// Whether to return the per-asset balance detail for each wallet. When `false` or omitted, the response is
+    /// unchanged from current behavior.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "needBalanceDetail", default)]
+    pub need_balance_detail: Option<bool>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -1906,6 +1913,7 @@ impl AssetApi for AssetApiClient {
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryUserWalletBalanceResponseInner>>> {
         let QueryUserWalletBalanceParams {
             quote_asset,
+            need_balance_detail,
             recv_window,
         } = params;
 
@@ -1914,6 +1922,10 @@ impl AssetApi for AssetApiClient {
 
         if let Some(rw) = quote_asset {
             query_params.insert("quoteAsset".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = need_balance_detail {
+            query_params.insert("needBalanceDetail".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -2506,9 +2518,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"[{"activate":true,"balance":"0","walletName":"Spot"}]"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"activate":true,"balance":"0","walletName":"Spot","assetBalances":[{"asset":"USDT","assetName":"TetherUS","free":"6.238383","locked":"0","freeze":"0","withdrawing":"0","btcValuation":"6.238383"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::QueryUserWalletBalanceResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::QueryUserWalletBalanceResponseInner>");
@@ -3332,17 +3342,10 @@ mod tests {
 
             let params = QueryUserWalletBalanceParams::builder().build().unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"[{"activate":true,"balance":"0","walletName":"Spot"}]"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: Vec<models::QueryUserWalletBalanceResponseInner> =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into Vec<models::QueryUserWalletBalanceResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"activate":true,"balance":"0","walletName":"Spot","assetBalances":[{"asset":"USDT","assetName":"TetherUS","free":"6.238383","locked":"0","freeze":"0","withdrawing":"0","btcValuation":"6.238383"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::QueryUserWalletBalanceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUserWalletBalanceResponseInner>");
 
-            let resp = client
-                .query_user_wallet_balance(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.query_user_wallet_balance(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -3354,23 +3357,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAssetApiClient { force_error: false };
 
-            let params = QueryUserWalletBalanceParams::builder()
-                .quote_asset("BTC".to_string())
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = QueryUserWalletBalanceParams::builder().quote_asset("BTC".to_string()).need_balance_detail(false).recv_window(5000).build().unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"[{"activate":true,"balance":"0","walletName":"Spot"}]"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: Vec<models::QueryUserWalletBalanceResponseInner> =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into Vec<models::QueryUserWalletBalanceResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"activate":true,"balance":"0","walletName":"Spot","assetBalances":[{"asset":"USDT","assetName":"TetherUS","free":"6.238383","locked":"0","freeze":"0","withdrawing":"0","btcValuation":"6.238383"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::QueryUserWalletBalanceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryUserWalletBalanceResponseInner>");
 
-            let resp = client
-                .query_user_wallet_balance(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.query_user_wallet_balance(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);

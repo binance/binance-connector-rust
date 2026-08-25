@@ -599,6 +599,41 @@ impl std::str::FromStr for LongShortRatioPeriodEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum LongShortRatioContractTypeEnum {
+    #[serde(rename = "PERPETUAL")]
+    Perpetual,
+    #[serde(rename = "CURRENT_QUARTER")]
+    CurrentQuarter,
+    #[serde(rename = "NEXT_QUARTER")]
+    NextQuarter,
+}
+
+impl LongShortRatioContractTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Perpetual => "PERPETUAL",
+            Self::CurrentQuarter => "CURRENT_QUARTER",
+            Self::NextQuarter => "NEXT_QUARTER",
+        }
+    }
+}
+
+impl std::str::FromStr for LongShortRatioContractTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PERPETUAL" => Ok(Self::Perpetual),
+            "CURRENT_QUARTER" => Ok(Self::CurrentQuarter),
+            "NEXT_QUARTER" => Ok(Self::NextQuarter),
+            other => Err(format!("invalid LongShortRatioContractTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MarkPriceKlineCandlestickDataIntervalEnum {
     #[serde(rename = "1m")]
     Interval1m,
@@ -686,47 +721,6 @@ impl std::str::FromStr for MarkPriceKlineCandlestickDataIntervalEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum OpenInterestStatisticsContractTypeEnum {
-    #[serde(rename = "ALL")]
-    All,
-    #[serde(rename = "PERPETUAL")]
-    Perpetual,
-    #[serde(rename = "CURRENT_QUARTER")]
-    CurrentQuarter,
-    #[serde(rename = "NEXT_QUARTER")]
-    NextQuarter,
-}
-
-impl OpenInterestStatisticsContractTypeEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::All => "ALL",
-            Self::Perpetual => "PERPETUAL",
-            Self::CurrentQuarter => "CURRENT_QUARTER",
-            Self::NextQuarter => "NEXT_QUARTER",
-        }
-    }
-}
-
-impl std::str::FromStr for OpenInterestStatisticsContractTypeEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "ALL" => Ok(Self::All),
-            "PERPETUAL" => Ok(Self::Perpetual),
-            "CURRENT_QUARTER" => Ok(Self::CurrentQuarter),
-            "NEXT_QUARTER" => Ok(Self::NextQuarter),
-            other => {
-                Err(format!("invalid OpenInterestStatisticsContractTypeEnum: {}", other).into())
-            }
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OpenInterestStatisticsPeriodEnum {
     #[serde(rename = "5m")]
     Period5m,
@@ -780,6 +774,43 @@ impl std::str::FromStr for OpenInterestStatisticsPeriodEnum {
             "12h" => Ok(Self::Period12h),
             "1d" => Ok(Self::Period1d),
             other => Err(format!("invalid OpenInterestStatisticsPeriodEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum OpenInterestStatisticsContractTypeEnum {
+    #[serde(rename = "PERPETUAL")]
+    Perpetual,
+    #[serde(rename = "CURRENT_QUARTER")]
+    CurrentQuarter,
+    #[serde(rename = "NEXT_QUARTER")]
+    NextQuarter,
+}
+
+impl OpenInterestStatisticsContractTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Perpetual => "PERPETUAL",
+            Self::CurrentQuarter => "CURRENT_QUARTER",
+            Self::NextQuarter => "NEXT_QUARTER",
+        }
+    }
+}
+
+impl std::str::FromStr for OpenInterestStatisticsContractTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PERPETUAL" => Ok(Self::Perpetual),
+            "CURRENT_QUARTER" => Ok(Self::CurrentQuarter),
+            "NEXT_QUARTER" => Ok(Self::NextQuarter),
+            other => {
+                Err(format!("invalid OpenInterestStatisticsContractTypeEnum: {}", other).into())
+            }
         }
     }
 }
@@ -1030,6 +1061,45 @@ impl std::str::FromStr for TopTraderLongShortRatioAccountsPeriodEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TopTraderLongShortRatioAccountsContractTypeEnum {
+    #[serde(rename = "PERPETUAL")]
+    Perpetual,
+    #[serde(rename = "CURRENT_QUARTER")]
+    CurrentQuarter,
+    #[serde(rename = "NEXT_QUARTER")]
+    NextQuarter,
+}
+
+impl TopTraderLongShortRatioAccountsContractTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Perpetual => "PERPETUAL",
+            Self::CurrentQuarter => "CURRENT_QUARTER",
+            Self::NextQuarter => "NEXT_QUARTER",
+        }
+    }
+}
+
+impl std::str::FromStr for TopTraderLongShortRatioAccountsContractTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PERPETUAL" => Ok(Self::Perpetual),
+            "CURRENT_QUARTER" => Ok(Self::CurrentQuarter),
+            "NEXT_QUARTER" => Ok(Self::NextQuarter),
+            other => Err(format!(
+                "invalid TopTraderLongShortRatioAccountsContractTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TopTraderLongShortRatioPositionsPeriodEnum {
     #[serde(rename = "5m")]
     Period5m,
@@ -1084,6 +1154,45 @@ impl std::str::FromStr for TopTraderLongShortRatioPositionsPeriodEnum {
             "1d" => Ok(Self::Period1d),
             other => Err(format!(
                 "invalid TopTraderLongShortRatioPositionsPeriodEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TopTraderLongShortRatioPositionsContractTypeEnum {
+    #[serde(rename = "PERPETUAL")]
+    Perpetual,
+    #[serde(rename = "CURRENT_QUARTER")]
+    CurrentQuarter,
+    #[serde(rename = "NEXT_QUARTER")]
+    NextQuarter,
+}
+
+impl TopTraderLongShortRatioPositionsContractTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Perpetual => "PERPETUAL",
+            Self::CurrentQuarter => "CURRENT_QUARTER",
+            Self::NextQuarter => "NEXT_QUARTER",
+        }
+    }
+}
+
+impl std::str::FromStr for TopTraderLongShortRatioPositionsContractTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PERPETUAL" => Ok(Self::Perpetual),
+            "CURRENT_QUARTER" => Ok(Self::CurrentQuarter),
+            "NEXT_QUARTER" => Ok(Self::NextQuarter),
+            other => Err(format!(
+                "invalid TopTraderLongShortRatioPositionsContractTypeEnum: {}",
                 other
             )
             .into()),
@@ -1487,6 +1596,12 @@ pub struct LongShortRatioParams {
     #[builder(setter(into))]
     #[serde(rename = "period")]
     pub period: LongShortRatioPeriodEnum,
+    /// Contract type filter. If omitted, returns aggregated data across all contract types.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "contractType", default)]
+    pub contract_type: Option<LongShortRatioContractTypeEnum>,
     /// Maximum number of records to return.
     ///
     /// This field is **optional.
@@ -1662,19 +1777,18 @@ pub struct OpenInterestStatisticsParams {
     #[serde(rename = "pair")]
     pub pair: String,
     ///
-    /// The `contract_type` parameter.
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "contractType")]
-    pub contract_type: OpenInterestStatisticsContractTypeEnum,
-    ///
     /// The `period` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
     #[serde(rename = "period")]
     pub period: OpenInterestStatisticsPeriodEnum,
+    /// Contract type filter. If omitted, returns aggregated data across all contract types.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "contractType", default)]
+    pub contract_type: Option<OpenInterestStatisticsContractTypeEnum>,
     /// Maximum number of records to return.
     ///
     /// This field is **optional.
@@ -1703,18 +1817,15 @@ impl OpenInterestStatisticsParams {
     /// Required parameters:
     ///
     /// * `pair` — String
-    /// * `contract_type` — String
     /// * `period` — String
     ///
     #[must_use]
     pub fn builder(
         pair: String,
-        contract_type: OpenInterestStatisticsContractTypeEnum,
         period: OpenInterestStatisticsPeriodEnum,
     ) -> OpenInterestStatisticsParamsBuilder {
         OpenInterestStatisticsParamsBuilder::default()
             .pair(pair)
-            .contract_type(contract_type)
             .period(period)
     }
 }
@@ -2033,12 +2144,12 @@ impl Ticker24hrPriceChangeStatisticsParams {
 #[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct TopTraderLongShortRatioAccountsParams {
-    /// Symbol
+    /// Pair
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    #[serde(rename = "symbol")]
-    pub symbol: String,
+    #[serde(rename = "pair")]
+    pub pair: String,
     ///
     /// The `period` parameter.
     ///
@@ -2046,6 +2157,12 @@ pub struct TopTraderLongShortRatioAccountsParams {
     #[builder(setter(into))]
     #[serde(rename = "period")]
     pub period: TopTraderLongShortRatioAccountsPeriodEnum,
+    /// Contract type filter. If omitted, returns aggregated data across all contract types.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "contractType", default)]
+    pub contract_type: Option<TopTraderLongShortRatioAccountsContractTypeEnum>,
     /// Maximum number of records to return.
     ///
     /// This field is **optional.
@@ -2073,16 +2190,16 @@ impl TopTraderLongShortRatioAccountsParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — Symbol
+    /// * `pair` — Pair
     /// * `period` — String
     ///
     #[must_use]
     pub fn builder(
-        symbol: String,
+        pair: String,
         period: TopTraderLongShortRatioAccountsPeriodEnum,
     ) -> TopTraderLongShortRatioAccountsParamsBuilder {
         TopTraderLongShortRatioAccountsParamsBuilder::default()
-            .symbol(symbol)
+            .pair(pair)
             .period(period)
     }
 }
@@ -2107,6 +2224,12 @@ pub struct TopTraderLongShortRatioPositionsParams {
     #[builder(setter(into))]
     #[serde(rename = "period")]
     pub period: TopTraderLongShortRatioPositionsPeriodEnum,
+    /// Contract type filter. If omitted, returns aggregated data across all contract types.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "contractType", default)]
+    pub contract_type: Option<TopTraderLongShortRatioPositionsContractTypeEnum>,
     /// Maximum number of records to return.
     ///
     /// This field is **optional.
@@ -2551,6 +2674,7 @@ impl MarketDataApi for MarketDataApiClient {
         let LongShortRatioParams {
             pair,
             period,
+            contract_type,
             limit,
             start_time,
             end_time,
@@ -2562,6 +2686,10 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("pair".to_string(), json!(pair));
 
         query_params.insert("period".to_string(), json!(period));
+
+        if let Some(rw) = contract_type {
+            query_params.insert("contractType".to_string(), json!(rw));
+        }
 
         if let Some(rw) = limit {
             query_params.insert("limit".to_string(), json!(rw));
@@ -2711,8 +2839,8 @@ impl MarketDataApi for MarketDataApiClient {
     ) -> anyhow::Result<RestApiResponse<Vec<models::OpenInterestStatisticsResponseInner>>> {
         let OpenInterestStatisticsParams {
             pair,
-            contract_type,
             period,
+            contract_type,
             limit,
             start_time,
             end_time,
@@ -2723,7 +2851,9 @@ impl MarketDataApi for MarketDataApiClient {
 
         query_params.insert("pair".to_string(), json!(pair));
 
-        query_params.insert("contractType".to_string(), json!(contract_type));
+        if let Some(rw) = contract_type {
+            query_params.insert("contractType".to_string(), json!(rw));
+        }
 
         query_params.insert("period".to_string(), json!(period));
 
@@ -3067,8 +3197,9 @@ impl MarketDataApi for MarketDataApiClient {
     ) -> anyhow::Result<RestApiResponse<Vec<models::TopTraderLongShortRatioAccountsResponseInner>>>
     {
         let TopTraderLongShortRatioAccountsParams {
-            symbol,
+            pair,
             period,
+            contract_type,
             limit,
             start_time,
             end_time,
@@ -3077,9 +3208,13 @@ impl MarketDataApi for MarketDataApiClient {
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
-        query_params.insert("symbol".to_string(), json!(symbol));
+        query_params.insert("pair".to_string(), json!(pair));
 
         query_params.insert("period".to_string(), json!(period));
+
+        if let Some(rw) = contract_type {
+            query_params.insert("contractType".to_string(), json!(rw));
+        }
 
         if let Some(rw) = limit {
             query_params.insert("limit".to_string(), json!(rw));
@@ -3117,6 +3252,7 @@ impl MarketDataApi for MarketDataApiClient {
         let TopTraderLongShortRatioPositionsParams {
             pair,
             period,
+            contract_type,
             limit,
             start_time,
             end_time,
@@ -3128,6 +3264,10 @@ impl MarketDataApi for MarketDataApiClient {
         query_params.insert("pair".to_string(), json!(pair));
 
         query_params.insert("period".to_string(), json!(period));
+
+        if let Some(rw) = contract_type {
+            query_params.insert("contractType".to_string(), json!(rw));
+        }
 
         if let Some(rw) = limit {
             query_params.insert("limit".to_string(), json!(rw));
@@ -4492,7 +4632,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = LongShortRatioParams::builder("pair_example".to_string(),LongShortRatioPeriodEnum::Period5m,).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = LongShortRatioParams::builder("pair_example".to_string(),LongShortRatioPeriodEnum::Period5m,).contract_type(LongShortRatioContractTypeEnum::Perpetual).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"pair":"BTCUSD","longShortRatio":"0.1960","longAccount":"0.6622","shortAccount":"0.3378","timestamp":1583139600000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::LongShortRatioResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::LongShortRatioResponseInner>");
@@ -4716,7 +4856,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = OpenInterestStatisticsParams::builder("BTCUSD".to_string(),OpenInterestStatisticsContractTypeEnum::All,OpenInterestStatisticsPeriodEnum::Period5m,).build().unwrap();
+            let params = OpenInterestStatisticsParams::builder("BTCUSD".to_string(),OpenInterestStatisticsPeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"pair":"BTCUSD","contractType":"CURRENT_QUARTER","sumOpenInterest":"20403","sumOpenInterestValue":"176196512.23400000","timestamp":1591261042378}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::OpenInterestStatisticsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OpenInterestStatisticsResponseInner>");
@@ -4733,7 +4873,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = OpenInterestStatisticsParams::builder("BTCUSD".to_string(),OpenInterestStatisticsContractTypeEnum::All,OpenInterestStatisticsPeriodEnum::Period5m,).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = OpenInterestStatisticsParams::builder("BTCUSD".to_string(),OpenInterestStatisticsPeriodEnum::Period5m,).contract_type(OpenInterestStatisticsContractTypeEnum::Perpetual).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"pair":"BTCUSD","contractType":"CURRENT_QUARTER","sumOpenInterest":"20403","sumOpenInterestValue":"176196512.23400000","timestamp":1591261042378}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::OpenInterestStatisticsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::OpenInterestStatisticsResponseInner>");
@@ -4752,7 +4892,6 @@ mod tests {
 
             let params = OpenInterestStatisticsParams::builder(
                 "BTCUSD".to_string(),
-                OpenInterestStatisticsContractTypeEnum::All,
                 OpenInterestStatisticsPeriodEnum::Period5m,
             )
             .build()
@@ -5264,7 +5403,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).build().unwrap();
+            let params = TopTraderLongShortRatioAccountsParams::builder("BTCUSD".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"pair":"BTCUSD","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":1591261042378}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::TopTraderLongShortRatioAccountsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioAccountsResponseInner>");
@@ -5281,7 +5420,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TopTraderLongShortRatioAccountsParams::builder("symbol_example".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = TopTraderLongShortRatioAccountsParams::builder("BTCUSD".to_string(),TopTraderLongShortRatioAccountsPeriodEnum::Period5m,).contract_type(TopTraderLongShortRatioAccountsContractTypeEnum::Perpetual).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"pair":"BTCUSD","longShortRatio":"1.8105","longAccount":"0.6442","shortAccount":"0.3558","timestamp":1591261042378}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::TopTraderLongShortRatioAccountsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioAccountsResponseInner>");
@@ -5299,7 +5438,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: true };
 
             let params = TopTraderLongShortRatioAccountsParams::builder(
-                "symbol_example".to_string(),
+                "BTCUSD".to_string(),
                 TopTraderLongShortRatioAccountsPeriodEnum::Period5m,
             )
             .build()
@@ -5336,7 +5475,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TopTraderLongShortRatioPositionsParams::builder("BTCUSD".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::Period5m,).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = TopTraderLongShortRatioPositionsParams::builder("BTCUSD".to_string(),TopTraderLongShortRatioPositionsPeriodEnum::Period5m,).contract_type(TopTraderLongShortRatioPositionsContractTypeEnum::Perpetual).limit(30).start_time(1623319461670).end_time(1641782889000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"pair":"BTCUSD","longShortRatio":"0.7869","longPosition":"0.6442","shortPosition":"0.4404","timestamp":1592870400000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::TopTraderLongShortRatioPositionsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::TopTraderLongShortRatioPositionsResponseInner>");

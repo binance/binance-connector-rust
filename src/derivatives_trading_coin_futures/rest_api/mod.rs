@@ -864,7 +864,7 @@ impl RestApi {
     /// Weight(IP): 20
     ///
     /// Notes:
-    /// - support querying futures trade histories that are not older than 24 hours
+    /// - only trade histories within the past 48 hours (counted from now) can be queried
     /// - If both `startTime` and `endTime` are sent, time between `startTime` and `endTime` must be less than 1 hour.
     /// - If `fromId`, `startTime`, and `endTime` are not sent, the most recent aggregate trades will be returned.
     /// - Only market trades will be aggregated and returned, which means the insurance fund trades and ADL trades won't be aggregated.

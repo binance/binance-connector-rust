@@ -1008,6 +1008,8 @@ pub enum MarginAccountNewOtoSideEffectTypeEnum {
     NoSideEffect,
     #[serde(rename = "MARGIN_BUY")]
     MarginBuy,
+    #[serde(rename = "AUTO_BORROW_REPAY")]
+    AutoBorrowRepay,
 }
 
 impl MarginAccountNewOtoSideEffectTypeEnum {
@@ -1016,6 +1018,7 @@ impl MarginAccountNewOtoSideEffectTypeEnum {
         match self {
             Self::NoSideEffect => "NO_SIDE_EFFECT",
             Self::MarginBuy => "MARGIN_BUY",
+            Self::AutoBorrowRepay => "AUTO_BORROW_REPAY",
         }
     }
 }
@@ -1027,6 +1030,7 @@ impl std::str::FromStr for MarginAccountNewOtoSideEffectTypeEnum {
         match s {
             "NO_SIDE_EFFECT" => Ok(Self::NoSideEffect),
             "MARGIN_BUY" => Ok(Self::MarginBuy),
+            "AUTO_BORROW_REPAY" => Ok(Self::AutoBorrowRepay),
             other => {
                 Err(format!("invalid MarginAccountNewOtoSideEffectTypeEnum: {}", other).into())
             }
@@ -1325,6 +1329,8 @@ pub enum MarginAccountNewOtocoSideEffectTypeEnum {
     NoSideEffect,
     #[serde(rename = "MARGIN_BUY")]
     MarginBuy,
+    #[serde(rename = "AUTO_BORROW_REPAY")]
+    AutoBorrowRepay,
 }
 
 impl MarginAccountNewOtocoSideEffectTypeEnum {
@@ -1333,6 +1339,7 @@ impl MarginAccountNewOtocoSideEffectTypeEnum {
         match self {
             Self::NoSideEffect => "NO_SIDE_EFFECT",
             Self::MarginBuy => "MARGIN_BUY",
+            Self::AutoBorrowRepay => "AUTO_BORROW_REPAY",
         }
     }
 }
@@ -1344,6 +1351,7 @@ impl std::str::FromStr for MarginAccountNewOtocoSideEffectTypeEnum {
         match s {
             "NO_SIDE_EFFECT" => Ok(Self::NoSideEffect),
             "MARGIN_BUY" => Ok(Self::MarginBuy),
+            "AUTO_BORROW_REPAY" => Ok(Self::AutoBorrowRepay),
             other => {
                 Err(format!("invalid MarginAccountNewOtocoSideEffectTypeEnum: {}", other).into())
             }
