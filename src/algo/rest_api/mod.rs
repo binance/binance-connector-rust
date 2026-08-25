@@ -123,6 +123,7 @@ impl RestApi {
     /// Security Type: TRADE
     ///
     /// Notes:
+    /// - Either `algoId` or `clientAlgoId` must be sent.
     /// - You need to enable `Futures Trading Permission` for the API key that requests this endpoint.
     /// - Base URL: `https://api.binance.com`
     ///
@@ -444,6 +445,9 @@ impl RestApi {
     /// Weight(IP): 1
     ///
     /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `algoId` or `clientAlgoId` must be sent.
     ///
     /// # Arguments
     ///

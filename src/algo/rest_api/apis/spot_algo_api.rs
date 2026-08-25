@@ -138,16 +138,23 @@ impl std::str::FromStr for TimeWeightedAveragePriceSpotAlgoSideEnum {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`cancel_algo_order_spot_algo`](#method.cancel_algo_order_spot_algo).
-#[derive(Clone, Debug, Builder, Deserialize)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CancelAlgoOrderSpotAlgoParams {
     ///
     /// The `algo_id` parameter.
     ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "algoId")]
-    pub algo_id: i64,
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "algoId", default)]
+    pub algo_id: Option<i64>,
+    ///
+    /// The `client_algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
+    pub client_algo_id: Option<String>,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
@@ -159,13 +166,9 @@ pub struct CancelAlgoOrderSpotAlgoParams {
 impl CancelAlgoOrderSpotAlgoParams {
     /// Create a builder for [`cancel_algo_order_spot_algo`].
     ///
-    /// Required parameters:
-    ///
-    /// * `algo_id` — i64
-    ///
     #[must_use]
-    pub fn builder(algo_id: i64) -> CancelAlgoOrderSpotAlgoParamsBuilder {
-        CancelAlgoOrderSpotAlgoParamsBuilder::default().algo_id(algo_id)
+    pub fn builder() -> CancelAlgoOrderSpotAlgoParamsBuilder {
+        CancelAlgoOrderSpotAlgoParamsBuilder::default()
     }
 }
 /// Request parameters for the [`query_current_algo_open_orders_spot_algo`] operation.
@@ -376,13 +379,20 @@ impl SpotAlgoApi for SpotAlgoApiClient {
     ) -> anyhow::Result<RestApiResponse<models::CancelAlgoOrderSpotAlgoResponse>> {
         let CancelAlgoOrderSpotAlgoParams {
             algo_id,
+            client_algo_id,
             recv_window,
         } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
-        query_params.insert("algoId".to_string(), json!(algo_id));
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -765,9 +775,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSpotAlgoApiClient { force_error: false };
 
-            let params = CancelAlgoOrderSpotAlgoParams::builder(14511)
-                .build()
-                .unwrap();
+            let params = CancelAlgoOrderSpotAlgoParams::builder().build().unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"algoId":14511,"success":true,"code":0,"msg":"OK"}"#)
@@ -791,7 +799,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSpotAlgoApiClient { force_error: false };
 
-            let params = CancelAlgoOrderSpotAlgoParams::builder(14511)
+            let params = CancelAlgoOrderSpotAlgoParams::builder()
+                .algo_id(14511)
+                .client_algo_id("65ce1630101a480b85915d7e11fd5078".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
@@ -818,9 +828,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSpotAlgoApiClient { force_error: true };
 
-            let params = CancelAlgoOrderSpotAlgoParams::builder(14511)
-                .build()
-                .unwrap();
+            let params = CancelAlgoOrderSpotAlgoParams::builder().build().unwrap();
 
             match client.cancel_algo_order_spot_algo(params).await {
                 Ok(_) => panic!("Expected an error"),

@@ -1491,16 +1491,16 @@ impl AccountTradeListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`all_orders`](#method.all_orders).
-#[derive(Clone, Debug, Builder, Deserialize)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AllOrdersParams {
     ///
     /// The `symbol` parameter.
     ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "symbol")]
-    pub symbol: String,
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
+    pub symbol: Option<String>,
     ///
     /// The `order_id` parameter.
     ///
@@ -1539,13 +1539,9 @@ pub struct AllOrdersParams {
 impl AllOrdersParams {
     /// Create a builder for [`all_orders`].
     ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — String
-    ///
     #[must_use]
-    pub fn builder(symbol: String) -> AllOrdersParamsBuilder {
-        AllOrdersParamsBuilder::default().symbol(symbol)
+    pub fn builder() -> AllOrdersParamsBuilder {
+        AllOrdersParamsBuilder::default()
     }
 }
 /// Request parameters for the [`auto_cancel_all_open_orders`] operation.
@@ -3286,7 +3282,9 @@ impl TradeApi for TradeApiClient {
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
-        query_params.insert("symbol".to_string(), json!(symbol));
+        if let Some(rw) = symbol {
+            query_params.insert("symbol".to_string(), json!(rw));
+        }
 
         if let Some(rw) = order_id {
             query_params.insert("orderId".to_string(), json!(rw));
@@ -5766,7 +5764,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = AllOrdersParams::builder("BTCUSDT".to_string(),).build().unwrap();
+            let params = AllOrdersParams::builder().build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.00000","clientOrderId":"abc","cumQuote":"0","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","pair":"BTCUSDT","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllOrdersResponseInner>");
@@ -5783,7 +5781,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = AllOrdersParams::builder("BTCUSDT".to_string(),).order_id(1917641).start_time(1623319461670).end_time(1641782889000).limit(50).recv_window(5000).build().unwrap();
+            let params = AllOrdersParams::builder().symbol("BTCUSDT".to_string()).order_id(1917641).start_time(1623319461670).end_time(1641782889000).limit(50).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"avgPrice":"0.00000","clientOrderId":"abc","cumQuote":"0","cumBase":"0","executedQty":"0","orderId":1917641,"origQty":"0.40","origType":"TRAILING_STOP_MARKET","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","status":"NEW","stopPrice":"9300","closePosition":false,"symbol":"BTCUSDT","pair":"BTCUSDT","time":1579276756075,"timeInForce":"GTC","type":"TRAILING_STOP_MARKET","activatePrice":"9020","priceRate":"0.3","updateTime":1579276756075,"workingType":"CONTRACT_PRICE","priceProtect":false,"priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AllOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AllOrdersResponseInner>");
@@ -5800,9 +5798,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = AllOrdersParams::builder("BTCUSDT".to_string())
-                .build()
-                .unwrap();
+            let params = AllOrdersParams::builder().build().unwrap();
 
             match client.all_orders(params).await {
                 Ok(_) => panic!("Expected an error"),

@@ -1584,6 +1584,37 @@ impl std::str::FromStr for NewUmAlgoOrderPriceMatchEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewUmAlgoOrderClosePositionEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewUmAlgoOrderClosePositionEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewUmAlgoOrderClosePositionEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewUmAlgoOrderClosePositionEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewUmAlgoOrderPriceProtectEnum {
     #[serde(rename = "true")]
     True,
@@ -4055,12 +4086,6 @@ pub struct NewUmAlgoOrderParams {
     #[builder(setter(into))]
     #[serde(rename = "type")]
     pub r#type: NewUmAlgoOrderTypeEnum,
-    /// Order quantity
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "quantity")]
-    pub quantity: rust_decimal::Decimal,
     /// Default `BOTH` for One-way Mode; `LONG` or `SHORT` for Hedge Mode
     ///
     /// This field is **optional.
@@ -4074,6 +4099,12 @@ pub struct NewUmAlgoOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "timeInForce", default)]
     pub time_in_force: Option<NewUmAlgoOrderTimeInForceEnum>,
+    /// Order quantity. Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
+    pub quantity: Option<rust_decimal::Decimal>,
     /// Order price
     ///
     /// This field is **optional.
@@ -4098,13 +4129,19 @@ pub struct NewUmAlgoOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "priceMatch", default)]
     pub price_match: Option<NewUmAlgoOrderPriceMatchEnum>,
+    /// Close-All, used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "closePosition", default)]
+    pub close_position: Option<NewUmAlgoOrderClosePositionEnum>,
     /// Price protection. Default `false`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "priceProtect", default)]
     pub price_protect: Option<NewUmAlgoOrderPriceProtectEnum>,
-    /// Cannot be sent in Hedge Mode
+    /// Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -4166,7 +4203,6 @@ impl NewUmAlgoOrderParams {
     /// * `symbol` — String
     /// * `side` — String
     /// * `r#type` — Conditional order type
-    /// * `quantity` — Order quantity
     ///
     #[must_use]
     pub fn builder(
@@ -4174,14 +4210,12 @@ impl NewUmAlgoOrderParams {
         symbol: String,
         side: NewUmAlgoOrderSideEnum,
         r#type: NewUmAlgoOrderTypeEnum,
-        quantity: rust_decimal::Decimal,
     ) -> NewUmAlgoOrderParamsBuilder {
         NewUmAlgoOrderParamsBuilder::default()
             .algo_type(algo_type)
             .symbol(symbol)
             .side(side)
             .r#type(r#type)
-            .quantity(quantity)
     }
 }
 /// Request parameters for the [`new_um_conditional_order`] operation.
@@ -7337,13 +7371,14 @@ impl TradeApi for TradeApiClient {
             symbol,
             side,
             r#type,
-            quantity,
             position_side,
             time_in_force,
+            quantity,
             price,
             trigger_price,
             working_type,
             price_match,
+            close_position,
             price_protect,
             reduce_only,
             activate_price,
@@ -7374,7 +7409,9 @@ impl TradeApi for TradeApiClient {
             query_params.insert("timeInForce".to_string(), json!(rw));
         }
 
-        query_params.insert("quantity".to_string(), json!(quantity));
+        if let Some(rw) = quantity {
+            query_params.insert("quantity".to_string(), json!(rw));
+        }
 
         if let Some(rw) = price {
             query_params.insert("price".to_string(), json!(rw));
@@ -7390,6 +7427,10 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = price_match {
             query_params.insert("priceMatch".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = close_position {
+            query_params.insert("closePosition".to_string(), json!(rw));
         }
 
         if let Some(rw) = price_protect {
@@ -9977,7 +10018,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::NewUmAlgoOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::NewUmAlgoOrderResponse");
@@ -12553,9 +12594,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewUmAlgoOrderParams::builder(NewUmAlgoOrderAlgoTypeEnum::Conditional,"BNBUSDT".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Stop,dec!(0.01),).build().unwrap();
+            let params = NewUmAlgoOrderParams::builder(NewUmAlgoOrderAlgoTypeEnum::Conditional,"BNBUSDT".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Stop,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
 
             let resp = client.new_um_algo_order(params).await.expect("Expected a response");
@@ -12570,9 +12611,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = NewUmAlgoOrderParams::builder(NewUmAlgoOrderAlgoTypeEnum::Conditional,"BNBUSDT".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Stop,dec!(0.01),).position_side(NewUmAlgoOrderPositionSideEnum::Both).time_in_force(NewUmAlgoOrderTimeInForceEnum::Ioc).price(dec!(750.000)).trigger_price(dec!(750.000)).working_type(NewUmAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewUmAlgoOrderPriceMatchEnum::Opponent).price_protect(NewUmAlgoOrderPriceProtectEnum::True).reduce_only(NewUmAlgoOrderReduceOnlyEnum::True).activate_price(dec!(700)).callback_rate(dec!(1)).client_algo_id("6B2I9XVcJpCjqPAJ4YoFX7".to_string()).new_order_resp_type(NewUmAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewUmAlgoOrderSelfTradePreventionModeEnum::None).good_till_date(0).recv_window(5000).build().unwrap();
+            let params = NewUmAlgoOrderParams::builder(NewUmAlgoOrderAlgoTypeEnum::Conditional,"BNBUSDT".to_string(),NewUmAlgoOrderSideEnum::Buy,NewUmAlgoOrderTypeEnum::Stop,).position_side(NewUmAlgoOrderPositionSideEnum::Both).time_in_force(NewUmAlgoOrderTimeInForceEnum::Ioc).quantity(dec!(0.01)).price(dec!(750.000)).trigger_price(dec!(750.000)).working_type(NewUmAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewUmAlgoOrderPriceMatchEnum::Opponent).close_position(NewUmAlgoOrderClosePositionEnum::True).price_protect(NewUmAlgoOrderPriceProtectEnum::True).reduce_only(NewUmAlgoOrderReduceOnlyEnum::True).activate_price(dec!(700)).callback_rate(dec!(1)).client_algo_id("6B2I9XVcJpCjqPAJ4YoFX7".to_string()).new_order_resp_type(NewUmAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewUmAlgoOrderSelfTradePreventionModeEnum::None).good_till_date(0).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BNBUSDT","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::NewUmAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmAlgoOrderResponse");
 
             let resp = client.new_um_algo_order(params).await.expect("Expected a response");
@@ -12592,7 +12633,6 @@ mod tests {
                 "BNBUSDT".to_string(),
                 NewUmAlgoOrderSideEnum::Buy,
                 NewUmAlgoOrderTypeEnum::Stop,
-                dec!(0.01),
             )
             .build()
             .unwrap();

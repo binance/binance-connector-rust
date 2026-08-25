@@ -1,5 +1,52 @@
 # Changelog
 
+## 69.1.0 - 2026-08-25
+
+**Algo**
+
+### Changed (2)
+
+- Added parameter `clientAlgoId`
+  - affected methods:
+    - `cancel_algo_order_future_algo()` (`DELETE /sapi/v1/algo/futures/order`)
+    - `cancel_algo_order_spot_algo()` (`DELETE /sapi/v1/algo/spot/order`)
+- Modified parameter `algoId`:
+  - required: `true` → `false`
+  - affected methods:
+    - `cancel_algo_order_future_algo()` (`DELETE /sapi/v1/algo/futures/order`)
+    - `cancel_algo_order_spot_algo()` (`DELETE /sapi/v1/algo/spot/order`)
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (4)
+
+#### REST API
+
+- Added parameter `closePosition`
+  - affected methods:
+    - `new_um_algo_order()` (`POST /papi/v1/um/algo/order`)
+- Modified parameter `quantity`:
+  - required: `true` → `false`
+  - affected methods:
+    - `new_um_algo_order()` (`POST /papi/v1/um/algo/order`)
+- Modified response for `new_um_algo_order()` (`POST /papi/v1/um/algo/order`):
+  - property `closePosition` added
+
+- Added response field `closePosition`
+  - affected events:
+    - `newUmAlgoOrderResponse`
+
+**Derivatives Trading USDS Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Modified parameter `symbol`:
+  - required: `true` → `false`
+  - affected methods:
+    - `all_orders()` (`GET /fapi/v1/allOrders`)
+
 ## 69.0.0 - 2026-08-25
 
 **Derivatives Trading Coin Futures**
