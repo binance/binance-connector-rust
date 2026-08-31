@@ -1,5 +1,11 @@
 # Changelog
 
+## 68.2.0 - 2026-08-31
+
+### Added (1)
+
+- Added Stocks REST API and WebSocket Streams (`stocks` module).
+
 ## 69.1.1 - 2026-08-31
 
 **Margin Trading**

@@ -52,6 +52,8 @@ pub mod simple_earn;
 pub mod spot;
 #[cfg(feature = "staking")]
 pub mod staking;
+#[cfg(feature = "stocks")]
+pub mod stocks;
 #[cfg(feature = "sub_account")]
 pub mod sub_account;
 #[cfg(feature = "vip_loan")]

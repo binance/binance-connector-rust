@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "69.1.1"
+version = "69.2.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -164,6 +164,7 @@ rebate = [ ]
 simple_earn = [ ]
 spot = [ ]
 staking = [ ]
+stocks = [ ]
 sub_account = [ ]
 vip_loan = [ ]
 w3w_prediction = [ ]
@@ -190,6 +191,7 @@ all = [
   "simple_earn",
   "spot",
   "staking",
+  "stocks",
   "sub_account",
   "vip_loan",
   "w3w_prediction",
@@ -4010,6 +4012,121 @@ required-features = [ "staking" ]
 name = "staking_rest_api_sol_staking_api_subscribe_sol_staking"
 path = "examples/staking/rest_api/sol_staking_api/subscribe_sol_staking.rs"
 required-features = [ "staking" ]
+
+[[example]]
+name = "stocks_rest_api_account_api_sign_us_equity_disclaimer"
+path = "examples/stocks/rest_api/account_api/sign_us_equity_disclaimer.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_market_data_api_exchange_info"
+path = "examples/stocks/rest_api/market_data_api/exchange_info.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_market_data_api_latest_quote"
+path = "examples/stocks/rest_api/market_data_api/latest_quote.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_market_data_api_tokenized_assets"
+path = "examples/stocks/rest_api/market_data_api/tokenized_assets.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_tokenized_api_tokenized_convert_history"
+path = "examples/stocks/rest_api/tokenized_api/tokenized_convert_history.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_tokenized_api_tokenized_convert_status"
+path = "examples/stocks/rest_api/tokenized_api/tokenized_convert_status.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_tokenized_api_tokenized_mint"
+path = "examples/stocks/rest_api/tokenized_api/tokenized_mint.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_tokenized_api_tokenized_redeem"
+path = "examples/stocks/rest_api/tokenized_api/tokenized_redeem.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_trade_api_cancel_all_equity_orders"
+path = "examples/stocks/rest_api/trade_api/cancel_all_equity_orders.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_trade_api_cancel_equity_order"
+path = "examples/stocks/rest_api/trade_api/cancel_equity_order.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_trade_api_current_open_orders"
+path = "examples/stocks/rest_api/trade_api/current_open_orders.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_trade_api_equity_order_detail"
+path = "examples/stocks/rest_api/trade_api/equity_order_detail.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_trade_api_equity_order_history"
+path = "examples/stocks/rest_api/trade_api/equity_order_history.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_trade_api_equity_trade_history"
+path = "examples/stocks/rest_api/trade_api/equity_trade_history.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_trade_api_place_equity_order"
+path = "examples/stocks/rest_api/trade_api/place_equity_order.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_rest_api_user_data_streams_api_create_renew_listen_key"
+path = "examples/stocks/rest_api/user_data_streams_api/create_renew_listen_key.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_websocket_streams_calendar_stream"
+path = "examples/stocks/websocket_streams/calendar_stream.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_websocket_streams_kline_stream"
+path = "examples/stocks/websocket_streams/kline_stream.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_websocket_streams_order_report_stream"
+path = "examples/stocks/websocket_streams/order_report_stream.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_websocket_streams_price_stream"
+path = "examples/stocks/websocket_streams/price_stream.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_websocket_streams_quote_stream"
+path = "examples/stocks/websocket_streams/quote_stream.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_websocket_streams_tradability_stream"
+path = "examples/stocks/websocket_streams/tradability_stream.rs"
+required-features = [ "stocks" ]
+
+[[example]]
+name = "stocks_websocket_streams_trading_status_stream"
+path = "examples/stocks/websocket_streams/trading_status_stream.rs"
+required-features = [ "stocks" ]
 
 [[example]]
 name = "sub_account_rest_api_account_management_api_create_a_virtual_sub_account"

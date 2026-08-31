@@ -52,6 +52,7 @@ All connectors are bundled within the single `binance-sdk` crate. Enable only th
 * [`simple_earn`](./src/simple_earn) – Simple Earn connector
 * [`spot`](./src/spot) – Spot Trading connector
 * [`staking`](./src/staking) – Staking connector
+* [`stocks`](./src/stocks) – Stocks connector
 * [`sub_account`](./src/sub_account) – Sub Account connector
 * [`vip_loan`](./src/vip_loan) – VIP Loan connector
 * [`w3w_prediction`](./src/w3w_prediction) – W3W Prediction connector
