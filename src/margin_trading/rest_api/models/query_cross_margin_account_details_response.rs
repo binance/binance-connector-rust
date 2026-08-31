@@ -50,12 +50,6 @@ pub struct QueryCrossMarginAccountDetailsResponse {
         skip_serializing_if = "Option::is_none"
     )]
     pub total_collateral_value_in_usdt: Option<String>,
-    /// total Open Order Loss In USDT.
-    #[serde(
-        rename = "totalOpenOrderLossInUSDT",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub total_open_order_loss_in_usdt: Option<String>,
     /// trade Enabled.
     #[serde(rename = "tradeEnabled", skip_serializing_if = "Option::is_none")]
     pub trade_enabled: Option<bool>,
@@ -85,7 +79,6 @@ impl QueryCrossMarginAccountDetailsResponse {
             total_liability_of_btc: None,
             total_net_asset_of_btc: None,
             total_collateral_value_in_usdt: None,
-            total_open_order_loss_in_usdt: None,
             trade_enabled: None,
             transfer_in_enabled: None,
             transfer_out_enabled: None,

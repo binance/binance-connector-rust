@@ -1169,7 +1169,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryCrossMarginAccountDetailsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryCrossMarginAccountDetailsResponse");
@@ -1704,7 +1704,7 @@ mod tests {
 
             let params = QueryCrossMarginAccountDetailsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCrossMarginAccountDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCrossMarginAccountDetailsResponse");
 
             let resp = client.query_cross_margin_account_details(params).await.expect("Expected a response");
@@ -1721,7 +1721,7 @@ mod tests {
 
             let params = QueryCrossMarginAccountDetailsParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","totalOpenOrderLossInUSDT":"582.728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"created":true,"borrowEnabled":true,"marginLevel":"11.64405625","collateralMarginLevel":"3.2","totalAssetOfBtc":"6.82728457","totalLiabilityOfBtc":"0.58633215","totalNetAssetOfBtc":"6.24095242","TotalCollateralValueInUSDT":"5.82728457","tradeEnabled":true,"transferInEnabled":true,"transferOutEnabled":true,"accountType":"MARGIN_1","userAssets":[{"asset":"BTC","borrowed":"0.00000000","free":"0.00499500","interest":"0.00000000","locked":"0.00000000","netAsset":"0.00499500"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCrossMarginAccountDetailsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCrossMarginAccountDetailsResponse");
 
             let resp = client.query_cross_margin_account_details(params).await.expect("Expected a response");
