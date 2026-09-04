@@ -1,6 +1,12 @@
 # Changelog
 
-## 68.2.0 - 2026-08-31
+## 69.2.1 - 2026-09-04
+
+### Changed (1)
+
+- Handle zero REST retries without underflow.
+
+## 69.2.0 - 2026-08-31
 
 ### Added (1)
 

@@ -2291,7 +2291,7 @@ mod tests {
                     .proxy(reqwest::Proxy::all("http://127.0.0.1:9").unwrap())
                     .build()
                     .unwrap();
-                let req = Client::new()
+                let req = client
                     .request(Method::GET, "http://example.test/unreachable")
                     .build()
                     .unwrap();
@@ -2299,12 +2299,19 @@ mod tests {
                 cfg.client = client;
                 cfg.retries = 0;
 
-                let err = match http_request::<Dummy>(req, &cfg).await {
-                    Ok(_) => panic!("request unexpectedly succeeded"),
-                    Err(err) => err,
+                let Err(err) = http_request::<Dummy>(req, &cfg).await else {
+                    panic!("request unexpectedly succeeded")
                 };
 
-                assert!(err.to_string().contains("HTTP request failed"));
+                let msg = err.to_string();
+                assert!(
+                    msg.contains("HTTP request failed"),
+                    "missing top-level marker in: {msg}"
+                );
+                assert!(
+                    msg.contains("tcp connect error") || msg.contains("Connection refused"),
+                    "underlying transport cause was not surfaced in: {msg}"
+                );
             });
         }
 
