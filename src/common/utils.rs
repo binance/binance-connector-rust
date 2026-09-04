@@ -681,7 +681,10 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                             continue;
                         }
                         return Err(ConnectorError::ConnectorClientError {
-                            msg: format!("Failed to get response bytes: {e}"),
+                            msg: format!(
+                                "Failed to get response bytes: {:#}",
+                                anyhow::Error::new(e)
+                            ),
                             code: None,
                         });
                     }
@@ -799,12 +802,16 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
             }
             Err(e) => {
                 attempt += 1;
-                if should_retry_request(&e, Some(req.method().as_str()), Some(retries - attempt)) {
+                if should_retry_request(
+                    &e,
+                    Some(req.method().as_str()),
+                    Some(retries.saturating_sub(attempt)),
+                ) {
                     delay(backoff * attempt as u64).await;
                     continue;
                 }
                 return Err(ConnectorError::ConnectorClientError {
-                    msg: format!("HTTP request failed: {e}"),
+                    msg: format!("HTTP request failed: {:#}", anyhow::Error::new(e)),
                     code: None,
                 });
             }
@@ -2274,6 +2281,37 @@ mod tests {
                 let data = resp.data().await.unwrap();
                 assert_eq!(data, Dummy { foo: "baz".into() });
                 mock.assert();
+            });
+        }
+
+        #[test]
+        fn http_request_with_zero_retries_returns_transport_error() {
+            TOKIO_SHARED_RT.block_on(async {
+                let client = Client::builder()
+                    .proxy(reqwest::Proxy::all("http://127.0.0.1:9").unwrap())
+                    .build()
+                    .unwrap();
+                let req = client
+                    .request(Method::GET, "http://example.test/unreachable")
+                    .build()
+                    .unwrap();
+                let mut cfg = make_config("http://example.test");
+                cfg.client = client;
+                cfg.retries = 0;
+
+                let Err(err) = http_request::<Dummy>(req, &cfg).await else {
+                    panic!("request unexpectedly succeeded")
+                };
+
+                let msg = err.to_string();
+                assert!(
+                    msg.contains("HTTP request failed"),
+                    "missing top-level marker in: {msg}"
+                );
+                assert!(
+                    msg.contains("tcp connect error") || msg.contains("Connection refused"),
+                    "underlying transport cause was not surfaced in: {msg}"
+                );
             });
         }
 
