@@ -1,5 +1,33 @@
 # Changelog
 
+## 70.0.0 - 2026-09-14
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (7)
+
+#### REST API
+
+- Removed response schema `queryAllCurrentUmOpenConditionalOrdersResponse`
+- Removed response schema `queryAllUmConditionalOrdersResponse`
+- Removed response schema `newUmConditionalOrderResponse`
+- Removed response schema `queryUmConditionalOrderHistoryResponse`
+- Removed response schema `cancelUmConditionalOrderResponse`
+- Removed response schema `queryCurrentUmOpenConditionalOrderResponse`
+- Removed response schema `cancelAllUmOpenConditionalOrdersResponse`
+
+### Removed (7)
+
+#### REST API
+
+- `cancel_all_um_open_conditional_orders()` (`DELETE /papi/v1/um/conditional/allOpenOrders`)
+- `cancel_um_conditional_order()` (`DELETE /papi/v1/um/conditional/order`)
+- `new_um_conditional_order()` (`POST /papi/v1/um/conditional/order`)
+- `query_all_current_um_open_conditional_orders()` (`GET /papi/v1/um/conditional/openOrders`)
+- `query_all_um_conditional_orders()` (`GET /papi/v1/um/conditional/allOrders`)
+- `query_current_um_open_conditional_order()` (`GET /papi/v1/um/conditional/openOrder`)
+- `query_um_conditional_order_history()` (`GET /papi/v1/um/conditional/orderHistory`)
+
 ## 69.2.3 - 2026-09-10
 
 **Derivatives Trading USDS Futures**

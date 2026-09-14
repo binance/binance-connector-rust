@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "69.2.3"
+version = "70.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1574,11 +1574,6 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
-name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_all_um_open_conditional_orders"
-path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_all_um_open_conditional_orders.rs"
-required-features = [ "derivatives_trading_portfolio_margin" ]
-
-[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_all_um_open_orders"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_all_um_open_orders.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1611,11 +1606,6 @@ required-features = [ "derivatives_trading_portfolio_margin" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_um_algo_order"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_um_algo_order.rs"
-required-features = [ "derivatives_trading_portfolio_margin" ]
-
-[[example]]
-name = "derivatives_trading_portfolio_margin_rest_api_trade_api_cancel_um_conditional_order"
-path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/cancel_um_conditional_order.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
@@ -1699,11 +1689,6 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/new_um_
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
-name = "derivatives_trading_portfolio_margin_rest_api_trade_api_new_um_conditional_order"
-path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/new_um_conditional_order.rs"
-required-features = [ "derivatives_trading_portfolio_margin" ]
-
-[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_new_um_order"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/new_um_order.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1734,11 +1719,6 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_a
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
-name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_all_current_um_open_conditional_orders"
-path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_all_current_um_open_conditional_orders.rs"
-required-features = [ "derivatives_trading_portfolio_margin" ]
-
-[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_all_current_um_open_orders"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_all_current_um_open_orders.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1746,11 +1726,6 @@ required-features = [ "derivatives_trading_portfolio_margin" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_all_margin_account_orders"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_all_margin_account_orders.rs"
-required-features = [ "derivatives_trading_portfolio_margin" ]
-
-[[example]]
-name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_all_um_conditional_orders"
-path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_all_um_conditional_orders.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
@@ -1794,11 +1769,6 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_c
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
-name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_current_um_open_conditional_order"
-path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_current_um_open_conditional_order.rs"
-required-features = [ "derivatives_trading_portfolio_margin" ]
-
-[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_current_um_open_order"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_current_um_open_order.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
@@ -1826,11 +1796,6 @@ required-features = [ "derivatives_trading_portfolio_margin" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_um_algo_order_history"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_um_algo_order_history.rs"
-required-features = [ "derivatives_trading_portfolio_margin" ]
-
-[[example]]
-name = "derivatives_trading_portfolio_margin_rest_api_trade_api_query_um_conditional_order_history"
-path = "examples/derivatives_trading_portfolio_margin/rest_api/trade_api/query_um_conditional_order_history.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]

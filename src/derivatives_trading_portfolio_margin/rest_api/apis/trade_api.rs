@@ -43,10 +43,6 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: CancelAllUmAlgoOpenOrdersParams,
     ) -> anyhow::Result<RestApiResponse<models::CancelAllUmAlgoOpenOrdersResponse>>;
-    async fn cancel_all_um_open_conditional_orders(
-        &self,
-        params: CancelAllUmOpenConditionalOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<models::CancelAllUmOpenConditionalOrdersResponse>>;
     async fn cancel_all_um_open_orders(
         &self,
         params: CancelAllUmOpenOrdersParams,
@@ -77,10 +73,6 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: CancelUmAlgoOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::CancelUmAlgoOrderResponse>>;
-    async fn cancel_um_conditional_order(
-        &self,
-        params: CancelUmConditionalOrderParams,
-    ) -> anyhow::Result<RestApiResponse<models::CancelUmConditionalOrderResponse>>;
     async fn cancel_um_order(
         &self,
         params: CancelUmOrderParams,
@@ -145,10 +137,6 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: NewUmAlgoOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::NewUmAlgoOrderResponse>>;
-    async fn new_um_conditional_order(
-        &self,
-        params: NewUmConditionalOrderParams,
-    ) -> anyhow::Result<RestApiResponse<models::NewUmConditionalOrderResponse>>;
     async fn new_um_order(
         &self,
         params: NewUmOrderParams,
@@ -175,12 +163,6 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryAllCurrentUmOpenAlgoOrdersParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllCurrentUmOpenAlgoOrdersResponseInner>>>;
-    async fn query_all_current_um_open_conditional_orders(
-        &self,
-        params: QueryAllCurrentUmOpenConditionalOrdersParams,
-    ) -> anyhow::Result<
-        RestApiResponse<Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner>>,
-    >;
     async fn query_all_current_um_open_orders(
         &self,
         params: QueryAllCurrentUmOpenOrdersParams,
@@ -189,10 +171,6 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryAllMarginAccountOrdersParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllMarginAccountOrdersResponseInner>>>;
-    async fn query_all_um_conditional_orders(
-        &self,
-        params: QueryAllUmConditionalOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllUmConditionalOrdersResponseInner>>>;
     async fn query_all_um_orders(
         &self,
         params: QueryAllUmOrdersParams,
@@ -225,10 +203,6 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryCurrentUmOpenAlgoOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenAlgoOrderResponse>>;
-    async fn query_current_um_open_conditional_order(
-        &self,
-        params: QueryCurrentUmOpenConditionalOrderParams,
-    ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenConditionalOrderResponse>>;
     async fn query_current_um_open_order(
         &self,
         params: QueryCurrentUmOpenOrderParams,
@@ -253,10 +227,6 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryUmAlgoOrderHistoryParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>>;
-    async fn query_um_conditional_order_history(
-        &self,
-        params: QueryUmConditionalOrderHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::QueryUmConditionalOrderHistoryResponse>>;
     async fn query_um_modify_order_history(
         &self,
         params: QueryUmModifyOrderHistoryParams,
@@ -1751,355 +1721,6 @@ impl std::str::FromStr for NewUmAlgoOrderSelfTradePreventionModeEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderSideEnum {
-    #[serde(rename = "BUY")]
-    Buy,
-    #[serde(rename = "SELL")]
-    Sell,
-}
-
-impl NewUmConditionalOrderSideEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Buy => "BUY",
-            Self::Sell => "SELL",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderSideEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "BUY" => Ok(Self::Buy),
-            "SELL" => Ok(Self::Sell),
-            other => Err(format!("invalid NewUmConditionalOrderSideEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderStrategyTypeEnum {
-    #[serde(rename = "STOP")]
-    Stop,
-    #[serde(rename = "STOP_MARKET")]
-    StopMarket,
-    #[serde(rename = "TAKE_PROFIT")]
-    TakeProfit,
-    #[serde(rename = "TAKE_PROFIT_MARKET")]
-    TakeProfitMarket,
-    #[serde(rename = "TRAILING_STOP_MARKET")]
-    TrailingStopMarket,
-}
-
-impl NewUmConditionalOrderStrategyTypeEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Stop => "STOP",
-            Self::StopMarket => "STOP_MARKET",
-            Self::TakeProfit => "TAKE_PROFIT",
-            Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
-            Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderStrategyTypeEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "STOP" => Ok(Self::Stop),
-            "STOP_MARKET" => Ok(Self::StopMarket),
-            "TAKE_PROFIT" => Ok(Self::TakeProfit),
-            "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
-            "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
-            other => {
-                Err(format!("invalid NewUmConditionalOrderStrategyTypeEnum: {}", other).into())
-            }
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderPositionSideEnum {
-    #[serde(rename = "BOTH")]
-    Both,
-    #[serde(rename = "LONG")]
-    Long,
-    #[serde(rename = "SHORT")]
-    Short,
-}
-
-impl NewUmConditionalOrderPositionSideEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Both => "BOTH",
-            Self::Long => "LONG",
-            Self::Short => "SHORT",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderPositionSideEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "BOTH" => Ok(Self::Both),
-            "LONG" => Ok(Self::Long),
-            "SHORT" => Ok(Self::Short),
-            other => {
-                Err(format!("invalid NewUmConditionalOrderPositionSideEnum: {}", other).into())
-            }
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderTimeInForceEnum {
-    #[serde(rename = "GTC")]
-    Gtc,
-    #[serde(rename = "IOC")]
-    Ioc,
-    #[serde(rename = "FOK")]
-    Fok,
-    #[serde(rename = "GTX")]
-    Gtx,
-    #[serde(rename = "GTD")]
-    Gtd,
-}
-
-impl NewUmConditionalOrderTimeInForceEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Gtc => "GTC",
-            Self::Ioc => "IOC",
-            Self::Fok => "FOK",
-            Self::Gtx => "GTX",
-            Self::Gtd => "GTD",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderTimeInForceEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "GTC" => Ok(Self::Gtc),
-            "IOC" => Ok(Self::Ioc),
-            "FOK" => Ok(Self::Fok),
-            "GTX" => Ok(Self::Gtx),
-            "GTD" => Ok(Self::Gtd),
-            other => Err(format!("invalid NewUmConditionalOrderTimeInForceEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderReduceOnlyEnum {
-    #[serde(rename = "true")]
-    True,
-    #[serde(rename = "false")]
-    False,
-}
-
-impl NewUmConditionalOrderReduceOnlyEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::True => "true",
-            Self::False => "false",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderReduceOnlyEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "true" => Ok(Self::True),
-            "false" => Ok(Self::False),
-            other => Err(format!("invalid NewUmConditionalOrderReduceOnlyEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderWorkingTypeEnum {
-    #[serde(rename = "MARK_PRICE")]
-    MarkPrice,
-    #[serde(rename = "CONTRACT_PRICE")]
-    ContractPrice,
-}
-
-impl NewUmConditionalOrderWorkingTypeEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::MarkPrice => "MARK_PRICE",
-            Self::ContractPrice => "CONTRACT_PRICE",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderWorkingTypeEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "MARK_PRICE" => Ok(Self::MarkPrice),
-            "CONTRACT_PRICE" => Ok(Self::ContractPrice),
-            other => Err(format!("invalid NewUmConditionalOrderWorkingTypeEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderPriceProtectEnum {
-    #[serde(rename = "true")]
-    True,
-    #[serde(rename = "false")]
-    False,
-}
-
-impl NewUmConditionalOrderPriceProtectEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::True => "true",
-            Self::False => "false",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderPriceProtectEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "true" => Ok(Self::True),
-            "false" => Ok(Self::False),
-            other => {
-                Err(format!("invalid NewUmConditionalOrderPriceProtectEnum: {}", other).into())
-            }
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderPriceMatchEnum {
-    #[serde(rename = "OPPONENT")]
-    Opponent,
-    #[serde(rename = "OPPONENT_5")]
-    Opponent5,
-    #[serde(rename = "OPPONENT_10")]
-    Opponent10,
-    #[serde(rename = "OPPONENT_20")]
-    Opponent20,
-    #[serde(rename = "QUEUE")]
-    Queue,
-    #[serde(rename = "QUEUE_5")]
-    Queue5,
-    #[serde(rename = "QUEUE_10")]
-    Queue10,
-    #[serde(rename = "QUEUE_20")]
-    Queue20,
-}
-
-impl NewUmConditionalOrderPriceMatchEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Opponent => "OPPONENT",
-            Self::Opponent5 => "OPPONENT_5",
-            Self::Opponent10 => "OPPONENT_10",
-            Self::Opponent20 => "OPPONENT_20",
-            Self::Queue => "QUEUE",
-            Self::Queue5 => "QUEUE_5",
-            Self::Queue10 => "QUEUE_10",
-            Self::Queue20 => "QUEUE_20",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderPriceMatchEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "OPPONENT" => Ok(Self::Opponent),
-            "OPPONENT_5" => Ok(Self::Opponent5),
-            "OPPONENT_10" => Ok(Self::Opponent10),
-            "OPPONENT_20" => Ok(Self::Opponent20),
-            "QUEUE" => Ok(Self::Queue),
-            "QUEUE_5" => Ok(Self::Queue5),
-            "QUEUE_10" => Ok(Self::Queue10),
-            "QUEUE_20" => Ok(Self::Queue20),
-            other => Err(format!("invalid NewUmConditionalOrderPriceMatchEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum NewUmConditionalOrderSelfTradePreventionModeEnum {
-    #[serde(rename = "NONE")]
-    None,
-    #[serde(rename = "EXPIRE_TAKER")]
-    ExpireTaker,
-    #[serde(rename = "EXPIRE_BOTH")]
-    ExpireBoth,
-    #[serde(rename = "EXPIRE_MAKER")]
-    ExpireMaker,
-}
-
-impl NewUmConditionalOrderSelfTradePreventionModeEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::None => "NONE",
-            Self::ExpireTaker => "EXPIRE_TAKER",
-            Self::ExpireBoth => "EXPIRE_BOTH",
-            Self::ExpireMaker => "EXPIRE_MAKER",
-        }
-    }
-}
-
-impl std::str::FromStr for NewUmConditionalOrderSelfTradePreventionModeEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "NONE" => Ok(Self::None),
-            "EXPIRE_TAKER" => Ok(Self::ExpireTaker),
-            "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
-            "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
-            other => Err(format!(
-                "invalid NewUmConditionalOrderSelfTradePreventionModeEnum: {}",
-                other
-            )
-            .into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewUmOrderSideEnum {
     #[serde(rename = "BUY")]
     Buy,
@@ -2603,40 +2224,6 @@ impl CancelAllUmAlgoOpenOrdersParams {
         CancelAllUmAlgoOpenOrdersParamsBuilder::default().symbol(symbol)
     }
 }
-/// Request parameters for the [`cancel_all_um_open_conditional_orders`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`cancel_all_um_open_conditional_orders`](#method.cancel_all_um_open_conditional_orders).
-#[derive(Clone, Debug, Builder, Deserialize)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct CancelAllUmOpenConditionalOrdersParams {
-    /// Symbol
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "symbol")]
-    pub symbol: String,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl CancelAllUmOpenConditionalOrdersParams {
-    /// Create a builder for [`cancel_all_um_open_conditional_orders`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — Symbol
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> CancelAllUmOpenConditionalOrdersParamsBuilder {
-        CancelAllUmOpenConditionalOrdersParamsBuilder::default().symbol(symbol)
-    }
-}
 /// Request parameters for the [`cancel_all_um_open_orders`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -2939,54 +2526,6 @@ impl CancelUmAlgoOrderParams {
     #[must_use]
     pub fn builder() -> CancelUmAlgoOrderParamsBuilder {
         CancelUmAlgoOrderParamsBuilder::default()
-    }
-}
-/// Request parameters for the [`cancel_um_conditional_order`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`cancel_um_conditional_order`](#method.cancel_um_conditional_order).
-#[derive(Clone, Debug, Builder, Deserialize)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct CancelUmConditionalOrderParams {
-    /// Symbol
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "symbol")]
-    pub symbol: String,
-    ///
-    /// The `strategy_id` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "strategyId", default)]
-    pub strategy_id: Option<i64>,
-    ///
-    /// The `new_client_strategy_id` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "newClientStrategyId", default)]
-    pub new_client_strategy_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl CancelUmConditionalOrderParams {
-    /// Create a builder for [`cancel_um_conditional_order`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — Symbol
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> CancelUmConditionalOrderParamsBuilder {
-        CancelUmConditionalOrderParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`cancel_um_order`] operation.
@@ -4218,150 +3757,6 @@ impl NewUmAlgoOrderParams {
             .r#type(r#type)
     }
 }
-/// Request parameters for the [`new_um_conditional_order`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`new_um_conditional_order`](#method.new_um_conditional_order).
-#[derive(Clone, Debug, Builder, Deserialize)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct NewUmConditionalOrderParams {
-    /// Symbol
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "symbol")]
-    pub symbol: String,
-    ///
-    /// The `side` parameter.
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "side")]
-    pub side: NewUmConditionalOrderSideEnum,
-    ///
-    /// The `strategy_type` parameter.
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "strategyType")]
-    pub strategy_type: NewUmConditionalOrderStrategyTypeEnum,
-    /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "positionSide", default)]
-    pub position_side: Option<NewUmConditionalOrderPositionSideEnum>,
-    ///
-    /// The `time_in_force` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "timeInForce", default)]
-    pub time_in_force: Option<NewUmConditionalOrderTimeInForceEnum>,
-    ///
-    /// The `quantity` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "quantity", default)]
-    pub quantity: Option<rust_decimal::Decimal>,
-    /// "true" or "false". Cannot be sent in Hedge Mode ; cannot be sent with `closePosition`=`true`
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "reduceOnly", default)]
-    pub reduce_only: Option<NewUmConditionalOrderReduceOnlyEnum>,
-    ///
-    /// The `price` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "price", default)]
-    pub price: Option<rust_decimal::Decimal>,
-    /// stopPrice triggered by: "`MARK_PRICE`", "`CONTRACT_PRICE`". Default "`CONTRACT_PRICE`"
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "workingType", default)]
-    pub working_type: Option<NewUmConditionalOrderWorkingTypeEnum>,
-    /// "true" or "false". Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "priceProtect", default)]
-    pub price_protect: Option<NewUmConditionalOrderPriceProtectEnum>,
-    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,32}$`
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "newClientStrategyId", default)]
-    pub new_client_strategy_id: Option<String>,
-    /// Used with `STOP/STOP_MARKET` or `TAKE_PROFIT/TAKE_PROFIT_MARKET` orders.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "stopPrice", default)]
-    pub stop_price: Option<rust_decimal::Decimal>,
-    /// Used with `TRAILING_STOP_MARKET` orders.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "activationPrice", default)]
-    pub activation_price: Option<rust_decimal::Decimal>,
-    /// Used with `TRAILING_STOP_MARKET` orders.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "callbackRate", default)]
-    pub callback_rate: Option<rust_decimal::Decimal>,
-    /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can be set to `OPPONENT`/ `OPPONENT_5`/ `OPPONENT_10`/ `OPPONENT_20`: /`QUEUE`/ `QUEUE_5`/ `QUEUE_10`/ `QUEUE_20`; Can't be passed together with `price`
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "priceMatch", default)]
-    pub price_match: Option<NewUmConditionalOrderPriceMatchEnum>,
-    /// `NONE`:No STP / `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "selfTradePreventionMode", default)]
-    pub self_trade_prevention_mode: Option<NewUmConditionalOrderSelfTradePreventionModeEnum>,
-    /// order cancel time for timeInForce `GTD`, mandatory when `timeInforce` set to `GTD`; order the timestamp only retains second-level precision, ms part will be ignored; The goodTillDate timestamp must be greater than the current time plus 600 seconds and smaller than 253402300799000Mode. It must be sent in Hedge Mode.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "goodTillDate", default)]
-    pub good_till_date: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl NewUmConditionalOrderParams {
-    /// Create a builder for [`new_um_conditional_order`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — Symbol
-    /// * `side` — String
-    /// * `strategy_type` — String
-    ///
-    #[must_use]
-    pub fn builder(
-        symbol: String,
-        side: NewUmConditionalOrderSideEnum,
-        strategy_type: NewUmConditionalOrderStrategyTypeEnum,
-    ) -> NewUmConditionalOrderParamsBuilder {
-        NewUmConditionalOrderParamsBuilder::default()
-            .symbol(symbol)
-            .side(side)
-            .strategy_type(strategy_type)
-    }
-}
 /// Request parameters for the [`new_um_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -4711,37 +4106,6 @@ impl QueryAllCurrentUmOpenAlgoOrdersParams {
         QueryAllCurrentUmOpenAlgoOrdersParamsBuilder::default()
     }
 }
-/// Request parameters for the [`query_all_current_um_open_conditional_orders`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`query_all_current_um_open_conditional_orders`](#method.query_all_current_um_open_conditional_orders).
-#[derive(Clone, Debug, Builder, Deserialize, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct QueryAllCurrentUmOpenConditionalOrdersParams {
-    ///
-    /// The `symbol` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "symbol", default)]
-    pub symbol: Option<String>,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl QueryAllCurrentUmOpenConditionalOrdersParams {
-    /// Create a builder for [`query_all_current_um_open_conditional_orders`].
-    ///
-    #[must_use]
-    pub fn builder() -> QueryAllCurrentUmOpenConditionalOrdersParamsBuilder {
-        QueryAllCurrentUmOpenConditionalOrdersParamsBuilder::default()
-    }
-}
 /// Request parameters for the [`query_all_current_um_open_orders`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -4829,62 +4193,6 @@ impl QueryAllMarginAccountOrdersParams {
     #[must_use]
     pub fn builder(symbol: String) -> QueryAllMarginAccountOrdersParamsBuilder {
         QueryAllMarginAccountOrdersParamsBuilder::default().symbol(symbol)
-    }
-}
-/// Request parameters for the [`query_all_um_conditional_orders`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`query_all_um_conditional_orders`](#method.query_all_um_conditional_orders).
-#[derive(Clone, Debug, Builder, Deserialize, Default)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct QueryAllUmConditionalOrdersParams {
-    ///
-    /// The `symbol` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "symbol", default)]
-    pub symbol: Option<String>,
-    ///
-    /// The `strategy_id` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "strategyId", default)]
-    pub strategy_id: Option<i64>,
-    /// Timestamp in ms to get funding from INCLUSIVE.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "startTime", default)]
-    pub start_time: Option<i64>,
-    /// Timestamp in ms to get funding until INCLUSIVE.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "endTime", default)]
-    pub end_time: Option<i64>,
-    /// Number of results returned.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "limit", default)]
-    pub limit: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl QueryAllUmConditionalOrdersParams {
-    /// Create a builder for [`query_all_um_conditional_orders`].
-    ///
-    #[must_use]
-    pub fn builder() -> QueryAllUmConditionalOrdersParamsBuilder {
-        QueryAllUmConditionalOrdersParamsBuilder::default()
     }
 }
 /// Request parameters for the [`query_all_um_orders`] operation.
@@ -5269,54 +4577,6 @@ impl QueryCurrentUmOpenAlgoOrderParams {
         QueryCurrentUmOpenAlgoOrderParamsBuilder::default()
     }
 }
-/// Request parameters for the [`query_current_um_open_conditional_order`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`query_current_um_open_conditional_order`](#method.query_current_um_open_conditional_order).
-#[derive(Clone, Debug, Builder, Deserialize)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct QueryCurrentUmOpenConditionalOrderParams {
-    /// Symbol
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "symbol")]
-    pub symbol: String,
-    ///
-    /// The `strategy_id` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "strategyId", default)]
-    pub strategy_id: Option<i64>,
-    ///
-    /// The `new_client_strategy_id` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "newClientStrategyId", default)]
-    pub new_client_strategy_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl QueryCurrentUmOpenConditionalOrderParams {
-    /// Create a builder for [`query_current_um_open_conditional_order`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — Symbol
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> QueryCurrentUmOpenConditionalOrderParamsBuilder {
-        QueryCurrentUmOpenConditionalOrderParamsBuilder::default().symbol(symbol)
-    }
-}
 /// Request parameters for the [`query_current_um_open_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -5576,54 +4836,6 @@ impl QueryUmAlgoOrderHistoryParams {
     #[must_use]
     pub fn builder(symbol: String) -> QueryUmAlgoOrderHistoryParamsBuilder {
         QueryUmAlgoOrderHistoryParamsBuilder::default().symbol(symbol)
-    }
-}
-/// Request parameters for the [`query_um_conditional_order_history`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`query_um_conditional_order_history`](#method.query_um_conditional_order_history).
-#[derive(Clone, Debug, Builder, Deserialize)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct QueryUmConditionalOrderHistoryParams {
-    /// Symbol
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "symbol")]
-    pub symbol: String,
-    ///
-    /// The `strategy_id` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "strategyId", default)]
-    pub strategy_id: Option<i64>,
-    ///
-    /// The `new_client_strategy_id` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "newClientStrategyId", default)]
-    pub new_client_strategy_id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl QueryUmConditionalOrderHistoryParams {
-    /// Create a builder for [`query_um_conditional_order_history`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `symbol` — Symbol
-    ///
-    #[must_use]
-    pub fn builder(symbol: String) -> QueryUmConditionalOrderHistoryParamsBuilder {
-        QueryUmConditionalOrderHistoryParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`query_um_modify_order_history`] operation.
@@ -6123,40 +5335,6 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
-    async fn cancel_all_um_open_conditional_orders(
-        &self,
-        params: CancelAllUmOpenConditionalOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<models::CancelAllUmOpenConditionalOrdersResponse>> {
-        let CancelAllUmOpenConditionalOrdersParams {
-            symbol,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::CancelAllUmOpenConditionalOrdersResponse>(
-            &self.configuration,
-            "/papi/v1/um/conditional/allOpenOrders",
-            reqwest::Method::DELETE,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
     async fn cancel_all_um_open_orders(
         &self,
         params: CancelAllUmOpenOrdersParams,
@@ -6441,50 +5619,6 @@ impl TradeApi for TradeApiClient {
         send_request::<models::CancelUmAlgoOrderResponse>(
             &self.configuration,
             "/papi/v1/um/algo/order",
-            reqwest::Method::DELETE,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
-    async fn cancel_um_conditional_order(
-        &self,
-        params: CancelUmConditionalOrderParams,
-    ) -> anyhow::Result<RestApiResponse<models::CancelUmConditionalOrderResponse>> {
-        let CancelUmConditionalOrderParams {
-            symbol,
-            strategy_id,
-            new_client_strategy_id,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        if let Some(rw) = strategy_id {
-            query_params.insert("strategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = new_client_strategy_id {
-            query_params.insert("newClientStrategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::CancelUmConditionalOrderResponse>(
-            &self.configuration,
-            "/papi/v1/um/conditional/order",
             reqwest::Method::DELETE,
             query_params,
             body_params,
@@ -7485,116 +6619,6 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
-    async fn new_um_conditional_order(
-        &self,
-        params: NewUmConditionalOrderParams,
-    ) -> anyhow::Result<RestApiResponse<models::NewUmConditionalOrderResponse>> {
-        let NewUmConditionalOrderParams {
-            symbol,
-            side,
-            strategy_type,
-            position_side,
-            time_in_force,
-            quantity,
-            reduce_only,
-            price,
-            working_type,
-            price_protect,
-            new_client_strategy_id,
-            stop_price,
-            activation_price,
-            callback_rate,
-            price_match,
-            self_trade_prevention_mode,
-            good_till_date,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        query_params.insert("side".to_string(), json!(side));
-
-        if let Some(rw) = position_side {
-            query_params.insert("positionSide".to_string(), json!(rw));
-        }
-
-        query_params.insert("strategyType".to_string(), json!(strategy_type));
-
-        if let Some(rw) = time_in_force {
-            query_params.insert("timeInForce".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = quantity {
-            query_params.insert("quantity".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = reduce_only {
-            query_params.insert("reduceOnly".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = price {
-            query_params.insert("price".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = working_type {
-            query_params.insert("workingType".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = price_protect {
-            query_params.insert("priceProtect".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = new_client_strategy_id {
-            query_params.insert("newClientStrategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = stop_price {
-            query_params.insert("stopPrice".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = activation_price {
-            query_params.insert("activationPrice".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = callback_rate {
-            query_params.insert("callbackRate".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = price_match {
-            query_params.insert("priceMatch".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = self_trade_prevention_mode {
-            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = good_till_date {
-            query_params.insert("goodTillDate".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::NewUmConditionalOrderResponse>(
-            &self.configuration,
-            "/papi/v1/um/conditional/order",
-            reqwest::Method::POST,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
     async fn new_um_order(
         &self,
         params: NewUmOrderParams,
@@ -7929,44 +6953,6 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
-    async fn query_all_current_um_open_conditional_orders(
-        &self,
-        params: QueryAllCurrentUmOpenConditionalOrdersParams,
-    ) -> anyhow::Result<
-        RestApiResponse<Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner>>,
-    > {
-        let QueryAllCurrentUmOpenConditionalOrdersParams {
-            symbol,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        if let Some(rw) = symbol {
-            query_params.insert("symbol".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner>>(
-            &self.configuration,
-            "/papi/v1/um/conditional/openOrders",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
     async fn query_all_current_um_open_orders(
         &self,
         params: QueryAllCurrentUmOpenOrdersParams,
@@ -8046,63 +7032,6 @@ impl TradeApi for TradeApiClient {
         send_request::<Vec<models::QueryAllMarginAccountOrdersResponseInner>>(
             &self.configuration,
             "/papi/v1/margin/allOrders",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
-    async fn query_all_um_conditional_orders(
-        &self,
-        params: QueryAllUmConditionalOrdersParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllUmConditionalOrdersResponseInner>>>
-    {
-        let QueryAllUmConditionalOrdersParams {
-            symbol,
-            strategy_id,
-            start_time,
-            end_time,
-            limit,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        if let Some(rw) = symbol {
-            query_params.insert("symbol".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = strategy_id {
-            query_params.insert("strategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = start_time {
-            query_params.insert("startTime".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = end_time {
-            query_params.insert("endTime".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = limit {
-            query_params.insert("limit".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<Vec<models::QueryAllUmConditionalOrdersResponseInner>>(
-            &self.configuration,
-            "/papi/v1/um/conditional/allOrders",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -8482,50 +7411,6 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
-    async fn query_current_um_open_conditional_order(
-        &self,
-        params: QueryCurrentUmOpenConditionalOrderParams,
-    ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenConditionalOrderResponse>> {
-        let QueryCurrentUmOpenConditionalOrderParams {
-            symbol,
-            strategy_id,
-            new_client_strategy_id,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        if let Some(rw) = strategy_id {
-            query_params.insert("strategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = new_client_strategy_id {
-            query_params.insert("newClientStrategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::QueryCurrentUmOpenConditionalOrderResponse>(
-            &self.configuration,
-            "/papi/v1/um/conditional/openOrder",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
     async fn query_current_um_open_order(
         &self,
         params: QueryCurrentUmOpenOrderParams,
@@ -8776,50 +7661,6 @@ impl TradeApi for TradeApiClient {
         send_request::<Vec<models::QueryUmAlgoOrderHistoryResponseInner>>(
             &self.configuration,
             "/papi/v1/um/algo/allAlgoOrders",
-            reqwest::Method::GET,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
-    async fn query_um_conditional_order_history(
-        &self,
-        params: QueryUmConditionalOrderHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::QueryUmConditionalOrderHistoryResponse>> {
-        let QueryUmConditionalOrderHistoryParams {
-            symbol,
-            strategy_id,
-            new_client_strategy_id,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("symbol".to_string(), json!(symbol));
-
-        if let Some(rw) = strategy_id {
-            query_params.insert("strategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = new_client_strategy_id {
-            query_params.insert("newClientStrategyId".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::QueryUmConditionalOrderHistoryResponse>(
-            &self.configuration,
-            "/papi/v1/um/conditional/orderHistory",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -9345,34 +8186,6 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn cancel_all_um_open_conditional_orders(
-            &self,
-            _params: CancelAllUmOpenConditionalOrdersParams,
-        ) -> anyhow::Result<RestApiResponse<models::CancelAllUmOpenConditionalOrdersResponse>>
-        {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"code":"200","msg":"The operation of cancel all conditional open order is done."}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response: models::CancelAllUmOpenConditionalOrdersResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::CancelAllUmOpenConditionalOrdersResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
         async fn cancel_all_um_open_orders(
             &self,
             _params: CancelAllUmOpenOrdersParams,
@@ -9555,33 +8368,6 @@ mod tests {
             let dummy_response: models::CancelUmAlgoOrderResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CancelUmAlgoOrderResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn cancel_um_conditional_order(
-            &self,
-            _params: CancelUmConditionalOrderParams,
-        ) -> anyhow::Result<RestApiResponse<models::CancelUmConditionalOrderResponse>> {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"myOrder1","strategyId":123445,"strategyStatus":"CANCELED","strategyType":"TRAILING_STOP_MARKET","origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","bookTime":1566818724710,"updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response: models::CancelUmConditionalOrderResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::CancelUmConditionalOrderResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -10033,33 +8819,6 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn new_um_conditional_order(
-            &self,
-            _params: NewUmConditionalOrderParams,
-        ) -> anyhow::Result<RestApiResponse<models::NewUmConditionalOrderResponse>> {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"testOrder","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTD","activatePrice":"9020","priceRate":"0.3","bookTime":1566818724710,"updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":1693207680000,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response: models::NewUmConditionalOrderResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::NewUmConditionalOrderResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
         async fn new_um_order(
             &self,
             _params: NewUmOrderParams,
@@ -10227,33 +8986,6 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn query_all_current_um_open_conditional_orders(
-            &self,
-            _params: QueryAllCurrentUmOpenConditionalOrdersParams,
-        ) -> anyhow::Result<
-            RestApiResponse<Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner>>,
-        > {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"[{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","bookTime":1566818724710,"updateTime":1566818724722,"timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response : Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner>");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
         async fn query_all_current_um_open_orders(
             &self,
             _params: QueryAllCurrentUmOpenOrdersParams,
@@ -10300,35 +9032,6 @@ mod tests {
             let dummy_response: Vec<models::QueryAllMarginAccountOrdersResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryAllMarginAccountOrdersResponseInner>",
-                );
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn query_all_um_conditional_orders(
-            &self,
-            _params: QueryAllUmConditionalOrdersParams,
-        ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllUmConditionalOrdersResponseInner>>>
-        {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"[{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"TRIGGERED","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","orderId":12132343435,"status":"NEW","bookTime":1566818724710,"updateTime":1566818724722,"triggerTime":1566818724750,"timeInForce":"GTC","type":"MARKET","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response: Vec<models::QueryAllUmConditionalOrdersResponseInner> =
-                serde_json::from_value(resp_json.clone()).expect(
-                    "should parse into Vec<models::QueryAllUmConditionalOrdersResponseInner>",
                 );
 
             let dummy = DummyRestApiResponse {
@@ -10565,34 +9268,6 @@ mod tests {
             Ok(dummy.into())
         }
 
-        async fn query_current_um_open_conditional_order(
-            &self,
-            _params: QueryCurrentUmOpenConditionalOrderParams,
-        ) -> anyhow::Result<RestApiResponse<models::QueryCurrentUmOpenConditionalOrderResponse>>
-        {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","bookTime":1566818724710,"updateTime":1566818724722,"timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response: models::QueryCurrentUmOpenConditionalOrderResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::QueryCurrentUmOpenConditionalOrderResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
         async fn query_current_um_open_order(
             &self,
             _params: QueryCurrentUmOpenOrderParams,
@@ -10749,34 +9424,6 @@ mod tests {
             let dummy_response: Vec<models::QueryUmAlgoOrderHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::QueryUmAlgoOrderHistoryResponseInner>");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
-        async fn query_um_conditional_order_history(
-            &self,
-            _params: QueryUmConditionalOrderHistoryParams,
-        ) -> anyhow::Result<RestApiResponse<models::QueryUmConditionalOrderHistoryResponse>>
-        {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"TRIGGERED","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","orderId":12132343435,"status":"NEW","bookTime":1566818724710,"updateTime":1566818724722,"triggerTime":1566818724750,"timeInForce":"GTC","type":"MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response: models::QueryUmConditionalOrderHistoryResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::QueryUmConditionalOrderHistoryResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -11216,58 +9863,6 @@ mod tests {
     }
 
     #[test]
-    fn cancel_all_um_open_conditional_orders_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = CancelAllUmOpenConditionalOrdersParams::builder("BTCUSDT".to_string(),).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"code":"200","msg":"The operation of cancel all conditional open order is done."}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::CancelAllUmOpenConditionalOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelAllUmOpenConditionalOrdersResponse");
-
-            let resp = client.cancel_all_um_open_conditional_orders(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn cancel_all_um_open_conditional_orders_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = CancelAllUmOpenConditionalOrdersParams::builder("BTCUSDT".to_string(),).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"code":"200","msg":"The operation of cancel all conditional open order is done."}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::CancelAllUmOpenConditionalOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelAllUmOpenConditionalOrdersResponse");
-
-            let resp = client.cancel_all_um_open_conditional_orders(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn cancel_all_um_open_conditional_orders_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = CancelAllUmOpenConditionalOrdersParams::builder("BTCUSDT".to_string())
-                .build()
-                .unwrap();
-
-            match client.cancel_all_um_open_conditional_orders(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
     fn cancel_all_um_open_orders_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -11663,58 +10258,6 @@ mod tests {
             let params = CancelUmAlgoOrderParams::builder().build().unwrap();
 
             match client.cancel_um_algo_order(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn cancel_um_conditional_order_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = CancelUmConditionalOrderParams::builder("BTCUSDT".to_string(),).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"myOrder1","strategyId":123445,"strategyStatus":"CANCELED","strategyType":"TRAILING_STOP_MARKET","origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","bookTime":1566818724710,"updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::CancelUmConditionalOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelUmConditionalOrderResponse");
-
-            let resp = client.cancel_um_conditional_order(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn cancel_um_conditional_order_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = CancelUmConditionalOrderParams::builder("BTCUSDT".to_string(),).strategy_id(1).new_client_strategy_id("1".to_string()).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"myOrder1","strategyId":123445,"strategyStatus":"CANCELED","strategyType":"TRAILING_STOP_MARKET","origQty":"11","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","bookTime":1566818724710,"updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::CancelUmConditionalOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelUmConditionalOrderResponse");
-
-            let resp = client.cancel_um_conditional_order(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn cancel_um_conditional_order_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = CancelUmConditionalOrderParams::builder("BTCUSDT".to_string())
-                .build()
-                .unwrap();
-
-            match client.cancel_um_conditional_order(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -12647,62 +11190,6 @@ mod tests {
     }
 
     #[test]
-    fn new_um_conditional_order_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = NewUmConditionalOrderParams::builder("BTCUSDT".to_string(),NewUmConditionalOrderSideEnum::Buy,NewUmConditionalOrderStrategyTypeEnum::Stop,).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"testOrder","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTD","activatePrice":"9020","priceRate":"0.3","bookTime":1566818724710,"updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":1693207680000,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::NewUmConditionalOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmConditionalOrderResponse");
-
-            let resp = client.new_um_conditional_order(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn new_um_conditional_order_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = NewUmConditionalOrderParams::builder("BTCUSDT".to_string(),NewUmConditionalOrderSideEnum::Buy,NewUmConditionalOrderStrategyTypeEnum::Stop,).position_side(NewUmConditionalOrderPositionSideEnum::Both).time_in_force(NewUmConditionalOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).reduce_only(NewUmConditionalOrderReduceOnlyEnum::True).price(dec!(1.0)).working_type(NewUmConditionalOrderWorkingTypeEnum::MarkPrice).price_protect(NewUmConditionalOrderPriceProtectEnum::True).new_client_strategy_id("1".to_string()).stop_price(dec!(1.0)).activation_price(dec!(1.0)).callback_rate(dec!(1.0)).price_match(NewUmConditionalOrderPriceMatchEnum::Opponent).self_trade_prevention_mode(NewUmConditionalOrderSelfTradePreventionModeEnum::None).good_till_date(1770736694138).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"testOrder","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"10","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","timeInForce":"GTD","activatePrice":"9020","priceRate":"0.3","bookTime":1566818724710,"updateTime":1566818724722,"workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":1693207680000,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::NewUmConditionalOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewUmConditionalOrderResponse");
-
-            let resp = client.new_um_conditional_order(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn new_um_conditional_order_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = NewUmConditionalOrderParams::builder(
-                "BTCUSDT".to_string(),
-                NewUmConditionalOrderSideEnum::Buy,
-                NewUmConditionalOrderStrategyTypeEnum::Stop,
-            )
-            .build()
-            .unwrap();
-
-            match client.new_um_conditional_order(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
     fn new_um_order_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -13020,61 +11507,6 @@ mod tests {
     }
 
     #[test]
-    fn query_all_current_um_open_conditional_orders_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryAllCurrentUmOpenConditionalOrdersParams::builder().build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"[{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","bookTime":1566818724710,"updateTime":1566818724722,"timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner>");
-
-            let resp = client.query_all_current_um_open_conditional_orders(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_all_current_um_open_conditional_orders_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryAllCurrentUmOpenConditionalOrdersParams::builder().symbol("BTCUSDT".to_string()).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"[{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","bookTime":1566818724710,"updateTime":1566818724722,"timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllCurrentUmOpenConditionalOrdersResponseInner>");
-
-            let resp = client.query_all_current_um_open_conditional_orders(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_all_current_um_open_conditional_orders_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = QueryAllCurrentUmOpenConditionalOrdersParams::builder()
-                .build()
-                .unwrap();
-
-            match client
-                .query_all_current_um_open_conditional_orders(params)
-                .await
-            {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
     fn query_all_current_um_open_orders_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -13170,58 +11602,6 @@ mod tests {
                 .unwrap();
 
             match client.query_all_margin_account_orders(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn query_all_um_conditional_orders_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryAllUmConditionalOrdersParams::builder().build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"[{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"TRIGGERED","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","orderId":12132343435,"status":"NEW","bookTime":1566818724710,"updateTime":1566818724722,"triggerTime":1566818724750,"timeInForce":"GTC","type":"MARKET","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : Vec<models::QueryAllUmConditionalOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllUmConditionalOrdersResponseInner>");
-
-            let resp = client.query_all_um_conditional_orders(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_all_um_conditional_orders_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryAllUmConditionalOrdersParams::builder().symbol("BTCUSDT".to_string()).strategy_id(1).start_time(1623319461670).end_time(1641782889000).limit(500).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"[{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"TRIGGERED","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","orderId":12132343435,"status":"NEW","bookTime":1566818724710,"updateTime":1566818724722,"triggerTime":1566818724750,"timeInForce":"GTC","type":"MARKET","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}]"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : Vec<models::QueryAllUmConditionalOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllUmConditionalOrdersResponseInner>");
-
-            let resp = client.query_all_um_conditional_orders(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_all_um_conditional_orders_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = QueryAllUmConditionalOrdersParams::builder()
-                .build()
-                .unwrap();
-
-            match client.query_all_um_conditional_orders(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -13648,58 +12028,6 @@ mod tests {
     }
 
     #[test]
-    fn query_current_um_open_conditional_order_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryCurrentUmOpenConditionalOrderParams::builder("BTCUSDT".to_string(),).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","bookTime":1566818724710,"updateTime":1566818724722,"timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::QueryCurrentUmOpenConditionalOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentUmOpenConditionalOrderResponse");
-
-            let resp = client.query_current_um_open_conditional_order(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_current_um_open_conditional_order_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryCurrentUmOpenConditionalOrderParams::builder("BTCUSDT".to_string(),).strategy_id(1).new_client_strategy_id("1".to_string()).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"NEW","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","bookTime":1566818724710,"updateTime":1566818724722,"timeInForce":"GTC","activatePrice":"9020","priceRate":"0.3","selfTradePreventionMode":"NONE","goodTillDate":0,"priceMatch":"NONE"}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::QueryCurrentUmOpenConditionalOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentUmOpenConditionalOrderResponse");
-
-            let resp = client.query_current_um_open_conditional_order(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_current_um_open_conditional_order_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = QueryCurrentUmOpenConditionalOrderParams::builder("BTCUSDT".to_string())
-                .build()
-                .unwrap();
-
-            match client.query_current_um_open_conditional_order(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
     fn query_current_um_open_order_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -13997,58 +12325,6 @@ mod tests {
                 .unwrap();
 
             match client.query_um_algo_order_history(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
-    }
-
-    #[test]
-    fn query_um_conditional_order_history_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryUmConditionalOrderHistoryParams::builder("BTCUSDT".to_string(),).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"TRIGGERED","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","orderId":12132343435,"status":"NEW","bookTime":1566818724710,"updateTime":1566818724722,"triggerTime":1566818724750,"timeInForce":"GTC","type":"MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::QueryUmConditionalOrderHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryUmConditionalOrderHistoryResponse");
-
-            let resp = client.query_um_conditional_order_history(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_um_conditional_order_history_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = QueryUmConditionalOrderHistoryParams::builder("BTCUSDT".to_string(),).strategy_id(1).new_client_strategy_id("1".to_string()).recv_window(5000).build().unwrap();
-
-            let resp_json: Value = serde_json::from_str(r#"{"newClientStrategyId":"abc","strategyId":123445,"strategyStatus":"TRIGGERED","strategyType":"TRAILING_STOP_MARKET","origQty":"0.40","price":"0","reduceOnly":false,"side":"BUY","positionSide":"SHORT","stopPrice":"9300","symbol":"BTCUSDT","orderId":12132343435,"status":"NEW","bookTime":1566818724710,"updateTime":1566818724722,"triggerTime":1566818724750,"timeInForce":"GTC","type":"MARKET","activatePrice":"9020","priceRate":"0.3","workingType":"CONTRACT_PRICE","priceProtect":false,"selfTradePreventionMode":"NONE","goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response : models::QueryUmConditionalOrderHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryUmConditionalOrderHistoryResponse");
-
-            let resp = client.query_um_conditional_order_history(params).await.expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn query_um_conditional_order_history_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = QueryUmConditionalOrderHistoryParams::builder("BTCUSDT".to_string())
-                .build()
-                .unwrap();
-
-            match client.query_um_conditional_order_history(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
