@@ -163,6 +163,37 @@ impl std::str::FromStr for ModifyOrderPriceMatchEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ModifyOrderReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl ModifyOrderReduceOnlyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for ModifyOrderReduceOnlyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid ModifyOrderReduceOnlyEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewAlgoOrderAlgoTypeEnum {
     #[serde(rename = "CONDITIONAL")]
     Conditional,
@@ -1036,6 +1067,12 @@ pub struct ModifyOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "modifyId", default)]
     pub modify_id: Option<i64>,
+    /// See notes below for behavior.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "reduceOnly", default)]
+    pub reduce_only: Option<ModifyOrderReduceOnlyEnum>,
     /// Recv Window.
     ///
     /// This field is **optional.
@@ -1189,7 +1226,7 @@ pub struct NewAlgoOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<NewAlgoOrderNewOrderRespTypeEnum>,
-    /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `NONE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1315,7 +1352,7 @@ pub struct NewOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "priceMatch", default)]
     pub price_match: Option<NewOrderPriceMatchEnum>,
-    /// `NONE`:No STP / `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
+    /// `NONE`: No STP / `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `NONE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1576,6 +1613,7 @@ impl TradeApi for TradeApiClient {
             orig_client_order_id,
             price_match,
             modify_id,
+            reduce_only,
             recv_window,
         } = params;
 
@@ -1598,6 +1636,9 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = modify_id {
             payload.insert("modifyId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = reduce_only {
+            payload.insert("reduceOnly".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));

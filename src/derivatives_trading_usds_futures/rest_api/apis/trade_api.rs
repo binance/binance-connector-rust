@@ -291,6 +291,37 @@ impl std::str::FromStr for ModifyOrderPriceMatchEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ModifyOrderReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl ModifyOrderReduceOnlyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for ModifyOrderReduceOnlyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid ModifyOrderReduceOnlyEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NewAlgoOrderAlgoTypeEnum {
     #[serde(rename = "CONDITIONAL")]
     Conditional,
@@ -2340,6 +2371,12 @@ pub struct ModifyOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "modifyId", default)]
     pub modify_id: Option<i64>,
+    /// See notes below for behavior.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "reduceOnly", default)]
+    pub reduce_only: Option<ModifyOrderReduceOnlyEnum>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -2496,7 +2533,7 @@ pub struct NewAlgoOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "newOrderRespType", default)]
     pub new_order_resp_type: Option<NewAlgoOrderNewOrderRespTypeEnum>,
-    /// `EXPIRE_TAKER`:expire taker order when STP triggers / `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers / `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `NONE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -2620,7 +2657,7 @@ pub struct NewOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "priceMatch", default)]
     pub price_match: Option<NewOrderPriceMatchEnum>,
-    /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `EXPIRE_MAKER`
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `EXPIRE_MAKER`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -3104,7 +3141,7 @@ pub struct TestOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "priceMatch", default)]
     pub price_match: Option<TestOrderPriceMatchEnum>,
-    /// `NONE`:No STP / `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers; default `NONE`
+    /// `NONE`: No STP / `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `NONE`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -4015,6 +4052,7 @@ impl TradeApi for TradeApiClient {
             orig_client_order_id,
             price_match,
             modify_id,
+            reduce_only,
             recv_window,
         } = params;
 
@@ -4043,6 +4081,10 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = modify_id {
             query_params.insert("modifyId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = reduce_only {
+            query_params.insert("reduceOnly".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -6863,7 +6905,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ModifyOrderParams::builder("BTCUSDT".to_string(),ModifyOrderSideEnum::Buy,dec!(1.0),dec!(30005),).order_id(20072994037).orig_client_order_id("LJ9R4QZDihCaS8UAOOLpgW".to_string()).price_match(ModifyOrderPriceMatchEnum::Opponent).modify_id(1).recv_window(5000).build().unwrap();
+            let params = ModifyOrderParams::builder("BTCUSDT".to_string(),ModifyOrderSideEnum::Buy,dec!(1.0),dec!(30005),).order_id(20072994037).orig_client_order_id("LJ9R4QZDihCaS8UAOOLpgW".to_string()).price_match(ModifyOrderPriceMatchEnum::Opponent).modify_id(1).reduce_only(ModifyOrderReduceOnlyEnum::True).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"orderId":20072994037,"symbol":"BTCUSDT","pair":"BTCUSDT","status":"NEW","clientOrderId":"LJ9R4QZDihCaS8UAOOLpgW","modifyId":1,"price":"30005","origQty":"1","executedQty":"0","cumQty":"0","timeInForce":"GTC","type":"LIMIT","reduceOnly":false,"closePosition":false,"side":"BUY","positionSide":"LONG","stopPrice":"0","workingType":"CONTRACT_PRICE","priceProtect":false,"origType":"LIMIT","priceMatch":"NONE","selfTradePreventionMode":"NONE","goodTillDate":0,"updateTime":1629182711600}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifyOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifyOrderResponse");

@@ -1,5 +1,23 @@
 # Changelog
 
+## 70.1.0 - 2026-09-16
+
+**Derivatives Trading USDS Futures**
+
+### Changed (2)
+
+#### REST API
+
+- Added parameter `reduceOnly`
+  - affected methods:
+    - `modify_order()` (`PUT /fapi/v1/order`)
+
+#### WebSocket API
+
+- Added parameter `reduceOnly`
+  - affected methods:
+    - `modify_order()` (`order.modify` method)
+
 ## 70.0.0 - 2026-09-14
 
 **Derivatives Trading Portfolio Margin**
