@@ -27,6 +27,8 @@ pub struct TradingScheduleResponseMarketSchedules {
     pub hk_equity: Option<Box<models::TradingScheduleResponseMarketSchedulesHkEquity>>,
     #[serde(rename = "CN_EQUITY", skip_serializing_if = "Option::is_none")]
     pub cn_equity: Option<Box<models::TradingScheduleResponseMarketSchedulesHkEquity>>,
+    #[serde(rename = "FX", skip_serializing_if = "Option::is_none")]
+    pub fx_uppercase: Option<Box<models::TradingScheduleResponseMarketSchedulesFx>>,
 }
 
 impl TradingScheduleResponseMarketSchedules {
@@ -38,6 +40,7 @@ impl TradingScheduleResponseMarketSchedules {
             kr_equity: None,
             hk_equity: None,
             cn_equity: None,
+            fx_uppercase: None,
         }
     }
 }

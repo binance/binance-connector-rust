@@ -1,5 +1,21 @@
 # Changelog
 
+## 70.1.1 - 2026-09-21
+
+**Derivatives Trading USDS Futures**
+
+### Changed (2)
+
+#### REST API
+
+- Modified response for `trading_schedule()` (`GET /fapi/v1/tradingSchedule`):
+  - `marketSchedules`: property `FX` added
+
+- Modified response field `marketSchedules`:
+  - property `FX` added
+  - affected events:
+    - `tradingScheduleResponse`
+
 ## 70.1.0 - 2026-09-16
 
 **Derivatives Trading USDS Futures**
