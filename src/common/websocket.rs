@@ -3009,7 +3009,9 @@ mod tests {
         WebsocketHandler, WebsocketMessageSendOptions, WebsocketMode, WebsocketSessionLogonReq,
         WebsocketStream, WebsocketStreams, create_stream_handler,
     };
-    use crate::config::{ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey};
+    use crate::config::{
+        AgentConnector, ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey,
+    };
     use crate::errors::{WebsocketConnectionFailureReason, WebsocketError};
     use crate::models::{StreamId, TimeUnit};
     use async_trait::async_trait;
@@ -4337,6 +4339,74 @@ mod tests {
 
         mod create_websocket {
             use super::*;
+
+            #[test]
+            fn custom_handshake_is_used_for_initial_connection() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let _listener_guard = spawn_mock_ws_listener(listener);
+                    let handshake_calls = Arc::new(AtomicUsize::new(0));
+                    let handshake_calls_clone = Arc::clone(&handshake_calls);
+                    let agent = AgentConnector {
+                        connector: None,
+                        handshake: Some(Arc::new(move |request, config, disable_nagle, connector| {
+                            let handshake_calls = Arc::clone(&handshake_calls_clone);
+                            Box::pin(async move {
+                                handshake_calls.fetch_add(1, Ordering::SeqCst);
+                                assert!(config.is_none());
+                                assert!(!disable_nagle);
+                                assert!(connector.is_none());
+                                tokio_tungstenite::connect_async_tls_with_config(
+                                    request,
+                                    config,
+                                    disable_nagle,
+                                    connector,
+                                )
+                                .await
+                            })
+                        })),
+                    };
+
+                    let result = WebsocketCommon::create_websocket(
+                        &format!("ws://{addr}"),
+                        Some(agent),
+                        None,
+                    )
+                    .await;
+
+                    assert!(result.is_ok(), "custom handshake failed: {result:?}");
+                    assert_eq!(handshake_calls.load(Ordering::SeqCst), 1);
+                });
+            }
+
+            #[test]
+            fn custom_handshake_error_maps_to_handshake_error() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let handshake_calls = Arc::new(AtomicUsize::new(0));
+                    let handshake_calls_clone = Arc::clone(&handshake_calls);
+                    let agent = AgentConnector {
+                        connector: None,
+                        handshake: Some(Arc::new(move |_, _, _, _| {
+                            let handshake_calls = Arc::clone(&handshake_calls_clone);
+                            Box::pin(async move {
+                                handshake_calls.fetch_add(1, Ordering::SeqCst);
+                                Err(tungstenite::Error::ConnectionClosed)
+                            })
+                        })),
+                    };
+
+                    let result = WebsocketCommon::create_websocket(
+                        "ws://127.0.0.1:1",
+                        Some(agent),
+                        None,
+                    )
+                    .await;
+
+                    assert!(matches!(result, Err(WebsocketError::Handshake(_))));
+                    assert_eq!(handshake_calls.load(Ordering::SeqCst), 1);
+                });
+            }
 
             #[test]
             fn successful_connection() {
