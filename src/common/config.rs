@@ -30,34 +30,11 @@ pub type AgentConnectorHandshakeFn = Arc<
 >;
 
 #[derive(Clone)]
-pub struct AgentConnector {
-    pub connector: Option<Connector>,
-    pub handshake: Option<AgentConnectorHandshakeFn>,
-}
+pub struct AgentConnector(pub Connector);
 
 impl fmt::Debug for AgentConnector {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Connector(…)")
-    }
-}
-
-impl From<Connector> for AgentConnector {
-    fn from(c: Connector) -> Self {
-        Self::new(c)
-    }
-}
-
-impl AgentConnector {
-    pub fn new(connector: Connector) -> Self {
-        Self {
-            connector: Some(connector),
-            handshake: None,
-        }
-    }
-
-    pub fn with_handshake(mut self, f: AgentConnectorHandshakeFn) -> Self {
-        self.handshake = Some(f);
-        self
     }
 }
 
@@ -262,6 +239,9 @@ pub struct ConfigurationWebsocketApi {
     pub agent: Option<AgentConnector>,
 
     #[builder(setter(strip_option), default)]
+    pub handshake: Option<AgentConnectorHandshakeFn>,
+
+    #[builder(setter(strip_option), default)]
     pub private_key: Option<PrivateKey>,
 
     #[builder(setter(strip_option), default)]
@@ -293,6 +273,10 @@ impl fmt::Debug for ConfigurationWebsocketApi {
             .field("reconnect_delay", &self.reconnect_delay)
             .field("mode", &self.mode)
             .field("agent", &self.agent)
+            .field(
+                "handshake",
+                &self.handshake.as_ref().map(|_| "<custom handshake fn>"),
+            )
             .field(
                 "private_key",
                 &self.private_key.as_ref().map(|_| "[REDACTED]"),
@@ -353,7 +337,7 @@ impl ConfigurationWebsocketApiBuilder {
     }
 }
 
-#[derive(Debug, Clone, Builder)]
+#[derive(Clone, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ConfigBuildError"))]
 pub struct ConfigurationWebsocketStreams {
     #[builder(setter(into, strip_option), default)]
@@ -369,10 +353,30 @@ pub struct ConfigurationWebsocketStreams {
     pub agent: Option<AgentConnector>,
 
     #[builder(setter(strip_option), default)]
+    pub handshake: Option<AgentConnectorHandshakeFn>,
+
+    #[builder(setter(strip_option), default)]
     pub time_unit: Option<TimeUnit>,
 
     #[builder(setter(skip))]
     pub(crate) user_agent: String,
+}
+
+impl fmt::Debug for ConfigurationWebsocketStreams {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ConfigurationWebsocketStreams")
+            .field("ws_url", &self.ws_url)
+            .field("reconnect_delay", &self.reconnect_delay)
+            .field("mode", &self.mode)
+            .field("agent", &self.agent)
+            .field(
+                "handshake",
+                &self.handshake.as_ref().map(|_| "<custom handshake fn>"),
+            )
+            .field("time_unit", &self.time_unit)
+            .field("user_agent", &self.user_agent)
+            .finish()
+    }
 }
 
 impl ConfigurationWebsocketStreams {
