@@ -4350,22 +4350,24 @@ mod tests {
                     let handshake_calls_clone = Arc::clone(&handshake_calls);
                     let agent = AgentConnector {
                         connector: None,
-                        handshake: Some(Arc::new(move |request, config, disable_nagle, connector| {
-                            let handshake_calls = Arc::clone(&handshake_calls_clone);
-                            Box::pin(async move {
-                                handshake_calls.fetch_add(1, Ordering::SeqCst);
-                                assert!(config.is_none());
-                                assert!(!disable_nagle);
-                                assert!(connector.is_none());
-                                tokio_tungstenite::connect_async_tls_with_config(
-                                    request,
-                                    config,
-                                    disable_nagle,
-                                    connector,
-                                )
-                                .await
-                            })
-                        })),
+                        handshake: Some(Arc::new(
+                            move |request, config, disable_nagle, connector| {
+                                let handshake_calls = Arc::clone(&handshake_calls_clone);
+                                Box::pin(async move {
+                                    handshake_calls.fetch_add(1, Ordering::SeqCst);
+                                    assert!(config.is_none());
+                                    assert!(!disable_nagle);
+                                    assert!(connector.is_none());
+                                    tokio_tungstenite::connect_async_tls_with_config(
+                                        request,
+                                        config,
+                                        disable_nagle,
+                                        connector,
+                                    )
+                                    .await
+                                })
+                            },
+                        )),
                     };
 
                     let result = WebsocketCommon::create_websocket(
@@ -4396,12 +4398,9 @@ mod tests {
                         })),
                     };
 
-                    let result = WebsocketCommon::create_websocket(
-                        "ws://127.0.0.1:1",
-                        Some(agent),
-                        None,
-                    )
-                    .await;
+                    let result =
+                        WebsocketCommon::create_websocket("ws://127.0.0.1:1", Some(agent), None)
+                            .await;
 
                     assert!(matches!(result, Err(WebsocketError::Handshake(_))));
                     assert_eq!(handshake_calls.load(Ordering::SeqCst), 1);
