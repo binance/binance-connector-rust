@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        QueryBlockTradeDetailsParams::builder("block_order_matching_key_example".to_string())
+        QueryBlockTradeDetailsParams::builder("12b96c28-ba05-8906-c89t-703215cfb2e6".to_string())
             .build()?;
 
     // Make the API call

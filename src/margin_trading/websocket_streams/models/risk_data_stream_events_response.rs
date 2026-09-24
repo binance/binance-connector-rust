@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading WebSocket Market Streams
+ * Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Margin Trading WebSocket Market Streams
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,16 +19,16 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(try_from = "Value")]
 pub enum RiskDataStreamEventsResponse {
-    #[serde(rename = "USER_LIABILITY_CHANGE")]
-    UserLiabilityChange(Box<models::UserLiabilityChange>),
     #[serde(rename = "MARGIN_LEVEL_STATUS_CHANGE")]
     MarginLevelStatusChange(Box<models::MarginLevelStatusChange>),
+    #[serde(rename = "USER_LIABILITY_CHANGE")]
+    UserLiabilityChange(Box<models::UserLiabilityChange>),
     Other(serde_json::Value),
 }
 
 impl Default for RiskDataStreamEventsResponse {
     fn default() -> Self {
-        Self::UserLiabilityChange(Default::default())
+        Self::MarginLevelStatusChange(Default::default())
     }
 }
 
@@ -42,18 +42,18 @@ impl TryFrom<Value> for RiskDataStreamEventsResponse {
             .ok_or_else(|| serde_json::Error::custom("missing field `e`"))?;
 
         match tag {
-            "USER_LIABILITY_CHANGE" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(RiskDataStreamEventsResponse::UserLiabilityChange(Box::new(
-                    payload,
-                )))
-            }
-
             "MARGIN_LEVEL_STATUS_CHANGE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(RiskDataStreamEventsResponse::MarginLevelStatusChange(
                     Box::new(payload),
                 ))
+            }
+
+            "USER_LIABILITY_CHANGE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(RiskDataStreamEventsResponse::UserLiabilityChange(Box::new(
+                    payload,
+                )))
             }
 
             _ => Ok(RiskDataStreamEventsResponse::Other(v)),

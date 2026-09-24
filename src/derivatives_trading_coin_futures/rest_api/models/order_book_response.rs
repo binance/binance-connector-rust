@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,18 +17,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderBookResponse {
+    /// Last update ID.
     #[serde(rename = "lastUpdateId", skip_serializing_if = "Option::is_none")]
     pub last_update_id: Option<i64>,
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Message output time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Transaction time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Bid orders. Each entry is [price, quantity].
     #[serde(rename = "bids", skip_serializing_if = "Option::is_none")]
     pub bids: Option<Vec<Vec<String>>>,
+    /// Ask orders. Each entry is [price, quantity].
     #[serde(rename = "asks", skip_serializing_if = "Option::is_none")]
     pub asks: Option<Vec<Vec<String>>>,
 }

@@ -7,7 +7,7 @@ use crate::common::{
 
 /// Represents the `CopyTrading` REST API client for interacting with the Binance `CopyTrading` REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct CopyTradingRestApi {}
 
 impl CopyTradingRestApi {

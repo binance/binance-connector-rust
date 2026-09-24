@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Portfolio Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,46 +18,67 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ConditionalOrderTradeUpdateSo {
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Strategy Client Order Id
     #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
     pub c: Option<String>,
+    /// Strategy ID
     #[serde(rename = "si", skip_serializing_if = "Option::is_none")]
     pub si: Option<i64>,
+    /// Side
     #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
     pub s_uppercase: Option<String>,
+    /// Strategy Type
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
     pub st: Option<String>,
+    /// Time in Force
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<String>,
+    /// Quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Stop Price. Please ignore with `TRAILING_STOP_MARKET` order
     #[serde(rename = "sp", skip_serializing_if = "Option::is_none")]
     pub sp: Option<String>,
+    /// Strategy Order Status
     #[serde(rename = "os", skip_serializing_if = "Option::is_none")]
     pub os: Option<String>,
+    /// Order book Time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Order update Time
     #[serde(rename = "ut", skip_serializing_if = "Option::is_none")]
     pub ut: Option<i64>,
+    /// Is this reduce only
     #[serde(rename = "R", skip_serializing_if = "Option::is_none")]
     pub r_uppercase: Option<bool>,
+    /// Stop Price Working Type
     #[serde(rename = "wt", skip_serializing_if = "Option::is_none")]
     pub wt: Option<String>,
+    /// Position Side
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// If Close-All, pushed with conditional order
     #[serde(rename = "cp", skip_serializing_if = "Option::is_none")]
     pub cp: Option<bool>,
+    /// Activation Price, only pushed with `TRAILING_STOP_MARKET` order
     #[serde(rename = "AP", skip_serializing_if = "Option::is_none")]
     pub ap_uppercase: Option<String>,
+    /// Callback Rate, only pushed with `TRAILING_STOP_MARKET` order
     #[serde(rename = "cr", skip_serializing_if = "Option::is_none")]
     pub cr: Option<String>,
+    /// Order Id
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<i64>,
+    /// STP mode
     #[serde(rename = "V", skip_serializing_if = "Option::is_none")]
     pub v_uppercase: Option<String>,
+    /// TIF GTD order auto cancel time
     #[serde(rename = "gtd", skip_serializing_if = "Option::is_none")]
     pub gtd: Option<i64>,
 }

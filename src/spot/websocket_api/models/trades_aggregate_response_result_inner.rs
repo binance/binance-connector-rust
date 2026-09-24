@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,20 +18,28 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TradesAggregateResponseResultInner {
+    /// Aggregate tradeId
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<i64>,
+    /// Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// First tradeId
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<i64>,
+    /// Last tradeId
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<i64>,
+    /// Timestamp
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Was the buyer the maker?
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
+    /// Was the trade the best price match?
     #[serde(rename = "M", skip_serializing_if = "Option::is_none")]
     pub m_uppercase: Option<bool>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,22 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct FuturesAccountBalanceV2ResponseInner {
+    /// Unique account alias.
     #[serde(rename = "accountAlias", skip_serializing_if = "Option::is_none")]
     pub account_alias: Option<String>,
+    /// Asset name.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Wallet balance.
     #[serde(rename = "balance", skip_serializing_if = "Option::is_none")]
     pub balance: Option<String>,
+    /// Cross wallet balance.
     #[serde(rename = "crossWalletBalance", skip_serializing_if = "Option::is_none")]
     pub cross_wallet_balance: Option<String>,
+    /// Unrealized `PnL` of cross positions.
     #[serde(rename = "crossUnPnl", skip_serializing_if = "Option::is_none")]
     pub cross_un_pnl: Option<String>,
+    /// Available balance.
     #[serde(rename = "availableBalance", skip_serializing_if = "Option::is_none")]
     pub available_balance: Option<String>,
+    /// Maximum transferable/withdrawable amount.
     #[serde(rename = "maxWithdrawAmount", skip_serializing_if = "Option::is_none")]
     pub max_withdraw_amount: Option<String>,
+    /// Whether the asset can be used as margin in multi-assets mode.
     #[serde(rename = "marginAvailable", skip_serializing_if = "Option::is_none")]
     pub margin_available: Option<bool>,
+    /// Last update time in milliseconds.
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

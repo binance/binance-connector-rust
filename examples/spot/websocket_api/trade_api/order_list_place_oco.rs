@@ -41,7 +41,7 @@ async fn main() -> Result<()> {
     let params = OrderListPlaceOcoParams::builder(
         "BNBUSDT".to_string(),
         OrderListPlaceOcoSideEnum::Buy,
-        dec!(1.0),
+        dec!(1),
         OrderListPlaceOcoAboveTypeEnum::StopLossLimit,
         OrderListPlaceOcoBelowTypeEnum::StopLoss,
     )

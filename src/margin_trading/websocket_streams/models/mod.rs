@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading WebSocket Market Streams
+ * Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Margin Trading WebSocket Market Streams
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,22 +11,22 @@
  * Do not edit the class manually.
  */
 
-pub mod balanceupdate;
-pub use self::balanceupdate::Balanceupdate;
-pub mod executionreport;
-pub use self::executionreport::Executionreport;
-pub mod listenkeyexpired;
-pub use self::listenkeyexpired::Listenkeyexpired;
-pub mod liststatus;
-pub use self::liststatus::Liststatus;
-pub mod liststatus_o_inner;
-pub use self::liststatus_o_inner::ListstatusOInner;
+pub mod balance_update;
+pub use self::balance_update::BalanceUpdate;
+pub mod execution_report;
+pub use self::execution_report::ExecutionReport;
+pub mod list_status;
+pub use self::list_status::ListStatus;
+pub mod list_status_o_inner;
+pub use self::list_status_o_inner::ListStatusOInner;
+pub mod listen_key_expired;
+pub use self::listen_key_expired::ListenKeyExpired;
 pub mod margin_level_status_change;
 pub use self::margin_level_status_change::MarginLevelStatusChange;
-pub mod outboundaccountposition;
-pub use self::outboundaccountposition::Outboundaccountposition;
-pub mod outboundaccountposition_b_inner;
-pub use self::outboundaccountposition_b_inner::OutboundaccountpositionBInner;
+pub mod outbound_account_position;
+pub use self::outbound_account_position::OutboundAccountPosition;
+pub mod outbound_account_position_b_inner;
+pub use self::outbound_account_position_b_inner::OutboundAccountPositionBInner;
 pub mod risk_data_stream_events_response;
 pub use self::risk_data_stream_events_response::RiskDataStreamEventsResponse;
 pub mod trade_data_stream_events_response;

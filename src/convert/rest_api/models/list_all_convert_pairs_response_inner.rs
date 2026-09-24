@@ -1,7 +1,7 @@
 /*
- * Binance Convert REST API
+ * Convert REST API
  *
- * OpenAPI Specification for the Binance Convert REST API
+ * Request quotes and execute cryptocurrency conversions via the Convert REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -27,6 +27,7 @@ pub struct ListAllConvertPairsResponseInner {
     pub from_asset_max_amount: Option<String>,
     #[serde(rename = "toAssetMinAmount", skip_serializing_if = "Option::is_none")]
     pub to_asset_min_amount: Option<String>,
+    /// 9E+24 signals that this symbol has a very large upper limit close to infinity
     #[serde(rename = "toAssetMaxAmount", skip_serializing_if = "Option::is_none")]
     pub to_asset_max_amount: Option<String>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -57,7 +57,5 @@ pub mod query_order_response_result;
 pub use self::query_order_response_result::QueryOrderResponseResult;
 pub mod start_user_data_stream_response;
 pub use self::start_user_data_stream_response::StartUserDataStreamResponse;
-pub mod start_user_data_stream_response_rate_limits_inner;
-pub use self::start_user_data_stream_response_rate_limits_inner::StartUserDataStreamResponseRateLimitsInner;
 pub mod start_user_data_stream_response_result;
 pub use self::start_user_data_stream_response_result::StartUserDataStreamResponseResult;

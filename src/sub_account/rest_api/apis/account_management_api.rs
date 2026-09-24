@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -46,11 +46,7 @@ pub trait AccountManagementApi: Send + Sync {
     async fn get_futures_position_risk_of_sub_account(
         &self,
         params: GetFuturesPositionRiskOfSubAccountParams,
-    ) -> anyhow::Result<
-        RestApiResponse<
-            Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>,
-        >,
-    >;
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>>>;
     async fn get_futures_position_risk_of_sub_account_v2(
         &self,
         params: GetFuturesPositionRiskOfSubAccountV2Params,
@@ -86,19 +82,21 @@ impl AccountManagementApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`create_a_virtual_sub_account`](#method.create_a_virtual_sub_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CreateAVirtualSubAccountParams {
     /// Please input a string. We will create a virtual email using that string for you to register
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "subAccountString")]
     pub sub_account_string: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -118,19 +116,22 @@ impl CreateAVirtualSubAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`enable_futures_for_sub_account`](#method.enable_futures_for_sub_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct EnableFuturesForSubAccountParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -139,7 +140,7 @@ impl EnableFuturesForSubAccountParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     ///
     #[must_use]
     pub fn builder(email: String) -> EnableFuturesForSubAccountParamsBuilder {
@@ -150,19 +151,22 @@ impl EnableFuturesForSubAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`enable_options_for_sub_account`](#method.enable_options_for_sub_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct EnableOptionsForSubAccountParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -171,7 +175,7 @@ impl EnableOptionsForSubAccountParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     ///
     #[must_use]
     pub fn builder(email: String) -> EnableOptionsForSubAccountParamsBuilder {
@@ -182,19 +186,22 @@ impl EnableOptionsForSubAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_futures_position_risk_of_sub_account`](#method.get_futures_position_risk_of_sub_account).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFuturesPositionRiskOfSubAccountParams {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -203,7 +210,7 @@ impl GetFuturesPositionRiskOfSubAccountParams {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     ///
     #[must_use]
     pub fn builder(email: String) -> GetFuturesPositionRiskOfSubAccountParamsBuilder {
@@ -214,24 +221,28 @@ impl GetFuturesPositionRiskOfSubAccountParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_futures_position_risk_of_sub_account_v2`](#method.get_futures_position_risk_of_sub_account_v2).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFuturesPositionRiskOfSubAccountV2Params {
-    /// [Sub-account email](#email-address)
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "email")]
     pub email: String,
     /// 1:USDT-margined Futures，2: Coin-margined Futures
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "futuresType")]
     pub futures_type: i64,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -240,7 +251,7 @@ impl GetFuturesPositionRiskOfSubAccountV2Params {
     ///
     /// Required parameters:
     ///
-    /// * `email` — [Sub-account email](#email-address)
+    /// * `email` — String
     /// * `futures_type` — 1:USDT-margined Futures，2: Coin-margined Futures
     ///
     #[must_use]
@@ -257,19 +268,22 @@ impl GetFuturesPositionRiskOfSubAccountV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_sub_accounts_status_on_margin_or_futures`](#method.get_sub_accounts_status_on_margin_or_futures).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSubAccountsStatusOnMarginOrFuturesParams {
-    /// Managed sub-account email
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "email", default)]
     pub email: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -285,34 +299,43 @@ impl GetSubAccountsStatusOnMarginOrFuturesParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_sub_account_list`](#method.query_sub_account_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QuerySubAccountListParams {
-    /// Managed sub-account email
+    ///
+    /// The `email` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "email", default)]
     pub email: Option<String>,
-    /// true or false
+    ///
+    /// The `is_freeze` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "isFreeze", default)]
     pub is_freeze: Option<String>,
-    /// Default value: 1
+    ///
+    /// The `page` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "page", default)]
     pub page: Option<i64>,
-    /// Default value: 1, Max value: 200
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -328,19 +351,21 @@ impl QuerySubAccountListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_sub_account_transaction_statistics`](#method.query_sub_account_transaction_statistics).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QuerySubAccountTransactionStatisticsParams {
     /// Managed sub-account email
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "email", default)]
     pub email: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -454,11 +479,8 @@ impl AccountManagementApi for AccountManagementApiClient {
     async fn get_futures_position_risk_of_sub_account(
         &self,
         params: GetFuturesPositionRiskOfSubAccountParams,
-    ) -> anyhow::Result<
-        RestApiResponse<
-            Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>,
-        >,
-    > {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>>>
+    {
         let GetFuturesPositionRiskOfSubAccountParams { email, recv_window } = params;
 
         let mut query_params = BTreeMap::new();
@@ -470,9 +492,7 @@ impl AccountManagementApi for AccountManagementApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<
-            Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>,
-        >(
+        send_request::<Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>>(
             &self.configuration,
             "/sapi/v1/sub-account/futures/positionRisk",
             reqwest::Method::GET,
@@ -690,7 +710,8 @@ mod tests {
             }
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"email":"addsdd_virtual@aasaixwqnoemail.com"}"#).unwrap();
+                serde_json::from_str(r#"{"email":"addsdd_virtual@aasaixwqnoemail.com"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CreateAVirtualSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CreateAVirtualSubAccountResponse");
@@ -719,7 +740,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"email":"123@test.com","isFuturesEnabled":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::EnableFuturesForSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableFuturesForSubAccountResponse");
@@ -748,7 +769,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"email":"123@test.com","isEOptionsEnabled":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::EnableOptionsForSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableOptionsForSubAccountResponse");
@@ -767,9 +788,7 @@ mod tests {
             &self,
             _params: GetFuturesPositionRiskOfSubAccountParams,
         ) -> anyhow::Result<
-            RestApiResponse<
-                Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>,
-            >,
+            RestApiResponse<Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>>,
         > {
             if self.force_error {
                 return Err(ConnectorError::ConnectorClientError {
@@ -779,8 +798,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}]"#).unwrap();
-            let dummy_response : Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response : Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -805,7 +824,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"futurePositionRiskVos":[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}],"deliveryPositionRiskVos":[{"entryPrice":"9975.12000","markPrice":"9973.50770517","leverage":"20","isolated":"false","isolatedWallet":"9973.50770517","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","positionAmount":"1.230","symbol":"BTCUSD_201225","unrealizedProfit":"-0.01612295"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"futurePositionRiskVos":[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}],"deliveryPositionRiskVos":[{"entryPrice":"9975.12000","markPrice":"9973.50770517","leverage":"20","isolated":"false","isolatedWallet":"9973.50770517","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","positionAmount":"1.230","symbol":"BTCUSD_201225","unrealizedProfit":"-0.01612295"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFuturesPositionRiskOfSubAccountV2Response =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetFuturesPositionRiskOfSubAccountV2Response",
@@ -835,7 +854,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"email":"123@test.com","isSubUserEnabled":true,"isUserActive":true,"insertTime":1570791523523,"isMarginEnabled":true,"isFutureEnabled":true,"mobile":1570791523523}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"email":"123@test.com","isSubUserEnabled":true,"isUserActive":true,"insertTime":1570791523523,"isMarginEnabled":true,"isFutureEnabled":true,"mobile":1570791523523}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::GetSubAccountsStatusOnMarginOrFuturesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetSubAccountsStatusOnMarginOrFuturesResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -860,7 +879,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"subAccounts":[{"subUserId":123456,"email":"testsub@gmail.com","remark":"remark","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false},{"subUserId":1234567,"email":"virtual@oxebmvfonoemail.com","remark":"remarks","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subAccounts":[{"subUserId":123456,"email":"testsub@gmail.com","remark":"remark","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QuerySubAccountListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QuerySubAccountListResponse");
@@ -888,7 +907,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"recent30BtcTotal":"0","recent30BtcFuturesTotal":"0","recent30BtcMarginTotal":"0","recent30BusdTotal":"0","recent30BusdFuturesTotal":"0","recent30BusdMarginTotal":"0","tradeInfoVos":[{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1676851200000},{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1677110400000},{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1677369600000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"recent30BtcTotal":"0","recent30BtcFuturesTotal":"0","recent30BtcMarginTotal":"0","recent30BusdTotal":"0","recent30BusdFuturesTotal":"0","recent30BusdMarginTotal":"0","tradeInfoVos":[{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1676851200000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QuerySubAccountTransactionStatisticsResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::QuerySubAccountTransactionStatisticsResponse",
@@ -910,13 +929,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params =
-                CreateAVirtualSubAccountParams::builder("sub_account_string_example".to_string())
-                    .build()
-                    .unwrap();
+            let params = CreateAVirtualSubAccountParams::builder("testSubAccount".to_string())
+                .build()
+                .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"email":"addsdd_virtual@aasaixwqnoemail.com"}"#).unwrap();
+                serde_json::from_str(r#"{"email":"addsdd_virtual@aasaixwqnoemail.com"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CreateAVirtualSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CreateAVirtualSubAccountResponse");
@@ -936,14 +955,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params =
-                CreateAVirtualSubAccountParams::builder("sub_account_string_example".to_string())
-                    .recv_window(5000)
-                    .build()
-                    .unwrap();
+            let params = CreateAVirtualSubAccountParams::builder("testSubAccount".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r#"{"email":"addsdd_virtual@aasaixwqnoemail.com"}"#).unwrap();
+                serde_json::from_str(r#"{"email":"addsdd_virtual@aasaixwqnoemail.com"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CreateAVirtualSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CreateAVirtualSubAccountResponse");
@@ -963,10 +982,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: true };
 
-            let params =
-                CreateAVirtualSubAccountParams::builder("sub_account_string_example".to_string())
-                    .build()
-                    .unwrap();
+            let params = CreateAVirtualSubAccountParams::builder("testSubAccount".to_string())
+                .build()
+                .unwrap();
 
             match client.create_a_virtual_sub_account(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -982,15 +1000,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = EnableFuturesForSubAccountParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = EnableFuturesForSubAccountParams::builder("123@test.com".to_string())
+                .build()
+                .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"email":"123@test.com","isFuturesEnabled":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::EnableFuturesForSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableFuturesForSubAccountResponse");
@@ -1010,16 +1026,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = EnableFuturesForSubAccountParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .recv_window(5000)
-            .build()
-            .unwrap();
+            let params = EnableFuturesForSubAccountParams::builder("123@test.com".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"email":"123@test.com","isFuturesEnabled":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::EnableFuturesForSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableFuturesForSubAccountResponse");
@@ -1039,11 +1053,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: true };
 
-            let params = EnableFuturesForSubAccountParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = EnableFuturesForSubAccountParams::builder("123@test.com".to_string())
+                .build()
+                .unwrap();
 
             match client.enable_futures_for_sub_account(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1059,15 +1071,13 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = EnableOptionsForSubAccountParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = EnableOptionsForSubAccountParams::builder("123@test.com".to_string())
+                .build()
+                .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"email":"123@test.com","isEOptionsEnabled":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::EnableOptionsForSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableOptionsForSubAccountResponse");
@@ -1087,16 +1097,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = EnableOptionsForSubAccountParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .recv_window(5000)
-            .build()
-            .unwrap();
+            let params = EnableOptionsForSubAccountParams::builder("123@test.com".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"email":"123@test.com","isEOptionsEnabled":true}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::EnableOptionsForSubAccountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::EnableOptionsForSubAccountResponse");
@@ -1116,11 +1124,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: true };
 
-            let params = EnableOptionsForSubAccountParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = EnableOptionsForSubAccountParams::builder("123@test.com".to_string())
+                .build()
+                .unwrap();
 
             match client.enable_options_for_sub_account(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1136,10 +1142,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = GetFuturesPositionRiskOfSubAccountParams::builder("sub-account-email@email.com".to_string(),).build().unwrap();
+            let params = GetFuturesPositionRiskOfSubAccountParams::builder("123@test.com".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}]"#).unwrap();
-            let expected_response : Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>");
 
             let resp = client.get_futures_position_risk_of_sub_account(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -1153,10 +1159,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = GetFuturesPositionRiskOfSubAccountParams::builder("sub-account-email@email.com".to_string(),).recv_window(5000).build().unwrap();
+            let params = GetFuturesPositionRiskOfSubAccountParams::builder("123@test.com".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}]"#).unwrap();
-            let expected_response : Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFuturesPositionRiskOfSubAccountV2ResponseFuturePositionRiskVosInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetFuturesPositionRiskOfSubAccountResponseInner>");
 
             let resp = client.get_futures_position_risk_of_sub_account(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -1170,11 +1176,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: true };
 
-            let params = GetFuturesPositionRiskOfSubAccountParams::builder(
-                "sub-account-email@email.com".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params =
+                GetFuturesPositionRiskOfSubAccountParams::builder("123@test.com".to_string())
+                    .build()
+                    .unwrap();
 
             match client
                 .get_futures_position_risk_of_sub_account(params)
@@ -1193,9 +1198,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = GetFuturesPositionRiskOfSubAccountV2Params::builder("sub-account-email@email.com".to_string(),789,).build().unwrap();
+            let params = GetFuturesPositionRiskOfSubAccountV2Params::builder("123@test.com".to_string(),1,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"futurePositionRiskVos":[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}],"deliveryPositionRiskVos":[{"entryPrice":"9975.12000","markPrice":"9973.50770517","leverage":"20","isolated":"false","isolatedWallet":"9973.50770517","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","positionAmount":"1.230","symbol":"BTCUSD_201225","unrealizedProfit":"-0.01612295"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"futurePositionRiskVos":[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}],"deliveryPositionRiskVos":[{"entryPrice":"9975.12000","markPrice":"9973.50770517","leverage":"20","isolated":"false","isolatedWallet":"9973.50770517","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","positionAmount":"1.230","symbol":"BTCUSD_201225","unrealizedProfit":"-0.01612295"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesPositionRiskOfSubAccountV2Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesPositionRiskOfSubAccountV2Response");
 
             let resp = client.get_futures_position_risk_of_sub_account_v2(params).await.expect("Expected a response");
@@ -1210,9 +1215,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = GetFuturesPositionRiskOfSubAccountV2Params::builder("sub-account-email@email.com".to_string(),789,).recv_window(5000).build().unwrap();
+            let params = GetFuturesPositionRiskOfSubAccountV2Params::builder("123@test.com".to_string(),1,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"futurePositionRiskVos":[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}],"deliveryPositionRiskVos":[{"entryPrice":"9975.12000","markPrice":"9973.50770517","leverage":"20","isolated":"false","isolatedWallet":"9973.50770517","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","positionAmount":"1.230","symbol":"BTCUSD_201225","unrealizedProfit":"-0.01612295"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"futurePositionRiskVos":[{"entryPrice":"9975.12000","leverage":"50","maxNotional":"1000000","liquidationPrice":"7963.54","markPrice":"9973.50770517","positionAmount":"0.010","symbol":"BTCUSDT","unrealizedProfit":"-0.01612295"}],"deliveryPositionRiskVos":[{"entryPrice":"9975.12000","markPrice":"9973.50770517","leverage":"20","isolated":"false","isolatedWallet":"9973.50770517","isolatedMargin":"0.00000000","isAutoAddMargin":"false","positionSide":"BOTH","positionAmount":"1.230","symbol":"BTCUSD_201225","unrealizedProfit":"-0.01612295"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFuturesPositionRiskOfSubAccountV2Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFuturesPositionRiskOfSubAccountV2Response");
 
             let resp = client.get_futures_position_risk_of_sub_account_v2(params).await.expect("Expected a response");
@@ -1227,12 +1232,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: true };
 
-            let params = GetFuturesPositionRiskOfSubAccountV2Params::builder(
-                "sub-account-email@email.com".to_string(),
-                789,
-            )
-            .build()
-            .unwrap();
+            let params =
+                GetFuturesPositionRiskOfSubAccountV2Params::builder("123@test.com".to_string(), 1)
+                    .build()
+                    .unwrap();
 
             match client
                 .get_futures_position_risk_of_sub_account_v2(params)
@@ -1253,7 +1256,7 @@ mod tests {
 
             let params = GetSubAccountsStatusOnMarginOrFuturesParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"email":"123@test.com","isSubUserEnabled":true,"isUserActive":true,"insertTime":1570791523523,"isMarginEnabled":true,"isFutureEnabled":true,"mobile":1570791523523}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"email":"123@test.com","isSubUserEnabled":true,"isUserActive":true,"insertTime":1570791523523,"isMarginEnabled":true,"isFutureEnabled":true,"mobile":1570791523523}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetSubAccountsStatusOnMarginOrFuturesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetSubAccountsStatusOnMarginOrFuturesResponseInner>");
 
             let resp = client.get_sub_accounts_status_on_margin_or_futures(params).await.expect("Expected a response");
@@ -1268,9 +1271,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = GetSubAccountsStatusOnMarginOrFuturesParams::builder().email("email_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetSubAccountsStatusOnMarginOrFuturesParams::builder().email("123@test.com".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"email":"123@test.com","isSubUserEnabled":true,"isUserActive":true,"insertTime":1570791523523,"isMarginEnabled":true,"isFutureEnabled":true,"mobile":1570791523523}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"email":"123@test.com","isSubUserEnabled":true,"isUserActive":true,"insertTime":1570791523523,"isMarginEnabled":true,"isFutureEnabled":true,"mobile":1570791523523}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetSubAccountsStatusOnMarginOrFuturesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetSubAccountsStatusOnMarginOrFuturesResponseInner>");
 
             let resp = client.get_sub_accounts_status_on_margin_or_futures(params).await.expect("Expected a response");
@@ -1308,7 +1311,7 @@ mod tests {
 
             let params = QuerySubAccountListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subAccounts":[{"subUserId":123456,"email":"testsub@gmail.com","remark":"remark","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false},{"subUserId":1234567,"email":"virtual@oxebmvfonoemail.com","remark":"remarks","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subAccounts":[{"subUserId":123456,"email":"testsub@gmail.com","remark":"remark","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountListResponse");
 
             let resp = client.query_sub_account_list(params).await.expect("Expected a response");
@@ -1323,9 +1326,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = QuerySubAccountListParams::builder().email("email_example".to_string()).is_freeze("is_freeze_example".to_string()).page(1).limit(1).recv_window(5000).build().unwrap();
+            let params = QuerySubAccountListParams::builder().email("123@test.com".to_string()).is_freeze("true".to_string()).page(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"subAccounts":[{"subUserId":123456,"email":"testsub@gmail.com","remark":"remark","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false},{"subUserId":1234567,"email":"virtual@oxebmvfonoemail.com","remark":"remarks","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"subAccounts":[{"subUserId":123456,"email":"testsub@gmail.com","remark":"remark","isFreeze":false,"createTime":1544433328000,"isManagedSubAccount":false,"isAssetManagementSubAccount":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountListResponse");
 
             let resp = client.query_sub_account_list(params).await.expect("Expected a response");
@@ -1358,7 +1361,7 @@ mod tests {
 
             let params = QuerySubAccountTransactionStatisticsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"recent30BtcTotal":"0","recent30BtcFuturesTotal":"0","recent30BtcMarginTotal":"0","recent30BusdTotal":"0","recent30BusdFuturesTotal":"0","recent30BusdMarginTotal":"0","tradeInfoVos":[{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1676851200000},{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1677110400000},{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1677369600000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"recent30BtcTotal":"0","recent30BtcFuturesTotal":"0","recent30BtcMarginTotal":"0","recent30BusdTotal":"0","recent30BusdFuturesTotal":"0","recent30BusdMarginTotal":"0","tradeInfoVos":[{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1676851200000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountTransactionStatisticsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountTransactionStatisticsResponse");
 
             let resp = client.query_sub_account_transaction_statistics(params).await.expect("Expected a response");
@@ -1373,9 +1376,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountManagementApiClient { force_error: false };
 
-            let params = QuerySubAccountTransactionStatisticsParams::builder().email("email_example".to_string()).recv_window(5000).build().unwrap();
+            let params = QuerySubAccountTransactionStatisticsParams::builder().email("abc@test.com".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"recent30BtcTotal":"0","recent30BtcFuturesTotal":"0","recent30BtcMarginTotal":"0","recent30BusdTotal":"0","recent30BusdFuturesTotal":"0","recent30BusdMarginTotal":"0","tradeInfoVos":[{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1676851200000},{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1677110400000},{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1677369600000}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"recent30BtcTotal":"0","recent30BtcFuturesTotal":"0","recent30BtcMarginTotal":"0","recent30BusdTotal":"0","recent30BusdFuturesTotal":"0","recent30BusdMarginTotal":"0","tradeInfoVos":[{"userId":1000138138384,"btc":0,"btcFutures":0,"btcMargin":0,"busd":0,"busdFutures":0,"busdMargin":0,"date":1676851200000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountTransactionStatisticsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountTransactionStatisticsResponse");
 
             let resp = client.query_sub_account_transaction_statistics(params).await.expect("Expected a response");

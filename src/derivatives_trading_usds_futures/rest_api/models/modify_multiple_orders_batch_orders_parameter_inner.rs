@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,23 +18,33 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ModifyMultipleOrdersBatchOrdersParameterInner {
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
-    pub order_id: Option<String>,
+    pub order_id: Option<i64>,
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<SideEnum>,
+    /// Order quantity, cannot be sent with closePosition=true
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
-    pub quantity: Option<String>,
+    pub quantity: Option<rust_decimal::Decimal>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<String>,
+    pub price: Option<rust_decimal::Decimal>,
+    /// Only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Cannot be sent together with `price`.
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<PriceMatchEnum>,
+    /// stop price, only STOP, `STOP_MARKET`, `TAKE_PROFIT`, `TAKE_PROFIT_MARKET` need
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
-    pub stop_price: Option<String>,
+    pub stop_price: Option<rust_decimal::Decimal>,
+    /// User-defined modification identifier, returned as-is in the response. Optional; not validated for uniqueness.
+    #[serde(rename = "modifyId", skip_serializing_if = "Option::is_none")]
+    pub modify_id: Option<i64>,
+    /// Validity window in milliseconds.
     #[serde(rename = "recvWindow", skip_serializing_if = "Option::is_none")]
-    pub recv_window: Option<String>,
+    pub recv_window: Option<i64>,
+    /// Unix timestamp in milliseconds.
+    #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
+    pub timestamp: Option<i64>,
 }
 
 impl ModifyMultipleOrdersBatchOrdersParameterInner {
@@ -49,7 +59,9 @@ impl ModifyMultipleOrdersBatchOrdersParameterInner {
             price: None,
             price_match: None,
             stop_price: None,
+            modify_id: None,
             recv_window: None,
+            timestamp: None,
         }
     }
 }
@@ -67,11 +79,9 @@ impl Default for SideEnum {
         Self::Buy
     }
 }
-///
+/// Only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Cannot be sent together with `price`.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PriceMatchEnum {
-    #[serde(rename = "NONE")]
-    None,
     #[serde(rename = "OPPONENT")]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
@@ -92,6 +102,6 @@ pub enum PriceMatchEnum {
 
 impl Default for PriceMatchEnum {
     fn default() -> PriceMatchEnum {
-        Self::None
+        Self::Opponent
     }
 }

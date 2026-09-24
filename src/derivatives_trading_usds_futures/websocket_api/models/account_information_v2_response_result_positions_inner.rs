@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -20,10 +20,12 @@ use serde_json::Value;
 pub struct AccountInformationV2ResponseResultPositionsInner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
     pub position_amt: Option<String>,
+    /// unrealized profit
     #[serde(rename = "unrealizedProfit", skip_serializing_if = "Option::is_none")]
     pub unrealized_profit: Option<String>,
     #[serde(rename = "isolatedMargin", skip_serializing_if = "Option::is_none")]
@@ -32,10 +34,13 @@ pub struct AccountInformationV2ResponseResultPositionsInner {
     pub notional: Option<String>,
     #[serde(rename = "isolatedWallet", skip_serializing_if = "Option::is_none")]
     pub isolated_wallet: Option<String>,
+    /// total initial margin required with current mark price
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// maintenance margin required
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// last update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

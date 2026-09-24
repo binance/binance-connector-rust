@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,43 +16,61 @@ use crate::derivatives_trading_options::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `KlineCandlestickStreamsResponseK` : k
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct KlineCandlestickStreamsResponseK {
+    /// kline start time
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
     pub t: Option<i64>,
+    /// kline end time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Option trading symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// candle period
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
+    /// first trade ID
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<i64>,
+    /// last trade ID
     #[serde(rename = "L", skip_serializing_if = "Option::is_none")]
     pub l_uppercase: Option<i64>,
+    /// open
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+    /// close
     #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
     pub c: Option<String>,
+    /// high
     #[serde(rename = "h", skip_serializing_if = "Option::is_none")]
     pub h: Option<String>,
+    /// low
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<String>,
+    /// volume(in contracts)
     #[serde(rename = "v", skip_serializing_if = "Option::is_none")]
     pub v: Option<String>,
+    /// number of trades
     #[serde(rename = "n", skip_serializing_if = "Option::is_none")]
     pub n: Option<i64>,
+    /// current candle has been completed Y/N
     #[serde(rename = "x", skip_serializing_if = "Option::is_none")]
     pub x: Option<bool>,
+    /// completed trade amount   (in quote asset)
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// taker completed trade volume (in contracts)
     #[serde(rename = "V", skip_serializing_if = "Option::is_none")]
     pub v_uppercase: Option<String>,
+    /// taker trade amount(in quote asset)
     #[serde(rename = "Q", skip_serializing_if = "Option::is_none")]
     pub q_uppercase: Option<String>,
 }
 
 impl KlineCandlestickStreamsResponseK {
+    /// k
     #[must_use]
     pub fn new() -> KlineCandlestickStreamsResponseK {
         KlineCandlestickStreamsResponseK {

@@ -5,7 +5,11 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
 use binance_sdk::margin_trading::{
-    MarginTradingRestApi, rest_api::QueryBorrowRepayRecordsInMarginAccountParams,
+    MarginTradingRestApi,
+    rest_api::{
+        QueryBorrowRepayRecordsInMarginAccountParams,
+        QueryBorrowRepayRecordsInMarginAccountTypeEnum,
+    },
 };
 
 #[tokio::main]
@@ -27,9 +31,10 @@ async fn main() -> Result<()> {
     let rest_client = MarginTradingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        QueryBorrowRepayRecordsInMarginAccountParams::builder("r#type_example".to_string())
-            .build()?;
+    let params = QueryBorrowRepayRecordsInMarginAccountParams::builder(
+        QueryBorrowRepayRecordsInMarginAccountTypeEnum::Borrow,
+    )
+    .build()?;
 
     // Make the API call
     let response = rest_client

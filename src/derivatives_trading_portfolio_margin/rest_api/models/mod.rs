@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -25,8 +25,8 @@ pub mod cancel_all_cm_open_conditional_orders_response;
 pub use self::cancel_all_cm_open_conditional_orders_response::CancelAllCmOpenConditionalOrdersResponse;
 pub mod cancel_all_cm_open_orders_response;
 pub use self::cancel_all_cm_open_orders_response::CancelAllCmOpenOrdersResponse;
-pub mod cancel_all_um_open_conditional_orders_response;
-pub use self::cancel_all_um_open_conditional_orders_response::CancelAllUmOpenConditionalOrdersResponse;
+pub mod cancel_all_um_algo_open_orders_response;
+pub use self::cancel_all_um_algo_open_orders_response::CancelAllUmAlgoOpenOrdersResponse;
 pub mod cancel_all_um_open_orders_response;
 pub use self::cancel_all_um_open_orders_response::CancelAllUmOpenOrdersResponse;
 pub mod cancel_cm_conditional_order_response;
@@ -47,8 +47,8 @@ pub mod cancel_margin_account_oco_orders_response_orders_inner;
 pub use self::cancel_margin_account_oco_orders_response_orders_inner::CancelMarginAccountOcoOrdersResponseOrdersInner;
 pub mod cancel_margin_account_order_response;
 pub use self::cancel_margin_account_order_response::CancelMarginAccountOrderResponse;
-pub mod cancel_um_conditional_order_response;
-pub use self::cancel_um_conditional_order_response::CancelUmConditionalOrderResponse;
+pub mod cancel_um_algo_order_response;
+pub use self::cancel_um_algo_order_response::CancelUmAlgoOrderResponse;
 pub mod cancel_um_order_response;
 pub use self::cancel_um_order_response::CancelUmOrderResponse;
 pub mod change_auto_repay_futures_status_response;
@@ -75,6 +75,8 @@ pub mod fund_auto_collection_response;
 pub use self::fund_auto_collection_response::FundAutoCollectionResponse;
 pub mod fund_collection_by_asset_response;
 pub use self::fund_collection_by_asset_response::FundCollectionByAssetResponse;
+pub mod futures_tradfi_perps_contract_response;
+pub use self::futures_tradfi_perps_contract_response::FuturesTradfiPerpsContractResponse;
 pub mod get_auto_repay_futures_status_response;
 pub use self::get_auto_repay_futures_status_response::GetAutoRepayFuturesStatusResponse;
 pub mod get_cm_account_detail_response;
@@ -99,12 +101,12 @@ pub mod get_margin_borrow_loan_interest_history_response_rows_inner;
 pub use self::get_margin_borrow_loan_interest_history_response_rows_inner::GetMarginBorrowLoanInterestHistoryResponseRowsInner;
 pub mod get_um_account_detail_response;
 pub use self::get_um_account_detail_response::GetUmAccountDetailResponse;
+pub mod get_um_account_detail_response_assets_inner;
+pub use self::get_um_account_detail_response_assets_inner::GetUmAccountDetailResponseAssetsInner;
 pub mod get_um_account_detail_response_positions_inner;
 pub use self::get_um_account_detail_response_positions_inner::GetUmAccountDetailResponsePositionsInner;
 pub mod get_um_account_detail_v2_response;
 pub use self::get_um_account_detail_v2_response::GetUmAccountDetailV2Response;
-pub mod get_um_account_detail_v2_response_assets_inner;
-pub use self::get_um_account_detail_v2_response_assets_inner::GetUmAccountDetailV2ResponseAssetsInner;
 pub mod get_um_account_detail_v2_response_positions_inner;
 pub use self::get_um_account_detail_v2_response_positions_inner::GetUmAccountDetailV2ResponsePositionsInner;
 pub mod get_um_current_position_mode_response;
@@ -151,8 +153,8 @@ pub mod new_margin_order_response;
 pub use self::new_margin_order_response::NewMarginOrderResponse;
 pub mod new_margin_order_response_fills_inner;
 pub use self::new_margin_order_response_fills_inner::NewMarginOrderResponseFillsInner;
-pub mod new_um_conditional_order_response;
-pub use self::new_um_conditional_order_response::NewUmConditionalOrderResponse;
+pub mod new_um_algo_order_response;
+pub use self::new_um_algo_order_response::NewUmAlgoOrderResponse;
 pub mod new_um_order_response;
 pub use self::new_um_order_response::NewUmOrderResponse;
 pub mod portfolio_margin_um_trading_quantitative_rules_indicators_response;
@@ -169,14 +171,12 @@ pub mod query_all_cm_orders_response_inner;
 pub use self::query_all_cm_orders_response_inner::QueryAllCmOrdersResponseInner;
 pub mod query_all_current_cm_open_conditional_orders_response_inner;
 pub use self::query_all_current_cm_open_conditional_orders_response_inner::QueryAllCurrentCmOpenConditionalOrdersResponseInner;
-pub mod query_all_current_um_open_conditional_orders_response_inner;
-pub use self::query_all_current_um_open_conditional_orders_response_inner::QueryAllCurrentUmOpenConditionalOrdersResponseInner;
+pub mod query_all_current_um_open_algo_orders_response_inner;
+pub use self::query_all_current_um_open_algo_orders_response_inner::QueryAllCurrentUmOpenAlgoOrdersResponseInner;
 pub mod query_all_current_um_open_orders_response_inner;
 pub use self::query_all_current_um_open_orders_response_inner::QueryAllCurrentUmOpenOrdersResponseInner;
 pub mod query_all_margin_account_orders_response_inner;
 pub use self::query_all_margin_account_orders_response_inner::QueryAllMarginAccountOrdersResponseInner;
-pub mod query_all_um_conditional_orders_response_inner;
-pub use self::query_all_um_conditional_orders_response_inner::QueryAllUmConditionalOrdersResponseInner;
 pub mod query_cm_conditional_order_history_response;
 pub use self::query_cm_conditional_order_history_response::QueryCmConditionalOrderHistoryResponse;
 pub mod query_cm_modify_order_history_response_inner;
@@ -195,8 +195,8 @@ pub mod query_current_cm_open_conditional_order_response;
 pub use self::query_current_cm_open_conditional_order_response::QueryCurrentCmOpenConditionalOrderResponse;
 pub mod query_current_margin_open_order_response_inner;
 pub use self::query_current_margin_open_order_response_inner::QueryCurrentMarginOpenOrderResponseInner;
-pub mod query_current_um_open_conditional_order_response;
-pub use self::query_current_um_open_conditional_order_response::QueryCurrentUmOpenConditionalOrderResponse;
+pub mod query_current_um_open_algo_order_response;
+pub use self::query_current_um_open_algo_order_response::QueryCurrentUmOpenAlgoOrderResponse;
 pub mod query_current_um_open_order_response;
 pub use self::query_current_um_open_order_response::QueryCurrentUmOpenOrderResponse;
 pub mod query_margin_account_order_response;
@@ -225,8 +225,8 @@ pub mod query_margin_repay_record_response_rows_inner;
 pub use self::query_margin_repay_record_response_rows_inner::QueryMarginRepayRecordResponseRowsInner;
 pub mod query_portfolio_margin_negative_balance_interest_history_response_inner;
 pub use self::query_portfolio_margin_negative_balance_interest_history_response_inner::QueryPortfolioMarginNegativeBalanceInterestHistoryResponseInner;
-pub mod query_um_conditional_order_history_response;
-pub use self::query_um_conditional_order_history_response::QueryUmConditionalOrderHistoryResponse;
+pub mod query_um_algo_order_history_response_inner;
+pub use self::query_um_algo_order_history_response_inner::QueryUmAlgoOrderHistoryResponseInner;
 pub mod query_um_modify_order_history_response_inner;
 pub use self::query_um_modify_order_history_response_inner::QueryUmModifyOrderHistoryResponseInner;
 pub mod query_um_order_response;

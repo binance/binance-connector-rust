@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,19 +15,25 @@
 use crate::derivatives_trading_coin_futures::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `PositionAdlQuantileEstimationResponseInnerAdlQuantile` : ADL quantile information.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PositionAdlQuantileEstimationResponseInnerAdlQuantile {
+    /// adl quantile for \"LONG\" position in hedge mode
     #[serde(rename = "LONG", skip_serializing_if = "Option::is_none")]
     pub long: Option<i64>,
+    /// adl qauntile for \"SHORT\" position in hedge mode
     #[serde(rename = "SHORT", skip_serializing_if = "Option::is_none")]
     pub short: Option<i64>,
+    /// Hedge mode ADL quantile.
     #[serde(rename = "HEDGE", skip_serializing_if = "Option::is_none")]
     pub hedge: Option<i64>,
+    /// One-way mode ADL quantile.
     #[serde(rename = "BOTH", skip_serializing_if = "Option::is_none")]
     pub both: Option<i64>,
 }
 
 impl PositionAdlQuantileEstimationResponseInnerAdlQuantile {
+    /// ADL quantile information.
     #[must_use]
     pub fn new() -> PositionAdlQuantileEstimationResponseInnerAdlQuantile {
         PositionAdlQuantileEstimationResponseInnerAdlQuantile {

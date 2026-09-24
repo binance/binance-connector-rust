@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -39,12 +39,12 @@ pub mod change_position_mode_response;
 pub use self::change_position_mode_response::ChangePositionModeResponse;
 pub mod check_server_time_response;
 pub use self::check_server_time_response::CheckServerTimeResponse;
-pub mod classic_portfolio_margin_account_information_response;
-pub use self::classic_portfolio_margin_account_information_response::ClassicPortfolioMarginAccountInformationResponse;
 pub mod compressed_aggregate_trades_list_response_inner;
 pub use self::compressed_aggregate_trades_list_response_inner::CompressedAggregateTradesListResponseInner;
-pub mod continuous_contract_kline_candlestick_data_response_item_inner;
-pub use self::continuous_contract_kline_candlestick_data_response_item_inner::ContinuousContractKlineCandlestickDataResponseItemInner;
+pub mod continuous_contract_kline_candlestick_data_item_inner;
+pub use self::continuous_contract_kline_candlestick_data_item_inner::ContinuousContractKlineCandlestickDataItemInner;
+pub mod current_all_open_orders_response_inner;
+pub use self::current_all_open_orders_response_inner::CurrentAllOpenOrdersResponseInner;
 pub mod exchange_information_response;
 pub use self::exchange_information_response::ExchangeInformationResponse;
 pub mod exchange_information_response_rate_limits_inner;
@@ -87,14 +87,12 @@ pub mod get_position_margin_change_history_response_inner;
 pub use self::get_position_margin_change_history_response_inner::GetPositionMarginChangeHistoryResponseInner;
 pub mod index_price_and_mark_price_response_inner;
 pub use self::index_price_and_mark_price_response_inner::IndexPriceAndMarkPriceResponseInner;
-pub mod index_price_kline_candlestick_data_response_item_inner;
-pub use self::index_price_kline_candlestick_data_response_item_inner::IndexPriceKlineCandlestickDataResponseItemInner;
+pub mod index_price_kline_candlestick_data_item_inner;
+pub use self::index_price_kline_candlestick_data_item_inner::IndexPriceKlineCandlestickDataItemInner;
 pub mod keepalive_user_data_stream_response;
 pub use self::keepalive_user_data_stream_response::KeepaliveUserDataStreamResponse;
 pub mod long_short_ratio_response_inner;
 pub use self::long_short_ratio_response_inner::LongShortRatioResponseInner;
-pub mod mark_price_kline_candlestick_data_response_item_inner;
-pub use self::mark_price_kline_candlestick_data_response_item_inner::MarkPriceKlineCandlestickDataResponseItemInner;
 pub mod modify_isolated_position_margin_response;
 pub use self::modify_isolated_position_margin_response::ModifyIsolatedPositionMarginResponse;
 pub mod modify_multiple_orders_batch_orders_parameter_inner;
@@ -129,8 +127,8 @@ pub mod position_adl_quantile_estimation_response_inner_adl_quantile;
 pub use self::position_adl_quantile_estimation_response_inner_adl_quantile::PositionAdlQuantileEstimationResponseInnerAdlQuantile;
 pub mod position_information_response_inner;
 pub use self::position_information_response_inner::PositionInformationResponseInner;
-pub mod premium_index_kline_data_response_item_inner;
-pub use self::premium_index_kline_data_response_item_inner::PremiumIndexKlineDataResponseItemInner;
+pub mod premium_index_kline_data_item_inner;
+pub use self::premium_index_kline_data_item_inner::PremiumIndexKlineDataItemInner;
 pub mod query_current_open_order_response;
 pub use self::query_current_open_order_response::QueryCurrentOpenOrderResponse;
 pub mod query_index_price_constituents_response;

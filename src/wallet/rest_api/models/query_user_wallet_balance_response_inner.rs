@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,6 +23,9 @@ pub struct QueryUserWalletBalanceResponseInner {
     pub balance: Option<String>,
     #[serde(rename = "walletName", skip_serializing_if = "Option::is_none")]
     pub wallet_name: Option<String>,
+    /// Per-asset balance detail for this wallet. Only present when `needBalanceDetail=true` is passed; omitted entirely otherwise.
+    #[serde(rename = "assetBalances", skip_serializing_if = "Option::is_none")]
+    pub asset_balances: Option<Vec<models::QueryUserWalletBalanceResponseInnerAssetBalancesInner>>,
 }
 
 impl QueryUserWalletBalanceResponseInner {
@@ -32,6 +35,7 @@ impl QueryUserWalletBalanceResponseInner {
             activate: None,
             balance: None,
             wallet_name: None,
+            asset_balances: None,
         }
     }
 }

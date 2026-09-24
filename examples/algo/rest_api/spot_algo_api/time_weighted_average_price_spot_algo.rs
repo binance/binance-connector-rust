@@ -3,7 +3,10 @@ use rust_decimal::prelude::*;
 use std::env;
 use tracing::info;
 
-use binance_sdk::algo::{AlgoRestApi, rest_api::TimeWeightedAveragePriceSpotAlgoParams};
+use binance_sdk::algo::{
+    AlgoRestApi,
+    rest_api::{TimeWeightedAveragePriceSpotAlgoParams, TimeWeightedAveragePriceSpotAlgoSideEnum},
+};
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
 
@@ -28,8 +31,8 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = TimeWeightedAveragePriceSpotAlgoParams::builder(
         "BTCUSDT".to_string(),
-        "BUY".to_string(),
-        dec!(1.0),
+        TimeWeightedAveragePriceSpotAlgoSideEnum::Buy,
+        dec!(1),
         5000,
     )
     .build()?;

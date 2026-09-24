@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,47 +17,67 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryAllCmConditionalOrdersResponseInner {
+    /// New Client Strategy ID.
     #[serde(
         rename = "newClientStrategyId",
         skip_serializing_if = "Option::is_none"
     )]
     pub new_client_strategy_id: Option<String>,
+    /// Strategy ID.
     #[serde(rename = "strategyId", skip_serializing_if = "Option::is_none")]
     pub strategy_id: Option<i64>,
+    /// Strategy Status.
     #[serde(rename = "strategyStatus", skip_serializing_if = "Option::is_none")]
     pub strategy_status: Option<String>,
+    /// Strategy Type.
     #[serde(rename = "strategyType", skip_serializing_if = "Option::is_none")]
     pub strategy_type: Option<String>,
+    /// Orig Qty.
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
+    /// Price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Reduce Only.
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
+    /// Side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// BOTH means that it is the position of One-way Mode
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// please ignore when order type is `TRAILING_STOP_MARKET`
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
+    /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Normal orderID after trigger if appliable, only have when the strategy is triggered
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Normal order status after trigger if appliable, only have when the strategy is triggered
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// order time
     #[serde(rename = "bookTime", skip_serializing_if = "Option::is_none")]
     pub book_time: Option<i64>,
+    /// last update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// Trigger Time.
     #[serde(rename = "triggerTime", skip_serializing_if = "Option::is_none")]
     pub trigger_time: Option<i64>,
+    /// Time In Force.
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// Normal order type after trigger if appliable
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// activation price, only return with `TRAILING_STOP_MARKET` order
     #[serde(rename = "activatePrice", skip_serializing_if = "Option::is_none")]
     pub activate_price: Option<String>,
+    /// callback rate, only return with `TRAILING_STOP_MARKET` order
     #[serde(rename = "priceRate", skip_serializing_if = "Option::is_none")]
     pub price_rate: Option<String>,
 }

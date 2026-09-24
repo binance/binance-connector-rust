@@ -26,12 +26,9 @@ async fn main() -> Result<()> {
     let rest_client = GiftCardRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = CreateADualTokenGiftCardParams::builder(
-        "base_token_example".to_string(),
-        "face_token_example".to_string(),
-        dec!(1.0),
-    )
-    .build()?;
+    let params =
+        CreateADualTokenGiftCardParams::builder("BUSD".to_string(), "BNB".to_string(), dec!(1))
+            .build()?;
 
     // Make the API call
     let response = rest_client

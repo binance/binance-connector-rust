@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -24,6 +24,12 @@ pub struct OrderBookResponse {
     pub status: Option<i64>,
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
     pub result: Option<Box<models::OrderBookResponseResult>>,
+    /// Bid orders. Each entry is [price, quantity].
+    #[serde(rename = "bids", skip_serializing_if = "Option::is_none")]
+    pub bids: Option<Vec<Vec<String>>>,
+    /// Ask orders. Each entry is [price, quantity].
+    #[serde(rename = "asks", skip_serializing_if = "Option::is_none")]
+    pub asks: Option<Vec<Vec<String>>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
     pub rate_limits: Option<Vec<models::OrderBookResponseRateLimitsInner>>,
 }
@@ -35,6 +41,8 @@ impl OrderBookResponse {
             id: None,
             status: None,
             result: None,
+            bids: None,
+            asks: None,
             rate_limits: None,
         }
     }

@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingUsdsFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        ToggleBnbBurnOnFuturesTradeParams::builder("fee_burn_example".to_string()).build()?;
+    let params = ToggleBnbBurnOnFuturesTradeParams::builder("true".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

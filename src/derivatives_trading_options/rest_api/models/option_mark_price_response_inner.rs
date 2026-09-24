@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,28 +17,40 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OptionMarkPriceResponseInner {
+    /// symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Mark price
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
+    /// Implied volatility Buy
     #[serde(rename = "bidIV", skip_serializing_if = "Option::is_none")]
     pub bid_iv: Option<String>,
+    /// Implied volatility Sell
     #[serde(rename = "askIV", skip_serializing_if = "Option::is_none")]
     pub ask_iv: Option<String>,
+    /// Implied volatility mark
     #[serde(rename = "markIV", skip_serializing_if = "Option::is_none")]
     pub mark_iv: Option<String>,
+    /// delta
     #[serde(rename = "delta", skip_serializing_if = "Option::is_none")]
     pub delta: Option<String>,
+    /// theta
     #[serde(rename = "theta", skip_serializing_if = "Option::is_none")]
     pub theta: Option<String>,
+    /// gamma
     #[serde(rename = "gamma", skip_serializing_if = "Option::is_none")]
     pub gamma: Option<String>,
+    /// vega
     #[serde(rename = "vega", skip_serializing_if = "Option::is_none")]
     pub vega: Option<String>,
+    /// Current highest buy price
     #[serde(rename = "highPriceLimit", skip_serializing_if = "Option::is_none")]
     pub high_price_limit: Option<String>,
+    /// Current lowest sell price
     #[serde(rename = "lowPriceLimit", skip_serializing_if = "Option::is_none")]
     pub low_price_limit: Option<String>,
+    /// risk free rate
     #[serde(rename = "riskFreeInterest", skip_serializing_if = "Option::is_none")]
     pub risk_free_interest: Option<String>,
 }

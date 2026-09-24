@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        VerifyBinanceGiftCardByGiftCardNumberParams::builder("reference_no_example".to_string())
+        VerifyBinanceGiftCardByGiftCardNumberParams::builder("0033002328060227".to_string())
             .build()?;
 
     // Make the API call

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,12 +17,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseRateLimitsInner {
+    /// rate Limit Type
     #[serde(rename = "rateLimitType", skip_serializing_if = "Option::is_none")]
     pub rate_limit_type: Option<String>,
+    /// interval
     #[serde(rename = "interval", skip_serializing_if = "Option::is_none")]
     pub interval: Option<String>,
+    /// interval Num
     #[serde(rename = "intervalNum", skip_serializing_if = "Option::is_none")]
     pub interval_num: Option<i64>,
+    /// limit
     #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
 }

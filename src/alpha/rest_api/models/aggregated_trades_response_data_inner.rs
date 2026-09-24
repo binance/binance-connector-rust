@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,18 +17,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AggregatedTradesResponseDataInner {
+    /// Aggregate trade ID.
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<i64>,
+    /// Trade price.
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Trade quantity.
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// First trade ID in the aggregation.
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<i64>,
+    /// Last trade ID in the aggregation.
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<i64>,
+    /// Trade timestamp in milliseconds.
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Whether buyer is the market maker (deprecated).
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
 }

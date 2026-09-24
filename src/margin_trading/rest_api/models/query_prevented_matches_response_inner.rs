@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,30 +17,40 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryPreventedMatchesResponseInner {
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// prevented Match Id.
     #[serde(rename = "preventedMatchId", skip_serializing_if = "Option::is_none")]
     pub prevented_match_id: Option<i64>,
+    /// taker Order Id.
     #[serde(rename = "takerOrderId", skip_serializing_if = "Option::is_none")]
     pub taker_order_id: Option<i64>,
+    /// maker Symbol.
     #[serde(rename = "makerSymbol", skip_serializing_if = "Option::is_none")]
     pub maker_symbol: Option<String>,
+    /// maker Order Id.
     #[serde(rename = "makerOrderId", skip_serializing_if = "Option::is_none")]
     pub maker_order_id: Option<i64>,
+    /// trade Group Id.
     #[serde(rename = "tradeGroupId", skip_serializing_if = "Option::is_none")]
     pub trade_group_id: Option<i64>,
+    /// self Trade Prevention Mode.
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<String>,
+    /// price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// maker Prevented Quantity.
     #[serde(
         rename = "makerPreventedQuantity",
         skip_serializing_if = "Option::is_none"
     )]
     pub maker_prevented_quantity: Option<String>,
+    /// transact Time.
     #[serde(rename = "transactTime", skip_serializing_if = "Option::is_none")]
     pub transact_time: Option<i64>,
 }

@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket Streams
+ * Spot WebSocket Market Streams
  *
- * OpenAPI Specifications for the Binance Spot WebSocket Streams
- *
- * API documents:
- * - [Github web-socket-streams documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md)
- * - [General API information for web-socket-streams on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,26 +18,37 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AggTradeResponse {
+    /// Event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Aggregate trade ID
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<i64>,
+    /// Price
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Quantity
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// First trade ID
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<i64>,
+    /// Last trade ID
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<i64>,
+    /// Trade time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Is the buyer the market maker?
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<bool>,
+    /// Ignore
     #[serde(rename = "M", skip_serializing_if = "Option::is_none")]
     pub m_uppercase: Option<bool>,
 }

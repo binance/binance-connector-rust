@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -75,5 +75,3 @@ pub mod statistic_list_response;
 pub use self::statistic_list_response::StatisticListResponse;
 pub mod statistic_list_response_data;
 pub use self::statistic_list_response_data::StatisticListResponseData;
-pub mod statistic_list_response_data_profit_today;
-pub use self::statistic_list_response_data_profit_today::StatisticListResponseDataProfitToday;

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,8 +18,10 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GreekUpdate {
+    /// Event Time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Transaction Time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
     #[serde(rename = "G", skip_serializing_if = "Option::is_none")]

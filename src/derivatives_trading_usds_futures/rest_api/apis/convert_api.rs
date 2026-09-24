@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -64,7 +64,7 @@ impl ConvertApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`accept_the_offered_quote`](#method.accept_the_offered_quote).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AcceptTheOfferedQuoteParams {
     ///
@@ -72,12 +72,14 @@ pub struct AcceptTheOfferedQuoteParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "quoteId")]
     pub quote_id: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -97,18 +99,20 @@ impl AcceptTheOfferedQuoteParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`list_all_convert_pairs`](#method.list_all_convert_pairs).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ListAllConvertPairsParams {
     /// User spends coin
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromAsset", default)]
     pub from_asset: Option<String>,
     /// User receives coin
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "toAsset", default)]
     pub to_asset: Option<String>,
 }
 
@@ -124,18 +128,20 @@ impl ListAllConvertPairsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_status`](#method.order_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderStatusParams {
     /// Either orderId or quoteId is required
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "orderId", default)]
     pub order_id: Option<String>,
     /// Either orderId or quoteId is required
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "quoteId", default)]
     pub quote_id: Option<String>,
 }
 
@@ -151,7 +157,7 @@ impl OrderStatusParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`send_quote_request`](#method.send_quote_request).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SendQuoteRequestParams {
     ///
@@ -159,33 +165,39 @@ pub struct SendQuoteRequestParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "fromAsset")]
     pub from_asset: String,
     ///
     /// The `to_asset` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "toAsset")]
     pub to_asset: String,
     /// When specified, it is the amount you will be debited after the conversion
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromAmount", default)]
     pub from_amount: Option<rust_decimal::Decimal>,
     /// When specified, it is the amount you will be credited after the conversion
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "toAmount", default)]
     pub to_amount: Option<rust_decimal::Decimal>,
     /// 10s, default 10s
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "validTime", default)]
     pub valid_time: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -407,7 +419,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AcceptTheOfferedQuoteResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AcceptTheOfferedQuoteResponse");
@@ -435,7 +447,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::ListAllConvertPairsResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::ListAllConvertPairsResponseInner>");
@@ -462,7 +474,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::OrderStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::OrderStatusResponse");
@@ -489,7 +501,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SendQuoteRequestResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SendQuoteRequestResponse");
@@ -512,7 +524,7 @@ mod tests {
 
             let params = AcceptTheOfferedQuoteParams::builder("1".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AcceptTheOfferedQuoteResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AcceptTheOfferedQuoteResponse");
 
             let resp = client.accept_the_offered_quote(params).await.expect("Expected a response");
@@ -529,7 +541,7 @@ mod tests {
 
             let params = AcceptTheOfferedQuoteParams::builder("1".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":"933256278426274426","createTime":1623381330472,"orderStatus":"PROCESS"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AcceptTheOfferedQuoteResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AcceptTheOfferedQuoteResponse");
 
             let resp = client.accept_the_offered_quote(params).await.expect("Expected a response");
@@ -564,7 +576,7 @@ mod tests {
 
             let params = ListAllConvertPairsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::ListAllConvertPairsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::ListAllConvertPairsResponseInner>");
 
             let resp = client.list_all_convert_pairs(params).await.expect("Expected a response");
@@ -579,9 +591,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockConvertApiClient { force_error: false };
 
-            let params = ListAllConvertPairsParams::builder().from_asset("from_asset_example".to_string()).to_asset("to_asset_example".to_string()).build().unwrap();
+            let params = ListAllConvertPairsParams::builder().from_asset("BTC".to_string()).to_asset("USDT".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"fromAsset":"BTC","toAsset":"USDT","fromAssetMinAmount":"0.0004","fromAssetMaxAmount":"50","toAssetMinAmount":"20","toAssetMaxAmount":"2500000"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::ListAllConvertPairsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::ListAllConvertPairsResponseInner>");
 
             let resp = client.list_all_convert_pairs(params).await.expect("Expected a response");
@@ -614,7 +626,7 @@ mod tests {
 
             let params = OrderStatusParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OrderStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderStatusResponse");
 
             let resp = client.order_status(params).await.expect("Expected a response");
@@ -629,9 +641,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockConvertApiClient { force_error: false };
 
-            let params = OrderStatusParams::builder().order_id("1".to_string()).quote_id("1".to_string()).build().unwrap();
+            let params = OrderStatusParams::builder().order_id("933256278426274400".to_string()).quote_id("1".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"orderId":933256278426274400,"orderStatus":"SUCCESS","fromAsset":"BTC","fromAmount":"0.00054414","toAsset":"USDT","toAmount":"20","ratio":"36755","inverseRatio":"0.00002721","createTime":1623381330472}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::OrderStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::OrderStatusResponse");
 
             let resp = client.order_status(params).await.expect("Expected a response");
@@ -662,9 +674,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockConvertApiClient { force_error: false };
 
-            let params = SendQuoteRequestParams::builder("from_asset_example".to_string(),"to_asset_example".to_string(),).build().unwrap();
+            let params = SendQuoteRequestParams::builder("BTC".to_string(),"USDT".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SendQuoteRequestResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SendQuoteRequestResponse");
 
             let resp = client.send_quote_request(params).await.expect("Expected a response");
@@ -679,9 +691,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockConvertApiClient { force_error: false };
 
-            let params = SendQuoteRequestParams::builder("from_asset_example".to_string(),"to_asset_example".to_string(),).from_amount(dec!(1.0)).to_amount(dec!(1.0)).valid_time("10s".to_string()).recv_window(5000).build().unwrap();
+            let params = SendQuoteRequestParams::builder("BTC".to_string(),"USDT".to_string(),).from_amount(dec!(1.0)).to_amount(dec!(1.0)).valid_time("10s".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"quoteId":"12415572564","ratio":"38163.7","inverseRatio":"0.0000262","validTimestamp":1623319461670,"toAmount":"3816.37","fromAmount":"0.1"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SendQuoteRequestResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SendQuoteRequestResponse");
 
             let resp = client.send_quote_request(params).await.expect("Expected a response");
@@ -696,12 +708,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockConvertApiClient { force_error: true };
 
-            let params = SendQuoteRequestParams::builder(
-                "from_asset_example".to_string(),
-                "to_asset_example".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = SendQuoteRequestParams::builder("BTC".to_string(), "USDT".to_string())
+                .build()
+                .unwrap();
 
             match client.send_quote_request(params).await {
                 Ok(_) => panic!("Expected an error"),

@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::dual_investment::{
-    DualInvestmentRestApi, rest_api::ChangeAutoCompoundStatusParams,
+    DualInvestmentRestApi,
+    rest_api::{ChangeAutoCompoundStatusAutoCompoundPlanEnum, ChangeAutoCompoundStatusParams},
 };
 use binance_sdk::logger;
 
@@ -27,7 +28,11 @@ async fn main() -> Result<()> {
     let rest_client = DualInvestmentRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = ChangeAutoCompoundStatusParams::builder("1".to_string()).build()?;
+    let params = ChangeAutoCompoundStatusParams::builder(
+        "741590".to_string(),
+        ChangeAutoCompoundStatusAutoCompoundPlanEnum::None,
+    )
+    .build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Portfolio Margin Pro REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -66,7 +66,7 @@ impl MarketDataApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`portfolio_margin_pro_tiered_collateral_rate`](#method.portfolio_margin_pro_tiered_collateral_rate).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PortfolioMarginProTieredCollateralRateParams {
     ///
@@ -74,6 +74,7 @@ pub struct PortfolioMarginProTieredCollateralRateParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -89,7 +90,7 @@ impl PortfolioMarginProTieredCollateralRateParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_portfolio_margin_asset_index_price`](#method.query_portfolio_margin_asset_index_price).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryPortfolioMarginAssetIndexPriceParams {
     ///
@@ -97,6 +98,7 @@ pub struct QueryPortfolioMarginAssetIndexPriceParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
 }
 
@@ -265,10 +267,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"[{"asset":"USDC","leverage":10},{"asset":"USDT","leverage":10}]"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","leverage":10}]"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetPortfolioMarginAssetLeverageResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetPortfolioMarginAssetLeverageResponseInner>",
@@ -296,7 +296,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","collateralRate":"1.0000"},{"asset":"BUSD","collateralRate":"1.0000"}]"#).unwrap();
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"asset":"USDC","collateralRate":"1.0000"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::PortfolioMarginCollateralRateResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::PortfolioMarginCollateralRateResponseInner>",
@@ -326,7 +328,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"},{"tierFloor":"1000.0000","tierCap":"2000.0000","collateralRate":"0.9000","cum":"0.0000"}]},{"asset":"USDT","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"},{"tierFloor":"1000.0000","tierCap":"2000.0000","collateralRate":"0.9999","cum":"0.0000"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::PortfolioMarginProTieredCollateralRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PortfolioMarginProTieredCollateralRateResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -356,7 +358,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"[{"asset":"BTC","assetIndexPrice":"28251.9136906","time":1683518338121}]"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response : Vec<models::QueryPortfolioMarginAssetIndexPriceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPortfolioMarginAssetIndexPriceResponseInner>");
 
             let dummy = DummyRestApiResponse {
@@ -375,10 +377,8 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let resp_json: Value = serde_json::from_str(
-                r#"[{"asset":"USDC","leverage":10},{"asset":"USDT","leverage":10}]"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","leverage":10}]"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: Vec<models::GetPortfolioMarginAssetLeverageResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetPortfolioMarginAssetLeverageResponseInner>",
@@ -399,10 +399,8 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let resp_json: Value = serde_json::from_str(
-                r#"[{"asset":"USDC","leverage":10},{"asset":"USDT","leverage":10}]"#,
-            )
-            .unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","leverage":10}]"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: Vec<models::GetPortfolioMarginAssetLeverageResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetPortfolioMarginAssetLeverageResponseInner>",
@@ -437,11 +435,18 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"asset":"USDC","collateralRate":"1.0000"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::PortfolioMarginCollateralRateResponseInner> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<models::PortfolioMarginCollateralRateResponseInner>",
+                );
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","collateralRate":"1.0000"},{"asset":"BUSD","collateralRate":"1.0000"}]"#).unwrap();
-            let expected_response : Vec<models::PortfolioMarginCollateralRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PortfolioMarginCollateralRateResponseInner>");
-
-            let resp = client.portfolio_margin_collateral_rate().await.expect("Expected a response");
+            let resp = client
+                .portfolio_margin_collateral_rate()
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -453,11 +458,18 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"asset":"USDC","collateralRate":"1.0000"}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::PortfolioMarginCollateralRateResponseInner> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<models::PortfolioMarginCollateralRateResponseInner>",
+                );
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDC","collateralRate":"1.0000"},{"asset":"BUSD","collateralRate":"1.0000"}]"#).unwrap();
-            let expected_response : Vec<models::PortfolioMarginCollateralRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PortfolioMarginCollateralRateResponseInner>");
-
-            let resp = client.portfolio_margin_collateral_rate().await.expect("Expected a response");
+            let resp = client
+                .portfolio_margin_collateral_rate()
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -485,7 +497,7 @@ mod tests {
 
             let params = PortfolioMarginProTieredCollateralRateParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"},{"tierFloor":"1000.0000","tierCap":"2000.0000","collateralRate":"0.9000","cum":"0.0000"}]},{"asset":"USDT","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"},{"tierFloor":"1000.0000","tierCap":"2000.0000","collateralRate":"0.9999","cum":"0.0000"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PortfolioMarginProTieredCollateralRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PortfolioMarginProTieredCollateralRateResponseInner>");
 
             let resp = client.portfolio_margin_pro_tiered_collateral_rate(params).await.expect("Expected a response");
@@ -502,7 +514,7 @@ mod tests {
 
             let params = PortfolioMarginProTieredCollateralRateParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"},{"tierFloor":"1000.0000","tierCap":"2000.0000","collateralRate":"0.9000","cum":"0.0000"}]},{"asset":"USDT","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"},{"tierFloor":"1000.0000","tierCap":"2000.0000","collateralRate":"0.9999","cum":"0.0000"}]}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::PortfolioMarginProTieredCollateralRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::PortfolioMarginProTieredCollateralRateResponseInner>");
 
             let resp = client.portfolio_margin_pro_tiered_collateral_rate(params).await.expect("Expected a response");
@@ -540,7 +552,7 @@ mod tests {
 
             let params = QueryPortfolioMarginAssetIndexPriceParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","assetIndexPrice":"28251.9136906","time":1683518338121}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","assetIndexPrice":"28251.9136906","time":1683518338121}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryPortfolioMarginAssetIndexPriceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPortfolioMarginAssetIndexPriceResponseInner>");
 
             let resp = client.query_portfolio_margin_asset_index_price(params).await.expect("Expected a response");
@@ -555,9 +567,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = QueryPortfolioMarginAssetIndexPriceParams::builder().asset("asset_example".to_string()).build().unwrap();
+            let params = QueryPortfolioMarginAssetIndexPriceParams::builder().asset("BTC".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","assetIndexPrice":"28251.9136906","time":1683518338121}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BTC","assetIndexPrice":"28251.9136906","time":1683518338121}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::QueryPortfolioMarginAssetIndexPriceResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryPortfolioMarginAssetIndexPriceResponseInner>");
 
             let resp = client.query_portfolio_margin_asset_index_price(params).await.expect("Expected a response");

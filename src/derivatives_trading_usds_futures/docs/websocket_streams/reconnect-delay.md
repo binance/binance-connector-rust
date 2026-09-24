@@ -4,7 +4,7 @@
 use binance_sdk::derivatives_trading_usds_futures;
 use binance_sdk::config;
 
-let configuration = config::ConfigurationWebsocketApi::builder()
+let configuration = config::ConfigurationWebsocketStreams::builder()
     .api_key("your-api-key")
     .api_secret("your-api-secret")
     .reconnect_delay(3000) // Set reconnect delay to 3 seconds

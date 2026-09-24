@@ -25,9 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = SubAccountRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        GetSubAccountDepositHistoryParams::builder("sub-account-email@email.com".to_string())
-            .build()?;
+    let params = GetSubAccountDepositHistoryParams::builder("123@test.com".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

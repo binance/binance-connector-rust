@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = MarkPriceKlineCandlestickDataParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSDT".to_string(),
         MarkPriceKlineCandlestickDataIntervalEnum::Interval1m,
     )
     .build()?;

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,14 +21,16 @@ use serde_json::Value;
 pub enum UserDataStreamEventsResponse {
     #[serde(rename = "ACCOUNT_CONFIG_UPDATE")]
     AccountConfigUpdate(Box<models::AccountConfigUpdate>),
-    #[serde(rename = "ALGO_UPDATE")]
-    AlgoUpdate(Box<models::AlgoUpdate>),
     #[serde(rename = "ACCOUNT_UPDATE")]
     AccountUpdate(Box<models::AccountUpdate>),
+    #[serde(rename = "ALGO_UPDATE")]
+    AlgoUpdate(Box<models::AlgoUpdate>),
     #[serde(rename = "CONDITIONAL_ORDER_TRIGGER_REJECT")]
     ConditionalOrderTriggerReject(Box<models::ConditionalOrderTriggerReject>),
     #[serde(rename = "GRID_UPDATE")]
     GridUpdate(Box<models::GridUpdate>),
+    #[serde(rename = "listenKeyExpired")]
+    ListenKeyExpired(Box<models::ListenKeyExpired>),
     #[serde(rename = "MARGIN_CALL")]
     MarginCall(Box<models::MarginCall>),
     #[serde(rename = "ORDER_TRADE_UPDATE")]
@@ -37,8 +39,6 @@ pub enum UserDataStreamEventsResponse {
     StrategyUpdate(Box<models::StrategyUpdate>),
     #[serde(rename = "TRADE_LITE")]
     TradeLite(Box<models::TradeLite>),
-    #[serde(rename = "listenKeyExpired")]
-    ListenKeyExpired(Box<models::Listenkeyexpired>),
     Other(serde_json::Value),
 }
 
@@ -65,16 +65,16 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 )))
             }
 
-            "ALGO_UPDATE" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::AlgoUpdate(Box::new(payload)))
-            }
-
             "ACCOUNT_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::AccountUpdate(Box::new(
                     payload,
                 )))
+            }
+
+            "ALGO_UPDATE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::AlgoUpdate(Box::new(payload)))
             }
 
             "CONDITIONAL_ORDER_TRIGGER_REJECT" => {
@@ -87,6 +87,13 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             "GRID_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::GridUpdate(Box::new(payload)))
+            }
+
+            "listenKeyExpired" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
+                    payload,
+                )))
             }
 
             "MARGIN_CALL" => {
@@ -111,13 +118,6 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             "TRADE_LITE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::TradeLite(Box::new(payload)))
-            }
-
-            "listenKeyExpired" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
-                    payload,
-                )))
             }
 
             _ => Ok(UserDataStreamEventsResponse::Other(v)),

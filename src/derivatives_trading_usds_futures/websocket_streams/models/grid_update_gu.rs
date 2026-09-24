@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,24 +18,34 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GridUpdateGu {
+    /// Strategy ID
     #[serde(rename = "si", skip_serializing_if = "Option::is_none")]
     pub si: Option<i64>,
+    /// Strategy Type
     #[serde(rename = "st", skip_serializing_if = "Option::is_none")]
     pub st: Option<String>,
+    /// Strategy Status
     #[serde(rename = "ss", skip_serializing_if = "Option::is_none")]
     pub ss: Option<String>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Realized PNL
     #[serde(rename = "r", skip_serializing_if = "Option::is_none")]
     pub r: Option<String>,
+    /// Unmatched Average Price
     #[serde(rename = "up", skip_serializing_if = "Option::is_none")]
     pub up: Option<String>,
+    /// Unmatched Qty
     #[serde(rename = "uq", skip_serializing_if = "Option::is_none")]
     pub uq: Option<String>,
+    /// Unmatched Fee
     #[serde(rename = "uf", skip_serializing_if = "Option::is_none")]
     pub uf: Option<String>,
+    /// Matched PNL
     #[serde(rename = "mp", skip_serializing_if = "Option::is_none")]
     pub mp: Option<String>,
+    /// Update Time
     #[serde(rename = "ut", skip_serializing_if = "Option::is_none")]
     pub ut: Option<i64>,
 }

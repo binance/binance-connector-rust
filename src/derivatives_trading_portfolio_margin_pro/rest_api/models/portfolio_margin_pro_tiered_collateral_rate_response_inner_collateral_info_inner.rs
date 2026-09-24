@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Portfolio Margin Pro REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,12 +17,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PortfolioMarginProTieredCollateralRateResponseInnerCollateralInfoInner {
+    /// tier Floor.
     #[serde(rename = "tierFloor", skip_serializing_if = "Option::is_none")]
     pub tier_floor: Option<String>,
+    /// tier Cap.
     #[serde(rename = "tierCap", skip_serializing_if = "Option::is_none")]
     pub tier_cap: Option<String>,
+    /// collateral Rate.
     #[serde(rename = "collateralRate", skip_serializing_if = "Option::is_none")]
     pub collateral_rate: Option<String>,
+    /// account equity quick addition number
     #[serde(rename = "cum", skip_serializing_if = "Option::is_none")]
     pub cum: Option<String>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Crypto Loan REST API
+ * Crypto Loan REST API
  *
- * OpenAPI Specification for the Binance Crypto Loan REST API
+ * Access Binance Crypto Loans to query assets, subscribe to loans, and manage loan positions.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -92,11 +92,73 @@ impl FlexibleRateApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum FlexibleLoanAdjustLtvDirectionEnum {
+    #[serde(rename = "ADDITIONAL")]
+    Additional,
+    #[serde(rename = "REDUCED")]
+    Reduced,
+}
+
+impl FlexibleLoanAdjustLtvDirectionEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Additional => "ADDITIONAL",
+            Self::Reduced => "REDUCED",
+        }
+    }
+}
+
+impl std::str::FromStr for FlexibleLoanAdjustLtvDirectionEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "ADDITIONAL" => Ok(Self::Additional),
+            "REDUCED" => Ok(Self::Reduced),
+            other => Err(format!("invalid FlexibleLoanAdjustLtvDirectionEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum FlexibleLoanRepayRepaymentTypeEnum {
+    #[serde(rename = "1")]
+    RepaymentType1,
+    #[serde(rename = "2")]
+    RepaymentType2,
+}
+
+impl FlexibleLoanRepayRepaymentTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::RepaymentType1 => "1",
+            Self::RepaymentType2 => "2",
+        }
+    }
+}
+
+impl std::str::FromStr for FlexibleLoanRepayRepaymentTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1" => Ok(Self::RepaymentType1),
+            "2" => Ok(Self::RepaymentType2),
+            other => Err(format!("invalid FlexibleLoanRepayRepaymentTypeEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`check_collateral_repay_rate`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`check_collateral_repay_rate`](#method.check_collateral_repay_rate).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CheckCollateralRepayRateParams {
     ///
@@ -104,18 +166,20 @@ pub struct CheckCollateralRepayRateParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanCoin")]
     pub loan_coin: String,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralCoin")]
     pub collateral_coin: String,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -141,7 +205,7 @@ impl CheckCollateralRepayRateParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`flexible_loan_adjust_ltv`](#method.flexible_loan_adjust_ltv).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FlexibleLoanAdjustLtvParams {
     ///
@@ -149,29 +213,34 @@ pub struct FlexibleLoanAdjustLtvParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanCoin")]
     pub loan_coin: String,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralCoin")]
     pub collateral_coin: String,
     ///
     /// The `adjustment_amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "adjustmentAmount")]
     pub adjustment_amount: rust_decimal::Decimal,
-    /// "ADDITIONAL", "REDUCED"
+    ///
+    /// The `direction` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub direction: String,
-    ///
-    /// The `recv_window` parameter.
+    #[serde(rename = "direction")]
+    pub direction: FlexibleLoanAdjustLtvDirectionEnum,
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -183,14 +252,14 @@ impl FlexibleLoanAdjustLtvParams {
     /// * `loan_coin` — String
     /// * `collateral_coin` — String
     /// * `adjustment_amount` — `rust_decimal::Decimal`
-    /// * `direction` — \"ADDITIONAL\", \"REDUCED\"
+    /// * `direction` — String
     ///
     #[must_use]
     pub fn builder(
         loan_coin: String,
         collateral_coin: String,
         adjustment_amount: rust_decimal::Decimal,
-        direction: String,
+        direction: FlexibleLoanAdjustLtvDirectionEnum,
     ) -> FlexibleLoanAdjustLtvParamsBuilder {
         FlexibleLoanAdjustLtvParamsBuilder::default()
             .loan_coin(loan_coin)
@@ -203,7 +272,7 @@ impl FlexibleLoanAdjustLtvParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`flexible_loan_borrow`](#method.flexible_loan_borrow).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FlexibleLoanBorrowParams {
     ///
@@ -211,28 +280,32 @@ pub struct FlexibleLoanBorrowParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanCoin")]
     pub loan_coin: String,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralCoin")]
     pub collateral_coin: String,
     /// Mandatory when collateralAmount is empty
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanAmount", default)]
     pub loan_amount: Option<rust_decimal::Decimal>,
     /// Mandatory when loanAmount is empty
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralAmount", default)]
     pub collateral_amount: Option<rust_decimal::Decimal>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -255,7 +328,7 @@ impl FlexibleLoanBorrowParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`flexible_loan_repay`](#method.flexible_loan_repay).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FlexibleLoanRepayParams {
     ///
@@ -263,38 +336,46 @@ pub struct FlexibleLoanRepayParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanCoin")]
     pub loan_coin: String,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "collateralCoin")]
     pub collateral_coin: String,
-    /// repay amount of loanCoin
+    ///
+    /// The `repay_amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "repayAmount")]
     pub repay_amount: rust_decimal::Decimal,
-    /// Default: TRUE. TRUE: Return extra collateral to spot account; FALSE: Keep extra collateral in the order, and lower LTV.
+    /// TRUE: Return extra collateral to spot account; FALSE: Keep extra collateral in the order and lower
+    /// LTV.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralReturn", default)]
     pub collateral_return: Option<bool>,
-    /// Default: FALSE. TRUE: Full repayment; FALSE: Partial repayment, based on loanAmount
+    /// TRUE: Full repayment; FALSE: Partial repayment based on loan amount
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fullRepayment", default)]
     pub full_repayment: Option<bool>,
-    /// Default: 1. 1: Repayment with loan asset; 2: Repayment with collateral
+    /// 1: Repayment with loan asset; 2: Repayment with collateral
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub repayment_type: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    #[serde(rename = "repaymentType", default)]
+    pub repayment_type: Option<FlexibleLoanRepayRepaymentTypeEnum>,
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -305,7 +386,7 @@ impl FlexibleLoanRepayParams {
     ///
     /// * `loan_coin` — String
     /// * `collateral_coin` — String
-    /// * `repay_amount` — repay amount of loanCoin
+    /// * `repay_amount` — `rust_decimal::Decimal`
     ///
     #[must_use]
     pub fn builder(
@@ -323,7 +404,7 @@ impl FlexibleLoanRepayParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_assets_data`](#method.get_flexible_loan_assets_data).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanAssetsDataParams {
     ///
@@ -331,12 +412,13 @@ pub struct GetFlexibleLoanAssetsDataParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -352,7 +434,7 @@ impl GetFlexibleLoanAssetsDataParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_borrow_history`](#method.get_flexible_loan_borrow_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanBorrowHistoryParams {
     ///
@@ -360,40 +442,46 @@ pub struct GetFlexibleLoanBorrowHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Current querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records to return
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -409,7 +497,7 @@ impl GetFlexibleLoanBorrowHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_collateral_assets_data`](#method.get_flexible_loan_collateral_assets_data).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanCollateralAssetsDataParams {
     ///
@@ -417,12 +505,13 @@ pub struct GetFlexibleLoanCollateralAssetsDataParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -438,7 +527,7 @@ impl GetFlexibleLoanCollateralAssetsDataParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_interest_rate_history`](#method.get_flexible_loan_interest_rate_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanInterestRateHistoryParams {
     ///
@@ -446,34 +535,39 @@ pub struct GetFlexibleLoanInterestRateHistoryParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "recvWindow")]
     pub recv_window: i64,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Current querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records to return
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
 }
 
@@ -483,7 +577,7 @@ impl GetFlexibleLoanInterestRateHistoryParams {
     /// Required parameters:
     ///
     /// * `coin` — String
-    /// * `recv_window` — i64
+    /// * `recv_window` — Request validity window in milliseconds
     ///
     #[must_use]
     pub fn builder(
@@ -499,7 +593,7 @@ impl GetFlexibleLoanInterestRateHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_liquidation_history`](#method.get_flexible_loan_liquidation_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanLiquidationHistoryParams {
     ///
@@ -507,40 +601,46 @@ pub struct GetFlexibleLoanLiquidationHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Current querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records to return
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -556,7 +656,7 @@ impl GetFlexibleLoanLiquidationHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_ltv_adjustment_history`](#method.get_flexible_loan_ltv_adjustment_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanLtvAdjustmentHistoryParams {
     ///
@@ -564,40 +664,46 @@ pub struct GetFlexibleLoanLtvAdjustmentHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Current querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records to return
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -613,7 +719,7 @@ impl GetFlexibleLoanLtvAdjustmentHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_ongoing_orders`](#method.get_flexible_loan_ongoing_orders).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanOngoingOrdersParams {
     ///
@@ -621,28 +727,32 @@ pub struct GetFlexibleLoanOngoingOrdersParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Current querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records to return
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -658,7 +768,7 @@ impl GetFlexibleLoanOngoingOrdersParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_flexible_loan_repayment_history`](#method.get_flexible_loan_repayment_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetFlexibleLoanRepaymentHistoryParams {
     ///
@@ -666,40 +776,46 @@ pub struct GetFlexibleLoanRepaymentHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
     ///
     /// The `collateral_coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Current querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records to return
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -1363,7 +1479,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"loanCoin":"BUSD","collateralCoin":"BNB","rate":"300.36781234"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CheckCollateralRepayRateResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckCollateralRepayRateResponse");
@@ -1390,7 +1506,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","adjustmentAmount":"5.235","currentLTV":"0.52","status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","adjustmentAmount":"5.235","currentLTV":"0.52","status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FlexibleLoanAdjustLtvResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FlexibleLoanAdjustLtvResponse");
@@ -1417,7 +1533,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","loanAmount":"100.5","collateralCoin":"BNB","collateralAmount":"50.5","status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","loanAmount":"100.5","collateralCoin":"BNB","collateralAmount":"50.5","status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FlexibleLoanBorrowResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FlexibleLoanBorrowResponse");
@@ -1444,7 +1560,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","remainingDebt":"100.5","remainingCollateral":"5.253","fullRepayment":false,"currentLTV":"0.25","repayStatus":"REPAID"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","remainingDebt":"100.5","remainingCollateral":"5.253","fullRepayment":false,"currentLTV":"0.25","repayStatus":"REPAID"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FlexibleLoanRepayResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FlexibleLoanRepayResponse");
@@ -1471,7 +1587,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","flexibleInterestRate":"0.00000491","flexibleMinLimit":"100","flexibleMaxLimit":"1000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","flexibleInterestRate":"0.00000491","flexibleMinLimit":"100","flexibleMaxLimit":"1000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanAssetsDataResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleLoanAssetsDataResponse");
@@ -1498,7 +1614,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","initialLoanAmount":"10000","collateralCoin":"BNB","initialCollateralAmount":"49.27565492","borrowTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","initialLoanAmount":"10000","collateralCoin":"BNB","initialCollateralAmount":"49.27565492","borrowTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanBorrowHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleLoanBorrowHistoryResponse");
@@ -1526,7 +1642,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BNB","initialLTV":"0.65","marginCallLTV":"0.75","liquidationLTV":"0.83","maxLimit":"1000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BNB","initialLTV":"0.65","marginCallLTV":"0.75","liquidationLTV":"0.83","maxLimit":"1000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanCollateralAssetsDataResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetFlexibleLoanCollateralAssetsDataResponse",
@@ -1555,7 +1671,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000},{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanInterestRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleLoanInterestRateHistoryResponse");
@@ -1583,7 +1699,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","liquidationDebt":"10000","collateralCoin":"BNB","liquidationCollateralAmount":"123","returnCollateralAmount":"0.2","liquidationFee":"1.2","liquidationStartingPrice":"49.27565492","liquidationStartingTime":1575018510000,"status":"Liquidated"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","liquidationDebt":"10000","collateralCoin":"BNB","liquidationCollateralAmount":"123","returnCollateralAmount":"0.2","liquidationFee":"1.2","liquidationStartingPrice":"49.27565492","liquidationStartingTime":1575018510000,"status":"Liquidated"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanLiquidationHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleLoanLiquidationHistoryResponse");
@@ -1611,7 +1727,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","collateralAmount":"5.235","preLTV":"0.78","afterLTV":"0.56","adjustTime":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","collateralAmount":"5.235","preLTV":"0.78","afterLTV":"0.56","adjustTime":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanLtvAdjustmentHistoryResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::GetFlexibleLoanLtvAdjustmentHistoryResponse",
@@ -1639,7 +1755,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","totalDebt":"10000","collateralCoin":"BNB","collateralAmount":"49.27565492","currentLTV":"0.57"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","totalDebt":"10000","collateralCoin":"BNB","collateralAmount":"49.27565492","currentLTV":"0.57"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanOngoingOrdersResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleLoanOngoingOrdersResponse");
@@ -1667,7 +1783,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB","collateralReturn":"49.27565492","repayStatus":"REPAID","repayTime":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB","collateralReturn":"49.27565492","repayStatus":"REPAID","repayTime":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetFlexibleLoanRepaymentHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetFlexibleLoanRepaymentHistoryResponse");
@@ -1688,17 +1804,15 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = CheckCollateralRepayRateParams::builder(
-                "loan_coin_example".to_string(),
-                "collateral_coin_example".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params =
+                CheckCollateralRepayRateParams::builder("BUSD".to_string(), "BNB".to_string())
+                    .build()
+                    .unwrap();
 
             let resp_json: Value = serde_json::from_str(
                 r#"{"loanCoin":"BUSD","collateralCoin":"BNB","rate":"300.36781234"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CheckCollateralRepayRateResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckCollateralRepayRateResponse");
@@ -1718,18 +1832,16 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = CheckCollateralRepayRateParams::builder(
-                "loan_coin_example".to_string(),
-                "collateral_coin_example".to_string(),
-            )
-            .recv_window(5000)
-            .build()
-            .unwrap();
+            let params =
+                CheckCollateralRepayRateParams::builder("BUSD".to_string(), "BNB".to_string())
+                    .recv_window(5000)
+                    .build()
+                    .unwrap();
 
             let resp_json: Value = serde_json::from_str(
                 r#"{"loanCoin":"BUSD","collateralCoin":"BNB","rate":"300.36781234"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CheckCollateralRepayRateResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckCollateralRepayRateResponse");
@@ -1749,12 +1861,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: true };
 
-            let params = CheckCollateralRepayRateParams::builder(
-                "loan_coin_example".to_string(),
-                "collateral_coin_example".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params =
+                CheckCollateralRepayRateParams::builder("BUSD".to_string(), "BNB".to_string())
+                    .build()
+                    .unwrap();
 
             match client.check_collateral_repay_rate(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1770,9 +1880,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = FlexibleLoanAdjustLtvParams::builder("loan_coin_example".to_string(),"collateral_coin_example".to_string(),dec!(1.0),"direction_example".to_string(),).build().unwrap();
+            let params = FlexibleLoanAdjustLtvParams::builder("BUSD".to_string(),"BNB".to_string(),dec!(1),FlexibleLoanAdjustLtvDirectionEnum::Additional,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","adjustmentAmount":"5.235","currentLTV":"0.52","status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","adjustmentAmount":"5.235","currentLTV":"0.52","status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FlexibleLoanAdjustLtvResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FlexibleLoanAdjustLtvResponse");
 
             let resp = client.flexible_loan_adjust_ltv(params).await.expect("Expected a response");
@@ -1787,9 +1897,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = FlexibleLoanAdjustLtvParams::builder("loan_coin_example".to_string(),"collateral_coin_example".to_string(),dec!(1.0),"direction_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = FlexibleLoanAdjustLtvParams::builder("BUSD".to_string(),"BNB".to_string(),dec!(1),FlexibleLoanAdjustLtvDirectionEnum::Additional,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","adjustmentAmount":"5.235","currentLTV":"0.52","status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","adjustmentAmount":"5.235","currentLTV":"0.52","status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FlexibleLoanAdjustLtvResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FlexibleLoanAdjustLtvResponse");
 
             let resp = client.flexible_loan_adjust_ltv(params).await.expect("Expected a response");
@@ -1805,10 +1915,10 @@ mod tests {
             let client = MockFlexibleRateApiClient { force_error: true };
 
             let params = FlexibleLoanAdjustLtvParams::builder(
-                "loan_coin_example".to_string(),
-                "collateral_coin_example".to_string(),
-                dec!(1.0),
-                "direction_example".to_string(),
+                "BUSD".to_string(),
+                "BNB".to_string(),
+                dec!(1),
+                FlexibleLoanAdjustLtvDirectionEnum::Additional,
             )
             .build()
             .unwrap();
@@ -1827,9 +1937,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = FlexibleLoanBorrowParams::builder("loan_coin_example".to_string(),"collateral_coin_example".to_string(),).build().unwrap();
+            let params = FlexibleLoanBorrowParams::builder("BUSD".to_string(),"BNB".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","loanAmount":"100.5","collateralCoin":"BNB","collateralAmount":"50.5","status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","loanAmount":"100.5","collateralCoin":"BNB","collateralAmount":"50.5","status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FlexibleLoanBorrowResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FlexibleLoanBorrowResponse");
 
             let resp = client.flexible_loan_borrow(params).await.expect("Expected a response");
@@ -1844,9 +1954,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = FlexibleLoanBorrowParams::builder("loan_coin_example".to_string(),"collateral_coin_example".to_string(),).loan_amount(dec!(1.0)).collateral_amount(dec!(1.0)).recv_window(5000).build().unwrap();
+            let params = FlexibleLoanBorrowParams::builder("BUSD".to_string(),"BNB".to_string(),).loan_amount(dec!(1)).collateral_amount(dec!(1)).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","loanAmount":"100.5","collateralCoin":"BNB","collateralAmount":"50.5","status":"Succeeds"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","loanAmount":"100.5","collateralCoin":"BNB","collateralAmount":"50.5","status":"Succeeds"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FlexibleLoanBorrowResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FlexibleLoanBorrowResponse");
 
             let resp = client.flexible_loan_borrow(params).await.expect("Expected a response");
@@ -1861,12 +1971,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: true };
 
-            let params = FlexibleLoanBorrowParams::builder(
-                "loan_coin_example".to_string(),
-                "collateral_coin_example".to_string(),
-            )
-            .build()
-            .unwrap();
+            let params = FlexibleLoanBorrowParams::builder("BUSD".to_string(), "BNB".to_string())
+                .build()
+                .unwrap();
 
             match client.flexible_loan_borrow(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1882,9 +1989,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = FlexibleLoanRepayParams::builder("loan_coin_example".to_string(),"collateral_coin_example".to_string(),dec!(1.0),).build().unwrap();
+            let params = FlexibleLoanRepayParams::builder("BUSD".to_string(),"BNB".to_string(),dec!(1),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","remainingDebt":"100.5","remainingCollateral":"5.253","fullRepayment":false,"currentLTV":"0.25","repayStatus":"REPAID"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","remainingDebt":"100.5","remainingCollateral":"5.253","fullRepayment":false,"currentLTV":"0.25","repayStatus":"REPAID"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FlexibleLoanRepayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FlexibleLoanRepayResponse");
 
             let resp = client.flexible_loan_repay(params).await.expect("Expected a response");
@@ -1899,9 +2006,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = FlexibleLoanRepayParams::builder("loan_coin_example".to_string(),"collateral_coin_example".to_string(),dec!(1.0),).collateral_return(true).full_repayment(false).repayment_type(1).recv_window(5000).build().unwrap();
+            let params = FlexibleLoanRepayParams::builder("BUSD".to_string(),"BNB".to_string(),dec!(1),).collateral_return(true).full_repayment(false).repayment_type(FlexibleLoanRepayRepaymentTypeEnum::RepaymentType1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","remainingDebt":"100.5","remainingCollateral":"5.253","fullRepayment":false,"currentLTV":"0.25","repayStatus":"REPAID"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"loanCoin":"BUSD","collateralCoin":"BNB","remainingDebt":"100.5","remainingCollateral":"5.253","fullRepayment":false,"currentLTV":"0.25","repayStatus":"REPAID"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FlexibleLoanRepayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FlexibleLoanRepayResponse");
 
             let resp = client.flexible_loan_repay(params).await.expect("Expected a response");
@@ -1916,13 +2023,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: true };
 
-            let params = FlexibleLoanRepayParams::builder(
-                "loan_coin_example".to_string(),
-                "collateral_coin_example".to_string(),
-                dec!(1.0),
-            )
-            .build()
-            .unwrap();
+            let params =
+                FlexibleLoanRepayParams::builder("BUSD".to_string(), "BNB".to_string(), dec!(1))
+                    .build()
+                    .unwrap();
 
             match client.flexible_loan_repay(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -1940,7 +2044,7 @@ mod tests {
 
             let params = GetFlexibleLoanAssetsDataParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","flexibleInterestRate":"0.00000491","flexibleMinLimit":"100","flexibleMaxLimit":"1000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","flexibleInterestRate":"0.00000491","flexibleMinLimit":"100","flexibleMaxLimit":"1000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanAssetsDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanAssetsDataResponse");
 
             let resp = client.get_flexible_loan_assets_data(params).await.expect("Expected a response");
@@ -1955,9 +2059,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanAssetsDataParams::builder().loan_coin("loan_coin_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetFlexibleLoanAssetsDataParams::builder().loan_coin("BUSD".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","flexibleInterestRate":"0.00000491","flexibleMinLimit":"100","flexibleMaxLimit":"1000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","flexibleInterestRate":"0.00000491","flexibleMinLimit":"100","flexibleMaxLimit":"1000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanAssetsDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanAssetsDataResponse");
 
             let resp = client.get_flexible_loan_assets_data(params).await.expect("Expected a response");
@@ -1990,7 +2094,7 @@ mod tests {
 
             let params = GetFlexibleLoanBorrowHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","initialLoanAmount":"10000","collateralCoin":"BNB","initialCollateralAmount":"49.27565492","borrowTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","initialLoanAmount":"10000","collateralCoin":"BNB","initialCollateralAmount":"49.27565492","borrowTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanBorrowHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanBorrowHistoryResponse");
 
             let resp = client.get_flexible_loan_borrow_history(params).await.expect("Expected a response");
@@ -2005,9 +2109,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanBorrowHistoryParams::builder().loan_coin("loan_coin_example".to_string()).collateral_coin("collateral_coin_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleLoanBorrowHistoryParams::builder().loan_coin("BUSD".to_string()).collateral_coin("BNB".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","initialLoanAmount":"10000","collateralCoin":"BNB","initialCollateralAmount":"49.27565492","borrowTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","initialLoanAmount":"10000","collateralCoin":"BNB","initialCollateralAmount":"49.27565492","borrowTime":1575018510000,"status":"SUCCESS"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanBorrowHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanBorrowHistoryResponse");
 
             let resp = client.get_flexible_loan_borrow_history(params).await.expect("Expected a response");
@@ -2042,7 +2146,7 @@ mod tests {
 
             let params = GetFlexibleLoanCollateralAssetsDataParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BNB","initialLTV":"0.65","marginCallLTV":"0.75","liquidationLTV":"0.83","maxLimit":"1000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BNB","initialLTV":"0.65","marginCallLTV":"0.75","liquidationLTV":"0.83","maxLimit":"1000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanCollateralAssetsDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanCollateralAssetsDataResponse");
 
             let resp = client.get_flexible_loan_collateral_assets_data(params).await.expect("Expected a response");
@@ -2057,9 +2161,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanCollateralAssetsDataParams::builder().collateral_coin("collateral_coin_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetFlexibleLoanCollateralAssetsDataParams::builder().collateral_coin("BNB".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BNB","initialLTV":"0.65","marginCallLTV":"0.75","liquidationLTV":"0.83","maxLimit":"1000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BNB","initialLTV":"0.65","marginCallLTV":"0.75","liquidationLTV":"0.83","maxLimit":"1000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanCollateralAssetsDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanCollateralAssetsDataResponse");
 
             let resp = client.get_flexible_loan_collateral_assets_data(params).await.expect("Expected a response");
@@ -2095,9 +2199,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanInterestRateHistoryParams::builder("coin_example".to_string(),5000,).build().unwrap();
+            let params = GetFlexibleLoanInterestRateHistoryParams::builder("USDT".to_string(),5000,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000},{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanInterestRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanInterestRateHistoryResponse");
 
             let resp = client.get_flexible_loan_interest_rate_history(params).await.expect("Expected a response");
@@ -2112,9 +2216,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanInterestRateHistoryParams::builder("coin_example".to_string(),5000,).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).build().unwrap();
+            let params = GetFlexibleLoanInterestRateHistoryParams::builder("USDT".to_string(),5000,).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000},{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanInterestRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanInterestRateHistoryResponse");
 
             let resp = client.get_flexible_loan_interest_rate_history(params).await.expect("Expected a response");
@@ -2130,7 +2234,7 @@ mod tests {
             let client = MockFlexibleRateApiClient { force_error: true };
 
             let params =
-                GetFlexibleLoanInterestRateHistoryParams::builder("coin_example".to_string(), 5000)
+                GetFlexibleLoanInterestRateHistoryParams::builder("USDT".to_string(), 5000)
                     .build()
                     .unwrap();
 
@@ -2150,7 +2254,7 @@ mod tests {
 
             let params = GetFlexibleLoanLiquidationHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","liquidationDebt":"10000","collateralCoin":"BNB","liquidationCollateralAmount":"123","returnCollateralAmount":"0.2","liquidationFee":"1.2","liquidationStartingPrice":"49.27565492","liquidationStartingTime":1575018510000,"status":"Liquidated"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","liquidationDebt":"10000","collateralCoin":"BNB","liquidationCollateralAmount":"123","returnCollateralAmount":"0.2","liquidationFee":"1.2","liquidationStartingPrice":"49.27565492","liquidationStartingTime":1575018510000,"status":"Liquidated"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanLiquidationHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanLiquidationHistoryResponse");
 
             let resp = client.get_flexible_loan_liquidation_history(params).await.expect("Expected a response");
@@ -2165,9 +2269,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanLiquidationHistoryParams::builder().loan_coin("loan_coin_example".to_string()).collateral_coin("collateral_coin_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleLoanLiquidationHistoryParams::builder().loan_coin("BUSD".to_string()).collateral_coin("BNB".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","liquidationDebt":"10000","collateralCoin":"BNB","liquidationCollateralAmount":"123","returnCollateralAmount":"0.2","liquidationFee":"1.2","liquidationStartingPrice":"49.27565492","liquidationStartingTime":1575018510000,"status":"Liquidated"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","liquidationDebt":"10000","collateralCoin":"BNB","liquidationCollateralAmount":"123","returnCollateralAmount":"0.2","liquidationFee":"1.2","liquidationStartingPrice":"49.27565492","liquidationStartingTime":1575018510000,"status":"Liquidated"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanLiquidationHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanLiquidationHistoryResponse");
 
             let resp = client.get_flexible_loan_liquidation_history(params).await.expect("Expected a response");
@@ -2202,7 +2306,7 @@ mod tests {
 
             let params = GetFlexibleLoanLtvAdjustmentHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","collateralAmount":"5.235","preLTV":"0.78","afterLTV":"0.56","adjustTime":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","collateralAmount":"5.235","preLTV":"0.78","afterLTV":"0.56","adjustTime":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanLtvAdjustmentHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanLtvAdjustmentHistoryResponse");
 
             let resp = client.get_flexible_loan_ltv_adjustment_history(params).await.expect("Expected a response");
@@ -2217,9 +2321,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanLtvAdjustmentHistoryParams::builder().loan_coin("loan_coin_example".to_string()).collateral_coin("collateral_coin_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleLoanLtvAdjustmentHistoryParams::builder().loan_coin("BUSD".to_string()).collateral_coin("BNB".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","collateralAmount":"5.235","preLTV":"0.78","afterLTV":"0.56","adjustTime":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","collateralCoin":"BNB","direction":"ADDITIONAL","collateralAmount":"5.235","preLTV":"0.78","afterLTV":"0.56","adjustTime":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanLtvAdjustmentHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanLtvAdjustmentHistoryResponse");
 
             let resp = client.get_flexible_loan_ltv_adjustment_history(params).await.expect("Expected a response");
@@ -2257,7 +2361,7 @@ mod tests {
 
             let params = GetFlexibleLoanOngoingOrdersParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","totalDebt":"10000","collateralCoin":"BNB","collateralAmount":"49.27565492","currentLTV":"0.57"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","totalDebt":"10000","collateralCoin":"BNB","collateralAmount":"49.27565492","currentLTV":"0.57"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanOngoingOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanOngoingOrdersResponse");
 
             let resp = client.get_flexible_loan_ongoing_orders(params).await.expect("Expected a response");
@@ -2272,9 +2376,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanOngoingOrdersParams::builder().loan_coin("loan_coin_example".to_string()).collateral_coin("collateral_coin_example".to_string()).current(1).limit(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleLoanOngoingOrdersParams::builder().loan_coin("BUSD".to_string()).collateral_coin("BNB".to_string()).current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","totalDebt":"10000","collateralCoin":"BNB","collateralAmount":"49.27565492","currentLTV":"0.57"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","totalDebt":"10000","collateralCoin":"BNB","collateralAmount":"49.27565492","currentLTV":"0.57"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanOngoingOrdersResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanOngoingOrdersResponse");
 
             let resp = client.get_flexible_loan_ongoing_orders(params).await.expect("Expected a response");
@@ -2309,7 +2413,7 @@ mod tests {
 
             let params = GetFlexibleLoanRepaymentHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB","collateralReturn":"49.27565492","repayStatus":"REPAID","repayTime":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB","collateralReturn":"49.27565492","repayStatus":"REPAID","repayTime":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanRepaymentHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanRepaymentHistoryResponse");
 
             let resp = client.get_flexible_loan_repayment_history(params).await.expect("Expected a response");
@@ -2324,9 +2428,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockFlexibleRateApiClient { force_error: false };
 
-            let params = GetFlexibleLoanRepaymentHistoryParams::builder().loan_coin("loan_coin_example".to_string()).collateral_coin("collateral_coin_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
+            let params = GetFlexibleLoanRepaymentHistoryParams::builder().loan_coin("BUSD".to_string()).collateral_coin("BNB".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB","collateralReturn":"49.27565492","repayStatus":"REPAID","repayTime":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","repayAmount":"10000","collateralCoin":"BNB","collateralReturn":"49.27565492","repayStatus":"REPAID","repayTime":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetFlexibleLoanRepaymentHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetFlexibleLoanRepaymentHistoryResponse");
 
             let resp = client.get_flexible_loan_repayment_history(params).await.expect("Expected a response");

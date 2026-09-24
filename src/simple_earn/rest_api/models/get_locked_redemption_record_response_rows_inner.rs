@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -34,7 +34,7 @@ pub struct GetLockedRedemptionRecordResponseRowsInner {
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     #[serde(rename = "deliverDate", skip_serializing_if = "Option::is_none")]
-    pub deliver_date: Option<String>,
+    pub deliver_date: Option<i64>,
     #[serde(rename = "lossAmount", skip_serializing_if = "Option::is_none")]
     pub loss_amount: Option<String>,
     #[serde(rename = "isComplete", skip_serializing_if = "Option::is_none")]

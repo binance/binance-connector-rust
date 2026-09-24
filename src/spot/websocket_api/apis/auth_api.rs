@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -64,18 +59,20 @@ impl AuthApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`session_logon`](#method.session_logon).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SessionLogonParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// The value cannot be greater than `60000`. Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -91,13 +88,14 @@ impl SessionLogonParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`session_logout`](#method.session_logout).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SessionLogoutParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -113,13 +111,14 @@ impl SessionLogoutParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`session_status`](#method.session_status).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SessionStatusParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -273,8 +272,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/session.logon".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c174a2b1-3f51-4580-b200-8528bd237cb7","status":200,"result":{"apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","authorizedSince":1649729878532,"connectedSince":1649729873021,"returnRateLimits":false,"serverTime":1649729878630,"userDataStream":false}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c174a2b1-3f51-4580-b200-8528bd237cb7","status":200,"result":{"apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","authorizedSince":1649729878532,"connectedSince":1649729873021,"returnRateLimits":false,"serverTime":1649729878630,"userDataStream":false}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -402,8 +400,7 @@ let response = response.into_iter().next().expect("should have response");
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/session.logout".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c174a2b1-3f51-4580-b200-8528bd237cb7","status":200,"result":{"apiKey":"CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ","authorizedSince":1649729878532,"connectedSince":1649729873021,"returnRateLimits":false,"serverTime":1649730611671,"userDataStream":false}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"c174a2b1-3f51-4580-b200-8528bd237cb7","status":200,"result":{"apiKey":"apiKey","authorizedSince":1,"connectedSince":1649729873021,"returnRateLimits":false,"serverTime":1649730611671,"userDataStream":false}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -531,8 +528,7 @@ let response = response.into_iter().next().expect("should have response");
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/session.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"b50c16cd-62c9-4e29-89e4-37f10111f5bf","status":200,"result":{"apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","authorizedSince":1649729878532,"connectedSince":1649729873021,"returnRateLimits":false,"serverTime":1649730611671,"userDataStream":true}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"b50c16cd-62c9-4e29-89e4-37f10111f5bf","status":200,"result":{"apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","authorizedSince":1649729878532,"connectedSince":1649729873021,"returnRateLimits":false,"serverTime":1649730611671,"userDataStream":true}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

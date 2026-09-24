@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,5 +11,7 @@
  * Do not edit the class manually.
  */
 
-pub mod websocket_market_streams_api;
-pub use websocket_market_streams_api::*;
+pub mod market_api;
+pub use market_api::*;
+pub mod public_api;
+pub use public_api::*;

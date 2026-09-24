@@ -27,7 +27,8 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = GetUmFuturesTradeDownloadLinkByIdParams::builder("1".to_string()).build()?;
+    let params = GetUmFuturesTradeDownloadLinkByIdParams::builder("545923594199212032".to_string())
+        .build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -41,6 +41,8 @@ pub mod all_market_mini_tickers_stream_response_inner;
 pub use self::all_market_mini_tickers_stream_response_inner::AllMarketMiniTickersStreamResponseInner;
 pub mod all_market_tickers_streams_response_inner;
 pub use self::all_market_tickers_streams_response_inner::AllMarketTickersStreamsResponseInner;
+pub mod asset_index_response_inner;
+pub use self::asset_index_response_inner::AssetIndexResponseInner;
 pub mod composite_index_symbol_information_streams_response;
 pub use self::composite_index_symbol_information_streams_response::CompositeIndexSymbolInformationStreamsResponse;
 pub mod composite_index_symbol_information_streams_response_c_inner;
@@ -75,8 +77,8 @@ pub mod kline_candlestick_streams_response_k;
 pub use self::kline_candlestick_streams_response_k::KlineCandlestickStreamsResponseK;
 pub mod liquidation_order_streams_response;
 pub use self::liquidation_order_streams_response::LiquidationOrderStreamsResponse;
-pub mod listenkeyexpired;
-pub use self::listenkeyexpired::Listenkeyexpired;
+pub mod listen_key_expired;
+pub use self::listen_key_expired::ListenKeyExpired;
 pub mod margin_call;
 pub use self::margin_call::MarginCall;
 pub mod margin_call_p_inner;
@@ -85,8 +87,6 @@ pub mod mark_price_stream_for_all_market_response_inner;
 pub use self::mark_price_stream_for_all_market_response_inner::MarkPriceStreamForAllMarketResponseInner;
 pub mod mark_price_stream_response;
 pub use self::mark_price_stream_response::MarkPriceStreamResponse;
-pub mod multi_assets_mode_asset_index_response_inner;
-pub use self::multi_assets_mode_asset_index_response_inner::MultiAssetsModeAssetIndexResponseInner;
 pub mod order_trade_update;
 pub use self::order_trade_update::OrderTradeUpdate;
 pub mod order_trade_update_o;

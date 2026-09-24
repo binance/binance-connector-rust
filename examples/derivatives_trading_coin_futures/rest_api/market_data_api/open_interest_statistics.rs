@@ -5,10 +5,7 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_coin_futures::{
     DerivativesTradingCoinFuturesRestApi,
-    rest_api::{
-        OpenInterestStatisticsContractTypeEnum, OpenInterestStatisticsParams,
-        OpenInterestStatisticsPeriodEnum,
-    },
+    rest_api::{OpenInterestStatisticsParams, OpenInterestStatisticsPeriodEnum},
 };
 use binance_sdk::logger;
 
@@ -32,8 +29,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = OpenInterestStatisticsParams::builder(
-        "pair_example".to_string(),
-        OpenInterestStatisticsContractTypeEnum::Perpetual,
+        "BTCUSD".to_string(),
         OpenInterestStatisticsPeriodEnum::Period5m,
     )
     .build()?;

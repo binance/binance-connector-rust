@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -51,6 +51,14 @@ pub trait TravelRuleApi: Send + Sync {
         &self,
         params: FetchAddressVerificationListParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::FetchAddressVerificationListResponseInner>>>;
+    async fn get_country_list(
+        &self,
+        params: GetCountryListParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>>;
+    async fn get_region_list(
+        &self,
+        params: GetRegionListParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetRegionListResponse>>;
     async fn submit_deposit_questionnaire(
         &self,
         params: SubmitDepositQuestionnaireParams,
@@ -70,11 +78,11 @@ pub trait TravelRuleApi: Send + Sync {
     async fn withdraw_history_v1(
         &self,
         params: WithdrawHistoryV1Params,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>>;
+    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>>;
     async fn withdraw_history_v2(
         &self,
         params: WithdrawHistoryV2Params,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>>;
+    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>>;
     async fn withdraw_travel_rule(
         &self,
         params: WithdrawTravelRuleParams,
@@ -96,7 +104,7 @@ impl TravelRuleApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`broker_withdraw`](#method.broker_withdraw).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct BrokerWithdrawParams {
     ///
@@ -104,64 +112,72 @@ pub struct BrokerWithdrawParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "address")]
     pub address: String,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
     /// withdrawID defined by the client (i.e. client's internal withdrawID)
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "withdrawOrderId")]
     pub withdraw_order_id: String,
     /// JSON format questionnaire answers.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "questionnaire")]
     pub questionnaire: String,
     /// JSON format originator Pii, see `StandardPii` section below
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "originatorPii")]
     pub originator_pii: String,
-    /// Must be the last parameter.
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub signature: String,
     /// Secondary address identifier for coins like XRP,XMR etc.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "addressTag", default)]
     pub address_tag: Option<String>,
     ///
     /// The `network` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     /// Description of the address. Address book cap is 200, space in name should be encoded into `%20`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "addressName", default)]
     pub address_name: Option<String>,
-    /// When making internal transfer, `true` for returning the fee to the destination account; `false` for returning the fee back to the departure account. Default `false`.
+    /// When making internal transfer, `true` for returning the fee to the destination account; `false` for
+    /// returning the fee back to the departure account. Default `false`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "transactionFeeFlag", default)]
     pub transaction_fee_flag: Option<bool>,
-    /// The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
+    /// The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current
+    /// "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "walletType", default)]
     pub wallet_type: Option<i64>,
 }
 
@@ -176,7 +192,6 @@ impl BrokerWithdrawParams {
     /// * `withdraw_order_id` — withdrawID defined by the client (i.e. client's internal withdrawID)
     /// * `questionnaire` — JSON format questionnaire answers.
     /// * `originator_pii` — JSON format originator Pii, see `StandardPii` section below
-    /// * `signature` — Must be the last parameter.
     ///
     #[must_use]
     pub fn builder(
@@ -186,7 +201,6 @@ impl BrokerWithdrawParams {
         withdraw_order_id: String,
         questionnaire: String,
         originator_pii: String,
-        signature: String,
     ) -> BrokerWithdrawParamsBuilder {
         BrokerWithdrawParamsBuilder::default()
             .address(address)
@@ -195,14 +209,13 @@ impl BrokerWithdrawParams {
             .withdraw_order_id(withdraw_order_id)
             .questionnaire(questionnaire)
             .originator_pii(originator_pii)
-            .signature(signature)
     }
 }
 /// Request parameters for the [`check_questionnaire_requirements`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`check_questionnaire_requirements`](#method.check_questionnaire_requirements).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CheckQuestionnaireRequirementsParams {
     ///
@@ -210,6 +223,7 @@ pub struct CheckQuestionnaireRequirementsParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -225,68 +239,77 @@ impl CheckQuestionnaireRequirementsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`deposit_history_travel_rule`](#method.deposit_history_travel_rule).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DepositHistoryTravelRuleParams {
     /// Comma(,) separated list of travel rule record Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "trId", default)]
     pub tr_id: Option<String>,
-    ///
-    /// The `tx_id` parameter.
+    /// Comma(,) separated list of transaction Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "txId", default)]
     pub tx_id: Option<String>,
     /// Comma(,) separated list of wallet tran Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "tranId", default)]
     pub tran_id: Option<String>,
     ///
     /// The `network` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
     /// 0:Completed,1:Pending,2:Failed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "travelRuleStatus", default)]
     pub travel_rule_status: Option<i64>,
     /// true: Only return records that pending deposit questionnaire. false/not provided: return all records.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pendingQuestionnaire", default)]
     pub pending_questionnaire: Option<bool>,
-    ///
-    /// The `start_time` parameter.
+    /// Default: 90 days from current timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Default: present timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
     /// Default: 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i64>,
-    /// min 7, max 30, default 7
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
 }
 
@@ -302,58 +325,66 @@ impl DepositHistoryTravelRuleParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`deposit_history_v2`](#method.deposit_history_v2).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct DepositHistoryV2Params {
     /// Comma(,) separated list of wallet tran Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub deposit_id: Option<String>,
-    ///
-    /// The `tx_id` parameter.
+    #[serde(rename = "depositId", default)]
+    pub deposit_id: Option<i64>,
+    /// Comma(,) separated list of transaction Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "txId", default)]
     pub tx_id: Option<String>,
     ///
     /// The `network` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
     /// true: return `questionnaire` within response.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "retrieveQuestionnaire", default)]
     pub retrieve_questionnaire: Option<bool>,
-    ///
-    /// The `start_time` parameter.
+    /// Default: 90 days from current timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Default: present timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Default: 0
+    ///
+    /// The `offset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i64>,
-    /// min 7, max 30, default 7
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
 }
 
@@ -369,7 +400,7 @@ impl DepositHistoryV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`fetch_address_verification_list`](#method.fetch_address_verification_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FetchAddressVerificationListParams {
     ///
@@ -377,6 +408,7 @@ pub struct FetchAddressVerificationListParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -388,66 +420,129 @@ impl FetchAddressVerificationListParams {
         FetchAddressVerificationListParamsBuilder::default()
     }
 }
+/// Request parameters for the [`get_country_list`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_country_list`](#method.get_country_list).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetCountryListParams {
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetCountryListParams {
+    /// Create a builder for [`get_country_list`].
+    ///
+    #[must_use]
+    pub fn builder() -> GetCountryListParamsBuilder {
+        GetCountryListParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`get_region_list`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_region_list`](#method.get_region_list).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetRegionListParams {
+    /// ISO 2-digit country code (from Country List API).
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "countryCode")]
+    pub country_code: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetRegionListParams {
+    /// Create a builder for [`get_region_list`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `country_code` — ISO 2-digit country code (from Country List API).
+    ///
+    #[must_use]
+    pub fn builder(country_code: String) -> GetRegionListParamsBuilder {
+        GetRegionListParamsBuilder::default().country_code(country_code)
+    }
+}
 /// Request parameters for the [`submit_deposit_questionnaire`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`submit_deposit_questionnaire`](#method.submit_deposit_questionnaire).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubmitDepositQuestionnaireParams {
     /// External user ID.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "subAccountId")]
     pub sub_account_id: String,
-    /// Wallet deposit ID
+    /// Wallet deposit ID.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "depositId")]
     pub deposit_id: i64,
     /// JSON format questionnaire answers.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "questionnaire")]
     pub questionnaire: String,
-    /// JSON format beneficiary Pii.
+    /// JSON format beneficiary Pii, see `StandardPii` section below
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "beneficiaryPii")]
     pub beneficiary_pii: String,
-    /// Must be the last parameter.
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    pub signature: String,
     ///
     /// The `network` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
     ///
     /// The `amount` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "amount", default)]
     pub amount: Option<rust_decimal::Decimal>,
     ///
     /// The `address` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "address", default)]
     pub address: Option<String>,
-    /// Secondary address identifier for coins like XRP,XMR etc.
+    ///
+    /// The `address_tag` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "addressTag", default)]
     pub address_tag: Option<String>,
 }
 
@@ -457,10 +552,9 @@ impl SubmitDepositQuestionnaireParams {
     /// Required parameters:
     ///
     /// * `sub_account_id` — External user ID.
-    /// * `deposit_id` — Wallet deposit ID
+    /// * `deposit_id` — Wallet deposit ID.
     /// * `questionnaire` — JSON format questionnaire answers.
-    /// * `beneficiary_pii` — JSON format beneficiary Pii.
-    /// * `signature` — Must be the last parameter.
+    /// * `beneficiary_pii` — JSON format beneficiary Pii, see `StandardPii` section below
     ///
     #[must_use]
     pub fn builder(
@@ -468,32 +562,32 @@ impl SubmitDepositQuestionnaireParams {
         deposit_id: i64,
         questionnaire: String,
         beneficiary_pii: String,
-        signature: String,
     ) -> SubmitDepositQuestionnaireParamsBuilder {
         SubmitDepositQuestionnaireParamsBuilder::default()
             .sub_account_id(sub_account_id)
             .deposit_id(deposit_id)
             .questionnaire(questionnaire)
             .beneficiary_pii(beneficiary_pii)
-            .signature(signature)
     }
 }
 /// Request parameters for the [`submit_deposit_questionnaire_travel_rule`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`submit_deposit_questionnaire_travel_rule`](#method.submit_deposit_questionnaire_travel_rule).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubmitDepositQuestionnaireTravelRuleParams {
     /// Wallet tran ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "tranId")]
     pub tran_id: i64,
     /// JSON format questionnaire answers.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "questionnaire")]
     pub questionnaire: String,
 }
 
@@ -519,18 +613,20 @@ impl SubmitDepositQuestionnaireTravelRuleParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`submit_deposit_questionnaire_v2`](#method.submit_deposit_questionnaire_v2).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubmitDepositQuestionnaireV2Params {
     /// Wallet deposit ID
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "depositId")]
     pub deposit_id: i64,
     /// JSON format questionnaire answers.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "questionnaire")]
     pub questionnaire: String,
 }
 
@@ -556,7 +652,7 @@ impl SubmitDepositQuestionnaireV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`vasp_list`](#method.vasp_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct VaspListParams {
     ///
@@ -564,6 +660,7 @@ pub struct VaspListParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -579,69 +676,80 @@ impl VaspListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`withdraw_history_v1`](#method.withdraw_history_v1).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct WithdrawHistoryV1Params {
     /// Comma(,) separated list of travel rule record Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "trId", default)]
     pub tr_id: Option<String>,
-    ///
-    /// The `tx_id` parameter.
+    /// Comma(,) separated list of transaction Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "txId", default)]
     pub tx_id: Option<String>,
-    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for query.
+    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for
+    /// query.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "withdrawOrderId", default)]
     pub withdraw_order_id: Option<String>,
     ///
     /// The `network` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
     /// 0:Completed,1:Pending,2:Failed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "travelRuleStatus", default)]
     pub travel_rule_status: Option<i64>,
-    /// Default: 0
+    ///
+    /// The `offset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i64>,
-    /// min 7, max 30, default 7
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `start_time` parameter.
+    /// Default: 90 days from current timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Default: present timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -657,69 +765,80 @@ impl WithdrawHistoryV1Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`withdraw_history_v2`](#method.withdraw_history_v2).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct WithdrawHistoryV2Params {
     /// Comma(,) separated list of travel rule record Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "trId", default)]
     pub tr_id: Option<String>,
-    ///
-    /// The `tx_id` parameter.
+    /// Comma(,) separated list of transaction Ids.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "txId", default)]
     pub tx_id: Option<String>,
-    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for query.
+    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for
+    /// query.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "withdrawOrderId", default)]
     pub withdraw_order_id: Option<String>,
     ///
     /// The `network` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     ///
     /// The `coin` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "coin", default)]
     pub coin: Option<String>,
     /// 0:Completed,1:Pending,2:Failed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "travelRuleStatus", default)]
     pub travel_rule_status: Option<i64>,
-    /// Default: 0
+    ///
+    /// The `offset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "offset", default)]
     pub offset: Option<i64>,
-    /// min 7, max 30, default 7
+    ///
+    /// The `limit` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    ///
-    /// The `start_time` parameter.
+    /// Default: 90 days from current timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Default: present timestamp
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -735,7 +854,7 @@ impl WithdrawHistoryV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`withdraw_travel_rule`](#method.withdraw_travel_rule).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct WithdrawTravelRuleParams {
     ///
@@ -743,60 +862,71 @@ pub struct WithdrawTravelRuleParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
-    ///
-    /// The `address` parameter.
+    /// Withdrawal address
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "address")]
     pub address: String,
-    ///
-    /// The `amount` parameter.
+    /// Amount
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
     /// JSON format questionnaire answers.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "questionnaire")]
     pub questionnaire: String,
-    /// client side id for withdrawal, if provided in POST `/sapi/v1/capital/withdraw/apply`, can be used here for query.
+    /// withdrawID defined by the client (i.e. client's internal withdrawID)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "withdrawOrderId", default)]
     pub withdraw_order_id: Option<String>,
-    ///
-    /// The `network` parameter.
+    /// Withdrawal network
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "network", default)]
     pub network: Option<String>,
     /// Secondary address identifier for coins like XRP,XMR etc.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "addressTag", default)]
     pub address_tag: Option<String>,
-    /// When making internal transfer, `true` for returning the fee to the destination account; `false` for returning the fee back to the departure account. Default `false`.
+    /// When making internal transfer, `true` for returning the fee to the destination account; `false` for
+    /// returning the fee back to the departure account. Default `false`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "transactionFeeFlag", default)]
     pub transaction_fee_flag: Option<bool>,
-    /// Description of the address. Address book cap is 200, space in name should be encoded into `%20`
+    ///
+    /// The `name` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "name", default)]
     pub name: Option<String>,
-    /// The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
+    /// The wallet type for withdraw，0-spot wallet ，1-funding wallet. Default walletType is the current
+    /// "selected wallet" under wallet->Fiat and Spot/Funding->Deposit
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "walletType", default)]
     pub wallet_type: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -806,8 +936,8 @@ impl WithdrawTravelRuleParams {
     /// Required parameters:
     ///
     /// * `coin` — String
-    /// * `address` — String
-    /// * `amount` — `rust_decimal::Decimal`
+    /// * `address` — Withdrawal address
+    /// * `amount` — Amount
     /// * `questionnaire` — JSON format questionnaire answers.
     ///
     #[must_use]
@@ -838,7 +968,6 @@ impl TravelRuleApi for TravelRuleApiClient {
             withdraw_order_id,
             questionnaire,
             originator_pii,
-            signature,
             address_tag,
             network,
             address_name,
@@ -880,8 +1009,6 @@ impl TravelRuleApi for TravelRuleApiClient {
         query_params.insert("questionnaire".to_string(), json!(questionnaire));
 
         query_params.insert("originatorPii".to_string(), json!(originator_pii));
-
-        query_params.insert("signature".to_string(), json!(signature));
 
         send_request::<models::BrokerWithdrawResponse>(
             &self.configuration,
@@ -1110,6 +1237,69 @@ impl TravelRuleApi for TravelRuleApiClient {
         .await
     }
 
+    async fn get_country_list(
+        &self,
+        params: GetCountryListParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>> {
+        let GetCountryListParams { recv_window } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetCountryListResponse>(
+            &self.configuration,
+            "/sapi/v1/localentity/country/list",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_region_list(
+        &self,
+        params: GetRegionListParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetRegionListResponse>> {
+        let GetRegionListParams {
+            country_code,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("countryCode".to_string(), json!(country_code));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetRegionListResponse>(
+            &self.configuration,
+            "/sapi/v1/localentity/region/list",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn submit_deposit_questionnaire(
         &self,
         params: SubmitDepositQuestionnaireParams,
@@ -1119,7 +1309,6 @@ impl TravelRuleApi for TravelRuleApiClient {
             deposit_id,
             questionnaire,
             beneficiary_pii,
-            signature,
             network,
             coin,
             amount,
@@ -1157,8 +1346,6 @@ impl TravelRuleApi for TravelRuleApiClient {
         if let Some(rw) = address_tag {
             query_params.insert("addressTag".to_string(), json!(rw));
         }
-
-        query_params.insert("signature".to_string(), json!(signature));
 
         send_request::<models::SubmitDepositQuestionnaireResponse>(
             &self.configuration,
@@ -1272,7 +1459,7 @@ impl TravelRuleApi for TravelRuleApiClient {
     async fn withdraw_history_v1(
         &self,
         params: WithdrawHistoryV1Params,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>> {
         let WithdrawHistoryV1Params {
             tr_id,
             tx_id,
@@ -1334,7 +1521,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<Vec<models::WithdrawHistoryV2ResponseInner>>(
+        send_request::<Vec<models::WithdrawHistoryV1ResponseInner>>(
             &self.configuration,
             "/sapi/v1/localentity/withdraw/history",
             reqwest::Method::GET,
@@ -1353,7 +1540,7 @@ impl TravelRuleApi for TravelRuleApiClient {
     async fn withdraw_history_v2(
         &self,
         params: WithdrawHistoryV2Params,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>> {
+    ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>> {
         let WithdrawHistoryV2Params {
             tr_id,
             tx_id,
@@ -1415,7 +1602,7 @@ impl TravelRuleApi for TravelRuleApiClient {
             query_params.insert("recvWindow".to_string(), json!(rw));
         }
 
-        send_request::<Vec<models::WithdrawHistoryV2ResponseInner>>(
+        send_request::<Vec<models::WithdrawHistoryV1ResponseInner>>(
             &self.configuration,
             "/sapi/v2/localentity/withdraw/history",
             reqwest::Method::GET,
@@ -1550,9 +1737,9 @@ mod tests {
             }
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::BrokerWithdrawResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::BrokerWithdrawResponse");
@@ -1580,8 +1767,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"questionnaireCountryCode":"AE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"questionnaireCountryCode":"AE"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CheckQuestionnaireRequirementsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckQuestionnaireRequirementsResponse");
@@ -1609,7 +1796,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"trId":123451123,"tranId":17644346245865,"amount":"0.001","coin":"BNB","network":"BNB","depositStatus":0,"travelRuleStatus":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"requireQuestionnaire":false,"questionnaire":null},{"trId":2451123,"tranId":4544346245865,"amount":"0.50000000","coin":"IOTA","network":"IOTA","depositStatus":0,"travelRuleStatus":0,"address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW","addressTag":"","txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999","insertTime":1599620082000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"requireQuestionnaire":false,"questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"trId":123451123,"tranId":17644346245865,"amount":"0.001","coin":"BNB","network":"BNB","depositStatus":0,"travelRuleStatus":1,"travelRuleStatusV2":"PENDING","address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493206000,"transferType":0,"confirmTimes":"1/1","requireQuestionnaire":false,"questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::DepositHistoryTravelRuleResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::DepositHistoryTravelRuleResponseInner>");
@@ -1636,7 +1823,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"depositId":"4615328107052018945","amount":"0.01","network":"AVAXC","coin":"AVAX","depositStatus":1,"travelRuleReqStatus":0,"address":"0x0010627ab66d69232f4080d54e0f838b4dc3894a","addressTag":"","txId":"0xdde578983015741eed764e7ca10defb5a2caafdca3db5f92872d24a96beb1879","transferType":0,"confirmTimes":"12/12","requireQuestionnaire":false,"questionnaire":{"vaspName":"BINANCE","depositOriginator":0},"insertTime":1753053392000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"depositId":"4615328107052018945","amount":"0.01","network":"AVAXC","coin":"AVAX","depositStatus":1,"travelRuleReqStatus":0,"address":"0x0010627ab66d69232f4080d54e0f838b4dc3894a","addressTag":"","txId":"0xdde578983015741eed764e7ca10defb5a2caafdca3db5f92872d24a96beb1879","transferType":0,"confirmTimes":"12/12","requireQuestionnaire":false,"questionnaire":{"vaspName":"BINANCE","depositOriginator":0},"insertTime":1753053392000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::DepositHistoryV2ResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::DepositHistoryV2ResponseInner>");
@@ -1664,11 +1851,65 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"status":"PENDING","token":"AVAX","network":"AVAXC","walletAddress":"0xc03a6aa728a8dde7464c33828424ede7553a0021","addressQuestionnaire":{"sendTo":1,"satoshiToken":"AVAX","isAddressOwner":1,"verifyMethod":1}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"status":"PENDING","token":"AVAX","network":"AVAXC","walletAddress":"0xc03a6aa728a8dde7464c33828424ede7553a0021","addressQuestionnaire":{"sendTo":1,"satoshiToken":"AVAX","isAddressOwner":1,"verifyMethod":1}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::FetchAddressVerificationListResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::FetchAddressVerificationListResponseInner>",
                 );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_country_list(
+            &self,
+            _params: GetCountryListParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetCountryListResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":false}],"lastUpdated":1716300000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetCountryListResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetCountryListResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_region_list(
+            &self,
+            _params: GetRegionListParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetRegionListResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"countryCode":"au","regions":[{"regionName":"New South Wales","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true}],"lastUpdated":1716300000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetRegionListResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetRegionListResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1695,7 +1936,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubmitDepositQuestionnaireResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubmitDepositQuestionnaireResponse");
@@ -1726,7 +1967,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubmitDepositQuestionnaireTravelRuleResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SubmitDepositQuestionnaireTravelRuleResponse",
@@ -1757,7 +1998,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubmitDepositQuestionnaireV2Response =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubmitDepositQuestionnaireV2Response");
@@ -1784,7 +2025,10 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vaspCode":"BINANCE","vaspName":"Binance","identifier":"I1QNLP"},{"vaspCode":"NVBH3Z_nNEHjvqbUfkaL","vaspName":"HashKeyGlobal","identifier":"ABC123"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(
+                r#"[{"vaspName":"Binance","vaspCode":"BINANCE","identifier":"xxx"}]"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::VaspListResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::VaspListResponseInner>");
@@ -1802,7 +2046,7 @@ mod tests {
         async fn withdraw_history_v1(
             &self,
             _params: WithdrawHistoryV1Params,
-        ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>> {
+        ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>> {
             if self.force_error {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
@@ -1811,10 +2055,10 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","trId":2231556234,"amount":"0.00150000","transactionFee":"0.004","coin":"BTC","withdrawalStatus":6,"travelRuleStatus":0,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
-            let dummy_response: Vec<models::WithdrawHistoryV2ResponseInner> =
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: Vec<models::WithdrawHistoryV1ResponseInner> =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into Vec<models::WithdrawHistoryV2ResponseInner>");
+                    .expect("should parse into Vec<models::WithdrawHistoryV1ResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1829,7 +2073,7 @@ mod tests {
         async fn withdraw_history_v2(
             &self,
             _params: WithdrawHistoryV2Params,
-        ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV2ResponseInner>>> {
+        ) -> anyhow::Result<RestApiResponse<Vec<models::WithdrawHistoryV1ResponseInner>>> {
             if self.force_error {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
@@ -1838,10 +2082,10 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","trId":2231556234,"amount":"0.00150000","transactionFee":"0.004","coin":"BTC","withdrawalStatus":6,"travelRuleStatus":0,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
-            let dummy_response: Vec<models::WithdrawHistoryV2ResponseInner> =
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: Vec<models::WithdrawHistoryV1ResponseInner> =
                 serde_json::from_value(resp_json.clone())
-                    .expect("should parse into Vec<models::WithdrawHistoryV2ResponseInner>");
+                    .expect("should parse into Vec<models::WithdrawHistoryV1ResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1866,9 +2110,9 @@ mod tests {
             }
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::WithdrawTravelRuleResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WithdrawTravelRuleResponse");
@@ -1891,20 +2135,19 @@ mod tests {
 
             let params = BrokerWithdrawParams::builder(
                 "address_example".to_string(),
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
                 "1".to_string(),
                 "questionnaire_example".to_string(),
                 "originator_pii_example".to_string(),
-                "signature_example".to_string(),
             )
             .build()
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::BrokerWithdrawResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::BrokerWithdrawResponse");
@@ -1926,25 +2169,24 @@ mod tests {
 
             let params = BrokerWithdrawParams::builder(
                 "address_example".to_string(),
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
                 "1".to_string(),
                 "questionnaire_example".to_string(),
                 "originator_pii_example".to_string(),
-                "signature_example".to_string(),
             )
             .address_tag("address_tag_example".to_string())
             .network("network_example".to_string())
             .address_name("address_name_example".to_string())
-            .transaction_fee_flag(false)
+            .transaction_fee_flag(true)
             .wallet_type(0)
             .build()
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::BrokerWithdrawResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::BrokerWithdrawResponse");
@@ -1966,12 +2208,11 @@ mod tests {
 
             let params = BrokerWithdrawParams::builder(
                 "address_example".to_string(),
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 dec!(1.0),
                 "1".to_string(),
                 "questionnaire_example".to_string(),
                 "originator_pii_example".to_string(),
-                "signature_example".to_string(),
             )
             .build()
             .unwrap();
@@ -1994,8 +2235,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"questionnaireCountryCode":"AE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"questionnaireCountryCode":"AE"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CheckQuestionnaireRequirementsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckQuestionnaireRequirementsResponse");
@@ -2020,8 +2261,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value =
-                serde_json::from_str(r#"{"questionnaireCountryCode":"AE"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"questionnaireCountryCode":"AE"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CheckQuestionnaireRequirementsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckQuestionnaireRequirementsResponse");
@@ -2061,7 +2302,7 @@ mod tests {
 
             let params = DepositHistoryTravelRuleParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"trId":123451123,"tranId":17644346245865,"amount":"0.001","coin":"BNB","network":"BNB","depositStatus":0,"travelRuleStatus":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"requireQuestionnaire":false,"questionnaire":null},{"trId":2451123,"tranId":4544346245865,"amount":"0.50000000","coin":"IOTA","network":"IOTA","depositStatus":0,"travelRuleStatus":0,"address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW","addressTag":"","txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999","insertTime":1599620082000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"requireQuestionnaire":false,"questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"trId":123451123,"tranId":17644346245865,"amount":"0.001","coin":"BNB","network":"BNB","depositStatus":0,"travelRuleStatus":1,"travelRuleStatusV2":"PENDING","address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493206000,"transferType":0,"confirmTimes":"1/1","requireQuestionnaire":false,"questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::DepositHistoryTravelRuleResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::DepositHistoryTravelRuleResponseInner>");
 
             let resp = client.deposit_history_travel_rule(params).await.expect("Expected a response");
@@ -2076,9 +2317,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTravelRuleApiClient { force_error: false };
 
-            let params = DepositHistoryTravelRuleParams::builder().tr_id("1".to_string()).tx_id("1".to_string()).tran_id("1".to_string()).network("network_example".to_string()).coin("coin_example".to_string()).travel_rule_status(789).pending_questionnaire(true).start_time(1623319461670).end_time(1641782889000).offset(0).limit(7).build().unwrap();
+            let params = DepositHistoryTravelRuleParams::builder().tr_id("1".to_string()).tx_id("1".to_string()).tran_id("1".to_string()).network("network_example".to_string()).coin("BTC".to_string()).travel_rule_status(0).pending_questionnaire(true).start_time(1623319461670).end_time(1641782889000).offset(789).limit(1000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"trId":123451123,"tranId":17644346245865,"amount":"0.001","coin":"BNB","network":"BNB","depositStatus":0,"travelRuleStatus":1,"address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"requireQuestionnaire":false,"questionnaire":null},{"trId":2451123,"tranId":4544346245865,"amount":"0.50000000","coin":"IOTA","network":"IOTA","depositStatus":0,"travelRuleStatus":0,"address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW","addressTag":"","txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999","insertTime":1599620082000,"transferType":0,"confirmTimes":"1/1","unlockConfirm":0,"walletType":0,"requireQuestionnaire":false,"questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}"}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"trId":123451123,"tranId":17644346245865,"amount":"0.001","coin":"BNB","network":"BNB","depositStatus":0,"travelRuleStatus":1,"travelRuleStatusV2":"PENDING","address":"bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23","addressTag":"101764890","txId":"98A3EA560C6B3336D348B6C83F0F95ECE4F1F5919E94BD006E5BF3BF264FACFC","insertTime":1661493146000,"completeTime":1661493206000,"transferType":0,"confirmTimes":"1/1","requireQuestionnaire":false,"questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::DepositHistoryTravelRuleResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::DepositHistoryTravelRuleResponseInner>");
 
             let resp = client.deposit_history_travel_rule(params).await.expect("Expected a response");
@@ -2111,7 +2352,7 @@ mod tests {
 
             let params = DepositHistoryV2Params::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"depositId":"4615328107052018945","amount":"0.01","network":"AVAXC","coin":"AVAX","depositStatus":1,"travelRuleReqStatus":0,"address":"0x0010627ab66d69232f4080d54e0f838b4dc3894a","addressTag":"","txId":"0xdde578983015741eed764e7ca10defb5a2caafdca3db5f92872d24a96beb1879","transferType":0,"confirmTimes":"12/12","requireQuestionnaire":false,"questionnaire":{"vaspName":"BINANCE","depositOriginator":0},"insertTime":1753053392000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"depositId":"4615328107052018945","amount":"0.01","network":"AVAXC","coin":"AVAX","depositStatus":1,"travelRuleReqStatus":0,"address":"0x0010627ab66d69232f4080d54e0f838b4dc3894a","addressTag":"","txId":"0xdde578983015741eed764e7ca10defb5a2caafdca3db5f92872d24a96beb1879","transferType":0,"confirmTimes":"12/12","requireQuestionnaire":false,"questionnaire":{"vaspName":"BINANCE","depositOriginator":0},"insertTime":1753053392000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::DepositHistoryV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::DepositHistoryV2ResponseInner>");
 
             let resp = client.deposit_history_v2(params).await.expect("Expected a response");
@@ -2126,9 +2367,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTravelRuleApiClient { force_error: false };
 
-            let params = DepositHistoryV2Params::builder().deposit_id("1".to_string()).tx_id("1".to_string()).network("network_example".to_string()).coin("coin_example".to_string()).retrieve_questionnaire(true).start_time(1623319461670).end_time(1641782889000).offset(0).limit(7).build().unwrap();
+            let params = DepositHistoryV2Params::builder().deposit_id(1).tx_id("1".to_string()).network("network_example".to_string()).coin("BTC".to_string()).retrieve_questionnaire(true).start_time(1623319461670).end_time(1641782889000).offset(0).limit(1000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"depositId":"4615328107052018945","amount":"0.01","network":"AVAXC","coin":"AVAX","depositStatus":1,"travelRuleReqStatus":0,"address":"0x0010627ab66d69232f4080d54e0f838b4dc3894a","addressTag":"","txId":"0xdde578983015741eed764e7ca10defb5a2caafdca3db5f92872d24a96beb1879","transferType":0,"confirmTimes":"12/12","requireQuestionnaire":false,"questionnaire":{"vaspName":"BINANCE","depositOriginator":0},"insertTime":1753053392000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"depositId":"4615328107052018945","amount":"0.01","network":"AVAXC","coin":"AVAX","depositStatus":1,"travelRuleReqStatus":0,"address":"0x0010627ab66d69232f4080d54e0f838b4dc3894a","addressTag":"","txId":"0xdde578983015741eed764e7ca10defb5a2caafdca3db5f92872d24a96beb1879","transferType":0,"confirmTimes":"12/12","requireQuestionnaire":false,"questionnaire":{"vaspName":"BINANCE","depositOriginator":0},"insertTime":1753053392000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::DepositHistoryV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::DepositHistoryV2ResponseInner>");
 
             let resp = client.deposit_history_v2(params).await.expect("Expected a response");
@@ -2161,7 +2402,7 @@ mod tests {
 
             let params = FetchAddressVerificationListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"status":"PENDING","token":"AVAX","network":"AVAXC","walletAddress":"0xc03a6aa728a8dde7464c33828424ede7553a0021","addressQuestionnaire":{"sendTo":1,"satoshiToken":"AVAX","isAddressOwner":1,"verifyMethod":1}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"status":"PENDING","token":"AVAX","network":"AVAXC","walletAddress":"0xc03a6aa728a8dde7464c33828424ede7553a0021","addressQuestionnaire":{"sendTo":1,"satoshiToken":"AVAX","isAddressOwner":1,"verifyMethod":1}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FetchAddressVerificationListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FetchAddressVerificationListResponseInner>");
 
             let resp = client.fetch_address_verification_list(params).await.expect("Expected a response");
@@ -2178,7 +2419,7 @@ mod tests {
 
             let params = FetchAddressVerificationListParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"status":"PENDING","token":"AVAX","network":"AVAXC","walletAddress":"0xc03a6aa728a8dde7464c33828424ede7553a0021","addressQuestionnaire":{"sendTo":1,"satoshiToken":"AVAX","isAddressOwner":1,"verifyMethod":1}}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"status":"PENDING","token":"AVAX","network":"AVAXC","walletAddress":"0xc03a6aa728a8dde7464c33828424ede7553a0021","addressQuestionnaire":{"sendTo":1,"satoshiToken":"AVAX","isAddressOwner":1,"verifyMethod":1}}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::FetchAddressVerificationListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::FetchAddressVerificationListResponseInner>");
 
             let resp = client.fetch_address_verification_list(params).await.expect("Expected a response");
@@ -2207,6 +2448,108 @@ mod tests {
     }
 
     #[test]
+    fn get_country_list_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params = GetCountryListParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":false}],"lastUpdated":1716300000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCountryListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCountryListResponse");
+
+            let resp = client.get_country_list(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_country_list_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params = GetCountryListParams::builder().recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"countries":[{"countryCode":"au","countryName":"Australia","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true,"hasRegionRestrictions":false}],"lastUpdated":1716300000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCountryListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCountryListResponse");
+
+            let resp = client.get_country_list(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_country_list_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: true };
+
+            let params = GetCountryListParams::builder().build().unwrap();
+
+            match client.get_country_list(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_region_list_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params = GetRegionListParams::builder("au".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"countryCode":"au","regions":[{"regionName":"New South Wales","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true}],"lastUpdated":1716300000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetRegionListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRegionListResponse");
+
+            let resp = client.get_region_list(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_region_list_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: false };
+
+            let params = GetRegionListParams::builder("au".to_string(),).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"countryCode":"au","regions":[{"regionName":"New South Wales","blockType":"supported","depositAllowed":true,"withdrawalAllowed":true}],"lastUpdated":1716300000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetRegionListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetRegionListResponse");
+
+            let resp = client.get_region_list(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_region_list_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTravelRuleApiClient { force_error: true };
+
+            let params = GetRegionListParams::builder("au".to_string())
+                .build()
+                .unwrap();
+
+            match client.get_region_list(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn submit_deposit_questionnaire_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTravelRuleApiClient { force_error: false };
@@ -2216,7 +2559,6 @@ mod tests {
                 1,
                 "questionnaire_example".to_string(),
                 "beneficiary_pii_example".to_string(),
-                "signature_example".to_string(),
             )
             .build()
             .unwrap();
@@ -2224,7 +2566,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubmitDepositQuestionnaireResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubmitDepositQuestionnaireResponse");
@@ -2249,10 +2591,9 @@ mod tests {
                 1,
                 "questionnaire_example".to_string(),
                 "beneficiary_pii_example".to_string(),
-                "signature_example".to_string(),
             )
             .network("network_example".to_string())
-            .coin("coin_example".to_string())
+            .coin("BTC".to_string())
             .amount(dec!(1.0))
             .address("address_example".to_string())
             .address_tag("address_tag_example".to_string())
@@ -2262,7 +2603,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubmitDepositQuestionnaireResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubmitDepositQuestionnaireResponse");
@@ -2287,7 +2628,6 @@ mod tests {
                 1,
                 "questionnaire_example".to_string(),
                 "beneficiary_pii_example".to_string(),
-                "signature_example".to_string(),
             )
             .build()
             .unwrap();
@@ -2316,7 +2656,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubmitDepositQuestionnaireTravelRuleResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SubmitDepositQuestionnaireTravelRuleResponse",
@@ -2347,7 +2687,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubmitDepositQuestionnaireTravelRuleResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::SubmitDepositQuestionnaireTravelRuleResponse",
@@ -2400,7 +2740,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubmitDepositQuestionnaireV2Response =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubmitDepositQuestionnaireV2Response");
@@ -2428,7 +2768,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"trId":765127651,"accepted":true,"info":"Deposit questionnaire accepted."}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SubmitDepositQuestionnaireV2Response =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubmitDepositQuestionnaireV2Response");
@@ -2469,8 +2809,13 @@ mod tests {
 
             let params = VaspListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vaspCode":"BINANCE","vaspName":"Binance","identifier":"I1QNLP"},{"vaspCode":"NVBH3Z_nNEHjvqbUfkaL","vaspName":"HashKeyGlobal","identifier":"ABC123"}]"#).unwrap();
-            let expected_response : Vec<models::VaspListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::VaspListResponseInner>");
+            let resp_json: Value = serde_json::from_str(
+                r#"[{"vaspName":"Binance","vaspCode":"BINANCE","identifier":"xxx"}]"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::VaspListResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::VaspListResponseInner>");
 
             let resp = client.vasp_list(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -2486,8 +2831,13 @@ mod tests {
 
             let params = VaspListParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"vaspCode":"BINANCE","vaspName":"Binance","identifier":"I1QNLP"},{"vaspCode":"NVBH3Z_nNEHjvqbUfkaL","vaspName":"HashKeyGlobal","identifier":"ABC123"}]"#).unwrap();
-            let expected_response : Vec<models::VaspListResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::VaspListResponseInner>");
+            let resp_json: Value = serde_json::from_str(
+                r#"[{"vaspName":"Binance","vaspCode":"BINANCE","identifier":"xxx"}]"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::VaspListResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::VaspListResponseInner>");
 
             let resp = client.vasp_list(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -2519,8 +2869,8 @@ mod tests {
 
             let params = WithdrawHistoryV1Params::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","trId":2231556234,"amount":"0.00150000","transactionFee":"0.004","coin":"BTC","withdrawalStatus":6,"travelRuleStatus":0,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
-            let expected_response : Vec<models::WithdrawHistoryV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV2ResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::WithdrawHistoryV1ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV1ResponseInner>");
 
             let resp = client.withdraw_history_v1(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -2534,10 +2884,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTravelRuleApiClient { force_error: false };
 
-            let params = WithdrawHistoryV1Params::builder().tr_id("1".to_string()).tx_id("1".to_string()).withdraw_order_id("1".to_string()).network("network_example".to_string()).coin("coin_example".to_string()).travel_rule_status(789).offset(0).limit(7).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
+            let params = WithdrawHistoryV1Params::builder().tr_id("1".to_string()).tx_id("1".to_string()).withdraw_order_id("1".to_string()).network("network_example".to_string()).coin("BTC".to_string()).travel_rule_status(0).offset(0).limit(1000).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","trId":2231556234,"amount":"0.00150000","transactionFee":"0.004","coin":"BTC","withdrawalStatus":6,"travelRuleStatus":0,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
-            let expected_response : Vec<models::WithdrawHistoryV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV2ResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::WithdrawHistoryV1ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV1ResponseInner>");
 
             let resp = client.withdraw_history_v1(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -2569,8 +2919,8 @@ mod tests {
 
             let params = WithdrawHistoryV2Params::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","trId":2231556234,"amount":"0.00150000","transactionFee":"0.004","coin":"BTC","withdrawalStatus":6,"travelRuleStatus":0,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
-            let expected_response : Vec<models::WithdrawHistoryV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV2ResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::WithdrawHistoryV1ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV1ResponseInner>");
 
             let resp = client.withdraw_history_v2(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -2584,10 +2934,10 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTravelRuleApiClient { force_error: false };
 
-            let params = WithdrawHistoryV2Params::builder().tr_id("1".to_string()).tx_id("1".to_string()).withdraw_order_id("1".to_string()).network("network_example".to_string()).coin("coin_example".to_string()).travel_rule_status(789).offset(0).limit(7).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
+            let params = WithdrawHistoryV2Params::builder().tr_id("1".to_string()).tx_id("1".to_string()).withdraw_order_id("1".to_string()).network("network_example".to_string()).coin("coin_example".to_string()).travel_rule_status(0).offset(0).limit(1000).start_time(1623319461670).end_time(1641782889000).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"},{"id":"156ec387f49b41df8724fa744fa82719","trId":2231556234,"amount":"0.00150000","transactionFee":"0.004","coin":"BTC","withdrawalStatus":6,"travelRuleStatus":0,"address":"1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB","txId":"60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354","applyTime":"2019-09-24 12:43:45","network":"BTC","transferType":0,"info":"","confirmNo":2,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap();
-            let expected_response : Vec<models::WithdrawHistoryV2ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV2ResponseInner>");
+            let resp_json: Value = serde_json::from_str(r#"[{"id":"b6ae22b3aa844210a7041aee7589627c","trId":1234456,"amount":"8.91000000","transactionFee":"0.004","coin":"USDT","withdrawalStatus":6,"travelRuleStatus":0,"address":"0x94df8b352de7f46f64b01d3666bf6e936e44ce60","txId":"0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268","applyTime":"2019-10-12 11:12:02","network":"ETH","transferType":0,"withdrawOrderId":"WITHDRAWtest123","info":"The address is not valid. Please confirm with the recipient","confirmNo":3,"walletType":1,"txKey":"","questionnaire":"{\"question1\":\"answer1\",\"question2\":\"answer2\"}","completeTime":"2023-03-23 16:52:41"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::WithdrawHistoryV1ResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::WithdrawHistoryV1ResponseInner>");
 
             let resp = client.withdraw_history_v2(params).await.expect("Expected a response");
             let data_future = resp.data();
@@ -2618,7 +2968,7 @@ mod tests {
             let client = MockTravelRuleApiClient { force_error: false };
 
             let params = WithdrawTravelRuleParams::builder(
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 "address_example".to_string(),
                 dec!(1.0),
                 "questionnaire_example".to_string(),
@@ -2627,9 +2977,9 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WithdrawTravelRuleResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WithdrawTravelRuleResponse");
@@ -2650,7 +3000,7 @@ mod tests {
             let client = MockTravelRuleApiClient { force_error: false };
 
             let params = WithdrawTravelRuleParams::builder(
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 "address_example".to_string(),
                 dec!(1.0),
                 "questionnaire_example".to_string(),
@@ -2658,7 +3008,7 @@ mod tests {
             .withdraw_order_id("1".to_string())
             .network("network_example".to_string())
             .address_tag("address_tag_example".to_string())
-            .transaction_fee_flag(false)
+            .transaction_fee_flag(true)
             .name("name_example".to_string())
             .wallet_type(0)
             .recv_window(5000)
@@ -2666,9 +3016,9 @@ mod tests {
             .unwrap();
 
             let resp_json: Value = serde_json::from_str(
-                r#"{"trId":123456,"accpted":true,"info":"Withdraw request accepted"}"#,
+                r#"{"trId":123456,"accepted":true,"info":"Withdraw request accepted"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::WithdrawTravelRuleResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::WithdrawTravelRuleResponse");
@@ -2689,7 +3039,7 @@ mod tests {
             let client = MockTravelRuleApiClient { force_error: true };
 
             let params = WithdrawTravelRuleParams::builder(
-                "coin_example".to_string(),
+                "BTC".to_string(),
                 "address_example".to_string(),
                 dec!(1.0),
                 "questionnaire_example".to_string(),

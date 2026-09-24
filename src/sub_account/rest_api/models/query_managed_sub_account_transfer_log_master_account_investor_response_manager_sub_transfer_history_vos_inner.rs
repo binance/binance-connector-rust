@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -43,7 +43,8 @@ pub struct QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManager
 impl
     QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner
 {
-    #[must_use]    pub fn new() -> QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner{
+    #[must_use]
+    pub fn new() -> QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner{
         QueryManagedSubAccountTransferLogMasterAccountInvestorResponseManagerSubTransferHistoryVosInner {
             from_email: None,
             from_account_type: None,

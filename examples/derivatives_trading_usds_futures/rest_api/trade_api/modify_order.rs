@@ -30,10 +30,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = ModifyOrderParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSDT".to_string(),
         ModifyOrderSideEnum::Buy,
         dec!(1.0),
-        dec!(1.0),
+        dec!(30005),
     )
     .build()?;
 

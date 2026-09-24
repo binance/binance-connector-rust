@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -26,18 +26,17 @@ pub struct ModifyOrderResponseResult {
     pub status: Option<String>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// user-defined modification identifier, only returned if provided in the request
+    #[serde(rename = "modifyId", skip_serializing_if = "Option::is_none")]
+    pub modify_id: Option<i64>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
-    #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
-    pub avg_price: Option<String>,
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
-    pub cum_quote: Option<String>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -79,12 +78,11 @@ impl ModifyOrderResponseResult {
             symbol: None,
             status: None,
             client_order_id: None,
+            modify_id: None,
             price: None,
-            avg_price: None,
             orig_qty: None,
             executed_qty: None,
             cum_qty: None,
-            cum_quote: None,
             time_in_force: None,
             r#type: None,
             reduce_only: None,

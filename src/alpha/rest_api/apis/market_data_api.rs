@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -35,6 +35,10 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: AggregatedTradesParams,
     ) -> anyhow::Result<RestApiResponse<models::AggregatedTradesResponse>>;
+    async fn full_depth(
+        &self,
+        params: FullDepthParams,
+    ) -> anyhow::Result<RestApiResponse<models::FullDepthResponse>>;
     async fn get_exchange_info(
         &self,
     ) -> anyhow::Result<RestApiResponse<models::GetExchangeInfoResponse>>;
@@ -60,37 +64,184 @@ impl MarketDataApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum FullDepthLimitEnum {
+    #[serde(rename = "5")]
+    Limit5,
+    #[serde(rename = "10")]
+    Limit10,
+    #[serde(rename = "20")]
+    Limit20,
+    #[serde(rename = "50")]
+    Limit50,
+    #[serde(rename = "100")]
+    Limit100,
+    #[serde(rename = "500")]
+    Limit500,
+    #[serde(rename = "1000")]
+    Limit1000,
+}
+
+impl FullDepthLimitEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Limit5 => "5",
+            Self::Limit10 => "10",
+            Self::Limit20 => "20",
+            Self::Limit50 => "50",
+            Self::Limit100 => "100",
+            Self::Limit500 => "500",
+            Self::Limit1000 => "1000",
+        }
+    }
+}
+
+impl std::str::FromStr for FullDepthLimitEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "5" => Ok(Self::Limit5),
+            "10" => Ok(Self::Limit10),
+            "20" => Ok(Self::Limit20),
+            "50" => Ok(Self::Limit50),
+            "100" => Ok(Self::Limit100),
+            "500" => Ok(Self::Limit500),
+            "1000" => Ok(Self::Limit1000),
+            other => Err(format!("invalid FullDepthLimitEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum KlinesIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
+    #[serde(rename = "15s")]
+    Interval15s,
+    #[serde(rename = "1m")]
+    Interval1m,
+    #[serde(rename = "3m")]
+    Interval3m,
+    #[serde(rename = "5m")]
+    Interval5m,
+    #[serde(rename = "15m")]
+    Interval15m,
+    #[serde(rename = "30m")]
+    Interval30m,
+    #[serde(rename = "1h")]
+    Interval1h,
+    #[serde(rename = "2h")]
+    Interval2h,
+    #[serde(rename = "4h")]
+    Interval4h,
+    #[serde(rename = "6h")]
+    Interval6h,
+    #[serde(rename = "8h")]
+    Interval8h,
+    #[serde(rename = "12h")]
+    Interval12h,
+    #[serde(rename = "1d")]
+    Interval1d,
+    #[serde(rename = "3d")]
+    Interval3d,
+    #[serde(rename = "1w")]
+    Interval1w,
+    #[serde(rename = "1M")]
+    Interval1M,
+}
+
+impl KlinesIntervalEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Interval1s => "1s",
+            Self::Interval15s => "15s",
+            Self::Interval1m => "1m",
+            Self::Interval3m => "3m",
+            Self::Interval5m => "5m",
+            Self::Interval15m => "15m",
+            Self::Interval30m => "30m",
+            Self::Interval1h => "1h",
+            Self::Interval2h => "2h",
+            Self::Interval4h => "4h",
+            Self::Interval6h => "6h",
+            Self::Interval8h => "8h",
+            Self::Interval12h => "12h",
+            Self::Interval1d => "1d",
+            Self::Interval3d => "3d",
+            Self::Interval1w => "1w",
+            Self::Interval1M => "1M",
+        }
+    }
+}
+
+impl std::str::FromStr for KlinesIntervalEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "1s" => Ok(Self::Interval1s),
+            "15s" => Ok(Self::Interval15s),
+            "1m" => Ok(Self::Interval1m),
+            "3m" => Ok(Self::Interval3m),
+            "5m" => Ok(Self::Interval5m),
+            "15m" => Ok(Self::Interval15m),
+            "30m" => Ok(Self::Interval30m),
+            "1h" => Ok(Self::Interval1h),
+            "2h" => Ok(Self::Interval2h),
+            "4h" => Ok(Self::Interval4h),
+            "6h" => Ok(Self::Interval6h),
+            "8h" => Ok(Self::Interval8h),
+            "12h" => Ok(Self::Interval12h),
+            "1d" => Ok(Self::Interval1d),
+            "3d" => Ok(Self::Interval3d),
+            "1w" => Ok(Self::Interval1w),
+            "1M" => Ok(Self::Interval1M),
+            other => Err(format!("invalid KlinesIntervalEnum: {}", other).into()),
+        }
+    }
+}
+
 /// Request parameters for the [`aggregated_trades`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`aggregated_trades`](#method.aggregated_trades).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AggregatedTradesParams {
-    /// e.g., "`ALPHA_175USDT`" – use token ID from Token List
+    /// Trading pair symbol, e.g. `ALPHA_118USDC` (use token ID from Token List).
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// starting trade ID to fetch from
+    /// Starting aggregate trade ID to fetch from.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "fromId", default)]
     pub from_id: Option<i64>,
-    /// start timestamp (milliseconds)
+    /// Start timestamp in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    /// end timestamp (milliseconds)
+    /// End timestamp in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// number of results to return (default 500, max 1000)
+    /// Number of results to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
 }
 
@@ -99,44 +250,82 @@ impl AggregatedTradesParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — e.g., \"`ALPHA_175USDT`\" – use token ID from Token List
+    /// * `symbol` — Trading pair symbol, e.g. `ALPHA_118USDC` (use token ID from Token List).
     ///
     #[must_use]
     pub fn builder(symbol: String) -> AggregatedTradesParamsBuilder {
         AggregatedTradesParamsBuilder::default().symbol(symbol)
     }
 }
+/// Request parameters for the [`full_depth`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`full_depth`](#method.full_depth).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct FullDepthParams {
+    /// Trading pair symbol, e.g. `ALPHA_175USDT` (use token ID from Token List).
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    /// Number of price levels to return. Valid values: 5, 10, 20, 50, 100, 500, 1000.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
+    pub limit: Option<FullDepthLimitEnum>,
+}
+
+impl FullDepthParams {
+    /// Create a builder for [`full_depth`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — Trading pair symbol, e.g. `ALPHA_175USDT` (use token ID from Token List).
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> FullDepthParamsBuilder {
+        FullDepthParamsBuilder::default().symbol(symbol)
+    }
+}
 /// Request parameters for the [`klines`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`klines`](#method.klines).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct KlinesParams {
-    /// e.g., "`ALPHA_175USDT`" – use token ID from Token List
+    /// Trading pair symbol, e.g. `ALPHA_175USDT` (use token ID from Token List).
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// e.g., "1h" – supported intervals: 1s, 15s, 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
+    /// Kline interval.
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub interval: String,
-    /// number of results to return (default 500, max 1000)
+    #[serde(rename = "interval")]
+    pub interval: KlinesIntervalEnum,
+    /// Number of klines to return.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
-    /// start timestamp (milliseconds)
+    /// Start timestamp in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    /// end timestamp (milliseconds)
+    /// End timestamp in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
 }
 
@@ -145,11 +334,11 @@ impl KlinesParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — e.g., \"`ALPHA_175USDT`\" – use token ID from Token List
-    /// * `interval` — e.g., \"1h\" – supported intervals: 1s, 15s, 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
+    /// * `symbol` — Trading pair symbol, e.g. `ALPHA_175USDT` (use token ID from Token List).
+    /// * `interval` — Kline interval.
     ///
     #[must_use]
-    pub fn builder(symbol: String, interval: String) -> KlinesParamsBuilder {
+    pub fn builder(symbol: String, interval: KlinesIntervalEnum) -> KlinesParamsBuilder {
         KlinesParamsBuilder::default()
             .symbol(symbol)
             .interval(interval)
@@ -159,13 +348,14 @@ impl KlinesParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`ticker`](#method.ticker).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct TickerParams {
-    /// e.g., "`ALPHA_175USDT`" – use token ID from Token List
+    /// Trading pair symbol, e.g. `ALPHA_175USDT` (use token ID from Token List).
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
 }
 
@@ -174,7 +364,7 @@ impl TickerParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — e.g., \"`ALPHA_175USDT`\" – use token ID from Token List
+    /// * `symbol` — Trading pair symbol, e.g. `ALPHA_175USDT` (use token ID from Token List).
     ///
     #[must_use]
     pub fn builder(symbol: String) -> TickerParamsBuilder {
@@ -220,6 +410,37 @@ impl MarketDataApi for MarketDataApiClient {
         send_request::<models::AggregatedTradesResponse>(
             &self.configuration,
             "/bapi/defi/v1/public/alpha-trade/agg-trades",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
+        )
+        .await
+    }
+
+    async fn full_depth(
+        &self,
+        params: FullDepthParams,
+    ) -> anyhow::Result<RestApiResponse<models::FullDepthResponse>> {
+        let FullDepthParams { symbol, limit } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = limit {
+            query_params.insert("limit".to_string(), json!(rw));
+        }
+
+        send_request::<models::FullDepthResponse>(
+            &self.configuration,
+            "/bapi/defi/v1/public/alpha-trade/fullDepth",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -394,10 +615,37 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":[{"a":58470,"p":"1.00","q":"1.00","f":58470,"l":58665,"T":1752568680000,"m":true}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":[{"a":58470,"p":"1.00","q":"1.00","f":58470,"l":58665,"T":1752568680000,"m":true}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AggregatedTradesResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AggregatedTradesResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn full_depth(
+            &self,
+            _params: FullDepthParams,
+        ) -> anyhow::Result<RestApiResponse<models::FullDepthResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"message","messageDetail":"messageDetail","success":true,"data":{"lastUpdateId":47534656223,"symbol":"ALPHA_175USDT","bids":[["0.00040161","365980.85000000"]],"asks":[["0.00046996","61994.70000000"]],"E":1775027836086,"T":1775027836072}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::FullDepthResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::FullDepthResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -420,7 +668,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":{"timezone":"UTC","assets":[{"asset":"USDT"}],"symbols":[{"symbol":"ALPHA_105USDT","status":"TRADING","baseAsset":"ALPHA_105","quoteAsset":"USDT","pricePrecision":8,"quantityPrecision":8,"baseAssetPrecision":8,"quotePrecision":8,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.00000001","maxPrice":"1000","tickSize":"0.00000001"},{"filterType":"LOT_SIZE","stepSize":"0.01000000","maxQty":"277778","minQty":"0.01000000"},{"filterType":"MAX_NUM_ORDERS","limit":200},{"filterType":"MIN_NOTIONAL","minNotional":"0.1"},{"filterType":"MAX_NOTIONAL","maxNotional":"1000000"},{"filterType":"NOTIONAL","minNotional":"0.1","maxNotional":"1000000"},{"filterType":"PERCENT_PRICE","multiplierDown":"0.20000","multiplierUp":"5"},{"filterType":"PERCENT_PRICE_BY_SIDE","bidMultiplierUp":"5","askMultiplierUp":"5","bidMultiplierDown":"0.20000","askMultiplierDown":"0.20000"}],"orderTypes":["LIMIT"]}],"orderTypes":""}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":{"timezone":"UTC","assets":[{"asset":"USDT"}],"symbols":[{"symbol":"ALPHA_105USDT","status":"TRADING","baseAsset":"ALPHA_105","quoteAsset":"USDT","pricePrecision":8,"quantityPrecision":8,"baseAssetPrecision":8,"quotePrecision":8,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.00000001","maxPrice":"1000","tickSize":"0.00000001","stepSize":"0.01000000","maxQty":"277778","minQty":"0.01000000","limit":200,"minNotional":"0.1","maxNotional":"1000000","multiplierDown":"0.20000","multiplierUp":"5","bidMultiplierUp":"5","askMultiplierUp":"5","bidMultiplierDown":"0.20000","askMultiplierDown":"0.20000"}],"orderTypes":["LIMIT"]}],"orderTypes":""}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetExchangeInfoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetExchangeInfoResponse");
@@ -447,7 +695,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[["1752642000000","0.00171473","0.00172515","0.00171473","0.00172515","1771.86000000","1752645599999","3.05093481","2","1771.86000000","3.05093481",0]]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[["1752642000000"]]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::KlinesResponse = serde_json::from_value(resp_json.clone())
                 .expect("should parse into models::KlinesResponse");
 
@@ -473,7 +721,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":{"symbol":"ALPHA_175USDT","priceChange":"-0.00007172","priceChangePercent":"-8.841","weightedAvgPrice":"0.00079608","lastPrice":"0.00073954","lastQty":"12600.43000000","openPrice":"0.00081126","highPrice":"0.00081126","lowPrice":"0.00073954","volume":"1204754.30000000","quoteVolume":"959.07729927","openTime":1768808100000,"closeTime":1768893244772,"firstId":93742,"lastId":93768,"count":38},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":{"symbol":"ALPHA_175USDT","priceChange":"-0.00007172","priceChangePercent":"-8.841","weightedAvgPrice":"0.00079608","lastPrice":"0.00073954","lastQty":"12600.43000000","openPrice":"0.00081126","highPrice":"0.00081126","lowPrice":"0.00073954","volume":"1204754.30000000","quoteVolume":"959.07729927","openTime":1768808100000,"closeTime":1768893244772,"firstId":93742,"lastId":93768,"count":38},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TickerResponse = serde_json::from_value(resp_json.clone())
                 .expect("should parse into models::TickerResponse");
 
@@ -496,7 +744,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[{"tokenId":"3F350C8B3621770A673159B7A19BC034","chainId":"56","chainIconUrl":"https://bin.bnbstatic.com/image/admin_mgs_image_upload/20250228/d0216ce4-a3e9-4bda-8937-4a6aa943ccf2.png","chainName":"BSC","contractAddress":"0xcf640fdf9b3d9e45cbd69fda91d7e22579c14444","name":"gorilla","symbol":"gorilla","iconUrl":"https://bin.bnbstatic.com/images/web3-data/public/token/logos/248b5406f88a4ee28913a29107875339.png","price":"0.00080595003978242023","percentChange24h":"-7.42","volume24h":"14847.711222633409558029675","marketCap":"805950.03978242","fdv":"805950.03978242","liquidity":"263192.72813121626034","totalSupply":"1000000000","circulatingSupply":"1000000000","holders":"7120","decimals":18,"listingCex":false,"hotTag":false,"cexCoinName":"","canTransfer":false,"denomination":1,"offline":false,"tradeDecimal":8,"alphaId":"ALPHA_175","offsell":false,"priceHigh24h":"0.00088873864475645879","priceLow24h":"0.0008020805165487083","count24h":"166","onlineTge":false,"onlineAirdrop":false,"score":1,"cexOffDisplay":false,"stockState":false,"listingTime":1746686700000,"mulPoint":1,"bnExclusiveState":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[{"tokenId":"3F350C8B3621770A673159B7A19BC034","chainId":"56","chainIconUrl":"https://bin.bnbstatic.com/image/admin_mgs_image_upload/20250228/d0216ce4-a3e9-4bda-8937-4a6aa943ccf2.png","chainName":"BSC","contractAddress":"0xcf640fdf9b3d9e45cbd69fda91d7e22579c14444","name":"gorilla","symbol":"gorilla","iconUrl":"https://bin.bnbstatic.com/images/web3-data/public/token/logos/248b5406f88a4ee28913a29107875339.png","price":"0.00080595003978242023","percentChange24h":"-7.42","volume24h":"14847.711222633409558029675","marketCap":"805950.03978242","fdv":"805950.03978242","liquidity":"263192.72813121626034","totalSupply":"1000000000","circulatingSupply":"1000000000","holders":"7120","decimals":18,"listingCex":false,"hotTag":false,"cexCoinName":"","canTransfer":false,"denomination":1,"offline":false,"tradeDecimal":8,"alphaId":"ALPHA_175","offsell":false,"priceHigh24h":"0.00088873864475645879","priceLow24h":"0.0008020805165487083","count24h":"166","onlineTge":false,"onlineAirdrop":false,"score":1,"cexOffDisplay":false,"stockState":false,"listingTime":1746686700000,"mulPoint":1,"bnExclusiveState":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TokenListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TokenListResponse");
@@ -517,9 +765,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = AggregatedTradesParams::builder("symbol_example".to_string(),).build().unwrap();
+            let params = AggregatedTradesParams::builder("ALPHA_118USDC".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":[{"a":58470,"p":"1.00","q":"1.00","f":58470,"l":58665,"T":1752568680000,"m":true}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":[{"a":58470,"p":"1.00","q":"1.00","f":58470,"l":58665,"T":1752568680000,"m":true}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AggregatedTradesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AggregatedTradesResponse");
 
             let resp = client.aggregated_trades(params).await.expect("Expected a response");
@@ -534,9 +782,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = AggregatedTradesParams::builder("symbol_example".to_string(),).from_id(1).start_time(1623319461670).end_time(1641782889000).limit(500).build().unwrap();
+            let params = AggregatedTradesParams::builder("ALPHA_118USDC".to_string(),).from_id(58470).start_time(1752568680000).end_time(1752572280000).limit(500).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":[{"a":58470,"p":"1.00","q":"1.00","f":58470,"l":58665,"T":1752568680000,"m":true}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":[{"a":58470,"p":"1.00","q":"1.00","f":58470,"l":58665,"T":1752568680000,"m":true}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AggregatedTradesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AggregatedTradesResponse");
 
             let resp = client.aggregated_trades(params).await.expect("Expected a response");
@@ -551,11 +799,63 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = AggregatedTradesParams::builder("symbol_example".to_string())
+            let params = AggregatedTradesParams::builder("ALPHA_118USDC".to_string())
                 .build()
                 .unwrap();
 
             match client.aggregated_trades(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn full_depth_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = FullDepthParams::builder("ALPHA_175USDT".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"message","messageDetail":"messageDetail","success":true,"data":{"lastUpdateId":47534656223,"symbol":"ALPHA_175USDT","bids":[["0.00040161","365980.85000000"]],"asks":[["0.00046996","61994.70000000"]],"E":1775027836086,"T":1775027836072}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::FullDepthResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FullDepthResponse");
+
+            let resp = client.full_depth(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn full_depth_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = FullDepthParams::builder("ALPHA_175USDT".to_string(),).limit(FullDepthLimitEnum::Limit5).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"message","messageDetail":"messageDetail","success":true,"data":{"lastUpdateId":47534656223,"symbol":"ALPHA_175USDT","bids":[["0.00040161","365980.85000000"]],"asks":[["0.00046996","61994.70000000"]],"E":1775027836086,"T":1775027836072}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::FullDepthResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FullDepthResponse");
+
+            let resp = client.full_depth(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn full_depth_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            let params = FullDepthParams::builder("ALPHA_175USDT".to_string())
+                .build()
+                .unwrap();
+
+            match client.full_depth(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -570,7 +870,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":{"timezone":"UTC","assets":[{"asset":"USDT"}],"symbols":[{"symbol":"ALPHA_105USDT","status":"TRADING","baseAsset":"ALPHA_105","quoteAsset":"USDT","pricePrecision":8,"quantityPrecision":8,"baseAssetPrecision":8,"quotePrecision":8,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.00000001","maxPrice":"1000","tickSize":"0.00000001"},{"filterType":"LOT_SIZE","stepSize":"0.01000000","maxQty":"277778","minQty":"0.01000000"},{"filterType":"MAX_NUM_ORDERS","limit":200},{"filterType":"MIN_NOTIONAL","minNotional":"0.1"},{"filterType":"MAX_NOTIONAL","maxNotional":"1000000"},{"filterType":"NOTIONAL","minNotional":"0.1","maxNotional":"1000000"},{"filterType":"PERCENT_PRICE","multiplierDown":"0.20000","multiplierUp":"5"},{"filterType":"PERCENT_PRICE_BY_SIDE","bidMultiplierUp":"5","askMultiplierUp":"5","bidMultiplierDown":"0.20000","askMultiplierDown":"0.20000"}],"orderTypes":["LIMIT"]}],"orderTypes":""}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":{"timezone":"UTC","assets":[{"asset":"USDT"}],"symbols":[{"symbol":"ALPHA_105USDT","status":"TRADING","baseAsset":"ALPHA_105","quoteAsset":"USDT","pricePrecision":8,"quantityPrecision":8,"baseAssetPrecision":8,"quotePrecision":8,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.00000001","maxPrice":"1000","tickSize":"0.00000001","stepSize":"0.01000000","maxQty":"277778","minQty":"0.01000000","limit":200,"minNotional":"0.1","maxNotional":"1000000","multiplierDown":"0.20000","multiplierUp":"5","bidMultiplierUp":"5","askMultiplierUp":"5","bidMultiplierDown":"0.20000","askMultiplierDown":"0.20000"}],"orderTypes":["LIMIT"]}],"orderTypes":""}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetExchangeInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetExchangeInfoResponse");
 
             let resp = client.get_exchange_info().await.expect("Expected a response");
@@ -586,7 +886,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":{"timezone":"UTC","assets":[{"asset":"USDT"}],"symbols":[{"symbol":"ALPHA_105USDT","status":"TRADING","baseAsset":"ALPHA_105","quoteAsset":"USDT","pricePrecision":8,"quantityPrecision":8,"baseAssetPrecision":8,"quotePrecision":8,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.00000001","maxPrice":"1000","tickSize":"0.00000001"},{"filterType":"LOT_SIZE","stepSize":"0.01000000","maxQty":"277778","minQty":"0.01000000"},{"filterType":"MAX_NUM_ORDERS","limit":200},{"filterType":"MIN_NOTIONAL","minNotional":"0.1"},{"filterType":"MAX_NOTIONAL","maxNotional":"1000000"},{"filterType":"NOTIONAL","minNotional":"0.1","maxNotional":"1000000"},{"filterType":"PERCENT_PRICE","multiplierDown":"0.20000","multiplierUp":"5"},{"filterType":"PERCENT_PRICE_BY_SIDE","bidMultiplierUp":"5","askMultiplierUp":"5","bidMultiplierDown":"0.20000","askMultiplierDown":"0.20000"}],"orderTypes":["LIMIT"]}],"orderTypes":""}}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":{"timezone":"UTC","assets":[{"asset":"USDT"}],"symbols":[{"symbol":"ALPHA_105USDT","status":"TRADING","baseAsset":"ALPHA_105","quoteAsset":"USDT","pricePrecision":8,"quantityPrecision":8,"baseAssetPrecision":8,"quotePrecision":8,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.00000001","maxPrice":"1000","tickSize":"0.00000001","stepSize":"0.01000000","maxQty":"277778","minQty":"0.01000000","limit":200,"minNotional":"0.1","maxNotional":"1000000","multiplierDown":"0.20000","multiplierUp":"5","bidMultiplierUp":"5","askMultiplierUp":"5","bidMultiplierDown":"0.20000","askMultiplierDown":"0.20000"}],"orderTypes":["LIMIT"]}],"orderTypes":""}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetExchangeInfoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetExchangeInfoResponse");
 
             let resp = client.get_exchange_info().await.expect("Expected a response");
@@ -615,9 +915,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = KlinesParams::builder("symbol_example".to_string(),"interval_example".to_string(),).build().unwrap();
+            let params = KlinesParams::builder("ALPHA_175USDT".to_string(),KlinesIntervalEnum::Interval1s,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[["1752642000000","0.00171473","0.00172515","0.00171473","0.00172515","1771.86000000","1752645599999","3.05093481","2","1771.86000000","3.05093481",0]]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[["1752642000000"]]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::KlinesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::KlinesResponse");
 
             let resp = client.klines(params).await.expect("Expected a response");
@@ -632,9 +932,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = KlinesParams::builder("symbol_example".to_string(),"interval_example".to_string(),).limit(500).start_time(1623319461670).end_time(1641782889000).build().unwrap();
+            let params = KlinesParams::builder("ALPHA_175USDT".to_string(),KlinesIntervalEnum::Interval1s,).limit(500).start_time(1752642000000).end_time(1752645599999).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[["1752642000000","0.00171473","0.00172515","0.00171473","0.00172515","1771.86000000","1752645599999","3.05093481","2","1771.86000000","3.05093481",0]]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[["1752642000000"]]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::KlinesResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::KlinesResponse");
 
             let resp = client.klines(params).await.expect("Expected a response");
@@ -650,7 +950,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: true };
 
             let params =
-                KlinesParams::builder("symbol_example".to_string(), "interval_example".to_string())
+                KlinesParams::builder("ALPHA_175USDT".to_string(), KlinesIntervalEnum::Interval1s)
                     .build()
                     .unwrap();
 
@@ -668,9 +968,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TickerParams::builder("symbol_example".to_string()).build().unwrap();
+            let params = TickerParams::builder("ALPHA_175USDT".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":{"symbol":"ALPHA_175USDT","priceChange":"-0.00007172","priceChangePercent":"-8.841","weightedAvgPrice":"0.00079608","lastPrice":"0.00073954","lastQty":"12600.43000000","openPrice":"0.00081126","highPrice":"0.00081126","lowPrice":"0.00073954","volume":"1204754.30000000","quoteVolume":"959.07729927","openTime":1768808100000,"closeTime":1768893244772,"firstId":93742,"lastId":93768,"count":38},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":{"symbol":"ALPHA_175USDT","priceChange":"-0.00007172","priceChangePercent":"-8.841","weightedAvgPrice":"0.00079608","lastPrice":"0.00073954","lastQty":"12600.43000000","openPrice":"0.00081126","highPrice":"0.00081126","lowPrice":"0.00073954","volume":"1204754.30000000","quoteVolume":"959.07729927","openTime":1768808100000,"closeTime":1768893244772,"firstId":93742,"lastId":93768,"count":38},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerResponse");
 
             let resp = client.ticker(params).await.expect("Expected a response");
@@ -685,9 +985,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = TickerParams::builder("symbol_example".to_string()).build().unwrap();
+            let params = TickerParams::builder("ALPHA_175USDT".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":{"symbol":"ALPHA_175USDT","priceChange":"-0.00007172","priceChangePercent":"-8.841","weightedAvgPrice":"0.00079608","lastPrice":"0.00073954","lastQty":"12600.43000000","openPrice":"0.00081126","highPrice":"0.00081126","lowPrice":"0.00073954","volume":"1204754.30000000","quoteVolume":"959.07729927","openTime":1768808100000,"closeTime":1768893244772,"firstId":93742,"lastId":93768,"count":38},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","data":{"symbol":"ALPHA_175USDT","priceChange":"-0.00007172","priceChangePercent":"-8.841","weightedAvgPrice":"0.00079608","lastPrice":"0.00073954","lastQty":"12600.43000000","openPrice":"0.00081126","highPrice":"0.00081126","lowPrice":"0.00073954","volume":"1204754.30000000","quoteVolume":"959.07729927","openTime":1768808100000,"closeTime":1768893244772,"firstId":93742,"lastId":93768,"count":38},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerResponse");
 
             let resp = client.ticker(params).await.expect("Expected a response");
@@ -702,7 +1002,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = TickerParams::builder("symbol_example".to_string())
+            let params = TickerParams::builder("ALPHA_175USDT".to_string())
                 .build()
                 .unwrap();
 
@@ -721,7 +1021,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[{"tokenId":"3F350C8B3621770A673159B7A19BC034","chainId":"56","chainIconUrl":"https://bin.bnbstatic.com/image/admin_mgs_image_upload/20250228/d0216ce4-a3e9-4bda-8937-4a6aa943ccf2.png","chainName":"BSC","contractAddress":"0xcf640fdf9b3d9e45cbd69fda91d7e22579c14444","name":"gorilla","symbol":"gorilla","iconUrl":"https://bin.bnbstatic.com/images/web3-data/public/token/logos/248b5406f88a4ee28913a29107875339.png","price":"0.00080595003978242023","percentChange24h":"-7.42","volume24h":"14847.711222633409558029675","marketCap":"805950.03978242","fdv":"805950.03978242","liquidity":"263192.72813121626034","totalSupply":"1000000000","circulatingSupply":"1000000000","holders":"7120","decimals":18,"listingCex":false,"hotTag":false,"cexCoinName":"","canTransfer":false,"denomination":1,"offline":false,"tradeDecimal":8,"alphaId":"ALPHA_175","offsell":false,"priceHigh24h":"0.00088873864475645879","priceLow24h":"0.0008020805165487083","count24h":"166","onlineTge":false,"onlineAirdrop":false,"score":1,"cexOffDisplay":false,"stockState":false,"listingTime":1746686700000,"mulPoint":1,"bnExclusiveState":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[{"tokenId":"3F350C8B3621770A673159B7A19BC034","chainId":"56","chainIconUrl":"https://bin.bnbstatic.com/image/admin_mgs_image_upload/20250228/d0216ce4-a3e9-4bda-8937-4a6aa943ccf2.png","chainName":"BSC","contractAddress":"0xcf640fdf9b3d9e45cbd69fda91d7e22579c14444","name":"gorilla","symbol":"gorilla","iconUrl":"https://bin.bnbstatic.com/images/web3-data/public/token/logos/248b5406f88a4ee28913a29107875339.png","price":"0.00080595003978242023","percentChange24h":"-7.42","volume24h":"14847.711222633409558029675","marketCap":"805950.03978242","fdv":"805950.03978242","liquidity":"263192.72813121626034","totalSupply":"1000000000","circulatingSupply":"1000000000","holders":"7120","decimals":18,"listingCex":false,"hotTag":false,"cexCoinName":"","canTransfer":false,"denomination":1,"offline":false,"tradeDecimal":8,"alphaId":"ALPHA_175","offsell":false,"priceHigh24h":"0.00088873864475645879","priceLow24h":"0.0008020805165487083","count24h":"166","onlineTge":false,"onlineAirdrop":false,"score":1,"cexOffDisplay":false,"stockState":false,"listingTime":1746686700000,"mulPoint":1,"bnExclusiveState":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TokenListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenListResponse");
 
             let resp = client.token_list().await.expect("Expected a response");
@@ -737,7 +1037,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: false };
 
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[{"tokenId":"3F350C8B3621770A673159B7A19BC034","chainId":"56","chainIconUrl":"https://bin.bnbstatic.com/image/admin_mgs_image_upload/20250228/d0216ce4-a3e9-4bda-8937-4a6aa943ccf2.png","chainName":"BSC","contractAddress":"0xcf640fdf9b3d9e45cbd69fda91d7e22579c14444","name":"gorilla","symbol":"gorilla","iconUrl":"https://bin.bnbstatic.com/images/web3-data/public/token/logos/248b5406f88a4ee28913a29107875339.png","price":"0.00080595003978242023","percentChange24h":"-7.42","volume24h":"14847.711222633409558029675","marketCap":"805950.03978242","fdv":"805950.03978242","liquidity":"263192.72813121626034","totalSupply":"1000000000","circulatingSupply":"1000000000","holders":"7120","decimals":18,"listingCex":false,"hotTag":false,"cexCoinName":"","canTransfer":false,"denomination":1,"offline":false,"tradeDecimal":8,"alphaId":"ALPHA_175","offsell":false,"priceHigh24h":"0.00088873864475645879","priceLow24h":"0.0008020805165487083","count24h":"166","onlineTge":false,"onlineAirdrop":false,"score":1,"cexOffDisplay":false,"stockState":false,"listingTime":1746686700000,"mulPoint":1,"bnExclusiveState":false}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"","messageDetail":"","success":true,"data":[{"tokenId":"3F350C8B3621770A673159B7A19BC034","chainId":"56","chainIconUrl":"https://bin.bnbstatic.com/image/admin_mgs_image_upload/20250228/d0216ce4-a3e9-4bda-8937-4a6aa943ccf2.png","chainName":"BSC","contractAddress":"0xcf640fdf9b3d9e45cbd69fda91d7e22579c14444","name":"gorilla","symbol":"gorilla","iconUrl":"https://bin.bnbstatic.com/images/web3-data/public/token/logos/248b5406f88a4ee28913a29107875339.png","price":"0.00080595003978242023","percentChange24h":"-7.42","volume24h":"14847.711222633409558029675","marketCap":"805950.03978242","fdv":"805950.03978242","liquidity":"263192.72813121626034","totalSupply":"1000000000","circulatingSupply":"1000000000","holders":"7120","decimals":18,"listingCex":false,"hotTag":false,"cexCoinName":"","canTransfer":false,"denomination":1,"offline":false,"tradeDecimal":8,"alphaId":"ALPHA_175","offsell":false,"priceHigh24h":"0.00088873864475645879","priceLow24h":"0.0008020805165487083","count24h":"166","onlineTge":false,"onlineAirdrop":false,"score":1,"cexOffDisplay":false,"stockState":false,"listingTime":1746686700000,"mulPoint":1,"bnExclusiveState":false}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TokenListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenListResponse");
 
             let resp = client.token_list().await.expect("Expected a response");

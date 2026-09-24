@@ -5,7 +5,7 @@ use binance_sdk::spot;
 use binance_sdk::config;
 use binance_sdk::models;
 
-let configuration = config::ConfigurationWebsocketApi::builder()
+let configuration = config::ConfigurationWebsocketStreams::builder()
     .api_key("your-api-key")
     .api_secret("your-api-secret")
     .time_unit(models::TimeUnit::Microsecond) // Set time unit to microseconds

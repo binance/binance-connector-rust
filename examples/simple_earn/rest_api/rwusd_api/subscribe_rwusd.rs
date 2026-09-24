@@ -5,7 +5,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::simple_earn::{SimpleEarnRestApi, rest_api::SubscribeRwusdParams};
+use binance_sdk::simple_earn::{
+    SimpleEarnRestApi,
+    rest_api::{SubscribeRwusdAssetEnum, SubscribeRwusdParams},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -26,7 +29,7 @@ async fn main() -> Result<()> {
     let rest_client = SimpleEarnRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = SubscribeRwusdParams::builder("asset_example".to_string(), dec!(1.0)).build()?;
+    let params = SubscribeRwusdParams::builder(SubscribeRwusdAssetEnum::Usdt, dec!(1.0)).build()?;
 
     // Make the API call
     let response = rest_client

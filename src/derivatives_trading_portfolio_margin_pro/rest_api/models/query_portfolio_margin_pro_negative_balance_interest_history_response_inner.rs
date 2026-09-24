@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Portfolio Margin Pro REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,17 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryPortfolioMarginProNegativeBalanceInterestHistoryResponseInner {
+    /// asset.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// interest amount
     #[serde(rename = "interest", skip_serializing_if = "Option::is_none")]
     pub interest: Option<String>,
+    /// interest Accrued Time.
     #[serde(
         rename = "interestAccruedTime",
         skip_serializing_if = "Option::is_none"
     )]
     pub interest_accrued_time: Option<i64>,
+    /// daily interest rate
     #[serde(rename = "interestRate", skip_serializing_if = "Option::is_none")]
     pub interest_rate: Option<String>,
+    /// principal.
     #[serde(rename = "principal", skip_serializing_if = "Option::is_none")]
     pub principal: Option<String>,
 }

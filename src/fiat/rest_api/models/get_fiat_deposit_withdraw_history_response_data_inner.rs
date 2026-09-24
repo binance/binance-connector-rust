@@ -1,7 +1,7 @@
 /*
- * Binance Fiat REST API
+ * Fiat REST API
  *
- * OpenAPI Specification for the Binance Fiat REST API
+ * Query Binance fiat deposit and withdrawal history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -29,6 +29,7 @@ pub struct GetFiatDepositWithdrawHistoryResponseDataInner {
     pub total_fee: Option<String>,
     #[serde(rename = "method", skip_serializing_if = "Option::is_none")]
     pub method: Option<String>,
+    /// Processing, Failed, Successful, Finished, Refunding, Refunded, Refund Failed, Order Partial Credit Stopped
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]

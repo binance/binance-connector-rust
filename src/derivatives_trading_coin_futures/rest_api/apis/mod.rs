@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,8 +15,6 @@ pub mod account_api;
 pub use account_api::*;
 pub mod market_data_api;
 pub use market_data_api::*;
-pub mod portfolio_margin_endpoints_api;
-pub use portfolio_margin_endpoints_api::*;
 pub mod trade_api;
 pub use trade_api::*;
 pub mod user_data_streams_api;

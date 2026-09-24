@@ -1,7 +1,7 @@
 /*
- * Binance C2C REST API
+ * C2C REST API
  *
- * OpenAPI Specification for the Binance C2C REST API
+ * Query fiat transaction history via the C2C REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,14 +17,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetC2CTradeHistoryResponse {
+    /// API response code. \"000000\" indicates success.
     #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
+    /// Response message.
     #[serde(rename = "message", skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
     pub data: Option<Vec<models::GetC2CTradeHistoryResponseDataInner>>,
+    /// Total number of records
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<i64>,
+    /// Whether request is successful
     #[serde(rename = "success", skip_serializing_if = "Option::is_none")]
     pub success: Option<bool>,
 }

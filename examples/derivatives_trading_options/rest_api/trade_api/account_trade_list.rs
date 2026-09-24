@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = AccountTradeListParams::default();
+    let params = AccountTradeListParams::builder("BTC-200730-9000-C".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

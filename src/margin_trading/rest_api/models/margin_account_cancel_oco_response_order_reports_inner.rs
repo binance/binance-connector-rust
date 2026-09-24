@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,37 +17,52 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarginAccountCancelOcoResponseOrderReportsInner {
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// orig Client Order Id.
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
+    /// order Id.
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// order List Id.
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
+    /// client Order Id.
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
+    /// price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// orig Qty.
     #[serde(rename = "origQty", skip_serializing_if = "Option::is_none")]
     pub orig_qty: Option<String>,
+    /// executed Qty.
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// cummulative Quote Qty.
     #[serde(
         rename = "cummulativeQuoteQty",
         skip_serializing_if = "Option::is_none"
     )]
     pub cummulative_quote_qty: Option<String>,
+    /// status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// time In Force.
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// type.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// stop Price.
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
+    /// self Trade Prevention Mode.
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"

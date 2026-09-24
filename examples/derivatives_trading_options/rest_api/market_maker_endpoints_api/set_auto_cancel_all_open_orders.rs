@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        SetAutoCancelAllOpenOrdersParams::builder("underlying_example".to_string(), 789).build()?;
+    let params = SetAutoCancelAllOpenOrdersParams::builder("BTCUSDT".to_string(), 5000).build()?;
 
     // Make the API call
     let response = rest_client

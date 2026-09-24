@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Portfolio Margin Pro REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro REST API
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,26 +17,34 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetPortfolioMarginProAccountInfoResponse {
+    /// Classic Portfolio margin account maintenance margin rate
     #[serde(rename = "uniMMR", skip_serializing_if = "Option::is_none")]
     pub uni_mmr: Option<String>,
+    /// Account equity, unit：USD
     #[serde(rename = "accountEquity", skip_serializing_if = "Option::is_none")]
     pub account_equity: Option<String>,
+    /// Actual equity, unit：USD
     #[serde(rename = "actualEquity", skip_serializing_if = "Option::is_none")]
     pub actual_equity: Option<String>,
+    /// Classic Portfolio margin account maintenance margin, unit：USD
     #[serde(rename = "accountMaintMargin", skip_serializing_if = "Option::is_none")]
     pub account_maint_margin: Option<String>,
+    /// Ignored for PM PRO and PM PRO SPAN
     #[serde(
         rename = "accountInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub account_initial_margin: Option<String>,
+    /// Ignored for PM PRO and PM PRO SPAN
     #[serde(
         rename = "totalAvailableBalance",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_available_balance: Option<String>,
+    /// Classic Portfolio margin account status:\"NORMAL\", \"`MARGIN_CALL`\", \"`SUPPLY_MARGIN`\", \"`REDUCE_ONLY`\", \"`ACTIVE_LIQUIDATION`\", \"`FORCE_LIQUIDATION`\", \"BANKRUPTED\"
     #[serde(rename = "accountStatus", skip_serializing_if = "Option::is_none")]
     pub account_status: Option<String>,
+    /// `PM_1` for PM PRO, `PM_2` for PM, `PM_3` for PM PRO SPAN
     #[serde(rename = "accountType", skip_serializing_if = "Option::is_none")]
     pub account_type: Option<String>,
 }

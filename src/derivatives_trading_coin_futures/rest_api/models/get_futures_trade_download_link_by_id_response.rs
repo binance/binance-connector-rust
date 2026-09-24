@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,19 +17,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetFuturesTradeDownloadLinkByIdResponse {
+    /// Download task ID.
     #[serde(rename = "downloadId", skip_serializing_if = "Option::is_none")]
     pub download_id: Option<String>,
+    /// Enum：completed，processing
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// The link is mapped to download id
     #[serde(rename = "url", skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
+    /// ignore
     #[serde(rename = "notified", skip_serializing_if = "Option::is_none")]
     pub notified: Option<bool>,
+    /// The link would expire after this timestamp
     #[serde(
         rename = "expirationTimestamp",
         skip_serializing_if = "Option::is_none"
     )]
     pub expiration_timestamp: Option<i64>,
+    /// Whether the record is expired.
     #[serde(rename = "isExpired", skip_serializing_if = "Option::is_none")]
     pub is_expired: Option<String>,
 }

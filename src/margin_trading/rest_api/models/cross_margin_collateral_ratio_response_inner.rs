@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CrossMarginCollateralRatioResponseInner {
+    /// collaterals list.
     #[serde(rename = "collaterals", skip_serializing_if = "Option::is_none")]
     pub collaterals: Option<Vec<models::CrossMarginCollateralRatioResponseInnerCollateralsInner>>,
+    /// asset Names list.
     #[serde(rename = "assetNames", skip_serializing_if = "Option::is_none")]
     pub asset_names: Option<Vec<String>>,
 }

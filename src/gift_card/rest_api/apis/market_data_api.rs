@@ -1,7 +1,7 @@
 /*
- * Binance Gift Card REST API
+ * Gift Card REST API
  *
- * OpenAPI Specification for the Binance Gift Card REST API
+ * Create, redeem, and check the value of Binance crypto gift cards.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -72,29 +72,34 @@ impl MarketDataApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`create_a_dual_token_gift_card`](#method.create_a_dual_token_gift_card).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CreateADualTokenGiftCardParams {
     /// The token you want to pay, example: BUSD
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "baseToken")]
     pub base_token: String,
-    /// The token you want to buy, example: BNB. If faceToken = baseToken, it's the same as createCode endpoint.
+    /// The token you want to buy, example: BNB. If faceToken = baseToken, it's the same as createCode
+    /// endpoint.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "faceToken")]
     pub face_token: String,
     /// The base token asset quantity, example : 1.002
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "baseTokenAmount")]
     pub base_token_amount: rust_decimal::Decimal,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -123,24 +128,27 @@ impl CreateADualTokenGiftCardParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`create_a_single_token_gift_card`](#method.create_a_single_token_gift_card).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CreateASingleTokenGiftCardParams {
     /// The token type contained in the Binance Gift Card
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "token")]
     pub token: String,
     /// The amount of the token contained in the Binance Gift Card
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "amount")]
     pub amount: rust_decimal::Decimal,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -166,7 +174,7 @@ impl CreateASingleTokenGiftCardParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`fetch_rsa_public_key`](#method.fetch_rsa_public_key).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FetchRsaPublicKeyParams {
     ///
@@ -174,6 +182,7 @@ pub struct FetchRsaPublicKeyParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -189,19 +198,21 @@ impl FetchRsaPublicKeyParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`fetch_token_limit`](#method.fetch_token_limit).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FetchTokenLimitParams {
     /// The token you want to pay, example: BUSD
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "baseToken")]
     pub base_token: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -221,24 +232,34 @@ impl FetchTokenLimitParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`redeem_a_binance_gift_card`](#method.redeem_a_binance_gift_card).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RedeemABinanceGiftCardParams {
     /// Redemption code of Binance Gift Card to be redeemed, supports both Plaintext & Encrypted code.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "code")]
     pub code: String,
-    /// Each external unique ID represents a unique user on the partner platform. The function helps you to identify the redemption behavior of different users, such as redemption frequency and amount. It also helps risk and limit control of a single account, such as daily limit on redemption volume, frequency, and incorrect number of entries. This will also prevent a single user account reach the partner's daily redemption limits. We strongly recommend you to use this feature and transfer us the User ID of your users if you have different users redeeming Binance Gift Cards on your platform. To protect user data privacy, you may choose to transfer the user id in any desired format (max. 400 characters).
+    /// Each external unique ID represents a unique user on the partner platform. The function helps you to
+    /// identify the redemption behavior of different users, such as redemption frequency and amount. It
+    /// also helps risk and limit control of a single account, such as daily limit on redemption volume,
+    /// frequency, and incorrect number of entries. This will also prevent a single user account reach the
+    /// partner's daily redemption limits. We strongly recommend you to use this feature and transfer us the
+    /// User ID of your users if you have different users redeeming Binance Gift Cards on your platform. To
+    /// protect user data privacy, you may choose to transfer the user id in any desired format (max. 400
+    /// characters).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "externalUid", default)]
     pub external_uid: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -258,19 +279,21 @@ impl RedeemABinanceGiftCardParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`verify_binance_gift_card_by_gift_card_number`](#method.verify_binance_gift_card_by_gift_card_number).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct VerifyBinanceGiftCardByGiftCardNumberParams {
     /// Enter the Gift Card Number
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "referenceNo")]
     pub reference_no: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -548,7 +571,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CreateADualTokenGiftCardResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CreateADualTokenGiftCardResponse");
@@ -575,7 +598,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CreateASingleTokenGiftCardResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CreateASingleTokenGiftCardResponse");
@@ -602,7 +625,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXBBVKLAc1GQ5FsIFFqOHrPTox5noBONIKr+IAedTR9FkVxq6e65updEbfdhRNkMOeYIO2i0UylrjGC0X8YSoIszmrVHeV0l06Zh1oJuZos1+7N+WLuz9JvlPaawof3GUakTxYWWCa9+8KIbLKsoKMdfS96VT+8iOXO3quMGKUmQIDAQAB","success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXBBVKLAc1GQ5FsIFFqOHrPTox5noBONIKr+IAedTR9FkVxq6e65updEbfdhRNkMOeYIO2i0UylrjGC0X8YSoIszmrVHeV0l06Zh1oJuZos1+7N+WLuz9JvlPaawof3GUakTxYWWCa9+8KIbLKsoKMdfS96VT+8iOXO3quMGKUmQIDAQAB","success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FetchRsaPublicKeyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FetchRsaPublicKeyResponse");
@@ -629,7 +652,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"coin":"BNB","fromMin":"0.01","fromMax":"1"}],"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"coin":"BNB","fromMin":"0.01","fromMax":"1"}],"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::FetchTokenLimitResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::FetchTokenLimitResponse");
@@ -656,7 +679,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002328060227","identityNo":"10317392647411060736","token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002328060227","identityNo":"10317392647411060736","token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::RedeemABinanceGiftCardResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::RedeemABinanceGiftCardResponse");
@@ -684,7 +707,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"valid":true,"token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"valid":true,"token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::VerifyBinanceGiftCardByGiftCardNumberResponse =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into models::VerifyBinanceGiftCardByGiftCardNumberResponse",
@@ -706,9 +729,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = CreateADualTokenGiftCardParams::builder("base_token_example".to_string(),"face_token_example".to_string(),dec!(1.0),).build().unwrap();
+            let params = CreateADualTokenGiftCardParams::builder("BUSD".to_string(),"BNB".to_string(),dec!(1),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CreateADualTokenGiftCardResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateADualTokenGiftCardResponse");
 
             let resp = client.create_a_dual_token_gift_card(params).await.expect("Expected a response");
@@ -723,9 +746,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = CreateADualTokenGiftCardParams::builder("base_token_example".to_string(),"face_token_example".to_string(),dec!(1.0),).recv_window(5000).build().unwrap();
+            let params = CreateADualTokenGiftCardParams::builder("BUSD".to_string(),"BNB".to_string(),dec!(1),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CreateADualTokenGiftCardResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateADualTokenGiftCardResponse");
 
             let resp = client.create_a_dual_token_gift_card(params).await.expect("Expected a response");
@@ -741,9 +764,9 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: true };
 
             let params = CreateADualTokenGiftCardParams::builder(
-                "base_token_example".to_string(),
-                "face_token_example".to_string(),
-                dec!(1.0),
+                "BUSD".to_string(),
+                "BNB".to_string(),
+                dec!(1),
             )
             .build()
             .unwrap();
@@ -762,9 +785,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = CreateASingleTokenGiftCardParams::builder("token_example".to_string(),dec!(1.0),).build().unwrap();
+            let params = CreateASingleTokenGiftCardParams::builder("BNB".to_string(),dec!(1),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CreateASingleTokenGiftCardResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateASingleTokenGiftCardResponse");
 
             let resp = client.create_a_single_token_gift_card(params).await.expect("Expected a response");
@@ -779,9 +802,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = CreateASingleTokenGiftCardParams::builder("token_example".to_string(),dec!(1.0),).recv_window(5000).build().unwrap();
+            let params = CreateASingleTokenGiftCardParams::builder("BNB".to_string(),dec!(1),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002144060553","code":"6H9EKF5ECCWFBHGE","expiredTime":1727417154000},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CreateASingleTokenGiftCardResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateASingleTokenGiftCardResponse");
 
             let resp = client.create_a_single_token_gift_card(params).await.expect("Expected a response");
@@ -796,10 +819,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params =
-                CreateASingleTokenGiftCardParams::builder("token_example".to_string(), dec!(1.0))
-                    .build()
-                    .unwrap();
+            let params = CreateASingleTokenGiftCardParams::builder("BNB".to_string(), dec!(1))
+                .build()
+                .unwrap();
 
             match client.create_a_single_token_gift_card(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -817,7 +839,7 @@ mod tests {
 
             let params = FetchRsaPublicKeyParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXBBVKLAc1GQ5FsIFFqOHrPTox5noBONIKr+IAedTR9FkVxq6e65updEbfdhRNkMOeYIO2i0UylrjGC0X8YSoIszmrVHeV0l06Zh1oJuZos1+7N+WLuz9JvlPaawof3GUakTxYWWCa9+8KIbLKsoKMdfS96VT+8iOXO3quMGKUmQIDAQAB","success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXBBVKLAc1GQ5FsIFFqOHrPTox5noBONIKr+IAedTR9FkVxq6e65updEbfdhRNkMOeYIO2i0UylrjGC0X8YSoIszmrVHeV0l06Zh1oJuZos1+7N+WLuz9JvlPaawof3GUakTxYWWCa9+8KIbLKsoKMdfS96VT+8iOXO3quMGKUmQIDAQAB","success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FetchRsaPublicKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FetchRsaPublicKeyResponse");
 
             let resp = client.fetch_rsa_public_key(params).await.expect("Expected a response");
@@ -834,7 +856,7 @@ mod tests {
 
             let params = FetchRsaPublicKeyParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXBBVKLAc1GQ5FsIFFqOHrPTox5noBONIKr+IAedTR9FkVxq6e65updEbfdhRNkMOeYIO2i0UylrjGC0X8YSoIszmrVHeV0l06Zh1oJuZos1+7N+WLuz9JvlPaawof3GUakTxYWWCa9+8KIbLKsoKMdfS96VT+8iOXO3quMGKUmQIDAQAB","success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXBBVKLAc1GQ5FsIFFqOHrPTox5noBONIKr+IAedTR9FkVxq6e65updEbfdhRNkMOeYIO2i0UylrjGC0X8YSoIszmrVHeV0l06Zh1oJuZos1+7N+WLuz9JvlPaawof3GUakTxYWWCa9+8KIbLKsoKMdfS96VT+8iOXO3quMGKUmQIDAQAB","success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FetchRsaPublicKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FetchRsaPublicKeyResponse");
 
             let resp = client.fetch_rsa_public_key(params).await.expect("Expected a response");
@@ -865,9 +887,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = FetchTokenLimitParams::builder("base_token_example".to_string(),).build().unwrap();
+            let params = FetchTokenLimitParams::builder("BUSD".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"coin":"BNB","fromMin":"0.01","fromMax":"1"}],"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"coin":"BNB","fromMin":"0.01","fromMax":"1"}],"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FetchTokenLimitResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FetchTokenLimitResponse");
 
             let resp = client.fetch_token_limit(params).await.expect("Expected a response");
@@ -882,9 +904,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = FetchTokenLimitParams::builder("base_token_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = FetchTokenLimitParams::builder("BUSD".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"coin":"BNB","fromMin":"0.01","fromMax":"1"}],"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":[{"coin":"BNB","fromMin":"0.01","fromMax":"1"}],"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::FetchTokenLimitResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::FetchTokenLimitResponse");
 
             let resp = client.fetch_token_limit(params).await.expect("Expected a response");
@@ -899,7 +921,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = FetchTokenLimitParams::builder("base_token_example".to_string())
+            let params = FetchTokenLimitParams::builder("BUSD".to_string())
                 .build()
                 .unwrap();
 
@@ -917,9 +939,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = RedeemABinanceGiftCardParams::builder("code_example".to_string(),).build().unwrap();
+            let params = RedeemABinanceGiftCardParams::builder("6H9EKF5ECCWFBHGE".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002328060227","identityNo":"10317392647411060736","token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002328060227","identityNo":"10317392647411060736","token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemABinanceGiftCardResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemABinanceGiftCardResponse");
 
             let resp = client.redeem_a_binance_gift_card(params).await.expect("Expected a response");
@@ -934,9 +956,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = RedeemABinanceGiftCardParams::builder("code_example".to_string(),).external_uid("external_uid_example".to_string()).recv_window(5000).build().unwrap();
+            let params = RedeemABinanceGiftCardParams::builder("6H9EKF5ECCWFBHGE".to_string(),).external_uid("user-123".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002328060227","identityNo":"10317392647411060736","token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"referenceNo":"0033002328060227","identityNo":"10317392647411060736","token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::RedeemABinanceGiftCardResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::RedeemABinanceGiftCardResponse");
 
             let resp = client.redeem_a_binance_gift_card(params).await.expect("Expected a response");
@@ -951,7 +973,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = RedeemABinanceGiftCardParams::builder("code_example".to_string())
+            let params = RedeemABinanceGiftCardParams::builder("6H9EKF5ECCWFBHGE".to_string())
                 .build()
                 .unwrap();
 
@@ -969,9 +991,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = VerifyBinanceGiftCardByGiftCardNumberParams::builder("reference_no_example".to_string(),).build().unwrap();
+            let params = VerifyBinanceGiftCardByGiftCardNumberParams::builder("0033002328060227".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"valid":true,"token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"valid":true,"token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VerifyBinanceGiftCardByGiftCardNumberResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VerifyBinanceGiftCardByGiftCardNumberResponse");
 
             let resp = client.verify_binance_gift_card_by_gift_card_number(params).await.expect("Expected a response");
@@ -986,9 +1008,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = VerifyBinanceGiftCardByGiftCardNumberParams::builder("reference_no_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = VerifyBinanceGiftCardByGiftCardNumberParams::builder("0033002328060227".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"valid":true,"token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"code":"000000","message":"success","data":{"valid":true,"token":"BNB","amount":"0.00000001"},"success":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::VerifyBinanceGiftCardByGiftCardNumberResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VerifyBinanceGiftCardByGiftCardNumberResponse");
 
             let resp = client.verify_binance_gift_card_by_gift_card_number(params).await.expect("Expected a response");
@@ -1004,7 +1026,7 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: true };
 
             let params = VerifyBinanceGiftCardByGiftCardNumberParams::builder(
-                "reference_no_example".to_string(),
+                "0033002328060227".to_string(),
             )
             .build()
             .unwrap();

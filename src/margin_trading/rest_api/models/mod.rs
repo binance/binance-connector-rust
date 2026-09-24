@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -63,6 +63,8 @@ pub mod get_small_liability_exchange_history_response_rows_inner;
 pub use self::get_small_liability_exchange_history_response_rows_inner::GetSmallLiabilityExchangeHistoryResponseRowsInner;
 pub mod get_summary_of_margin_account_response;
 pub use self::get_summary_of_margin_account_response::GetSummaryOfMarginAccountResponse;
+pub mod liquidation_loan_repay_response;
+pub use self::liquidation_loan_repay_response::LiquidationLoanRepayResponse;
 pub mod margin_account_borrow_repay_response;
 pub use self::margin_account_borrow_repay_response::MarginAccountBorrowRepayResponse;
 pub mod margin_account_cancel_all_open_orders_on_a_symbol_response_inner;
@@ -137,6 +139,12 @@ pub mod query_liability_coin_leverage_bracket_in_cross_margin_pro_mode_response_
 pub use self::query_liability_coin_leverage_bracket_in_cross_margin_pro_mode_response_inner::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInner;
 pub mod query_liability_coin_leverage_bracket_in_cross_margin_pro_mode_response_inner_brackets_inner;
 pub use self::query_liability_coin_leverage_bracket_in_cross_margin_pro_mode_response_inner_brackets_inner::QueryLiabilityCoinLeverageBracketInCrossMarginProModeResponseInnerBracketsInner;
+pub mod query_liquidation_loan_repay_history_response;
+pub use self::query_liquidation_loan_repay_history_response::QueryLiquidationLoanRepayHistoryResponse;
+pub mod query_liquidation_loan_repay_history_response_rows_inner;
+pub use self::query_liquidation_loan_repay_history_response_rows_inner::QueryLiquidationLoanRepayHistoryResponseRowsInner;
+pub mod query_liquidation_loan_response;
+pub use self::query_liquidation_loan_response::QueryLiquidationLoanResponse;
 pub mod query_margin_accounts_all_oco_response_inner;
 pub use self::query_margin_accounts_all_oco_response_inner::QueryMarginAccountsAllOcoResponseInner;
 pub mod query_margin_accounts_all_oco_response_inner_orders_inner;
@@ -159,8 +167,6 @@ pub mod query_margin_accounts_trade_list_response_inner;
 pub use self::query_margin_accounts_trade_list_response_inner::QueryMarginAccountsTradeListResponseInner;
 pub mod query_margin_available_inventory_response;
 pub use self::query_margin_available_inventory_response::QueryMarginAvailableInventoryResponse;
-pub mod query_margin_available_inventory_response_assets;
-pub use self::query_margin_available_inventory_response_assets::QueryMarginAvailableInventoryResponseAssets;
 pub mod query_margin_interest_rate_history_response_inner;
 pub use self::query_margin_interest_rate_history_response_inner::QueryMarginInterestRateHistoryResponseInner;
 pub mod query_margin_priceindex_response;

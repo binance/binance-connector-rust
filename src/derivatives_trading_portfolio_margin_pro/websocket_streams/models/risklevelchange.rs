@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Portfolio Margin Pro WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,16 +18,22 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Risklevelchange {
+    /// Event Time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// uniMMR level
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<String>,
+    /// Risk level: `MARGIN_CALL`, `REDUCE_ONLY`, `FORCE_LIQUIDATION`
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Account equity in USD value
     #[serde(rename = "eq", skip_serializing_if = "Option::is_none")]
     pub eq: Option<String>,
+    /// Actual equity without collateral rate in USD value
     #[serde(rename = "ae", skip_serializing_if = "Option::is_none")]
     pub ae: Option<String>,
+    /// Total maintenance margin in USD value
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<String>,
 }

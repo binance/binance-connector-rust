@@ -28,11 +28,9 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingUsdsFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = LongShortRatioParams::builder(
-        "symbol_example".to_string(),
-        LongShortRatioPeriodEnum::Period5m,
-    )
-    .build()?;
+    let params =
+        LongShortRatioParams::builder("BTCUSDT".to_string(), LongShortRatioPeriodEnum::Period5m)
+            .build()?;
 
     // Make the API call
     let response = rest_client

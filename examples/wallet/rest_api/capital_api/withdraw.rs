@@ -26,12 +26,9 @@ async fn main() -> Result<()> {
     let rest_client = WalletRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = WithdrawParams::builder(
-        "coin_example".to_string(),
-        "address_example".to_string(),
-        dec!(1.0),
-    )
-    .build()?;
+    let params =
+        WithdrawParams::builder("BTC".to_string(), "address_example".to_string(), dec!(1.0))
+            .build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,10 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountListResponseDataInnerListInner {
+    /// Time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// Hashrate
     #[serde(rename = "hashrate", skip_serializing_if = "Option::is_none")]
     pub hashrate: Option<String>,
+    /// Rejection rate
     #[serde(rename = "reject", skip_serializing_if = "Option::is_none")]
     pub reject: Option<String>,
 }

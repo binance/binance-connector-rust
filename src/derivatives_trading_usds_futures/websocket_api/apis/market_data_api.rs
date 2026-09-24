@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -59,24 +59,26 @@ impl MarketDataApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`order_book`](#method.order_book).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct OrderBookParams {
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// Default 500; Valid limits:[5, 10, 20, 50, 100, 500, 1000]
+    /// Valid limits:[5, 10, 20, 50, 100, 500, 1000]
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
 }
 
@@ -85,7 +87,7 @@ impl OrderBookParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — String
+    /// * `symbol` — Symbol.
     ///
     #[must_use]
     pub fn builder(symbol: String) -> OrderBookParamsBuilder {
@@ -96,19 +98,20 @@ impl OrderBookParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`symbol_order_book_ticker`](#method.symbol_order_book_ticker).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SymbolOrderBookTickerParams {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
 }
 
@@ -124,19 +127,20 @@ impl SymbolOrderBookTickerParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`symbol_price_ticker`](#method.symbol_price_ticker).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SymbolPriceTickerParams {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `symbol` parameter.
+    /// Symbol.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
     pub symbol: Option<String>,
 }
 
@@ -286,7 +290,7 @@ mod tests {
             let client = MarketDataApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderBookParams::builder("symbol_example".to_string(),).build().unwrap();
+                let params = OrderBookParams::builder("BTCUSDT".to_string(),).build().unwrap();
                 client.order_book(params).await
             });
 
@@ -295,8 +299,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/depth".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"51e2affb-0aba-4821-ba75-f2625006eb43","status":200,"result":{"lastUpdateId":1027024,"E":1589436922972,"T":1589436922959,"bids":[["4.00000000","431.00000000"]],"asks":[["4.00000200","12.00000000"]]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":5}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"51e2affb-0aba-4821-ba75-f2625006eb43","status":200,"result":{"lastUpdateId":1027024,"E":1589436922972,"T":1589436922959},"bids":[["4.00000000","431.00000000"]],"asks":[["4.00000200","12.00000000"]],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":5}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -330,7 +333,7 @@ mod tests {
             let client = MarketDataApiClient::new(ws_api.clone());
 
             let handle = tokio::spawn(async move {
-                let params = OrderBookParams::builder("symbol_example".to_string(),).build().unwrap();
+                let params = OrderBookParams::builder("BTCUSDT".to_string(),).build().unwrap();
                 client.order_book(params).await
             });
 
@@ -380,7 +383,7 @@ mod tests {
             let client = MarketDataApiClient::new(ws_api.clone());
 
             let handle = spawn(async move {
-                let params = OrderBookParams::builder("symbol_example".to_string())
+                let params = OrderBookParams::builder("BTCUSDT".to_string())
                     .build()
                     .unwrap();
                 client.order_book(params).await
@@ -426,8 +429,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/ticker.book".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"9d32157c-a556-4d27-9866-66760a174b57","status":200,"result":{"lastUpdateId":1027024,"symbol":"BTCUSDT","bidPrice":"4.00000000","bidQty":"431.00000000","askPrice":"4.00000200","askQty":"9.00000000","time":1589437530011},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":2}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"9d32157c-a556-4d27-9866-66760a174b57","status":200,"result":{"lastUpdateId":1027024,"symbol":"BTCUSDT","bidPrice":"4.00000000","bidQty":"431.00000000","askPrice":"4.00000200","askQty":"9.00000000","time":1589437530011},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":2}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -555,8 +557,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/ticker.price".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"9d32157c-a556-4d27-9866-66760a174b57","status":200,"result":{"symbol":"BTCUSDT","price":"6000.01","time":1589437530011},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":2}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"9d32157c-a556-4d27-9866-66760a174b57","status":200,"result":{"symbol":"BTCUSDT","price":"6000.01","time":1589437530011},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":2}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

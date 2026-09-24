@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,42 +17,61 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountBlockTradeListResponseInnerLegsInner {
+    /// create Time
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
     pub create_time: Option<i64>,
+    /// update Time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// order Id
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<String>,
+    /// order Price
     #[serde(rename = "orderPrice", skip_serializing_if = "Option::is_none")]
     pub order_price: Option<rust_decimal::Decimal>,
+    /// order Quantity
     #[serde(rename = "orderQuantity", skip_serializing_if = "Option::is_none")]
     pub order_quantity: Option<rust_decimal::Decimal>,
+    /// order Status
     #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
     pub order_status: Option<String>,
+    /// executed Qty
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<rust_decimal::Decimal>,
+    /// executed Amount
     #[serde(rename = "executedAmount", skip_serializing_if = "Option::is_none")]
     pub executed_amount: Option<rust_decimal::Decimal>,
+    /// fee
     #[serde(rename = "fee", skip_serializing_if = "Option::is_none")]
     pub fee: Option<rust_decimal::Decimal>,
+    /// order Type
     #[serde(rename = "orderType", skip_serializing_if = "Option::is_none")]
     pub order_type: Option<String>,
+    /// order Side
     #[serde(rename = "orderSide", skip_serializing_if = "Option::is_none")]
     pub order_side: Option<String>,
+    /// id
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+    /// trade Id
     #[serde(rename = "tradeId", skip_serializing_if = "Option::is_none")]
     pub trade_id: Option<i64>,
+    /// trade Price
     #[serde(rename = "tradePrice", skip_serializing_if = "Option::is_none")]
     pub trade_price: Option<rust_decimal::Decimal>,
+    /// trade Qty
     #[serde(rename = "tradeQty", skip_serializing_if = "Option::is_none")]
     pub trade_qty: Option<rust_decimal::Decimal>,
+    /// trade Time
     #[serde(rename = "tradeTime", skip_serializing_if = "Option::is_none")]
     pub trade_time: Option<i64>,
+    /// liquidity
     #[serde(rename = "liquidity", skip_serializing_if = "Option::is_none")]
     pub liquidity: Option<String>,
+    /// commission
     #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
     pub commission: Option<rust_decimal::Decimal>,
 }

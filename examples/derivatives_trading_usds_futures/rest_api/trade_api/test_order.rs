@@ -5,7 +5,7 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_usds_futures::{
     DerivativesTradingUsdsFuturesRestApi,
-    rest_api::{TestOrderParams, TestOrderSideEnum},
+    rest_api::{TestOrderParams, TestOrderSideEnum, TestOrderTypeEnum},
 };
 use binance_sdk::logger;
 
@@ -29,9 +29,9 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = TestOrderParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSDT".to_string(),
         TestOrderSideEnum::Buy,
-        "r#type_example".to_string(),
+        TestOrderTypeEnum::Limit,
     )
     .build()?;
 

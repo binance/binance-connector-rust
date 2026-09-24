@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -120,11 +120,13 @@ impl RestApi {
         .await
     }
 
-    /// ETH Staking `account(USER_DATA)`
+    /// ETH Staking account (`USER_DATA`)
     ///
     /// ETH Staking account
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -154,7 +156,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/account/ETH-Staking-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#eth-staking-account).
     ///
     pub async fn eth_staking_account(
         &self,
@@ -165,11 +167,13 @@ impl RestApi {
             .await
     }
 
-    /// Get current ETH staking `quota(USER_DATA)`
+    /// Get current ETH staking quota (`USER_DATA`)
     ///
     /// Get current ETH staking quota
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -199,7 +203,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/account/Get-current-ETH-staking-quota).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#get-current-eth-staking-quota).
     ///
     pub async fn get_current_eth_staking_quota(
         &self,
@@ -210,16 +214,22 @@ impl RestApi {
             .await
     }
 
-    /// Get ETH redemption `history(USER_DATA)`
+    /// Get ETH redemption history (`USER_DATA`)
     ///
     /// Get ETH redemption history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -249,7 +259,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/history/Get-ETH-redemption-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#get-eth-redemption-history).
     ///
     pub async fn get_eth_redemption_history(
         &self,
@@ -260,16 +270,22 @@ impl RestApi {
             .await
     }
 
-    /// Get ETH staking `history(USER_DATA)`
+    /// Get ETH staking history (`USER_DATA`)
     ///
     /// Get ETH staking history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -299,7 +315,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/history/Get-ETH-staking-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#get-eth-staking-history).
     ///
     pub async fn get_eth_staking_history(
         &self,
@@ -310,16 +326,22 @@ impl RestApi {
             .await
     }
 
-    /// Get WBETH Rate `History(USER_DATA)`
+    /// Get WBETH Rate History (`USER_DATA`)
     ///
     /// Get WBETH Rate History
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -349,7 +371,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/history/Get-BETH-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#get-wbeth-rate-history).
     ///
     pub async fn get_wbeth_rate_history(
         &self,
@@ -360,16 +382,22 @@ impl RestApi {
             .await
     }
 
-    /// Get WBETH rewards `history(USER_DATA)`
+    /// Get WBETH rewards history (`USER_DATA`)
     ///
     /// Get WBETH rewards history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -399,7 +427,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/history/Get-WBETH-rewards-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#get-wbeth-rewards-history).
     ///
     pub async fn get_wbeth_rewards_history(
         &self,
@@ -410,16 +438,22 @@ impl RestApi {
             .await
     }
 
-    /// Get WBETH unwrap `history(USER_DATA)`
+    /// Get WBETH unwrap history (`USER_DATA`)
     ///
     /// Get WBETH unwrap history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -449,7 +483,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/history/Get-WBETH-unwrap-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#get-wbeth-unwrap-history).
     ///
     pub async fn get_wbeth_unwrap_history(
         &self,
@@ -460,16 +494,22 @@ impl RestApi {
             .await
     }
 
-    /// Get WBETH wrap `history(USER_DATA)`
+    /// Get WBETH wrap history (`USER_DATA`)
     ///
     /// Get WBETH wrap history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -499,7 +539,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/history/Get-WBETH-wrap-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#get-wbeth-wrap-history).
     ///
     pub async fn get_wbeth_wrap_history(
         &self,
@@ -510,13 +550,16 @@ impl RestApi {
             .await
     }
 
-    /// Redeem ETH(TRADE)
+    /// Redeem ETH (TRADE)
     ///
     /// Redeem WBETH or BETH and get ETH
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -546,7 +589,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/staking/Redeem-ETH).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#redeem-eth).
     ///
     pub async fn redeem_eth(
         &self,
@@ -555,13 +598,16 @@ impl RestApi {
         self.eth_staking_api_client.redeem_eth(params).await
     }
 
-    /// Subscribe ETH Staking(TRADE)
+    /// Subscribe ETH Staking (TRADE)
     ///
     /// Subscribe ETH Staking
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -591,7 +637,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/staking/Subscribe-ETH-Staking).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#subscribe-eth-staking).
     ///
     pub async fn subscribe_eth_staking(
         &self,
@@ -602,13 +648,16 @@ impl RestApi {
             .await
     }
 
-    /// Wrap BETH(TRADE)
+    /// Wrap BETH (TRADE)
     ///
     /// Wrap BETH
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -638,7 +687,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/eth-staking/staking/Wrap-BETH).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/eth-staking#wrap-beth).
     ///
     pub async fn wrap_beth(
         &self,
@@ -651,7 +700,9 @@ impl RestApi {
     ///
     /// Get On-chain Yields Locked Personal Left Quota
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -681,7 +732,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/account/Get-Onchain-Locked-Personal-Left-Quota).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#get-on-chain-yields-locked-personal-left-quota).
     ///
     pub async fn get_on_chain_yields_locked_personal_left_quota(
         &self,
@@ -697,9 +748,12 @@ impl RestApi {
     ///
     /// Get available On-chain Yields Locked product list
     ///
-    /// * Get available On-chain Yields Locked product list
+    /// Weight(IP): 50
     ///
-    /// Weight: 50
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Get available On-chain Yields Locked product list
     ///
     /// # Arguments
     ///
@@ -729,7 +783,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/account/).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#get-on-chain-yields-locked-product-list).
     ///
     pub async fn get_on_chain_yields_locked_product_list(
         &self,
@@ -744,7 +798,9 @@ impl RestApi {
     ///
     /// Get On-chain Yields Locked Product Position
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -774,7 +830,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/account/Get-Onchain-Locked-Product-Position).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#get-on-chain-yields-locked-product-position).
     ///
     pub async fn get_on_chain_yields_locked_product_position(
         &self,
@@ -790,12 +846,18 @@ impl RestApi {
     ///
     /// Get On-chain Yields Locked Redemption Record
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 50
     ///
-    /// Weight: 50
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -825,7 +887,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/history/Get-Onchain-Locked-Redemption-Record).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#get-on-chain-yields-locked-redemption-record).
     ///
     pub async fn get_on_chain_yields_locked_redemption_record(
         &self,
@@ -841,12 +903,18 @@ impl RestApi {
     ///
     /// Get On-chain Yields Locked Rewards History
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 50
     ///
-    /// Weight: 50
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -876,7 +944,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/history/Get-Onchain-Locked-Rewards-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#get-on-chain-yields-locked-rewards-history).
     ///
     pub async fn get_on_chain_yields_locked_rewards_history(
         &self,
@@ -891,7 +959,9 @@ impl RestApi {
     ///
     /// Get On-chain Yields Locked Subscription Preview
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -921,7 +991,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/earn/).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#get-on-chain-yields-locked-subscription-preview).
     ///
     pub async fn get_on_chain_yields_locked_subscription_preview(
         &self,
@@ -937,12 +1007,18 @@ impl RestApi {
     ///
     /// Get On-chain Yields Locked Subscription Record
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 50
     ///
-    /// Weight: 50
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -972,7 +1048,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/history/).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#get-on-chain-yields-locked-subscription-record).
     ///
     pub async fn get_on_chain_yields_locked_subscription_record(
         &self,
@@ -988,7 +1064,9 @@ impl RestApi {
     ///
     /// On-chain Yields Account query
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1018,7 +1096,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/account/Onchain-Account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#on-chain-yields-account).
     ///
     pub async fn on_chain_yields_account(
         &self,
@@ -1033,9 +1111,12 @@ impl RestApi {
     ///
     /// Redeem On-chain Yields Locked Product
     ///
-    /// * You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
+    /// Weight(IP): 200
     ///
-    /// Weight: 1/3s per account
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1065,7 +1146,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/earn/Redeem-Onchain-Locked-Product).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#redeem-on-chain-yields-locked-product).
     ///
     pub async fn redeem_on_chain_yields_locked_product(
         &self,
@@ -1076,11 +1157,13 @@ impl RestApi {
             .await
     }
 
-    /// Set On-chain Yields Locked Auto `Subscribe(USER_DATA)`
+    /// Set On-chain Yields Locked Auto Subscribe (`USER_DATA`)
     ///
     /// Set On-chain Yield locked auto subscribe
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1110,7 +1193,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/earn/Set-Onchain-Locked-Auto-Subscribe).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#set-on-chain-yields-locked-auto-subscribe).
     ///
     pub async fn set_on_chain_yields_locked_auto_subscribe(
         &self,
@@ -1121,11 +1204,13 @@ impl RestApi {
             .await
     }
 
-    /// Set On-chain Yields Locked Product Redeem `Option(USER_DATA)`
+    /// Set On-chain Yields Locked Product Redeem Option (`USER_DATA`)
     ///
     /// Set On-chain Yields redeem option for Locked product
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1155,7 +1240,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/earn/Set-Onchain-Locked-Redeem-Option).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#set-on-chain-yields-locked-product-redeem-option).
     ///
     pub async fn set_on_chain_yields_locked_product_redeem_option(
         &self,
@@ -1167,13 +1252,16 @@ impl RestApi {
             .await
     }
 
-    /// Subscribe On-chain Yields Locked Product(TRADE)
+    /// Subscribe On-chain Yields Locked Product (TRADE)
     ///
     /// Subscribe On-chain Yields Locked Product
     ///
-    /// * You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
+    /// Weight(IP): 200
     ///
-    /// Weight: 200
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open `Enable Spot & Margin Trading` permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1203,7 +1291,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/on-chain-yields/earn/Subscribe-Onchain-Locked-Product).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/on-chain-yields#subscribe-on-chain-yields-locked-product).
     ///
     pub async fn subscribe_on_chain_yields_locked_product(
         &self,
@@ -1218,7 +1306,9 @@ impl RestApi {
     ///
     /// Get the available Soft Staking product list.
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1248,7 +1338,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/soft-staking/).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/soft-staking#get-soft-staking-product-list).
     ///
     pub async fn get_soft_staking_product_list(
         &self,
@@ -1259,14 +1349,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Soft Staking Rewards `History(USER_DATA)`
+    /// Get Soft Staking Rewards History (`USER_DATA`)
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Get Soft Staking Rewards History
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1296,7 +1394,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/soft-staking/Get-Soft-Staking-Rewards-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/soft-staking#get-soft-staking-rewards-history).
     ///
     pub async fn get_soft_staking_rewards_history(
         &self,
@@ -1311,7 +1409,9 @@ impl RestApi {
     ///
     /// Enable or disable Soft Staking.
     ///
-    /// Weight: 50
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1341,7 +1441,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/soft-staking/Set-Soft-Staking).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/soft-staking#set-soft-staking).
     ///
     pub async fn set_soft_staking(
         &self,
@@ -1350,13 +1450,16 @@ impl RestApi {
         self.soft_staking_api_client.set_soft_staking(params).await
     }
 
-    /// Claim Boost Rewards(TRADE)
+    /// Claim Boost Rewards (TRADE)
     ///
     /// Claim Boost APR Airdrop Rewards
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1386,7 +1489,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/staking/Claim-Boost-Rewards).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#claim-boost-rewards).
     ///
     pub async fn claim_boost_rewards(
         &self,
@@ -1397,16 +1500,22 @@ impl RestApi {
             .await
     }
 
-    /// Get BNSOL Rate `History(USER_DATA)`
+    /// Get BNSOL Rate History (`USER_DATA`)
     ///
     /// Get BNSOL Rate History
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1436,7 +1545,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/history/Get-BNSOL-Rate-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#get-bnsol-rate-history).
     ///
     pub async fn get_bnsol_rate_history(
         &self,
@@ -1447,16 +1556,22 @@ impl RestApi {
             .await
     }
 
-    /// Get BNSOL rewards `history(USER_DATA)`
+    /// Get BNSOL rewards history (`USER_DATA`)
     ///
     /// Get BNSOL rewards history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1486,7 +1601,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/history/Get-BNSOL-rewards-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#get-bnsol-rewards-history).
     ///
     pub async fn get_bnsol_rewards_history(
         &self,
@@ -1497,16 +1612,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Boost Rewards `History(USER_DATA)`
+    /// Get Boost Rewards History (`USER_DATA`)
     ///
     /// Get Boost rewards history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1536,7 +1657,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/history/Get-Boost-Rewards-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#get-boost-rewards-history).
     ///
     pub async fn get_boost_rewards_history(
         &self,
@@ -1547,16 +1668,22 @@ impl RestApi {
             .await
     }
 
-    /// Get SOL redemption `history(USER_DATA)`
+    /// Get SOL redemption history (`USER_DATA`)
     ///
     /// Get SOL redemption history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1586,7 +1713,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/history/Get-SOL-redemption-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#get-sol-redemption-history).
     ///
     pub async fn get_sol_redemption_history(
         &self,
@@ -1597,16 +1724,22 @@ impl RestApi {
             .await
     }
 
-    /// Get SOL staking `history(USER_DATA)`
+    /// Get SOL staking history (`USER_DATA`)
     ///
     /// Get SOL staking history
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1636,7 +1769,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/history/Get-SOL-staking-history).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#get-sol-staking-history).
     ///
     pub async fn get_sol_staking_history(
         &self,
@@ -1647,11 +1780,13 @@ impl RestApi {
             .await
     }
 
-    /// Get SOL staking quota `details(USER_DATA)`
+    /// Get SOL staking quota details (`USER_DATA`)
     ///
     /// Get SOL staking quota
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1681,7 +1816,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/account/Get-SOL-staking-quota-details).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#get-sol-staking-quota-details).
     ///
     pub async fn get_sol_staking_quota_details(
         &self,
@@ -1692,16 +1827,22 @@ impl RestApi {
             .await
     }
 
-    /// Get Unclaimed `Rewards(USER_DATA)`
+    /// Get Unclaimed Rewards (`USER_DATA`)
     ///
     /// Get Unclaimed rewards
     ///
-    /// * The time between `startTime` and `endTime` cannot be longer than 3 months.
-    /// * If `startTime` and `endTime` are both not sent, then the last 30 days' data will be returned.
-    /// * If `startTime` is sent but `endTime` is not sent, the next 30 days' data beginning from `startTime` will be returned.
-    /// * If `endTime` is sent but `startTime` is not sent, the 30 days' data before `endTime` will be returned.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The time between `startTime` and `endTime` cannot be longer than 3 months.
+    /// - If `startTime` and `endTime`
+    /// are both not sent, then the last 30 days' data will be returned.
+    /// - If `startTime` is sent but `endTime` is not
+    /// sent, the next 30 days' data beginning from `startTime` will be returned.
+    /// - If `endTime` is sent but
+    /// `startTime` is not sent, the 30 days' data before `endTime` will be returned.
     ///
     /// # Arguments
     ///
@@ -1731,7 +1872,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/history/Get-Unclaimed-Rewards).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#get-unclaimed-rewards).
     ///
     pub async fn get_unclaimed_rewards(
         &self,
@@ -1742,13 +1883,16 @@ impl RestApi {
             .await
     }
 
-    /// Redeem SOL(TRADE)
+    /// Redeem SOL (TRADE)
     ///
     /// Redeem BNSOL get SOL
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1778,7 +1922,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/staking/Redeem-SOL).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#redeem-sol).
     ///
     pub async fn redeem_sol(
         &self,
@@ -1787,11 +1931,13 @@ impl RestApi {
         self.sol_staking_api_client.redeem_sol(params).await
     }
 
-    /// SOL Staking `account(USER_DATA)`
+    /// SOL Staking account (`USER_DATA`)
     ///
     /// SOL Staking account
     ///
-    /// Weight: 150
+    /// Weight(IP): 150
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -1821,7 +1967,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/account/SOL-Staking-account).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#sol-staking-account).
     ///
     pub async fn sol_staking_account(
         &self,
@@ -1832,13 +1978,16 @@ impl RestApi {
             .await
     }
 
-    /// Subscribe SOL Staking(TRADE)
+    /// Subscribe SOL Staking (TRADE)
     ///
     /// Subscribe SOL Staking
     ///
-    /// * You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
+    /// Weight(IP): 150
     ///
-    /// Weight: 150
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - You need to open Enable Spot & Margin Trading permission for the API Key which requests this endpoint.
     ///
     /// # Arguments
     ///
@@ -1868,7 +2017,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/staking/sol-staking/staking/Subscribe-SOL-Staking).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-staking/api/rest-api/sol-staking#subscribe-sol-staking).
     ///
     pub async fn subscribe_sol_staking(
         &self,

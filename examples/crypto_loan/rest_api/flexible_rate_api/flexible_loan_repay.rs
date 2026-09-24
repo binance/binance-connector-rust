@@ -26,12 +26,8 @@ async fn main() -> Result<()> {
     let rest_client = CryptoLoanRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = FlexibleLoanRepayParams::builder(
-        "loan_coin_example".to_string(),
-        "collateral_coin_example".to_string(),
-        dec!(1.0),
-    )
-    .build()?;
+    let params =
+        FlexibleLoanRepayParams::builder("BUSD".to_string(), "BNB".to_string(), dec!(1)).build()?;
 
     // Make the API call
     let response = rest_client

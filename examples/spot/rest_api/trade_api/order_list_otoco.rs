@@ -36,10 +36,10 @@ async fn main() -> Result<()> {
         "BNBUSDT".to_string(),
         OrderListOtocoWorkingTypeEnum::Limit,
         OrderListOtocoWorkingSideEnum::Buy,
-        dec!(1.0),
-        dec!(1.0),
+        dec!(1),
+        dec!(1),
         OrderListOtocoPendingSideEnum::Buy,
-        dec!(1.0),
+        dec!(1),
         OrderListOtocoPendingAboveTypeEnum::StopLossLimit,
     )
     .build()?;

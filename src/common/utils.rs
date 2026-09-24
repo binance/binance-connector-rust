@@ -26,6 +26,7 @@ use serde::de::DeserializeOwned;
 use serde_json::Number;
 use serde_json::{Value, json};
 use sha2::Sha256;
+use std::fmt;
 use std::fmt::Display;
 use std::hash::BuildHasher;
 use std::sync::LazyLock;
@@ -39,7 +40,6 @@ use std::{
 #[cfg(feature = "openssl-tls")]
 use std::{fs, path::Path};
 use tokio::time::sleep;
-use tracing::info;
 use url::form_urlencoded;
 use url::{Url, form_urlencoded::Serializer};
 
@@ -55,6 +55,10 @@ use super::websocket::WebsocketMessageSendOptions;
 pub(crate) static ID_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^[0-9a-f]{32}$").unwrap());
 static PLACEHOLDER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(@)?<([^>]+)>").unwrap());
+static CLI_SKILL_UA_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^binance-(?:cli|skill)(?:/[A-Za-z0-9._-]+){0,2} \([^;()]+; [^;()]+; [^;()]+\)$")
+        .unwrap()
+});
 
 /// A generator for creating cryptographic signatures with support for various key types and configurations.
 ///
@@ -70,7 +74,7 @@ static PLACEHOLDER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(@)?<([^>
 /// * `raw_key_data`: Lazily initialized raw key data as a string
 /// * `key_object`: Lazily initialized OpenSSL private key
 /// * `ed25519_signing_key`: Lazily initialized Ed25519 signing key
-#[derive(Debug, Default, Clone)]
+#[derive(Default, Clone)]
 #[allow(dead_code)]
 pub struct SignatureGenerator {
     api_secret: Option<String>,
@@ -81,6 +85,31 @@ pub struct SignatureGenerator {
     key_object: OnceCell<PKey<openssl::pkey::Private>>,
     #[cfg(feature = "openssl-tls")]
     ed25519_signing_key: OnceCell<SigningKey>,
+}
+
+impl fmt::Debug for SignatureGenerator {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("SignatureGenerator")
+            .field(
+                "api_secret",
+                &self.api_secret.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key",
+                &self.private_key.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key_passphrase",
+                &self.private_key_passphrase.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "raw_key_data",
+                &self.raw_key_data.get().map(|_| "[REDACTED]"),
+            )
+            .field("key_object", &"[REDACTED]")
+            .field("ed25519_signing_key", &"[REDACTED]")
+            .finish()
+    }
 }
 
 impl SignatureGenerator {
@@ -230,6 +259,48 @@ impl SignatureGenerator {
             query_str
         };
 
+        self.sign_payload(&params)
+    }
+
+    /// Generates a signature for a WebSocket API request.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - A map of parameters to be signed (already sorted by the caller)
+    ///
+    /// # Returns
+    ///
+    /// A signature string (hex for HMAC, base64 for RSA/ED25519)
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - No API secret or private key is provided
+    /// - Key initialization fails
+    /// - Signing process encounters an error
+    /// - An unsupported key type is used
+    pub fn get_signature_unencoded(&self, params: &BTreeMap<String, Value>) -> Result<String> {
+        let payload = build_plain_query_string(params)?;
+        self.sign_payload(&payload)
+    }
+
+    /// Signs the given payload using the appropriate signing method based on the available keys.
+    ///
+    /// # Arguments
+    ///
+    /// * `params` - The payload string to be signed
+    ///
+    /// # Returns
+    ///
+    /// A `Result` containing the signature string or an error if signing fails
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if:
+    /// - No API secret or private key is provided
+    /// - Key initialization fails
+    /// - Signing process encounters an error
+    fn sign_payload(&self, params: &str) -> Result<String> {
         if self.private_key.is_none() {
             if let Some(secret) = self.api_secret.as_ref() {
                 let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes())
@@ -336,8 +407,6 @@ pub fn build_client(
         builder = (agent_fn)(builder);
     }
 
-    info!("Client builder {:?}", builder);
-
     builder.build().expect("Failed to build reqwest client")
 }
 
@@ -365,6 +434,12 @@ pub fn build_client(
 ///
 #[must_use]
 pub fn build_user_agent(product: &str) -> String {
+    if let Ok(override_ua) = std::env::var("BINANCE_CONNECTOR_RUST_USER_AGENT") {
+        let trimmed = override_ua.trim().to_string();
+        if CLI_SKILL_UA_RE.is_match(&trimmed) {
+            return trimmed;
+        }
+    }
     format!(
         "{}/{}/{} (Rust/{}; {}; {})",
         env!("CARGO_PKG_NAME"),
@@ -493,6 +568,67 @@ pub fn build_query_string(params: &BTreeMap<String, Value>) -> Result<String, an
     }
 
     Ok(segments.join("&"))
+}
+
+/// Builds a query string from a map of key-value parameters, without URL-encoding the values.
+///
+/// This mirrors [`build_query_string`], converting the same set of JSON `Value` types into
+/// `parameter=value` segments joined by `&`.
+///
+/// # Arguments
+///
+/// * `params` - A map of parameter names to their corresponding JSON values
+///
+/// # Returns
+///
+/// * `Result<String, anyhow::Error>` - A `&`-joined string of raw `parameter=value` pairs, or an error
+///
+/// # Errors
+///
+/// Returns an error if:
+/// - An object value is encountered or JSON serialization fails
+/// - A key or value contains `&`, `=`, or an ASCII control character
+pub fn build_plain_query_string(params: &BTreeMap<String, Value>) -> Result<String, anyhow::Error> {
+    let mut segments = Vec::with_capacity(params.len());
+
+    for (key, value) in params {
+        if value.is_null() {
+            continue;
+        }
+
+        let value_str = match value {
+            Value::String(s) => s.clone(),
+            Value::Bool(b) => b.to_string(),
+            Value::Number(n) => n.to_string(),
+            Value::Array(_) | Value::Object(_) => serde_json::to_string(value)
+                .with_context(|| format!("failed to JSON-serialize `{}`", key))?,
+            Value::Null => unreachable!(),
+        };
+
+        ensure_safe_plain_query_component(key)
+            .with_context(|| format!("unsafe character in parameter name `{key}`"))?;
+        ensure_safe_plain_query_component(&value_str)
+            .with_context(|| format!("unsafe character in value of parameter `{key}`"))?;
+
+        segments.push(format!("{key}={value_str}"));
+    }
+
+    Ok(segments.join("&"))
+}
+
+/// Checks that a string does not contain characters that would be ambiguous or unsafe when
+/// embedded, unescaped, into a `key=value&key=value` signature payload.
+///
+/// # Errors
+///
+/// Returns an error if `s` contains `&`, `=`, or an ASCII control character.
+fn ensure_safe_plain_query_component(s: &str) -> Result<(), anyhow::Error> {
+    if let Some(c) = s.chars().find(|&c| c == '&' || c == '=' || c.is_control()) {
+        return Err(anyhow::anyhow!(
+            "value contains disallowed character {c:?}; '&', '=', and control characters are not permitted in WebSocket API signed parameters"
+        ));
+    }
+    Ok(())
 }
 
 /// Determines whether a request should be retried based on:
@@ -648,7 +784,10 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                             continue;
                         }
                         return Err(ConnectorError::ConnectorClientError {
-                            msg: format!("Failed to get response bytes: {e}"),
+                            msg: format!(
+                                "Failed to get response bytes: {:#}",
+                                anyhow::Error::new(e)
+                            ),
                             code: None,
                         });
                     }
@@ -766,12 +905,16 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
             }
             Err(e) => {
                 attempt += 1;
-                if should_retry_request(&e, Some(req.method().as_str()), Some(retries - attempt)) {
+                if should_retry_request(
+                    &e,
+                    Some(req.method().as_str()),
+                    Some(retries.saturating_sub(attempt)),
+                ) {
                     delay(backoff * attempt as u64).await;
                     continue;
                 }
                 return Err(ConnectorError::ConnectorClientError {
-                    msg: format!("HTTP request failed: {e}"),
+                    msg: format!("HTTP request failed: {:#}", anyhow::Error::new(e)),
                     code: None,
                 });
             }
@@ -1191,7 +1334,7 @@ pub fn build_websocket_api_message(
         if !skip_auth {
             let sig = configuration
                 .signature_gen
-                .get_signature(&sorted, None)
+                .get_signature_unencoded(&sorted)
                 .expect("signature generation");
             sorted.insert("signature".into(), Value::String(sig));
         }
@@ -1295,6 +1438,9 @@ mod tests {
 
     mod build_user_agent {
         use crate::common::utils::build_user_agent;
+        use std::sync::Mutex;
+
+        static ENV_LOCK: Mutex<()> = Mutex::new(());
 
         #[test]
         fn build_user_agent_contains_crate_product_and_rust_info() {
@@ -1336,6 +1482,67 @@ mod tests {
             assert_eq!(
                 user_agent1, user_agent2,
                 "user agent should be the same on repeated calls"
+            );
+        }
+
+        #[test]
+        fn env_override_cli_is_used_when_valid() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            let valid = "binance-cli/1.2.3 (linux; x86_64; extra)";
+            unsafe { std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", valid) };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert_eq!(ua, valid);
+        }
+
+        #[test]
+        fn env_override_skill_is_used_when_valid() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            let valid = "binance-skill/2.0 (darwin; aarch64; v2)";
+            unsafe { std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", valid) };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert_eq!(ua, valid);
+        }
+
+        #[test]
+        fn env_override_with_leading_whitespace_is_trimmed_and_used() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            let valid = "binance-cli/1.0 (linux; x86_64; v1)";
+            unsafe {
+                std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", format!("  {valid}  "));
+            };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert_eq!(ua, valid);
+        }
+
+        #[test]
+        fn invalid_env_override_falls_back_to_default() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            unsafe {
+                std::env::set_var(
+                    "BINANCE_CONNECTOR_RUST_USER_AGENT",
+                    "not-binance-cli/1.0 (linux; x86_64; v1)",
+                );
+            };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert!(
+                ua.starts_with(env!("CARGO_PKG_NAME")),
+                "should fall back to default: {ua}"
+            );
+        }
+
+        #[test]
+        fn empty_env_override_falls_back_to_default() {
+            let _guard = ENV_LOCK.lock().unwrap();
+            unsafe { std::env::set_var("BINANCE_CONNECTOR_RUST_USER_AGENT", "") };
+            let ua = build_user_agent("spot");
+            unsafe { std::env::remove_var("BINANCE_CONNECTOR_RUST_USER_AGENT") };
+            assert!(
+                ua.starts_with(env!("CARGO_PKG_NAME")),
+                "should fall back to default: {ua}"
             );
         }
     }
@@ -1653,6 +1860,91 @@ mod tests {
         }
     }
 
+    mod build_plain_query_string {
+        use std::collections::BTreeMap;
+
+        use serde_json::{Value, json};
+
+        use crate::common::utils::build_plain_query_string;
+
+        fn mk_map(pairs: Vec<(&str, Value)>) -> BTreeMap<String, Value> {
+            let mut m = BTreeMap::new();
+            for (k, v) in pairs {
+                m.insert(k.to_string(), v);
+            }
+            m
+        }
+
+        #[test]
+        fn empty_map_returns_empty_string() {
+            let params = BTreeMap::new();
+            let qs = build_plain_query_string(&params).unwrap();
+            assert_eq!(qs, "");
+        }
+
+        #[test]
+        fn string_and_number_and_bool_are_not_percent_encoded() {
+            let params = mk_map(vec![
+                ("foo", json!("bar")),
+                ("num", json!(42)),
+                ("flag", json!(true)),
+            ]);
+            let qs = build_plain_query_string(&params).unwrap();
+            assert_eq!(qs, "flag=true&foo=bar&num=42");
+        }
+
+        #[test]
+        fn null_is_skipped() {
+            let params = mk_map(vec![("a", json!(true)), ("b", Value::Null)]);
+            let qs = build_plain_query_string(&params).unwrap();
+            assert_eq!(qs, "a=true");
+        }
+
+        #[test]
+        fn non_ascii_values_are_kept_raw() {
+            let params = mk_map(vec![("symbol", json!("我踏马来了USDT"))]);
+            let qs = build_plain_query_string(&params).unwrap();
+            assert_eq!(qs, "symbol=我踏马来了USDT");
+        }
+
+        #[test]
+        fn value_containing_ampersand_is_rejected() {
+            let params = mk_map(vec![("a", json!("1&b=2"))]);
+            let err = build_plain_query_string(&params).unwrap_err().to_string();
+            assert!(err.contains("unsafe character"), "unexpected error: {err}");
+        }
+
+        #[test]
+        fn value_containing_equals_is_rejected() {
+            let params = mk_map(vec![("a", json!("1=2"))]);
+            let err = build_plain_query_string(&params).unwrap_err().to_string();
+            assert!(err.contains("unsafe character"), "unexpected error: {err}");
+        }
+
+        #[test]
+        fn value_containing_control_character_is_rejected() {
+            let params = mk_map(vec![("a", json!("line1\nline2"))]);
+            let err = build_plain_query_string(&params).unwrap_err().to_string();
+            assert!(err.contains("unsafe character"), "unexpected error: {err}");
+        }
+
+        #[test]
+        fn key_containing_ampersand_is_rejected() {
+            let params = mk_map(vec![("a&b", json!("v"))]);
+            let err = build_plain_query_string(&params).unwrap_err().to_string();
+            assert!(err.contains("unsafe character"), "unexpected error: {err}");
+        }
+
+        #[test]
+        fn ambiguous_parameter_sets_no_longer_collide() {
+            let colliding = mk_map(vec![("a", json!("1&b=2"))]);
+            let distinct = mk_map(vec![("a", json!("1")), ("b", json!("2"))]);
+
+            assert!(build_plain_query_string(&colliding).is_err());
+            assert_eq!(build_plain_query_string(&distinct).unwrap(), "a=1&b=2");
+        }
+    }
+
     #[cfg(feature = "openssl-tls")]
     mod signature_generator {
         use base64::{Engine, engine::general_purpose};
@@ -1932,6 +2224,61 @@ mod tests {
                 .to_string();
             assert!(err.contains("Either 'api_secret' or 'private_key' must be provided"));
         }
+
+        #[test]
+        fn unencoded_hmac_signature_does_not_percent_encode_non_ascii() {
+            let mut params = BTreeMap::new();
+            params.insert("apiKey".into(), Value::String("key".into()));
+            params.insert("symbol".into(), Value::String("我踏马来了USDT".into()));
+            params.insert("timestamp".into(), Value::Number(1_i64.into()));
+
+            let signature_gen = SignatureGenerator::new(Some("test-secret".into()), None, None);
+            let sig = signature_gen
+                .get_signature_unencoded(&params)
+                .expect("HMAC unencoded signing failed");
+
+            let expected_payload = "apiKey=key&symbol=我踏马来了USDT&timestamp=1";
+            let mut mac = Hmac::<Sha256>::new_from_slice(b"test-secret").unwrap();
+            mac.update(expected_payload.as_bytes());
+            let expected = hex::encode(mac.finalize().into_bytes());
+
+            assert_eq!(sig, expected);
+
+            let encoded_sig = signature_gen
+                .get_signature(&params, None)
+                .expect("HMAC encoded signing failed");
+            assert_ne!(sig, encoded_sig);
+        }
+
+        #[test]
+        fn unencoded_ed25519_signature_does_not_percent_encode_non_ascii() {
+            let mut params = BTreeMap::new();
+            params.insert("apiKey".into(), Value::String("key".into()));
+            params.insert("symbol".into(), Value::String("我踏马来了USDT".into()));
+            params.insert("timestamp".into(), Value::Number(1_i64.into()));
+
+            let ed = PKey::generate_ed25519().unwrap();
+            let priv_pem = ed.private_key_to_pem_pkcs8().unwrap();
+
+            let signature_gen =
+                SignatureGenerator::new(None, Some(PrivateKey::Raw(priv_pem.clone())), None);
+            let sig = signature_gen
+                .get_signature_unencoded(&params)
+                .expect("Ed25519 unencoded signing failed");
+
+            let expected_payload = "apiKey=key&symbol=我踏马来了USDT&timestamp=1";
+            let pem_str = String::from_utf8(priv_pem).unwrap();
+            let b64 = pem_str
+                .lines()
+                .filter(|l| !l.starts_with("-----"))
+                .collect::<String>();
+            let der = general_purpose::STANDARD.decode(b64).unwrap();
+            let mut sk = SigningKey::from_pkcs8_der(&der).unwrap();
+            let expected_bytes = sk.sign(expected_payload.as_bytes()).to_bytes();
+            let expected_sig = general_purpose::STANDARD.encode(expected_bytes);
+
+            assert_eq!(sig, expected_sig);
+        }
     }
 
     mod should_retry_request {
@@ -2177,6 +2524,37 @@ mod tests {
                 let data = resp.data().await.unwrap();
                 assert_eq!(data, Dummy { foo: "baz".into() });
                 mock.assert();
+            });
+        }
+
+        #[test]
+        fn http_request_with_zero_retries_returns_transport_error() {
+            TOKIO_SHARED_RT.block_on(async {
+                let client = Client::builder()
+                    .proxy(reqwest::Proxy::all("http://127.0.0.1:9").unwrap())
+                    .build()
+                    .unwrap();
+                let req = client
+                    .request(Method::GET, "http://example.test/unreachable")
+                    .build()
+                    .unwrap();
+                let mut cfg = make_config("http://example.test");
+                cfg.client = client;
+                cfg.retries = 0;
+
+                let Err(err) = http_request::<Dummy>(req, &cfg).await else {
+                    panic!("request unexpectedly succeeded")
+                };
+
+                let msg = err.to_string();
+                assert!(
+                    msg.contains("HTTP request failed"),
+                    "missing top-level marker in: {msg}"
+                );
+                assert!(
+                    msg.contains("tcp connect error") || msg.contains("Connection refused"),
+                    "underlying transport cause was not surfaced in: {msg}"
+                );
             });
         }
 
@@ -3510,6 +3888,40 @@ mod tests {
 
             let sig = params["signature"].as_str().unwrap();
             assert!(!sig.is_empty(), "signature should not be empty");
+        }
+
+        #[test]
+        fn signed_non_ascii_symbol_is_not_percent_encoded_in_signature() {
+            use hmac::{Hmac, Mac};
+            use sha2::Sha256;
+
+            let mut payload = BTreeMap::new();
+            payload.insert("symbol".into(), Value::String("我踏马来了USDT".into()));
+            let cfg = make_config();
+
+            let (_id, req) = build_websocket_api_message(
+                &cfg,
+                "method",
+                payload.clone(),
+                &WebsocketMessageSendOptions {
+                    with_api_key: true,
+                    is_signed: true,
+                    ..Default::default()
+                },
+                false,
+            );
+
+            let params = &req["params"];
+            let timestamp = params["timestamp"].as_i64().unwrap();
+            let sig = params["signature"].as_str().unwrap();
+
+            let expected_payload =
+                format!("apiKey=api-key&symbol=我踏马来了USDT&timestamp={timestamp}");
+            let mut mac = Hmac::<Sha256>::new_from_slice(b"api-secret").unwrap();
+            mac.update(expected_payload.as_bytes());
+            let expected_sig = hex::encode(mac.finalize().into_bytes());
+
+            assert_eq!(sig, expected_sig);
         }
 
         #[test]

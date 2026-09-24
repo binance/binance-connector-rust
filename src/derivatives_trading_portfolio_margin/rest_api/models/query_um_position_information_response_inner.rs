@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,26 +17,37 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryUmPositionInformationResponseInner {
+    /// average entry price
     #[serde(rename = "entryPrice", skip_serializing_if = "Option::is_none")]
     pub entry_price: Option<String>,
+    /// current initial leverage
     #[serde(rename = "leverage", skip_serializing_if = "Option::is_none")]
     pub leverage: Option<String>,
+    /// Mark Price.
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
+    /// Max Notional Value.
     #[serde(rename = "maxNotionalValue", skip_serializing_if = "Option::is_none")]
     pub max_notional_value: Option<String>,
+    /// position amount
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
     pub position_amt: Option<String>,
+    /// Notional.
     #[serde(rename = "notional", skip_serializing_if = "Option::is_none")]
     pub notional: Option<String>,
+    /// Trade symbol, if existing.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Un Realized Profit.
     #[serde(rename = "unRealizedProfit", skip_serializing_if = "Option::is_none")]
     pub un_realized_profit: Option<String>,
+    /// Liquidation Price.
     #[serde(rename = "liquidationPrice", skip_serializing_if = "Option::is_none")]
     pub liquidation_price: Option<String>,
+    /// BOTH means that it is the position of One-way Mode
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// last update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

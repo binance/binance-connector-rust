@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = WalletRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = DustTransferParams::builder("asset_example".to_string()).build()?;
+    let params = DustTransferParams::builder("BTC".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

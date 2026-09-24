@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,43 +17,70 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseOptionSymbolsInner {
+    /// expiry time
     #[serde(rename = "expiryDate", skip_serializing_if = "Option::is_none")]
     pub expiry_date: Option<i64>,
+    /// filters
     #[serde(rename = "filters", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<models::ExchangeInformationResponseOptionSymbolsInnerFiltersInner>>,
+    /// Trading pair name
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Direction: CALL long, PUT short
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Strike price
     #[serde(rename = "strikePrice", skip_serializing_if = "Option::is_none")]
     pub strike_price: Option<String>,
+    /// Name of the underlying asset of the option contract
     #[serde(rename = "underlying", skip_serializing_if = "Option::is_none")]
     pub underlying: Option<String>,
+    /// Contract unit, the quantity of the underlying asset represented by a single contract.
     #[serde(rename = "unit", skip_serializing_if = "Option::is_none")]
     pub unit: Option<i64>,
+    /// liquidation fee rate
     #[serde(rename = "liquidationFeeRate", skip_serializing_if = "Option::is_none")]
     pub liquidation_fee_rate: Option<String>,
+    /// Minimum order quantity
     #[serde(rename = "minQty", skip_serializing_if = "Option::is_none")]
     pub min_qty: Option<String>,
+    /// Maximum order quantity
     #[serde(rename = "maxQty", skip_serializing_if = "Option::is_none")]
     pub max_qty: Option<String>,
+    /// Initial Magin Ratio
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// Maintenance Margin Ratio
     #[serde(rename = "maintenanceMargin", skip_serializing_if = "Option::is_none")]
     pub maintenance_margin: Option<String>,
+    /// Min Initial Margin Ratio
     #[serde(rename = "minInitialMargin", skip_serializing_if = "Option::is_none")]
     pub min_initial_margin: Option<String>,
+    /// Min Maintenance Margin Ratio
     #[serde(
         rename = "minMaintenanceMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub min_maintenance_margin: Option<String>,
+    /// price precision
     #[serde(rename = "priceScale", skip_serializing_if = "Option::is_none")]
     pub price_scale: Option<i64>,
+    /// quantity precision
     #[serde(rename = "quantityScale", skip_serializing_if = "Option::is_none")]
     pub quantity_scale: Option<i64>,
+    /// Quotation asset
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// Contract type
+    #[serde(rename = "contractType", skip_serializing_if = "Option::is_none")]
+    pub contract_type: Option<String>,
+    /// Underlying type
+    #[serde(rename = "underlyingType", skip_serializing_if = "Option::is_none")]
+    pub underlying_type: Option<String>,
+    /// Whether naked selling is allowed for this symbol
+    #[serde(rename = "nakedSell", skip_serializing_if = "Option::is_none")]
+    pub naked_sell: Option<bool>,
+    /// Trading Status
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }
@@ -79,6 +106,9 @@ impl ExchangeInformationResponseOptionSymbolsInner {
             price_scale: None,
             quantity_scale: None,
             quote_asset: None,
+            contract_type: None,
+            underlying_type: None,
+            naked_sell: None,
             status: None,
         }
     }

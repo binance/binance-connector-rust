@@ -5,7 +5,8 @@ use tracing::info;
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
 use binance_sdk::margin_trading::{
-    MarginTradingRestApi, rest_api::QueryMarginAvailableInventoryParams,
+    MarginTradingRestApi,
+    rest_api::{QueryMarginAvailableInventoryParams, QueryMarginAvailableInventoryTypeEnum},
 };
 
 #[tokio::main]
@@ -28,7 +29,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        QueryMarginAvailableInventoryParams::builder("r#type_example".to_string()).build()?;
+        QueryMarginAvailableInventoryParams::builder(QueryMarginAvailableInventoryTypeEnum::Margin)
+            .build()?;
 
     // Make the API call
     let response = rest_client

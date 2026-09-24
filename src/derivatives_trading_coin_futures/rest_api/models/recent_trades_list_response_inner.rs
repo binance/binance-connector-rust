@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,16 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RecentTradesListResponseInner {
+    /// positionId
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
+    /// Latest token price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Quantity.
     #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+    /// Base asset quantity.
     #[serde(rename = "baseQty", skip_serializing_if = "Option::is_none")]
     pub base_qty: Option<String>,
+    /// Time
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// Whether buyer is market maker.
     #[serde(rename = "isBuyerMaker", skip_serializing_if = "Option::is_none")]
     pub is_buyer_maker: Option<bool>,
 }

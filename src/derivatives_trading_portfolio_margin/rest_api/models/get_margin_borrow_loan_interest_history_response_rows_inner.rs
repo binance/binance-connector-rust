@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,23 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetMarginBorrowLoanInterestHistoryResponseRowsInner {
+    /// Tx ID.
     #[serde(rename = "txId", skip_serializing_if = "Option::is_none")]
     pub tx_id: Option<i64>,
+    /// Interest Accured Time.
     #[serde(
         rename = "interestAccuredTime",
         skip_serializing_if = "Option::is_none"
     )]
     pub interest_accured_time: Option<i64>,
+    /// asset name
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Raw Asset.
     #[serde(rename = "rawAsset", skip_serializing_if = "Option::is_none")]
     pub raw_asset: Option<String>,
+    /// Principal repaid
     #[serde(rename = "principal", skip_serializing_if = "Option::is_none")]
     pub principal: Option<String>,
+    /// Interest repaid
     #[serde(rename = "interest", skip_serializing_if = "Option::is_none")]
     pub interest: Option<String>,
+    /// daily interest rate
     #[serde(rename = "interestRate", skip_serializing_if = "Option::is_none")]
     pub interest_rate: Option<String>,
+    /// Normal order type after trigger if appliable
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
 }

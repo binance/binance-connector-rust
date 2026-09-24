@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,8 +19,8 @@ use serde::{Deserialize, Serialize};
 pub struct WithdrawTravelRuleResponse {
     #[serde(rename = "trId", skip_serializing_if = "Option::is_none")]
     pub tr_id: Option<i64>,
-    #[serde(rename = "accpted", skip_serializing_if = "Option::is_none")]
-    pub accpted: Option<bool>,
+    #[serde(rename = "accepted", skip_serializing_if = "Option::is_none")]
+    pub accepted: Option<bool>,
     #[serde(rename = "info", skip_serializing_if = "Option::is_none")]
     pub info: Option<String>,
 }
@@ -30,7 +30,7 @@ impl WithdrawTravelRuleResponse {
     pub fn new() -> WithdrawTravelRuleResponse {
         WithdrawTravelRuleResponse {
             tr_id: None,
-            accpted: None,
+            accepted: None,
             info: None,
         }
     }

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Portfolio Margin Pro WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,6 +19,8 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(try_from = "Value")]
 pub enum UserDataStreamEventsResponse {
+    #[serde(rename = "PM_PRO_ACCOUNT_UPDATE")]
+    PmProAccountUpdate(Box<models::PmProAccountUpdate>),
     #[serde(rename = "riskLevelChange")]
     RiskLevelChange(Box<models::Risklevelchange>),
     Other(serde_json::Value),
@@ -26,7 +28,7 @@ pub enum UserDataStreamEventsResponse {
 
 impl Default for UserDataStreamEventsResponse {
     fn default() -> Self {
-        Self::RiskLevelChange(Default::default())
+        Self::PmProAccountUpdate(Default::default())
     }
 }
 
@@ -40,6 +42,13 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             .ok_or_else(|| serde_json::Error::custom("missing field `e`"))?;
 
         match tag {
+            "PM_PRO_ACCOUNT_UPDATE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::PmProAccountUpdate(Box::new(
+                    payload,
+                )))
+            }
+
             "riskLevelChange" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::RiskLevelChange(Box::new(

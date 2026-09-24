@@ -1,7 +1,7 @@
 /*
- * Binance Dual Investment REST API
+ * Dual Investment REST API
  *
- * OpenAPI Specification for the Binance Dual Investment REST API
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,6 +19,7 @@ use serde::{Deserialize, Serialize};
 pub struct ChangeAutoCompoundStatusResponse {
     #[serde(rename = "positionId", skip_serializing_if = "Option::is_none")]
     pub position_id: Option<String>,
+    /// Auto-compound plan after the update
     #[serde(rename = "autoCompoundPlan", skip_serializing_if = "Option::is_none")]
     pub auto_compound_plan: Option<String>,
 }

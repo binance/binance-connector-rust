@@ -38,8 +38,8 @@ async fn main() -> Result<()> {
     let params = OrderListPlaceParams::builder(
         "BNBUSDT".to_string(),
         OrderListPlaceSideEnum::Buy,
-        dec!(1.0),
-        dec!(1.0),
+        dec!(1),
+        dec!(1),
     )
     .build()?;
 

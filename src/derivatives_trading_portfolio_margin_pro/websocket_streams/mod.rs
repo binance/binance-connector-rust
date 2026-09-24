@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Portfolio Margin Pro WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -164,7 +164,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous subscription to the specified WebSocket streams.
@@ -184,7 +184,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None).await;
+    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None);
     ///
     ///
     /// This method initiates an asynchronous unsubscription from the specified WebSocket streams.

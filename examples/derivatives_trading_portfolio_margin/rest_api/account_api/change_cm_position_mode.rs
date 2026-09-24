@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_portfolio_margin::{
-    DerivativesTradingPortfolioMarginRestApi, rest_api::ChangeCmPositionModeParams,
+    DerivativesTradingPortfolioMarginRestApi,
+    rest_api::{ChangeCmPositionModeDualSidePositionEnum, ChangeCmPositionModeParams},
 };
 use binance_sdk::logger;
 
@@ -28,7 +29,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        ChangeCmPositionModeParams::builder("dual_side_position_example".to_string()).build()?;
+        ChangeCmPositionModeParams::builder(ChangeCmPositionModeDualSidePositionEnum::True)
+            .build()?;
 
     // Make the API call
     let response = rest_client

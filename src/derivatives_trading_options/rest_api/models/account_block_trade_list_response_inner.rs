@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,12 +17,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountBlockTradeListResponseInner {
+    /// parent Order Id
     #[serde(rename = "parentOrderId", skip_serializing_if = "Option::is_none")]
     pub parent_order_id: Option<String>,
+    /// cross Type
     #[serde(rename = "crossType", skip_serializing_if = "Option::is_none")]
     pub cross_type: Option<String>,
+    /// legs
     #[serde(rename = "legs", skip_serializing_if = "Option::is_none")]
     pub legs: Option<Vec<models::AccountBlockTradeListResponseInnerLegsInner>>,
+    /// block Trade Settlement Key
     #[serde(
         rename = "blockTradeSettlementKey",
         skip_serializing_if = "Option::is_none"

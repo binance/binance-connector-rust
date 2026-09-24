@@ -28,10 +28,10 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = VipLoanBorrowParams::builder(
         1,
-        "loan_coin_example".to_string(),
+        "BTC".to_string(),
         dec!(1.0),
-        "1".to_string(),
-        "collateral_coin_example".to_string(),
+        "12345678,12345678,12345678".to_string(),
+        "BUSD,USDT,ETH".to_string(),
         true,
     )
     .build()?;

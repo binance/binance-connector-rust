@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = QueryMarginLoanRecordParams::builder("asset_example".to_string()).build()?;
+    let params = QueryMarginLoanRecordParams::builder("USDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

@@ -25,11 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = ConvertRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = SendQuoteRequestParams::builder(
-        "from_asset_example".to_string(),
-        "to_asset_example".to_string(),
-    )
-    .build()?;
+    let params = SendQuoteRequestParams::builder("BTC".to_string(), "USDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

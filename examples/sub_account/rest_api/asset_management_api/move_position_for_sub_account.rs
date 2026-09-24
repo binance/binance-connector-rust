@@ -4,7 +4,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::sub_account::{SubAccountRestApi, rest_api::MovePositionForSubAccountParams};
+use binance_sdk::sub_account::{
+    SubAccountRestApi,
+    rest_api::{MovePositionForSubAccountParams, MovePositionForSubAccountProductTypeEnum},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -26,9 +29,9 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = MovePositionForSubAccountParams::builder(
-        "from_user_email_example".to_string(),
-        "to_user_email_example".to_string(),
-        "product_type_example".to_string(),
+        "testFrom@google.com".to_string(),
+        "testTo@google.com".to_string(),
+        MovePositionForSubAccountProductTypeEnum::Um,
         vec![],
     )
     .build()?;

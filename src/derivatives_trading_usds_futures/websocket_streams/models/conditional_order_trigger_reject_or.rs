@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,10 +18,13 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ConditionalOrderTriggerRejectOr {
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Order Id
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<i64>,
+    /// Reject Reason
     #[serde(rename = "r", skip_serializing_if = "Option::is_none")]
     pub r: Option<String>,
 }

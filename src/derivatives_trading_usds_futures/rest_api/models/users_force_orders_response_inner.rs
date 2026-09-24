@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,6 +21,9 @@ pub struct UsersForceOrdersResponseInner {
     pub order_id: Option<i64>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair.
+    #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
+    pub pair: Option<String>,
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
@@ -35,6 +38,9 @@ pub struct UsersForceOrdersResponseInner {
     pub executed_qty: Option<String>,
     #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
     pub cum_quote: Option<String>,
+    /// Cum Base.
+    #[serde(rename = "cumBase", skip_serializing_if = "Option::is_none")]
+    pub cum_base: Option<String>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -65,6 +71,7 @@ impl UsersForceOrdersResponseInner {
         UsersForceOrdersResponseInner {
             order_id: None,
             symbol: None,
+            pair: None,
             status: None,
             client_order_id: None,
             price: None,
@@ -72,6 +79,7 @@ impl UsersForceOrdersResponseInner {
             orig_qty: None,
             executed_qty: None,
             cum_quote: None,
+            cum_base: None,
             time_in_force: None,
             r#type: None,
             reduce_only: None,

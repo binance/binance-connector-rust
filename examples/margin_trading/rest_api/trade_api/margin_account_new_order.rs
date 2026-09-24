@@ -6,7 +6,9 @@ use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
 use binance_sdk::margin_trading::{
     MarginTradingRestApi,
-    rest_api::{MarginAccountNewOrderParams, MarginAccountNewOrderSideEnum},
+    rest_api::{
+        MarginAccountNewOrderParams, MarginAccountNewOrderSideEnum, MarginAccountNewOrderTypeEnum,
+    },
 };
 
 #[tokio::main]
@@ -29,9 +31,9 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = MarginAccountNewOrderParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSDT".to_string(),
         MarginAccountNewOrderSideEnum::Buy,
-        "r#type_example".to_string(),
+        MarginAccountNewOrderTypeEnum::Limit,
     )
     .build()?;
 

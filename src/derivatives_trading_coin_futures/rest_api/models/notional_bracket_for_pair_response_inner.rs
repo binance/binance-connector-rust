@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct NotionalBracketForPairResponseInner {
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Leverage bracket details.
     #[serde(rename = "brackets", skip_serializing_if = "Option::is_none")]
     pub brackets: Option<Vec<models::NotionalBracketForPairResponseInnerBracketsInner>>,
 }

@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket API")?;
 
     // Setup the WS API parameters
-    let params = CancelOrderParams::builder("symbol_example".to_string()).build()?;
+    let params = CancelOrderParams::builder("BTCUSDT".to_string()).build()?;
 
     // Make the WS API call
     let response = connection

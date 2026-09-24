@@ -27,8 +27,7 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        ChangeUmInitialLeverageParams::builder("symbol_example".to_string(), 789).build()?;
+    let params = ChangeUmInitialLeverageParams::builder("BTCUSDT".to_string(), 21).build()?;
 
     // Make the API call
     let response = rest_client

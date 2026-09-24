@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket API
+ * Spot WebSocket API
  *
- * OpenAPI Specifications for the Binance Spot WebSocket API
- *
- * API documents:
- * - [Github web-socket-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-api.md)
- * - [General API information for web-socket-api on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -68,13 +63,14 @@ impl UserDataStreamApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`session_subscriptions`](#method.session_subscriptions).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SessionSubscriptionsParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -90,13 +86,14 @@ impl SessionSubscriptionsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`user_data_stream_subscribe`](#method.user_data_stream_subscribe).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct UserDataStreamSubscribeParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
 }
 
@@ -112,18 +109,20 @@ impl UserDataStreamSubscribeParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`user_data_stream_subscribe_signature`](#method.user_data_stream_subscribe_signature).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct UserDataStreamSubscribeSignatureParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// The value cannot be greater than `60000`. <br> Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
+    /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
 }
 
@@ -139,18 +138,20 @@ impl UserDataStreamSubscribeSignatureParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`user_data_stream_unsubscribe`](#method.user_data_stream_unsubscribe).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct UserDataStreamUnsubscribeParams {
-    /// Unique WebSocket request ID.
+    /// Client-generated request identifier.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    /// When called with no parameter, this will close all subscriptions. <br>When called with the `subscriptionId` parameter, this will attempt to close the subscription with that subscription id, if it exists.
+    /// When called with no parameter, this will close all subscriptions. When called with the subscriptionId parameter, this will attempt to close the subscription with that subscription id, if it exists.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "subscriptionId", default)]
     pub subscription_id: Option<i32>,
 }
 
@@ -337,8 +338,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/session.subscriptions".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df5a22-88ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":[{"subscriptionId":1},{"subscriptionId":0}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df5a22-88ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":[{"subscriptionId":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -466,8 +466,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/userDataStream.subscribe".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df8a21-98ea-4fe0-8f4e-0fcea5d418b7","status":200,"result":{"subscriptionId":0}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df8a21-98ea-4fe0-8f4e-0fcea5d418b7","status":200,"result":{"subscriptionId":0}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -595,8 +594,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/userDataStream.subscribe.signature".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df8a22-98ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":{"subscriptionId":0}}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df8a22-98ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":{"subscriptionId":0}}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -732,11 +730,10 @@ mod tests {
                 v["method"],
                 "/userDataStream.unsubscribe".trim_start_matches('/')
             );
-
             let mut resp_json: Value = serde_json::from_str(
                 r#"{"id":"d3df8a21-98ea-4fe0-8f4e-0fcea5d418b7","status":200,"result":{}}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json

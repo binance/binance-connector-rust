@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,26 +17,37 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExchangeInformationResponseSymbolsInnerFiltersInner {
+    /// Filter type.
     #[serde(rename = "filterType", skip_serializing_if = "Option::is_none")]
     pub filter_type: Option<String>,
+    /// Maximum price.
     #[serde(rename = "maxPrice", skip_serializing_if = "Option::is_none")]
     pub max_price: Option<String>,
+    /// Minimum price.
     #[serde(rename = "minPrice", skip_serializing_if = "Option::is_none")]
     pub min_price: Option<String>,
+    /// Tick size.
     #[serde(rename = "tickSize", skip_serializing_if = "Option::is_none")]
     pub tick_size: Option<String>,
+    /// maximum quantity of base asset
     #[serde(rename = "maxQty", skip_serializing_if = "Option::is_none")]
     pub max_qty: Option<String>,
+    /// Minimum quantity.
     #[serde(rename = "minQty", skip_serializing_if = "Option::is_none")]
     pub min_qty: Option<String>,
+    /// Step size.
     #[serde(rename = "stepSize", skip_serializing_if = "Option::is_none")]
     pub step_size: Option<String>,
+    /// Maximum allowed orders for this rule.
     #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
+    /// Upper multiplier bound.
     #[serde(rename = "multiplierUp", skip_serializing_if = "Option::is_none")]
     pub multiplier_up: Option<String>,
+    /// Lower multiplier bound.
     #[serde(rename = "multiplierDown", skip_serializing_if = "Option::is_none")]
     pub multiplier_down: Option<String>,
+    /// Multiplier decimal precision.
     #[serde(rename = "multiplierDecimal", skip_serializing_if = "Option::is_none")]
     pub multiplier_decimal: Option<String>,
 }

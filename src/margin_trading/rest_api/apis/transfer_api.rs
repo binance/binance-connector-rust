@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -52,11 +52,44 @@ impl TransferApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetCrossMarginTransferHistoryTypeEnum {
+    #[serde(rename = "ROLL_IN")]
+    RollIn,
+    #[serde(rename = "ROLL_OUT")]
+    RollOut,
+}
+
+impl GetCrossMarginTransferHistoryTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::RollIn => "ROLL_IN",
+            Self::RollOut => "ROLL_OUT",
+        }
+    }
+}
+
+impl std::str::FromStr for GetCrossMarginTransferHistoryTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "ROLL_IN" => Ok(Self::RollIn),
+            "ROLL_OUT" => Ok(Self::RollOut),
+            other => {
+                Err(format!("invalid GetCrossMarginTransferHistoryTypeEnum: {}", other).into())
+            }
+        }
+    }
+}
+
 /// Request parameters for the [`get_cross_margin_transfer_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_cross_margin_transfer_history`](#method.get_cross_margin_transfer_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetCrossMarginTransferHistoryParams {
     ///
@@ -64,42 +97,56 @@ pub struct GetCrossMarginTransferHistoryParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// Transfer Type: `ROLL_IN`, `ROLL_OUT`
+    ///
+    /// The `r#type` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub r#type: Option<String>,
-    /// Only supports querying data from the past 90 days.
+    #[serde(rename = "type", default)]
+    pub r#type: Option<GetCrossMarginTransferHistoryTypeEnum>,
+    ///
+    /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    ///
+    /// The `current` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10 Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    /// isolated symbol
+    ///
+    /// The `isolated_symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "isolatedSymbol", default)]
     pub isolated_symbol: Option<String>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -115,7 +162,7 @@ impl GetCrossMarginTransferHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`query_max_transfer_out_amount`](#method.query_max_transfer_out_amount).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct QueryMaxTransferOutAmountParams {
     ///
@@ -123,16 +170,21 @@ pub struct QueryMaxTransferOutAmountParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "asset")]
     pub asset: String,
-    /// isolated symbol
+    ///
+    /// The `isolated_symbol` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "isolatedSymbol", default)]
     pub isolated_symbol: Option<String>,
-    /// No more than 60000
+    ///
+    /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -302,7 +354,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"0.10000000","asset":"BNB","status":"CONFIRMED","timestamp":1566898617,"txId":5240372201,"type":"ROLL_IN","transFrom":"SPOT","transTo":"ISOLATED_MARGIN"},{"amount":"5.00000000","asset":"USDT","status":"CONFIRMED","timestamp":1566888436,"txId":5239810406,"type":"ROLL_OUT","transFrom":"ISOLATED_MARGIN","transTo":"ISOLATED_MARGIN","fromSymbol":"BNBUSDT","toSymbol":"BTCUSDT"},{"amount":"1.00000000","asset":"EOS","status":"CONFIRMED","timestamp":1566888403,"txId":5239808703,"type":"ROLL_IN"}],"total":3}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"0.10000000","asset":"BNB","status":"CONFIRMED","timestamp":1566898617,"txId":5240372201,"type":"ROLL_IN","transFrom":"SPOT","transTo":"ISOLATED_MARGIN","fromSymbol":"BNBUSDT","toSymbol":"BTCUSDT"}],"total":3}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetCrossMarginTransferHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCrossMarginTransferHistoryResponse");
@@ -329,7 +381,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"amount":"3.59498107"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"amount":"3.59498107"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryMaxTransferOutAmountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMaxTransferOutAmountResponse");
@@ -352,7 +405,7 @@ mod tests {
 
             let params = GetCrossMarginTransferHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"0.10000000","asset":"BNB","status":"CONFIRMED","timestamp":1566898617,"txId":5240372201,"type":"ROLL_IN","transFrom":"SPOT","transTo":"ISOLATED_MARGIN"},{"amount":"5.00000000","asset":"USDT","status":"CONFIRMED","timestamp":1566888436,"txId":5239810406,"type":"ROLL_OUT","transFrom":"ISOLATED_MARGIN","transTo":"ISOLATED_MARGIN","fromSymbol":"BNBUSDT","toSymbol":"BTCUSDT"},{"amount":"1.00000000","asset":"EOS","status":"CONFIRMED","timestamp":1566888403,"txId":5239808703,"type":"ROLL_IN"}],"total":3}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"0.10000000","asset":"BNB","status":"CONFIRMED","timestamp":1566898617,"txId":5240372201,"type":"ROLL_IN","transFrom":"SPOT","transTo":"ISOLATED_MARGIN","fromSymbol":"BNBUSDT","toSymbol":"BTCUSDT"}],"total":3}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCrossMarginTransferHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCrossMarginTransferHistoryResponse");
 
             let resp = client.get_cross_margin_transfer_history(params).await.expect("Expected a response");
@@ -367,9 +420,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTransferApiClient { force_error: false };
 
-            let params = GetCrossMarginTransferHistoryParams::builder().asset("asset_example".to_string()).r#type("r#type_example".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).isolated_symbol("isolated_symbol_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetCrossMarginTransferHistoryParams::builder().asset("BNB".to_string()).r#type(GetCrossMarginTransferHistoryTypeEnum::RollIn).start_time(1623319461670).end_time(1641782889000).current(1).size(10).isolated_symbol("BNBUSDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"0.10000000","asset":"BNB","status":"CONFIRMED","timestamp":1566898617,"txId":5240372201,"type":"ROLL_IN","transFrom":"SPOT","transTo":"ISOLATED_MARGIN"},{"amount":"5.00000000","asset":"USDT","status":"CONFIRMED","timestamp":1566888436,"txId":5239810406,"type":"ROLL_OUT","transFrom":"ISOLATED_MARGIN","transTo":"ISOLATED_MARGIN","fromSymbol":"BNBUSDT","toSymbol":"BTCUSDT"},{"amount":"1.00000000","asset":"EOS","status":"CONFIRMED","timestamp":1566888403,"txId":5239808703,"type":"ROLL_IN"}],"total":3}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"amount":"0.10000000","asset":"BNB","status":"CONFIRMED","timestamp":1566898617,"txId":5240372201,"type":"ROLL_IN","transFrom":"SPOT","transTo":"ISOLATED_MARGIN","fromSymbol":"BNBUSDT","toSymbol":"BTCUSDT"}],"total":3}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCrossMarginTransferHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCrossMarginTransferHistoryResponse");
 
             let resp = client.get_cross_margin_transfer_history(params).await.expect("Expected a response");
@@ -402,11 +455,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTransferApiClient { force_error: false };
 
-            let params = QueryMaxTransferOutAmountParams::builder("asset_example".to_string())
+            let params = QueryMaxTransferOutAmountParams::builder("BTC".to_string())
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"amount":"3.59498107"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"amount":"3.59498107"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryMaxTransferOutAmountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMaxTransferOutAmountResponse");
@@ -426,13 +480,14 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTransferApiClient { force_error: false };
 
-            let params = QueryMaxTransferOutAmountParams::builder("asset_example".to_string())
-                .isolated_symbol("isolated_symbol_example".to_string())
+            let params = QueryMaxTransferOutAmountParams::builder("BTC".to_string())
+                .isolated_symbol("BTCUSDT".to_string())
                 .recv_window(5000)
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"amount":"3.59498107"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"amount":"3.59498107"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::QueryMaxTransferOutAmountResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryMaxTransferOutAmountResponse");
@@ -452,7 +507,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTransferApiClient { force_error: true };
 
-            let params = QueryMaxTransferOutAmountParams::builder("asset_example".to_string())
+            let params = QueryMaxTransferOutAmountParams::builder("BTC".to_string())
                 .build()
                 .unwrap();
 

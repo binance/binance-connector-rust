@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket Streams
+ * Spot WebSocket Market Streams
  *
- * OpenAPI Specifications for the Binance Spot WebSocket Streams
- *
- * API documents:
- * - [Github web-socket-streams documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md)
- * - [General API information for web-socket-streams on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,10 +18,13 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PartialBookDepthResponse {
+    /// Last update ID
     #[serde(rename = "lastUpdateId", skip_serializing_if = "Option::is_none")]
     pub last_update_id: Option<i64>,
+    /// Bids to be updated
     #[serde(rename = "bids", skip_serializing_if = "Option::is_none")]
     pub bids: Option<Vec<Vec<String>>>,
+    /// Asks to be updated
     #[serde(rename = "asks", skip_serializing_if = "Option::is_none")]
     pub asks: Option<Vec<Vec<String>>>,
 }

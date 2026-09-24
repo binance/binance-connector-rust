@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CancelAllOpenOrdersResponse {
+    /// API response code. \"000000\" indicates success.
     #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
     pub code: Option<i64>,
+    /// Message details.
     #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
     pub msg: Option<String>,
 }

@@ -6,7 +6,7 @@ use crate::common::{
 
 /// Represents the `VIPLoan` REST API client for interacting with the Binance `VIPLoan` REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct VIPLoanRestApi {}
 
 impl VIPLoanRestApi {

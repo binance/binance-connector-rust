@@ -5,7 +5,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::dual_investment::{
-    DualInvestmentRestApi, rest_api::SubscribeDualInvestmentProductsParams,
+    DualInvestmentRestApi,
+    rest_api::{
+        SubscribeDualInvestmentProductsAutoCompoundPlanEnum, SubscribeDualInvestmentProductsParams,
+    },
 };
 use binance_sdk::logger;
 
@@ -29,10 +32,10 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = SubscribeDualInvestmentProductsParams::builder(
-        "id_example".to_string(),
-        "1".to_string(),
-        dec!(1.0),
-        "NONE".to_string(),
+        "741590".to_string(),
+        "8257205859".to_string(),
+        dec!(1),
+        SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,
     )
     .build()?;
 

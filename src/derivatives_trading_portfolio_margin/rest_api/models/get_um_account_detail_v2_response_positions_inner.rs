@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetUmAccountDetailV2ResponsePositionsInner {
+    /// symbol name
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// total initial margin required with current mark price
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// maintenance margin required
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// unrealized profit
     #[serde(rename = "unrealizedProfit", skip_serializing_if = "Option::is_none")]
     pub unrealized_profit: Option<String>,
+    /// position side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// position amount
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
     pub position_amt: Option<String>,
+    /// last update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
+    /// Notional.
     #[serde(rename = "notional", skip_serializing_if = "Option::is_none")]
     pub notional: Option<String>,
 }

@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,25 +17,34 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetInterestHistoryResponseRowsInner {
+    /// tx Id.
     #[serde(rename = "txId", skip_serializing_if = "Option::is_none")]
     pub tx_id: Option<i64>,
+    /// interest Accured Time.
     #[serde(
         rename = "interestAccuredTime",
         skip_serializing_if = "Option::is_none"
     )]
     pub interest_accured_time: Option<i64>,
+    /// asset.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// will not be returned for isolated margin
     #[serde(rename = "rawAsset", skip_serializing_if = "Option::is_none")]
     pub raw_asset: Option<String>,
+    /// principal.
     #[serde(rename = "principal", skip_serializing_if = "Option::is_none")]
     pub principal: Option<String>,
+    /// interest.
     #[serde(rename = "interest", skip_serializing_if = "Option::is_none")]
     pub interest: Option<String>,
+    /// interest Rate.
     #[serde(rename = "interestRate", skip_serializing_if = "Option::is_none")]
     pub interest_rate: Option<String>,
+    /// type.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// isolated symbol, will not be returned for crossed margin
     #[serde(rename = "isolatedSymbol", skip_serializing_if = "Option::is_none")]
     pub isolated_symbol: Option<String>,
 }

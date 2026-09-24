@@ -1,7 +1,7 @@
 /*
- * Binance Dual Investment REST API
+ * Dual Investment REST API
  *
- * OpenAPI Specification for the Binance Dual Investment REST API
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -48,42 +48,87 @@ impl MarketDataApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetDualInvestmentProductListOptionTypeEnum {
+    #[serde(rename = "CALL")]
+    Call,
+    #[serde(rename = "PUT")]
+    Put,
+}
+
+impl GetDualInvestmentProductListOptionTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Call => "CALL",
+            Self::Put => "PUT",
+        }
+    }
+}
+
+impl std::str::FromStr for GetDualInvestmentProductListOptionTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "CALL" => Ok(Self::Call),
+            "PUT" => Ok(Self::Put),
+            other => Err(format!(
+                "invalid GetDualInvestmentProductListOptionTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`get_dual_investment_product_list`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_dual_investment_product_list`](#method.get_dual_investment_product_list).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetDualInvestmentProductListParams {
     /// Input CALL or PUT
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub option_type: String,
-    /// Target exercised asset, e.g.: if you subscribe to a high sell product (call option), you should input: `optionType`:CALL,`exercisedCoin`:USDT,`investCoin`:BNB; if you subscribe to a low buy product (put option), you should input: `optionType`:PUT,`exercisedCoin`:BNB,`investCoin`:USDT
+    #[serde(rename = "optionType")]
+    pub option_type: GetDualInvestmentProductListOptionTypeEnum,
+    /// Target exercised asset, e.g.: if you subscribe to a high sell product (call option), you should input:
+    /// `optionType: CALL`, `exercisedCoin: USDT`, `investCoin: BNB`; if you subscribe to a low buy product (put
+    /// option), you should input: `optionType: PUT`, `exercisedCoin: BNB`, `investCoin: USDT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "exercisedCoin")]
     pub exercised_coin: String,
-    /// Asset used for subscribing, e.g.: if you subscribe to a high sell product (call option), you should input: `optionType`:CALL,`exercisedCoin`:USDT,`investCoin`:BNB; if you subscribe to a low buy product (put option), you should input: `optionType`:PUT,`exercisedCoin`:BNB,`investCoin`:USDT
+    /// Asset used for subscribing, e.g.: if you subscribe to a high sell product (call option), you should input:
+    /// `optionType: CALL`, `exercisedCoin: USDT`, `investCoin: BNB`; if you subscribe to a low buy product (put
+    /// option), you should input: `optionType: PUT`, `exercisedCoin: BNB`, `investCoin: USDT`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "investCoin")]
     pub invest_coin: String,
-    /// Default: 10, Maximum: 100
+    /// Number of records per page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pageSize", default)]
     pub page_size: Option<i64>,
-    /// Default: 1
+    /// Page index
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pageIndex", default)]
     pub page_index: Option<i64>,
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -93,12 +138,12 @@ impl GetDualInvestmentProductListParams {
     /// Required parameters:
     ///
     /// * `option_type` — Input CALL or PUT
-    /// * `exercised_coin` — Target exercised asset, e.g.: if you subscribe to a high sell product (call option), you should input: `optionType`:CALL,`exercisedCoin`:USDT,`investCoin`:BNB; if you subscribe to a low buy product (put option), you should input: `optionType`:PUT,`exercisedCoin`:BNB,`investCoin`:USDT
-    /// * `invest_coin` — Asset used for subscribing, e.g.: if you subscribe to a high sell product (call option), you should input: `optionType`:CALL,`exercisedCoin`:USDT,`investCoin`:BNB; if you subscribe to a low buy product (put option), you should input: `optionType`:PUT,`exercisedCoin`:BNB,`investCoin`:USDT
+    /// * `exercised_coin` — Target exercised asset, e.g.: if you subscribe to a high sell product (call option), you should input: `optionType: CALL`, `exercisedCoin: USDT`, `investCoin: BNB`; if you subscribe to a low buy product (put option), you should input: `optionType: PUT`, `exercisedCoin: BNB`, `investCoin: USDT`
+    /// * `invest_coin` — Asset used for subscribing, e.g.: if you subscribe to a high sell product (call option), you should input: `optionType: CALL`, `exercisedCoin: USDT`, `investCoin: BNB`; if you subscribe to a low buy product (put option), you should input: `optionType: PUT`, `exercisedCoin: BNB`, `investCoin: USDT`
     ///
     #[must_use]
     pub fn builder(
-        option_type: String,
+        option_type: GetDualInvestmentProductListOptionTypeEnum,
         exercised_coin: String,
         invest_coin: String,
     ) -> GetDualInvestmentProductListParamsBuilder {
@@ -156,7 +201,7 @@ impl MarketDataApi for MarketDataApiClient {
             } else {
                 None
             },
-            true,
+            false,
         )
         .await
     }
@@ -206,7 +251,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"741590","investCoin":"USDT","exercisedCoin":"BNB","strikePrice":"380","duration":4,"settleDate":1709020800000,"purchaseDecimal":8,"purchaseEndTime":1708934400000,"canPurchase":true,"apr":"0.6076","orderId":8257205859,"minAmount":"0.1","maxAmount":"25265.7","createTimestamp":1708560084000,"optionType":"PUT","isAutoCompoundEnable":true,"autoCompoundPlanList":["STANDARD","ADVANCE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"741590","investCoin":"USDT","exercisedCoin":"BNB","strikePrice":"380","duration":4,"settleDate":1709020800000,"purchaseDecimal":8,"purchaseEndTime":1708934400000,"canPurchase":true,"apr":"0.6076","orderId":8257205859,"minAmount":"0.1","maxAmount":"25265.7","createTimestamp":1708560084000,"optionType":"PUT","isAutoCompoundEnable":true,"autoCompoundPlanList":["STANDARD","ADVANCE"]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetDualInvestmentProductListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetDualInvestmentProductListResponse");
@@ -227,9 +272,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetDualInvestmentProductListParams::builder("option_type_example".to_string(),"exercised_coin_example".to_string(),"invest_coin_example".to_string(),).build().unwrap();
+            let params = GetDualInvestmentProductListParams::builder(GetDualInvestmentProductListOptionTypeEnum::Call,"USDT".to_string(),"BNB".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"741590","investCoin":"USDT","exercisedCoin":"BNB","strikePrice":"380","duration":4,"settleDate":1709020800000,"purchaseDecimal":8,"purchaseEndTime":1708934400000,"canPurchase":true,"apr":"0.6076","orderId":8257205859,"minAmount":"0.1","maxAmount":"25265.7","createTimestamp":1708560084000,"optionType":"PUT","isAutoCompoundEnable":true,"autoCompoundPlanList":["STANDARD","ADVANCE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"741590","investCoin":"USDT","exercisedCoin":"BNB","strikePrice":"380","duration":4,"settleDate":1709020800000,"purchaseDecimal":8,"purchaseEndTime":1708934400000,"canPurchase":true,"apr":"0.6076","orderId":8257205859,"minAmount":"0.1","maxAmount":"25265.7","createTimestamp":1708560084000,"optionType":"PUT","isAutoCompoundEnable":true,"autoCompoundPlanList":["STANDARD","ADVANCE"]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetDualInvestmentProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetDualInvestmentProductListResponse");
 
             let resp = client.get_dual_investment_product_list(params).await.expect("Expected a response");
@@ -244,9 +289,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetDualInvestmentProductListParams::builder("option_type_example".to_string(),"exercised_coin_example".to_string(),"invest_coin_example".to_string(),).page_size(10).page_index(1).recv_window(5000).build().unwrap();
+            let params = GetDualInvestmentProductListParams::builder(GetDualInvestmentProductListOptionTypeEnum::Call,"USDT".to_string(),"BNB".to_string(),).page_size(10).page_index(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"741590","investCoin":"USDT","exercisedCoin":"BNB","strikePrice":"380","duration":4,"settleDate":1709020800000,"purchaseDecimal":8,"purchaseEndTime":1708934400000,"canPurchase":true,"apr":"0.6076","orderId":8257205859,"minAmount":"0.1","maxAmount":"25265.7","createTimestamp":1708560084000,"optionType":"PUT","isAutoCompoundEnable":true,"autoCompoundPlanList":["STANDARD","ADVANCE"]}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"741590","investCoin":"USDT","exercisedCoin":"BNB","strikePrice":"380","duration":4,"settleDate":1709020800000,"purchaseDecimal":8,"purchaseEndTime":1708934400000,"canPurchase":true,"apr":"0.6076","orderId":8257205859,"minAmount":"0.1","maxAmount":"25265.7","createTimestamp":1708560084000,"optionType":"PUT","isAutoCompoundEnable":true,"autoCompoundPlanList":["STANDARD","ADVANCE"]}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetDualInvestmentProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetDualInvestmentProductListResponse");
 
             let resp = client.get_dual_investment_product_list(params).await.expect("Expected a response");
@@ -262,9 +307,9 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: true };
 
             let params = GetDualInvestmentProductListParams::builder(
-                "option_type_example".to_string(),
-                "exercised_coin_example".to_string(),
-                "invest_coin_example".to_string(),
+                GetDualInvestmentProductListOptionTypeEnum::Call,
+                "USDT".to_string(),
+                "BNB".to_string(),
             )
             .build()
             .unwrap();

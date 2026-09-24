@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -30,12 +25,6 @@ pub struct OrderCancelReplaceResponse {
     pub cancel_response: Option<Box<models::OrderCancelReplaceResponseCancelResponse>>,
     #[serde(rename = "newOrderResponse", skip_serializing_if = "Option::is_none")]
     pub new_order_response: Option<Box<models::OrderCancelReplaceResponseNewOrderResponse>>,
-    #[serde(rename = "code", skip_serializing_if = "Option::is_none")]
-    pub code: Option<i64>,
-    #[serde(rename = "msg", skip_serializing_if = "Option::is_none")]
-    pub msg: Option<String>,
-    #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
-    pub data: Option<Box<models::OrderCancelReplaceResponseData>>,
 }
 
 impl OrderCancelReplaceResponse {
@@ -46,9 +35,6 @@ impl OrderCancelReplaceResponse {
             new_order_result: None,
             cancel_response: None,
             new_order_response: None,
-            code: None,
-            msg: None,
-            data: None,
         }
     }
 }

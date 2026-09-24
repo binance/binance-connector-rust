@@ -43,8 +43,8 @@ async fn main() -> Result<()> {
         "BNBUSDT".to_string(),
         OrderListPlaceOpocoWorkingTypeEnum::Limit,
         OrderListPlaceOpocoWorkingSideEnum::Buy,
-        dec!(1.0),
-        dec!(1.0),
+        dec!(1),
+        dec!(1),
         OrderListPlaceOpocoPendingSideEnum::Buy,
         OrderListPlaceOpocoPendingAboveTypeEnum::StopLossLimit,
     )

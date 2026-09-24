@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,43 +15,61 @@
 use crate::alpha::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `TickerResponseData` : 24-hour rolling window ticker statistics.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TickerResponseData {
+    /// Trading pair symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Absolute price change in the 24h window.
     #[serde(rename = "priceChange", skip_serializing_if = "Option::is_none")]
     pub price_change: Option<String>,
+    /// Percentage price change in the 24h window.
     #[serde(rename = "priceChangePercent", skip_serializing_if = "Option::is_none")]
     pub price_change_percent: Option<String>,
+    /// Weighted average price in the 24h window.
     #[serde(rename = "weightedAvgPrice", skip_serializing_if = "Option::is_none")]
     pub weighted_avg_price: Option<String>,
+    /// Latest traded price.
     #[serde(rename = "lastPrice", skip_serializing_if = "Option::is_none")]
     pub last_price: Option<String>,
+    /// Quantity of the latest trade.
     #[serde(rename = "lastQty", skip_serializing_if = "Option::is_none")]
     pub last_qty: Option<String>,
+    /// Opening price of the 24h window.
     #[serde(rename = "openPrice", skip_serializing_if = "Option::is_none")]
     pub open_price: Option<String>,
+    /// Highest price in the 24h window.
     #[serde(rename = "highPrice", skip_serializing_if = "Option::is_none")]
     pub high_price: Option<String>,
+    /// Lowest price in the 24h window.
     #[serde(rename = "lowPrice", skip_serializing_if = "Option::is_none")]
     pub low_price: Option<String>,
+    /// Base asset volume in the 24h window.
     #[serde(rename = "volume", skip_serializing_if = "Option::is_none")]
     pub volume: Option<String>,
+    /// Quote asset volume in the 24h window.
     #[serde(rename = "quoteVolume", skip_serializing_if = "Option::is_none")]
     pub quote_volume: Option<String>,
+    /// Start time of the 24h window (milliseconds).
     #[serde(rename = "openTime", skip_serializing_if = "Option::is_none")]
     pub open_time: Option<i64>,
+    /// End time of the 24h window (milliseconds).
     #[serde(rename = "closeTime", skip_serializing_if = "Option::is_none")]
     pub close_time: Option<i64>,
+    /// First trade ID in the 24h window.
     #[serde(rename = "firstId", skip_serializing_if = "Option::is_none")]
     pub first_id: Option<i64>,
+    /// Last trade ID in the 24h window.
     #[serde(rename = "lastId", skip_serializing_if = "Option::is_none")]
     pub last_id: Option<i64>,
+    /// Total number of trades in the 24h window.
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }
 
 impl TickerResponseData {
+    /// 24-hour rolling window ticker statistics.
     #[must_use]
     pub fn new() -> TickerResponseData {
         TickerResponseData {

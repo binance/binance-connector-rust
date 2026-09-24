@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        CancelBlockTradeOrderParams::builder("block_order_matching_key_example".to_string())
+        CancelBlockTradeOrderParams::builder("7d046e6e-a429-4335-ab9d-6a681febcde5".to_string())
             .build()?;
 
     // Make the API call

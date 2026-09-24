@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -35,18 +35,18 @@ pub struct GetLockedSubscriptionPreviewResponseInner {
     #[serde(rename = "nextPay", skip_serializing_if = "Option::is_none")]
     pub next_pay: Option<String>,
     #[serde(rename = "nextPayDate", skip_serializing_if = "Option::is_none")]
-    pub next_pay_date: Option<String>,
+    pub next_pay_date: Option<i64>,
     #[serde(rename = "valueDate", skip_serializing_if = "Option::is_none")]
-    pub value_date: Option<String>,
+    pub value_date: Option<i64>,
     #[serde(rename = "rewardsEndDate", skip_serializing_if = "Option::is_none")]
-    pub rewards_end_date: Option<String>,
+    pub rewards_end_date: Option<i64>,
     #[serde(rename = "deliverDate", skip_serializing_if = "Option::is_none")]
-    pub deliver_date: Option<String>,
+    pub deliver_date: Option<i64>,
     #[serde(
         rename = "nextSubscriptionDate",
         skip_serializing_if = "Option::is_none"
     )]
-    pub next_subscription_date: Option<String>,
+    pub next_subscription_date: Option<i64>,
 }
 
 impl GetLockedSubscriptionPreviewResponseInner {

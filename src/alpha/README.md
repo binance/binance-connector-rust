@@ -8,6 +8,7 @@
 This is a client library for the Binance Alpha API, enabling developers to interact programmatically with Binance Alpha. The library provides tools to access curated early-stage token data, track Alpha project metrics and integrate discovery-focused market information into applications through the REST API:
 
 - [REST API](./rest_api/mod.rs)
+- [Websocket Stream](./websocket_streams/mod.rs)
 
 ## Table of Contents
 
@@ -15,6 +16,7 @@ This is a client library for the Binance Alpha API, enabling developers to inter
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [REST APIs](#rest-apis)
+- [Websocket Streams](#websocket-streams)
 - [Logging](#logging)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -24,6 +26,7 @@ This is a client library for the Binance Alpha API, enabling developers to inter
 
 - REST API Endpoints:
   - `/bapi/defi/v1/*`
+- WebSocket Endpoints: Real-time data streaming.
 - Inclusion of test cases and examples for quick onboarding.
 
 ## Installation
@@ -136,6 +139,84 @@ Errors are represented by the following types:
 
 See the [Error Handling example](./docs/rest_api/error-handling.md) for detailed usage. Refer to the [`error`](../common/errors.rs) module for more information.
 
+### Websocket Streams
+
+The WebSocket Streams provide real-time data feeds for market trades, candlesticks, and more. Use the [`websocket_streams`](./websocket_streams/mod.rs) module to interact with these endpoints.
+
+```rust
+use binance_sdk::config::ConfigurationWebsocketStreams;
+use binance_sdk::alpha;
+
+let configuration = ConfigurationWebsocketStreams::builder().build()?;
+
+let client = alpha::AlphaWsStreams::production(configuration);
+let connection = client.connect().await?;
+let params = alpha::websocket_streams::AllBookTickerStreamParams::default();
+let stream = connection.all_book_ticker_stream(params).await?;
+
+stream.on_message(|data| {
+  println!("{:#?}", data);
+});
+```
+
+#### Configuration Options
+
+The `alpha` module can be configured with the following options via the `ConfigurationWebsocketStreams` builder pattern:
+
+- `reconnect_delay` (u64): Specify the delay between reconnection attempts in milliseconds (default: 5000)
+- `mode` (WebsocketMode): Choose between `single` and `pool` connection modes
+  - `Single`: A single WebSocket connection
+  - `Pool`: A pool of WebSocket connections
+- `agent` (AgentConnector): Customize the WebSocket agent for advanced configurations
+
+Refer to the [`configuration`](../common/config.rs) for more details.
+
+##### Reconnect Delay
+
+Specify the delay in milliseconds between WebSocket reconnection attempts. See the [Reconnect Delay example](./docs/websocket_streams/reconnect-delay.md) for detailed usage.
+
+##### WebSocket Agent
+
+Customize the agent for advanced configurations. See the [WebSocket Agent example](./docs/websocket_streams/agent.md) for detailed usage.
+
+##### Connection Mode
+
+Choose between `Single` and `Pool` connection modes for WebSocket connections. The `Single` mode uses a single WebSocket connection, while the `Pool` mode uses a pool of WebSocket connections. See the [Connection Mode example](./docs/websocket_streams/connection-mode.md) for detailed usage.
+
+##### Certificate Pinning
+
+To enhance security, you can use certificate pinning with the `agent` option in the configuration. This ensures the client only communicates with servers using specific certificates. See the [Certificate Pinning example](./docs/websocket_streams/certificate-pinning.md) for detailed usage.
+
+#### Unsubscribing from Streams
+
+You can unsubscribe from specific WebSocket streams using the `unsubscribe` method. This is useful for managing active subscriptions without closing the connection.
+
+```rust
+use tokio::time::{Duration, sleep};
+
+use binance_sdk::config::ConfigurationWebsocketStreams;
+use binance_sdk::alpha;
+
+let configuration = ConfigurationWebsocketStreams::builder().build()?;
+
+let client = alpha::AlphaWsStreams::production(configuration);
+let connection = client.connect().await?;
+let params = alpha::websocket_streams::AllBookTickerStreamParams::default();
+let stream = connection.all_book_ticker_stream(params).await?;
+
+stream.on_message(|data| {
+  println!("{:#?}", data);
+});
+
+sleep(Duration::from_secs(10)).await;
+
+stream.unsubscribe().await;
+```
+
+### Automatic Connection Renewal
+
+The WebSocket connection is automatically renewed for WebSocket Streams connections, before the 24 hours expiration of the API key. This ensures continuous connectivity.
+
 ## Logging
 
 This crate ships with an optional default logger that you can enable with a single call:
@@ -183,6 +264,19 @@ To contribute:
 Please ensure that all tests pass with `--features alpha` if you're making a direct contribution. Submit a pull request only after discussing and confirming the change.
 
 Thank you for your contributions!
+
+## Disclaimer
+
+This SDK is provided by Binance on an "as is" and "as available" basis for use at your own risk. Binance makes no representations or warranties of any kind, whether express or implied, as to the operation of the SDK, its accuracy, reliability, completeness, or fitness for any particular purpose.
+
+To the fullest extent permitted by law, Binance shall not be liable for any losses, damages, or expenses of any kind arising from or in connection with your use of, or inability to use, this SDK, including but not limited to any financial losses resulting from errors, bugs, interruptions, or inaccuracies in the SDK.
+
+Your use of this SDK to access the Binance Platform is subject to the Binance API Key Terms and the Binance Terms of Use, which shall prevail in the event of any conflict with this disclaimer. You are solely responsible for any orders or transactions executed through the Binance Platform using this SDK.
+
+This SDK is not intended to constitute investment advice or a recommendation to buy, sell, or hold any digital asset. You should independently evaluate and verify all information before acting.
+
+- [Binance Terms of Use](https://www.binance.com/en/terms)
+- [Binance API Key Terms](https://www.binance.com/en/about-legal/terms-binance-api)
 
 ## License
 

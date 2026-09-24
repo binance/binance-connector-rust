@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,24 +17,34 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetForceLiquidationRecordResponseRowsInner {
+    /// avg Price.
     #[serde(rename = "avgPrice", skip_serializing_if = "Option::is_none")]
     pub avg_price: Option<String>,
+    /// executed Qty.
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
+    /// order Id.
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// qty.
     #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+    /// side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// time In Force.
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<String>,
+    /// is Isolated.
     #[serde(rename = "isIsolated", skip_serializing_if = "Option::is_none")]
     pub is_isolated: Option<bool>,
+    /// updated Time.
     #[serde(rename = "updatedTime", skip_serializing_if = "Option::is_none")]
     pub updated_time: Option<i64>,
 }

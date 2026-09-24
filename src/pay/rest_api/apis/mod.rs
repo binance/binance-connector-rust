@@ -1,7 +1,7 @@
 /*
  * Binance Pay REST API
  *
- * OpenAPI Specification for the Binance Pay REST API
+ * Query Binance Pay transaction history.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,5 +11,5 @@
  * Do not edit the class manually.
  */
 
-pub mod pay_api;
-pub use pay_api::*;
+pub mod api;
+pub use api::*;

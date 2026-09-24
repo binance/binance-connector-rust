@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,12 +18,16 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ContinuousContractKlineCandlestickStreamsResponse {
+    /// Event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Pair
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// Contract type
     #[serde(rename = "ct", skip_serializing_if = "Option::is_none")]
     pub ct: Option<String>,
     #[serde(rename = "k", skip_serializing_if = "Option::is_none")]

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -41,11 +41,11 @@ pub trait AccountApi: Send + Sync {
     async fn futures_account_balance(
         &self,
         params: FuturesAccountBalanceParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>>;
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>>;
     async fn futures_account_balance_v2(
         &self,
         params: FuturesAccountBalanceV2Params,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>>;
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>>;
 }
 
 #[derive(Clone)]
@@ -63,19 +63,20 @@ impl AccountApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_information`](#method.account_information).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountInformationParams {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -91,19 +92,20 @@ impl AccountInformationParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`account_information_v2`](#method.account_information_v2).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct AccountInformationV2Params {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -119,19 +121,20 @@ impl AccountInformationV2Params {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`futures_account_balance`](#method.futures_account_balance).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FuturesAccountBalanceParams {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -147,19 +150,20 @@ impl FuturesAccountBalanceParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`futures_account_balance_v2`](#method.futures_account_balance_v2).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct FuturesAccountBalanceV2Params {
-    /// Unique WebSocket request ID.
+    /// Id.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `recv_window` parameter.
+    /// Recv Window.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -235,7 +239,7 @@ impl AccountApi for AccountApiClient {
     async fn futures_account_balance(
         &self,
         params: FuturesAccountBalanceParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>>
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>>
     {
         let FuturesAccountBalanceParams { id, recv_window } = params;
 
@@ -249,7 +253,7 @@ impl AccountApi for AccountApiClient {
         let payload = remove_empty_value(payload);
 
         self.websocket_api_base
-            .send_message::<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>(
+            .send_message::<Vec<models::FuturesAccountBalanceResponseResultInner>>(
                 "/account.balance".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new().signed(),
@@ -265,7 +269,7 @@ impl AccountApi for AccountApiClient {
     async fn futures_account_balance_v2(
         &self,
         params: FuturesAccountBalanceV2Params,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>>
+    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::FuturesAccountBalanceResponseResultInner>>>
     {
         let FuturesAccountBalanceV2Params { id, recv_window } = params;
 
@@ -279,7 +283,7 @@ impl AccountApi for AccountApiClient {
         let payload = remove_empty_value(payload);
 
         self.websocket_api_base
-            .send_message::<Vec<models::FuturesAccountBalanceV2ResponseResultInner>>(
+            .send_message::<Vec<models::FuturesAccountBalanceResponseResultInner>>(
                 "/v2/account.balance".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new().signed(),
@@ -348,8 +352,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"103.12345678","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0},{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","breakEvenPrice":"0.0","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"feeTier":0,"canTrade":true,"canDeposit":true,"canWithdraw":true,"updateTime":0,"multiAssetsMargin":true,"tradeGroupId":-1,"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","initialMargin":"0","maintMargin":"0","unrealizedProfit":"0.00000000","positionInitialMargin":"0","openOrderInitialMargin":"0","leverage":"100","isolated":true,"entryPrice":"0.00000","maxNotional":"250000","bidNotional":"0","askNotional":"0","positionSide":"BOTH","positionAmt":"0","updateTime":0,"breakEvenPrice":"0.0"}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -477,8 +480,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/v2/account.status".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","updateTime":1625474304765},{"asset":"USDC","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","updateTime":1625474304765},{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765},{"asset":"BUSD","walletBalance":"103.12345678","unrealizedProfit":"0.00000000","marginBalance":"103.12345678","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"103.12345678","crossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"103.12345678","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0},{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":{"totalInitialMargin":"0.00000000","totalMaintMargin":"0.00000000","totalWalletBalance":"126.72469206","totalUnrealizedProfit":"0.00000000","totalMarginBalance":"126.72469206","totalPositionInitialMargin":"0.00000000","totalOpenOrderInitialMargin":"0.00000000","totalCrossWalletBalance":"126.72469206","totalCrossUnPnl":"0.00000000","availableBalance":"126.72469206","maxWithdrawAmount":"126.72469206","assets":[{"asset":"USDT","walletBalance":"23.72469206","unrealizedProfit":"0.00000000","marginBalance":"23.72469206","maintMargin":"0.00000000","initialMargin":"0.00000000","positionInitialMargin":"0.00000000","openOrderInitialMargin":"0.00000000","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1625474304765}],"positions":[{"symbol":"BTCUSDT","positionSide":"BOTH","positionAmt":"1.000","unrealizedProfit":"0.00000000","isolatedMargin":"0.00000000","notional":"0","isolatedWallet":"0","initialMargin":"0","maintMargin":"0","updateTime":0}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -606,12 +608,11 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/account.balance".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
-            let expected_data: Vec<models::FuturesAccountBalanceV2ResponseResultInner> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let expected_data: Vec<models::FuturesAccountBalanceResponseResultInner> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
             let empty_array = Value::Array(vec![]);
             let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
             let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
@@ -735,12 +736,11 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/v2/account.balance".trim_start_matches('/'));
-
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap();
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"605a6d20-6588-4cb9-afa0-b0ab087507ba","status":200,"result":[{"accountAlias":"SgsR","asset":"USDT","balance":"122607.35137903","crossWalletBalance":"23.72469206","crossUnPnl":"0.00000000","availableBalance":"23.72469206","maxWithdrawAmount":"23.72469206","marginAvailable":true,"updateTime":1617939110373}],"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":20}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
-            let expected_data: Vec<models::FuturesAccountBalanceV2ResponseResultInner> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let expected_data: Vec<models::FuturesAccountBalanceResponseResultInner> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
             let empty_array = Value::Array(vec![]);
             let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
             let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =

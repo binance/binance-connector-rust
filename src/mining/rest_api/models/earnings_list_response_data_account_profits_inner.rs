@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct EarningsListResponseDataAccountProfitsInner {
+    /// Mining date
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// 0: Mining Wallet, 5: Mining Address, 7: Pool Savings, 8: Transferred, 31: Income Transfer, 32: Hashrate Resale-Mining Wallet, 33: Hashrate Resale-Pool Savings
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<i64>,
+    /// Transferred hashrate
     #[serde(rename = "hashTransfer", skip_serializing_if = "Option::is_none")]
     pub hash_transfer: Option<i64>,
+    /// Transferred income
     #[serde(rename = "transferAmount", skip_serializing_if = "Option::is_none")]
     pub transfer_amount: Option<rust_decimal::Decimal>,
+    /// Daily hashrate
     #[serde(rename = "dayHashRate", skip_serializing_if = "Option::is_none")]
     pub day_hash_rate: Option<i64>,
+    /// Earnings amount
     #[serde(rename = "profitAmount", skip_serializing_if = "Option::is_none")]
     pub profit_amount: Option<rust_decimal::Decimal>,
+    /// Coin type
     #[serde(rename = "coinName", skip_serializing_if = "Option::is_none")]
     pub coin_name: Option<String>,
+    /// Status: 0 Unpaid, 1 Paying, 2 Paid
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
 }

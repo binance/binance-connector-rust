@@ -28,8 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        ClassicPortfolioMarginAccountInformationParams::builder("asset_example".to_string())
-            .build()?;
+        ClassicPortfolioMarginAccountInformationParams::builder("BTC".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

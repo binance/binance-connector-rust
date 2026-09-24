@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,37 +17,55 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ModifyMultipleOrdersBatchOrdersParameterInner {
+    /// Sub-order ID, required when clientOrderId is not sent.
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
-    pub order_id: Option<String>,
+    pub order_id: Option<i64>,
+    /// Client order ID, required when orderId is not sent. Only support letters, numbers and underscores, and must be unique within 24 hours.
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
-    #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
-    pub symbol: Option<String>,
-    #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
-    pub side: Option<SideEnum>,
+    /// Trading symbol
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    /// Trading side
+    #[serde(rename = "side")]
+    pub side: SideEnum,
+    /// Order quantity, cannot be sent with closePosition=true. **After CM migration, this parameter becomes mandatory** (each batch element must send both `price` and `quantity`).
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
-    pub quantity: Option<String>,
+    pub quantity: Option<rust_decimal::Decimal>,
+    /// Latest token price. **After CM migration, this parameter becomes mandatory** (each batch element must send both `price` and `quantity`).
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<String>,
+    pub price: Option<rust_decimal::Decimal>,
+    /// User-defined modification identifier, returned as-is in the response. Optional; not validated for uniqueness.
+    #[serde(rename = "modifyId", skip_serializing_if = "Option::is_none")]
+    pub modify_id: Option<i64>,
     #[serde(rename = "recvWindow", skip_serializing_if = "Option::is_none")]
-    pub recv_window: Option<String>,
+    pub recv_window: Option<i64>,
+    /// Unix timestamp in milliseconds used to sign the request. The value must reflect the current client time and is validated by the server for signed endpoints.
+    #[serde(rename = "timestamp")]
+    pub timestamp: i64,
 }
 
 impl ModifyMultipleOrdersBatchOrdersParameterInner {
     #[must_use]
-    pub fn new() -> ModifyMultipleOrdersBatchOrdersParameterInner {
+    pub fn new(
+        symbol: String,
+        side: SideEnum,
+        timestamp: i64,
+    ) -> ModifyMultipleOrdersBatchOrdersParameterInner {
         ModifyMultipleOrdersBatchOrdersParameterInner {
             order_id: None,
             orig_client_order_id: None,
-            symbol: None,
-            side: None,
+            symbol,
+            side,
             quantity: None,
             price: None,
+            modify_id: None,
             recv_window: None,
+            timestamp,
         }
     }
 }
-///
+/// Trading side
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SideEnum {
     #[serde(rename = "BUY")]

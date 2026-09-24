@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,15 +17,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryIsolatedMarginAccountInfoResponse {
+    /// assets list.
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
     pub assets: Option<Vec<models::QueryIsolatedMarginAccountInfoResponseAssetsInner>>,
+    /// total Asset Of Btc.
     #[serde(rename = "totalAssetOfBtc", skip_serializing_if = "Option::is_none")]
     pub total_asset_of_btc: Option<String>,
+    /// total Liability Of Btc.
     #[serde(
         rename = "totalLiabilityOfBtc",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_liability_of_btc: Option<String>,
+    /// total Net Asset Of Btc.
     #[serde(rename = "totalNetAssetOfBtc", skip_serializing_if = "Option::is_none")]
     pub total_net_asset_of_btc: Option<String>,
 }

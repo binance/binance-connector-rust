@@ -5,6 +5,7 @@ pub mod websocket_streams;
 use crate::common::{
     config::{ConfigurationRestApi, ConfigurationWebsocketApi, ConfigurationWebsocketStreams},
     constants::{
+        DERIVATIVES_TRADING_USDS_FUTURES_REST_API_DEMO_URL,
         DERIVATIVES_TRADING_USDS_FUTURES_REST_API_PROD_URL,
         DERIVATIVES_TRADING_USDS_FUTURES_REST_API_TESTNET_URL,
         DERIVATIVES_TRADING_USDS_FUTURES_WS_API_PROD_URL,
@@ -17,7 +18,7 @@ use crate::common::{
 
 /// Represents the `DerivativesTradingUsdsFutures` REST API client for interacting with the Binance `DerivativesTradingUsdsFutures` REST API.
 ///
-/// This struct provides methods to create REST API clients for both production and testnet environments.
+/// This struct provides methods to create REST API clients for production , demo and testnet environments.
 pub struct DerivativesTradingUsdsFuturesRestApi {}
 
 impl DerivativesTradingUsdsFuturesRestApi {
@@ -70,11 +71,26 @@ impl DerivativesTradingUsdsFuturesRestApi {
         config.base_path = Some(DERIVATIVES_TRADING_USDS_FUTURES_REST_API_TESTNET_URL.to_string());
         DerivativesTradingUsdsFuturesRestApi::from_config(config)
     }
+
+    /// Creates a REST API client configured for the demo environment.
+    ///
+    /// # Arguments
+    ///
+    /// * `config` - Configuration for the REST API client
+    ///
+    /// # Returns
+    ///
+    /// A new REST API client configured for the demo environment
+    #[must_use]
+    pub fn demo(mut config: ConfigurationRestApi) -> rest_api::RestApi {
+        config.base_path = Some(DERIVATIVES_TRADING_USDS_FUTURES_REST_API_DEMO_URL.to_string());
+        DerivativesTradingUsdsFuturesRestApi::from_config(config)
+    }
 }
 
 /// Represents the `DerivativesTradingUsdsFutures` WebSocket API client for interacting with the Binance `DerivativesTradingUsdsFutures` WebSocket API.
 ///
-/// This struct provides methods to create WebSocket API clients for both production and testnet environments.
+/// This struct provides methods to create WebSocket API clients for production  and testnet environments.
 pub struct DerivativesTradingUsdsFuturesWsApi {}
 
 impl DerivativesTradingUsdsFuturesWsApi {
@@ -131,7 +147,7 @@ impl DerivativesTradingUsdsFuturesWsApi {
 
 /// Represents the `DerivativesTradingUsdsFutures` WebSocket Streams client for interacting with the Binance `DerivativesTradingUsdsFutures` WebSocket Streams.
 ///
-/// This struct provides methods to create WebSocket Streams clients for both production and testnet environments.
+/// This struct provides methods to create WebSocket Streams clients for production  and testnet environments.
 pub struct DerivativesTradingUsdsFuturesWsStreams {}
 
 impl DerivativesTradingUsdsFuturesWsStreams {

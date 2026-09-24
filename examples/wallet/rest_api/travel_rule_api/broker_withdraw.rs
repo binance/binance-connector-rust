@@ -28,12 +28,11 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = BrokerWithdrawParams::builder(
         "address_example".to_string(),
-        "coin_example".to_string(),
+        "BTC".to_string(),
         dec!(1.0),
         "1".to_string(),
         "questionnaire_example".to_string(),
         "originator_pii_example".to_string(),
-        "signature_example".to_string(),
     )
     .build()?;
 

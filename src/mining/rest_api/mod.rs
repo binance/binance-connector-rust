@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -28,16 +28,16 @@ pub use models::*;
 #[derive(Debug, Clone)]
 pub struct RestApi {
     configuration: ConfigurationRestApi,
-    mining_api_client: MiningApiClient,
+    api_client: ApiClient,
 }
 
 impl RestApi {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
-        let mining_api_client = MiningApiClient::new(configuration.clone());
+        let api_client = ApiClient::new(configuration.clone());
 
         Self {
             configuration,
-            mining_api_client,
+            api_client,
         }
     }
 
@@ -111,11 +111,13 @@ impl RestApi {
         .await
     }
 
-    /// Account `List(USER_DATA)`
+    /// Account List (`USER_DATA`)
     ///
     /// Query Account List
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -145,20 +147,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Account-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#account-list).
     ///
     pub async fn account_list(
         &self,
         params: AccountListParams,
     ) -> anyhow::Result<RestApiResponse<models::AccountListResponse>> {
-        self.mining_api_client.account_list(params).await
+        self.api_client.account_list(params).await
     }
 
-    /// Acquiring `Algorithm(MARKET_DATA)`
+    /// Acquiring Algorithm (`MARKET_DATA`)
     ///
     /// Acquiring Algorithm
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -188,19 +192,21 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Acquiring-Algorithm).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#acquiring-algorithm).
     ///
     pub async fn acquiring_algorithm(
         &self,
     ) -> anyhow::Result<RestApiResponse<models::AcquiringAlgorithmResponse>> {
-        self.mining_api_client.acquiring_algorithm().await
+        self.api_client.acquiring_algorithm().await
     }
 
-    /// Acquiring `CoinName(MARKET_DATA)`
+    /// Acquiring `CoinName` (`MARKET_DATA`)
     ///
     /// Acquiring `CoinName`
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `MARKET_DATA`
     ///
     /// # Arguments
     ///
@@ -230,18 +236,21 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Acquiring-CoinName).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#acquiring-coinname).
     ///
     pub async fn acquiring_coinname(
         &self,
     ) -> anyhow::Result<RestApiResponse<models::AcquiringCoinnameResponse>> {
-        self.mining_api_client.acquiring_coinname().await
+        self.api_client.acquiring_coinname().await
     }
 
-    /// Cancel hashrate resale `configuration(USER_DATA)`
+    /// Cancel hashrate resale configuration (`USER_DATA`)
     ///
+    /// Cancel hashrate resale configuration
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -271,22 +280,24 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Cancel-hashrate-resale-configuration).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#cancel-hashrate-resale-configuration).
     ///
     pub async fn cancel_hashrate_resale_configuration(
         &self,
         params: CancelHashrateResaleConfigurationParams,
     ) -> anyhow::Result<RestApiResponse<models::CancelHashrateResaleConfigurationResponse>> {
-        self.mining_api_client
+        self.api_client
             .cancel_hashrate_resale_configuration(params)
             .await
     }
 
-    /// Earnings `List(USER_DATA)`
+    /// Earnings List (`USER_DATA`)
     ///
     /// Query Earnings List
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -316,20 +327,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Earnings-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#earnings-list).
     ///
     pub async fn earnings_list(
         &self,
         params: EarningsListParams,
     ) -> anyhow::Result<RestApiResponse<models::EarningsListResponse>> {
-        self.mining_api_client.earnings_list(params).await
+        self.api_client.earnings_list(params).await
     }
 
-    /// Extra Bonus `List(USER_DATA)`
+    /// Extra Bonus List (`USER_DATA`)
     ///
     /// Extra Bonus List
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -359,20 +372,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Extra-Bonus-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#extra-bonus-list).
     ///
     pub async fn extra_bonus_list(
         &self,
         params: ExtraBonusListParams,
     ) -> anyhow::Result<RestApiResponse<models::ExtraBonusListResponse>> {
-        self.mining_api_client.extra_bonus_list(params).await
+        self.api_client.extra_bonus_list(params).await
     }
 
-    /// Hashrate Resale `Detail(USER_DATA)`
+    /// Hashrate Resale Detail (`USER_DATA`)
     ///
     /// Hashrate Resale `Detail(USER_DATA)`
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -402,20 +417,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Hashrate-Resale-Detail).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#hashrate-resale-detail).
     ///
     pub async fn hashrate_resale_detail(
         &self,
         params: HashrateResaleDetailParams,
     ) -> anyhow::Result<RestApiResponse<models::HashrateResaleDetailResponse>> {
-        self.mining_api_client.hashrate_resale_detail(params).await
+        self.api_client.hashrate_resale_detail(params).await
     }
 
-    /// Hashrate Resale List
+    /// Hashrate Resale List (`USER_DATA`)
     ///
     /// Hashrate Resale List
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -445,20 +462,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Hashrate-Resale-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#hashrate-resale-list).
     ///
     pub async fn hashrate_resale_list(
         &self,
         params: HashrateResaleListParams,
     ) -> anyhow::Result<RestApiResponse<models::HashrateResaleListResponse>> {
-        self.mining_api_client.hashrate_resale_list(params).await
+        self.api_client.hashrate_resale_list(params).await
     }
 
-    /// Hashrate Resale `Request(USER_DATA)`
+    /// Hashrate Resale Request (`USER_DATA`)
     ///
     /// Hashrate Resale Request
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -488,20 +507,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Hashrate-Resale-Request).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#hashrate-resale-request).
     ///
     pub async fn hashrate_resale_request(
         &self,
         params: HashrateResaleRequestParams,
     ) -> anyhow::Result<RestApiResponse<models::HashrateResaleRequestResponse>> {
-        self.mining_api_client.hashrate_resale_request(params).await
+        self.api_client.hashrate_resale_request(params).await
     }
 
-    /// Mining Account `Earning(USER_DATA)`
+    /// Mining Account Earning (`USER_DATA`)
     ///
     /// Mining Account Earning
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -531,20 +552,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Mining-Account-Earning).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#mining-account-earning).
     ///
     pub async fn mining_account_earning(
         &self,
         params: MiningAccountEarningParams,
     ) -> anyhow::Result<RestApiResponse<models::MiningAccountEarningResponse>> {
-        self.mining_api_client.mining_account_earning(params).await
+        self.api_client.mining_account_earning(params).await
     }
 
-    /// Request for Detail Miner `List(USER_DATA)`
+    /// Request for Detail Miner List (`USER_DATA`)
     ///
     /// Request for Detail Miner List
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -574,22 +597,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Request-for-Detail-Miner-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#request-for-detail-miner-list).
     ///
     pub async fn request_for_detail_miner_list(
         &self,
         params: RequestForDetailMinerListParams,
     ) -> anyhow::Result<RestApiResponse<models::RequestForDetailMinerListResponse>> {
-        self.mining_api_client
-            .request_for_detail_miner_list(params)
-            .await
+        self.api_client.request_for_detail_miner_list(params).await
     }
 
-    /// Request for Miner `List(USER_DATA)`
+    /// Request for Miner List (`USER_DATA`)
     ///
     /// Request for Miner List
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -619,20 +642,22 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Request-for-Miner-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#request-for-miner-list).
     ///
     pub async fn request_for_miner_list(
         &self,
         params: RequestForMinerListParams,
     ) -> anyhow::Result<RestApiResponse<models::RequestForMinerListResponse>> {
-        self.mining_api_client.request_for_miner_list(params).await
+        self.api_client.request_for_miner_list(params).await
     }
 
-    /// Statistic `List(USER_DATA)`
+    /// Statistic List (`USER_DATA`)
     ///
     /// Statistic List
     ///
-    /// Weight: 5
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -662,12 +687,12 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/mining/rest-api/Statistic-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-mining/api/rest-api/~#statistic-list).
     ///
     pub async fn statistic_list(
         &self,
         params: StatisticListParams,
     ) -> anyhow::Result<RestApiResponse<models::StatisticListResponse>> {
-        self.mining_api_client.statistic_list(params).await
+        self.api_client.statistic_list(params).await
     }
 }

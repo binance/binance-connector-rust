@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,14 +19,19 @@ use serde::{Deserialize, Serialize};
 pub struct ExchangeInformationResponse {
     #[serde(rename = "exchangeFilters", skip_serializing_if = "Option::is_none")]
     pub exchange_filters: Option<Vec<String>>,
+    /// Rate Limits.
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
     pub rate_limits: Option<Vec<models::ExchangeInformationResponseRateLimitsInner>>,
+    /// Ignore please. If you want to check current server time, please check via \"GET /fapi/v1/time\"
     #[serde(rename = "serverTime", skip_serializing_if = "Option::is_none")]
     pub server_time: Option<i64>,
+    /// assets information
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
     pub assets: Option<Vec<models::ExchangeInformationResponseAssetsInner>>,
+    /// Symbols.
     #[serde(rename = "symbols", skip_serializing_if = "Option::is_none")]
     pub symbols: Option<Vec<models::ExchangeInformationResponseSymbolsInner>>,
+    /// Timezone.
     #[serde(rename = "timezone", skip_serializing_if = "Option::is_none")]
     pub timezone: Option<String>,
 }

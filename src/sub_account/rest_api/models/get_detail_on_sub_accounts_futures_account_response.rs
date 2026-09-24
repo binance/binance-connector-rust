@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -22,9 +22,7 @@ pub struct GetDetailOnSubAccountsFuturesAccountResponse {
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
-    pub assets: Option<
-        Vec<models::GetDetailOnSubAccountsFuturesAccountV2ResponseFutureAccountRespAssetsInner>,
-    >,
+    pub assets: Option<Vec<models::GetDetailOnSubAccountsFuturesAccountResponseAssetsInner>>,
     #[serde(rename = "canDeposit", skip_serializing_if = "Option::is_none")]
     pub can_deposit: Option<bool>,
     #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]

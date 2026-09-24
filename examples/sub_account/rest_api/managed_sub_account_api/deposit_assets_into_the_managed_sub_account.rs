@@ -29,8 +29,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = DepositAssetsIntoTheManagedSubAccountParams::builder(
-        "to_email_example".to_string(),
-        "asset_example".to_string(),
+        "abc@test.com".to_string(),
+        "BTC".to_string(),
         dec!(1.0),
     )
     .build()?;

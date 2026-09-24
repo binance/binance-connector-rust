@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = AlgoRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = CancelAlgoOrderFutureAlgoParams::builder(1).build()?;
+    let params = CancelAlgoOrderFutureAlgoParams::default();
 
     // Make the API call
     let response = rest_client

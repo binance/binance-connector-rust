@@ -1,7 +1,7 @@
 /*
- * Binance Dual Investment REST API
+ * Dual Investment REST API
  *
- * OpenAPI Specification for the Binance Dual Investment REST API
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -60,28 +60,159 @@ impl TradeApiClient {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ChangeAutoCompoundStatusAutoCompoundPlanEnum {
+    #[serde(rename = "NONE")]
+    None,
+    #[serde(rename = "STANDARD")]
+    Standard,
+    #[serde(rename = "ADVANCED")]
+    Advanced,
+}
+
+impl ChangeAutoCompoundStatusAutoCompoundPlanEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::None => "NONE",
+            Self::Standard => "STANDARD",
+            Self::Advanced => "ADVANCED",
+        }
+    }
+}
+
+impl std::str::FromStr for ChangeAutoCompoundStatusAutoCompoundPlanEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "NONE" => Ok(Self::None),
+            "STANDARD" => Ok(Self::Standard),
+            "ADVANCED" => Ok(Self::Advanced),
+            other => Err(format!(
+                "invalid ChangeAutoCompoundStatusAutoCompoundPlanEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum GetDualInvestmentPositionsStatusEnum {
+    #[serde(rename = "PENDING")]
+    Pending,
+    #[serde(rename = "PURCHASE_SUCCESS")]
+    PurchaseSuccess,
+    #[serde(rename = "SETTLED")]
+    Settled,
+    #[serde(rename = "PURCHASE_FAIL")]
+    PurchaseFail,
+    #[serde(rename = "REFUNDING")]
+    Refunding,
+    #[serde(rename = "REFUND_SUCCESS")]
+    RefundSuccess,
+    #[serde(rename = "SETTLING")]
+    Settling,
+}
+
+impl GetDualInvestmentPositionsStatusEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Pending => "PENDING",
+            Self::PurchaseSuccess => "PURCHASE_SUCCESS",
+            Self::Settled => "SETTLED",
+            Self::PurchaseFail => "PURCHASE_FAIL",
+            Self::Refunding => "REFUNDING",
+            Self::RefundSuccess => "REFUND_SUCCESS",
+            Self::Settling => "SETTLING",
+        }
+    }
+}
+
+impl std::str::FromStr for GetDualInvestmentPositionsStatusEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "PENDING" => Ok(Self::Pending),
+            "PURCHASE_SUCCESS" => Ok(Self::PurchaseSuccess),
+            "SETTLED" => Ok(Self::Settled),
+            "PURCHASE_FAIL" => Ok(Self::PurchaseFail),
+            "REFUNDING" => Ok(Self::Refunding),
+            "REFUND_SUCCESS" => Ok(Self::RefundSuccess),
+            "SETTLING" => Ok(Self::Settling),
+            other => Err(format!("invalid GetDualInvestmentPositionsStatusEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SubscribeDualInvestmentProductsAutoCompoundPlanEnum {
+    #[serde(rename = "NONE")]
+    None,
+    #[serde(rename = "STANDARD")]
+    Standard,
+    #[serde(rename = "ADVANCED")]
+    Advanced,
+}
+
+impl SubscribeDualInvestmentProductsAutoCompoundPlanEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::None => "NONE",
+            Self::Standard => "STANDARD",
+            Self::Advanced => "ADVANCED",
+        }
+    }
+}
+
+impl std::str::FromStr for SubscribeDualInvestmentProductsAutoCompoundPlanEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "NONE" => Ok(Self::None),
+            "STANDARD" => Ok(Self::Standard),
+            "ADVANCED" => Ok(Self::Advanced),
+            other => Err(format!(
+                "invalid SubscribeDualInvestmentProductsAutoCompoundPlanEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`change_auto_compound_status`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`change_auto_compound_status`](#method.change_auto_compound_status).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct ChangeAutoCompoundStatusParams {
     /// Get positionId from `/sapi/v1/dci/product/positions`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "positionId")]
     pub position_id: String,
+    /// `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
     ///
-    /// The `auto_compound_plan` parameter.
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "autoCompoundPlan")]
+    pub auto_compound_plan: ChangeAutoCompoundStatusAutoCompoundPlanEnum,
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub auto_compound_plan: Option<String>,
-    /// The value cannot be greater than 60000
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -91,23 +222,30 @@ impl ChangeAutoCompoundStatusParams {
     /// Required parameters:
     ///
     /// * `position_id` — Get positionId from `/sapi/v1/dci/product/positions`
+    /// * `auto_compound_plan` — `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
     ///
     #[must_use]
-    pub fn builder(position_id: String) -> ChangeAutoCompoundStatusParamsBuilder {
-        ChangeAutoCompoundStatusParamsBuilder::default().position_id(position_id)
+    pub fn builder(
+        position_id: String,
+        auto_compound_plan: ChangeAutoCompoundStatusAutoCompoundPlanEnum,
+    ) -> ChangeAutoCompoundStatusParamsBuilder {
+        ChangeAutoCompoundStatusParamsBuilder::default()
+            .position_id(position_id)
+            .auto_compound_plan(auto_compound_plan)
     }
 }
 /// Request parameters for the [`check_dual_investment_accounts`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`check_dual_investment_accounts`](#method.check_dual_investment_accounts).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct CheckDualInvestmentAccountsParams {
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -123,28 +261,35 @@ impl CheckDualInvestmentAccountsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_dual_investment_positions`](#method.get_dual_investment_positions).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetDualInvestmentPositionsParams {
-    /// `PENDING`:Products are purchasing, will give results later;`PURCHASE_SUCCESS`:purchase successfully;`SETTLED`: Products are finish settling;`PURCHASE_FAIL`:fail to purchase;`REFUNDING`:refund ongoing;`REFUND_SUCCESS`:refund to spot account successfully; `SETTLING`:Products are settling. If don't fill this field, will response all the position status.
+    /// `PENDING`: Products are purchasing, will give results later; `PURCHASE_SUCCESS`: purchase successfully;
+    /// `SETTLED`: Products are finish settling; `PURCHASE_FAIL`: fail to purchase; `REFUNDING`: refund ongoing;
+    /// `REFUND_SUCCESS`: refund to spot account successfully; `SETTLING`: Products are settling. If don't fill this
+    /// field, will response all the position status.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
-    pub status: Option<String>,
-    /// Default: 10, Maximum: 100
+    #[serde(rename = "status", default)]
+    pub status: Option<GetDualInvestmentPositionsStatusEnum>,
+    /// Number of records per page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pageSize", default)]
     pub page_size: Option<i64>,
-    /// Default: 1
+    /// Page index
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "pageIndex", default)]
     pub page_index: Option<i64>,
-    /// The value cannot be greater than 60000
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -160,33 +305,38 @@ impl GetDualInvestmentPositionsParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`subscribe_dual_investment_products`](#method.subscribe_dual_investment_products).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SubscribeDualInvestmentProductsParams {
     /// get id from `/sapi/v1/dci/product/list`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "id")]
     pub id: String,
     /// get orderId from `/sapi/v1/dci/product/list`
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "orderId")]
     pub order_id: String,
     /// the amount for subscribing
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "depositAmount")]
     pub deposit_amount: rust_decimal::Decimal,
-    /// `NONE`: switch off the plan, `STANDARD`:standard plan,`ADVANCED`:advanced plan
+    /// `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
     ///
     /// This field is **required.
     #[builder(setter(into))]
-    pub auto_compound_plan: String,
-    /// The value cannot be greater than 60000
+    #[serde(rename = "autoCompoundPlan")]
+    pub auto_compound_plan: SubscribeDualInvestmentProductsAutoCompoundPlanEnum,
+    /// Request validity window in milliseconds
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -198,14 +348,14 @@ impl SubscribeDualInvestmentProductsParams {
     /// * `id` — get id from `/sapi/v1/dci/product/list`
     /// * `order_id` — get orderId from `/sapi/v1/dci/product/list`
     /// * `deposit_amount` — the amount for subscribing
-    /// * `auto_compound_plan` — `NONE`: switch off the plan, `STANDARD`:standard plan,`ADVANCED`:advanced plan
+    /// * `auto_compound_plan` — `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
     ///
     #[must_use]
     pub fn builder(
         id: String,
         order_id: String,
         deposit_amount: rust_decimal::Decimal,
-        auto_compound_plan: String,
+        auto_compound_plan: SubscribeDualInvestmentProductsAutoCompoundPlanEnum,
     ) -> SubscribeDualInvestmentProductsParamsBuilder {
         SubscribeDualInvestmentProductsParamsBuilder::default()
             .id(id)
@@ -232,9 +382,7 @@ impl TradeApi for TradeApiClient {
 
         query_params.insert("positionId".to_string(), json!(position_id));
 
-        if let Some(rw) = auto_compound_plan {
-            query_params.insert("AutoCompoundPlan".to_string(), json!(rw));
-        }
+        query_params.insert("autoCompoundPlan".to_string(), json!(auto_compound_plan));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -421,7 +569,7 @@ mod tests {
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"positionId":"123456789","autoCompoundPlan":"ADVANCED"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ChangeAutoCompoundStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeAutoCompoundStatusResponse");
@@ -451,7 +599,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CheckDualInvestmentAccountsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckDualInvestmentAccountsResponse");
@@ -478,7 +626,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"10160533","investCoin":"USDT","exercisedCoin":"BNB","subscriptionAmount":"0.5","strikePrice":"330","duration":4,"settleDate":1708416000000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.0365","orderId":7973677530,"purchaseEndTime":1708329600000,"optionType":"PUT","autoCompoundPlan":"STANDARD"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"10160533","investCoin":"USDT","exercisedCoin":"BNB","subscriptionAmount":"0.5","strikePrice":"330","duration":4,"settleDate":1708416000000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.0365","orderId":7973677530,"purchaseEndTime":1708329600000,"optionType":"PUT","autoCompoundPlan":"STANDARD","subscriptionTime":1708243200000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetDualInvestmentPositionsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetDualInvestmentPositionsResponse");
@@ -506,7 +654,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SubscribeDualInvestmentProductsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SubscribeDualInvestmentProductsResponse");
@@ -527,13 +675,16 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ChangeAutoCompoundStatusParams::builder("1".to_string())
-                .build()
-                .unwrap();
+            let params = ChangeAutoCompoundStatusParams::builder(
+                "741590".to_string(),
+                ChangeAutoCompoundStatusAutoCompoundPlanEnum::None,
+            )
+            .build()
+            .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"positionId":"123456789","autoCompoundPlan":"ADVANCED"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeAutoCompoundStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeAutoCompoundStatusResponse");
@@ -553,15 +704,17 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = ChangeAutoCompoundStatusParams::builder("1".to_string())
-                .auto_compound_plan("auto_compound_plan_example".to_string())
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = ChangeAutoCompoundStatusParams::builder(
+                "741590".to_string(),
+                ChangeAutoCompoundStatusAutoCompoundPlanEnum::None,
+            )
+            .recv_window(5000)
+            .build()
+            .unwrap();
 
             let resp_json: Value =
                 serde_json::from_str(r#"{"positionId":"123456789","autoCompoundPlan":"ADVANCED"}"#)
-                    .unwrap();
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::ChangeAutoCompoundStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangeAutoCompoundStatusResponse");
@@ -581,9 +734,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: true };
 
-            let params = ChangeAutoCompoundStatusParams::builder("1".to_string())
-                .build()
-                .unwrap();
+            let params = ChangeAutoCompoundStatusParams::builder(
+                "741590".to_string(),
+                ChangeAutoCompoundStatusAutoCompoundPlanEnum::None,
+            )
+            .build()
+            .unwrap();
 
             match client.change_auto_compound_status(params).await {
                 Ok(_) => panic!("Expected an error"),
@@ -606,7 +762,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CheckDualInvestmentAccountsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckDualInvestmentAccountsResponse");
@@ -634,7 +790,7 @@ mod tests {
             let resp_json: Value = serde_json::from_str(
                 r#"{"totalAmountInBTC":"0.01067982","totalAmountInUSDT":"77.13289230"}"#,
             )
-            .unwrap();
+            .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::CheckDualInvestmentAccountsResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CheckDualInvestmentAccountsResponse");
@@ -674,7 +830,7 @@ mod tests {
 
             let params = GetDualInvestmentPositionsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"10160533","investCoin":"USDT","exercisedCoin":"BNB","subscriptionAmount":"0.5","strikePrice":"330","duration":4,"settleDate":1708416000000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.0365","orderId":7973677530,"purchaseEndTime":1708329600000,"optionType":"PUT","autoCompoundPlan":"STANDARD"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"10160533","investCoin":"USDT","exercisedCoin":"BNB","subscriptionAmount":"0.5","strikePrice":"330","duration":4,"settleDate":1708416000000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.0365","orderId":7973677530,"purchaseEndTime":1708329600000,"optionType":"PUT","autoCompoundPlan":"STANDARD","subscriptionTime":1708243200000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetDualInvestmentPositionsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetDualInvestmentPositionsResponse");
 
             let resp = client.get_dual_investment_positions(params).await.expect("Expected a response");
@@ -689,9 +845,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = GetDualInvestmentPositionsParams::builder().status("status_example".to_string()).page_size(10).page_index(1).recv_window(5000).build().unwrap();
+            let params = GetDualInvestmentPositionsParams::builder().status(GetDualInvestmentPositionsStatusEnum::Pending).page_size(10).page_index(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"10160533","investCoin":"USDT","exercisedCoin":"BNB","subscriptionAmount":"0.5","strikePrice":"330","duration":4,"settleDate":1708416000000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.0365","orderId":7973677530,"purchaseEndTime":1708329600000,"optionType":"PUT","autoCompoundPlan":"STANDARD"}]}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"list":[{"id":"10160533","investCoin":"USDT","exercisedCoin":"BNB","subscriptionAmount":"0.5","strikePrice":"330","duration":4,"settleDate":1708416000000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.0365","orderId":7973677530,"purchaseEndTime":1708329600000,"optionType":"PUT","autoCompoundPlan":"STANDARD","subscriptionTime":1708243200000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetDualInvestmentPositionsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetDualInvestmentPositionsResponse");
 
             let resp = client.get_dual_investment_positions(params).await.expect("Expected a response");
@@ -722,9 +878,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SubscribeDualInvestmentProductsParams::builder("id_example".to_string(),"1".to_string(),dec!(1.0),"NONE".to_string(),).build().unwrap();
+            let params = SubscribeDualInvestmentProductsParams::builder("741590".to_string(),"8257205859".to_string(),dec!(1),SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeDualInvestmentProductsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeDualInvestmentProductsResponse");
 
             let resp = client.subscribe_dual_investment_products(params).await.expect("Expected a response");
@@ -739,9 +895,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SubscribeDualInvestmentProductsParams::builder("id_example".to_string(),"1".to_string(),dec!(1.0),"NONE".to_string(),).recv_window(5000).build().unwrap();
+            let params = SubscribeDualInvestmentProductsParams::builder("741590".to_string(),"8257205859".to_string(),dec!(1),SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeDualInvestmentProductsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeDualInvestmentProductsResponse");
 
             let resp = client.subscribe_dual_investment_products(params).await.expect("Expected a response");
@@ -757,10 +913,10 @@ mod tests {
             let client = MockTradeApiClient { force_error: true };
 
             let params = SubscribeDualInvestmentProductsParams::builder(
-                "id_example".to_string(),
-                "1".to_string(),
-                dec!(1.0),
-                "NONE".to_string(),
+                "741590".to_string(),
+                "8257205859".to_string(),
+                dec!(1),
+                SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,
             )
             .build()
             .unwrap();

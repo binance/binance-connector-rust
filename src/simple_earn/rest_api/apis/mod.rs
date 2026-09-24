@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,3 +17,5 @@ pub mod flexible_locked_api;
 pub use flexible_locked_api::*;
 pub mod rwusd_api;
 pub use rwusd_api::*;
+pub mod yield_arena_api;
+pub use yield_arena_api::*;

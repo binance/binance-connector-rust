@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options WebSocket Market Streams
+ * Options WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options WebSocket Market Streams
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,6 +11,8 @@
  * Do not edit the class manually.
  */
 
+pub mod account_update;
+pub use self::account_update::AccountUpdate;
 pub mod balance_position_update;
 pub use self::balance_position_update::BalancePositionUpdate;
 pub mod balance_position_update_b_inner;
@@ -23,6 +25,8 @@ pub mod greek_update;
 pub use self::greek_update::GreekUpdate;
 pub mod greek_update_g_inner;
 pub use self::greek_update_g_inner::GreekUpdateGInner;
+pub mod hour24_ticker_response;
+pub use self::hour24_ticker_response::Hour24TickerResponse;
 pub mod index_price_streams_response_inner;
 pub use self::index_price_streams_response_inner::IndexPriceStreamsResponseInner;
 pub mod individual_symbol_book_ticker_streams_response;
@@ -31,14 +35,14 @@ pub mod kline_candlestick_streams_response;
 pub use self::kline_candlestick_streams_response::KlineCandlestickStreamsResponse;
 pub mod kline_candlestick_streams_response_k;
 pub use self::kline_candlestick_streams_response_k::KlineCandlestickStreamsResponseK;
-pub mod listenkeyexpired;
-pub use self::listenkeyexpired::Listenkeyexpired;
-pub mod mark_price_response_inner;
-pub use self::mark_price_response_inner::MarkPriceResponseInner;
+pub mod listen_key_expired;
+pub use self::listen_key_expired::ListenKeyExpired;
 pub mod new_symbol_info_response;
 pub use self::new_symbol_info_response::NewSymbolInfoResponse;
 pub mod open_interest_response_inner;
 pub use self::open_interest_response_inner::OpenInterestResponseInner;
+pub mod option_mark_price_response_inner;
+pub use self::option_mark_price_response_inner::OptionMarkPriceResponseInner;
 pub mod order_trade_update;
 pub use self::order_trade_update::OrderTradeUpdate;
 pub mod order_trade_update_o;
@@ -47,8 +51,6 @@ pub mod partial_book_depth_streams_response;
 pub use self::partial_book_depth_streams_response::PartialBookDepthStreamsResponse;
 pub mod risk_level_change;
 pub use self::risk_level_change::RiskLevelChange;
-pub mod ticker24_hour_response;
-pub use self::ticker24_hour_response::Ticker24HourResponse;
 pub mod trade_streams_response;
 pub use self::trade_streams_response::TradeStreamsResponse;
 pub mod user_data_stream_events_response;

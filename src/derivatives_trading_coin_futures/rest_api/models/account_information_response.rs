@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,18 +17,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationResponse {
+    /// Supported assets.
     #[serde(rename = "assets", skip_serializing_if = "Option::is_none")]
     pub assets: Option<Vec<models::AccountInformationResponseAssetsInner>>,
+    /// Position list.
     #[serde(rename = "positions", skip_serializing_if = "Option::is_none")]
     pub positions: Option<Vec<models::AccountInformationResponsePositionsInner>>,
+    /// Whether deposits are enabled.
     #[serde(rename = "canDeposit", skip_serializing_if = "Option::is_none")]
     pub can_deposit: Option<bool>,
+    /// Whether trading is enabled.
     #[serde(rename = "canTrade", skip_serializing_if = "Option::is_none")]
     pub can_trade: Option<bool>,
+    /// Whether withdrawals are enabled.
     #[serde(rename = "canWithdraw", skip_serializing_if = "Option::is_none")]
     pub can_withdraw: Option<bool>,
+    /// Fee tier level.
     #[serde(rename = "feeTier", skip_serializing_if = "Option::is_none")]
     pub fee_tier: Option<i64>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

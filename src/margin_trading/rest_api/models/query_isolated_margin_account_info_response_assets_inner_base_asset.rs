@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,31 +15,43 @@
 use crate::margin_trading::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `QueryIsolatedMarginAccountInfoResponseAssetsInnerBaseAsset` : base Asset object.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryIsolatedMarginAccountInfoResponseAssetsInnerBaseAsset {
+    /// asset.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// borrow Enabled.
     #[serde(rename = "borrowEnabled", skip_serializing_if = "Option::is_none")]
     pub borrow_enabled: Option<bool>,
+    /// borrowed.
     #[serde(rename = "borrowed", skip_serializing_if = "Option::is_none")]
     pub borrowed: Option<String>,
+    /// free.
     #[serde(rename = "free", skip_serializing_if = "Option::is_none")]
     pub free: Option<String>,
+    /// interest.
     #[serde(rename = "interest", skip_serializing_if = "Option::is_none")]
     pub interest: Option<String>,
+    /// locked.
     #[serde(rename = "locked", skip_serializing_if = "Option::is_none")]
     pub locked: Option<String>,
+    /// net Asset.
     #[serde(rename = "netAsset", skip_serializing_if = "Option::is_none")]
     pub net_asset: Option<String>,
+    /// net Asset Of Btc.
     #[serde(rename = "netAssetOfBtc", skip_serializing_if = "Option::is_none")]
     pub net_asset_of_btc: Option<String>,
+    /// repay Enabled.
     #[serde(rename = "repayEnabled", skip_serializing_if = "Option::is_none")]
     pub repay_enabled: Option<bool>,
+    /// total Asset.
     #[serde(rename = "totalAsset", skip_serializing_if = "Option::is_none")]
     pub total_asset: Option<String>,
 }
 
 impl QueryIsolatedMarginAccountInfoResponseAssetsInnerBaseAsset {
+    /// base Asset object.
     #[must_use]
     pub fn new() -> QueryIsolatedMarginAccountInfoResponseAssetsInnerBaseAsset {
         QueryIsolatedMarginAccountInfoResponseAssetsInnerBaseAsset {

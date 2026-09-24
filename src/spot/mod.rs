@@ -5,15 +5,16 @@ pub mod websocket_streams;
 use crate::common::{
     config::{ConfigurationRestApi, ConfigurationWebsocketApi, ConfigurationWebsocketStreams},
     constants::{
-        SPOT_REST_API_PROD_URL, SPOT_REST_API_TESTNET_URL, SPOT_WS_API_PROD_URL,
-        SPOT_WS_API_TESTNET_URL, SPOT_WS_STREAMS_PROD_URL, SPOT_WS_STREAMS_TESTNET_URL,
+        SPOT_REST_API_DEMO_URL, SPOT_REST_API_PROD_URL, SPOT_REST_API_TESTNET_URL,
+        SPOT_WS_API_DEMO_URL, SPOT_WS_API_PROD_URL, SPOT_WS_API_TESTNET_URL,
+        SPOT_WS_STREAMS_DEMO_URL, SPOT_WS_STREAMS_PROD_URL, SPOT_WS_STREAMS_TESTNET_URL,
     },
     utils::build_user_agent,
 };
 
 /// Represents the Spot REST API client for interacting with the Binance Spot REST API.
 ///
-/// This struct provides methods to create REST API clients for both production and testnet environments.
+/// This struct provides methods to create REST API clients for production , demo and testnet environments.
 pub struct SpotRestApi {}
 
 impl SpotRestApi {
@@ -66,11 +67,26 @@ impl SpotRestApi {
         config.base_path = Some(SPOT_REST_API_TESTNET_URL.to_string());
         SpotRestApi::from_config(config)
     }
+
+    /// Creates a REST API client configured for the demo environment.
+    ///
+    /// # Arguments
+    ///
+    /// * `config` - Configuration for the REST API client
+    ///
+    /// # Returns
+    ///
+    /// A new REST API client configured for the demo environment
+    #[must_use]
+    pub fn demo(mut config: ConfigurationRestApi) -> rest_api::RestApi {
+        config.base_path = Some(SPOT_REST_API_DEMO_URL.to_string());
+        SpotRestApi::from_config(config)
+    }
 }
 
 /// Represents the Spot WebSocket API client for interacting with the Binance Spot WebSocket API.
 ///
-/// This struct provides methods to create WebSocket API clients for both production and testnet environments.
+/// This struct provides methods to create WebSocket API clients for production , demo and testnet environments.
 pub struct SpotWsApi {}
 
 impl SpotWsApi {
@@ -123,11 +139,26 @@ impl SpotWsApi {
         config.ws_url = Some(SPOT_WS_API_TESTNET_URL.to_string());
         SpotWsApi::from_config(config)
     }
+
+    /// Creates a WebSocket API client configured for the demo environment.
+    ///
+    /// # Arguments
+    ///
+    /// * `config` - Configuration for the WebSocket API client
+    ///
+    /// # Returns
+    ///
+    /// A new WebSocket API client configured for the demo environment
+    #[must_use]
+    pub fn demo(mut config: ConfigurationWebsocketApi) -> websocket_api::WebsocketApiHandle {
+        config.ws_url = Some(SPOT_WS_API_DEMO_URL.to_string());
+        SpotWsApi::from_config(config)
+    }
 }
 
 /// Represents the Spot WebSocket Streams client for interacting with the Binance Spot WebSocket Streams.
 ///
-/// This struct provides methods to create WebSocket Streams clients for both production and testnet environments.
+/// This struct provides methods to create WebSocket Streams clients for production , demo and testnet environments.
 pub struct SpotWsStreams {}
 
 impl SpotWsStreams {
@@ -184,6 +215,23 @@ impl SpotWsStreams {
         mut config: ConfigurationWebsocketStreams,
     ) -> websocket_streams::WebsocketStreamsHandle {
         config.ws_url = Some(SPOT_WS_STREAMS_TESTNET_URL.to_string());
+        SpotWsStreams::from_config(config)
+    }
+
+    /// Creates a WebSocket streams client configured for the demo environment.
+    ///
+    /// # Arguments
+    ///
+    /// * `config` - Configuration for the WebSocket streams client
+    ///
+    /// # Returns
+    ///
+    /// A new WebSocket streams client configured for the demo environment
+    #[must_use]
+    pub fn demo(
+        mut config: ConfigurationWebsocketStreams,
+    ) -> websocket_streams::WebsocketStreamsHandle {
+        config.ws_url = Some(SPOT_WS_STREAMS_DEMO_URL.to_string());
         SpotWsStreams::from_config(config)
     }
 }

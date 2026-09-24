@@ -1,7 +1,7 @@
 /*
- * Binance Staking REST API
+ * Staking REST API
  *
- * OpenAPI Specification for the Binance Staking REST API
+ * Subscribe to staking products, track positions, and query rewards via the Binance Staking API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -60,29 +60,34 @@ impl SoftStakingApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_soft_staking_product_list`](#method.get_soft_staking_product_list).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSoftStakingProductListParams {
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -98,41 +103,48 @@ impl GetSoftStakingProductListParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_soft_staking_rewards_history`](#method.get_soft_staking_rewards_history).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSoftStakingRewardsHistoryParams {
-    /// WBETH or BETH, default to BETH
+    ///
+    /// The `asset` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "asset", default)]
     pub asset: Option<String>,
     ///
     /// The `start_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
     ///
     /// The `end_time` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Currently querying page. Start from 1. Default:1
+    /// Currently querying page
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default:10, Max:100
+    ///
+    /// The `size` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
     pub size: Option<i64>,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -148,19 +160,21 @@ impl GetSoftStakingRewardsHistoryParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`set_soft_staking`](#method.set_soft_staking).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct SetSoftStakingParams {
-    /// true or false
+    ///
+    /// The `soft_staking` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "softStaking")]
     pub soft_staking: bool,
-    ///
-    /// The `recv_window` parameter.
+    /// Request validity window in milliseconds.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -169,7 +183,7 @@ impl SetSoftStakingParams {
     ///
     /// Required parameters:
     ///
-    /// * `soft_staking` — true or false
+    /// * `soft_staking` — bool
     ///
     #[must_use]
     pub fn builder(soft_staking: bool) -> SetSoftStakingParamsBuilder {
@@ -360,7 +374,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":true,"totalRewardsUsdt":"3.09827182","rows":[{"asset":"BNB","minAmount":"0.5","maxCap":"1000","apr":"0.0015","stakedAmount":"2.14","totalProfit":"0.00171234"},{"asset":"SUI","minAmount":"100","maxCap":"50000","apr":"0.01","stakedAmount":"100","totalProfit":"0.1"}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":true,"totalRewardsUsdt":"3.09827182","rows":[{"asset":"BNB","minAmount":"0.5","maxCap":"1000","apr":"0.0015","stakedAmount":"2.14","totalProfit":"0.00171234"}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSoftStakingProductListResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSoftStakingProductListResponse");
@@ -387,7 +401,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BNB","rewards":"0.00000557","rewardAsset":"BNB","avgAmount":"2.14","time":1754007978000},{"asset":"SUI","rewards":"0.00274257","rewardAsset":"SUI","avgAmount":"100","time":1754007978000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BNB","rewards":"0.00000557","rewardAsset":"BNB","avgAmount":"2.14","time":1754007978000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetSoftStakingRewardsHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetSoftStakingRewardsHistoryResponse");
@@ -414,7 +428,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SetSoftStakingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetSoftStakingResponse");
@@ -437,7 +452,7 @@ mod tests {
 
             let params = GetSoftStakingProductListParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":true,"totalRewardsUsdt":"3.09827182","rows":[{"asset":"BNB","minAmount":"0.5","maxCap":"1000","apr":"0.0015","stakedAmount":"2.14","totalProfit":"0.00171234"},{"asset":"SUI","minAmount":"100","maxCap":"50000","apr":"0.01","stakedAmount":"100","totalProfit":"0.1"}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":true,"totalRewardsUsdt":"3.09827182","rows":[{"asset":"BNB","minAmount":"0.5","maxCap":"1000","apr":"0.0015","stakedAmount":"2.14","totalProfit":"0.00171234"}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSoftStakingProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSoftStakingProductListResponse");
 
             let resp = client.get_soft_staking_product_list(params).await.expect("Expected a response");
@@ -452,9 +467,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSoftStakingApiClient { force_error: false };
 
-            let params = GetSoftStakingProductListParams::builder().asset("BETH".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSoftStakingProductListParams::builder().asset("BTC".to_string()).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":true,"totalRewardsUsdt":"3.09827182","rows":[{"asset":"BNB","minAmount":"0.5","maxCap":"1000","apr":"0.0015","stakedAmount":"2.14","totalProfit":"0.00171234"},{"asset":"SUI","minAmount":"100","maxCap":"50000","apr":"0.01","stakedAmount":"100","totalProfit":"0.1"}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":true,"totalRewardsUsdt":"3.09827182","rows":[{"asset":"BNB","minAmount":"0.5","maxCap":"1000","apr":"0.0015","stakedAmount":"2.14","totalProfit":"0.00171234"}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSoftStakingProductListResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSoftStakingProductListResponse");
 
             let resp = client.get_soft_staking_product_list(params).await.expect("Expected a response");
@@ -487,7 +502,7 @@ mod tests {
 
             let params = GetSoftStakingRewardsHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BNB","rewards":"0.00000557","rewardAsset":"BNB","avgAmount":"2.14","time":1754007978000},{"asset":"SUI","rewards":"0.00274257","rewardAsset":"SUI","avgAmount":"100","time":1754007978000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BNB","rewards":"0.00000557","rewardAsset":"BNB","avgAmount":"2.14","time":1754007978000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSoftStakingRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSoftStakingRewardsHistoryResponse");
 
             let resp = client.get_soft_staking_rewards_history(params).await.expect("Expected a response");
@@ -502,9 +517,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockSoftStakingApiClient { force_error: false };
 
-            let params = GetSoftStakingRewardsHistoryParams::builder().asset("BETH".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
+            let params = GetSoftStakingRewardsHistoryParams::builder().asset("BTC".to_string()).start_time(1623319461670).end_time(1641782889000).current(1).size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BNB","rewards":"0.00000557","rewardAsset":"BNB","avgAmount":"2.14","time":1754007978000},{"asset":"SUI","rewards":"0.00274257","rewardAsset":"SUI","avgAmount":"100","time":1754007978000}],"total":2}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"asset":"BNB","rewards":"0.00000557","rewardAsset":"BNB","avgAmount":"2.14","time":1754007978000}],"total":2}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetSoftStakingRewardsHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetSoftStakingRewardsHistoryResponse");
 
             let resp = client.get_soft_staking_rewards_history(params).await.expect("Expected a response");
@@ -539,7 +554,8 @@ mod tests {
 
             let params = SetSoftStakingParams::builder(true).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetSoftStakingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetSoftStakingResponse");
@@ -564,7 +580,8 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"success":true}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SetSoftStakingResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SetSoftStakingResponse");

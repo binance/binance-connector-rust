@@ -1,7 +1,7 @@
 /*
- * Binance Simple Earn REST API
+ * Simple Earn REST API
  *
- * OpenAPI Specification for the Binance Simple Earn REST API
+ * Earn rewards by subscribing to flexible or locked Simple Earn products.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -19,6 +19,8 @@ pub mod get_bfusd_quota_details_response_fast_redemption_quota;
 pub use self::get_bfusd_quota_details_response_fast_redemption_quota::GetBfusdQuotaDetailsResponseFastRedemptionQuota;
 pub mod get_bfusd_quota_details_response_standard_redemption_quota;
 pub use self::get_bfusd_quota_details_response_standard_redemption_quota::GetBfusdQuotaDetailsResponseStandardRedemptionQuota;
+pub mod get_bfusd_quota_details_response_subscription_quota;
+pub use self::get_bfusd_quota_details_response_subscription_quota::GetBfusdQuotaDetailsResponseSubscriptionQuota;
 pub mod get_bfusd_rate_history_response;
 pub use self::get_bfusd_rate_history_response::GetBfusdRateHistoryResponse;
 pub mod get_bfusd_rate_history_response_rows_inner;
@@ -121,6 +123,10 @@ pub mod get_simple_earn_locked_product_list_response_rows_inner_detail;
 pub use self::get_simple_earn_locked_product_list_response_rows_inner_detail::GetSimpleEarnLockedProductListResponseRowsInnerDetail;
 pub mod get_simple_earn_locked_product_list_response_rows_inner_quota;
 pub use self::get_simple_earn_locked_product_list_response_rows_inner_quota::GetSimpleEarnLockedProductListResponseRowsInnerQuota;
+pub mod get_yield_arena_activities_response;
+pub use self::get_yield_arena_activities_response::GetYieldArenaActivitiesResponse;
+pub mod get_yield_arena_activities_response_activities_inner;
+pub use self::get_yield_arena_activities_response_activities_inner::GetYieldArenaActivitiesResponseActivitiesInner;
 pub mod redeem_bfusd_response;
 pub use self::redeem_bfusd_response::RedeemBfusdResponse;
 pub mod redeem_flexible_product_response;

@@ -5,7 +5,14 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::margin_trading::{MarginTradingRestApi, rest_api::MarginAccountNewOtoParams};
+use binance_sdk::margin_trading::{
+    MarginTradingRestApi,
+    rest_api::{
+        MarginAccountNewOtoParams, MarginAccountNewOtoPendingSideEnum,
+        MarginAccountNewOtoPendingTypeEnum, MarginAccountNewOtoWorkingSideEnum,
+        MarginAccountNewOtoWorkingTypeEnum,
+    },
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -27,14 +34,14 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = MarginAccountNewOtoParams::builder(
-        "symbol_example".to_string(),
-        "working_type_example".to_string(),
-        "working_side_example".to_string(),
+        "BTCUSDT".to_string(),
+        MarginAccountNewOtoWorkingTypeEnum::Limit,
+        MarginAccountNewOtoWorkingSideEnum::Buy,
         dec!(1.0),
         dec!(1.0),
         dec!(1.0),
-        "Order Types".to_string(),
-        "pending_side_example".to_string(),
+        MarginAccountNewOtoPendingTypeEnum::Limit,
+        MarginAccountNewOtoPendingSideEnum::Buy,
         dec!(1.0),
     )
     .build()?;

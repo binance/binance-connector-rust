@@ -6,7 +6,7 @@ use crate::common::{
 
 /// Represents the Mining REST API client for interacting with the Binance Mining REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct MiningRestApi {}
 
 impl MiningRestApi {

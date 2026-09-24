@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Portfolio Margin Pro WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin Pro WebSocket Market Streams
+ * Access advanced account management and high-frequency trading with Binance Portfolio Margin Pro.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,6 +11,8 @@
  * Do not edit the class manually.
  */
 
+pub mod pm_pro_account_update;
+pub use self::pm_pro_account_update::PmProAccountUpdate;
 pub mod risklevelchange;
 pub use self::risklevelchange::Risklevelchange;
 pub mod user_data_stream_events_response;

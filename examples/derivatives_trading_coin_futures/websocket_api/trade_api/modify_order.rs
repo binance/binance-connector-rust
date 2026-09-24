@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
 
     // Setup the WS API parameters
     let params = ModifyOrderParams::builder(
-        "symbol_example".to_string(),
+        "BTCUSD_PERP".to_string(),
         ModifyOrderSideEnum::Buy,
         dec!(1.0),
         dec!(1.0),

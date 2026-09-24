@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -115,8 +115,6 @@ impl RestApi {
     ///
     /// Retrieves compressed, aggregated historical trades for a specific symbol. Useful for recent trade history.
     ///
-    /// Weight: 0
-    ///
     /// # Arguments
     ///
     /// - `params`: [`AggregatedTradesParams`]
@@ -145,7 +143,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/alpha/market-data/rest-api/Aggregated-Trades).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/market-data#aggregated-trades).
     ///
     pub async fn aggregated_trades(
         &self,
@@ -154,11 +152,50 @@ impl RestApi {
         self.market_data_api_client.aggregated_trades(params).await
     }
 
+    /// Full Depth
+    ///
+    /// Fetches the full order book depth (UI & API orders) for a symbol, including bid and ask orders with their prices and quantities.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`FullDepthParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::FullDepthResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/market-data#full-depth).
+    ///
+    pub async fn full_depth(
+        &self,
+        params: FullDepthParams,
+    ) -> anyhow::Result<RestApiResponse<models::FullDepthResponse>> {
+        self.market_data_api_client.full_depth(params).await
+    }
+
     /// Get Exchange Info
     ///
     /// Fetches general exchange information, such as supported symbols, rate limits, and server time.
-    ///
-    /// Weight: 0
     ///
     /// # Arguments
     ///
@@ -188,7 +225,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/alpha/market-data/rest-api/Get-Exchange-Info).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/market-data#get-exchange-info).
     ///
     pub async fn get_exchange_info(
         &self,
@@ -196,11 +233,9 @@ impl RestApi {
         self.market_data_api_client.get_exchange_info().await
     }
 
-    /// Klines (Candlestick Data)
+    /// Klines
     ///
     /// Fetches Kline/candlestick bars for a symbol, which include open/high/low/close prices and volume over intervals. Useful for charting and analysis.
-    ///
-    /// Weight: 0
     ///
     /// # Arguments
     ///
@@ -230,7 +265,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/alpha/market-data/rest-api/Klines).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/market-data#klines).
     ///
     pub async fn klines(
         &self,
@@ -239,11 +274,9 @@ impl RestApi {
         self.market_data_api_client.klines(params).await
     }
 
-    /// Ticker (24hr Price Statistics)
+    /// Ticker
     ///
     /// Gets the 24-hour rolling window price change statistics for a symbol, including volume and price changes.
-    ///
-    /// Weight: 0
     ///
     /// # Arguments
     ///
@@ -273,7 +306,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/alpha/market-data/rest-api/24hr-ticker-price-change).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/market-data#ticker).
     ///
     pub async fn ticker(
         &self,
@@ -285,8 +318,6 @@ impl RestApi {
     /// Token List
     ///
     /// Retrieves a list of all available ALPHA tokens, including their IDs and symbols. Use this to find the token ID for constructing symbols in other endpoints.
-    ///
-    /// Weight: 0
     ///
     /// # Arguments
     ///
@@ -316,7 +347,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/alpha/market-data/rest-api/Token-List).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/market-data#token-list).
     ///
     pub async fn token_list(&self) -> anyhow::Result<RestApiResponse<models::TokenListResponse>> {
         self.market_data_api_client.token_list().await

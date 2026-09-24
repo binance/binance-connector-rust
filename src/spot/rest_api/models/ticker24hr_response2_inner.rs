@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -22,6 +17,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ticker24hrResponse2Inner {
+    /// Symbol Name
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "priceChange", skip_serializing_if = "Option::is_none")]
@@ -32,6 +28,7 @@ pub struct Ticker24hrResponse2Inner {
     pub weighted_avg_price: Option<String>,
     #[serde(rename = "prevClosePrice", skip_serializing_if = "Option::is_none")]
     pub prev_close_price: Option<String>,
+    /// Closing price of the interval
     #[serde(rename = "lastPrice", skip_serializing_if = "Option::is_none")]
     pub last_price: Option<String>,
     #[serde(rename = "lastQty", skip_serializing_if = "Option::is_none")]
@@ -44,24 +41,34 @@ pub struct Ticker24hrResponse2Inner {
     pub ask_price: Option<String>,
     #[serde(rename = "askQty", skip_serializing_if = "Option::is_none")]
     pub ask_qty: Option<String>,
+    /// Opening price of the Interval
     #[serde(rename = "openPrice", skip_serializing_if = "Option::is_none")]
     pub open_price: Option<String>,
+    /// Highest price in the interval
     #[serde(rename = "highPrice", skip_serializing_if = "Option::is_none")]
     pub high_price: Option<String>,
+    /// Lowest  price in the interval
     #[serde(rename = "lowPrice", skip_serializing_if = "Option::is_none")]
     pub low_price: Option<String>,
+    /// Total trade volume (in base asset)
     #[serde(rename = "volume", skip_serializing_if = "Option::is_none")]
     pub volume: Option<String>,
+    /// Total trade volume (in quote asset)
     #[serde(rename = "quoteVolume", skip_serializing_if = "Option::is_none")]
     pub quote_volume: Option<String>,
+    /// Start of the ticker interval
     #[serde(rename = "openTime", skip_serializing_if = "Option::is_none")]
     pub open_time: Option<i64>,
+    /// End of the ticker interval
     #[serde(rename = "closeTime", skip_serializing_if = "Option::is_none")]
     pub close_time: Option<i64>,
+    /// First tradeId
     #[serde(rename = "firstId", skip_serializing_if = "Option::is_none")]
     pub first_id: Option<i64>,
+    /// Last tradeId
     #[serde(rename = "lastId", skip_serializing_if = "Option::is_none")]
     pub last_id: Option<i64>,
+    /// Trade count
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }

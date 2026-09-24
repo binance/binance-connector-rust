@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,24 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryIsolatedMarginTierDataResponseInner {
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// tier.
     #[serde(rename = "tier", skip_serializing_if = "Option::is_none")]
     pub tier: Option<i64>,
+    /// effective Multiple.
     #[serde(rename = "effectiveMultiple", skip_serializing_if = "Option::is_none")]
     pub effective_multiple: Option<String>,
+    /// initial Risk Ratio.
     #[serde(rename = "initialRiskRatio", skip_serializing_if = "Option::is_none")]
     pub initial_risk_ratio: Option<String>,
+    /// liquidation Risk Ratio.
     #[serde(
         rename = "liquidationRiskRatio",
         skip_serializing_if = "Option::is_none"
     )]
     pub liquidation_risk_ratio: Option<String>,
+    /// base Asset Max Borrowable.
     #[serde(
         rename = "baseAssetMaxBorrowable",
         skip_serializing_if = "Option::is_none"
     )]
     pub base_asset_max_borrowable: Option<String>,
+    /// quote Asset Max Borrowable.
     #[serde(
         rename = "quoteAssetMaxBorrowable",
         skip_serializing_if = "Option::is_none"

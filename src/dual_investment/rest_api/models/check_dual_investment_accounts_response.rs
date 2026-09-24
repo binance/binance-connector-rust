@@ -1,7 +1,7 @@
 /*
- * Binance Dual Investment REST API
+ * Dual Investment REST API
  *
- * OpenAPI Specification for the Binance Dual Investment REST API
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CheckDualInvestmentAccountsResponse {
+    /// Total BTC amount in Dual Investment
     #[serde(rename = "totalAmountInBTC", skip_serializing_if = "Option::is_none")]
     pub total_amount_in_btc: Option<String>,
+    /// Total USDT equivalent amount in Dual Investment
     #[serde(rename = "totalAmountInUSDT", skip_serializing_if = "Option::is_none")]
     pub total_amount_in_usdt: Option<String>,
 }

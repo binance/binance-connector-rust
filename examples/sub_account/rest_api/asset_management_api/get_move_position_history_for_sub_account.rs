@@ -28,8 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        GetMovePositionHistoryForSubAccountParams::builder("symbol_example".to_string(), 789, 789)
-            .build()?;
+        GetMovePositionHistoryForSubAccountParams::builder("BTCUSDT".to_string(), 1, 1).build()?;
 
     // Make the API call
     let response = rest_client

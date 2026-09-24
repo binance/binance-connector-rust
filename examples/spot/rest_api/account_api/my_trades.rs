@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = SpotRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = MyTradesParams::builder("BNBUSDT".to_string()).build()?;
+    let params = MyTradesParams::builder("BNBBTC".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

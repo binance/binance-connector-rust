@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,14 +17,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QuerySpecialKeyResponse {
+    /// api Key.
     #[serde(rename = "apiKey", skip_serializing_if = "Option::is_none")]
     pub api_key: Option<String>,
+    /// 0.0.0.0 is just an initial statereference (no extra meaning).
     #[serde(rename = "ip", skip_serializing_if = "Option::is_none")]
     pub ip: Option<String>,
+    /// api Name.
     #[serde(rename = "apiName", skip_serializing_if = "Option::is_none")]
     pub api_name: Option<String>,
+    /// type.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// permission Mode.
     #[serde(rename = "permissionMode", skip_serializing_if = "Option::is_none")]
     pub permission_mode: Option<String>,
 }

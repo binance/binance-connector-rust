@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures REST API
+ * Futures (COIN-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures REST API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,38 +17,55 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ticker24hrPriceChangeStatisticsResponseInner {
+    /// Trading symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair
     #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
     pub pair: Option<String>,
+    /// Absolute price change in the 24h window.
     #[serde(rename = "priceChange", skip_serializing_if = "Option::is_none")]
     pub price_change: Option<String>,
+    /// Percentage price change in the 24h window.
     #[serde(rename = "priceChangePercent", skip_serializing_if = "Option::is_none")]
     pub price_change_percent: Option<String>,
+    /// Weighted average price in the 24h window.
     #[serde(rename = "weightedAvgPrice", skip_serializing_if = "Option::is_none")]
     pub weighted_avg_price: Option<String>,
+    /// Latest traded price.
     #[serde(rename = "lastPrice", skip_serializing_if = "Option::is_none")]
     pub last_price: Option<String>,
+    /// Quantity of the latest trade.
     #[serde(rename = "lastQty", skip_serializing_if = "Option::is_none")]
     pub last_qty: Option<String>,
+    /// Opening price of the 24h window.
     #[serde(rename = "openPrice", skip_serializing_if = "Option::is_none")]
     pub open_price: Option<String>,
+    /// Highest price in the 24h window.
     #[serde(rename = "highPrice", skip_serializing_if = "Option::is_none")]
     pub high_price: Option<String>,
+    /// Lowest price in the 24h window.
     #[serde(rename = "lowPrice", skip_serializing_if = "Option::is_none")]
     pub low_price: Option<String>,
+    /// Base asset volume in the 24h window.
     #[serde(rename = "volume", skip_serializing_if = "Option::is_none")]
     pub volume: Option<String>,
+    /// Base asset volume.
     #[serde(rename = "baseVolume", skip_serializing_if = "Option::is_none")]
     pub base_volume: Option<String>,
+    /// Start time of the 24h window (milliseconds).
     #[serde(rename = "openTime", skip_serializing_if = "Option::is_none")]
     pub open_time: Option<i64>,
+    /// End time of the 24h window (milliseconds).
     #[serde(rename = "closeTime", skip_serializing_if = "Option::is_none")]
     pub close_time: Option<i64>,
+    /// First tradeId
     #[serde(rename = "firstId", skip_serializing_if = "Option::is_none")]
     pub first_id: Option<i64>,
+    /// Last tradeId
     #[serde(rename = "lastId", skip_serializing_if = "Option::is_none")]
     pub last_id: Option<i64>,
+    /// Total number of trades in the 24h window.
     #[serde(rename = "count", skip_serializing_if = "Option::is_none")]
     pub count: Option<i64>,
 }

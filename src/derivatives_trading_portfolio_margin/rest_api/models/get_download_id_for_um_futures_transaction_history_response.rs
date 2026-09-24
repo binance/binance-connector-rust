@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin REST API
+ * Portfolio Margin REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin REST API
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,11 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetDownloadIdForUmFuturesTransactionHistoryResponse {
+    /// Average time taken for data download in the past 30 days
     #[serde(
         rename = "avgCostTimestampOfLast30d",
         skip_serializing_if = "Option::is_none"
     )]
     pub avg_cost_timestamp_of_last30d: Option<i64>,
+    /// Download ID.
     #[serde(rename = "downloadId", skip_serializing_if = "Option::is_none")]
     pub download_id: Option<String>,
 }

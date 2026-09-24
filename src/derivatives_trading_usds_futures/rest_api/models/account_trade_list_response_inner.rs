@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,32 +17,55 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountTradeListResponseInner {
+    /// Buyer.
     #[serde(rename = "buyer", skip_serializing_if = "Option::is_none")]
     pub buyer: Option<bool>,
+    /// Commission.
     #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
     pub commission: Option<String>,
+    /// Commission Asset.
     #[serde(rename = "commissionAsset", skip_serializing_if = "Option::is_none")]
     pub commission_asset: Option<String>,
+    /// Id.
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<i64>,
+    /// Maker.
     #[serde(rename = "maker", skip_serializing_if = "Option::is_none")]
     pub maker: Option<bool>,
+    /// Order Id.
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// Price.
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Qty.
     #[serde(rename = "qty", skip_serializing_if = "Option::is_none")]
     pub qty: Option<String>,
+    /// Quote asset quantity. Populated for USDⓈ-M symbols; returns \"0\" for COIN-M symbols.
     #[serde(rename = "quoteQty", skip_serializing_if = "Option::is_none")]
     pub quote_qty: Option<String>,
+    /// Base asset quantity. Populated for COIN-M symbols; returns \"0\" for USDⓈ-M symbols.
+    #[serde(rename = "baseQty", skip_serializing_if = "Option::is_none")]
+    pub base_qty: Option<String>,
+    /// Margin Asset.
+    #[serde(rename = "marginAsset", skip_serializing_if = "Option::is_none")]
+    pub margin_asset: Option<String>,
+    /// Realized Pnl.
     #[serde(rename = "realizedPnl", skip_serializing_if = "Option::is_none")]
     pub realized_pnl: Option<String>,
+    /// Side.
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Position Side.
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// Symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Pair.
+    #[serde(rename = "pair", skip_serializing_if = "Option::is_none")]
+    pub pair: Option<String>,
+    /// Time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
 }
@@ -60,10 +83,13 @@ impl AccountTradeListResponseInner {
             price: None,
             qty: None,
             quote_qty: None,
+            base_qty: None,
+            margin_asset: None,
             realized_pnl: None,
             side: None,
             position_side: None,
             symbol: None,
+            pair: None,
             time: None,
         }
     }

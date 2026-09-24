@@ -4,7 +4,7 @@
 [![Open Issues](https://img.shields.io/github/issues/binance/binance-connector-rust)](https://github.com/binance/binance-connector-rust/issues)
 [![Crates.io](https://img.shields.io/crates/v/binance-sdk)](https://crates.io/crates/binance-sdk)
 [![docs.rs](https://img.shields.io/docsrs/binance-sdk)](https://docs.rs/binance-sdk)
-[![Known Vulnerabilities](https://snyk.io/test/github/binance/binance-connector-rust/badge.svg)](https://snyk.io/test/github/binance/binance-connector-rust)
+[![Dependency Status](https://deps.rs/repo/github/binance/binance-connector-rust/status.svg)](https://deps.rs/repo/github/binance/binance-connector-rust)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official collection of auto-generated Rust SDK modules for Binance APIs.
@@ -47,14 +47,15 @@ All connectors are bundled within the single `binance-sdk` crate. Enable only th
 * [`gift_card`](./src/gift_card) – Gift Card connector
 * [`margin_trading`](./src/margin_trading) – Margin Trading connector
 * [`mining`](./src/mining) – Mining connector
-* [`nft`](./src/nft) – NFT connector
 * [`pay`](./src/pay) – Pay connector
 * [`rebate`](./src/rebate) – Rebate connector
 * [`simple_earn`](./src/simple_earn) – Simple Earn connector
 * [`spot`](./src/spot) – Spot Trading connector
 * [`staking`](./src/staking) – Staking connector
+* [`stocks`](./src/stocks) – Stocks connector
 * [`sub_account`](./src/sub_account) – Sub Account connector
 * [`vip_loan`](./src/vip_loan) – VIP Loan connector
+* [`w3w_prediction`](./src/w3w_prediction) – W3W Prediction connector
 * [`wallet`](./src/wallet) – Wallet connector
 
 ## Documentation
@@ -107,6 +108,19 @@ This repository contains auto-generated code using OpenAPI Generator. To contrib
 3. **Respect the code generation workflow** — manual edits to generated files will be overwritten.
 
 Please ensure all new code is covered by existing or new tests. We follow [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) for naming and documentation.
+
+## Disclaimer
+
+This SDK is provided by Binance on an "as is" and "as available" basis for use at your own risk. Binance makes no representations or warranties of any kind, whether express or implied, as to the operation of the SDK, its accuracy, reliability, completeness, or fitness for any particular purpose.
+
+To the fullest extent permitted by law, Binance shall not be liable for any losses, damages, or expenses of any kind arising from or in connection with your use of, or inability to use, this SDK, including but not limited to any financial losses resulting from errors, bugs, interruptions, or inaccuracies in the SDK.
+
+Your use of this SDK to access the Binance Platform is subject to the Binance API Key Terms and the Binance Terms of Use, which shall prevail in the event of any conflict with this disclaimer. You are solely responsible for any orders or transactions executed through the Binance Platform using this SDK.
+
+This SDK is not intended to constitute investment advice or a recommendation to buy, sell, or hold any digital asset. You should independently evaluate and verify all information before acting.
+
+- [Binance Terms of Use](https://www.binance.com/en/terms)
+- [Binance API Key Terms](https://www.binance.com/en/about-legal/terms-binance-api)
 
 ## License
 

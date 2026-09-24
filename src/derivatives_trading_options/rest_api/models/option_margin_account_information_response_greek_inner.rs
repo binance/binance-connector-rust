@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,14 +17,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OptionMarginAccountInformationResponseGreekInner {
+    /// underlying
     #[serde(rename = "underlying", skip_serializing_if = "Option::is_none")]
     pub underlying: Option<String>,
+    /// delta
     #[serde(rename = "delta", skip_serializing_if = "Option::is_none")]
     pub delta: Option<String>,
-    #[serde(rename = "theta", skip_serializing_if = "Option::is_none")]
-    pub theta: Option<String>,
+    /// gamma
     #[serde(rename = "gamma", skip_serializing_if = "Option::is_none")]
     pub gamma: Option<String>,
+    /// theta
+    #[serde(rename = "theta", skip_serializing_if = "Option::is_none")]
+    pub theta: Option<String>,
+    /// vega
     #[serde(rename = "vega", skip_serializing_if = "Option::is_none")]
     pub vega: Option<String>,
 }
@@ -35,8 +40,8 @@ impl OptionMarginAccountInformationResponseGreekInner {
         OptionMarginAccountInformationResponseGreekInner {
             underlying: None,
             delta: None,
-            theta: None,
             gamma: None,
+            theta: None,
             vega: None,
         }
     }

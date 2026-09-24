@@ -1,7 +1,7 @@
 /*
- * Binance C2C REST API
+ * C2C REST API
  *
- * OpenAPI Specification for the Binance C2C REST API
+ * Query fiat transaction history via the C2C REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -29,23 +29,50 @@ pub struct GetC2CTradeHistoryResponseDataInner {
     pub fiat: Option<String>,
     #[serde(rename = "fiatSymbol", skip_serializing_if = "Option::is_none")]
     pub fiat_symbol: Option<String>,
+    /// Quantity (in Crypto)
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Total order amount in fiat
     #[serde(rename = "totalPrice", skip_serializing_if = "Option::is_none")]
     pub total_price: Option<String>,
+    /// Unit Price (in Fiat)
     #[serde(rename = "unitPrice", skip_serializing_if = "Option::is_none")]
     pub unit_price: Option<String>,
     #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
     pub order_status: Option<String>,
+    /// Order creation timestamp in milliseconds
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
     pub create_time: Option<i64>,
+    /// Transaction Fee (in Crypto)
     #[serde(rename = "commission", skip_serializing_if = "Option::is_none")]
     pub commission: Option<String>,
+    /// Counterparty nickname
     #[serde(
         rename = "counterPartNickName",
         skip_serializing_if = "Option::is_none"
     )]
     pub counter_part_nick_name: Option<String>,
+    /// Identifier of the payment method
+    #[serde(rename = "payMethodName", skip_serializing_if = "Option::is_none")]
+    pub pay_method_name: Option<String>,
+    /// KYC verification status. 0: not required, 1: not verified, 2: verified
+    #[serde(
+        rename = "additionalKycVerify",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub additional_kyc_verify: Option<i64>,
+    /// Taker commission rate
+    #[serde(
+        rename = "takerCommissionRate",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub taker_commission_rate: Option<String>,
+    /// Taker commission amount
+    #[serde(rename = "takerCommission", skip_serializing_if = "Option::is_none")]
+    pub taker_commission: Option<String>,
+    /// Taker trade amount
+    #[serde(rename = "takerAmount", skip_serializing_if = "Option::is_none")]
+    pub taker_amount: Option<String>,
     #[serde(rename = "advertisementRole", skip_serializing_if = "Option::is_none")]
     pub advertisement_role: Option<String>,
 }
@@ -67,6 +94,11 @@ impl GetC2CTradeHistoryResponseDataInner {
             create_time: None,
             commission: None,
             counter_part_nick_name: None,
+            pay_method_name: None,
+            additional_kyc_verify: None,
+            taker_commission_rate: None,
+            taker_commission: None,
+            taker_amount: None,
             advertisement_role: None,
         }
     }

@@ -1,7 +1,7 @@
 /*
- * Binance Wallet REST API
+ * Wallet REST API
  *
- * OpenAPI Specification for the Binance Wallet REST API
+ * Query balances, manage assets, and perform wallet operations via the Binance Wallet API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -53,7 +53,7 @@ impl OthersApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_symbols_delist_schedule_for_spot`](#method.get_symbols_delist_schedule_for_spot).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSymbolsDelistScheduleForSpotParams {
     ///
@@ -61,6 +61,7 @@ pub struct GetSymbolsDelistScheduleForSpotParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -172,7 +173,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"symbols":["ADAUSDT","BNBUSDT"]},{"delistTime":1686222232000,"symbols":["ETHUSDT"]}]"#).unwrap();
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"delistTime":1686161202000,"symbols":["ADAUSDT"]}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetSymbolsDelistScheduleForSpotResponseInner> =
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::GetSymbolsDelistScheduleForSpotResponseInner>",
@@ -199,7 +202,8 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":0,"msg":"normal"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":0,"msg":"normal"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::SystemStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SystemStatusResponse");
@@ -220,12 +224,22 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOthersApiClient { force_error: false };
 
-            let params = GetSymbolsDelistScheduleForSpotParams::builder().build().unwrap();
+            let params = GetSymbolsDelistScheduleForSpotParams::builder()
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"symbols":["ADAUSDT","BNBUSDT"]},{"delistTime":1686222232000,"symbols":["ETHUSDT"]}]"#).unwrap();
-            let expected_response : Vec<models::GetSymbolsDelistScheduleForSpotResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetSymbolsDelistScheduleForSpotResponseInner>");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"delistTime":1686161202000,"symbols":["ADAUSDT"]}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::GetSymbolsDelistScheduleForSpotResponseInner> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<models::GetSymbolsDelistScheduleForSpotResponseInner>",
+                );
 
-            let resp = client.get_symbols_delist_schedule_for_spot(params).await.expect("Expected a response");
+            let resp = client
+                .get_symbols_delist_schedule_for_spot(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -237,12 +251,23 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOthersApiClient { force_error: false };
 
-            let params = GetSymbolsDelistScheduleForSpotParams::builder().recv_window(5000).build().unwrap();
+            let params = GetSymbolsDelistScheduleForSpotParams::builder()
+                .recv_window(5000)
+                .build()
+                .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"delistTime":1686161202000,"symbols":["ADAUSDT","BNBUSDT"]},{"delistTime":1686222232000,"symbols":["ETHUSDT"]}]"#).unwrap();
-            let expected_response : Vec<models::GetSymbolsDelistScheduleForSpotResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetSymbolsDelistScheduleForSpotResponseInner>");
+            let resp_json: Value =
+                serde_json::from_str(r#"[{"delistTime":1686161202000,"symbols":["ADAUSDT"]}]"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: Vec<models::GetSymbolsDelistScheduleForSpotResponseInner> =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into Vec<models::GetSymbolsDelistScheduleForSpotResponseInner>",
+                );
 
-            let resp = client.get_symbols_delist_schedule_for_spot(params).await.expect("Expected a response");
+            let resp = client
+                .get_symbols_delist_schedule_for_spot(params)
+                .await
+                .expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -272,7 +297,8 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOthersApiClient { force_error: false };
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":0,"msg":"normal"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":0,"msg":"normal"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SystemStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SystemStatusResponse");
@@ -289,7 +315,8 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockOthersApiClient { force_error: false };
 
-            let resp_json: Value = serde_json::from_str(r#"{"status":0,"msg":"normal"}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"status":0,"msg":"normal"}"#)
+                .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::SystemStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::SystemStatusResponse");

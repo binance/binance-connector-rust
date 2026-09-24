@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,36 +17,49 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PositionInformationV2ResponseInner {
+    /// Entry Price.
     #[serde(rename = "entryPrice", skip_serializing_if = "Option::is_none")]
     pub entry_price: Option<String>,
+    /// Break Even Price.
     #[serde(rename = "breakEvenPrice", skip_serializing_if = "Option::is_none")]
     pub break_even_price: Option<String>,
+    /// Margin Type.
     #[serde(rename = "marginType", skip_serializing_if = "Option::is_none")]
     pub margin_type: Option<String>,
     #[serde(rename = "isAutoAddMargin", skip_serializing_if = "Option::is_none")]
     pub is_auto_add_margin: Option<String>,
+    /// Isolated Margin.
     #[serde(rename = "isolatedMargin", skip_serializing_if = "Option::is_none")]
     pub isolated_margin: Option<String>,
+    /// Leverage.
     #[serde(rename = "leverage", skip_serializing_if = "Option::is_none")]
     pub leverage: Option<String>,
+    /// Liquidation Price.
     #[serde(rename = "liquidationPrice", skip_serializing_if = "Option::is_none")]
     pub liquidation_price: Option<String>,
+    /// Mark Price.
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
+    /// Max Notional Value.
     #[serde(rename = "maxNotionalValue", skip_serializing_if = "Option::is_none")]
     pub max_notional_value: Option<String>,
+    /// Position Amt.
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
     pub position_amt: Option<String>,
     #[serde(rename = "notional", skip_serializing_if = "Option::is_none")]
     pub notional: Option<String>,
     #[serde(rename = "isolatedWallet", skip_serializing_if = "Option::is_none")]
     pub isolated_wallet: Option<String>,
+    /// Symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Un Realized Profit.
     #[serde(rename = "unRealizedProfit", skip_serializing_if = "Option::is_none")]
     pub un_realized_profit: Option<String>,
+    /// Position Side.
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
+    /// Update Time.
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

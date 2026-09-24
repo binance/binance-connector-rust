@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
         "BNBUSDT".to_string(),
         SorOrderPlaceSideEnum::Buy,
         SorOrderPlaceTypeEnum::Market,
-        dec!(1.0),
+        dec!(1),
     )
     .build()?;
 

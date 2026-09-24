@@ -4,7 +4,8 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::derivatives_trading_portfolio_margin::{
-    DerivativesTradingPortfolioMarginRestApi, rest_api::ToggleBnbBurnOnUmFuturesTradeParams,
+    DerivativesTradingPortfolioMarginRestApi,
+    rest_api::{ToggleBnbBurnOnUmFuturesTradeFeeBurnEnum, ToggleBnbBurnOnUmFuturesTradeParams},
 };
 use binance_sdk::logger;
 
@@ -27,8 +28,10 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingPortfolioMarginRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        ToggleBnbBurnOnUmFuturesTradeParams::builder("fee_burn_example".to_string()).build()?;
+    let params = ToggleBnbBurnOnUmFuturesTradeParams::builder(
+        ToggleBnbBurnOnUmFuturesTradeFeeBurnEnum::True,
+    )
+    .build()?;
 
     // Make the API call
     let response = rest_client

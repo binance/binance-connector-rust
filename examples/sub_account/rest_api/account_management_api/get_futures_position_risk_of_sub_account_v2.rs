@@ -27,11 +27,8 @@ async fn main() -> Result<()> {
     let rest_client = SubAccountRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = GetFuturesPositionRiskOfSubAccountV2Params::builder(
-        "sub-account-email@email.com".to_string(),
-        789,
-    )
-    .build()?;
+    let params = GetFuturesPositionRiskOfSubAccountV2Params::builder("123@test.com".to_string(), 1)
+        .build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryCrossMarginFeeDataResponseInner {
+    /// vip Level.
     #[serde(rename = "vipLevel", skip_serializing_if = "Option::is_none")]
     pub vip_level: Option<i64>,
+    /// coin.
     #[serde(rename = "coin", skip_serializing_if = "Option::is_none")]
     pub coin: Option<String>,
+    /// transfer In.
     #[serde(rename = "transferIn", skip_serializing_if = "Option::is_none")]
     pub transfer_in: Option<bool>,
+    /// borrowable.
     #[serde(rename = "borrowable", skip_serializing_if = "Option::is_none")]
     pub borrowable: Option<bool>,
+    /// daily Interest.
     #[serde(rename = "dailyInterest", skip_serializing_if = "Option::is_none")]
     pub daily_interest: Option<String>,
+    /// yearly Interest.
     #[serde(rename = "yearlyInterest", skip_serializing_if = "Option::is_none")]
     pub yearly_interest: Option<String>,
+    /// borrow Limit.
     #[serde(rename = "borrowLimit", skip_serializing_if = "Option::is_none")]
     pub borrow_limit: Option<String>,
+    /// marginable Pairs list.
     #[serde(rename = "marginablePairs", skip_serializing_if = "Option::is_none")]
     pub marginable_pairs: Option<Vec<String>>,
 }

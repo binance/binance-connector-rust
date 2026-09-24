@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,24 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SetMarketMakerProtectionConfigResponse {
+    /// underlying Id
     #[serde(rename = "underlyingId", skip_serializing_if = "Option::is_none")]
     pub underlying_id: Option<i64>,
+    /// underlying
     #[serde(rename = "underlying", skip_serializing_if = "Option::is_none")]
     pub underlying: Option<String>,
+    /// window Time In Milliseconds
     #[serde(
         rename = "windowTimeInMilliseconds",
         skip_serializing_if = "Option::is_none"
     )]
     pub window_time_in_milliseconds: Option<i64>,
+    /// frozen Time In Milliseconds
     #[serde(
         rename = "frozenTimeInMilliseconds",
         skip_serializing_if = "Option::is_none"
     )]
     pub frozen_time_in_milliseconds: Option<i64>,
+    /// qty Limit
     #[serde(rename = "qtyLimit", skip_serializing_if = "Option::is_none")]
     pub qty_limit: Option<String>,
+    /// delta Limit
     #[serde(rename = "deltaLimit", skip_serializing_if = "Option::is_none")]
     pub delta_limit: Option<String>,
+    /// last Trigger Time
     #[serde(rename = "lastTriggerTime", skip_serializing_if = "Option::is_none")]
     pub last_trigger_time: Option<i64>,
 }

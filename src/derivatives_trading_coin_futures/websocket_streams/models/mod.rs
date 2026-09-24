@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -65,10 +65,8 @@ pub mod kline_candlestick_streams_response;
 pub use self::kline_candlestick_streams_response::KlineCandlestickStreamsResponse;
 pub mod kline_candlestick_streams_response_k;
 pub use self::kline_candlestick_streams_response_k::KlineCandlestickStreamsResponseK;
-pub mod liquidation_order_streams_response;
-pub use self::liquidation_order_streams_response::LiquidationOrderStreamsResponse;
-pub mod listenkeyexpired;
-pub use self::listenkeyexpired::Listenkeyexpired;
+pub mod listen_key_expired;
+pub use self::listen_key_expired::ListenKeyExpired;
 pub mod margin_call;
 pub use self::margin_call::MarginCall;
 pub mod margin_call_p_inner;
@@ -81,6 +79,8 @@ pub mod mark_price_of_all_symbols_of_a_pair_response_inner;
 pub use self::mark_price_of_all_symbols_of_a_pair_response_inner::MarkPriceOfAllSymbolsOfAPairResponseInner;
 pub mod mark_price_stream_response;
 pub use self::mark_price_stream_response::MarkPriceStreamResponse;
+pub mod market_liquidation_order_streams_response;
+pub use self::market_liquidation_order_streams_response::MarketLiquidationOrderStreamsResponse;
 pub mod order_trade_update;
 pub use self::order_trade_update::OrderTradeUpdate;
 pub mod order_trade_update_o;

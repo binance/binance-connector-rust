@@ -42,7 +42,6 @@ binance-sdk = { version = "1.0.0", features = [
   "spot",
   "derivatives_trading_usds_futures",
   "margin-trading",
-  "nft",
 ] }
 ```
 
@@ -98,7 +97,7 @@ Simply enable all the corresponding features under the new dependency. For insta
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["spot", "margin-trading", "nft"] }
+binance-sdk = { version = "1.0.0", features = ["spot", "margin-trading"] }
 ```
 
 Remove the old `binance_spot_connector_rust = "1.3.0"` entry.

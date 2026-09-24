@@ -1,7 +1,7 @@
 /*
- * Binance C2C REST API
+ * C2C REST API
  *
- * OpenAPI Specification for the Binance C2C REST API
+ * Query fiat transaction history via the C2C REST API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -28,16 +28,16 @@ pub use models::*;
 #[derive(Debug, Clone)]
 pub struct RestApi {
     configuration: ConfigurationRestApi,
-    c2_c_api_client: C2CApiClient,
+    api_client: ApiClient,
 }
 
 impl RestApi {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
-        let c2_c_api_client = C2CApiClient::new(configuration.clone());
+        let api_client = ApiClient::new(configuration.clone());
 
         Self {
             configuration,
-            c2_c_api_client,
+            api_client,
         }
     }
 
@@ -115,11 +115,14 @@ impl RestApi {
     ///
     /// Get C2C Trade History
     ///
-    /// * The max interval between startTimestamp and endTimestamp is 30 days.
-    /// * If startTimestamp and endTimestamp are not sent, the recent 30 days' data will be returned.
-    /// * You can only view data from the past 6 months. To see all C2C orders, please check <https://c2c.binance.com/en/fiatOrder>
+    /// Weight(IP): 1
     ///
-    /// Weight: 1
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The max interval between `startTimestamp` and `endTimestamp` is 30 days.
+    /// - If `startTimestamp` and `endTimestamp` are not sent, the recent 30 days' data is returned.
+    /// - You can only view data from the past 6 months. For all C2C orders, check `https://c2c.binance.com/en/fiatOrder`.
     ///
     /// # Arguments
     ///
@@ -149,12 +152,12 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/c2c/rest-api/Get-C2C-Trade-History).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-c2-c/api/rest-api/~#get-c2-ctrade-history).
     ///
     pub async fn get_c2_c_trade_history(
         &self,
         params: GetC2CTradeHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetC2CTradeHistoryResponse>> {
-        self.c2_c_api_client.get_c2_c_trade_history(params).await
+        self.api_client.get_c2_c_trade_history(params).await
     }
 }

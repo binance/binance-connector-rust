@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -20,6 +20,7 @@ use serde_json::Value;
 pub struct PositionInformationV2ResponseResultInner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Position Side
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
     #[serde(rename = "positionAmt", skip_serializing_if = "Option::is_none")]
@@ -30,6 +31,7 @@ pub struct PositionInformationV2ResponseResultInner {
     pub break_even_price: Option<String>,
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
+    /// Unrealized Profit
     #[serde(rename = "unRealizedProfit", skip_serializing_if = "Option::is_none")]
     pub un_realized_profit: Option<String>,
     #[serde(rename = "liquidationPrice", skip_serializing_if = "Option::is_none")]
@@ -42,15 +44,19 @@ pub struct PositionInformationV2ResponseResultInner {
     pub margin_asset: Option<String>,
     #[serde(rename = "isolatedWallet", skip_serializing_if = "Option::is_none")]
     pub isolated_wallet: Option<String>,
+    /// Initial Margin
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// Maintainance Margin
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// Position Initial Margin
     #[serde(
         rename = "positionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub position_initial_margin: Option<String>,
+    /// Open Order Initial Margin
     #[serde(
         rename = "openOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
@@ -62,6 +68,7 @@ pub struct PositionInformationV2ResponseResultInner {
     pub bid_notional: Option<String>,
     #[serde(rename = "askNotional", skip_serializing_if = "Option::is_none")]
     pub ask_notional: Option<String>,
+    /// Update Time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

@@ -6,7 +6,7 @@ use crate::common::{
 
 /// Represents the `SimpleEarn` REST API client for interacting with the Binance `SimpleEarn` REST API.
 ///
-/// This struct provides methods to create REST API clients for the production environment.
+/// This struct provides methods to create REST API clients for production  environments.
 pub struct SimpleEarnRestApi {}
 
 impl SimpleEarnRestApi {

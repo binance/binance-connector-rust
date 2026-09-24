@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,22 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct StatisticListResponseData {
+    /// 15-minute hashrate
     #[serde(rename = "fifteenMinHashRate", skip_serializing_if = "Option::is_none")]
     pub fifteen_min_hash_rate: Option<String>,
+    /// 24H hashrate
     #[serde(rename = "dayHashRate", skip_serializing_if = "Option::is_none")]
     pub day_hash_rate: Option<String>,
+    /// Effective quantity
     #[serde(rename = "validNum", skip_serializing_if = "Option::is_none")]
     pub valid_num: Option<i64>,
+    /// Invalid quantity
     #[serde(rename = "invalidNum", skip_serializing_if = "Option::is_none")]
     pub invalid_num: Option<i64>,
+    /// Today's estimate. Keys are coin symbols (e.g. BTC, BSV, BCH), values are earning amounts as strings.
     #[serde(rename = "profitToday", skip_serializing_if = "Option::is_none")]
-    pub profit_today: Option<Box<models::StatisticListResponseDataProfitToday>>,
+    pub profit_today: Option<std::collections::HashMap<String, String>>,
+    /// Yesterday's earnings. Keys are coin symbols (e.g. BTC, BSV, BCH), values are earning amounts as strings.
     #[serde(rename = "profitYesterday", skip_serializing_if = "Option::is_none")]
-    pub profit_yesterday: Option<Box<models::StatisticListResponseDataProfitToday>>,
+    pub profit_yesterday: Option<std::collections::HashMap<String, String>>,
+    /// Mining account
     #[serde(rename = "userName", skip_serializing_if = "Option::is_none")]
     pub user_name: Option<String>,
+    /// Unit
     #[serde(rename = "unit", skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
+    /// Algorithm
     #[serde(rename = "algo", skip_serializing_if = "Option::is_none")]
     pub algo: Option<String>,
 }

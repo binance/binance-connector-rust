@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = SpotRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = AccountCommissionParams::builder("BNBUSDT".to_string()).build()?;
+    let params = AccountCommissionParams::builder("BTCUSDT".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

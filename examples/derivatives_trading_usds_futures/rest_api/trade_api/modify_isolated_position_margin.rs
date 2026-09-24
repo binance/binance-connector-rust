@@ -28,12 +28,8 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingUsdsFuturesRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = ModifyIsolatedPositionMarginParams::builder(
-        "symbol_example".to_string(),
-        dec!(1.0),
-        "r#type_example".to_string(),
-    )
-    .build()?;
+    let params =
+        ModifyIsolatedPositionMarginParams::builder("BTCUSDT".to_string(), dec!(1.0), 1).build()?;
 
     // Make the API call
     let response = rest_client

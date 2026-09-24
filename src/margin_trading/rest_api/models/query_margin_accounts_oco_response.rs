@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,22 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct QueryMarginAccountsOcoResponse {
+    /// order List Id.
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
+    /// contingency Type.
     #[serde(rename = "contingencyType", skip_serializing_if = "Option::is_none")]
     pub contingency_type: Option<String>,
+    /// list Status Type.
     #[serde(rename = "listStatusType", skip_serializing_if = "Option::is_none")]
     pub list_status_type: Option<String>,
+    /// list Order Status.
     #[serde(rename = "listOrderStatus", skip_serializing_if = "Option::is_none")]
     pub list_order_status: Option<String>,
+    /// list Client Order Id.
     #[serde(rename = "listClientOrderId", skip_serializing_if = "Option::is_none")]
     pub list_client_order_id: Option<String>,
+    /// transaction Time.
     #[serde(rename = "transactionTime", skip_serializing_if = "Option::is_none")]
     pub transaction_time: Option<i64>,
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// if isolated margin
     #[serde(rename = "isIsolated", skip_serializing_if = "Option::is_none")]
     pub is_isolated: Option<bool>,
+    /// orders list.
     #[serde(rename = "orders", skip_serializing_if = "Option::is_none")]
     pub orders: Option<Vec<models::QueryMarginAccountsOcoResponseOrdersInner>>,
 }

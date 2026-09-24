@@ -32,7 +32,7 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket API")?;
 
     // Setup the WS API parameters
-    let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), dec!(1.0)).build()?;
+    let params = OrderAmendKeepPriorityParams::builder("BNBUSDT".to_string(), dec!(1)).build()?;
 
     // Make the WS API call
     let response = connection

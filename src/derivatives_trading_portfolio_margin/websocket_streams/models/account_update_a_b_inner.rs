@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Portfolio Margin WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading Portfolio Margin WebSocket Market Streams
+ * Access account information, manage margin positions, and trade with Binance Portfolio Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,12 +18,16 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountUpdateABInner {
+    /// Asset
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    /// Wallet Balance
     #[serde(rename = "wb", skip_serializing_if = "Option::is_none")]
     pub wb: Option<String>,
+    /// Cross Wallet Balance
     #[serde(rename = "cw", skip_serializing_if = "Option::is_none")]
     pub cw: Option<String>,
+    /// Balance Change except `PnL` and Commission
     #[serde(rename = "bc", skip_serializing_if = "Option::is_none")]
     pub bc: Option<String>,
 }

@@ -30,7 +30,6 @@ async fn main() -> Result<()> {
         1,
         "questionnaire_example".to_string(),
         "beneficiary_pii_example".to_string(),
-        "signature_example".to_string(),
     )
     .build()?;
 

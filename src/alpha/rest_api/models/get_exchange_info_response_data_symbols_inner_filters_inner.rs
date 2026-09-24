@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,36 +17,52 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetExchangeInfoResponseDataSymbolsInnerFiltersInner {
+    /// Filter type.
     #[serde(rename = "filterType", skip_serializing_if = "Option::is_none")]
     pub filter_type: Option<String>,
+    /// Minimum price.
     #[serde(rename = "minPrice", skip_serializing_if = "Option::is_none")]
     pub min_price: Option<String>,
+    /// Maximum price.
     #[serde(rename = "maxPrice", skip_serializing_if = "Option::is_none")]
     pub max_price: Option<String>,
+    /// Tick size.
     #[serde(rename = "tickSize", skip_serializing_if = "Option::is_none")]
     pub tick_size: Option<String>,
+    /// Step size.
     #[serde(rename = "stepSize", skip_serializing_if = "Option::is_none")]
     pub step_size: Option<String>,
+    /// Maximum quantity.
     #[serde(rename = "maxQty", skip_serializing_if = "Option::is_none")]
     pub max_qty: Option<String>,
+    /// Minimum quantity.
     #[serde(rename = "minQty", skip_serializing_if = "Option::is_none")]
     pub min_qty: Option<String>,
+    /// Maximum allowed orders for this rule.
     #[serde(rename = "limit", skip_serializing_if = "Option::is_none")]
     pub limit: Option<i64>,
+    /// Minimum notional value.
     #[serde(rename = "minNotional", skip_serializing_if = "Option::is_none")]
     pub min_notional: Option<String>,
+    /// Maximum notional value.
     #[serde(rename = "maxNotional", skip_serializing_if = "Option::is_none")]
     pub max_notional: Option<String>,
+    /// Lower multiplier bound.
     #[serde(rename = "multiplierDown", skip_serializing_if = "Option::is_none")]
     pub multiplier_down: Option<String>,
+    /// Upper multiplier bound.
     #[serde(rename = "multiplierUp", skip_serializing_if = "Option::is_none")]
     pub multiplier_up: Option<String>,
+    /// Upper multiplier bound for bids.
     #[serde(rename = "bidMultiplierUp", skip_serializing_if = "Option::is_none")]
     pub bid_multiplier_up: Option<String>,
+    /// Upper multiplier bound for asks.
     #[serde(rename = "askMultiplierUp", skip_serializing_if = "Option::is_none")]
     pub ask_multiplier_up: Option<String>,
+    /// Lower multiplier bound for bids.
     #[serde(rename = "bidMultiplierDown", skip_serializing_if = "Option::is_none")]
     pub bid_multiplier_down: Option<String>,
+    /// Lower multiplier bound for asks.
     #[serde(rename = "askMultiplierDown", skip_serializing_if = "Option::is_none")]
     pub ask_multiplier_down: Option<String>,
 }

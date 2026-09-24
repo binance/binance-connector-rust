@@ -5,7 +5,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::wallet::{WalletRestApi, rest_api::UserUniversalTransferParams};
+use binance_sdk::wallet::{
+    WalletRestApi,
+    rest_api::{UserUniversalTransferParams, UserUniversalTransferTypeEnum},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -27,8 +30,8 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = UserUniversalTransferParams::builder(
-        "r#type_example".to_string(),
-        "asset_example".to_string(),
+        UserUniversalTransferTypeEnum::MainUmfuture,
+        "BTC".to_string(),
         dec!(1.0),
     )
     .build()?;

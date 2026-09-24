@@ -4,7 +4,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::simple_earn::{SimpleEarnRestApi, rest_api::SetLockedProductRedeemOptionParams};
+use binance_sdk::simple_earn::{
+    SimpleEarnRestApi,
+    rest_api::{SetLockedProductRedeemOptionParams, SetLockedProductRedeemOptionRedeemToEnum},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -27,7 +30,7 @@ async fn main() -> Result<()> {
     // Setup the API parameters
     let params = SetLockedProductRedeemOptionParams::builder(
         "1".to_string(),
-        "redeem_to_example".to_string(),
+        SetLockedProductRedeemOptionRedeemToEnum::Spot,
     )
     .build()?;
 

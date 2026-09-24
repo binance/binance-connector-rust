@@ -1,7 +1,7 @@
 /*
- * Binance Alpha REST API
+ * Alpha Trading REST API
  *
- * OpenAPI Specification for the Binance Alpha REST API
+ * APIs for Binance Alpha Trading.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -15,6 +15,10 @@ pub mod aggregated_trades_response;
 pub use self::aggregated_trades_response::AggregatedTradesResponse;
 pub mod aggregated_trades_response_data_inner;
 pub use self::aggregated_trades_response_data_inner::AggregatedTradesResponseDataInner;
+pub mod full_depth_response;
+pub use self::full_depth_response::FullDepthResponse;
+pub mod full_depth_response_data;
+pub use self::full_depth_response_data::FullDepthResponseData;
 pub mod get_exchange_info_response;
 pub use self::get_exchange_info_response::GetExchangeInfoResponse;
 pub mod get_exchange_info_response_data;
@@ -27,8 +31,8 @@ pub mod get_exchange_info_response_data_symbols_inner_filters_inner;
 pub use self::get_exchange_info_response_data_symbols_inner_filters_inner::GetExchangeInfoResponseDataSymbolsInnerFiltersInner;
 pub mod klines_response;
 pub use self::klines_response::KlinesResponse;
-pub mod klines_response_data_item_inner;
-pub use self::klines_response_data_item_inner::KlinesResponseDataItemInner;
+pub mod klines_response_data_inner_inner;
+pub use self::klines_response_data_inner_inner::KlinesResponseDataInnerInner;
 pub mod ticker_response;
 pub use self::ticker_response::TickerResponse;
 pub mod ticker_response_data;

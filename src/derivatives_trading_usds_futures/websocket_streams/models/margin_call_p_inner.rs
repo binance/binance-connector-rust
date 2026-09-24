@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,20 +18,28 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarginCallPInner {
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Position Side
     #[serde(rename = "ps", skip_serializing_if = "Option::is_none")]
     pub ps: Option<String>,
+    /// Position Amount
     #[serde(rename = "pa", skip_serializing_if = "Option::is_none")]
     pub pa: Option<String>,
+    /// Margin Type
     #[serde(rename = "mt", skip_serializing_if = "Option::is_none")]
     pub mt: Option<String>,
+    /// Isolated Wallet (if isolated position)
     #[serde(rename = "iw", skip_serializing_if = "Option::is_none")]
     pub iw: Option<String>,
+    /// Mark Price
     #[serde(rename = "mp", skip_serializing_if = "Option::is_none")]
     pub mp: Option<String>,
+    /// Unrealized `PnL`
     #[serde(rename = "up", skip_serializing_if = "Option::is_none")]
     pub up: Option<String>,
+    /// Maintenance Margin Required
     #[serde(rename = "mm", skip_serializing_if = "Option::is_none")]
     pub mm: Option<String>,
 }

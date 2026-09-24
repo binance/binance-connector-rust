@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,24 +17,34 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetCrossMarginTransferHistoryResponseRowsInner {
+    /// amount.
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// asset.
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// status.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// timestamp.
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
+    /// tx Id.
     #[serde(rename = "txId", skip_serializing_if = "Option::is_none")]
     pub tx_id: Option<i64>,
+    /// type.
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// `SPOT,FUTURES,FIAT,DELIVERY,MINING,ISOLATED_MARGIN,FUNDING,MOTHER_SPOT,OPTION,SUB_SPOT,SUB_MARGIN,CROSS_MARGIN`
     #[serde(rename = "transFrom", skip_serializing_if = "Option::is_none")]
     pub trans_from: Option<String>,
+    /// `SPOT,FUTURES,FIAT,DELIVERY,MINING,ISOLATED_MARGIN,FUNDING,MOTHER_SPOT,OPTION,SUB_SPOT,SUB_MARGIN,CROSS_MARGIN`
     #[serde(rename = "transTo", skip_serializing_if = "Option::is_none")]
     pub trans_to: Option<String>,
+    /// from Symbol.
     #[serde(rename = "fromSymbol", skip_serializing_if = "Option::is_none")]
     pub from_symbol: Option<String>,
+    /// to Symbol.
     #[serde(rename = "toSymbol", skip_serializing_if = "Option::is_none")]
     pub to_symbol: Option<String>,
 }

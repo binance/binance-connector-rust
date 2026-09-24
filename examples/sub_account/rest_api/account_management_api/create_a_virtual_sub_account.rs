@@ -25,8 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = SubAccountRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = CreateAVirtualSubAccountParams::builder("sub_account_string_example".to_string())
-        .build()?;
+    let params = CreateAVirtualSubAccountParams::builder("testSubAccount".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

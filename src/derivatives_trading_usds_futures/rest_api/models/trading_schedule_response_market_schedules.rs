@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,6 +21,14 @@ pub struct TradingScheduleResponseMarketSchedules {
     pub equity: Option<Box<models::TradingScheduleResponseMarketSchedulesEquity>>,
     #[serde(rename = "COMMODITY", skip_serializing_if = "Option::is_none")]
     pub commodity: Option<Box<models::TradingScheduleResponseMarketSchedulesCommodity>>,
+    #[serde(rename = "KR_EQUITY", skip_serializing_if = "Option::is_none")]
+    pub kr_equity: Option<Box<models::TradingScheduleResponseMarketSchedulesKrEquity>>,
+    #[serde(rename = "HK_EQUITY", skip_serializing_if = "Option::is_none")]
+    pub hk_equity: Option<Box<models::TradingScheduleResponseMarketSchedulesHkEquity>>,
+    #[serde(rename = "CN_EQUITY", skip_serializing_if = "Option::is_none")]
+    pub cn_equity: Option<Box<models::TradingScheduleResponseMarketSchedulesHkEquity>>,
+    #[serde(rename = "FX", skip_serializing_if = "Option::is_none")]
+    pub fx_uppercase: Option<Box<models::TradingScheduleResponseMarketSchedulesFx>>,
 }
 
 impl TradingScheduleResponseMarketSchedules {
@@ -29,6 +37,10 @@ impl TradingScheduleResponseMarketSchedules {
         TradingScheduleResponseMarketSchedules {
             equity: None,
             commodity: None,
+            kr_equity: None,
+            hk_equity: None,
+            cn_equity: None,
+            fx_uppercase: None,
         }
     }
 }

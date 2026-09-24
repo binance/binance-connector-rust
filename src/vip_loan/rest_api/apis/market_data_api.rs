@@ -1,7 +1,7 @@
 /*
- * Binance VIP Loan REST API
+ * VIP Loan REST API
  *
- * OpenAPI Specification for the Binance VIP Loan REST API
+ * Access over-collateralized loan services, manage positions, and monitor collateral via the VIP Loan API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -47,6 +47,10 @@ pub trait MarketDataApi: Send + Sync {
         &self,
         params: GetVipLoanInterestRateHistoryParams,
     ) -> anyhow::Result<RestApiResponse<models::GetVipLoanInterestRateHistoryResponse>>;
+    async fn query_vip_loan_fixed_rate_market(
+        &self,
+        params: QueryVipLoanFixedRateMarketParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>>;
 }
 
 #[derive(Debug, Clone)]
@@ -64,20 +68,21 @@ impl MarketDataApiClient {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_borrow_interest_rate`](#method.get_borrow_interest_rate).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetBorrowInterestRateParams {
-    ///
-    /// The `loan_coin` parameter.
+    /// Max 10 assets, Multiple split by ","
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "loanCoin")]
     pub loan_coin: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -86,7 +91,7 @@ impl GetBorrowInterestRateParams {
     ///
     /// Required parameters:
     ///
-    /// * `loan_coin` — String
+    /// * `loan_coin` — Max 10 assets, Multiple split by \",\"
     ///
     #[must_use]
     pub fn builder(loan_coin: String) -> GetBorrowInterestRateParamsBuilder {
@@ -97,7 +102,7 @@ impl GetBorrowInterestRateParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_collateral_asset_data`](#method.get_collateral_asset_data).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetCollateralAssetDataParams {
     ///
@@ -105,12 +110,14 @@ pub struct GetCollateralAssetDataParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "collateralCoin", default)]
     pub collateral_coin: Option<String>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -126,7 +133,7 @@ impl GetCollateralAssetDataParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_loanable_assets_data`](#method.get_loanable_assets_data).
-#[derive(Clone, Debug, Builder, Default)]
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetLoanableAssetsDataParams {
     ///
@@ -134,17 +141,20 @@ pub struct GetLoanableAssetsDataParams {
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "loanCoin", default)]
     pub loan_coin: Option<String>,
-    /// default:user's vip level
+    /// Defaults to the user's VIP level.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "vipLevel", default)]
     pub vip_level: Option<i64>,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<i64>,
 }
 
@@ -160,7 +170,7 @@ impl GetLoanableAssetsDataParams {
 ///
 /// This struct holds all of the inputs you can pass when calling
 /// [`get_vip_loan_interest_rate_history`](#method.get_vip_loan_interest_rate_history).
-#[derive(Clone, Debug, Builder)]
+#[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetVipLoanInterestRateHistoryParams {
     ///
@@ -168,34 +178,38 @@ pub struct GetVipLoanInterestRateHistoryParams {
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "coin")]
     pub coin: String,
     ///
     /// The `recv_window` parameter.
     ///
     /// This field is **required.
     #[builder(setter(into))]
+    #[serde(rename = "recvWindow")]
     pub recv_window: i64,
-    ///
-    /// The `start_time` parameter.
+    /// If both startTime and endTime are omitted, the most recent 90 days are returned.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
     pub start_time: Option<i64>,
-    ///
-    /// The `end_time` parameter.
+    /// Maximum interval between startTime and endTime is 180 days. Time is based on UTC+0.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Current querying page. Start from 1; default: 1; max: 1000
+    /// Current page number, starting from 1.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
     pub current: Option<i64>,
-    /// Default: 10; max: 100
+    /// Number of records per page.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
     pub limit: Option<i64>,
 }
 
@@ -212,6 +226,57 @@ impl GetVipLoanInterestRateHistoryParams {
         GetVipLoanInterestRateHistoryParamsBuilder::default()
             .coin(coin)
             .recv_window(recv_window)
+    }
+}
+/// Request parameters for the [`query_vip_loan_fixed_rate_market`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_vip_loan_fixed_rate_market`](#method.query_vip_loan_fixed_rate_market).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryVipLoanFixedRateMarketParams {
+    /// Loan coin
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "loanCoin")]
+    pub loan_coin: String,
+    /// Duration in days, minimum 1
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "duration", default)]
+    pub duration: Option<i64>,
+    /// Page number, default 1, minimum 1
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "current", default)]
+    pub current: Option<i64>,
+    /// Page size, default 10, range [1, 100]
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "size", default)]
+    pub size: Option<i64>,
+    /// The value cannot be greater than `60000`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryVipLoanFixedRateMarketParams {
+    /// Create a builder for [`query_vip_loan_fixed_rate_market`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `loan_coin` — Loan coin
+    ///
+    #[must_use]
+    pub fn builder(loan_coin: String) -> QueryVipLoanFixedRateMarketParamsBuilder {
+        QueryVipLoanFixedRateMarketParamsBuilder::default().loan_coin(loan_coin)
     }
 }
 
@@ -379,6 +444,55 @@ impl MarketDataApi for MarketDataApiClient {
         )
         .await
     }
+
+    async fn query_vip_loan_fixed_rate_market(
+        &self,
+        params: QueryVipLoanFixedRateMarketParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>> {
+        let QueryVipLoanFixedRateMarketParams {
+            loan_coin,
+            duration,
+            current,
+            size,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("loanCoin".to_string(), json!(loan_coin));
+
+        if let Some(rw) = duration {
+            query_params.insert("duration".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = current {
+            query_params.insert("current".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = size {
+            query_params.insert("size".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::QueryVipLoanFixedRateMarketResponse>(
+            &self.configuration,
+            "/sapi/v1/loan/vip/fixed/market",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
 }
 
 #[cfg(all(test, feature = "vip_loan"))]
@@ -426,7 +540,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BUSD","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233578000},{"asset":"BTC","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233562000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BUSD","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233578000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetBorrowInterestRateResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetBorrowInterestRateResponseInner>");
@@ -453,7 +567,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BUSD","_1stCollateralRatio":"100%","_1stCollateralRange":"1-10000000","_2ndCollateralRatio":"80%","_2ndCollateralRange":"10000000-100000000","_3rdCollateralRatio":"60%","_3rdCollateralRange":"100000000-1000000000","_4thCollateralRatio":"0%","_4thCollateralRange":">10000000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BUSD","_1stCollateralRatio":"100%","_1stCollateralRange":"1-10000000","_2ndCollateralRatio":"80%","_2ndCollateralRange":"10000000-100000000","_3rdCollateralRatio":"60%","_3rdCollateralRange":"100000000-1000000000","_4thCollateralRatio":"0%","_4thCollateralRange":">10000000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetCollateralAssetDataResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetCollateralAssetDataResponse");
@@ -480,7 +594,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","_flexibleDailyInterestRate":"0.001503","_flexibleYearlyInterestRate":"0.548595","_30dDailyInterestRate":"0.000136","_30dYearlyInterestRate":"0.03450","_60dDailyInterestRate":"0.000145","_60dYearlyInterestRate":"0.04103","minLimit":"100","maxLimit":"1000000","vipLevel":1}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","_flexibleDailyInterestRate":"0.001503","_flexibleYearlyInterestRate":"0.548595","_30dDailyInterestRate":"0.000136","_30dYearlyInterestRate":"0.03450","_60dDailyInterestRate":"0.000145","_60dYearlyInterestRate":"0.04103","minLimit":"100","maxLimit":"1000000","vipLevel":1}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetLoanableAssetsDataResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetLoanableAssetsDataResponse");
@@ -508,10 +622,37 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::GetVipLoanInterestRateHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::GetVipLoanInterestRateHistoryResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_vip_loan_fixed_rate_market(
+            &self,
+            _params: QueryVipLoanFixedRateMarketParams,
+        ) -> anyhow::Result<RestApiResponse<models::QueryVipLoanFixedRateMarketResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":25,"rows":[{"requestId":1234567890,"requestNo":100001,"coin":"USDT","interestRate":"0.05","duration":30,"minimumAmount":"100","availableAmount":"1000000","estimatedInterest":"4109.59"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::QueryVipLoanFixedRateMarketResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::QueryVipLoanFixedRateMarketResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -529,9 +670,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetBorrowInterestRateParams::builder("loan_coin_example".to_string(),).build().unwrap();
+            let params = GetBorrowInterestRateParams::builder("BTC".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BUSD","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233578000},{"asset":"BTC","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233562000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BUSD","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233578000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetBorrowInterestRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetBorrowInterestRateResponseInner>");
 
             let resp = client.get_borrow_interest_rate(params).await.expect("Expected a response");
@@ -546,9 +687,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetBorrowInterestRateParams::builder("loan_coin_example".to_string(),).recv_window(5000).build().unwrap();
+            let params = GetBorrowInterestRateParams::builder("BTC".to_string(),).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BUSD","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233578000},{"asset":"BTC","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233562000}]"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BUSD","flexibleDailyInterestRate":"0.001503","flexibleYearlyInterestRate":"0.548595","time":1577233578000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetBorrowInterestRateResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetBorrowInterestRateResponseInner>");
 
             let resp = client.get_borrow_interest_rate(params).await.expect("Expected a response");
@@ -563,7 +704,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params = GetBorrowInterestRateParams::builder("loan_coin_example".to_string())
+            let params = GetBorrowInterestRateParams::builder("BTC".to_string())
                 .build()
                 .unwrap();
 
@@ -583,7 +724,7 @@ mod tests {
 
             let params = GetCollateralAssetDataParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BUSD","_1stCollateralRatio":"100%","_1stCollateralRange":"1-10000000","_2ndCollateralRatio":"80%","_2ndCollateralRange":"10000000-100000000","_3rdCollateralRatio":"60%","_3rdCollateralRange":"100000000-1000000000","_4thCollateralRatio":"0%","_4thCollateralRange":">10000000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BUSD","_1stCollateralRatio":"100%","_1stCollateralRange":"1-10000000","_2ndCollateralRatio":"80%","_2ndCollateralRange":"10000000-100000000","_3rdCollateralRatio":"60%","_3rdCollateralRange":"100000000-1000000000","_4thCollateralRatio":"0%","_4thCollateralRange":">10000000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCollateralAssetDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCollateralAssetDataResponse");
 
             let resp = client.get_collateral_asset_data(params).await.expect("Expected a response");
@@ -598,9 +739,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetCollateralAssetDataParams::builder().collateral_coin("collateral_coin_example".to_string()).recv_window(5000).build().unwrap();
+            let params = GetCollateralAssetDataParams::builder().collateral_coin("BUSD".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BUSD","_1stCollateralRatio":"100%","_1stCollateralRange":"1-10000000","_2ndCollateralRatio":"80%","_2ndCollateralRange":"10000000-100000000","_3rdCollateralRatio":"60%","_3rdCollateralRange":"100000000-1000000000","_4thCollateralRatio":"0%","_4thCollateralRange":">10000000000"}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"collateralCoin":"BUSD","_1stCollateralRatio":"100%","_1stCollateralRange":"1-10000000","_2ndCollateralRatio":"80%","_2ndCollateralRange":"10000000-100000000","_3rdCollateralRatio":"60%","_3rdCollateralRange":"100000000-1000000000","_4thCollateralRatio":"0%","_4thCollateralRange":">10000000000"}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetCollateralAssetDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCollateralAssetDataResponse");
 
             let resp = client.get_collateral_asset_data(params).await.expect("Expected a response");
@@ -633,7 +774,7 @@ mod tests {
 
             let params = GetLoanableAssetsDataParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","_flexibleDailyInterestRate":"0.001503","_flexibleYearlyInterestRate":"0.548595","_30dDailyInterestRate":"0.000136","_30dYearlyInterestRate":"0.03450","_60dDailyInterestRate":"0.000145","_60dYearlyInterestRate":"0.04103","minLimit":"100","maxLimit":"1000000","vipLevel":1}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","_flexibleDailyInterestRate":"0.001503","_flexibleYearlyInterestRate":"0.548595","_30dDailyInterestRate":"0.000136","_30dYearlyInterestRate":"0.03450","_60dDailyInterestRate":"0.000145","_60dYearlyInterestRate":"0.04103","minLimit":"100","maxLimit":"1000000","vipLevel":1}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLoanableAssetsDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLoanableAssetsDataResponse");
 
             let resp = client.get_loanable_assets_data(params).await.expect("Expected a response");
@@ -648,9 +789,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetLoanableAssetsDataParams::builder().loan_coin("loan_coin_example".to_string()).vip_level(1).recv_window(5000).build().unwrap();
+            let params = GetLoanableAssetsDataParams::builder().loan_coin("BUSD".to_string()).vip_level(1).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","_flexibleDailyInterestRate":"0.001503","_flexibleYearlyInterestRate":"0.548595","_30dDailyInterestRate":"0.000136","_30dYearlyInterestRate":"0.03450","_60dDailyInterestRate":"0.000145","_60dYearlyInterestRate":"0.04103","minLimit":"100","maxLimit":"1000000","vipLevel":1}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"loanCoin":"BUSD","_flexibleDailyInterestRate":"0.001503","_flexibleYearlyInterestRate":"0.548595","_30dDailyInterestRate":"0.000136","_30dYearlyInterestRate":"0.03450","_60dDailyInterestRate":"0.000145","_60dYearlyInterestRate":"0.04103","minLimit":"100","maxLimit":"1000000","vipLevel":1}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetLoanableAssetsDataResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetLoanableAssetsDataResponse");
 
             let resp = client.get_loanable_assets_data(params).await.expect("Expected a response");
@@ -681,9 +822,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetVipLoanInterestRateHistoryParams::builder("coin_example".to_string(),5000,).build().unwrap();
+            let params = GetVipLoanInterestRateHistoryParams::builder("USDT".to_string(),5000,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetVipLoanInterestRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanInterestRateHistoryResponse");
 
             let resp = client.get_vip_loan_interest_rate_history(params).await.expect("Expected a response");
@@ -698,9 +839,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = GetVipLoanInterestRateHistoryParams::builder("coin_example".to_string(),5000,).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).build().unwrap();
+            let params = GetVipLoanInterestRateHistoryParams::builder("USDT".to_string(),5000,).start_time(1623319461670).end_time(1641782889000).current(1).limit(10).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":1}"#).unwrap();
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"coin":"USDT","annualizedInterestRate":"0.0647","time":1575018510000}],"total":1}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::GetVipLoanInterestRateHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetVipLoanInterestRateHistoryResponse");
 
             let resp = client.get_vip_loan_interest_rate_history(params).await.expect("Expected a response");
@@ -715,12 +856,63 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: true };
 
-            let params =
-                GetVipLoanInterestRateHistoryParams::builder("coin_example".to_string(), 5000)
-                    .build()
-                    .unwrap();
+            let params = GetVipLoanInterestRateHistoryParams::builder("USDT".to_string(), 5000)
+                .build()
+                .unwrap();
 
             match client.get_vip_loan_interest_rate_history(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_vip_loan_fixed_rate_market_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = QueryVipLoanFixedRateMarketParams::builder("USDT".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":25,"rows":[{"requestId":1234567890,"requestNo":100001,"coin":"USDT","interestRate":"0.05","duration":30,"minimumAmount":"100","availableAmount":"1000000","estimatedInterest":"4109.59"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::QueryVipLoanFixedRateMarketResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryVipLoanFixedRateMarketResponse");
+
+            let resp = client.query_vip_loan_fixed_rate_market(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_vip_loan_fixed_rate_market_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+            let params = QueryVipLoanFixedRateMarketParams::builder("USDT".to_string(),).duration(30).current(1).size(10).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"total":25,"rows":[{"requestId":1234567890,"requestNo":100001,"coin":"USDT","interestRate":"0.05","duration":30,"minimumAmount":"100","availableAmount":"1000000","estimatedInterest":"4109.59"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::QueryVipLoanFixedRateMarketResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryVipLoanFixedRateMarketResponse");
+
+            let resp = client.query_vip_loan_fixed_rate_market(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_vip_loan_fixed_rate_market_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            let params = QueryVipLoanFixedRateMarketParams::builder("USDT".to_string())
+                .build()
+                .unwrap();
+
+            match client.query_vip_loan_fixed_rate_market(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

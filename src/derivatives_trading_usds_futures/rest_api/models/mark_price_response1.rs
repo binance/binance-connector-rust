@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,23 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarkPriceResponse1 {
+    /// Symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// mark price
     #[serde(rename = "markPrice", skip_serializing_if = "Option::is_none")]
     pub mark_price: Option<String>,
+    /// index price
     #[serde(rename = "indexPrice", skip_serializing_if = "Option::is_none")]
     pub index_price: Option<String>,
+    /// Estimated Settle Price, only useful in the last hour before the settlement starts.
     #[serde(
         rename = "estimatedSettlePrice",
         skip_serializing_if = "Option::is_none"
     )]
     pub estimated_settle_price: Option<String>,
+    /// This is the Latest funding rate
     #[serde(rename = "lastFundingRate", skip_serializing_if = "Option::is_none")]
     pub last_funding_rate: Option<String>,
+    /// Interest Rate.
     #[serde(rename = "interestRate", skip_serializing_if = "Option::is_none")]
     pub interest_rate: Option<String>,
+    /// Next Funding Time.
     #[serde(rename = "nextFundingTime", skip_serializing_if = "Option::is_none")]
     pub next_funding_time: Option<i64>,
+    /// Time.
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
 }

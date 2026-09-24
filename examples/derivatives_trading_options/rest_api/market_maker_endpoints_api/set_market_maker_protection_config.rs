@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use rust_decimal::prelude::*;
 use std::env;
 use tracing::info;
 
@@ -27,7 +28,14 @@ async fn main() -> Result<()> {
     let rest_client = DerivativesTradingOptionsRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = SetMarketMakerProtectionConfigParams::default();
+    let params = SetMarketMakerProtectionConfigParams::builder(
+        "BTCUSDT".to_string(),
+        1000,
+        1000,
+        dec!(1.0),
+        dec!(1.0),
+    )
+    .build()?;
 
     // Make the API call
     let response = rest_client

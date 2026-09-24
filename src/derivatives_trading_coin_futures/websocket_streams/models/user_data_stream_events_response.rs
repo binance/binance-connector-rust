@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -25,14 +25,14 @@ pub enum UserDataStreamEventsResponse {
     AccountUpdate(Box<models::AccountUpdate>),
     #[serde(rename = "GRID_UPDATE")]
     GridUpdate(Box<models::GridUpdate>),
+    #[serde(rename = "listenKeyExpired")]
+    ListenKeyExpired(Box<models::ListenKeyExpired>),
     #[serde(rename = "MARGIN_CALL")]
     MarginCall(Box<models::MarginCall>),
     #[serde(rename = "ORDER_TRADE_UPDATE")]
     OrderTradeUpdate(Box<models::OrderTradeUpdate>),
     #[serde(rename = "STRATEGY_UPDATE")]
     StrategyUpdate(Box<models::StrategyUpdate>),
-    #[serde(rename = "listenKeyExpired")]
-    ListenKeyExpired(Box<models::Listenkeyexpired>),
     Other(serde_json::Value),
 }
 
@@ -71,6 +71,13 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 Ok(UserDataStreamEventsResponse::GridUpdate(Box::new(payload)))
             }
 
+            "listenKeyExpired" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
+                    payload,
+                )))
+            }
+
             "MARGIN_CALL" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::MarginCall(Box::new(payload)))
@@ -86,13 +93,6 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
             "STRATEGY_UPDATE" => {
                 let payload = serde_json::from_value(v)?;
                 Ok(UserDataStreamEventsResponse::StrategyUpdate(Box::new(
-                    payload,
-                )))
-            }
-
-            "listenKeyExpired" => {
-                let payload = serde_json::from_value(v)?;
-                Ok(UserDataStreamEventsResponse::ListenKeyExpired(Box::new(
                     payload,
                 )))
             }

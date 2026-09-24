@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = MarginAccountNewOcoParams::builder(
-        "symbol_example".to_string(),
+        "LTCBTC".to_string(),
         MarginAccountNewOcoSideEnum::Buy,
         dec!(1.0),
         dec!(1.0),

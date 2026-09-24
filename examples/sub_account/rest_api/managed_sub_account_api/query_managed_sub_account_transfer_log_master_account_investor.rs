@@ -28,11 +28,11 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = QueryManagedSubAccountTransferLogMasterAccountInvestorParams::builder(
-        "sub-account-email@email.com".to_string(),
+        "abc@test.com".to_string(),
         1623319461670,
         1641782889000,
-        789,
-        789,
+        1,
+        1,
     )
     .build()?;
 

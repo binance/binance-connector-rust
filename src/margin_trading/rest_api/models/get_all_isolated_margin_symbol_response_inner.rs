@@ -1,7 +1,7 @@
 /*
- * Binance Margin Trading REST API
+ * Margin REST API
  *
- * OpenAPI Specification for the Binance Margin Trading REST API
+ * Access account information, borrow and repay assets, and trade with Binance Margin.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,16 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetAllIsolatedMarginSymbolResponseInner {
+    /// base.
     #[serde(rename = "base", skip_serializing_if = "Option::is_none")]
     pub base: Option<String>,
+    /// is Buy Allowed.
     #[serde(rename = "isBuyAllowed", skip_serializing_if = "Option::is_none")]
     pub is_buy_allowed: Option<bool>,
+    /// is Margin Trade.
     #[serde(rename = "isMarginTrade", skip_serializing_if = "Option::is_none")]
     pub is_margin_trade: Option<bool>,
+    /// is Sell Allowed.
     #[serde(rename = "isSellAllowed", skip_serializing_if = "Option::is_none")]
     pub is_sell_allowed: Option<bool>,
+    /// quote.
     #[serde(rename = "quote", skip_serializing_if = "Option::is_none")]
     pub quote: Option<String>,
+    /// symbol.
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
 }

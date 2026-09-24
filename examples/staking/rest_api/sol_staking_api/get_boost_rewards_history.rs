@@ -4,7 +4,10 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::staking::{StakingRestApi, rest_api::GetBoostRewardsHistoryParams};
+use binance_sdk::staking::{
+    StakingRestApi,
+    rest_api::{GetBoostRewardsHistoryParams, GetBoostRewardsHistoryTypeEnum},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -25,7 +28,8 @@ async fn main() -> Result<()> {
     let rest_client = StakingRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = GetBoostRewardsHistoryParams::builder("CLAIM".to_string()).build()?;
+    let params =
+        GetBoostRewardsHistoryParams::builder(GetBoostRewardsHistoryTypeEnum::Claim).build()?;
 
     // Make the API call
     let response = rest_client

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures REST API
+ * Futures (USDⓈ-M) REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures REST API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,31 +21,35 @@ pub struct PlaceMultipleOrdersBatchOrdersParameterInner {
     pub symbol: Option<String>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<SideEnum>,
+    /// Default `BOTH` for One-way Mode; `LONG` or `SHORT` for Hedge Mode.
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<PositionSideEnum>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<String>,
+    pub r#type: Option<TypeEnum>,
     #[serde(rename = "timeInForce", skip_serializing_if = "Option::is_none")]
     pub time_in_force: Option<TimeInForceEnum>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
-    pub quantity: Option<String>,
+    pub quantity: Option<rust_decimal::Decimal>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
-    pub reduce_only: Option<String>,
+    pub reduce_only: Option<ReduceOnlyEnum>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
-    pub price: Option<String>,
+    pub price: Option<rust_decimal::Decimal>,
     #[serde(rename = "newClientOrderId", skip_serializing_if = "Option::is_none")]
     pub new_client_order_id: Option<String>,
     #[serde(rename = "newOrderRespType", skip_serializing_if = "Option::is_none")]
     pub new_order_resp_type: Option<NewOrderRespTypeEnum>,
+    /// only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Can't be passed together with price
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<PriceMatchEnum>,
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default NONE
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<SelfTradePreventionModeEnum>,
+    /// Auto-cancel time for `GTD` orders.
     #[serde(rename = "goodTillDate", skip_serializing_if = "Option::is_none")]
-    pub good_till_date: Option<String>,
+    pub good_till_date: Option<i64>,
 }
 
 impl PlaceMultipleOrdersBatchOrdersParameterInner {
@@ -82,7 +86,7 @@ impl Default for SideEnum {
         Self::Buy
     }
 }
-///
+/// Default `BOTH` for One-way Mode; `LONG` or `SHORT` for Hedge Mode.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PositionSideEnum {
     #[serde(rename = "BOTH")]
@@ -96,6 +100,30 @@ pub enum PositionSideEnum {
 impl Default for PositionSideEnum {
     fn default() -> PositionSideEnum {
         Self::Both
+    }
+}
+///
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum TypeEnum {
+    #[serde(rename = "LIMIT")]
+    Limit,
+    #[serde(rename = "MARKET")]
+    Market,
+    #[serde(rename = "STOP")]
+    Stop,
+    #[serde(rename = "STOP_MARKET")]
+    StopMarket,
+    #[serde(rename = "TAKE_PROFIT")]
+    TakeProfit,
+    #[serde(rename = "TAKE_PROFIT_MARKET")]
+    TakeProfitMarket,
+    #[serde(rename = "TRAILING_STOP_MARKET")]
+    TrailingStopMarket,
+}
+
+impl Default for TypeEnum {
+    fn default() -> TypeEnum {
+        Self::Limit
     }
 }
 ///
@@ -122,6 +150,20 @@ impl Default for TimeInForceEnum {
 }
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+pub enum ReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl Default for ReduceOnlyEnum {
+    fn default() -> ReduceOnlyEnum {
+        Self::True
+    }
+}
+///
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum NewOrderRespTypeEnum {
     #[serde(rename = "ACK")]
     Ack,
@@ -134,11 +176,9 @@ impl Default for NewOrderRespTypeEnum {
         Self::Ack
     }
 }
-///
+/// only avaliable for `LIMIT/STOP/TAKE_PROFIT` order; Can't be passed together with price
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum PriceMatchEnum {
-    #[serde(rename = "NONE")]
-    None,
     #[serde(rename = "OPPONENT")]
     Opponent,
     #[serde(rename = "OPPONENT_5")]
@@ -159,12 +199,14 @@ pub enum PriceMatchEnum {
 
 impl Default for PriceMatchEnum {
     fn default() -> PriceMatchEnum {
-        Self::None
+        Self::Opponent
     }
 }
-///
+/// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default NONE
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SelfTradePreventionModeEnum {
+    #[serde(rename = "NONE")]
+    None,
     #[serde(rename = "EXPIRE_TAKER")]
     ExpireTaker,
     #[serde(rename = "EXPIRE_BOTH")]
@@ -175,6 +217,6 @@ pub enum SelfTradePreventionModeEnum {
 
 impl Default for SelfTradePreventionModeEnum {
     fn default() -> SelfTradePreventionModeEnum {
-        Self::ExpireTaker
+        Self::None
     }
 }

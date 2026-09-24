@@ -28,8 +28,7 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params =
-        GetFlexibleLoanInterestRateHistoryParams::builder("coin_example".to_string(), 5000)
-            .build()?;
+        GetFlexibleLoanInterestRateHistoryParams::builder("USDT".to_string(), 5000).build()?;
 
     // Make the API call
     let response = rest_client

@@ -5,7 +5,13 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
-use binance_sdk::sub_account::{SubAccountRestApi, rest_api::UniversalTransferParams};
+use binance_sdk::sub_account::{
+    SubAccountRestApi,
+    rest_api::{
+        UniversalTransferFromAccountTypeEnum, UniversalTransferParams,
+        UniversalTransferToAccountTypeEnum,
+    },
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -27,9 +33,9 @@ async fn main() -> Result<()> {
 
     // Setup the API parameters
     let params = UniversalTransferParams::builder(
-        "from_account_type_example".to_string(),
-        "to_account_type_example".to_string(),
-        "asset_example".to_string(),
+        UniversalTransferFromAccountTypeEnum::Spot,
+        UniversalTransferToAccountTypeEnum::Spot,
+        "BTC".to_string(),
         dec!(1.0),
     )
     .build()?;

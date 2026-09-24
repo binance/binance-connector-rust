@@ -2,7 +2,10 @@ use anyhow::{Context, Result};
 use std::env;
 use tracing::info;
 
-use binance_sdk::alpha::{AlphaRestApi, rest_api::KlinesParams};
+use binance_sdk::alpha::{
+    AlphaRestApi,
+    rest_api::{KlinesIntervalEnum, KlinesParams},
+};
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::logger;
 
@@ -25,9 +28,8 @@ async fn main() -> Result<()> {
     let rest_client = AlphaRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params =
-        KlinesParams::builder("symbol_example".to_string(), "interval_example".to_string())
-            .build()?;
+    let params = KlinesParams::builder("ALPHA_175USDT".to_string(), KlinesIntervalEnum::Interval1s)
+        .build()?;
 
     // Make the API call
     let response = rest_client

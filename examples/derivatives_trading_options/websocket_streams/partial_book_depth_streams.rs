@@ -4,7 +4,11 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationWebsocketStreams;
 use binance_sdk::derivatives_trading_options::{
-    DerivativesTradingOptionsWsStreams, websocket_streams::PartialBookDepthStreamsParams,
+    DerivativesTradingOptionsWsStreams,
+    websocket_streams::{
+        PartialBookDepthStreamsLevelEnum, PartialBookDepthStreamsParams,
+        PartialBookDepthStreamsUpdateSpeedEnum,
+    },
 };
 use binance_sdk::logger;
 
@@ -26,9 +30,12 @@ async fn main() -> Result<()> {
         .context("Failed to connect to WebSocket Streams")?;
 
     // Setup the stream parameters
-    let params =
-        PartialBookDepthStreamsParams::builder("btcusdt".to_string(), "example_value".to_string())
-            .build()?;
+    let params = PartialBookDepthStreamsParams::builder(
+        "btcusdt".to_string(),
+        PartialBookDepthStreamsLevelEnum::Level5,
+        PartialBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,
+    )
+    .build()?;
 
     // Subscribe to the stream
     let stream = connection

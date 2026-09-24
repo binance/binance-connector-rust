@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket API
+ * Futures (COIN-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket API
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -18,36 +18,49 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountInformationResponseResultAssetsInner {
+    /// asset name
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// total wallet balance
     #[serde(rename = "walletBalance", skip_serializing_if = "Option::is_none")]
     pub wallet_balance: Option<String>,
+    /// unrealized profit or loss
     #[serde(rename = "unrealizedProfit", skip_serializing_if = "Option::is_none")]
     pub unrealized_profit: Option<String>,
+    /// margin balance
     #[serde(rename = "marginBalance", skip_serializing_if = "Option::is_none")]
     pub margin_balance: Option<String>,
+    /// maintenance margin
     #[serde(rename = "maintMargin", skip_serializing_if = "Option::is_none")]
     pub maint_margin: Option<String>,
+    /// total intial margin required with the latest mark price
     #[serde(rename = "initialMargin", skip_serializing_if = "Option::is_none")]
     pub initial_margin: Option<String>,
+    /// positions margin required with the latest mark price
     #[serde(
         rename = "positionInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub position_initial_margin: Option<String>,
+    /// open orders intial margin required with the latest mark price
     #[serde(
         rename = "openOrderInitialMargin",
         skip_serializing_if = "Option::is_none"
     )]
     pub open_order_initial_margin: Option<String>,
+    /// maximum amount for transfer out
     #[serde(rename = "maxWithdrawAmount", skip_serializing_if = "Option::is_none")]
     pub max_withdraw_amount: Option<String>,
+    /// wallet balance for crossed margin
     #[serde(rename = "crossWalletBalance", skip_serializing_if = "Option::is_none")]
     pub cross_wallet_balance: Option<String>,
+    /// total unrealized profit or loss of crossed positions
     #[serde(rename = "crossUnPnl", skip_serializing_if = "Option::is_none")]
     pub cross_un_pnl: Option<String>,
+    /// available margin balance
     #[serde(rename = "availableBalance", skip_serializing_if = "Option::is_none")]
     pub available_balance: Option<String>,
+    /// update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

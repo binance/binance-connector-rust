@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading Options REST API
+ * Options REST API
  *
- * OpenAPI Specification for the Binance Derivatives Trading Options REST API
+ * Access market data, manage accounts, and trade Binance Options.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,14 +17,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct HistoricalExerciseRecordsResponseInner {
+    /// symbol
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// strike price
     #[serde(rename = "strikePrice", skip_serializing_if = "Option::is_none")]
     pub strike_price: Option<String>,
+    /// real strike price
     #[serde(rename = "realStrikePrice", skip_serializing_if = "Option::is_none")]
     pub real_strike_price: Option<String>,
+    /// Exercise time
     #[serde(rename = "expiryDate", skip_serializing_if = "Option::is_none")]
     pub expiry_date: Option<i64>,
+    /// strike result
     #[serde(rename = "strikeResult", skip_serializing_if = "Option::is_none")]
     pub strike_result: Option<String>,
 }

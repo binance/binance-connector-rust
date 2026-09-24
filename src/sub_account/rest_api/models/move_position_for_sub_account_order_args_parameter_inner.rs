@@ -1,7 +1,7 @@
 /*
- * Binance Sub Account REST API
+ * Sub Account REST API
  *
- * OpenAPI Specification for the Binance Sub Account REST API
+ * Create and manage sub-accounts, control permissions, and transfer assets via the Sub Account API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -21,6 +21,7 @@ pub struct MovePositionForSubAccountOrderArgsParameterInner {
     pub symbol: Option<String>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
     pub quantity: Option<rust_decimal::Decimal>,
+    /// Required when productType=UM. Optional and ignored when productType=OPTION (the response returns positionSide as null).
     #[serde(rename = "positionSide", skip_serializing_if = "Option::is_none")]
     pub position_side: Option<String>,
 }

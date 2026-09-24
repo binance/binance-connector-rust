@@ -1,7 +1,7 @@
 /*
- * Binance Gift Card REST API
+ * Gift Card REST API
  *
- * OpenAPI Specification for the Binance Gift Card REST API
+ * Create, redeem, and check the value of Binance crypto gift cards.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -111,19 +111,24 @@ impl RestApi {
         .await
     }
 
-    /// Create a dual-token gift card(fixed value, discount feature)(TRADE)
+    /// Create a dual-token gift card (fixed value, discount feature) (TRADE)
     ///
-    /// * This API is for creating a dual-token ( stablecoin-denominated) Binance Gift Card. You may create a gift card using USDT as baseToken, that is redeemable to another designated token (faceToken). For example, you can create a fixed-value BTC gift card and pay with 100 USDT plus minting fee. This gift card can keep the value fixed at 100 USDT before redemption, and will be redeemable to BTC equivalent to 100 USDT upon redemption.
-    /// * Once successfully created, the amount of baseToken (e.g. USDT) in the fixed-value gift card along with the fee would be deducted from your funding wallet.
+    /// * This API is for creating a dual-token ( stablecoin-denominated) Binance Gift Card. You may create a gift card
+    /// using USDT as baseToken, that is redeemable to another designated token (faceToken). For example, you can create
+    /// a fixed-value BTC gift card and pay with 100 USDT plus minting fee. This gift card can keep the value fixed at
+    /// 100 USDT before redemption, and will be redeemable to BTC equivalent to 100 USDT upon redemption.
     ///
-    ///
+    /// * Once successfully created, the amount of baseToken (e.g. USDT) in the fixed-value gift card along with the fee
+    /// would be deducted from your funding wallet.
     /// * To get started with, please make sure:
     /// * You have a Binance account
     /// * You have passed KYB
     /// * You have a sufﬁcient balance(Gift Card amount and fee amount) in your Binance funding wallet
     /// * You need Enable Withdrawals for the API Key which requests this endpoint.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
     ///
     /// # Arguments
     ///
@@ -153,7 +158,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/gift_card/market-data/Create-a-dual-token-gift-card).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-gift-card/api/rest-api/market-data#create-adual-token-gift-card).
     ///
     pub async fn create_a_dual_token_gift_card(
         &self,
@@ -169,13 +174,14 @@ impl RestApi {
     /// This API is for creating a Binance Gift Card.
     ///
     /// To get started with, please make sure:
-    ///
     /// * You have a Binance account
     /// * You have passed KYB
     /// * You have a sufﬁcient balance(Gift Card amount and fee amount) in your Binance funding wallet
     /// * You need `Enable Withdrawals` for the API Key which requests this endpoint.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -205,7 +211,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/gift_card/market-data/Create-a-single-token-gift-card).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-gift-card/api/rest-api/market-data#create-asingle-token-gift-card).
     ///
     pub async fn create_a_single_token_gift_card(
         &self,
@@ -216,14 +222,16 @@ impl RestApi {
             .await
     }
 
-    /// Fetch RSA Public `Key(USER_DATA)`
+    /// Fetch RSA Public Key (`USER_DATA`)
     ///
     /// This API is for fetching the RSA Public Key.
     /// This RSA Public key will be used to encrypt the card code.
     ///
     /// **Please note that the RSA Public key fetched is valid only for the current day.**
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -253,7 +261,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/gift_card/market-data/Fetch-RSA-Public-Key).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-gift-card/api/rest-api/market-data#fetch-rsa-public-key).
     ///
     pub async fn fetch_rsa_public_key(
         &self,
@@ -264,11 +272,14 @@ impl RestApi {
             .await
     }
 
-    /// Fetch Token `Limit(USER_DATA)`
+    /// Fetch Token Limit (`USER_DATA`)
     ///
-    /// This API is to help you verify which tokens are available for you to create Stablecoin-Denominated gift cards as mentioned in section 2 and its’ limitation.
+    /// This API is to help you verify which tokens are available for you to create Stablecoin-Denominated gift cards as
+    /// mentioned in section 2 and its’ limitation.
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -298,7 +309,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/gift_card/market-data/Fetch-Token-Limit).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-gift-card/api/rest-api/market-data#fetch-token-limit).
     ///
     pub async fn fetch_token_limit(
         &self,
@@ -307,21 +318,21 @@ impl RestApi {
         self.market_data_api_client.fetch_token_limit(params).await
     }
 
-    /// Redeem a Binance Gift `Card(USER_DATA)`
+    /// Redeem a Binance Gift Card (`USER_DATA`)
     ///
-    /// This API is for redeeming a Binance Gift Card
-    /// Once redeemed, the coins will be deposited in your funding wallet.
+    /// This API is for redeeming a Binance Gift Card. Once redeemed, the coins will be deposited in your funding wallet.
     ///
-    /// * Parameter code can be sent in two formats:
-    /// * Plaintext
-    /// * Encrypted
+    /// Weight(IP): 1
     ///
-    /// * Sending code in Encrypted format provides more security than sending it as a plaintext. To send card code in encrypted format the following steps must be followed:
-    /// * Fetch RSA public key from api stated below.
-    /// * Use the below algorithm to encrypt the card code using the RSA public key fetched above: `RSA/ECB/OAEPWithSHA-256AndMGF1Padding`
-    /// **A sample code snippet (JAVA) is stated below for reference, the same approach can be used for different languages like C#, PERL, PYTHON, SHELL etc.:**
+    /// Security Type: `USER_DATA`
     ///
-    /// Weight: 1
+    /// Notes:
+    /// - Parameter `code` can be sent in two formats: `Plaintext` and `Encrypted`.
+    /// - Sending `code` in encrypted format is more secure than plaintext.
+    /// - To send encrypted `code`:
+    /// - Fetch RSA public key from `GET /sapi/v1/giftcard/cryptography/rsa-public-key`.
+    /// - Encrypt card code using `RSA/ECB/OAEPWithSHA-256AndMGF1Padding`.
+    /// - If you enter the wrong redemption code 5 times within 24 hours, you will no longer be able to redeem any Binance Gift Cards that day.
     ///
     /// # Arguments
     ///
@@ -351,7 +362,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/gift_card/market-data/Redeem-a-Binance-Gift-Card).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-gift-card/api/rest-api/market-data#redeem-abinance-gift-card).
     ///
     pub async fn redeem_a_binance_gift_card(
         &self,
@@ -362,13 +373,16 @@ impl RestApi {
             .await
     }
 
-    /// Verify Binance Gift Card by Gift Card `Number(USER_DATA)`
+    /// Verify Binance Gift Card by Gift Card Number (`USER_DATA`)
     ///
     /// This API is for verifying whether the Binance Gift Card is valid or not by entering Gift Card Number.
     ///
-    /// **Please note that if you enter the wrong Gift Card Number 5 times within an hour, you will no longer be able to verify any Gift Card Number for that hour.**
+    /// **Please note that if you enter the wrong Gift Card Number 5 times within an hour, you will no longer be able to
+    /// verify any Gift Card Number for that hour.**
     ///
-    /// Weight: 1
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
     ///
     /// # Arguments
     ///
@@ -398,7 +412,7 @@ impl RestApi {
     ///   - `BadRequestError`
     ///
     ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/docs/gift_card/market-data/Verify-Binance-Gift-Card-by-Gift-Card-Number).
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-gift-card/api/rest-api/market-data#verify-binance-gift-card-by-gift-card-number).
     ///
     pub async fn verify_binance_gift_card_by_gift_card_number(
         &self,

@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket API
+ * Futures (USDⓈ-M) WebSocket API
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket API
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -22,8 +22,6 @@ pub struct CancelOrderResponseResult {
     pub client_order_id: Option<String>,
     #[serde(rename = "cumQty", skip_serializing_if = "Option::is_none")]
     pub cum_qty: Option<String>,
-    #[serde(rename = "cumQuote", skip_serializing_if = "Option::is_none")]
-    pub cum_quote: Option<String>,
     #[serde(rename = "executedQty", skip_serializing_if = "Option::is_none")]
     pub executed_qty: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
@@ -79,7 +77,6 @@ impl CancelOrderResponseResult {
         CancelOrderResponseResult {
             client_order_id: None,
             cum_qty: None,
-            cum_quote: None,
             executed_qty: None,
             order_id: None,
             orig_qty: None,

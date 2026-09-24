@@ -1,12 +1,7 @@
 /*
- * Binance Spot REST API
+ * Spot REST API
  *
- * OpenAPI Specifications for the Binance Spot REST API
- *
- * API documents:
- * - [Github rest-api documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md)
- * - [General API information for rest-api on website](https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-api-information)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -27,11 +22,14 @@ pub struct ExchangeInfoResponse {
     #[serde(rename = "serverTime", skip_serializing_if = "Option::is_none")]
     pub server_time: Option<i64>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::RateLimits>>,
+    pub rate_limits: Option<Vec<models::MyFiltersResponseRateLimitsInner>>,
     #[serde(rename = "exchangeFilters", skip_serializing_if = "Option::is_none")]
-    pub exchange_filters: Option<Vec<models::ExchangeFilters>>,
+    pub exchange_filters: Option<Vec<models::MyFiltersResponseExchangeFiltersInner>>,
     #[serde(rename = "symbols", skip_serializing_if = "Option::is_none")]
     pub symbols: Option<Vec<models::ExchangeInfoResponseSymbolsInner>>,
+    /// Optional. Present only when SOR is available.
+    #[serde(rename = "sors", skip_serializing_if = "Option::is_none")]
+    pub sors: Option<Vec<models::ExchangeInfoResponseSorsInner>>,
 }
 
 impl ExchangeInfoResponse {
@@ -43,6 +41,7 @@ impl ExchangeInfoResponse {
             rate_limits: None,
             exchange_filters: None,
             symbols: None,
+            sors: None,
         }
     }
 }

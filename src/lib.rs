@@ -42,8 +42,6 @@ pub mod gift_card;
 pub mod margin_trading;
 #[cfg(feature = "mining")]
 pub mod mining;
-#[cfg(feature = "nft")]
-pub mod nft;
 #[cfg(feature = "pay")]
 pub mod pay;
 #[cfg(feature = "rebate")]
@@ -54,10 +52,14 @@ pub mod simple_earn;
 pub mod spot;
 #[cfg(feature = "staking")]
 pub mod staking;
+#[cfg(feature = "stocks")]
+pub mod stocks;
 #[cfg(feature = "sub_account")]
 pub mod sub_account;
 #[cfg(feature = "vip_loan")]
 pub mod vip_loan;
+#[cfg(feature = "w3w_prediction")]
+pub mod w3w_prediction;
 #[cfg(feature = "wallet")]
 pub mod wallet;
 

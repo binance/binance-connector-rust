@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Futures (USDⓈ-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading USDS Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade USDⓈ-M perpetual futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,23 +16,31 @@ use crate::derivatives_trading_usds_futures::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `AccountUpdateA` : Update Data
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountUpdateA {
+    /// Event reason type
     #[serde(rename = "m", skip_serializing_if = "Option::is_none")]
     pub m: Option<String>,
+    /// Balances
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<Vec<models::AccountUpdateABInner>>,
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
     pub p_uppercase: Option<Vec<models::AccountUpdateAPInner>>,
+    /// Symbol associated with `FUNDING_FEE` event
+    #[serde(rename = "S", skip_serializing_if = "Option::is_none")]
+    pub s_uppercase: Option<String>,
 }
 
 impl AccountUpdateA {
+    /// Update Data
     #[must_use]
     pub fn new() -> AccountUpdateA {
         AccountUpdateA {
             m: None,
             b_uppercase: None,
             p_uppercase: None,
+            s_uppercase: None,
         }
     }
 }

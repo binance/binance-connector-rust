@@ -1,7 +1,7 @@
 /*
- * Binance Mining REST API
+ * Mining REST API
  *
- * OpenAPI Specification for the Binance Mining REST API
+ * Query mining status, earnings, and account data via the Binance Pool API.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -17,22 +17,31 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct HashrateResaleListResponseDataConfigDetailsInner {
+    /// Configuration ID
     #[serde(rename = "configId", skip_serializing_if = "Option::is_none")]
     pub config_id: Option<i64>,
+    /// Transfer-out sub-account
     #[serde(rename = "poolUsername", skip_serializing_if = "Option::is_none")]
     pub pool_username: Option<String>,
+    /// Transfer-in sub-account
     #[serde(rename = "toPoolUsername", skip_serializing_if = "Option::is_none")]
     pub to_pool_username: Option<String>,
+    /// Transfer algorithm name
     #[serde(rename = "algoName", skip_serializing_if = "Option::is_none")]
     pub algo_name: Option<String>,
+    /// Transferred hashrate
     #[serde(rename = "hashRate", skip_serializing_if = "Option::is_none")]
     pub hash_rate: Option<i64>,
+    /// Start date
     #[serde(rename = "startDay", skip_serializing_if = "Option::is_none")]
     pub start_day: Option<i64>,
+    /// End date
     #[serde(rename = "endDay", skip_serializing_if = "Option::is_none")]
     pub end_day: Option<i64>,
+    /// Status: 0 Processing, 1 Cancelled, 2 Terminated
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
+    /// Type: 0 Hashrate transfer record, 1 Hashrate receive record
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<i64>,
 }

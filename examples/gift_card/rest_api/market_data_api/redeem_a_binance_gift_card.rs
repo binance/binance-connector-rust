@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
     let rest_client = GiftCardRestApi::production(rest_conf);
 
     // Setup the API parameters
-    let params = RedeemABinanceGiftCardParams::builder("code_example".to_string()).build()?;
+    let params = RedeemABinanceGiftCardParams::builder("6H9EKF5ECCWFBHGE".to_string()).build()?;
 
     // Make the API call
     let response = rest_client

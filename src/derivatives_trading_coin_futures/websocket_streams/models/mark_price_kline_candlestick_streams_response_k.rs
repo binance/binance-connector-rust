@@ -1,7 +1,7 @@
 /*
- * Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Futures (COIN-M) WebSocket Market Streams
  *
- * OpenAPI Specification for the Binance Derivatives Trading COIN Futures WebSocket Market Streams
+ * Access market data, manage accounts, and trade COIN-M perpetual and delivery futures.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -16,45 +16,64 @@ use crate::derivatives_trading_coin_futures::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `MarkPriceKlineCandlestickStreamsResponseK` : Kline payload
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct MarkPriceKlineCandlestickStreamsResponseK {
+    /// Kline start time
     #[serde(rename = "t", skip_serializing_if = "Option::is_none")]
     pub t: Option<i64>,
+    /// Kline close time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Interval
     #[serde(rename = "i", skip_serializing_if = "Option::is_none")]
     pub i: Option<String>,
+    /// ignore
     #[serde(rename = "f", skip_serializing_if = "Option::is_none")]
     pub f: Option<i64>,
+    /// ignore
     #[serde(rename = "L", skip_serializing_if = "Option::is_none")]
     pub l_uppercase: Option<i64>,
+    /// Open price
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+    /// Close price
     #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
     pub c: Option<String>,
+    /// High price
     #[serde(rename = "h", skip_serializing_if = "Option::is_none")]
     pub h: Option<String>,
+    /// Low price
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<String>,
+    /// ignore
     #[serde(rename = "v", skip_serializing_if = "Option::is_none")]
     pub v: Option<String>,
+    /// Number of basic data
     #[serde(rename = "n", skip_serializing_if = "Option::is_none")]
     pub n: Option<i64>,
+    /// Is this kline closed?
     #[serde(rename = "x", skip_serializing_if = "Option::is_none")]
     pub x: Option<bool>,
+    /// ignore
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// ignore
     #[serde(rename = "V", skip_serializing_if = "Option::is_none")]
     pub v_uppercase: Option<String>,
+    /// ignore
     #[serde(rename = "Q", skip_serializing_if = "Option::is_none")]
     pub q_uppercase: Option<String>,
+    /// ignore
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<String>,
 }
 
 impl MarkPriceKlineCandlestickStreamsResponseK {
+    /// Kline payload
     #[must_use]
     pub fn new() -> MarkPriceKlineCandlestickStreamsResponseK {
         MarkPriceKlineCandlestickStreamsResponseK {

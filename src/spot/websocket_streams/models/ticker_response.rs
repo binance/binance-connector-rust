@@ -1,12 +1,7 @@
 /*
- * Binance Spot WebSocket Streams
+ * Spot WebSocket Market Streams
  *
- * OpenAPI Specifications for the Binance Spot WebSocket Streams
- *
- * API documents:
- * - [Github web-socket-streams documentation file](https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md)
- * - [General API information for web-socket-streams on website](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams)
- *
+ * Access market data, manage accounts, and trade on Binance Spot.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -23,50 +18,73 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TickerResponse {
+    /// Event type
     #[serde(rename = "e", skip_serializing_if = "Option::is_none")]
     pub e: Option<String>,
+    /// Event time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
+    /// Symbol
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
+    /// Price change
     #[serde(rename = "p", skip_serializing_if = "Option::is_none")]
     pub p: Option<String>,
+    /// Price change percent
     #[serde(rename = "P", skip_serializing_if = "Option::is_none")]
     pub p_uppercase: Option<String>,
+    /// Weighted average price
     #[serde(rename = "w", skip_serializing_if = "Option::is_none")]
     pub w: Option<String>,
+    /// First trade(F)-1 price (first trade before the 24hr rolling window)
     #[serde(rename = "x", skip_serializing_if = "Option::is_none")]
     pub x: Option<String>,
+    /// Last price
     #[serde(rename = "c", skip_serializing_if = "Option::is_none")]
     pub c: Option<String>,
+    /// Last quantity
     #[serde(rename = "Q", skip_serializing_if = "Option::is_none")]
     pub q_uppercase: Option<String>,
+    /// Best bid price
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<String>,
+    /// Best bid quantity
     #[serde(rename = "B", skip_serializing_if = "Option::is_none")]
     pub b_uppercase: Option<String>,
+    /// Best ask price
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
     pub a: Option<String>,
+    /// Best ask quantity
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
+    /// Open price
     #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+    /// High price
     #[serde(rename = "h", skip_serializing_if = "Option::is_none")]
     pub h: Option<String>,
+    /// Low price
     #[serde(rename = "l", skip_serializing_if = "Option::is_none")]
     pub l: Option<String>,
+    /// Total traded base asset volume
     #[serde(rename = "v", skip_serializing_if = "Option::is_none")]
     pub v: Option<String>,
+    /// Total traded quote asset volume
     #[serde(rename = "q", skip_serializing_if = "Option::is_none")]
     pub q: Option<String>,
+    /// Statistics open time
     #[serde(rename = "O", skip_serializing_if = "Option::is_none")]
     pub o_uppercase: Option<i64>,
+    /// Statistics close time
     #[serde(rename = "C", skip_serializing_if = "Option::is_none")]
     pub c_uppercase: Option<i64>,
+    /// First trade ID
     #[serde(rename = "F", skip_serializing_if = "Option::is_none")]
     pub f_uppercase: Option<i64>,
+    /// Last trade Id
     #[serde(rename = "L", skip_serializing_if = "Option::is_none")]
     pub l_uppercase: Option<i64>,
+    /// Total number of trades
     #[serde(rename = "n", skip_serializing_if = "Option::is_none")]
     pub n: Option<i64>,
 }
