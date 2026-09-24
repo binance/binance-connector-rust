@@ -27,7 +27,7 @@ use tokio::{
     time::{sleep, timeout},
 };
 use tokio_tungstenite::{
-    Connector, MaybeTlsStream, WebSocketStream, connect_async_tls_with_config,
+    MaybeTlsStream, WebSocketStream, connect_async_tls_with_config,
     tungstenite::{
         Message,
         client::IntoClientRequest,
