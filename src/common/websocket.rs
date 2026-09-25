@@ -27,7 +27,7 @@ use tokio::{
     time::{sleep, timeout},
 };
 use tokio_tungstenite::{
-    Connector, MaybeTlsStream, WebSocketStream, connect_async_tls_with_config,
+    MaybeTlsStream, WebSocketStream, connect_async_tls_with_config,
     tungstenite::{
         Message,
         client::IntoClientRequest,
@@ -38,7 +38,10 @@ use tokio_util::time::DelayQueue;
 use tracing::{debug, error, info, warn};
 
 use super::{
-    config::{AgentConnector, ConfigurationWebsocketApi, ConfigurationWebsocketStreams},
+    config::{
+        AgentConnector, ConfigurationWebsocketApi, ConfigurationWebsocketStreams,
+        WebsocketHandshakeFn,
+    },
     errors::{WebsocketConnectionFailureReason, WebsocketError},
     models::{StreamId, WebsocketApiResponse, WebsocketEvent, WebsocketMode},
     utils::{build_websocket_api_message, normalize_stream_id, random_string, validate_time_unit},
@@ -279,17 +282,34 @@ pub struct WebsocketCommon {
     renewal_tx: Sender<(String, String)>,
     reconnect_delay: usize,
     agent: Option<AgentConnector>,
+    handshake: Option<WebsocketHandshakeFn>,
     user_agent: Option<String>,
 }
 
 impl WebsocketCommon {
     #[must_use]
     pub fn new(
+        initial_pool: Vec<Arc<WebsocketConnection>>,
+        mode: WebsocketMode,
+        reconnect_delay: usize,
+        agent: Option<AgentConnector>,
+        user_agent: Option<String>,
+    ) -> Arc<Self> {
+        Self::new_with_handshake(initial_pool, mode, reconnect_delay, agent, user_agent, None)
+    }
+
+    /// Same as [`Self::new`], but additionally accepts a caller-supplied
+    /// [`WebsocketHandshakeFn`] used in place of the SDK's default handshake path.
+    /// Kept private: reachable only via `ConfigurationWebsocketApi::handshake` /
+    /// `ConfigurationWebsocketStreams::handshake` to avoid growing the public
+    /// constructor surface further.
+    fn new_with_handshake(
         mut initial_pool: Vec<Arc<WebsocketConnection>>,
         mode: WebsocketMode,
         reconnect_delay: usize,
         agent: Option<AgentConnector>,
         user_agent: Option<String>,
+        handshake: Option<WebsocketHandshakeFn>,
     ) -> Arc<Self> {
         if initial_pool.is_empty() {
             for _ in 0..mode.pool_size() {
@@ -310,6 +330,7 @@ impl WebsocketCommon {
             renewal_tx,
             reconnect_delay,
             agent,
+            handshake,
             user_agent,
         });
 
@@ -765,6 +786,7 @@ impl WebsocketCommon {
         url: &str,
         agent: Option<AgentConnector>,
         user_agent: Option<String>,
+        handshake: Option<WebsocketHandshakeFn>,
     ) -> Result<WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>, WebsocketError> {
         let mut req = url
             .into_client_request()
@@ -776,10 +798,18 @@ impl WebsocketCommon {
 
         let ws_config: Option<WebSocketConfig> = None;
         let disable_nagle = false;
-        let connector: Option<Connector> = agent.map(|dbg| dbg.0);
 
         let timeout_duration = Duration::from_secs(10);
-        let handshake = connect_async_tls_with_config(req, ws_config, disable_nagle, connector);
+        let connector = agent.map(|agent| agent.0);
+        let handshake = match handshake {
+            Some(handshake) => handshake(req, ws_config, disable_nagle, connector),
+            None => Box::pin(connect_async_tls_with_config(
+                req,
+                ws_config,
+                disable_nagle,
+                connector,
+            )),
+        };
         match timeout(timeout_duration, handshake).await {
             Ok(Ok((ws_stream, response))) => {
                 debug!("WebSocket connected: {:?}", response);
@@ -901,12 +931,17 @@ impl WebsocketCommon {
             conn_state.is_session_logged_on = false;
         }
 
-        let ws = Self::create_websocket(url, self.agent.clone(), self.user_agent.clone())
-            .await
-            .map_err(|e| {
-                error!("Handshake failed {}: {:?}", url, e);
-                e
-            })?;
+        let ws = Self::create_websocket(
+            url,
+            self.agent.clone(),
+            self.user_agent.clone(),
+            self.handshake.clone(),
+        )
+        .await
+        .map_err(|e| {
+            error!("Handshake failed {}: {:?}", url, e);
+            e
+        })?;
 
         info!("Established {} → {}", conn.id, url);
 
@@ -1491,14 +1526,16 @@ impl WebsocketApi {
         connection_pool: Vec<Arc<WebsocketConnection>>,
     ) -> Arc<Self> {
         let agent_clone = configuration.agent.clone();
+        let handshake_clone = configuration.handshake.clone();
         let user_agent_clone = configuration.user_agent.clone();
-        let common = WebsocketCommon::new(
+        let common = WebsocketCommon::new_with_handshake(
             connection_pool,
             configuration.mode.clone(),
             usize::try_from(configuration.reconnect_delay)
                 .expect("reconnect_delay should fit in usize"),
             agent_clone,
             Some(user_agent_clone),
+            handshake_clone,
         );
 
         Arc::new(Self {
@@ -2086,14 +2123,16 @@ impl WebsocketStreams {
         }
 
         let agent_clone = configuration.agent.clone();
+        let handshake_clone = configuration.handshake.clone();
         let user_agent_clone = configuration.user_agent.clone();
-        let common = WebsocketCommon::new(
+        let common = WebsocketCommon::new_with_handshake(
             connection_pool,
             configuration.mode.clone(),
             usize::try_from(configuration.reconnect_delay)
                 .expect("reconnect_delay should fit in usize"),
             agent_clone,
             Some(user_agent_clone),
+            handshake_clone,
         );
         Arc::new(Self {
             common,
@@ -2994,7 +3033,9 @@ mod tests {
         WebsocketHandler, WebsocketMessageSendOptions, WebsocketMode, WebsocketSessionLogonReq,
         WebsocketStream, WebsocketStreams, create_stream_handler,
     };
-    use crate::config::{ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey};
+    use crate::config::{
+        ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey, WebsocketHandshakeFn,
+    };
     use crate::errors::{WebsocketConnectionFailureReason, WebsocketError};
     use crate::models::{StreamId, TimeUnit};
     use async_trait::async_trait;
@@ -3105,6 +3146,7 @@ mod tests {
             time_unit,
             auto_session_relogon,
             agent: None,
+            handshake: None,
             user_agent: build_user_agent("product"),
         };
         let conn1 = WebsocketConnection::new("c1");
@@ -3131,6 +3173,7 @@ mod tests {
             reconnect_delay: 500,
             time_unit: None,
             agent: None,
+            handshake: None,
             user_agent: build_user_agent("product"),
         };
         WebsocketStreams::new(config, connections, url_paths)
@@ -4324,6 +4367,219 @@ mod tests {
             use super::*;
 
             #[test]
+            fn configuration_builders_accept_custom_handshakes() {
+                let handshake: WebsocketHandshakeFn = Arc::new(|_, _, _, _| {
+                    Box::pin(async { Err(tungstenite::Error::ConnectionClosed) })
+                });
+
+                let api = ConfigurationWebsocketApi::builder()
+                    .handshake(handshake.clone())
+                    .build()
+                    .unwrap();
+                let streams = ConfigurationWebsocketStreams::builder()
+                    .handshake(handshake)
+                    .build()
+                    .unwrap();
+
+                assert!(api.handshake.is_some());
+                assert!(streams.handshake.is_some());
+                assert!(format!("{streams:?}").contains("<custom handshake fn>"));
+            }
+
+            #[test]
+            fn custom_handshake_routes_connection_through_custom_transport() {
+                use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+                TOKIO_SHARED_RT.block_on(async {
+                    // 1. Real echo WebSocket server (the "origin").
+                    let origin_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let origin_addr = origin_listener.local_addr().unwrap();
+                    let _origin_guard = AbortOnDrop(tokio::spawn(async move {
+                        if let Ok((stream, _)) = origin_listener.accept().await {
+                            let Ok(mut ws) = accept_async(stream).await else {
+                                return;
+                            };
+                            // Echo one message back, prefixed so we can prove
+                            // the round-trip actually reached the origin.
+                            while let Some(Ok(msg)) = ws.next().await {
+                                if let Message::Text(text) = msg {
+                                    let _ =
+                                        ws.send(Message::Text(format!("echo:{text}").into())).await;
+                                }
+                            }
+                        }
+                    }));
+
+                    // 2. A separate TCP relay standing in for a custom transport
+                    //    (e.g. a SOCKS5 tunnel). It blindly pipes bytes between
+                    //    the client and the origin, and counts the bytes it
+                    //    carried so the test can assert traffic really flowed
+                    //    through it rather than directly to the origin.
+                    let relay_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let relay_addr = relay_listener.local_addr().unwrap();
+                    let relay_bytes = Arc::new(AtomicUsize::new(0));
+                    let relay_bytes_srv = Arc::clone(&relay_bytes);
+                    let _relay_guard = AbortOnDrop(tokio::spawn(async move {
+                        if let Ok((mut inbound, _)) = relay_listener.accept().await {
+                            let Ok(mut outbound) =
+                                tokio::net::TcpStream::connect(origin_addr).await
+                            else {
+                                return;
+                            };
+                            let (mut ri, mut wi) = inbound.split();
+                            let (mut ro, mut wo) = outbound.split();
+                            // Client -> origin: count bytes as they flow so the
+                            // test can observe traffic live, not just at close.
+                            let up = async {
+                                let mut buf = [0u8; 4096];
+                                loop {
+                                    match ri.read(&mut buf).await {
+                                        Ok(0) | Err(_) => break,
+                                        Ok(n) => {
+                                            relay_bytes_srv.fetch_add(n, Ordering::SeqCst);
+                                            if wo.write_all(&buf[..n]).await.is_err() {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+                            let down = tokio::io::copy(&mut ro, &mut wi);
+                            let _ = tokio::join!(up, down);
+                        }
+                    }));
+
+                    // 3. Custom handshake: rewrite the request URI so the
+                    //    transport connects to the relay instead of the origin.
+                    //    This is the essence of the feature — the caller decides
+                    //    how/where the underlying connection is opened.
+                    let handshake_calls = Arc::new(AtomicUsize::new(0));
+                    let handshake_calls_clone = Arc::clone(&handshake_calls);
+                    let handshake: WebsocketHandshakeFn =
+                        Arc::new(move |mut request, ws_config, disable_nagle, connector| {
+                            let handshake_calls = Arc::clone(&handshake_calls_clone);
+                            Box::pin(async move {
+                                handshake_calls.fetch_add(1, Ordering::SeqCst);
+                                // Redirect the transport target to the relay.
+                                *request.uri_mut() = format!("ws://{relay_addr}/").parse().unwrap();
+                                tokio_tungstenite::connect_async_tls_with_config(
+                                    request,
+                                    ws_config,
+                                    disable_nagle,
+                                    connector,
+                                )
+                                .await
+                            })
+                        });
+
+                    // 4. Drive the SDK's real create_websocket with the custom
+                    //    handshake, pointing at the origin address (which the
+                    //    handshake will override to the relay).
+                    let ws = WebsocketCommon::create_websocket(
+                        &format!("ws://{origin_addr}"),
+                        None,
+                        None,
+                        Some(handshake),
+                    )
+                    .await
+                    .expect("custom-handshake connection should succeed");
+
+                    // 5. Exchange a real message round-trip over the tunneled
+                    //    connection and verify it reached the echo origin.
+                    let (mut write, mut read) = ws.split();
+                    write
+                        .send(Message::Text("through-tunnel".into()))
+                        .await
+                        .unwrap();
+                    let reply = timeout(Duration::from_secs(5), read.next())
+                        .await
+                        .expect("timed out awaiting echo")
+                        .expect("stream ended")
+                        .expect("read error");
+
+                    assert_eq!(
+                        reply,
+                        Message::Text("echo:through-tunnel".into()),
+                        "message did not round-trip through the origin"
+                    );
+                    assert_eq!(
+                        handshake_calls.load(Ordering::SeqCst),
+                        1,
+                        "custom handshake should have been invoked exactly once"
+                    );
+                    assert!(
+                        relay_bytes.load(Ordering::SeqCst) > 0,
+                        "no bytes flowed through the custom transport relay"
+                    );
+                });
+            }
+
+            #[test]
+            fn custom_handshake_is_used_for_initial_connection() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let _listener_guard = spawn_mock_ws_listener(listener);
+                    let handshake_calls = Arc::new(AtomicUsize::new(0));
+                    let handshake_calls_clone = Arc::clone(&handshake_calls);
+                    let handshake: WebsocketHandshakeFn =
+                        Arc::new(move |request, config, disable_nagle, connector| {
+                            let handshake_calls = Arc::clone(&handshake_calls_clone);
+                            Box::pin(async move {
+                                handshake_calls.fetch_add(1, Ordering::SeqCst);
+                                assert!(config.is_none());
+                                assert!(!disable_nagle);
+                                assert!(connector.is_none());
+                                tokio_tungstenite::connect_async_tls_with_config(
+                                    request,
+                                    config,
+                                    disable_nagle,
+                                    connector,
+                                )
+                                .await
+                            })
+                        });
+
+                    let result = WebsocketCommon::create_websocket(
+                        &format!("ws://{addr}"),
+                        None,
+                        None,
+                        Some(handshake),
+                    )
+                    .await;
+
+                    assert!(result.is_ok(), "custom handshake failed: {result:?}");
+                    assert_eq!(handshake_calls.load(Ordering::SeqCst), 1);
+                });
+            }
+
+            #[test]
+            fn custom_handshake_error_maps_to_handshake_error() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let handshake_calls = Arc::new(AtomicUsize::new(0));
+                    let handshake_calls_clone = Arc::clone(&handshake_calls);
+                    let handshake: WebsocketHandshakeFn = Arc::new(move |_, _, _, _| {
+                        let handshake_calls = Arc::clone(&handshake_calls_clone);
+                        Box::pin(async move {
+                            handshake_calls.fetch_add(1, Ordering::SeqCst);
+                            Err(tungstenite::Error::ConnectionClosed)
+                        })
+                    });
+
+                    let result = WebsocketCommon::create_websocket(
+                        "ws://127.0.0.1:1",
+                        None,
+                        None,
+                        Some(handshake),
+                    )
+                    .await;
+
+                    assert!(matches!(result, Err(WebsocketError::Handshake(_))));
+                    assert_eq!(handshake_calls.load(Ordering::SeqCst), 1);
+                });
+            }
+
+            #[test]
             fn successful_connection() {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
@@ -4350,7 +4606,8 @@ mod tests {
 
                     let url = format!("ws://{addr}");
                     let res =
-                        WebsocketCommon::create_websocket(&url, None, Some(expected_ua)).await;
+                        WebsocketCommon::create_websocket(&url, None, Some(expected_ua), None)
+                            .await;
                     assert!(res.is_ok(), "handshake failed: {res:?}");
                 });
             }
@@ -4359,7 +4616,8 @@ mod tests {
             fn invalid_url_returns_handshake_error() {
                 TOKIO_SHARED_RT.block_on(async {
                     let res =
-                        WebsocketCommon::create_websocket("not-a-valid-url", None, None).await;
+                        WebsocketCommon::create_websocket("not-a-valid-url", None, None, None)
+                            .await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
             }
@@ -4368,7 +4626,8 @@ mod tests {
             fn unreachable_host_returns_handshake_error() {
                 TOKIO_SHARED_RT.block_on(async {
                     let res =
-                        WebsocketCommon::create_websocket("ws://127.0.0.1:1", None, None).await;
+                        WebsocketCommon::create_websocket("ws://127.0.0.1:1", None, None, None)
+                            .await;
                     assert!(matches!(res, Err(WebsocketError::Handshake(_))));
                 });
             }
@@ -4942,6 +5201,7 @@ mod tests {
                         renewal_tx,
                         reconnect_delay: 0,
                         agent: None,
+                        handshake: None,
                         user_agent: None,
                     });
                     let url = format!("ws://{addr}");
@@ -5725,6 +5985,7 @@ mod tests {
                         time_unit: None,
                         auto_session_relogon: false,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
 
@@ -5768,6 +6029,7 @@ mod tests {
                         time_unit: None,
                         auto_session_relogon: false,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
@@ -5803,6 +6065,7 @@ mod tests {
                         time_unit: None,
                         auto_session_relogon: false,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
@@ -5833,6 +6096,7 @@ mod tests {
                         time_unit: None,
                         auto_session_relogon: false,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
@@ -5863,6 +6127,7 @@ mod tests {
                         time_unit: None,
                         auto_session_relogon: false,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
@@ -5898,6 +6163,7 @@ mod tests {
                         time_unit: None,
                         auto_session_relogon: false,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
@@ -6519,6 +6785,7 @@ mod tests {
                     time_unit: None,
                     auto_session_relogon: true,
                     agent: None,
+                    handshake: None,
                     user_agent: build_user_agent("product"),
                 };
                 let conn = WebsocketConnection::new("test-conn");
@@ -6691,6 +6958,7 @@ mod tests {
                     time_unit: None,
                     auto_session_relogon: false,
                     agent: None,
+                    handshake: None,
                     user_agent: build_user_agent("product"),
                 };
                 let conn = WebsocketConnection::new("test");
@@ -6960,6 +7228,7 @@ mod tests {
                         reconnect_delay: 500,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let conn1 = WebsocketConnection::new("c1");
@@ -6988,6 +7257,7 @@ mod tests {
                         reconnect_delay: 500,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
 
@@ -7015,6 +7285,7 @@ mod tests {
                         reconnect_delay: 500,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
 
@@ -7066,6 +7337,7 @@ mod tests {
                             reconnect_delay: 500,
                             time_unit: None,
                             agent: None,
+                            handshake: None,
                             user_agent: build_user_agent("product"),
                         };
                         WebsocketStreams::new(config, vec![c1, c2], vec![])
@@ -7100,6 +7372,7 @@ mod tests {
                         reconnect_delay: 500,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
 
@@ -7136,6 +7409,7 @@ mod tests {
                         reconnect_delay: 500,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
 
@@ -7743,6 +8017,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
@@ -7761,6 +8036,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: Some(TimeUnit::Millisecond),
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
@@ -7779,6 +8055,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: Some(TimeUnit::Microsecond),
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
@@ -7800,6 +8077,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
@@ -7818,6 +8096,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: Some(TimeUnit::Millisecond),
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
@@ -7839,6 +8118,7 @@ mod tests {
                         reconnect_delay: 100,
                         time_unit: None,
                         agent: None,
+                        handshake: None,
                         user_agent: build_user_agent("product"),
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);

@@ -1,5 +1,11 @@
 # Changelog
 
+## 70.2.0 - 2026-09-25
+
+### Added (1)
+
+- Added optional custom WebSocket handshake support via the `handshake` option on `ConfigurationWebsocketApi` and `ConfigurationWebsocketStreams`.
+
 ## 70.1.1 - 2026-09-21
 
 **Derivatives Trading USDS Futures**

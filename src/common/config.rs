@@ -17,6 +17,68 @@ impl fmt::Debug for AgentConnector {
     }
 }
 
+/// The result produced by a custom [`WebsocketHandshakeFn`]: either the established
+/// WebSocket stream together with the server's HTTP handshake response, or a
+/// `tungstenite` error describing why the handshake could not be completed.
+///
+/// This mirrors the return type of
+/// [`tokio_tungstenite::connect_async_tls_with_config`], so an implementation can
+/// simply delegate to it after doing any transport-level setup it needs (see
+/// [`WebsocketHandshakeFn`] for details).
+pub type WebsocketHandshakeResult = Result<
+    (
+        tokio_tungstenite::WebSocketStream<
+            tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>,
+        >,
+        tokio_tungstenite::tungstenite::handshake::client::Response,
+    ),
+    tokio_tungstenite::tungstenite::Error,
+>;
+
+/// A caller-supplied async function that performs the TLS/WebSocket handshake in
+/// place of the SDK's default connection path.
+///
+/// This is useful when the underlying transport needs to be established before the
+/// handshake runs — for example, tunneling the connection through a SOCKS5 proxy or
+/// another custom stream — something the SDK does not implement itself. The
+/// callback is used for the initial connection, reconnects, and connection renewal,
+/// and is subject to the same 10-second timeout and error mapping as the SDK's
+/// built-in handshake.
+///
+/// # Arguments passed to the function
+///
+/// The function receives the same inputs that
+/// [`tokio_tungstenite::connect_async_tls_with_config`] takes, so an implementation
+/// can open its own transport and then delegate to that function (or an equivalent)
+/// to finish the handshake:
+///
+/// 1. `Request` — the outgoing HTTP upgrade request (already carries the target URL
+///    and any headers the SDK has set, such as `User-Agent`).
+/// 2. `Option<WebSocketConfig>` — optional WebSocket protocol configuration.
+/// 3. `bool` — whether to disable Nagle's algorithm on the underlying TCP stream.
+/// 4. `Option<Connector>` — the TLS connector derived from the configuration's
+///    `agent` field, if one was set. A custom handshake function that ignores this
+///    value effectively overrides `agent`; forward it to the delegate call if the
+///    two options are meant to compose.
+///
+/// # Relationship with `agent`
+///
+/// `agent` and `handshake` are independent, composable settings: `agent` only
+/// customizes the TLS connector, while `handshake` replaces how the transport is
+/// opened and the handshake is performed. Setting both is valid — the resolved
+/// `agent` connector is simply passed through as the fourth argument above for the
+/// custom handshake function to use as it sees fit.
+pub type WebsocketHandshakeFn = Arc<
+    dyn Fn(
+            tokio_tungstenite::tungstenite::handshake::client::Request,
+            Option<tokio_tungstenite::tungstenite::protocol::WebSocketConfig>,
+            bool,
+            Option<Connector>,
+        ) -> std::pin::Pin<Box<dyn Future<Output = WebsocketHandshakeResult> + Send>>
+        + Send
+        + Sync,
+>;
+
 #[derive(Clone)]
 pub struct HttpAgent(pub Arc<dyn Fn(ClientBuilder) -> ClientBuilder + Send + Sync>);
 
@@ -217,6 +279,11 @@ pub struct ConfigurationWebsocketApi {
     #[builder(setter(strip_option), default)]
     pub agent: Option<AgentConnector>,
 
+    /// Overrides how the SDK performs the TLS/WebSocket handshake. See
+    /// [`WebsocketHandshakeFn`] for details and its interaction with `agent`.
+    #[builder(setter(strip_option), default)]
+    pub handshake: Option<WebsocketHandshakeFn>,
+
     #[builder(setter(strip_option), default)]
     pub private_key: Option<PrivateKey>,
 
@@ -249,6 +316,10 @@ impl fmt::Debug for ConfigurationWebsocketApi {
             .field("reconnect_delay", &self.reconnect_delay)
             .field("mode", &self.mode)
             .field("agent", &self.agent)
+            .field(
+                "handshake",
+                &self.handshake.as_ref().map(|_| "<custom handshake fn>"),
+            )
             .field(
                 "private_key",
                 &self.private_key.as_ref().map(|_| "[REDACTED]"),
@@ -309,7 +380,7 @@ impl ConfigurationWebsocketApiBuilder {
     }
 }
 
-#[derive(Debug, Clone, Builder)]
+#[derive(Clone, Builder)]
 #[builder(pattern = "owned", build_fn(error = "ConfigBuildError"))]
 pub struct ConfigurationWebsocketStreams {
     #[builder(setter(into, strip_option), default)]
@@ -324,11 +395,33 @@ pub struct ConfigurationWebsocketStreams {
     #[builder(setter(strip_option), default)]
     pub agent: Option<AgentConnector>,
 
+    /// Overrides how the SDK performs the TLS/WebSocket handshake. See
+    /// [`WebsocketHandshakeFn`] for details and its interaction with `agent`.
+    #[builder(setter(strip_option), default)]
+    pub handshake: Option<WebsocketHandshakeFn>,
+
     #[builder(setter(strip_option), default)]
     pub time_unit: Option<TimeUnit>,
 
     #[builder(setter(skip))]
     pub(crate) user_agent: String,
+}
+
+impl fmt::Debug for ConfigurationWebsocketStreams {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ConfigurationWebsocketStreams")
+            .field("ws_url", &self.ws_url)
+            .field("reconnect_delay", &self.reconnect_delay)
+            .field("mode", &self.mode)
+            .field("agent", &self.agent)
+            .field(
+                "handshake",
+                &self.handshake.as_ref().map(|_| "<custom handshake fn>"),
+            )
+            .field("time_unit", &self.time_unit)
+            .field("user_agent", &self.user_agent)
+            .finish()
+    }
 }
 
 impl ConfigurationWebsocketStreams {

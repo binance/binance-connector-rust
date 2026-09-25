@@ -196,6 +196,7 @@ The `spot` module can be configured with the following options via the `Configur
   - `Single`: A single WebSocket connection
   - `Pool`: A pool of WebSocket connections
 - `agent` (AgentConnector): Customize the WebSocket agent for advanced configurations
+- `handshake` (WebsocketHandshakeFn): Provide a custom async TLS/WebSocket handshake (e.g. to tunnel through a SOCKS5 proxy)
 - `private_key` (PrivateKey): RSA or ED25519 private key for request signing (raw string or PEM file path)
 - `private_key_passphrase` (String): Passphrase for the private key, if encrypted
 - `time_unit` (TimeUnit): Specify the time unit for timestamps (e.g., milliseconds or microseconds)
@@ -213,6 +214,10 @@ Specify the delay in milliseconds between WebSocket reconnection attempts. See t
 ##### WebSocket Agent
 
 Customize the agent for advanced configurations. See the [WebSocket Agent example](./docs/websocket_api/agent.md) for detailed usage.
+
+##### Custom Handshake
+
+Supply a custom async TLS/WebSocket handshake to open your own transport (such as a SOCKS5 tunnel) before the handshake completes. See the [Custom Handshake example](./docs/websocket_api/custom-handshake.md) for detailed usage.
 
 ##### Connection Mode
 
@@ -316,6 +321,7 @@ The `spot` module can be configured with the following options via the `Configur
   - `Single`: A single WebSocket connection
   - `Pool`: A pool of WebSocket connections
 - `agent` (AgentConnector): Customize the WebSocket agent for advanced configurations
+- `handshake` (WebsocketHandshakeFn): Provide a custom async TLS/WebSocket handshake (e.g. to tunnel through a SOCKS5 proxy)
 - `time_unit` (TimeUnit): Specify the time unit for timestamps (e.g., milliseconds or microseconds)
 
 Refer to the [`configuration`](../common/config.rs) for more details.
@@ -327,6 +333,10 @@ Specify the delay in milliseconds between WebSocket reconnection attempts. See t
 ##### WebSocket Agent
 
 Customize the agent for advanced configurations. See the [WebSocket Agent example](./docs/websocket_streams/agent.md) for detailed usage.
+
+##### Custom Handshake
+
+Supply a custom async TLS/WebSocket handshake to open your own transport (such as a SOCKS5 tunnel) before the handshake completes. See the [Custom Handshake example](./docs/websocket_streams/custom-handshake.md) for detailed usage.
 
 ##### Connection Mode
 
