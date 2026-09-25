@@ -190,6 +190,7 @@ The `derivatives_trading_coin_futures` module can be configured with the followi
   - `Single`: A single WebSocket connection
   - `Pool`: A pool of WebSocket connections
 - `agent` (AgentConnector): Customize the WebSocket agent for advanced configurations
+- `handshake` (WebsocketHandshakeFn): Provide a custom async TLS/WebSocket handshake (e.g. to tunnel through a SOCKS5 proxy)
 - `private_key` (PrivateKey): RSA or ED25519 private key for request signing (raw string or PEM file path)
 - `private_key_passphrase` (String): Passphrase for the private key, if encrypted
 
@@ -206,6 +207,10 @@ Specify the delay in milliseconds between WebSocket reconnection attempts. See t
 ##### WebSocket Agent
 
 Customize the agent for advanced configurations. See the [WebSocket Agent example](./docs/websocket_api/agent.md) for detailed usage.
+
+##### Custom Handshake
+
+Supply a custom async TLS/WebSocket handshake to open your own transport (such as a SOCKS5 tunnel) before the handshake completes. See the [Custom Handshake example](./docs/websocket_api/custom-handshake.md) for detailed usage.
 
 ##### Connection Mode
 
@@ -264,6 +269,7 @@ The `derivatives_trading_coin_futures` module can be configured with the followi
   - `Single`: A single WebSocket connection
   - `Pool`: A pool of WebSocket connections
 - `agent` (AgentConnector): Customize the WebSocket agent for advanced configurations
+- `handshake` (WebsocketHandshakeFn): Provide a custom async TLS/WebSocket handshake (e.g. to tunnel through a SOCKS5 proxy)
 
 Refer to the [`configuration`](../common/config.rs) for more details.
 
@@ -274,6 +280,10 @@ Specify the delay in milliseconds between WebSocket reconnection attempts. See t
 ##### WebSocket Agent
 
 Customize the agent for advanced configurations. See the [WebSocket Agent example](./docs/websocket_streams/agent.md) for detailed usage.
+
+##### Custom Handshake
+
+Supply a custom async TLS/WebSocket handshake to open your own transport (such as a SOCKS5 tunnel) before the handshake completes. See the [Custom Handshake example](./docs/websocket_streams/custom-handshake.md) for detailed usage.
 
 ##### Connection Mode
 

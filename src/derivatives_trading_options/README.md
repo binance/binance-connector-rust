@@ -186,6 +186,7 @@ The `derivatives_trading_options` module can be configured with the following op
   - `Single`: A single WebSocket connection
   - `Pool`: A pool of WebSocket connections
 - `agent` (AgentConnector): Customize the WebSocket agent for advanced configurations
+- `handshake` (WebsocketHandshakeFn): Provide a custom async TLS/WebSocket handshake (e.g. to tunnel through a SOCKS5 proxy)
 
 Refer to the [`configuration`](../common/config.rs) for more details.
 
@@ -196,6 +197,10 @@ Specify the delay in milliseconds between WebSocket reconnection attempts. See t
 ##### WebSocket Agent
 
 Customize the agent for advanced configurations. See the [WebSocket Agent example](./docs/websocket_streams/agent.md) for detailed usage.
+
+##### Custom Handshake
+
+Supply a custom async TLS/WebSocket handshake to open your own transport (such as a SOCKS5 tunnel) before the handshake completes. See the [Custom Handshake example](./docs/websocket_streams/custom-handshake.md) for detailed usage.
 
 ##### Connection Mode
 

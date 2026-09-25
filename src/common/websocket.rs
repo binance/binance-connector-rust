@@ -39,8 +39,8 @@ use tracing::{debug, error, info, warn};
 
 use super::{
     config::{
-        AgentConnector, AgentConnectorHandshakeFn, ConfigurationWebsocketApi,
-        ConfigurationWebsocketStreams,
+        AgentConnector, ConfigurationWebsocketApi, ConfigurationWebsocketStreams,
+        WebsocketHandshakeFn,
     },
     errors::{WebsocketConnectionFailureReason, WebsocketError},
     models::{StreamId, WebsocketApiResponse, WebsocketEvent, WebsocketMode},
@@ -282,7 +282,7 @@ pub struct WebsocketCommon {
     renewal_tx: Sender<(String, String)>,
     reconnect_delay: usize,
     agent: Option<AgentConnector>,
-    handshake: Option<AgentConnectorHandshakeFn>,
+    handshake: Option<WebsocketHandshakeFn>,
     user_agent: Option<String>,
 }
 
@@ -298,13 +298,18 @@ impl WebsocketCommon {
         Self::new_with_handshake(initial_pool, mode, reconnect_delay, agent, user_agent, None)
     }
 
+    /// Same as [`Self::new`], but additionally accepts a caller-supplied
+    /// [`WebsocketHandshakeFn`] used in place of the SDK's default handshake path.
+    /// Kept private: reachable only via `ConfigurationWebsocketApi::handshake` /
+    /// `ConfigurationWebsocketStreams::handshake` to avoid growing the public
+    /// constructor surface further.
     fn new_with_handshake(
         mut initial_pool: Vec<Arc<WebsocketConnection>>,
         mode: WebsocketMode,
         reconnect_delay: usize,
         agent: Option<AgentConnector>,
         user_agent: Option<String>,
-        handshake: Option<AgentConnectorHandshakeFn>,
+        handshake: Option<WebsocketHandshakeFn>,
     ) -> Arc<Self> {
         if initial_pool.is_empty() {
             for _ in 0..mode.pool_size() {
@@ -781,7 +786,7 @@ impl WebsocketCommon {
         url: &str,
         agent: Option<AgentConnector>,
         user_agent: Option<String>,
-        handshake: Option<AgentConnectorHandshakeFn>,
+        handshake: Option<WebsocketHandshakeFn>,
     ) -> Result<WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>, WebsocketError> {
         let mut req = url
             .into_client_request()
@@ -3029,8 +3034,7 @@ mod tests {
         WebsocketStream, WebsocketStreams, create_stream_handler,
     };
     use crate::config::{
-        AgentConnectorHandshakeFn, ConfigurationWebsocketApi, ConfigurationWebsocketStreams,
-        PrivateKey,
+        ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey, WebsocketHandshakeFn,
     };
     use crate::errors::{WebsocketConnectionFailureReason, WebsocketError};
     use crate::models::{StreamId, TimeUnit};
@@ -4364,7 +4368,7 @@ mod tests {
 
             #[test]
             fn configuration_builders_accept_custom_handshakes() {
-                let handshake: AgentConnectorHandshakeFn = Arc::new(|_, _, _, _| {
+                let handshake: WebsocketHandshakeFn = Arc::new(|_, _, _, _| {
                     Box::pin(async { Err(tungstenite::Error::ConnectionClosed) })
                 });
 
@@ -4383,6 +4387,134 @@ mod tests {
             }
 
             #[test]
+            fn custom_handshake_routes_connection_through_custom_transport() {
+                use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+                TOKIO_SHARED_RT.block_on(async {
+                    // 1. Real echo WebSocket server (the "origin").
+                    let origin_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let origin_addr = origin_listener.local_addr().unwrap();
+                    let _origin_guard = AbortOnDrop(tokio::spawn(async move {
+                        if let Ok((stream, _)) = origin_listener.accept().await {
+                            let Ok(mut ws) = accept_async(stream).await else {
+                                return;
+                            };
+                            // Echo one message back, prefixed so we can prove
+                            // the round-trip actually reached the origin.
+                            while let Some(Ok(msg)) = ws.next().await {
+                                if let Message::Text(text) = msg {
+                                    let _ =
+                                        ws.send(Message::Text(format!("echo:{text}").into())).await;
+                                }
+                            }
+                        }
+                    }));
+
+                    // 2. A separate TCP relay standing in for a custom transport
+                    //    (e.g. a SOCKS5 tunnel). It blindly pipes bytes between
+                    //    the client and the origin, and counts the bytes it
+                    //    carried so the test can assert traffic really flowed
+                    //    through it rather than directly to the origin.
+                    let relay_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let relay_addr = relay_listener.local_addr().unwrap();
+                    let relay_bytes = Arc::new(AtomicUsize::new(0));
+                    let relay_bytes_srv = Arc::clone(&relay_bytes);
+                    let _relay_guard = AbortOnDrop(tokio::spawn(async move {
+                        if let Ok((mut inbound, _)) = relay_listener.accept().await {
+                            let Ok(mut outbound) =
+                                tokio::net::TcpStream::connect(origin_addr).await
+                            else {
+                                return;
+                            };
+                            let (mut ri, mut wi) = inbound.split();
+                            let (mut ro, mut wo) = outbound.split();
+                            // Client -> origin: count bytes as they flow so the
+                            // test can observe traffic live, not just at close.
+                            let up = async {
+                                let mut buf = [0u8; 4096];
+                                loop {
+                                    match ri.read(&mut buf).await {
+                                        Ok(0) | Err(_) => break,
+                                        Ok(n) => {
+                                            relay_bytes_srv.fetch_add(n, Ordering::SeqCst);
+                                            if wo.write_all(&buf[..n]).await.is_err() {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+                            let down = tokio::io::copy(&mut ro, &mut wi);
+                            let _ = tokio::join!(up, down);
+                        }
+                    }));
+
+                    // 3. Custom handshake: rewrite the request URI so the
+                    //    transport connects to the relay instead of the origin.
+                    //    This is the essence of the feature — the caller decides
+                    //    how/where the underlying connection is opened.
+                    let handshake_calls = Arc::new(AtomicUsize::new(0));
+                    let handshake_calls_clone = Arc::clone(&handshake_calls);
+                    let handshake: WebsocketHandshakeFn =
+                        Arc::new(move |mut request, ws_config, disable_nagle, connector| {
+                            let handshake_calls = Arc::clone(&handshake_calls_clone);
+                            Box::pin(async move {
+                                handshake_calls.fetch_add(1, Ordering::SeqCst);
+                                // Redirect the transport target to the relay.
+                                *request.uri_mut() = format!("ws://{relay_addr}/").parse().unwrap();
+                                tokio_tungstenite::connect_async_tls_with_config(
+                                    request,
+                                    ws_config,
+                                    disable_nagle,
+                                    connector,
+                                )
+                                .await
+                            })
+                        });
+
+                    // 4. Drive the SDK's real create_websocket with the custom
+                    //    handshake, pointing at the origin address (which the
+                    //    handshake will override to the relay).
+                    let ws = WebsocketCommon::create_websocket(
+                        &format!("ws://{origin_addr}"),
+                        None,
+                        None,
+                        Some(handshake),
+                    )
+                    .await
+                    .expect("custom-handshake connection should succeed");
+
+                    // 5. Exchange a real message round-trip over the tunneled
+                    //    connection and verify it reached the echo origin.
+                    let (mut write, mut read) = ws.split();
+                    write
+                        .send(Message::Text("through-tunnel".into()))
+                        .await
+                        .unwrap();
+                    let reply = timeout(Duration::from_secs(5), read.next())
+                        .await
+                        .expect("timed out awaiting echo")
+                        .expect("stream ended")
+                        .expect("read error");
+
+                    assert_eq!(
+                        reply,
+                        Message::Text("echo:through-tunnel".into()),
+                        "message did not round-trip through the origin"
+                    );
+                    assert_eq!(
+                        handshake_calls.load(Ordering::SeqCst),
+                        1,
+                        "custom handshake should have been invoked exactly once"
+                    );
+                    assert!(
+                        relay_bytes.load(Ordering::SeqCst) > 0,
+                        "no bytes flowed through the custom transport relay"
+                    );
+                });
+            }
+
+            #[test]
             fn custom_handshake_is_used_for_initial_connection() {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
@@ -4390,7 +4522,7 @@ mod tests {
                     let _listener_guard = spawn_mock_ws_listener(listener);
                     let handshake_calls = Arc::new(AtomicUsize::new(0));
                     let handshake_calls_clone = Arc::clone(&handshake_calls);
-                    let handshake: AgentConnectorHandshakeFn =
+                    let handshake: WebsocketHandshakeFn =
                         Arc::new(move |request, config, disable_nagle, connector| {
                             let handshake_calls = Arc::clone(&handshake_calls_clone);
                             Box::pin(async move {
@@ -4426,7 +4558,7 @@ mod tests {
                 TOKIO_SHARED_RT.block_on(async {
                     let handshake_calls = Arc::new(AtomicUsize::new(0));
                     let handshake_calls_clone = Arc::clone(&handshake_calls);
-                    let handshake: AgentConnectorHandshakeFn = Arc::new(move |_, _, _, _| {
+                    let handshake: WebsocketHandshakeFn = Arc::new(move |_, _, _, _| {
                         let handshake_calls = Arc::clone(&handshake_calls_clone);
                         Box::pin(async move {
                             handshake_calls.fetch_add(1, Ordering::SeqCst);
