@@ -471,8 +471,6 @@ pub enum GetUmIncomeHistoryIncomeTypeEnum {
     OptionsSettleProfit,
     #[serde(rename = "INTERNAL_TRANSFER")]
     InternalTransfer,
-    #[serde(rename = "AUTO_EXCHANGE")]
-    AutoExchange,
     #[serde(rename = "DELIVERED_SETTELMENT")]
     DeliveredSettelment,
     #[serde(rename = "COIN_SWAP_DEPOSIT")]
@@ -501,7 +499,6 @@ impl GetUmIncomeHistoryIncomeTypeEnum {
             Self::OptionsPremiumFee => "OPTIONS_PREMIUM_FEE",
             Self::OptionsSettleProfit => "OPTIONS_SETTLE_PROFIT",
             Self::InternalTransfer => "INTERNAL_TRANSFER",
-            Self::AutoExchange => "AUTO_EXCHANGE",
             Self::DeliveredSettelment => "DELIVERED_SETTELMENT",
             Self::CoinSwapDeposit => "COIN_SWAP_DEPOSIT",
             Self::CoinSwapWithdraw => "COIN_SWAP_WITHDRAW",
@@ -529,7 +526,6 @@ impl std::str::FromStr for GetUmIncomeHistoryIncomeTypeEnum {
             "OPTIONS_PREMIUM_FEE" => Ok(Self::OptionsPremiumFee),
             "OPTIONS_SETTLE_PROFIT" => Ok(Self::OptionsSettleProfit),
             "INTERNAL_TRANSFER" => Ok(Self::InternalTransfer),
-            "AUTO_EXCHANGE" => Ok(Self::AutoExchange),
             "DELIVERED_SETTELMENT" => Ok(Self::DeliveredSettelment),
             "COIN_SWAP_DEPOSIT" => Ok(Self::CoinSwapDeposit),
             "COIN_SWAP_WITHDRAW" => Ok(Self::CoinSwapWithdraw),
@@ -3782,7 +3778,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"122607.35137903","crossMarginAsset":"92.27530794","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"126.72469206","crossMarginAsset":"103.00000000","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::AccountBalanceResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::AccountBalanceResponse");
@@ -4970,7 +4966,7 @@ mod tests {
 
             let params = AccountBalanceParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"122607.35137903","crossMarginAsset":"92.27530794","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"126.72469206","crossMarginAsset":"103.00000000","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountBalanceResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountBalanceResponse");
 
             let resp = client.account_balance(params).await.expect("Expected a response");
@@ -4987,7 +4983,7 @@ mod tests {
 
             let params = AccountBalanceParams::builder().asset("USDT".to_string()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"122607.35137903","crossMarginAsset":"92.27530794","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"USDT","totalWalletBalance":"126.72469206","crossMarginAsset":"103.00000000","crossMarginBorrowed":"10.00000000","crossMarginFree":"100.00000000","crossMarginInterest":"0.72469206","crossMarginLocked":"3.00000000","umWalletBalance":"0.00000000","umUnrealizedPNL":"23.72469206","cmWalletBalance":"23.72469206","cmUnrealizedPNL":"","updateTime":1617939110373,"negativeBalance":"0"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::AccountBalanceResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::AccountBalanceResponse");
 
             let resp = client.account_balance(params).await.expect("Expected a response");

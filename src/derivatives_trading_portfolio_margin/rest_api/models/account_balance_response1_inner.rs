@@ -23,7 +23,7 @@ pub struct AccountBalanceResponse1Inner {
     /// Total Wallet Balance.
     #[serde(rename = "totalWalletBalance", skip_serializing_if = "Option::is_none")]
     pub total_wallet_balance: Option<String>,
-    /// Cross Margin Asset.
+    /// Cross Margin Asset. Equal to crossMarginFree + crossMarginLocked.
     #[serde(rename = "crossMarginAsset", skip_serializing_if = "Option::is_none")]
     pub cross_margin_asset: Option<String>,
     /// Cross Margin Borrowed.

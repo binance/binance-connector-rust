@@ -1,5 +1,23 @@
 # Changelog
 
+## 71.0.0 - 2026-09-28
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (4)
+
+#### REST API
+
+- Modified parameter `incomeType`:
+  - enum removed: `AUTO_EXCHANGE`
+  - affected methods:
+    - `get_um_income_history()` (`GET /papi/v1/um/income`)
+- Modified response for `account_balance()` (`GET /papi/v1/balance`):
+  - oneOf modified
+
+- Modified response schema `accountBalanceResponse`:
+  - oneOf modified
+
 ## 70.2.0 - 2026-09-25
 
 ### Added (1)
