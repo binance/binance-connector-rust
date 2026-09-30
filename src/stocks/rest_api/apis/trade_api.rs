@@ -595,7 +595,7 @@ impl EquityTradeHistoryParams {
 #[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PlaceEquityOrderParams {
-    /// US stock ticker, e.g. `AAPL`, `TSLA`. Must be a symbol with tokenization enabled — check via `/market/tokenized-assets`.
+    /// US stock ticker, e.g. `AAPL`, `TSLA`. Must be a tradable US-equity symbol — verify via `/sapi/v1/equity/market/exchangeInfo`. Tokenization enablement (verifiable via `/sapi/v1/equity/market/tokenized-assets`) is *not* required; non-tokenized symbols are accepted and settle as traditional underlying-equity trades. The `tokenize` parameter only takes effect on tokenization-enabled symbols and is silently ignored otherwise.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -661,7 +661,7 @@ pub struct PlaceEquityOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "clientOrderId", default)]
     pub client_order_id: Option<String>,
-    /// Whether to tokenize the purchased stock asset upon settlement. Default `true`. Set to `false` to receive the underlying equity directly instead of a tokenized asset.
+    /// Whether to tokenize the purchased stock asset upon settlement. Default `true`. Only takes effect when the symbol is tokenization-enabled (check via `/market/tokenized-assets`); silently ignored for non-tokenized symbols, which always settle as traditional underlying-equity trades.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -680,7 +680,7 @@ impl PlaceEquityOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `symbol` — US stock ticker, e.g. `AAPL`, `TSLA`. Must be a symbol with tokenization enabled — check via `/market/tokenized-assets`.
+    /// * `symbol` — US stock ticker, e.g. `AAPL`, `TSLA`. Must be a tradable US-equity symbol — verify via `/sapi/v1/equity/market/exchangeInfo`. Tokenization enablement (verifiable via `/sapi/v1/equity/market/tokenized-assets`) is *not* required; non-tokenized symbols are accepted and settle as traditional underlying-equity trades. The `tokenize` parameter only takes effect on tokenization-enabled symbols and is silently ignored otherwise.
     /// * `side` — `BUY` / `SELL`.
     /// * `order_type` — `MARKET` / `LIMIT`.
     ///

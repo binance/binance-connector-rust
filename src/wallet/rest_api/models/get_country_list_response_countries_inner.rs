@@ -32,7 +32,7 @@ pub struct GetCountryListResponseCountriesInner {
     /// Whether withdrawal is allowed for this country.
     #[serde(rename = "withdrawalAllowed", skip_serializing_if = "Option::is_none")]
     pub withdrawal_allowed: Option<bool>,
-    /// Whether this country has region-level restrictions.
+    /// Whether this country has region-level restrictions. Always `false` for the BR entity, which does not collect region/city.
     #[serde(
         rename = "hasRegionRestrictions",
         skip_serializing_if = "Option::is_none"

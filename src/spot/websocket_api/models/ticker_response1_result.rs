@@ -51,6 +51,7 @@ pub struct TickerResponse1Result {
     /// Trade IDs
     #[serde(rename = "firstId", skip_serializing_if = "Option::is_none")]
     pub first_id: Option<i64>,
+    /// Last trade ID
     #[serde(rename = "lastId", skip_serializing_if = "Option::is_none")]
     pub last_id: Option<i64>,
     /// Number of trades in the interval

@@ -25,7 +25,7 @@ pub struct TimeResponse {
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
     pub result: Option<Box<models::TimeResponseResult>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::AccountCommissionResponseRateLimitsInner>>,
+    pub rate_limits: Option<Vec<models::PingResponseRateLimitsInner>>,
 }
 
 impl TimeResponse {

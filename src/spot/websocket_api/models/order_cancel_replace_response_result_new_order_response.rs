@@ -16,6 +16,7 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `OrderCancelReplaceResponseResultNewOrderResponse` : Format is identical to \"order.place\" format, affected by \"newOrderRespType\". Some fields are optional and are included only for orders that set them.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderCancelReplaceResponseResultNewOrderResponse {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
@@ -102,6 +103,7 @@ pub struct OrderCancelReplaceResponseResultNewOrderResponse {
 }
 
 impl OrderCancelReplaceResponseResultNewOrderResponse {
+    /// Format is identical to \"order.place\" format, affected by \"newOrderRespType\". Some fields are optional and are included only for orders that set them.
     #[must_use]
     pub fn new() -> OrderCancelReplaceResponseResultNewOrderResponse {
         OrderCancelReplaceResponseResultNewOrderResponse {

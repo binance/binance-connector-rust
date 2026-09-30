@@ -468,7 +468,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/exchangeInfo".trim_start_matches('/'));
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"5494febb-d167-46a2-996d-70533eb4d976","status":200,"result":{"timezone":"UTC","serverTime":1655969291181,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}],"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000}],"symbols":[{"symbol":"BNBBTC","status":"TRADING","baseAsset":"BNB","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":true,"cancelReplaceAllowed":true,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[{"filterType":"PRICE_FILTER","priceExponent":8,"minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"}],"permissions":["SPOT"],"permissionSets":[["SPOT"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}],"sors":[{"baseAsset":"BTC","symbols":["BTCUSDT"]}]}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"5494febb-d167-46a2-996d-70533eb4d976","status":200,"result":{"timezone":"UTC","serverTime":1655969291181,"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000},{"rateLimitType":"ORDERS","interval":"SECOND","intervalNum":10,"limit":50},{"rateLimitType":"ORDERS","interval":"DAY","intervalNum":1,"limit":160000},{"rateLimitType":"CONNECTIONS","interval":"MINUTE","intervalNum":5,"limit":300}],"exchangeFilters":[{"filterType":"EXCHANGE_MAX_NUM_ORDERS","maxNumOrders":1000}],"symbols":[{"symbol":"BNBBTC","status":"TRADING","baseAsset":"BNB","baseAssetPrecision":8,"quoteAsset":"BTC","quotePrecision":8,"quoteAssetPrecision":8,"baseCommissionPrecision":8,"quoteCommissionPrecision":8,"orderTypes":["LIMIT","LIMIT_MAKER","MARKET","STOP_LOSS_LIMIT","TAKE_PROFIT_LIMIT"],"icebergAllowed":true,"ocoAllowed":true,"otoAllowed":true,"opoAllowed":true,"quoteOrderQtyMarketAllowed":true,"allowTrailingStop":true,"cancelReplaceAllowed":true,"amendAllowed":false,"pegInstructionsAllowed":true,"isSpotTradingAllowed":true,"isMarginTradingAllowed":true,"filters":[{"filterType":"PRICE_FILTER","minPrice":"0.00000100","maxPrice":"100000.00000000","tickSize":"0.00000100"},{"filterType":"LOT_SIZE","minQty":"0.00100000","maxQty":"100000.00000000","stepSize":"0.00100000"}],"permissions":["SPOT"],"permissionSets":[["SPOT","MARGIN","TRD_GRP_004"]],"defaultSelfTradePreventionMode":"NONE","allowedSelfTradePreventionModes":["NONE"]}],"sors":[{"baseAsset":"BTC","symbols":["BTCUSDT","BTCUSDC"]}]},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":20}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -724,7 +724,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/ping".trim_start_matches('/'));
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"922bcc6e-9de8-440d-9e84-7c80933a8d0d","status":200,"result":{},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"922bcc6e-9de8-440d-9e84-7c80933a8d0d","status":200,"result":{},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
@@ -852,7 +852,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/time".trim_start_matches('/'));
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"187d3cb2-942d-484c-8271-4e2141bbadb1","status":200,"result":{"serverTime":1656400526260},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":321}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"187d3cb2-942d-484c-8271-4e2141bbadb1","status":200,"result":{"serverTime":1656400526260},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

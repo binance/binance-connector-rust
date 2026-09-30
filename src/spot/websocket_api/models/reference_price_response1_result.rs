@@ -17,7 +17,7 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ReferencePriceResponseResult {
+pub struct ReferencePriceResponse1Result {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     #[serde(rename = "referencePrice", skip_serializing_if = "Option::is_none")]
@@ -31,10 +31,10 @@ pub struct ReferencePriceResponseResult {
     pub msg: Option<String>,
 }
 
-impl ReferencePriceResponseResult {
+impl ReferencePriceResponse1Result {
     #[must_use]
-    pub fn new() -> ReferencePriceResponseResult {
-        ReferencePriceResponseResult {
+    pub fn new() -> ReferencePriceResponse1Result {
+        ReferencePriceResponse1Result {
             symbol: None,
             reference_price: None,
             timestamp: None,

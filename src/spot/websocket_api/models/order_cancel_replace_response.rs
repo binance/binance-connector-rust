@@ -16,6 +16,7 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `OrderCancelReplaceResponse` : If both cancel and placement succeed, you get the following response with `\"status\": 200`:
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderCancelReplaceResponse {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
@@ -25,10 +26,11 @@ pub struct OrderCancelReplaceResponse {
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
     pub result: Option<Box<models::OrderCancelReplaceResponseResult>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::AccountCommissionResponseRateLimitsInner>>,
+    pub rate_limits: Option<Vec<models::PingResponseRateLimitsInner>>,
 }
 
 impl OrderCancelReplaceResponse {
+    /// If both cancel and placement succeed, you get the following response with `\"status\": 200`:
     #[must_use]
     pub fn new() -> OrderCancelReplaceResponse {
         OrderCancelReplaceResponse {

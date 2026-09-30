@@ -16,6 +16,7 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `OrderTestResponseResultDiscount` : Discount on standard commissions when paying in BNB.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderTestResponseResultDiscount {
     #[serde(rename = "enabledForAccount", skip_serializing_if = "Option::is_none")]
@@ -24,11 +25,13 @@ pub struct OrderTestResponseResultDiscount {
     pub enabled_for_symbol: Option<bool>,
     #[serde(rename = "discountAsset", skip_serializing_if = "Option::is_none")]
     pub discount_asset: Option<String>,
+    /// Standard commission is reduced by this rate when paying commission in BNB.
     #[serde(rename = "discount", skip_serializing_if = "Option::is_none")]
     pub discount: Option<String>,
 }
 
 impl OrderTestResponseResultDiscount {
+    /// Discount on standard commissions when paying in BNB.
     #[must_use]
     pub fn new() -> OrderTestResponseResultDiscount {
         OrderTestResponseResultDiscount {

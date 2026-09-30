@@ -360,7 +360,7 @@ impl RestApi {
 
     /// Futures Trading Quantitative Rules Indicators (`USER_DATA`)
     ///
-    /// Futures trading quantitative rules indicators, for more information on this, please refer to the [Futures Trading Quantitative Rules](https://www.binance.com/en/support/faq/4f462ebe6ff445d4a170be7d9e897272)
+    /// Futures trading quantitative rules indicators, for more information on this, please refer to the Futures Trading Quantitative Rules
     ///
     /// Weight: - **1** for a single symbol
     /// - **10** when the symbol parameter is omitted

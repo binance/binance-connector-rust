@@ -322,7 +322,7 @@ pub struct FuturesTransferForSubAccountParams {
     pub amount: rust_decimal::Decimal,
     /// 1: transfer from subaccount's spot account to its USDT-margined futures account 2: transfer from
     /// subaccount's USDT-margined futures account to its spot account 3: transfer from subaccount's spot
-    /// account to its COIN-margined futures account 4:transfer from subaccount's COIN-margined futures
+    /// account to its COIN-margined futures account 4: transfer from subaccount's COIN-margined futures
     /// account to its spot account
     ///
     /// This field is **required.
@@ -346,7 +346,7 @@ impl FuturesTransferForSubAccountParams {
     /// * `email` — String
     /// * `asset` — The asset being transferred
     /// * `amount` — The amount to be transferred
-    /// * `r#type` — 1: transfer from subaccount's spot account to its USDT-margined futures account 2: transfer from subaccount's USDT-margined futures account to its spot account 3: transfer from subaccount's spot account to its COIN-margined futures account 4:transfer from subaccount's COIN-margined futures account to its spot account
+    /// * `r#type` — 1: transfer from subaccount's spot account to its USDT-margined futures account 2: transfer from subaccount's USDT-margined futures account to its spot account 3: transfer from subaccount's spot account to its COIN-margined futures account 4: transfer from subaccount's COIN-margined futures account to its spot account
     ///
     #[must_use]
     pub fn builder(
@@ -411,7 +411,7 @@ pub struct GetDetailOnSubAccountsFuturesAccountV2Params {
     #[builder(setter(into))]
     #[serde(rename = "email")]
     pub email: String,
-    /// 1:USDT-margined Futures，2: Coin-margined Futures
+    /// 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -432,7 +432,7 @@ impl GetDetailOnSubAccountsFuturesAccountV2Params {
     /// Required parameters:
     ///
     /// * `email` — String
-    /// * `futures_type` — 1:USDT-margined Futures，2: Coin-margined Futures
+    /// * `futures_type` — 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     #[must_use]
     pub fn builder(
@@ -755,7 +755,7 @@ impl GetSummaryOfSubAccountsFuturesAccountParams {
 #[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct GetSummaryOfSubAccountsFuturesAccountV2Params {
-    /// 1:USDT-margined Futures，2: Coin-margined Futures
+    /// 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -789,7 +789,7 @@ impl GetSummaryOfSubAccountsFuturesAccountV2Params {
     ///
     /// Required parameters:
     ///
-    /// * `futures_type` — 1:USDT-margined Futures，2: Coin-margined Futures
+    /// * `futures_type` — 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     #[must_use]
     pub fn builder(futures_type: i64) -> GetSummaryOfSubAccountsFuturesAccountV2ParamsBuilder {
@@ -1042,7 +1042,7 @@ pub struct QuerySubAccountFuturesAssetTransferHistoryParams {
     #[builder(setter(into))]
     #[serde(rename = "email")]
     pub email: String,
-    /// 1:USDT-margined Futures，2: Coin-margined Futures
+    /// 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -1090,7 +1090,7 @@ impl QuerySubAccountFuturesAssetTransferHistoryParams {
     /// Required parameters:
     ///
     /// * `email` — String
-    /// * `futures_type` — 1:USDT-margined Futures，2: Coin-margined Futures
+    /// * `futures_type` — 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     #[must_use]
     pub fn builder(
@@ -1304,7 +1304,7 @@ pub struct SubAccountFuturesAssetTransferParams {
     #[builder(setter(into))]
     #[serde(rename = "toEmail")]
     pub to_email: String,
-    /// 1:USDT-margined Futures，2: Coin-margined Futures
+    /// 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -1340,7 +1340,7 @@ impl SubAccountFuturesAssetTransferParams {
     ///
     /// * `from_email` — Sender email
     /// * `to_email` — Recipient email
-    /// * `futures_type` — 1:USDT-margined Futures，2: Coin-margined Futures
+    /// * `futures_type` — 1: USDT-margined Futures，2: Coin-margined Futures
     /// * `asset` — String
     /// * `amount` — `rust_decimal::Decimal`
     ///

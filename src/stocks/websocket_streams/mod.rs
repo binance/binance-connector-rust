@@ -230,7 +230,7 @@ impl WebsocketStreams {
 
     /// Calendar Stream
     ///
-    /// Single-stream broadcast of market-phase transitions. One message per transition; no periodic heartbeat payload. Server polls every 5 seconds. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see [Subscribing via RPC](https://developers.binance.com/en/docs/products/stocks/websocket-streams-general-info#subscribing-via-rpc).
+    /// Single-stream broadcast of market-phase transitions. One message per transition; no periodic heartbeat payload. Server polls every 5 seconds. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see Subscribing via RPC.
     ///
     /// # Arguments
     ///
@@ -257,7 +257,7 @@ impl WebsocketStreams {
 
     /// Kline Stream
     ///
-    /// Per-symbol candlestick updates. One stream per (symbol, interval) combination. Supported intervals: 5m, 1h, 1d, 1w, 1M. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see [Subscribing via RPC](https://developers.binance.com/en/docs/products/stocks/websocket-streams-general-info#subscribing-via-rpc).
+    /// Per-symbol candlestick updates. One stream per (symbol, interval) combination. Supported intervals: 5m, 1h, 1d, 1w, 1M. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see Subscribing via RPC.
     ///
     /// # Arguments
     ///
@@ -284,7 +284,7 @@ impl WebsocketStreams {
 
     /// Price Stream
     ///
-    /// Push-all price snapshot, polled every 3 seconds. One message carries the latest price for every active US-equity symbol. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see [Subscribing via RPC](https://developers.binance.com/en/docs/products/stocks/websocket-streams-general-info#subscribing-via-rpc).
+    /// Push-all price snapshot, polled every 3 seconds. One message carries the latest price for every active US-equity symbol. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see Subscribing via RPC.
     ///
     /// # Arguments
     ///
@@ -311,7 +311,7 @@ impl WebsocketStreams {
 
     /// Quote Stream
     ///
-    /// Per-symbol real-time best-bid / best-ask. Each symbol has its own stream. Per-symbol throttle: at most one push per symbol every 200 ms. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see [Subscribing via RPC](https://developers.binance.com/en/docs/products/stocks/websocket-streams-general-info#subscribing-via-rpc).
+    /// Per-symbol real-time best-bid / best-ask. Each symbol has its own stream. Per-symbol throttle: at most one push per symbol every 200 ms. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see Subscribing via RPC.
     ///
     /// # Arguments
     ///
@@ -338,7 +338,7 @@ impl WebsocketStreams {
 
     /// Tradability Stream
     ///
-    /// Per-symbol push whenever the tradable direction of a symbol changes. Pushed only when the value actually changes (new value ≠ old value). Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see [Subscribing via RPC](https://developers.binance.com/en/docs/products/stocks/websocket-streams-general-info#subscribing-via-rpc).
+    /// Per-symbol push whenever the tradable direction of a symbol changes. Pushed only when the value actually changes (new value ≠ old value). Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see Subscribing via RPC.
     ///
     /// # Arguments
     ///
@@ -367,7 +367,7 @@ impl WebsocketStreams {
 
     /// Trading Status Stream
     ///
-    /// Per-symbol trading-status transitions (halts, resumes, SSR, LULD pauses, etc.). Events that do not match a known status/reason rule are not pushed. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see [Subscribing via RPC](https://developers.binance.com/en/docs/products/stocks/websocket-streams-general-info#subscribing-via-rpc).
+    /// Per-symbol trading-status transitions (halts, resumes, SSR, LULD pauses, etc.). Events that do not match a known status/reason rule are not pushed. Also reachable via the SUBSCRIBE/UNSUBSCRIBE RPC — see Subscribing via RPC.
     ///
     /// # Arguments
     ///

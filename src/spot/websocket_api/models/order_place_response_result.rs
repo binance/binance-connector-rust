@@ -22,6 +22,7 @@ pub struct OrderPlaceResponseResult {
     pub symbol: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// always -1 for singular orders
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
@@ -101,6 +102,7 @@ pub struct OrderPlaceResponseResult {
     /// Cause of the order's expiration. Appears when an order has expired.
     #[serde(rename = "expiryReason", skip_serializing_if = "Option::is_none")]
     pub expiry_reason: Option<String>,
+    /// FULL response is identical to RESULT response, with the same optional fields based on the order type and parameters. FULL response additionally includes the list of trades which immediately filled the order.
     #[serde(rename = "fills", skip_serializing_if = "Option::is_none")]
     pub fills: Option<Vec<models::OrderPlaceResponseResultFillsInner>>,
 }

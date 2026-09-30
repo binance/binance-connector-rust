@@ -25,7 +25,7 @@ pub struct TickerResponse1 {
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
     pub result: Option<Box<models::TickerResponse1Result>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::AccountCommissionResponseRateLimitsInner>>,
+    pub rate_limits: Option<Vec<models::TickerResponse1RateLimitsInner>>,
 }
 
 impl TickerResponse1 {

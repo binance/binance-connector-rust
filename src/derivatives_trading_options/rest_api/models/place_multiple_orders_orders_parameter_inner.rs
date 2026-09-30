@@ -43,7 +43,7 @@ pub struct PlaceMultipleOrdersOrdersParameterInner {
     /// is market maker protection order
     #[serde(rename = "isMmp", skip_serializing_if = "Option::is_none")]
     pub is_mmp: Option<bool>,
-    /// `EXPIRE_TAKER:expire` taker order when STP triggers/ `EXPIRE_MAKER:expire` maker order when STP triggers/ `EXPIRE_BOTH:expire` both orders when STP triggers; Default `EXPIRE_MAKER`
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire maker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; Default `EXPIRE_MAKER`
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
@@ -133,7 +133,7 @@ impl Default for NewOrderRespTypeEnum {
         Self::Ack
     }
 }
-/// `EXPIRE_TAKER:expire` taker order when STP triggers/ `EXPIRE_MAKER:expire` maker order when STP triggers/ `EXPIRE_BOTH:expire` both orders when STP triggers; Default `EXPIRE_MAKER`
+/// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire maker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; Default `EXPIRE_MAKER`
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SelfTradePreventionModeEnum {
     #[serde(rename = "EXPIRE_TAKER")]

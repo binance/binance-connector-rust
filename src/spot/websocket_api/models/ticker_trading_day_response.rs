@@ -16,26 +16,16 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
-#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct TickerTradingDayResponse {
-    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
-    pub status: Option<i64>,
-    #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
-    pub result: Option<Vec<models::TickerTradingDayResponseResultInner>>,
-    #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::AccountCommissionResponseRateLimitsInner>>,
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum TickerTradingDayResponse {
+    TickerTradingDayResponse1(Box<models::TickerTradingDayResponse1>),
+    TickerTradingDayResponse2(Box<models::TickerTradingDayResponse2>),
+    Other(serde_json::Value),
 }
 
-impl TickerTradingDayResponse {
-    #[must_use]
-    pub fn new() -> TickerTradingDayResponse {
-        TickerTradingDayResponse {
-            id: None,
-            status: None,
-            result: None,
-            rate_limits: None,
-        }
+impl Default for TickerTradingDayResponse {
+    fn default() -> Self {
+        Self::TickerTradingDayResponse1(Default::default())
     }
 }

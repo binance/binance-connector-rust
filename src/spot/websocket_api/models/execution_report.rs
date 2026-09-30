@@ -79,8 +79,13 @@ pub struct ExecutionReport {
     #[serde(rename = "n", skip_serializing_if = "Option::is_none")]
     pub n: Option<String>,
     /// Commission asset
-    #[serde(rename = "N", skip_serializing_if = "Option::is_none")]
-    pub n_uppercase: Option<String>,
+    #[serde(
+        rename = "N",
+        default,
+        with = "::serde_with::rust::double_option",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub n_uppercase: Option<Option<String>>,
     /// Transaction time
     #[serde(rename = "T", skip_serializing_if = "Option::is_none")]
     pub t_uppercase: Option<i64>,

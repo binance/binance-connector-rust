@@ -84,6 +84,7 @@ pub struct ExchangeInfoResponseSymbolsInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub is_margin_trading_allowed: Option<bool>,
+    /// Symbol filters are explained on the \"Filters\" page: All symbol filters are optional.
     #[serde(rename = "filters", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<models::SymbolFilters>>,
     #[serde(rename = "permissions", skip_serializing_if = "Option::is_none")]

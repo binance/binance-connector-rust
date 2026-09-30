@@ -17,7 +17,7 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct TickerTradingDayResponseResultInner {
+pub struct TickerTradingDayResponse2ResultInner {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
     /// Absolute price change
@@ -58,10 +58,10 @@ pub struct TickerTradingDayResponseResultInner {
     pub count: Option<i64>,
 }
 
-impl TickerTradingDayResponseResultInner {
+impl TickerTradingDayResponse2ResultInner {
     #[must_use]
-    pub fn new() -> TickerTradingDayResponseResultInner {
-        TickerTradingDayResponseResultInner {
+    pub fn new() -> TickerTradingDayResponse2ResultInner {
+        TickerTradingDayResponse2ResultInner {
             symbol: None,
             price_change: None,
             price_change_percent: None,

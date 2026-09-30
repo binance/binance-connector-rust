@@ -19,6 +19,7 @@ use serde::{Deserialize, Serialize};
 pub struct OrderCancelReplaceResponseCancelResponse {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// cancelOrigClientOrderId from request
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
@@ -26,6 +27,7 @@ pub struct OrderCancelReplaceResponseCancelResponse {
     /// Unless it's part of an order list, value will be -1
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
+    /// cancelNewClientOrderId from request
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     #[serde(rename = "transactTime", skip_serializing_if = "Option::is_none")]

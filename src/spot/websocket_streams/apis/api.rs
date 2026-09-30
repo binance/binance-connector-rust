@@ -1648,7 +1648,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":1672515782136,"s":"BNBBTC","a":12345,"f":100,"l":105,"T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":1672515782136,"s":"BNBBTC","a":12345,"p":"0.001","q":"100","f":100,"l":105,"T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1702,7 +1702,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":1672515782136,"s":"BNBBTC","a":12345,"f":100,"l":105,"T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"aggTrade","E":1672515782136,"s":"BNBBTC","a":12345,"p":"0.001","q":"100","f":100,"l":105,"T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1793,7 +1793,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"[{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","o":"0.0010","h":"0.0025","l":"0.0010","c":"0.0025","w":"0.0018","v":"10000","q":"18","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1847,7 +1847,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"[{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"[{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","o":"0.0010","h":"0.0025","l":"0.0010","c":"0.0025","w":"0.0018","v":"10000","q":"18","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1904,14 +1904,17 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = AllMiniTickerParams::builder()
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = AllMiniTickerParams::builder().id(Some(id.clone())).build().unwrap();
 
-            let AllMiniTickerParams { id } = params.clone();
+            let AllMiniTickerParams {
+                id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1927,9 +1930,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value =
-                serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC"}]"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1938,10 +1939,7 @@ mod tests {
             streams_base.on_message(msg.to_string(), conn.clone()).await;
             yield_now().await;
 
-            assert!(
-                called.load(Ordering::SeqCst),
-                "expected our callback to have been invoked"
-            );
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
         });
     }
 
@@ -1953,14 +1951,17 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = AllMiniTickerParams::builder()
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = AllMiniTickerParams::builder().id(Some(id.clone())).build().unwrap();
 
-            let AllMiniTickerParams { id } = params.clone();
+            let AllMiniTickerParams {
+                id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1976,16 +1977,11 @@ mod tests {
                 called_clone.store(true, Ordering::SeqCst);
             });
 
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "should be subscribed before unsubscribe"
-            );
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value =
-                serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC"}]"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"[{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -1995,10 +1991,7 @@ mod tests {
 
             yield_now().await;
 
-            assert!(
-                !called.load(Ordering::SeqCst),
-                "callback should not be invoked after unsubscribe"
-            );
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
         });
     }
 
@@ -2046,15 +2039,20 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = AvgPriceParams::builder("bnbusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = AvgPriceParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
-            let AvgPriceParams { symbol, id } = params.clone();
+            let AvgPriceParams {
+                symbol,id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2070,10 +2068,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(
-                r#"{"e":"avgPrice","E":1693907033000,"s":"BTCUSDT","i":"5m","T":1693907032213}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"avgPrice","E":1693907033000,"s":"BTCUSDT","i":"5m","w":"25776.86000000","T":1693907032213}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2082,10 +2077,7 @@ mod tests {
             streams_base.on_message(msg.to_string(), conn.clone()).await;
             yield_now().await;
 
-            assert!(
-                called.load(Ordering::SeqCst),
-                "expected our callback to have been invoked"
-            );
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
         });
     }
 
@@ -2097,15 +2089,20 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = AvgPriceParams::builder("bnbusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = AvgPriceParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
-            let AvgPriceParams { symbol, id } = params.clone();
+            let AvgPriceParams {
+                symbol,id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2121,17 +2118,11 @@ mod tests {
                 called_clone.store(true, Ordering::SeqCst);
             });
 
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "should be subscribed before unsubscribe"
-            );
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(
-                r#"{"e":"avgPrice","E":1693907033000,"s":"BTCUSDT","i":"5m","T":1693907032213}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"avgPrice","E":1693907033000,"s":"BTCUSDT","i":"5m","w":"25776.86000000","T":1693907032213}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2141,10 +2132,7 @@ mod tests {
 
             yield_now().await;
 
-            assert!(
-                !called.load(Ordering::SeqCst),
-                "callback should not be invoked after unsubscribe"
-            );
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
         });
     }
 
@@ -2333,15 +2321,20 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = BookTickerParams::builder("bnbusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = BookTickerParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
-            let BookTickerParams { symbol, id } = params.clone();
+            let BookTickerParams {
+                symbol,id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2357,8 +2350,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"u":400900217,"s":"BNBUSDT"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"u":400900217,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2367,10 +2359,7 @@ mod tests {
             streams_base.on_message(msg.to_string(), conn.clone()).await;
             yield_now().await;
 
-            assert!(
-                called.load(Ordering::SeqCst),
-                "expected our callback to have been invoked"
-            );
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
         });
     }
 
@@ -2382,15 +2371,20 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = BookTickerParams::builder("bnbusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = BookTickerParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
-            let BookTickerParams { symbol, id } = params.clone();
+            let BookTickerParams {
+                symbol,id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2406,15 +2400,11 @@ mod tests {
                 called_clone.store(true, Ordering::SeqCst);
             });
 
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "should be subscribed before unsubscribe"
-            );
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"u":400900217,"s":"BNBUSDT"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"u":400900217,"s":"BNBUSDT","b":"25.35190000","B":"31.21000000","a":"25.36520000","A":"40.66000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2424,10 +2414,7 @@ mod tests {
 
             yield_now().await;
 
-            assert!(
-                !called.load(Ordering::SeqCst),
-                "callback should not be invoked after unsubscribe"
-            );
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
         });
     }
 
@@ -2673,7 +2660,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"n":100,"x":false}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2730,7 +2717,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"n":100,"x":false}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2831,7 +2818,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"n":100,"x":false}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2888,7 +2875,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"n":100,"x":false}}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"kline","E":1672515782136,"s":"BNBBTC","k":{"t":1672515780000,"T":1672515839999,"s":"BNBBTC","i":"1m","f":100,"L":200,"o":"0.0010","c":"0.0020","h":"0.0025","l":"0.0015","v":"1000","n":100,"x":false,"q":"1.0000","V":"500","Q":"0.500","B":"123456"}}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2946,15 +2933,20 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = MiniTickerParams::builder("bnbusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = MiniTickerParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
-            let MiniTickerParams { symbol, id } = params.clone();
+            let MiniTickerParams {
+                symbol,id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -2970,9 +2962,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value =
-                serde_json::from_str(r#"{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC"}"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -2981,10 +2971,7 @@ mod tests {
             streams_base.on_message(msg.to_string(), conn.clone()).await;
             yield_now().await;
 
-            assert!(
-                called.load(Ordering::SeqCst),
-                "expected our callback to have been invoked"
-            );
+            assert!(called.load(Ordering::SeqCst), "expected our callback to have been invoked");
         });
     }
 
@@ -2996,15 +2983,20 @@ mod tests {
 
             let id = "test-id-123".to_string();
 
-            let params = MiniTickerParams::builder("bnbusdt".to_string())
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = MiniTickerParams::builder("bnbusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
-            let MiniTickerParams { symbol, id } = params.clone();
+            let MiniTickerParams {
+                symbol,id,
+            } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] =
-                &[("symbol", Some(symbol.clone())), ("id", id.clone())];
+            let pairs: &[(&str, Option<String>)] = &[
+                ("symbol",
+                        Some(symbol.clone())
+                ),
+                ("id",
+                        id.clone()
+                ),
+            ];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -3020,16 +3012,11 @@ mod tests {
                 called_clone.store(true, Ordering::SeqCst);
             });
 
-            assert!(
-                streams_base.is_subscribed(&stream).await,
-                "should be subscribed before unsubscribe"
-            );
+            assert!(streams_base.is_subscribed(&stream).await, "should be subscribed before unsubscribe");
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value =
-                serde_json::from_str(r#"{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC"}"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrMiniTicker","E":1672515782136,"s":"BNBBTC","c":"0.0025","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3039,10 +3026,7 @@ mod tests {
 
             yield_now().await;
 
-            assert!(
-                !called.load(Ordering::SeqCst),
-                "callback should not be invoked after unsubscribe"
-            );
+            assert!(!called.load(Ordering::SeqCst), "callback should not be invoked after unsubscribe");
         });
     }
 
@@ -3479,7 +3463,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","o":"0.0010","h":"0.0025","l":"0.0010","c":"0.0025","w":"0.0018","v":"10000","q":"18","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3536,7 +3520,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"1hTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","o":"0.0010","h":"0.0025","l":"0.0010","c":"0.0025","w":"0.0018","v":"10000","q":"18","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3623,7 +3607,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":1672515782136,"s":"BNBBTC","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","w":"0.0018","x":"0.0009","c":"0.0025","Q":"10","b":"0.0024","B":"10","a":"0.0026","A":"100","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3677,7 +3661,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":1672515782136,"s":"BNBBTC","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"24hrTicker","E":1672515782136,"s":"BNBBTC","p":"0.0015","P":"250.00","w":"0.0018","x":"0.0009","c":"0.0025","Q":"10","b":"0.0024","B":"10","a":"0.0026","A":"100","o":"0.0010","h":"0.0025","l":"0.0010","v":"10000","q":"18","O":0,"C":1675216573749,"F":0,"L":18150,"n":18151}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3764,7 +3748,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1672515782136,"s":"BNBBTC","t":12345,"T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1672515782136,"s":"BNBBTC","t":12345,"p":"0.001","q":"100","T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -3818,7 +3802,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1672515782136,"s":"BNBBTC","t":12345,"T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"trade","E":1672515782136,"s":"BNBBTC","t":12345,"p":"0.001","q":"100","T":1672515782136,"m":true,"M":true}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,

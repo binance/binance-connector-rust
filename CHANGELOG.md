@@ -1,5 +1,122 @@
 # Changelog
 
+## 72.0.0 - 2026-09-30
+
+**Spot**
+
+### Changed (47)
+
+- Modified response for `reference_price()` (`GET /api/v3/referencePrice`):
+  - property `symbol` deleted
+  - property `timestamp` deleted
+  - property `referencePrice` deleted
+  - oneOf added 2 schema(s)
+
+- Modified response for `ticker()` (`GET /api/v3/ticker`):
+  - oneOf modified
+
+- Modified response for `ticker24hr()` (`GET /api/v3/ticker/24hr`):
+  - oneOf modified
+
+- Modified response for `ticker_book_ticker()` (`GET /api/v3/ticker/bookTicker`):
+  - oneOf modified
+
+- Modified response for `ticker_price()` (`GET /api/v3/ticker/price`):
+  - oneOf modified
+
+- Modified response for `ticker_trading_day()` (`GET /api/v3/ticker/tradingDay`):
+  - oneOf modified
+
+- Removed response field `referencePrice`
+  - affected events:
+    - `referencePriceResponse`
+- Removed response field `symbol`
+  - affected events:
+    - `referencePriceResponse`
+- Removed response field `timestamp`
+  - affected events:
+    - `referencePriceResponse`
+- Added response schema `referencePriceResponse2`
+- Added response schema `referencePriceResponse1`
+- Modified response schema `ticker24hrResponse`:
+  - oneOf modified
+- Modified response schema `tickerBookTickerResponse`:
+  - oneOf modified
+- Modified response schema `tickerPriceResponse`:
+  - oneOf modified
+- Modified response schema `tickerResponse`:
+  - oneOf modified
+- Modified response schema `tickerTradingDayResponse`:
+  - oneOf modified
+- Marked `order_oco()` (`POST /api/v3/order/oco`) as deprecated.
+
+- Modified response for `reference_price()` (`referencePrice` method):
+  - property `status` deleted
+  - property `id` deleted
+  - property `rateLimits` deleted
+  - property `result` deleted
+  - oneOf added 2 schema(s)
+
+- Modified response for `ticker()` (`ticker` method):
+  - oneOf modified
+
+- Modified response for `ticker24hr()` (`ticker.24hr` method):
+  - oneOf modified
+
+- Modified response for `ticker_book()` (`ticker.book` method):
+  - oneOf modified
+
+- Modified response for `ticker_price()` (`ticker.price` method):
+  - oneOf modified
+
+- Modified response for `ticker_trading_day()` (`ticker.tradingDay` method):
+  - property `result` deleted
+  - property `status` deleted
+  - property `id` deleted
+  - property `rateLimits` deleted
+  - oneOf added 2 schema(s)
+
+- Removed response field `rateLimits`
+  - affected events:
+    - `referencePriceResponse`
+    - `tickerTradingDayResponse`
+- Removed response field `result`
+  - affected events:
+    - `referencePriceResponse`
+    - `tickerTradingDayResponse`
+- Removed response field `status`
+  - affected events:
+    - `referencePriceResponse`
+    - `tickerTradingDayResponse`
+- Removed response field `id`
+  - affected events:
+    - `referencePriceResponse`
+    - `tickerTradingDayResponse`
+- Modified response field `N`:
+  - nullable `false` → `true`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `executionReport`
+- Added response schema `referencePriceResponse1`
+- Added response schema `referencePriceResponse2`
+- Added response schema `tickerTradingDayResponse1`
+- Added response schema `tickerTradingDayResponse2`
+- Modified response schema `ticker24hrResponse`:
+  - oneOf modified
+- Modified response schema `tickerBookResponse`:
+  - oneOf modified
+- Modified response schema `tickerPriceResponse`:
+  - oneOf modified
+- Modified response schema `tickerResponse`:
+  - oneOf modified
+- Marked `order_list_place()` (`orderList.place` method) as deprecated.
+
+- Modified response field `N`:
+  - nullable `false` → `true`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `executionReport`
+
 ## 71.0.0 - 2026-09-28
 
 **Derivatives Trading Portfolio Margin**

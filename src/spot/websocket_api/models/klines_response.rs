@@ -25,7 +25,7 @@ pub struct KlinesResponse {
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<Vec<models::KlinesResponseResultInnerInner>>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::AccountCommissionResponseRateLimitsInner>>,
+    pub rate_limits: Option<Vec<models::AvgPriceResponseRateLimitsInner>>,
 }
 
 impl KlinesResponse {

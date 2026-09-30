@@ -15,25 +15,16 @@
 use crate::spot::rest_api::models;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ReferencePriceResponse {
-    #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
-    pub symbol: Option<String>,
-    /// Reference price. Can be `null` if no reference price is set.
-    #[serde(rename = "referencePrice", skip_serializing_if = "Option::is_none")]
-    pub reference_price: Option<String>,
-    /// Timestamp when reference price was valid.
-    #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<i64>,
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ReferencePriceResponse {
+    ReferencePriceResponse1(Box<models::ReferencePriceResponse1>),
+    ReferencePriceResponse2(Box<models::ReferencePriceResponse2>),
+    Other(serde_json::Value),
 }
 
-impl ReferencePriceResponse {
-    #[must_use]
-    pub fn new() -> ReferencePriceResponse {
-        ReferencePriceResponse {
-            symbol: None,
-            reference_price: None,
-            timestamp: None,
-        }
+impl Default for ReferencePriceResponse {
+    fn default() -> Self {
+        Self::ReferencePriceResponse1(Default::default())
     }
 }

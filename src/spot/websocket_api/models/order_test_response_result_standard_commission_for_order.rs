@@ -16,6 +16,7 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `OrderTestResponseResultStandardCommissionForOrder` : Standard commission rates on trades from the order.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderTestResponseResultStandardCommissionForOrder {
     #[serde(rename = "maker", skip_serializing_if = "Option::is_none")]
@@ -25,6 +26,7 @@ pub struct OrderTestResponseResultStandardCommissionForOrder {
 }
 
 impl OrderTestResponseResultStandardCommissionForOrder {
+    /// Standard commission rates on trades from the order.
     #[must_use]
     pub fn new() -> OrderTestResponseResultStandardCommissionForOrder {
         OrderTestResponseResultStandardCommissionForOrder {

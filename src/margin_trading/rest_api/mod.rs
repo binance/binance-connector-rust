@@ -135,7 +135,7 @@ impl RestApi {
     /// Security Type: `USER_DATA`
     ///
     /// Notes:
-    /// - The margin level need higher than the initial risk ratio of adjusted leverage, the initial risk ratio of 3x is 1.5 , the initial risk ratio of 5x is 1.25; The detail conditions on how to switch between Cross Margin Classic and Cross Margin Pro can refer to [the FAQ](https://www.binance.com/en/support/faq/how-to-activate-the-cross-margin-pro-mode-on-binance-e27786da05e743a694b8c625b3bc475d).
+    /// - The margin level need higher than the initial risk ratio of adjusted leverage, the initial risk ratio of 3x is 1.5 , the initial risk ratio of 5x is 1.25; The detail conditions on how to switch between Cross Margin Classic and Cross Margin Pro can refer to the FAQ.
     ///
     /// # Arguments
     ///
@@ -973,7 +973,7 @@ impl RestApi {
     ///
     /// Notes:
     /// - If isolatedSymbol is not sent, crossed margin data will be sent.
-    /// - `borrowLimit` is also available from [https://www.binance.com/en/margin-fee](https://www.binance.com/en/margin-fee)
+    /// - `borrowLimit` is also available from <https://www.binance.com/en/margin-fee>
     ///
     /// # Arguments
     ///
@@ -1641,12 +1641,12 @@ impl RestApi {
     ///
     /// **Eligibility**
     ///
-    /// - Binance Margin offers low-latency trading through a [special key](https://www.binance.com/en/support/faq/frequently-asked-questions-on-margin-special-api-key-3208663e900d4d2e9fec4140e1832f4e), available exclusively to users with VIP level 7 or higher.
+    /// - Binance Margin offers low-latency trading through a special key, available exclusively to users with VIP level 7 or higher.
     /// - If you are VIP level 6 or below, please contact your VIP manager for eligibility criterias.
     /// - All new Margin Special Key users are required to read, understand, and agree to the Margin Special Key Supplemental Product Terms at the master account level before creating a Margin Special Key.
     /// - Once signed at the master account level, the agreement applies to all sub-accounts. The master account and all sub-accounts (Cross Margin Classic and Portfolio Margin Pro) are authorized to create a Margin Special Key and are subject to the `LiquidationLoan` policy.
     ///
-    /// For more information, please refer to [FAQ](https://www.binance.com/en/support/faq/detail/3208663e900d4d2e9fec4140e1832f4e).
+    /// For more information, please refer to FAQ.
     ///
     /// **Supported Products:**
     ///
@@ -1664,7 +1664,7 @@ impl RestApi {
     /// * HMAC
     /// * RSA
     ///
-    /// We recommend to **use Ed25519 API keys** as it should provide the best performance and security out of all supported key types. We accept PKCS#8 (BEGIN PUBLIC KEY). For how to generate an RSA key pair to send API requests on Binance. Please refer to the document below [FAQ](https://www.binance.com/en/support/faq/how-to-generate-an-rsa-key-pair-to-send-api-requests-on-binance-2b79728f331e43079b27440d9d15c5db) .
+    /// We recommend to **use Ed25519 API keys** as it should provide the best performance and security out of all supported key types. We accept PKCS#8 (BEGIN PUBLIC KEY). For how to generate an RSA key pair to send API requests on Binance. Please refer to the document below FAQ .
     ///
     /// **How to use the Margin Special Key**
     /// - Use the below `sapi` endpoint to create your margin special API Key.
@@ -1672,7 +1672,7 @@ impl RestApi {
     /// - For accessing the Isolated Margin account(s), pass the relevant `symbol` parameter in the API Key creation request.
     /// - Use the generated API Key (and Secret key, if applicable) to perform margin trading and listenKey generation via **Spot** REST API (`https://api.binance.com/api/v3/*`) endpoints.
     ///
-    /// Read [REST API](/products/spot/rest-api#signed-trade-and-user_data-endpoint-security) or [WebSocket API](/products/spot/web-socket-api#request-security) documentation to learn how to use different API keys
+    /// Read REST API or WebSocket API documentation to learn how to use different API keys
     ///
     /// You need to enable Permits “Enable Spot & Margin Trading” option for the API Key which requests this endpoint.
     ///
@@ -1845,7 +1845,7 @@ impl RestApi {
     /// 2. All pre-execution margin checks (including Open-order-loss calculation) will revert to standard mode.
     /// 3. A cooldown period (default: 24 hours) will be enforced, during which the account will not be permitted to create new Margin Special API Keys.
     ///
-    /// For more information, please refer to [FAQ](https://www.binance.com/en/support/faq/detail/3208663e900d4d2e9fec4140e1832f4e).
+    /// For more information, please refer to FAQ.
     ///
     /// **Preconditions:**
     ///
@@ -2420,7 +2420,6 @@ impl RestApi {
     ///
     /// Post a new OTOCO order for margin account：
     ///
-    ///
     /// - An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list
     /// comprised of 3 orders.
     ///
@@ -2430,7 +2429,7 @@ impl RestApi {
     /// - OTOCO has 2 pending orders (pending above and pending below), forming
     /// an OCO pair. The pending orders are only placed on the order book when
     /// the working order gets **fully filled**.
-    /// - The rules of the pending above and pending below follow the same rules as the [Order List OCO](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#margin-account-new-oco).
+    /// - The rules of the pending above and pending below follow the same rules as the Order List OCO.
     /// - OTOCOs add **3 orders** against the unfilled order count,
     /// `EXCHANGE_MAX_NUM_ORDERS` filter, and `MAX_NUM_ORDERS` filter.
     ///

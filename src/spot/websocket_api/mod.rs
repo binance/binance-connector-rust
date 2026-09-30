@@ -494,8 +494,8 @@ impl WebsocketApi {
 
     /// Query Relevant Filters (`USER_DATA`)
     ///
-    /// Retrieves the list of [filters](/products/spot/filters) relevant to an account on a given symbol. This is the only method
-    /// that shows if an account has [`MAX_ASSET`](/products/spot/filters#max_asset) filters applied to it.
+    /// Retrieves the list of filters relevant to an account on a given symbol. This is the only method
+    /// that shows if an account has `MAX_ASSET` filters applied to it.
     ///
     /// Weight(IP): 40
     ///
@@ -585,7 +585,7 @@ impl WebsocketApi {
     /// Security Type: `USER_DATA`
     ///
     /// Notes:
-    /// Data Source: Memory => Database
+    /// **Data Source:** Memory => Database
     ///
     /// Notes:
     /// - If `fromId` is specified, return trades with trade ID >= `fromId`.
@@ -678,7 +678,10 @@ impl WebsocketApi {
     /// Security Type: `USER_DATA`
     ///
     /// Notes:
-    /// Data Source: Memory => Database
+    /// **Data Source:** Memory => Database
+    ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
     ///
     /// # Arguments
     ///
@@ -798,6 +801,9 @@ impl WebsocketApi {
     ///
     /// * For some historical orders the `cummulativeQuoteQty` response field may be negative,
     /// meaning the data is not available at this time.
+    ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
     ///
     /// # Arguments
     ///
@@ -1138,7 +1144,7 @@ impl WebsocketApi {
     /// Security Type: NONE
     ///
     /// Notes:
-    /// - Data Source: Database
+    /// **Data Source:** Database
     ///
     /// # Arguments
     ///
@@ -1174,7 +1180,7 @@ impl WebsocketApi {
     /// * `<symbol>@depth<levels>`
     /// * `<symbol>@depth`
     ///
-    /// You can use `depth` request together with `<symbol>@depth` streams to [maintain a local order book](/products/spot/web-socket-streams#how-to-manage-a-local-order-book-correctly).
+    /// You can use `depth` request together with `<symbol>@depth` streams to maintain a local order book.
     ///
     /// Weight: Adjusted based on the limit:
     ///
@@ -1222,7 +1228,7 @@ impl WebsocketApi {
     /// If you need access to real-time kline updates, please consider using WebSocket Streams:
     /// * `<symbol>@kline_<interval>`
     ///
-    /// If you need historical kline data, please consider using [data.binance.vision](https://github.com/binance/binance-public-data/#klines).
+    /// If you need historical kline data, please consider using data.binance.vision.
     ///
     /// Weight(IP): 2
     ///
@@ -1287,6 +1293,15 @@ impl WebsocketApi {
     /// Notes:
     /// **Data Source:** Memory
     ///
+    /// If the symbol has never had a reference price set, the request is rejected with:
+    ///
+    /// ```json
+    /// {
+    /// "code": -2043,
+    /// "msg": "This symbol doesn't have a reference price."
+    /// }
+    /// ```
+    ///
     /// # Arguments
     ///
     /// - `params`: [`ReferencePriceParams`]
@@ -1294,7 +1309,7 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>`] on success.
+    /// [`WebsocketApiResponse<models::ReferencePriceResponse>`] on success.
     ///
     /// # Errors
     ///
@@ -1306,7 +1321,7 @@ impl WebsocketApi {
     pub async fn reference_price(
         &self,
         params: ReferencePriceParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>> {
+    ) -> anyhow::Result<WebsocketApiResponse<models::ReferencePriceResponse>> {
         self.market_api_client.reference_price(params).await
     }
 
@@ -1618,7 +1633,7 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<Vec<models::TickerTradingDayResponseResultInner>>`] on success.
+    /// [`WebsocketApiResponse<models::TickerTradingDayResponse>`] on success.
     ///
     /// # Errors
     ///
@@ -1630,8 +1645,7 @@ impl WebsocketApi {
     pub async fn ticker_trading_day(
         &self,
         params: TickerTradingDayParams,
-    ) -> anyhow::Result<WebsocketApiResponse<Vec<models::TickerTradingDayResponseResultInner>>>
-    {
+    ) -> anyhow::Result<WebsocketApiResponse<models::TickerTradingDayResponse>> {
         self.market_api_client.ticker_trading_day(params).await
     }
 
@@ -1653,7 +1667,7 @@ impl WebsocketApi {
     ///
     /// * `<symbol>@aggTrade`
     ///
-    /// If you need historical aggregate trade data, please consider using [data.binance.vision](https://github.com/binance/binance-public-data/#aggtrades).
+    /// If you need historical aggregate trade data, please consider using data.binance.vision.
     ///
     /// Weight(IP): 4
     ///
@@ -1824,6 +1838,9 @@ impl WebsocketApi {
     /// Notes:
     /// **Data Source:** Matching Engine
     ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
+    ///
     /// # Arguments
     ///
     /// - `params`: [`OpenOrdersCancelAllParams`]
@@ -1854,7 +1871,7 @@ impl WebsocketApi {
     ///
     /// This adds 0 orders to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
     ///
-    /// Read [Order Amend Keep Priority FAQ](/products/spot/faqs/order_amend_keep_priority) to learn more.
+    /// Read Order Amend Keep Priority FAQ to learn more.
     ///
     /// Weight(IP): 4
     ///
@@ -1864,6 +1881,9 @@ impl WebsocketApi {
     ///
     /// Notes:
     /// **Data Source:** Matching Engine
+    ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
     ///
     /// # Arguments
     ///
@@ -1912,6 +1932,26 @@ impl WebsocketApi {
     ///
     /// * The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` + `origClientOrderId` will be slower.
     ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
+    ///
+    /// **Regarding `cancelRestrictions`**
+    ///
+    /// * If the `cancelRestrictions` value is not any of the supported values, the error will be:
+    /// ```json
+    /// {
+    /// "code": -1145,
+    /// "msg": "Invalid cancelRestrictions"
+    /// }
+    /// ```
+    /// * If the order did not pass the conditions for `cancelRestrictions`, the error will be:
+    /// ```json
+    /// {
+    /// "code": -2011,
+    /// "msg": "Order was not canceled due to cancel restrictions."
+    /// }
+    /// ```
+    ///
     /// # Arguments
     ///
     /// - `params`: [`OrderCancelParams`]
@@ -1939,7 +1979,7 @@ impl WebsocketApi {
     ///
     /// * Cancel an existing order and immediately place a new order instead of the canceled one.
     /// * A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
-    /// * You can only cancel an individual order from an orderList using this method, but the result is the same as canceling the entire orderList.not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
+    /// * You can only cancel an individual order from an orderList using this method, but the result is the same as canceling the entire orderList.
     ///
     /// Weight(IP): 1
     ///
@@ -1950,7 +1990,7 @@ impl WebsocketApi {
     /// Notes:
     /// **Data Source:** Matching Engine
     ///
-    /// Similar to the [`order.place`](#order-place) request,
+    /// Similar to the `order.place` request,
     /// additional mandatory parameters (*) are determined by the new order `type`.
     ///
     /// Available `cancelReplaceMode` options:
@@ -2148,9 +2188,12 @@ impl WebsocketApi {
     ///
     /// * If new order placement is not attempted, your order count is still incremented.
     ///
-    /// * Like [`order.cancel`](#order-cancel), if you cancel an individual order from an order list, the entire order list is canceled.
+    /// * Like `order.cancel`, if you cancel an individual order from an order list, the entire order list is canceled.
     ///
     /// * The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` + `origClientOrderId` will be slower.
+    ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
     ///
     /// # Arguments
     ///
@@ -2190,7 +2233,7 @@ impl WebsocketApi {
     ///
     /// * If both `orderListId` and `listClientOrderId` parameters are provided, the `orderListId` is searched first, then the `listClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
     ///
-    /// * Canceling an individual order with [`order.cancel`](#order-cancel) will cancel the entire order list as well.
+    /// * Canceling an individual order with `order.cancel` will cancel the entire order list as well.
     ///
     /// # Arguments
     ///
@@ -2340,7 +2383,7 @@ impl WebsocketApi {
 
     /// OPO (TRADE)
     ///
-    /// Place an [OPO](/products/spot/faqs/opo).
+    /// Place an OPO.
     ///
     /// * OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
     ///
@@ -2352,6 +2395,9 @@ impl WebsocketApi {
     ///
     /// Notes:
     /// **Data Source:** Matching Engine
+    ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
     ///
     /// # Arguments
     ///
@@ -2378,7 +2424,7 @@ impl WebsocketApi {
 
     /// OPOCO (TRADE)
     ///
-    /// Place an [OPOCO](/products/spot/faqs/opo).
+    /// Place an OPOCO.
     ///
     /// Weight(IP): 1
     ///
@@ -2388,6 +2434,9 @@ impl WebsocketApi {
     ///
     /// Notes:
     /// **Data Source:** Matching Engine
+    ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
     ///
     /// # Arguments
     ///
@@ -2454,6 +2503,9 @@ impl WebsocketApi {
     /// |`pendingType` = `STOP_LOSS` or `TAKE_PROFIT`           |`pendingStopPrice` and/or `pendingTrailingDelta`|
     /// |`pendingType` =`STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`|`pendingPrice`, `pendingStopPrice` and/or `pendingTrailingDelta`, `pendingTimeInForce`|
     ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
+    ///
     /// # Arguments
     ///
     /// - `params`: [`OrderListPlaceOtoParams`]
@@ -2483,9 +2535,9 @@ impl WebsocketApi {
     ///
     /// * An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list comprised of 3 orders.
     /// * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
-    /// * The behavior of the working order is the same as the [OTO](#order-list-place-oto).
+    /// * The behavior of the working order is the same as the OTO.
     /// * OTOCO has 2 pending orders (pending above and pending below), forming an OCO pair. The pending orders are only placed on the order book when the working order gets **fully filled**.
-    /// * The rules of the pending above and pending below follow the same rules as the [Order list OCO](#order-list-place-oco).
+    /// * The rules of the pending above and pending below follow the same rules as the Order list OCO.
     /// * OTOCOs add **3 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
     ///
     /// Weight(IP): 1
@@ -2510,6 +2562,9 @@ impl WebsocketApi {
     /// |`pendingBelowType`= `LIMIT_MAKER`                                |`pendingBelowPrice`          |
     /// `pendingBelowType= STOP_LOSS/TAKE_PROFIT`         |`pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`|
     /// |`pendingBelowType=STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT`|`pendingBelowPrice`, `pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`, `pendingBelowTimeInForce`|
+    ///
+    /// Response Notes:
+    /// **Note:** The payload above does not show all fields that can appear. Please refer to Conditional fields in Order Responses.
     ///
     /// # Arguments
     ///
@@ -2549,7 +2604,7 @@ impl WebsocketApi {
     /// Notes:
     /// **Data Source:** Matching Engine
     ///
-    /// <a id="order-type">Certain parameters (*)</a> become mandatory based on the order `type`:
+    /// Certain parameters (*) become mandatory based on the order `type`:
     ///
     /// <table>
     /// <thead>
@@ -2732,7 +2787,6 @@ impl WebsocketApi {
     /// </tbody>
     /// </table>
     ///
-    /// <a id="pegged-orders-info"></a>
     /// Notes on using parameters for Pegged Orders:
     ///
     /// * These parameters are allowed for `LIMIT`, `LIMIT_MAKER`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` orders.
@@ -2740,8 +2794,6 @@ impl WebsocketApi {
     /// * `pegPriceType=PRIMARY_PEG` means the primary peg, that is the best price on the same side of the order book as your order.
     /// * `pegPriceType=MARKET_PEG` means the market peg, that is the best price on the opposite side of the order book from your order.
     /// * Use `pegOffsetType` and `pegOffsetValue` to request a price level other than the best one. These parameters must be specified together.
-    ///
-    /// <a id="timeInForce"></a>
     ///
     /// Available `timeInForce` options,
     /// setting how long the order should be active before expiration:
@@ -2767,7 +2819,7 @@ impl WebsocketApi {
     /// * `stopPrice` must be above market price: `STOP_LOSS BUY`, `TAKE_PROFIT SELL`
     /// * `stopPrice` must be below market price: `STOP_LOSS SELL`, `TAKE_PROFIT BUY`
     ///
-    /// * `MARKET` orders using `quoteOrderQty` follow [`LOT_SIZE`](/products/spot/filters#lot_size) filter rules.
+    /// * `MARKET` orders using `quoteOrderQty` follow `LOT_SIZE` filter rules.
     ///
     /// The order will execute a quantity that has notional value as close as possible to requested `quoteOrderQty`.
     ///
@@ -2840,7 +2892,7 @@ impl WebsocketApi {
     ///
     /// This adds 1 order to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
     ///
-    /// Read [SOR FAQ](/products/spot/faqs/sor_faq) to learn more.
+    /// Read SOR FAQ to learn more.
     ///
     /// Weight(IP): 1
     ///
@@ -2953,20 +3005,20 @@ impl WebsocketApi {
             .await
     }
 
-    /// Subscribe to User Data Stream
+    /// Subscribe to User Data Stream (`USER_STREAM`)
     ///
     /// Subscribe to the User Data Stream in the current WebSocket connection.
     ///
     /// **Notes:**
-    /// - This method requires an authenticated WebSocket connection using Ed25519 keys. Please refer to [`session.logon`](/catalog/core-trading-spot-trading/api/ws-api/auth#session-logon).
-    /// - To check the subscription status, use [`session.status`](/catalog/core-trading-spot-trading/api/ws-api/auth#session-status), see the `userDataStream` flag indicating you have have an active subscription.
-    /// - User Data Stream events are available in both JSON and [SBE](/products/spot/faqs/sbe_faq) sessions.
-    /// - Please refer to [User Data Streams](/products/spot/user-data-stream) for the event format details.
+    /// - This method requires an authenticated WebSocket connection using Ed25519 keys. Please refer to `session.logon`.
+    /// - To check the subscription status, use `session.status`, see the `userDataStream` flag indicating you have an active subscription.
+    /// - User Data Stream events are available in both JSON and SBE sessions.
+    /// - Please refer to User Data Streams for the event format details.
     /// - For SBE, only SBE schema 2:1 or later is supported.
     ///
     /// Weight(IP): 2
     ///
-    /// Security Type: NONE
+    /// Security Type: `USER_STREAM`
     ///
     /// # Arguments
     ///
@@ -3053,7 +3105,7 @@ impl WebsocketApi {
         Ok((response, stream))
     }
 
-    /// WebSocket Unsubscribe from User Data Stream
+    /// Unsubscribe from User Data Stream
     ///
     /// Stop listening to the User Data Stream in the current WebSocket
     /// connection.

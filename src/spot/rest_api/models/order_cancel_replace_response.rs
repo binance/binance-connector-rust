@@ -15,6 +15,7 @@
 use crate::spot::rest_api::models;
 use serde::{Deserialize, Serialize};
 
+/// `OrderCancelReplaceResponse` : Both the cancel and the new order placement succeeded, and the account has not exceeded its unfilled order count:
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderCancelReplaceResponse {
     #[serde(rename = "cancelResult", skip_serializing_if = "Option::is_none")]
@@ -28,6 +29,7 @@ pub struct OrderCancelReplaceResponse {
 }
 
 impl OrderCancelReplaceResponse {
+    /// Both the cancel and the new order placement succeeded, and the account has not exceeded its unfilled order count:
     #[must_use]
     pub fn new() -> OrderCancelReplaceResponse {
         OrderCancelReplaceResponse {

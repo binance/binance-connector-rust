@@ -690,7 +690,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1762866729459,"T":1762866729358,"s":"BTC-251123-126000-C","U":465,"u":465,"pu":464,"b":[["1100.000"]],"a":[["1300.000"]]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1762866729459,"T":1762866729358,"s":"BTC-251123-126000-C","U":465,"u":465,"pu":464,"b":[["1100.000","0.6000"]],"a":[["1300.000","0.6000"]]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -747,7 +747,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1762866729459,"T":1762866729358,"s":"BTC-251123-126000-C","U":465,"u":465,"pu":464,"b":[["1100.000"]],"a":[["1300.000"]]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"depthUpdate","E":1762866729459,"T":1762866729358,"s":"BTC-251123-126000-C","U":465,"u":465,"pu":464,"b":[["1100.000","0.6000"]],"a":[["1300.000","0.6000"]]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,

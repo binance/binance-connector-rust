@@ -464,7 +464,7 @@ pub struct WithdrawHistoryParams {
     #[builder(setter(into), default)]
     #[serde(rename = "withdrawOrderId", default)]
     pub withdraw_order_id: Option<String>,
-    /// 0(0:Email Sent, 2:Awaiting Approval 3:Rejected 4:Processing 6:Completed)
+    /// 0(0: Email Sent, 2: Awaiting Approval 3: Rejected 4: Processing 6: Completed)
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

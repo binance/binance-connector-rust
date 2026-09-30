@@ -231,7 +231,7 @@ pub struct GetFuturesPositionRiskOfSubAccountV2Params {
     #[builder(setter(into))]
     #[serde(rename = "email")]
     pub email: String,
-    /// 1:USDT-margined Futures，2: Coin-margined Futures
+    /// 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -252,7 +252,7 @@ impl GetFuturesPositionRiskOfSubAccountV2Params {
     /// Required parameters:
     ///
     /// * `email` — String
-    /// * `futures_type` — 1:USDT-margined Futures，2: Coin-margined Futures
+    /// * `futures_type` — 1: USDT-margined Futures，2: Coin-margined Futures
     ///
     #[must_use]
     pub fn builder(

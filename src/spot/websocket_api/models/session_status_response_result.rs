@@ -18,8 +18,10 @@ use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct SessionStatusResponseResult {
+    /// `null` if the connection is not authenticated.
     #[serde(rename = "apiKey", skip_serializing_if = "Option::is_none")]
     pub api_key: Option<String>,
+    /// `null` if the connection is not authenticated.
     #[serde(rename = "authorizedSince", skip_serializing_if = "Option::is_none")]
     pub authorized_since: Option<i64>,
     #[serde(rename = "connectedSince", skip_serializing_if = "Option::is_none")]

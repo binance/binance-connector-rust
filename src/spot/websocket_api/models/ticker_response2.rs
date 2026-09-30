@@ -16,6 +16,7 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `TickerResponse2` : If more than one symbol is requested, response returns an array:
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TickerResponse2 {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
@@ -25,10 +26,11 @@ pub struct TickerResponse2 {
     #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
     pub result: Option<Vec<models::TickerResponse2ResultInner>>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
-    pub rate_limits: Option<Vec<models::AccountCommissionResponseRateLimitsInner>>,
+    pub rate_limits: Option<Vec<models::TickerResponse2RateLimitsInner>>,
 }
 
 impl TickerResponse2 {
+    /// If more than one symbol is requested, response returns an array:
     #[must_use]
     pub fn new() -> TickerResponse2 {
         TickerResponse2 {

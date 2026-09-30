@@ -210,7 +210,7 @@ impl UserDataStreamApi for UserDataStreamApiClient {
             .send_message::<Box<models::UserDataStreamSubscribeResponseResult>>(
                 "/userDataStream.subscribe".trim_start_matches('/'),
                 payload,
-                WebsocketMessageSendOptions::new(),
+                WebsocketMessageSendOptions::new().with_api_key(),
             )
             .await
             .map_err(anyhow::Error::from)?
@@ -338,7 +338,7 @@ mod tests {
             let v: Value = serde_json::from_str(&text).unwrap();
             let id = v["id"].as_str().unwrap();
             assert_eq!(v["method"], "/session.subscriptions".trim_start_matches('/'));
-            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df5a22-88ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":[{"subscriptionId":0}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"d3df5a22-88ea-4fe0-9f4e-0fcea5d418b7","status":200,"result":[{"subscriptionId":0},{"subscriptionId":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");

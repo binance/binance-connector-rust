@@ -20,12 +20,15 @@ use serde_json::Value;
 pub struct OrderCancelResponseResult {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// clientOrderId that was canceled
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
+    /// set only for legs of an order list
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
+    /// newClientOrderId from request
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     #[serde(rename = "transactTime", skip_serializing_if = "Option::is_none")]
@@ -51,19 +54,19 @@ pub struct OrderCancelResponseResult {
     pub r#type: Option<String>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
-    /// Appears for `STOP_LOSS`, `TAKE_PROFIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` orders.
+    /// present only if stopPrice set for the order
     #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
     pub stop_price: Option<String>,
-    /// Delta price change required before order activation.
+    /// present only if trailingDelta set for the order
     #[serde(rename = "trailingDelta", skip_serializing_if = "Option::is_none")]
     pub trailing_delta: Option<i64>,
-    /// Appears only if the parameter icebergQty was sent in the request.
+    /// present only if icebergQty set for the order
     #[serde(rename = "icebergQty", skip_serializing_if = "Option::is_none")]
     pub iceberg_qty: Option<String>,
-    /// Appears only if the strategyId parameter was provided upon order placement.
+    /// present only if strategyId set for the order
     #[serde(rename = "strategyId", skip_serializing_if = "Option::is_none")]
     pub strategy_id: Option<i64>,
-    /// Appears only if the strategyType parameter was provided upon order placement.
+    /// present only if strategyType set for the order
     #[serde(rename = "strategyType", skip_serializing_if = "Option::is_none")]
     pub strategy_type: Option<i64>,
     #[serde(
@@ -113,6 +116,7 @@ pub struct OrderCancelResponseResult {
     pub transaction_time: Option<i64>,
     #[serde(rename = "orders", skip_serializing_if = "Option::is_none")]
     pub orders: Option<Vec<models::OpenOrdersCancelAllResponseResultInnerOrdersInner>>,
+    /// order list order's status format is the same as for individual orders.
     #[serde(rename = "orderReports", skip_serializing_if = "Option::is_none")]
     pub order_reports: Option<Vec<models::OpenOrdersCancelAllResponseResultInnerOrderReportsInner>>,
 }

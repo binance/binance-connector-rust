@@ -23,11 +23,12 @@ pub struct ExchangeInfoResponse {
     pub server_time: Option<i64>,
     #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
     pub rate_limits: Option<Vec<models::MyFiltersResponseRateLimitsInner>>,
+    /// Exchange filters are explained on the \"Filters\" page: All exchange filters are optional.
     #[serde(rename = "exchangeFilters", skip_serializing_if = "Option::is_none")]
     pub exchange_filters: Option<Vec<models::MyFiltersResponseExchangeFiltersInner>>,
     #[serde(rename = "symbols", skip_serializing_if = "Option::is_none")]
     pub symbols: Option<Vec<models::ExchangeInfoResponseSymbolsInner>>,
-    /// Optional. Present only when SOR is available.
+    /// Optional field. Present only when SOR is available.
     #[serde(rename = "sors", skip_serializing_if = "Option::is_none")]
     pub sors: Option<Vec<models::ExchangeInfoResponseSorsInner>>,
 }

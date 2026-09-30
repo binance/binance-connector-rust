@@ -2579,7 +2579,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","priceChange":"-8.00000000","priceChangePercent":"-88.889","weightedAvgPrice":"2.60427807","openPrice":"0.10000000","highPrice":"2.00000000","lowPrice":"0.10000000","lastPrice":"2.00000000","volume":"39.00000000","quoteVolume":"13.40000000","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TickerResponse = serde_json::from_value(resp_json.clone())
                 .expect("should parse into models::TickerResponse");
 
@@ -2605,7 +2605,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","priceChange":"-94.99999800","priceChangePercent":"-95.960","weightedAvgPrice":"0.29628482","prevClosePrice":"0.10002000","lastPrice":"4.00000200","lastQty":"200.00000000","bidPrice":"4.00000000","bidQty":"100.00000000","askPrice":"4.00000200","askQty":"100.00000000","openPrice":"99.00000000","highPrice":"100.00000000","lowPrice":"0.10000000","volume":"8913.30000000","quoteVolume":"15.30000000","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::Ticker24hrResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::Ticker24hrResponse");
@@ -2632,8 +2632,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","bidPrice":"4.00000000","bidQty":"431.00000000","askPrice":"4.00000200","askQty":"9.00000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TickerBookTickerResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TickerBookTickerResponse");
@@ -2660,8 +2659,9 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value =
+                serde_json::from_str(r#"{"symbol":"LTCBTC","price":"4.00000200"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TickerPriceResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TickerPriceResponse");
@@ -2688,7 +2688,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","priceChange":"-83.13000000","priceChangePercent":"-0.317","weightedAvgPrice":"26234.58803036","openPrice":"26304.80000000","highPrice":"26397.46000000","lowPrice":"26088.34000000","lastPrice":"26221.67000000","volume":"18495.35066000","quoteVolume":"485217905.04210480","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TickerTradingDayResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TickerTradingDayResponse");
@@ -3256,7 +3256,7 @@ mod tests {
 
             let params = TickerParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","priceChange":"-8.00000000","priceChangePercent":"-88.889","weightedAvgPrice":"2.60427807","openPrice":"0.10000000","highPrice":"2.00000000","lowPrice":"0.10000000","lastPrice":"2.00000000","volume":"39.00000000","quoteVolume":"13.40000000","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerResponse");
 
             let resp = client.ticker(params).await.expect("Expected a response");
@@ -3273,7 +3273,7 @@ mod tests {
 
             let params = TickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["BTCUSDT".to_string(),].to_vec()).window_size(TickerWindowSizeEnum::WindowSize1m).r#type(TickerTypeEnum::Full).symbol_status(TickerSymbolStatusEnum::Trading).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","priceChange":"-8.00000000","priceChangePercent":"-88.889","weightedAvgPrice":"2.60427807","openPrice":"0.10000000","highPrice":"2.00000000","lowPrice":"0.10000000","lastPrice":"2.00000000","volume":"39.00000000","quoteVolume":"13.40000000","openTime":1656986580000,"closeTime":1657001016795,"firstId":0,"lastId":34,"count":35}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerResponse");
 
             let resp = client.ticker(params).await.expect("Expected a response");
@@ -3306,7 +3306,7 @@ mod tests {
 
             let params = Ticker24hrParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","priceChange":"-94.99999800","priceChangePercent":"-95.960","weightedAvgPrice":"0.29628482","prevClosePrice":"0.10002000","lastPrice":"4.00000200","lastQty":"200.00000000","bidPrice":"4.00000000","bidQty":"100.00000000","askPrice":"4.00000200","askQty":"100.00000000","openPrice":"99.00000000","highPrice":"100.00000000","lowPrice":"0.10000000","volume":"8913.30000000","quoteVolume":"15.30000000","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::Ticker24hrResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::Ticker24hrResponse");
 
             let resp = client.ticker24hr(params).await.expect("Expected a response");
@@ -3323,7 +3323,7 @@ mod tests {
 
             let params = Ticker24hrParams::builder().symbol("BNBUSDT".to_string()).symbols(["BTCUSDT".to_string(),].to_vec()).r#type(Ticker24hrTypeEnum::Full).symbol_status(Ticker24hrSymbolStatusEnum::Trading).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BNBBTC","priceChange":"-94.99999800","priceChangePercent":"-95.960","weightedAvgPrice":"0.29628482","prevClosePrice":"0.10002000","lastPrice":"4.00000200","lastQty":"200.00000000","bidPrice":"4.00000000","bidQty":"100.00000000","askPrice":"4.00000200","askQty":"100.00000000","openPrice":"99.00000000","highPrice":"100.00000000","lowPrice":"0.10000000","volume":"8913.30000000","quoteVolume":"15.30000000","openTime":1499783499040,"closeTime":1499869899040,"firstId":28385,"lastId":28460,"count":76}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::Ticker24hrResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::Ticker24hrResponse");
 
             let resp = client.ticker24hr(params).await.expect("Expected a response");
@@ -3356,16 +3356,10 @@ mod tests {
 
             let params = TickerBookTickerParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::TickerBookTickerResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TickerBookTickerResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","bidPrice":"4.00000000","bidQty":"431.00000000","askPrice":"4.00000200","askQty":"9.00000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::TickerBookTickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerBookTickerResponse");
 
-            let resp = client
-                .ticker_book_ticker(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.ticker_book_ticker(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -3377,23 +3371,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketApiClient { force_error: false };
 
-            let params = TickerBookTickerParams::builder()
-                .symbol("BNBUSDT".to_string())
-                .symbols(["BTCUSDT".to_string()].to_vec())
-                .symbol_status(TickerBookTickerSymbolStatusEnum::Trading)
-                .build()
-                .unwrap();
+            let params = TickerBookTickerParams::builder().symbol("BNBUSDT".to_string()).symbols(["BTCUSDT".to_string(),].to_vec()).symbol_status(TickerBookTickerSymbolStatusEnum::Trading).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::TickerBookTickerResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TickerBookTickerResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC","bidPrice":"4.00000000","bidQty":"431.00000000","askPrice":"4.00000200","askQty":"9.00000000"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::TickerBookTickerResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerBookTickerResponse");
 
-            let resp = client
-                .ticker_book_ticker(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.ticker_book_ticker(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -3423,8 +3406,9 @@ mod tests {
 
             let params = TickerPriceParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value =
+                serde_json::from_str(r#"{"symbol":"LTCBTC","price":"4.00000200"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::TickerPriceResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TickerPriceResponse");
@@ -3451,8 +3435,9 @@ mod tests {
                 .build()
                 .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"LTCBTC"}"#)
-                .unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value =
+                serde_json::from_str(r#"{"symbol":"LTCBTC","price":"4.00000200"}"#)
+                    .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: models::TickerPriceResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TickerPriceResponse");
@@ -3490,7 +3475,7 @@ mod tests {
 
             let params = TickerTradingDayParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","priceChange":"-83.13000000","priceChangePercent":"-0.317","weightedAvgPrice":"26234.58803036","openPrice":"26304.80000000","highPrice":"26397.46000000","lowPrice":"26088.34000000","lastPrice":"26221.67000000","volume":"18495.35066000","quoteVolume":"485217905.04210480","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TickerTradingDayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerTradingDayResponse");
 
             let resp = client.ticker_trading_day(params).await.expect("Expected a response");
@@ -3507,7 +3492,7 @@ mod tests {
 
             let params = TickerTradingDayParams::builder().symbol("BNBUSDT".to_string()).symbols(["BTCUSDT".to_string(),].to_vec()).time_zone("0".to_string()).r#type(TickerTradingDayTypeEnum::Full).symbol_status(TickerTradingDaySymbolStatusEnum::Trading).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"symbol":"BTCUSDT","priceChange":"-83.13000000","priceChangePercent":"-0.317","weightedAvgPrice":"26234.58803036","openPrice":"26304.80000000","highPrice":"26397.46000000","lowPrice":"26088.34000000","lastPrice":"26221.67000000","volume":"18495.35066000","quoteVolume":"485217905.04210480","openTime":1695686400000,"closeTime":1695772799999,"firstId":3220151555,"lastId":3220849281,"count":697727}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TickerTradingDayResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TickerTradingDayResponse");
 
             let resp = client.ticker_trading_day(params).await.expect("Expected a response");

@@ -274,7 +274,7 @@ pub struct DepositHistoryTravelRuleParams {
     #[builder(setter(into), default)]
     #[serde(rename = "coin", default)]
     pub coin: Option<String>,
-    /// 0:Completed,1:Pending,2:Failed
+    /// 0: Completed,1: Pending,2: Failed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -712,7 +712,7 @@ pub struct WithdrawHistoryV1Params {
     #[builder(setter(into), default)]
     #[serde(rename = "coin", default)]
     pub coin: Option<String>,
-    /// 0:Completed,1:Pending,2:Failed
+    /// 0: Completed,1: Pending,2: Failed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -801,7 +801,7 @@ pub struct WithdrawHistoryV2Params {
     #[builder(setter(into), default)]
     #[serde(rename = "coin", default)]
     pub coin: Option<String>,
-    /// 0:Completed,1:Pending,2:Failed
+    /// 0: Completed,1: Pending,2: Failed
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

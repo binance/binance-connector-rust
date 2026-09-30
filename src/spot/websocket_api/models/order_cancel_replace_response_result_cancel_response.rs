@@ -16,16 +16,19 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
+/// `OrderCancelReplaceResponseResultCancelResponse` : Format is identical to \"order.cancel\" format. Some fields are optional and are included only for orders that set them.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderCancelReplaceResponseResultCancelResponse {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// cancelOrigClientOrderId from request
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
     #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
     pub order_list_id: Option<i64>,
+    /// cancelNewClientOrderId from request
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     #[serde(rename = "transactTime", skip_serializing_if = "Option::is_none")]
@@ -104,6 +107,7 @@ pub struct OrderCancelReplaceResponseResultCancelResponse {
 }
 
 impl OrderCancelReplaceResponseResultCancelResponse {
+    /// Format is identical to \"order.cancel\" format. Some fields are optional and are included only for orders that set them.
     #[must_use]
     pub fn new() -> OrderCancelReplaceResponseResultCancelResponse {
         OrderCancelReplaceResponseResultCancelResponse {

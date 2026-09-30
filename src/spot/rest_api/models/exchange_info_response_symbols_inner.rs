@@ -27,6 +27,7 @@ pub struct ExchangeInfoResponseSymbolsInner {
     pub base_asset_precision: Option<i64>,
     #[serde(rename = "quoteAsset", skip_serializing_if = "Option::is_none")]
     pub quote_asset: Option<String>,
+    /// will be removed in future api versions (v4+)
     #[serde(rename = "quotePrecision", skip_serializing_if = "Option::is_none")]
     pub quote_precision: Option<i64>,
     #[serde(
@@ -83,6 +84,7 @@ pub struct ExchangeInfoResponseSymbolsInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub is_margin_trading_allowed: Option<bool>,
+    /// Symbol filters are explained on the \"Filters\" page: All symbol filters are optional.
     #[serde(rename = "filters", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<models::MyFiltersResponseSymbolFiltersInner>>,
     #[serde(rename = "permissions", skip_serializing_if = "Option::is_none")]
