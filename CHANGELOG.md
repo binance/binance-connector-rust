@@ -1,5 +1,54 @@
 # Changelog
 
+## 73.0.0 - 2026-10-01
+
+**Spot**
+
+### Changed (13)
+
+#### REST API
+
+- Modified response for `reference_price()` (`GET /api/v3/referencePrice`):
+  - property `referencePrice` added
+  - property `symbol` added
+  - property `timestamp` added
+  - oneOf removed 2 schema(s)
+
+- Added response field `timestamp`
+  - affected events:
+    - `referencePriceResponse`
+- Added response field `referencePrice`
+  - affected events:
+    - `referencePriceResponse`
+- Added response field `symbol`
+  - affected events:
+    - `referencePriceResponse`
+- Removed response schema `referencePriceResponse2`
+- Removed response schema `referencePriceResponse1`
+#### WebSocket API
+
+- Modified response for `reference_price()` (`referencePrice` method):
+  - property `id` added
+  - property `rateLimits` added
+  - property `result` added
+  - property `status` added
+  - oneOf removed 2 schema(s)
+
+- Added response field `rateLimits`
+  - affected events:
+    - `referencePriceResponse`
+- Added response field `result`
+  - affected events:
+    - `referencePriceResponse`
+- Added response field `status`
+  - affected events:
+    - `referencePriceResponse`
+- Added response field `id`
+  - affected events:
+    - `referencePriceResponse`
+- Removed response schema `referencePriceResponse2`
+- Removed response schema `referencePriceResponse1`
+
 ## 72.0.0 - 2026-09-30
 
 **Spot**

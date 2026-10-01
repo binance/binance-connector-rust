@@ -129,6 +129,12 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: QueryMarginAccountsOpenOrdersParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::QueryMarginAccountsOpenOrdersResponseInner>>>;
+    async fn query_margin_accounts_open_otootoco_order_lists(
+        &self,
+        params: QueryMarginAccountsOpenOtootocoOrderListsParams,
+    ) -> anyhow::Result<
+        RestApiResponse<Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>>,
+    >;
     async fn query_margin_accounts_order(
         &self,
         params: QueryMarginAccountsOrderParams,
@@ -3614,6 +3620,37 @@ impl QueryMarginAccountsOpenOrdersParams {
         QueryMarginAccountsOpenOrdersParamsBuilder::default()
     }
 }
+/// Request parameters for the [`query_margin_accounts_open_otootoco_order_lists`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_margin_accounts_open_otootoco_order_lists`](#method.query_margin_accounts_open_otootoco_order_lists).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryMarginAccountsOpenOtootocoOrderListsParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
+    pub symbol: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryMarginAccountsOpenOtootocoOrderListsParams {
+    /// Create a builder for [`query_margin_accounts_open_otootoco_order_lists`].
+    ///
+    #[must_use]
+    pub fn builder() -> QueryMarginAccountsOpenOtootocoOrderListsParamsBuilder {
+        QueryMarginAccountsOpenOtootocoOrderListsParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`query_margin_accounts_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -5301,6 +5338,44 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn query_margin_accounts_open_otootoco_order_lists(
+        &self,
+        params: QueryMarginAccountsOpenOtootocoOrderListsParams,
+    ) -> anyhow::Result<
+        RestApiResponse<Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>>,
+    > {
+        let QueryMarginAccountsOpenOtootocoOrderListsParams {
+            symbol,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = symbol {
+            query_params.insert("symbol".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>>(
+            &self.configuration,
+            "/sapi/v1/margin/oto/openOrderList",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn query_margin_accounts_order(
         &self,
         params: QueryMarginAccountsOrderParams,
@@ -6255,6 +6330,33 @@ mod tests {
                 serde_json::from_value(resp_json.clone()).expect(
                     "should parse into Vec<models::QueryMarginAccountsOpenOrdersResponseInner>",
                 );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_margin_accounts_open_otootoco_order_lists(
+            &self,
+            _params: QueryMarginAccountsOpenOtootocoOrderListsParams,
+        ) -> anyhow::Result<
+            RestApiResponse<Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>>,
+        > {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"orderListId":24867326110,"contingencyType":"OTOCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"web_6324e98951224f96b8a24f312abe5067","transactionTime":1790063061632,"symbol":"ASTERUSDT","orders":[{"symbol":"ASTERUSDT","orderId":499470863,"status":"NEW","clientOrderId":"web_f8890794e27b42a1a2ef6b5aef79a949"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response : Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -7722,6 +7824,61 @@ mod tests {
                 .unwrap();
 
             match client.query_margin_accounts_open_orders(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_margin_accounts_open_otootoco_order_lists_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryMarginAccountsOpenOtootocoOrderListsParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"orderListId":24867326110,"contingencyType":"OTOCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"web_6324e98951224f96b8a24f312abe5067","transactionTime":1790063061632,"symbol":"ASTERUSDT","orders":[{"symbol":"ASTERUSDT","orderId":499470863,"status":"NEW","clientOrderId":"web_f8890794e27b42a1a2ef6b5aef79a949"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>");
+
+            let resp = client.query_margin_accounts_open_otootoco_order_lists(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_margin_accounts_open_otootoco_order_lists_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryMarginAccountsOpenOtootocoOrderListsParams::builder().symbol("ASTERUSDT".to_string()).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"orderListId":24867326110,"contingencyType":"OTOCO","listStatusType":"EXEC_STARTED","listOrderStatus":"EXECUTING","listClientOrderId":"web_6324e98951224f96b8a24f312abe5067","transactionTime":1790063061632,"symbol":"ASTERUSDT","orders":[{"symbol":"ASTERUSDT","orderId":499470863,"status":"NEW","clientOrderId":"web_f8890794e27b42a1a2ef6b5aef79a949"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>");
+
+            let resp = client.query_margin_accounts_open_otootoco_order_lists(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_margin_accounts_open_otootoco_order_lists_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = QueryMarginAccountsOpenOtootocoOrderListsParams::builder()
+                .build()
+                .unwrap();
+
+            match client
+                .query_margin_accounts_open_otootoco_order_lists(params)
+                .await
+            {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

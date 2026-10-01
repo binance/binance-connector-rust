@@ -1309,7 +1309,7 @@ impl WebsocketApi {
     ///
     /// # Returns
     ///
-    /// [`WebsocketApiResponse<models::ReferencePriceResponse>`] on success.
+    /// [`WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>`] on success.
     ///
     /// # Errors
     ///
@@ -1321,7 +1321,7 @@ impl WebsocketApi {
     pub async fn reference_price(
         &self,
         params: ReferencePriceParams,
-    ) -> anyhow::Result<WebsocketApiResponse<models::ReferencePriceResponse>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>> {
         self.market_api_client.reference_price(params).await
     }
 

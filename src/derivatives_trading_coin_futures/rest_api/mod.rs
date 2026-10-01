@@ -2098,6 +2098,7 @@ impl RestApi {
     /// - The parameter `fromId` cannot be sent with `startTime` or `endTime`
     /// - If startTime and endTime are both not sent, then the last 7 days' data will be returned.
     /// - The time between startTime and endTime cannot be longer than 7 days.
+    /// - Only support querying trade in the past 3 months
     ///
     /// # Arguments
     ///

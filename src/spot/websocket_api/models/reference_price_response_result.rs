@@ -17,11 +17,16 @@ use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ReferencePriceResponse1Result {
+pub struct ReferencePriceResponseResult {
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
-    #[serde(rename = "referencePrice", skip_serializing_if = "Option::is_none")]
-    pub reference_price: Option<String>,
+    #[serde(
+        rename = "referencePrice",
+        default,
+        with = "::serde_with::rust::double_option",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub reference_price: Option<Option<String>>,
     /// Timestamp when the reference price was valid
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
@@ -31,10 +36,10 @@ pub struct ReferencePriceResponse1Result {
     pub msg: Option<String>,
 }
 
-impl ReferencePriceResponse1Result {
+impl ReferencePriceResponseResult {
     #[must_use]
-    pub fn new() -> ReferencePriceResponse1Result {
-        ReferencePriceResponse1Result {
+    pub fn new() -> ReferencePriceResponseResult {
+        ReferencePriceResponseResult {
             symbol: None,
             reference_price: None,
             timestamp: None,

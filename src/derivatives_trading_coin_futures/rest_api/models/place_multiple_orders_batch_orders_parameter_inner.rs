@@ -60,7 +60,7 @@ pub struct PlaceMultipleOrdersBatchOrdersParameterInner {
     /// only avaliable for `LIMIT`/`STOP`/`TAKE_PROFIT` order; can't be passed together with `price`
     #[serde(rename = "priceMatch", skip_serializing_if = "Option::is_none")]
     pub price_match: Option<PriceMatchEnum>,
-    /// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
@@ -251,7 +251,7 @@ impl Default for PriceMatchEnum {
         Self::Opponent
     }
 }
-/// `EXPIRE_TAKER`:expire taker order when STP triggers/ `EXPIRE_MAKER`:expire taker order when STP triggers/ `EXPIRE_BOTH`:expire both orders when STP triggers
+/// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire taker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum SelfTradePreventionModeEnum {
     #[serde(rename = "EXPIRE_TAKER")]

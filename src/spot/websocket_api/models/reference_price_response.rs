@@ -16,16 +16,26 @@ use crate::spot::websocket_api::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum ReferencePriceResponse {
-    ReferencePriceResponse1(Box<models::ReferencePriceResponse1>),
-    ReferencePriceResponse2(Box<models::ReferencePriceResponse2>),
-    Other(serde_json::Value),
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ReferencePriceResponse {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
+    pub status: Option<i64>,
+    #[serde(rename = "result", skip_serializing_if = "Option::is_none")]
+    pub result: Option<Box<models::ReferencePriceResponseResult>>,
+    #[serde(rename = "rateLimits", skip_serializing_if = "Option::is_none")]
+    pub rate_limits: Option<Vec<models::AvgPriceResponseRateLimitsInner>>,
 }
 
-impl Default for ReferencePriceResponse {
-    fn default() -> Self {
-        Self::ReferencePriceResponse1(Default::default())
+impl ReferencePriceResponse {
+    #[must_use]
+    pub fn new() -> ReferencePriceResponse {
+        ReferencePriceResponse {
+            id: None,
+            status: None,
+            result: None,
+            rate_limits: None,
+        }
     }
 }

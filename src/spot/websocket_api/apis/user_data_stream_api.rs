@@ -210,7 +210,7 @@ impl UserDataStreamApi for UserDataStreamApiClient {
             .send_message::<Box<models::UserDataStreamSubscribeResponseResult>>(
                 "/userDataStream.subscribe".trim_start_matches('/'),
                 payload,
-                WebsocketMessageSendOptions::new().with_api_key(),
+                WebsocketMessageSendOptions::new(),
             )
             .await
             .map_err(anyhow::Error::from)?

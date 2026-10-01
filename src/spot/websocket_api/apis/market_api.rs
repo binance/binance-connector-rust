@@ -49,7 +49,7 @@ pub trait MarketApi: Send + Sync {
     async fn reference_price(
         &self,
         params: ReferencePriceParams,
-    ) -> anyhow::Result<WebsocketApiResponse<models::ReferencePriceResponse>>;
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>>;
     async fn reference_price_calculation(
         &self,
         params: ReferencePriceCalculationParams,
@@ -1889,7 +1889,7 @@ impl MarketApi for MarketApiClient {
     async fn reference_price(
         &self,
         params: ReferencePriceParams,
-    ) -> anyhow::Result<WebsocketApiResponse<models::ReferencePriceResponse>> {
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::ReferencePriceResponseResult>>> {
         let ReferencePriceParams { symbol, id } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
@@ -1900,7 +1900,7 @@ impl MarketApi for MarketApiClient {
         let payload = remove_empty_value(payload);
 
         self.websocket_api_base
-            .send_message::<models::ReferencePriceResponse>(
+            .send_message::<Box<models::ReferencePriceResponseResult>>(
                 "/referencePrice".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new(),
@@ -2911,7 +2911,7 @@ mod tests {
             resp_json["id"] = id.into();
 
             let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
-            let expected_data: models::ReferencePriceResponse = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let expected_data: Box<models::ReferencePriceResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
             let empty_array = Value::Array(vec![]);
             let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
             let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =

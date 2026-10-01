@@ -2929,6 +2929,61 @@ impl RestApi {
             .await
     }
 
+    /// Query Margin Account's Open OTO/OTOCO Order Lists (`USER_DATA`)
+    ///
+    /// Retrieves all open OTO / OTOCO order lists of the margin account.
+    ///
+    ///
+    /// Notes:
+    /// - The returned list contains order lists whose `listOrderStatus` is `EXECUTING`, i.e. at least one order of the list is still open (`NEW` / `PARTIALLY_FILLED`).
+    /// - For OTO, the `orders` array contains 2 orders: the working order and the pending order.
+    /// - For OTOCO, the `orders` array contains 3 orders: the working order and the two pending orders (pending above / pending below).
+    ///
+    /// Weight(UID): 10
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryMarginAccountsOpenOtootocoOrderListsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/trade#query-margin-accounts-open-otootoco-order-lists).
+    ///
+    pub async fn query_margin_accounts_open_otootoco_order_lists(
+        &self,
+        params: QueryMarginAccountsOpenOtootocoOrderListsParams,
+    ) -> anyhow::Result<
+        RestApiResponse<Vec<models::QueryMarginAccountsOpenOtootocoOrderListsResponseInner>>,
+    > {
+        self.trade_api_client
+            .query_margin_accounts_open_otootoco_order_lists(params)
+            .await
+    }
+
     /// Query Margin Account's Order (`USER_DATA`)
     ///
     /// Query Margin Account's Order
