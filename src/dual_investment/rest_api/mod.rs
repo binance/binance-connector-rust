@@ -1,7 +1,7 @@
 /*
  * Dual Investment REST API
  *
- * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies. The auto-compound setting is no longer managed via API — it must be toggled by the user in the Binance Web UI.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -156,56 +156,6 @@ impl RestApi {
     ) -> anyhow::Result<RestApiResponse<models::GetDualInvestmentProductListResponse>> {
         self.market_data_api_client
             .get_dual_investment_product_list(params)
-            .await
-    }
-
-    /// Change Auto-Compound status (`USER_DATA`)
-    ///
-    /// Change Auto-Compound status
-    ///
-    /// Weight(IP): 1
-    ///
-    /// Security Type: `USER_DATA`
-    ///
-    /// Notes:
-    /// - 15:31 ~ 16:00 UTC+8: This function is disabled.
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`ChangeAutoCompoundStatusParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::ChangeAutoCompoundStatusResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-dual-investment/api/rest-api/trade#change-auto-compound-status).
-    ///
-    pub async fn change_auto_compound_status(
-        &self,
-        params: ChangeAutoCompoundStatusParams,
-    ) -> anyhow::Result<RestApiResponse<models::ChangeAutoCompoundStatusResponse>> {
-        self.trade_api_client
-            .change_auto_compound_status(params)
             .await
     }
 

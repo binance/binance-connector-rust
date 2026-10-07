@@ -1,7 +1,7 @@
 /*
  * Dual Investment REST API
  *
- * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies. The auto-compound setting is no longer managed via API — it must be toggled by the user in the Binance Web UI.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -11,8 +11,6 @@
  * Do not edit the class manually.
  */
 
-pub mod change_auto_compound_status_response;
-pub use self::change_auto_compound_status_response::ChangeAutoCompoundStatusResponse;
 pub mod check_dual_investment_accounts_response;
 pub use self::check_dual_investment_accounts_response::CheckDualInvestmentAccountsResponse;
 pub mod get_dual_investment_positions_response;

@@ -1,7 +1,7 @@
 /*
  * Dual Investment REST API
  *
- * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies.
+ * Query products, request quotes, and subscribe to Advanced Earn Dual Investment strategies. The auto-compound setting is no longer managed via API — it must be toggled by the user in the Binance Web UI.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -31,10 +31,6 @@ const HAS_TIME_UNIT: bool = false;
 
 #[async_trait]
 pub trait TradeApi: Send + Sync {
-    async fn change_auto_compound_status(
-        &self,
-        params: ChangeAutoCompoundStatusParams,
-    ) -> anyhow::Result<RestApiResponse<models::ChangeAutoCompoundStatusResponse>>;
     async fn check_dual_investment_accounts(
         &self,
         params: CheckDualInvestmentAccountsParams,
@@ -57,45 +53,6 @@ pub struct TradeApiClient {
 impl TradeApiClient {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
         Self { configuration }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum ChangeAutoCompoundStatusAutoCompoundPlanEnum {
-    #[serde(rename = "NONE")]
-    None,
-    #[serde(rename = "STANDARD")]
-    Standard,
-    #[serde(rename = "ADVANCED")]
-    Advanced,
-}
-
-impl ChangeAutoCompoundStatusAutoCompoundPlanEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::None => "NONE",
-            Self::Standard => "STANDARD",
-            Self::Advanced => "ADVANCED",
-        }
-    }
-}
-
-impl std::str::FromStr for ChangeAutoCompoundStatusAutoCompoundPlanEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "NONE" => Ok(Self::None),
-            "STANDARD" => Ok(Self::Standard),
-            "ADVANCED" => Ok(Self::Advanced),
-            other => Err(format!(
-                "invalid ChangeAutoCompoundStatusAutoCompoundPlanEnum: {}",
-                other
-            )
-            .into()),
-        }
     }
 }
 
@@ -150,90 +107,6 @@ impl std::str::FromStr for GetDualInvestmentPositionsStatusEnum {
     }
 }
 
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum SubscribeDualInvestmentProductsAutoCompoundPlanEnum {
-    #[serde(rename = "NONE")]
-    None,
-    #[serde(rename = "STANDARD")]
-    Standard,
-    #[serde(rename = "ADVANCED")]
-    Advanced,
-}
-
-impl SubscribeDualInvestmentProductsAutoCompoundPlanEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::None => "NONE",
-            Self::Standard => "STANDARD",
-            Self::Advanced => "ADVANCED",
-        }
-    }
-}
-
-impl std::str::FromStr for SubscribeDualInvestmentProductsAutoCompoundPlanEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "NONE" => Ok(Self::None),
-            "STANDARD" => Ok(Self::Standard),
-            "ADVANCED" => Ok(Self::Advanced),
-            other => Err(format!(
-                "invalid SubscribeDualInvestmentProductsAutoCompoundPlanEnum: {}",
-                other
-            )
-            .into()),
-        }
-    }
-}
-
-/// Request parameters for the [`change_auto_compound_status`] operation.
-///
-/// This struct holds all of the inputs you can pass when calling
-/// [`change_auto_compound_status`](#method.change_auto_compound_status).
-#[derive(Clone, Debug, Builder, Deserialize)]
-#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
-pub struct ChangeAutoCompoundStatusParams {
-    /// Get positionId from `/sapi/v1/dci/product/positions`
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "positionId")]
-    pub position_id: String,
-    /// `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "autoCompoundPlan")]
-    pub auto_compound_plan: ChangeAutoCompoundStatusAutoCompoundPlanEnum,
-    /// Request validity window in milliseconds
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "recvWindow", default)]
-    pub recv_window: Option<i64>,
-}
-
-impl ChangeAutoCompoundStatusParams {
-    /// Create a builder for [`change_auto_compound_status`].
-    ///
-    /// Required parameters:
-    ///
-    /// * `position_id` — Get positionId from `/sapi/v1/dci/product/positions`
-    /// * `auto_compound_plan` — `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
-    ///
-    #[must_use]
-    pub fn builder(
-        position_id: String,
-        auto_compound_plan: ChangeAutoCompoundStatusAutoCompoundPlanEnum,
-    ) -> ChangeAutoCompoundStatusParamsBuilder {
-        ChangeAutoCompoundStatusParamsBuilder::default()
-            .position_id(position_id)
-            .auto_compound_plan(auto_compound_plan)
-    }
-}
 /// Request parameters for the [`check_dual_investment_accounts`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -326,12 +199,6 @@ pub struct SubscribeDualInvestmentProductsParams {
     #[builder(setter(into))]
     #[serde(rename = "depositAmount")]
     pub deposit_amount: rust_decimal::Decimal,
-    /// `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
-    ///
-    /// This field is **required.
-    #[builder(setter(into))]
-    #[serde(rename = "autoCompoundPlan")]
-    pub auto_compound_plan: SubscribeDualInvestmentProductsAutoCompoundPlanEnum,
     /// Request validity window in milliseconds
     ///
     /// This field is **optional.
@@ -348,62 +215,22 @@ impl SubscribeDualInvestmentProductsParams {
     /// * `id` — get id from `/sapi/v1/dci/product/list`
     /// * `order_id` — get orderId from `/sapi/v1/dci/product/list`
     /// * `deposit_amount` — the amount for subscribing
-    /// * `auto_compound_plan` — `NONE`: switch off the plan, `STANDARD`: standard plan, `ADVANCED`: advanced plan
     ///
     #[must_use]
     pub fn builder(
         id: String,
         order_id: String,
         deposit_amount: rust_decimal::Decimal,
-        auto_compound_plan: SubscribeDualInvestmentProductsAutoCompoundPlanEnum,
     ) -> SubscribeDualInvestmentProductsParamsBuilder {
         SubscribeDualInvestmentProductsParamsBuilder::default()
             .id(id)
             .order_id(order_id)
             .deposit_amount(deposit_amount)
-            .auto_compound_plan(auto_compound_plan)
     }
 }
 
 #[async_trait]
 impl TradeApi for TradeApiClient {
-    async fn change_auto_compound_status(
-        &self,
-        params: ChangeAutoCompoundStatusParams,
-    ) -> anyhow::Result<RestApiResponse<models::ChangeAutoCompoundStatusResponse>> {
-        let ChangeAutoCompoundStatusParams {
-            position_id,
-            auto_compound_plan,
-            recv_window,
-        } = params;
-
-        let mut query_params = BTreeMap::new();
-        let body_params = BTreeMap::new();
-
-        query_params.insert("positionId".to_string(), json!(position_id));
-
-        query_params.insert("autoCompoundPlan".to_string(), json!(auto_compound_plan));
-
-        if let Some(rw) = recv_window {
-            query_params.insert("recvWindow".to_string(), json!(rw));
-        }
-
-        send_request::<models::ChangeAutoCompoundStatusResponse>(
-            &self.configuration,
-            "/sapi/v1/dci/product/auto_compound/edit-status",
-            reqwest::Method::POST,
-            query_params,
-            body_params,
-            if HAS_TIME_UNIT {
-                self.configuration.time_unit
-            } else {
-                None
-            },
-            true,
-        )
-        .await
-    }
-
     async fn check_dual_investment_accounts(
         &self,
         params: CheckDualInvestmentAccountsParams,
@@ -487,7 +314,6 @@ impl TradeApi for TradeApiClient {
             id,
             order_id,
             deposit_amount,
-            auto_compound_plan,
             recv_window,
         } = params;
 
@@ -499,8 +325,6 @@ impl TradeApi for TradeApiClient {
         query_params.insert("orderId".to_string(), json!(order_id));
 
         query_params.insert("depositAmount".to_string(), json!(deposit_amount));
-
-        query_params.insert("autoCompoundPlan".to_string(), json!(auto_compound_plan));
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -555,35 +379,6 @@ mod tests {
 
     #[async_trait]
     impl TradeApi for MockTradeApiClient {
-        async fn change_auto_compound_status(
-            &self,
-            _params: ChangeAutoCompoundStatusParams,
-        ) -> anyhow::Result<RestApiResponse<models::ChangeAutoCompoundStatusResponse>> {
-            if self.force_error {
-                return Err(ConnectorError::ConnectorClientError {
-                    msg: "ResponseError".to_string(),
-                    code: None,
-                }
-                .into());
-            }
-
-            let resp_json: Value =
-                serde_json::from_str(r#"{"positionId":"123456789","autoCompoundPlan":"ADVANCED"}"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
-            let dummy_response: models::ChangeAutoCompoundStatusResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::ChangeAutoCompoundStatusResponse");
-
-            let dummy = DummyRestApiResponse {
-                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
-                status: 200,
-                headers: HashMap::new(),
-                rate_limits: None,
-            };
-
-            Ok(dummy.into())
-        }
-
         async fn check_dual_investment_accounts(
             &self,
             _params: CheckDualInvestmentAccountsParams,
@@ -668,86 +463,6 @@ mod tests {
 
             Ok(dummy.into())
         }
-    }
-
-    #[test]
-    fn change_auto_compound_status_required_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = ChangeAutoCompoundStatusParams::builder(
-                "741590".to_string(),
-                ChangeAutoCompoundStatusAutoCompoundPlanEnum::None,
-            )
-            .build()
-            .unwrap();
-
-            let resp_json: Value =
-                serde_json::from_str(r#"{"positionId":"123456789","autoCompoundPlan":"ADVANCED"}"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::ChangeAutoCompoundStatusResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::ChangeAutoCompoundStatusResponse");
-
-            let resp = client
-                .change_auto_compound_status(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn change_auto_compound_status_optional_params_success() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: false };
-
-            let params = ChangeAutoCompoundStatusParams::builder(
-                "741590".to_string(),
-                ChangeAutoCompoundStatusAutoCompoundPlanEnum::None,
-            )
-            .recv_window(5000)
-            .build()
-            .unwrap();
-
-            let resp_json: Value =
-                serde_json::from_str(r#"{"positionId":"123456789","autoCompoundPlan":"ADVANCED"}"#)
-                    .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::ChangeAutoCompoundStatusResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::ChangeAutoCompoundStatusResponse");
-
-            let resp = client
-                .change_auto_compound_status(params)
-                .await
-                .expect("Expected a response");
-            let data_future = resp.data();
-            let actual_response = data_future.await.unwrap();
-            assert_eq!(actual_response, expected_response);
-        });
-    }
-
-    #[test]
-    fn change_auto_compound_status_response_error() {
-        TOKIO_SHARED_RT.block_on(async {
-            let client = MockTradeApiClient { force_error: true };
-
-            let params = ChangeAutoCompoundStatusParams::builder(
-                "741590".to_string(),
-                ChangeAutoCompoundStatusAutoCompoundPlanEnum::None,
-            )
-            .build()
-            .unwrap();
-
-            match client.change_auto_compound_status(params).await {
-                Ok(_) => panic!("Expected an error"),
-                Err(err) => {
-                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
-                }
-            }
-        });
     }
 
     #[test]
@@ -878,7 +593,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SubscribeDualInvestmentProductsParams::builder("741590".to_string(),"8257205859".to_string(),dec!(1),SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,).build().unwrap();
+            let params = SubscribeDualInvestmentProductsParams::builder("741590".to_string(),"8257205859".to_string(),dec!(1),).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeDualInvestmentProductsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeDualInvestmentProductsResponse");
@@ -895,7 +610,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = SubscribeDualInvestmentProductsParams::builder("741590".to_string(),"8257205859".to_string(),dec!(1),SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,).recv_window(5000).build().unwrap();
+            let params = SubscribeDualInvestmentProductsParams::builder("741590".to_string(),"8257205859".to_string(),dec!(1),).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"positionId":10208824,"investCoin":"BNB","exercisedCoin":"USDT","subscriptionAmount":"0.002","duration":4,"autoCompoundPlan":"STANDARD","strikePrice":"380","settleDate":1709020800000,"purchaseStatus":"PURCHASE_SUCCESS","apr":"0.7397","orderId":8259117597,"purchaseTime":1708677583874,"optionType":"CALL"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::SubscribeDualInvestmentProductsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::SubscribeDualInvestmentProductsResponse");
@@ -916,7 +631,6 @@ mod tests {
                 "741590".to_string(),
                 "8257205859".to_string(),
                 dec!(1),
-                SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,
             )
             .build()
             .unwrap();

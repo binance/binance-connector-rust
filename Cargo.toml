@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "73.0.0"
+version = "74.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2521,11 +2521,6 @@ required-features = [ "derivatives_trading_usds_futures" ]
 [[example]]
 name = "dual_investment_rest_api_market_data_api_get_dual_investment_product_list"
 path = "examples/dual_investment/rest_api/market_data_api/get_dual_investment_product_list.rs"
-required-features = [ "dual_investment" ]
-
-[[example]]
-name = "dual_investment_rest_api_trade_api_change_auto_compound_status"
-path = "examples/dual_investment/rest_api/trade_api/change_auto_compound_status.rs"
 required-features = [ "dual_investment" ]
 
 [[example]]

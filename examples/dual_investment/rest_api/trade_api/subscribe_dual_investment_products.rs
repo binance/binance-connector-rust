@@ -5,10 +5,7 @@ use tracing::info;
 
 use binance_sdk::config::ConfigurationRestApi;
 use binance_sdk::dual_investment::{
-    DualInvestmentRestApi,
-    rest_api::{
-        SubscribeDualInvestmentProductsAutoCompoundPlanEnum, SubscribeDualInvestmentProductsParams,
-    },
+    DualInvestmentRestApi, rest_api::SubscribeDualInvestmentProductsParams,
 };
 use binance_sdk::logger;
 
@@ -35,7 +32,6 @@ async fn main() -> Result<()> {
         "741590".to_string(),
         "8257205859".to_string(),
         dec!(1),
-        SubscribeDualInvestmentProductsAutoCompoundPlanEnum::None,
     )
     .build()?;
 
