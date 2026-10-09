@@ -379,7 +379,7 @@ pub struct GetQuoteParams {
     #[builder(setter(into))]
     #[serde(rename = "side")]
     pub side: GetQuoteSideEnum,
-    /// Input amount in wei (18 decimals). Must be > 0. For `MARKET` orders, minimum is approximately 1.5 USDT (varies by market depth). Example: `1000000000000000000` = 1 USDT
+    /// Input amount in wei (18 decimals). Must be > 0. The minimum is set by the server and may change, see the response notes. Example: `1000000000000000000` = 1 USDT
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -397,7 +397,7 @@ pub struct GetQuoteParams {
     #[builder(setter(into))]
     #[serde(rename = "slippageBps")]
     pub slippage_bps: i32,
-    /// Limit price. Required when `orderType=LIMIT`. Must be > 0
+    /// Limit price. Required when `orderType=LIMIT`. Must be > 0. A price that is not on the price tick of the market (see `decimalPrecision` in Get Market Detail) is truncated down instead of being rejected, unless the result is 0
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -437,7 +437,7 @@ impl GetQuoteParams {
     /// * `wallet_address` — User's prediction wallet address
     /// * `token_id` — Prediction outcome token ID
     /// * `side` — Trade direction. Enum: `BUY`, `SELL`
-    /// * `amount_in` — Input amount in wei (18 decimals). Must be > 0. For `MARKET` orders, minimum is approximately 1.5 USDT (varies by market depth). Example: `1000000000000000000` = 1 USDT
+    /// * `amount_in` — Input amount in wei (18 decimals). Must be > 0. The minimum is set by the server and may change, see the response notes. Example: `1000000000000000000` = 1 USDT
     /// * `order_type` — Order type. Enum: `MARKET`, `LIMIT`
     /// * `slippage_bps` — Slippage tolerance in basis points. Range 1–10000
     ///
@@ -466,7 +466,7 @@ impl GetQuoteParams {
 #[derive(Clone, Debug, Builder, Deserialize)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PlaceOrderParams {
-    /// User's prediction wallet address
+    /// User's prediction wallet address. Must be a valid address owned by the calling UID — a well-formed address not owned by the UID and a malformed (non-address) value both return the same generic `-3026`. An empty string instead returns `-1102` naming the field.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -490,13 +490,13 @@ pub struct PlaceOrderParams {
     #[builder(setter(into))]
     #[serde(rename = "timeInForce")]
     pub time_in_force: String,
-    /// Payment account type. Enum: `SPOT`, `FUNDING`
+    /// Payment account type. Enum: `SPOT`, `FUNDING`. This only determines the settlement/reference account — it does not control which balance is debited. See `fundingSource` below for that.
     ///
     /// This field is **required.
     #[builder(setter(into))]
     #[serde(rename = "accountType")]
     pub account_type: PlaceOrderAccountTypeEnum,
-    /// Order type. Enum: `MARKET`, `LIMIT`
+    /// Order type. Enum: `MARKET`, `LIMIT` only. Do not combine with `timeInForce` (e.g. `LIMIT_GTC` is not a valid value) — set `timeInForce` separately per the Validation Rules table below.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -508,13 +508,13 @@ pub struct PlaceOrderParams {
     #[builder(setter(into))]
     #[serde(rename = "slippageBps")]
     pub slippage_bps: i32,
-    /// Limit price. Required when `orderType=LIMIT`. Must be > 0
+    /// Limit price. Required when `orderType=LIMIT`, must be > 0. Omitting it when `orderType=LIMIT` returns a generic `-3026` (no field name in the message).
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "priceLimit", default)]
     pub price_limit: Option<String>,
-    /// Funding source. Enum: `MPC`, `CEX`. Default `MPC`
+    /// Funding source. Enum: `MPC`, `CEX`. Default `MPC`. This determines which balance is actually debited, independent of `accountType`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -533,12 +533,12 @@ impl PlaceOrderParams {
     ///
     /// Required parameters:
     ///
-    /// * `wallet_address` — User's prediction wallet address
+    /// * `wallet_address` — User's prediction wallet address. Must be a valid address owned by the calling UID — a well-formed address not owned by the UID and a malformed (non-address) value both return the same generic `-3026`. An empty string instead returns `-1102` naming the field.
     /// * `wallet_id` — Wallet ID
     /// * `quote_id` — Quote ID obtained from `Get Quote`
     /// * `time_in_force` — Must match `orderType`: `FOK` for `MARKET`, `GTC` for `LIMIT`
-    /// * `account_type` — Payment account type. Enum: `SPOT`, `FUNDING`
-    /// * `order_type` — Order type. Enum: `MARKET`, `LIMIT`
+    /// * `account_type` — Payment account type. Enum: `SPOT`, `FUNDING`. This only determines the settlement/reference account — it does not control which balance is debited. See `fundingSource` below for that.
+    /// * `order_type` — Order type. Enum: `MARKET`, `LIMIT` only. Do not combine with `timeInForce` (e.g. `LIMIT_GTC` is not a valid value) — set `timeInForce` separately per the Validation Rules table below.
     /// * `slippage_bps` — Slippage tolerance in basis points. Range 1–10000
     ///
     #[must_use]

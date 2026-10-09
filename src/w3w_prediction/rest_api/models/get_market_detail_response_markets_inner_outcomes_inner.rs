@@ -27,6 +27,9 @@ pub struct GetMarketDetailResponseMarketsInnerOutcomesInner {
     pub index: Option<i32>,
     #[serde(rename = "tokenId", skip_serializing_if = "Option::is_none")]
     pub token_id: Option<String>,
+    /// Whether this outcome won. Returned only after the market is resolved. More than one outcome can be `true` when the payout is split
+    #[serde(rename = "winner", skip_serializing_if = "Option::is_none")]
+    pub winner: Option<bool>,
 }
 
 impl GetMarketDetailResponseMarketsInnerOutcomesInner {
@@ -38,6 +41,7 @@ impl GetMarketDetailResponseMarketsInnerOutcomesInner {
             chance: None,
             index: None,
             token_id: None,
+            winner: None,
         }
     }
 }

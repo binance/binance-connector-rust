@@ -290,7 +290,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","symbol":"BTC-200730-9000-C","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::AccountFundingFlowResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::AccountFundingFlowResponseInner>");
@@ -341,7 +341,7 @@ mod tests {
 
             let params = AccountFundingFlowParams::builder(AccountFundingFlowCurrencyEnum::Usdt,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","symbol":"BTC-200730-9000-C","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountFundingFlowResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountFundingFlowResponseInner>");
 
             let resp = client.account_funding_flow(params).await.expect("Expected a response");
@@ -358,7 +358,7 @@ mod tests {
 
             let params = AccountFundingFlowParams::builder(AccountFundingFlowCurrencyEnum::Usdt,).record_id(100000).start_time(1623319461670).end_time(1641782889000).limit(20).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"id":1125899906842624000,"asset":"USDT","amount":"-0.552","symbol":"BTC-200730-9000-C","type":"FEE","createDate":1592449456000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::AccountFundingFlowResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::AccountFundingFlowResponseInner>");
 
             let resp = client.account_funding_flow(params).await.expect("Expected a response");

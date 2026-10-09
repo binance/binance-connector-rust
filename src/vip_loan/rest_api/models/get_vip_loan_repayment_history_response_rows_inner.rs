@@ -21,6 +21,10 @@ pub struct GetVipLoanRepaymentHistoryResponseRowsInner {
     pub loan_coin: Option<String>,
     #[serde(rename = "repayAmount", skip_serializing_if = "Option::is_none")]
     pub repay_amount: Option<String>,
+    #[serde(rename = "repayPrincipal", skip_serializing_if = "Option::is_none")]
+    pub repay_principal: Option<String>,
+    #[serde(rename = "repayInterest", skip_serializing_if = "Option::is_none")]
+    pub repay_interest: Option<String>,
     #[serde(rename = "collateralCoin", skip_serializing_if = "Option::is_none")]
     pub collateral_coin: Option<String>,
     /// Repayment status (`Repaid`, `Repaying`, `Failed`).
@@ -40,6 +44,8 @@ impl GetVipLoanRepaymentHistoryResponseRowsInner {
         GetVipLoanRepaymentHistoryResponseRowsInner {
             loan_coin: None,
             repay_amount: None,
+            repay_principal: None,
+            repay_interest: None,
             collateral_coin: None,
             repay_status: None,
             loan_date: None,

@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
         "BTC".to_string(),
         dec!(1.0),
         "12345678,12345678,12345678".to_string(),
-        "BUSD,USDT,ETH".to_string(),
+        "BUSD,USDT,USDT-Earn,ETH".to_string(),
         true,
     )
     .build()?;

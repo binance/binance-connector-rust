@@ -51,6 +51,10 @@ pub trait SpotAlgoApi: Send + Sync {
         &self,
         params: TimeWeightedAveragePriceSpotAlgoParams,
     ) -> anyhow::Result<RestApiResponse<models::TimeWeightedAveragePriceSpotAlgoResponse>>;
+    async fn volume_participation(
+        &self,
+        params: VolumeParticipationParams,
+    ) -> anyhow::Result<RestApiResponse<models::VolumeParticipationResponse>>;
 }
 
 #[derive(Debug, Clone)]
@@ -130,6 +134,72 @@ impl std::str::FromStr for TimeWeightedAveragePriceSpotAlgoSideEnum {
                 other
             )
             .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum VolumeParticipationSideEnum {
+    #[serde(rename = "BUY")]
+    Buy,
+    #[serde(rename = "SELL")]
+    Sell,
+}
+
+impl VolumeParticipationSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Buy => "BUY",
+            Self::Sell => "SELL",
+        }
+    }
+}
+
+impl std::str::FromStr for VolumeParticipationSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BUY" => Ok(Self::Buy),
+            "SELL" => Ok(Self::Sell),
+            other => Err(format!("invalid VolumeParticipationSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum VolumeParticipationUrgencyEnum {
+    #[serde(rename = "LOW")]
+    Low,
+    #[serde(rename = "MEDIUM")]
+    Medium,
+    #[serde(rename = "HIGH")]
+    High,
+}
+
+impl VolumeParticipationUrgencyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Low => "LOW",
+            Self::Medium => "MEDIUM",
+            Self::High => "HIGH",
+        }
+    }
+}
+
+impl std::str::FromStr for VolumeParticipationUrgencyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "LOW" => Ok(Self::Low),
+            "MEDIUM" => Ok(Self::Medium),
+            "HIGH" => Ok(Self::High),
+            other => Err(format!("invalid VolumeParticipationUrgencyEnum: {}", other).into()),
         }
     }
 }
@@ -370,6 +440,85 @@ impl TimeWeightedAveragePriceSpotAlgoParams {
             .duration(duration)
     }
 }
+/// Request parameters for the [`volume_participation`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`volume_participation`](#method.volume_participation).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct VolumeParticipationParams {
+    /// Trading symbol eg. BTCUSDT
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    /// Trading side ( BUY or SELL )
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "side")]
+    pub side: VolumeParticipationSideEnum,
+    /// Total order quantity in base asset; The notional must be at least the equivalent of 1,000 USDT, and the
+    /// maximum notional per order is 200k, 2mm or 10mm, depending on symbol. Please reduce your size if your
+    /// order is above the maximum notional per order.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "quantity")]
+    pub quantity: rust_decimal::Decimal,
+    /// Represent the relative speed of the current execution; ENUM: LOW, MEDIUM, HIGH
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "urgency")]
+    pub urgency: VolumeParticipationUrgencyEnum,
+    /// A unique id among Algo orders (length should be 32 characters). If it is not sent, we will give
+    /// default value. Must be unique across all open Algo orders.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
+    pub client_algo_id: Option<String>,
+    /// Max allowed duration in seconds (minimum 300, maximum 86400). If it is not sent, 86400 is used and the
+    /// order runs until fully filled or cancelled.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "vpTimeLimit", default)]
+    pub vp_time_limit: Option<i64>,
+    /// Cannot be greater than 60000
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl VolumeParticipationParams {
+    /// Create a builder for [`volume_participation`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — Trading symbol eg. BTCUSDT
+    /// * `side` — Trading side ( BUY or SELL )
+    /// * `quantity` — Total order quantity in base asset; The notional must be at least the equivalent of 1,000 USDT, and the maximum notional per order is 200k, 2mm or 10mm, depending on symbol. Please reduce your size if your order is above the maximum notional per order.
+    /// * `urgency` — Represent the relative speed of the current execution; ENUM: LOW, MEDIUM, HIGH
+    ///
+    #[must_use]
+    pub fn builder(
+        symbol: String,
+        side: VolumeParticipationSideEnum,
+        quantity: rust_decimal::Decimal,
+        urgency: VolumeParticipationUrgencyEnum,
+    ) -> VolumeParticipationParamsBuilder {
+        VolumeParticipationParamsBuilder::default()
+            .symbol(symbol)
+            .side(side)
+            .quantity(quantity)
+            .urgency(urgency)
+    }
+}
 
 #[async_trait]
 impl SpotAlgoApi for SpotAlgoApiClient {
@@ -595,6 +744,59 @@ impl SpotAlgoApi for SpotAlgoApiClient {
         )
         .await
     }
+
+    async fn volume_participation(
+        &self,
+        params: VolumeParticipationParams,
+    ) -> anyhow::Result<RestApiResponse<models::VolumeParticipationResponse>> {
+        let VolumeParticipationParams {
+            symbol,
+            side,
+            quantity,
+            urgency,
+            client_algo_id,
+            vp_time_limit,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        query_params.insert("side".to_string(), json!(side));
+
+        query_params.insert("quantity".to_string(), json!(quantity));
+
+        query_params.insert("urgency".to_string(), json!(urgency));
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = vp_time_limit {
+            query_params.insert("vpTimeLimit".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::VolumeParticipationResponse>(
+            &self.configuration,
+            "/sapi/v1/algo/spot/newOrderVp",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
 }
 
 #[cfg(all(test, feature = "algo"))]
@@ -671,7 +873,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14517,"symbol":"ETHUSDT","side":"SELL","totalQty":"5.000","executedQty":"0.000","executedAmt":"0.00000000","avgPrice":"0.00","clientAlgoId":"d7096549481642f8a0bb69e9e2e31f2e","bookTime":1649756817004,"endTime":0,"algoStatus":"WORKING","algoType":"VP","urgency":"LOW"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14517,"symbol":"ETHUSDT","side":"SELL","totalQty":"5.000","executedQty":"0.000","executedAmt":"0.00000000","avgPrice":"0.00","clientAlgoId":"d7096549481642f8a0bb69e9e2e31f2e","bookTime":1649756817004,"endTime":0,"algoStatus":"WORKING","algoType":"TWAP","urgency":"LOW","duration":86400}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryCurrentAlgoOpenOrdersSpotAlgoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryCurrentAlgoOpenOrdersSpotAlgoResponse");
@@ -699,7 +901,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14518,"symbol":"BNBUSDT","side":"BUY","totalQty":"100.00","executedQty":"0.00","executedAmt":"0.00000000","avgPrice":"0.000","clientAlgoId":"acacab56b3c44bef9f6a8f8ebd2a8408","bookTime":1649757019503,"endTime":1649757088101,"algoStatus":"CANCELLED","algoType":"VP","urgency":"LOW"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14518,"symbol":"BNBUSDT","side":"BUY","totalQty":"100.00","executedQty":"0.00","executedAmt":"0.00000000","avgPrice":"0.000","clientAlgoId":"acacab56b3c44bef9f6a8f8ebd2a8408","bookTime":1649757019503,"endTime":1649757088101,"algoStatus":"CANCELLED","algoType":"TWAP","urgency":"LOW","duration":86400}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QueryHistoricalAlgoOrdersSpotAlgoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QueryHistoricalAlgoOrdersSpotAlgoResponse");
@@ -758,6 +960,33 @@ mod tests {
             let dummy_response: models::TimeWeightedAveragePriceSpotAlgoResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TimeWeightedAveragePriceSpotAlgoResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn volume_participation(
+            &self,
+            _params: VolumeParticipationParams,
+        ) -> anyhow::Result<RestApiResponse<models::VolumeParticipationResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"clientAlgoId":"65ce1630101a480b85915d7e11fd5078","success":true,"code":0,"msg":"OK"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::VolumeParticipationResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::VolumeParticipationResponse");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -846,7 +1075,7 @@ mod tests {
 
             let params = QueryCurrentAlgoOpenOrdersSpotAlgoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14517,"symbol":"ETHUSDT","side":"SELL","totalQty":"5.000","executedQty":"0.000","executedAmt":"0.00000000","avgPrice":"0.00","clientAlgoId":"d7096549481642f8a0bb69e9e2e31f2e","bookTime":1649756817004,"endTime":0,"algoStatus":"WORKING","algoType":"VP","urgency":"LOW"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14517,"symbol":"ETHUSDT","side":"SELL","totalQty":"5.000","executedQty":"0.000","executedAmt":"0.00000000","avgPrice":"0.00","clientAlgoId":"d7096549481642f8a0bb69e9e2e31f2e","bookTime":1649756817004,"endTime":0,"algoStatus":"WORKING","algoType":"TWAP","urgency":"LOW","duration":86400}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCurrentAlgoOpenOrdersSpotAlgoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentAlgoOpenOrdersSpotAlgoResponse");
 
             let resp = client.query_current_algo_open_orders_spot_algo(params).await.expect("Expected a response");
@@ -863,7 +1092,7 @@ mod tests {
 
             let params = QueryCurrentAlgoOpenOrdersSpotAlgoParams::builder().recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14517,"symbol":"ETHUSDT","side":"SELL","totalQty":"5.000","executedQty":"0.000","executedAmt":"0.00000000","avgPrice":"0.00","clientAlgoId":"d7096549481642f8a0bb69e9e2e31f2e","bookTime":1649756817004,"endTime":0,"algoStatus":"WORKING","algoType":"VP","urgency":"LOW"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14517,"symbol":"ETHUSDT","side":"SELL","totalQty":"5.000","executedQty":"0.000","executedAmt":"0.00000000","avgPrice":"0.00","clientAlgoId":"d7096549481642f8a0bb69e9e2e31f2e","bookTime":1649756817004,"endTime":0,"algoStatus":"WORKING","algoType":"TWAP","urgency":"LOW","duration":86400}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryCurrentAlgoOpenOrdersSpotAlgoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryCurrentAlgoOpenOrdersSpotAlgoResponse");
 
             let resp = client.query_current_algo_open_orders_spot_algo(params).await.expect("Expected a response");
@@ -901,7 +1130,7 @@ mod tests {
 
             let params = QueryHistoricalAlgoOrdersSpotAlgoParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14518,"symbol":"BNBUSDT","side":"BUY","totalQty":"100.00","executedQty":"0.00","executedAmt":"0.00000000","avgPrice":"0.000","clientAlgoId":"acacab56b3c44bef9f6a8f8ebd2a8408","bookTime":1649757019503,"endTime":1649757088101,"algoStatus":"CANCELLED","algoType":"VP","urgency":"LOW"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14518,"symbol":"BNBUSDT","side":"BUY","totalQty":"100.00","executedQty":"0.00","executedAmt":"0.00000000","avgPrice":"0.000","clientAlgoId":"acacab56b3c44bef9f6a8f8ebd2a8408","bookTime":1649757019503,"endTime":1649757088101,"algoStatus":"CANCELLED","algoType":"TWAP","urgency":"LOW","duration":86400}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryHistoricalAlgoOrdersSpotAlgoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryHistoricalAlgoOrdersSpotAlgoResponse");
 
             let resp = client.query_historical_algo_orders_spot_algo(params).await.expect("Expected a response");
@@ -918,7 +1147,7 @@ mod tests {
 
             let params = QueryHistoricalAlgoOrdersSpotAlgoParams::builder().symbol("BTCUSDT".to_string()).side(QueryHistoricalAlgoOrdersSpotAlgoSideEnum::Buy).start_time(1623319461670).end_time(1641782889000).page(1).page_size(10).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14518,"symbol":"BNBUSDT","side":"BUY","totalQty":"100.00","executedQty":"0.00","executedAmt":"0.00000000","avgPrice":"0.000","clientAlgoId":"acacab56b3c44bef9f6a8f8ebd2a8408","bookTime":1649757019503,"endTime":1649757088101,"algoStatus":"CANCELLED","algoType":"VP","urgency":"LOW"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"orders":[{"algoId":14518,"symbol":"BNBUSDT","side":"BUY","totalQty":"100.00","executedQty":"0.00","executedAmt":"0.00000000","avgPrice":"0.000","clientAlgoId":"acacab56b3c44bef9f6a8f8ebd2a8408","bookTime":1649757019503,"endTime":1649757088101,"algoStatus":"CANCELLED","algoType":"TWAP","urgency":"LOW","duration":86400}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QueryHistoricalAlgoOrdersSpotAlgoResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryHistoricalAlgoOrdersSpotAlgoResponse");
 
             let resp = client.query_historical_algo_orders_spot_algo(params).await.expect("Expected a response");
@@ -1045,6 +1274,63 @@ mod tests {
             .unwrap();
 
             match client.time_weighted_average_price_spot_algo(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn volume_participation_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockSpotAlgoApiClient { force_error: false };
+
+            let params = VolumeParticipationParams::builder("BTCUSDT".to_string(),VolumeParticipationSideEnum::Buy,dec!(1),VolumeParticipationUrgencyEnum::Low,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"clientAlgoId":"65ce1630101a480b85915d7e11fd5078","success":true,"code":0,"msg":"OK"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::VolumeParticipationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VolumeParticipationResponse");
+
+            let resp = client.volume_participation(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn volume_participation_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockSpotAlgoApiClient { force_error: false };
+
+            let params = VolumeParticipationParams::builder("BTCUSDT".to_string(),VolumeParticipationSideEnum::Buy,dec!(1),VolumeParticipationUrgencyEnum::Low,).client_algo_id("1".to_string()).vp_time_limit(5000).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"clientAlgoId":"65ce1630101a480b85915d7e11fd5078","success":true,"code":0,"msg":"OK"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::VolumeParticipationResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::VolumeParticipationResponse");
+
+            let resp = client.volume_participation(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn volume_participation_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockSpotAlgoApiClient { force_error: true };
+
+            let params = VolumeParticipationParams::builder(
+                "BTCUSDT".to_string(),
+                VolumeParticipationSideEnum::Buy,
+                dec!(1),
+                VolumeParticipationUrgencyEnum::Low,
+            )
+            .build()
+            .unwrap();
+
+            match client.volume_participation(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

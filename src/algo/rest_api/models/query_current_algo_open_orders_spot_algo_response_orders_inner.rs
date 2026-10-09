@@ -56,6 +56,9 @@ pub struct QueryCurrentAlgoOpenOrdersSpotAlgoResponseOrdersInner {
     /// Execution urgency
     #[serde(rename = "urgency", skip_serializing_if = "Option::is_none")]
     pub urgency: Option<String>,
+    /// Order duration in seconds. Only returned for TWAP orders
+    #[serde(rename = "duration", skip_serializing_if = "Option::is_none")]
+    pub duration: Option<i64>,
 }
 
 impl QueryCurrentAlgoOpenOrdersSpotAlgoResponseOrdersInner {
@@ -75,6 +78,7 @@ impl QueryCurrentAlgoOpenOrdersSpotAlgoResponseOrdersInner {
             algo_status: None,
             algo_type: None,
             urgency: None,
+            duration: None,
         }
     }
 }

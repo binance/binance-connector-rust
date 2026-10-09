@@ -470,7 +470,9 @@ pub struct TimeWeightedAveragePriceFutureAlgoParams {
     #[serde(rename = "side")]
     pub side: TimeWeightedAveragePriceFutureAlgoSideEnum,
     /// Quantity of base asset; The notional (`quantity` * `mark price(base asset)`) must be more than the
-    /// equivalent of 1,000 USDT and less than the equivalent of 1,000,000 USDT
+    /// equivalent of 1,000 USDT, and the maximum notional varies by symbol: up to 50,000,000 USDT for
+    /// BTCUSDT perpetual, up to 25,000,000 USDT for ETHUSDT perpetual, and up to 5,000,000 USDT for
+    /// other symbols
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -523,7 +525,7 @@ impl TimeWeightedAveragePriceFutureAlgoParams {
     ///
     /// * `symbol` — Trading symbol eg. BTCUSDT
     /// * `side` — Trading side ( BUY or SELL )
-    /// * `quantity` — Quantity of base asset; The notional (`quantity` * `mark price(base asset)`) must be more than the equivalent of 1,000 USDT and less than the equivalent of 1,000,000 USDT
+    /// * `quantity` — Quantity of base asset; The notional (`quantity` * `mark price(base asset)`) must be more than the equivalent of 1,000 USDT, and the maximum notional varies by symbol: up to 50,000,000 USDT for BTCUSDT perpetual, up to 25,000,000 USDT for ETHUSDT perpetual, and up to 5,000,000 USDT for other symbols
     /// * `duration` — Duration for TWAP orders in seconds
     ///
     #[must_use]
@@ -560,7 +562,9 @@ pub struct VolumeParticipationFutureAlgoParams {
     #[serde(rename = "side")]
     pub side: VolumeParticipationFutureAlgoSideEnum,
     /// Quantity of base asset; The notional (`quantity` * `mark price(base asset)`) must be more than the
-    /// equivalent of 10,000 USDT and less than the equivalent of 1,000,000 USDT
+    /// equivalent of 10,000 USDT, and the maximum notional varies by symbol: up to 50,000,000 USDT for
+    /// BTCUSDT perpetual, up to 25,000,000 USDT for ETHUSDT perpetual, and up to 5,000,000 USDT for
+    /// other symbols
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -613,7 +617,7 @@ impl VolumeParticipationFutureAlgoParams {
     ///
     /// * `symbol` — Trading symbol eg. BTCUSDT
     /// * `side` — Trading side ( BUY or SELL )
-    /// * `quantity` — Quantity of base asset; The notional (`quantity` * `mark price(base asset)`) must be more than the equivalent of 10,000 USDT and less than the equivalent of 1,000,000 USDT
+    /// * `quantity` — Quantity of base asset; The notional (`quantity` * `mark price(base asset)`) must be more than the equivalent of 10,000 USDT, and the maximum notional varies by symbol: up to 50,000,000 USDT for BTCUSDT perpetual, up to 25,000,000 USDT for ETHUSDT perpetual, and up to 5,000,000 USDT for other symbols
     /// * `urgency` — Represent the relative speed of the current execution; ENUM: LOW, MEDIUM, HIGH
     ///
     #[must_use]

@@ -26,6 +26,9 @@ pub struct AccountFundingFlowResponseInner {
     /// Amount (positive numbers represent inflow, negative numbers represent outflow)
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Option symbol the record relates to. Returned only for contract-related types (e.g. `CONTRACT`, `FEE`, `EXERCISE_PNL`, `EXERCISE_FEE`); omitted for other types such as `TRANSFER`. Older records may not include this field.
+    #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
+    pub symbol: Option<String>,
     /// type (fees)
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
@@ -41,6 +44,7 @@ impl AccountFundingFlowResponseInner {
             id: None,
             asset: None,
             amount: None,
+            symbol: None,
             r#type: None,
             create_date: None,
         }

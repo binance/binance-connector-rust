@@ -440,7 +440,7 @@ impl RestApi {
 
     /// Cancel Spot Algo Order (TRADE)
     ///
-    /// Cancel an open TWAP order
+    /// Cancel an open TWAP or VP algo order
     ///
     /// Weight(IP): 1
     ///
@@ -490,7 +490,7 @@ impl RestApi {
 
     /// Query Current Spot Algo Open Orders (`USER_DATA`)
     ///
-    /// Get all open SPOT TWAP orders
+    /// Get all open Spot TWAP and VP algo orders
     ///
     /// Weight(IP): 1
     ///
@@ -537,7 +537,7 @@ impl RestApi {
 
     /// Query Historical Spot Algo Orders (`USER_DATA`)
     ///
-    /// Get all historical SPOT TWAP orders
+    /// Get all historical Spot TWAP and VP algo orders
     ///
     /// Weight(IP): 1
     ///
@@ -677,5 +677,57 @@ impl RestApi {
         self.spot_algo_api_client
             .time_weighted_average_price_spot_algo(params)
             .await
+    }
+
+    /// Volume Participation (VP) New Order (TRADE)
+    ///
+    /// Place a new spot VP (Volume Participation) order with Algo service. A VP order automatically slices the total quantity over time, targeting a percentage of the market volume.
+    ///
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - VP orders do not accept `price` or `timeInForce`; pricing is determined algorithmically based on market volume.
+    /// - `urgency` controls the participation rate: LOW = passive, MEDIUM = neutral, HIGH = aggressive.
+    /// - Receiving `"success": true` does not guarantee execution; use the query order endpoints (`GET /sapi/v1/algo/spot/openOrders` or `GET /sapi/v1/algo/spot/historicalOrders`) to check the final status.
+    /// - You need to enable the `Spot Trading` permission for the API key requesting this endpoint.
+    /// - Base URL: `https://api.binance.com`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`VolumeParticipationParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::VolumeParticipationResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-algo-trading/api/rest-api/spot-algo#volume-participation).
+    ///
+    pub async fn volume_participation(
+        &self,
+        params: VolumeParticipationParams,
+    ) -> anyhow::Result<RestApiResponse<models::VolumeParticipationResponse>> {
+        self.spot_algo_api_client.volume_participation(params).await
     }
 }

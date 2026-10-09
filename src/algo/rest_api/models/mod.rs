@@ -43,3 +43,5 @@ pub mod time_weighted_average_price_spot_algo_response;
 pub use self::time_weighted_average_price_spot_algo_response::TimeWeightedAveragePriceSpotAlgoResponse;
 pub mod volume_participation_future_algo_response;
 pub use self::volume_participation_future_algo_response::VolumeParticipationFutureAlgoResponse;
+pub mod volume_participation_response;
+pub use self::volume_participation_response::VolumeParticipationResponse;

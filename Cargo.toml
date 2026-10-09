@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "74.0.0"
+version = "74.1.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -251,6 +251,11 @@ required-features = [ "algo" ]
 [[example]]
 name = "algo_rest_api_spot_algo_api_time_weighted_average_price_spot_algo"
 path = "examples/algo/rest_api/spot_algo_api/time_weighted_average_price_spot_algo.rs"
+required-features = [ "algo" ]
+
+[[example]]
+name = "algo_rest_api_spot_algo_api_volume_participation"
+path = "examples/algo/rest_api/spot_algo_api/volume_participation.rs"
 required-features = [ "algo" ]
 
 [[example]]

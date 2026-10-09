@@ -37,6 +37,7 @@ pub struct GetMarketDetailResponseMarketsInner {
     pub trade_volume: Option<String>,
     #[serde(rename = "liquidity", skip_serializing_if = "Option::is_none")]
     pub liquidity: Option<String>,
+    /// Price precision of the market, in decimal places. The price tick is 10 to the power of minus `decimalPrecision`, for example `2` means a tick of 0.01. A limit price that is not on the tick is truncated down
     #[serde(rename = "decimalPrecision", skip_serializing_if = "Option::is_none")]
     pub decimal_precision: Option<i32>,
     #[serde(rename = "outcomes", skip_serializing_if = "Option::is_none")]

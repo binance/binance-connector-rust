@@ -33,6 +33,7 @@ pub struct VipLoanBorrowResponse {
         skip_serializing_if = "Option::is_none"
     )]
     pub collateral_account_id: Option<String>,
+    /// Includes `<ASSET>-Earn` entries when a Simple Earn Flexible position is pledged.
     #[serde(rename = "collateralCoin", skip_serializing_if = "Option::is_none")]
     pub collateral_coin: Option<String>,
     #[serde(rename = "loanTerm", skip_serializing_if = "Option::is_none")]

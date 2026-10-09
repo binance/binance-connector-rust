@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
         "BUSD".to_string(),
         30,
         12345678,
-        "BNB,ETH,BTC".to_string(),
+        "BNB,BNB-Earn,ETH,BTC".to_string(),
         "12345,67890,13579".to_string(),
     )
     .build()?;
