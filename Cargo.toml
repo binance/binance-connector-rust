@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "74.1.0"
+version = "74.1.1"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2866,6 +2866,11 @@ required-features = [ "margin_trading" ]
 [[example]]
 name = "margin_trading_rest_api_trade_api_query_margin_accounts_open_orders"
 path = "examples/margin_trading/rest_api/trade_api/query_margin_accounts_open_orders.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_trade_api_query_margin_accounts_open_otootoco_order_lists"
+path = "examples/margin_trading/rest_api/trade_api/query_margin_accounts_open_otootoco_order_lists.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]

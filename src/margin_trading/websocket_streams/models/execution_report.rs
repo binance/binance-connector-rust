@@ -119,19 +119,19 @@ pub struct ExecutionReport {
     pub v_uppercase: Option<String>,
     /// Trailing Delta; This is only visible if the order was a trailing stop order.
     #[serde(rename = "d", skip_serializing_if = "Option::is_none")]
-    pub d: Option<String>,
+    pub d: Option<i64>,
     /// Trailing Time
     #[serde(rename = "D", skip_serializing_if = "Option::is_none")]
-    pub d_uppercase: Option<String>,
+    pub d_uppercase: Option<i64>,
     /// Strategy Id
     #[serde(rename = "j", skip_serializing_if = "Option::is_none")]
-    pub j: Option<String>,
+    pub j: Option<i64>,
     /// Strategy Type
     #[serde(rename = "J", skip_serializing_if = "Option::is_none")]
-    pub j_uppercase: Option<String>,
+    pub j_uppercase: Option<i64>,
     /// Prevented Match Id
     #[serde(rename = "v", skip_serializing_if = "Option::is_none")]
-    pub v: Option<String>,
+    pub v: Option<i64>,
     /// Prevented Quantity
     #[serde(rename = "A", skip_serializing_if = "Option::is_none")]
     pub a_uppercase: Option<String>,
@@ -140,10 +140,10 @@ pub struct ExecutionReport {
     pub b_uppercase: Option<String>,
     /// Trade Group Id
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
-    pub u: Option<String>,
+    pub u: Option<i64>,
     /// Counter Order Id
     #[serde(rename = "U", skip_serializing_if = "Option::is_none")]
-    pub u_uppercase: Option<String>,
+    pub u_uppercase: Option<i64>,
     /// Counter Symbol
     #[serde(rename = "Cs", skip_serializing_if = "Option::is_none")]
     pub cs: Option<String>,
@@ -161,7 +161,7 @@ pub struct ExecutionReport {
     pub b: Option<String>,
     /// Allocation ID
     #[serde(rename = "a", skip_serializing_if = "Option::is_none")]
-    pub a: Option<String>,
+    pub a: Option<i64>,
     /// Working Floor
     #[serde(rename = "k", skip_serializing_if = "Option::is_none")]
     pub k: Option<String>,
