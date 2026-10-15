@@ -34,7 +34,7 @@ Enable the `crypto_loan` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["crypto_loan"] }
+binance-sdk = { version = "75.0.0", features = ["crypto_loan"] }
 ```
 
 In your code, import the `crypto_loan` client:

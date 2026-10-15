@@ -33,7 +33,7 @@ Enable the `convert` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["convert"] }
+binance-sdk = { version = "75.0.0", features = ["convert"] }
 ```
 
 In your code, import the `convert` client:

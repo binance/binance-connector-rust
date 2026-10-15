@@ -740,12 +740,6 @@ pub struct GetIncomeHistoryParams {
     #[builder(setter(into), default)]
     #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Pagination page number.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "page", default)]
-    pub page: Option<i64>,
     /// Maximum number of records to return.
     ///
     /// This field is **optional.
@@ -1419,7 +1413,6 @@ impl AccountApi for AccountApiClient {
             income_type,
             start_time,
             end_time,
-            page,
             limit,
             recv_window,
         } = params;
@@ -1441,10 +1434,6 @@ impl AccountApi for AccountApiClient {
 
         if let Some(rw) = end_time {
             query_params.insert("endTime".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = page {
-            query_params.insert("page".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -3212,7 +3201,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetIncomeHistoryParams::builder().symbol("BTCUSDT".to_string()).income_type(GetIncomeHistoryIncomeTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).page(1).limit(30).recv_window(5000).build().unwrap();
+            let params = GetIncomeHistoryParams::builder().symbol("BTCUSDT".to_string()).income_type(GetIncomeHistoryIncomeTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).limit(30).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":9689322392,"tradeId":""}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetIncomeHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetIncomeHistoryResponseInner>");

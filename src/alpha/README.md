@@ -35,7 +35,7 @@ Enable the `alpha` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["alpha"] }
+binance-sdk = { version = "75.0.0", features = ["alpha"] }
 ```
 
 In your code, import the `alpha` client:

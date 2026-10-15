@@ -25,7 +25,7 @@ pub struct AccountCommissionResponseResultDiscount {
     pub enabled_for_symbol: Option<bool>,
     #[serde(rename = "discountAsset", skip_serializing_if = "Option::is_none")]
     pub discount_asset: Option<String>,
-    /// Standard commission is reduced by this rate when paying commission in BNB.
+    /// Multiplier applied to the standard commission when paying commission in BNB (e.g. 0.75 = 75% of the standard commission is charged).
     #[serde(rename = "discount", skip_serializing_if = "Option::is_none")]
     pub discount: Option<String>,
 }

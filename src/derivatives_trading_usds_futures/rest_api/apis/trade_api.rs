@@ -1839,7 +1839,7 @@ pub struct ChangeInitialLeverageParams {
     #[builder(setter(into))]
     #[serde(rename = "symbol")]
     pub symbol: String,
-    /// target initial leverage
+    /// Target initial leverage. The maximum is symbol-specific: use `initialLeverage` of bracket 1 from `GET /fapi/v1/leverageBracket`.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -1860,7 +1860,7 @@ impl ChangeInitialLeverageParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `leverage` — target initial leverage
+    /// * `leverage` — Target initial leverage. The maximum is symbol-specific: use `initialLeverage` of bracket 1 from `GET /fapi/v1/leverageBracket`.
     ///
     #[must_use]
     pub fn builder(symbol: String, leverage: i64) -> ChangeInitialLeverageParamsBuilder {

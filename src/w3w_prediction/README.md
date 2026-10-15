@@ -5,9 +5,10 @@
 [![Build Status](https://img.shields.io/github/actions/workflow/status/binance/binance-connector-rust/ci.yaml)](https://github.com/binance/binance-connector-rust/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This module provides the official Rust client for Binance's W3W Prediction API, enabling developers to interact programmatically with Binance's W3W Prediction trading platform. The library provides tools to place and manage prediction market orders, query positions and transfer funds through the REST API:
+This module provides the official Rust client for Binance's W3W Prediction API, enabling developers to interact programmatically with Binance's W3W Prediction trading platform. The library provides tools to place and manage prediction market orders, query positions and transfer funds through the REST API, and to receive real-time order book quotes and trading, claim, transfer and market resolution events through the WebSocket Streams:
 
 - [REST API](./rest_api/mod.rs)
+- [WebSocket Streams](./websocket_streams/mod.rs)
 
 ## Table of Contents
 
@@ -15,6 +16,7 @@ This module provides the official Rust client for Binance's W3W Prediction API, 
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [REST APIs](#rest-apis)
+- [Websocket Streams](#websocket-streams)
 - [Logging](#logging)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -24,6 +26,7 @@ This module provides the official Rust client for Binance's W3W Prediction API, 
 
 - REST API Endpoints:
   - `/sapi/v1/w3w/wallet/prediction/*`
+- WebSocket Endpoints: Real-time data streaming.
 - Inclusion of test cases and examples for quick onboarding.
 
 ## Installation
@@ -32,7 +35,7 @@ Enable the `w3w_prediction` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["w3w_prediction"] }
+binance-sdk = { version = "75.0.0", features = ["w3w_prediction"] }
 ```
 
 In your code, import the `w3w_prediction` client:
@@ -60,8 +63,7 @@ let configuration = ConfigurationRestApi::builder()
   .build()?;
 
 let client = w3w_prediction::W3WPredictionRestApi::production(configuration);
-let params = w3w_prediction::rest_api::ListPredictionCategoriesResponse::default();
-let response = client.list_prediction_categories(params).await?;
+let response = client.list_prediction_categories().await?;
 
 let data = response.data().await?;
 println!("{:#?}", data);
@@ -137,6 +139,105 @@ Errors are represented by the following types:
 
 See the [Error Handling example](./docs/rest_api/error-handling.md) for detailed usage. Refer to the [`error`](../common/errors.rs) module for more information.
 
+### Websocket Streams
+
+The WebSocket Streams provide real-time push notifications for prediction market order books and per-user trading, claim, transfer and market resolution events. Use the [`websocket_streams`](./websocket_streams/mod.rs) module to interact with these endpoints.
+
+These streams are signed, so an API key and secret (or a private key) are required.
+
+```rust
+use binance_sdk::config::ConfigurationWebsocketStreams;
+use binance_sdk::w3w_prediction;
+
+let configuration = ConfigurationWebsocketStreams::builder()
+  .api_key("YOUR_API_KEY")
+  .api_secret("YOUR_SECRET_KEY")
+  .build()?;
+
+let client = w3w_prediction::W3WPredictionWsStreams::production(configuration);
+let connection = client.connect().await?;
+let params = w3w_prediction::websocket_streams::PredictionOrderBookByMarketIdParams::builder("8859231".to_string()).build()?;
+let stream = connection.prediction_order_book_by_market_id(params).await?;
+
+stream.on_message(|data| {
+  println!("{:#?}", data);
+});
+```
+
+#### Configuration Options
+
+The `w3w_prediction` module can be configured with the following options via the `ConfigurationWebsocketStreams` builder pattern:
+
+- `api_key` (String): Your Binance API key (required). It is sent in the `X-MBX-APIKEY` header on connection
+- `api_secret` (String): Your Binance API secret, used to sign the connection URL with HMAC-SHA256
+- `private_key` (PrivateKey): RSA or ED25519 private key, used instead of `api_secret` to sign the connection URL (raw string or PEM file path)
+- `private_key_passphrase` (String): Passphrase for the private key, if encrypted
+- `reconnect_delay` (u64): Specify the delay between reconnection attempts in milliseconds (default: 5000)
+- `mode` (WebsocketMode): Choose between `single` and `pool` connection modes
+  - `Single`: A single WebSocket connection
+  - `Pool`: A pool of WebSocket connections
+- `agent` (AgentConnector): Customize the WebSocket agent for advanced configurations
+- `handshake` (WebsocketHandshakeFn): Provide a custom async TLS/WebSocket handshake (e.g. to tunnel through a SOCKS5 proxy)
+
+Refer to the [`configuration`](../common/config.rs) for more details.
+
+##### Key Pair Based Authentication
+
+Sign the connection URL with an `RSA` or `Ed25519` private key instead of an API secret. See the [Key Pair Based Authentication example](./docs/websocket_streams/key-pair-authentication.md) for detailed usage.
+
+##### Reconnect Delay
+
+Specify the delay in milliseconds between WebSocket reconnection attempts. See the [Reconnect Delay example](./docs/websocket_streams/reconnect-delay.md) for detailed usage.
+
+##### WebSocket Agent
+
+Customize the agent for advanced configurations. See the [WebSocket Agent example](./docs/websocket_streams/agent.md) for detailed usage.
+
+##### Custom Handshake
+
+Supply a custom async TLS/WebSocket handshake to open your own transport (such as a SOCKS5 tunnel) before the handshake completes. See the [Custom Handshake example](./docs/websocket_streams/custom-handshake.md) for detailed usage.
+
+##### Connection Mode
+
+Choose between `Single` and `Pool` connection modes for WebSocket connections. The `Single` mode uses a single WebSocket connection, while the `Pool` mode uses a pool of WebSocket connections. See the [Connection Mode example](./docs/websocket_streams/connection-mode.md) for detailed usage.
+
+##### Certificate Pinning
+
+To enhance security, you can use certificate pinning with the `agent` option in the configuration. This ensures the client only communicates with servers using specific certificates. See the [Certificate Pinning example](./docs/websocket_streams/certificate-pinning.md) for detailed usage.
+
+#### Unsubscribing from Streams
+
+You can unsubscribe from specific WebSocket streams using the `unsubscribe` method. This is useful for managing active subscriptions without closing the connection.
+
+```rust
+use tokio::time::{Duration, sleep};
+
+use binance_sdk::config::ConfigurationWebsocketStreams;
+use binance_sdk::w3w_prediction;
+
+let configuration = ConfigurationWebsocketStreams::builder()
+  .api_key("YOUR_API_KEY")
+  .api_secret("YOUR_SECRET_KEY")
+  .build()?;
+
+let client = w3w_prediction::W3WPredictionWsStreams::production(configuration);
+let connection = client.connect().await?;
+let params = w3w_prediction::websocket_streams::PredictionOrderBookByMarketIdParams::builder("8859231".to_string()).build()?;
+let stream = connection.prediction_order_book_by_market_id(params).await?;
+
+stream.on_message(|data| {
+  println!("{:#?}", data);
+});
+
+sleep(Duration::from_secs(10)).await;
+
+stream.unsubscribe().await;
+```
+
+### Automatic Connection Renewal
+
+The WebSocket connection is automatically renewed for WebSocket Streams connections, before the 24 hours expiration of the API key. This ensures continuous connectivity. Active streams are re-subscribed automatically after every reconnection or renewal.
+
 ## Logging
 
 This crate ships with an optional default logger that you can enable with a single call:
@@ -168,6 +269,7 @@ cargo test --features w3w_prediction
 Tests cover:
 
 - REST API endpoint integration
+- WebSocket Streams
 - Error scenarios and edge cases
 
 ## Contributing

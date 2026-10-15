@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "74.1.1"
+version = "75.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -146,6 +146,7 @@ rustls-tls = [
 algo = [ ]
 alpha = [ ]
 c2c = [ ]
+cms = [ ]
 convert = [ ]
 copy_trading = [ ]
 crypto_loan = [ ]
@@ -173,6 +174,7 @@ all = [
   "algo",
   "alpha",
   "c2c",
+  "cms",
   "convert",
   "copy_trading",
   "crypto_loan",
@@ -357,6 +359,11 @@ required-features = [ "alpha" ]
 name = "c2c_rest_api_get_c2_c_trade_history"
 path = "examples/c2c/rest_api/get_c2_c_trade_history.rs"
 required-features = [ "c2c" ]
+
+[[example]]
+name = "cms_websocket_streams_com_announcement_en"
+path = "examples/cms/websocket_streams/com_announcement_en.rs"
+required-features = [ "cms" ]
 
 [[example]]
 name = "convert_rest_api_market_data_api_list_all_convert_pairs"
@@ -4444,6 +4451,46 @@ path = "examples/w3w_prediction/rest_api/market_data_api/query_order_book.rs"
 required-features = [ "w3w_prediction" ]
 
 [[example]]
+name = "w3w_prediction_rest_api_otc_api_create_otc_blocktrade"
+path = "examples/w3w_prediction/rest_api/otc_api/create_otc_blocktrade.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_otc_api_fulfil_otc_blocktrade"
+path = "examples/w3w_prediction/rest_api/otc_api/fulfil_otc_blocktrade.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_otc_api_get_otc_blocktrade_detail"
+path = "examples/w3w_prediction/rest_api/otc_api/get_otc_blocktrade_detail.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_otc_api_get_otc_blocktrade_events"
+path = "examples/w3w_prediction/rest_api/otc_api/get_otc_blocktrade_events.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_otc_api_get_otc_reserved_balances"
+path = "examples/w3w_prediction/rest_api/otc_api/get_otc_reserved_balances.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_otc_api_list_otc_blocktrades"
+path = "examples/w3w_prediction/rest_api/otc_api/list_otc_blocktrades.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_otc_api_preview_otc_blocktrade"
+path = "examples/w3w_prediction/rest_api/otc_api/preview_otc_blocktrade.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_otc_api_remove_otc_blocktrades"
+path = "examples/w3w_prediction/rest_api/otc_api/remove_otc_blocktrades.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
 name = "w3w_prediction_rest_api_position_api_get_position_by_token"
 path = "examples/w3w_prediction/rest_api/position_api/get_position_by_token.rs"
 required-features = [ "w3w_prediction" ]
@@ -4504,6 +4551,16 @@ path = "examples/w3w_prediction/rest_api/trade_api/query_order_history.rs"
 required-features = [ "w3w_prediction" ]
 
 [[example]]
+name = "w3w_prediction_rest_api_transfer_api_apply_mm_deposit"
+path = "examples/w3w_prediction/rest_api/transfer_api/apply_mm_deposit.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_rest_api_transfer_api_apply_mm_withdraw"
+path = "examples/w3w_prediction/rest_api/transfer_api/apply_mm_withdraw.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
 name = "w3w_prediction_rest_api_transfer_api_create_inbound_transfer"
 path = "examples/w3w_prediction/rest_api/transfer_api/create_inbound_transfer.rs"
 required-features = [ "w3w_prediction" ]
@@ -4541,6 +4598,81 @@ required-features = [ "w3w_prediction" ]
 [[example]]
 name = "w3w_prediction_rest_api_wallet_api_query_payment_option_balances"
 path = "examples/w3w_prediction/rest_api/wallet_api/query_payment_option_balances.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_batch_claim_partially_succeeded"
+path = "examples/w3w_prediction/websocket_streams/batch_claim_partially_succeeded.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_fund_transfer_failed"
+path = "examples/w3w_prediction/websocket_streams/fund_transfer_failed.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_fund_transfer_succeeded"
+path = "examples/w3w_prediction/websocket_streams/fund_transfer_succeeded.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_limit_order_fully_filled"
+path = "examples/w3w_prediction/websocket_streams/limit_order_fully_filled.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_limit_order_partially_filled"
+path = "examples/w3w_prediction/websocket_streams/limit_order_partially_filled.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_limit_order_submission_failed"
+path = "examples/w3w_prediction/websocket_streams/limit_order_submission_failed.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_limit_order_submitted_successfully"
+path = "examples/w3w_prediction/websocket_streams/limit_order_submitted_successfully.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_market_buy_order_failed"
+path = "examples/w3w_prediction/websocket_streams/market_buy_order_failed.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_market_buy_order_fully_filled"
+path = "examples/w3w_prediction/websocket_streams/market_buy_order_fully_filled.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_market_resolution_notification"
+path = "examples/w3w_prediction/websocket_streams/market_resolution_notification.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_market_sell_order_failed_expired"
+path = "examples/w3w_prediction/websocket_streams/market_sell_order_failed_expired.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_market_sell_order_fully_filled"
+path = "examples/w3w_prediction/websocket_streams/market_sell_order_fully_filled.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_prediction_order_book_by_market_id"
+path = "examples/w3w_prediction/websocket_streams/prediction_order_book_by_market_id.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_reward_claim_failed"
+path = "examples/w3w_prediction/websocket_streams/reward_claim_failed.rs"
+required-features = [ "w3w_prediction" ]
+
+[[example]]
+name = "w3w_prediction_websocket_streams_reward_claim_succeeded"
+path = "examples/w3w_prediction/websocket_streams/reward_claim_succeeded.rs"
 required-features = [ "w3w_prediction" ]
 
 [[example]]

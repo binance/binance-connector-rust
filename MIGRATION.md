@@ -31,14 +31,14 @@ Replace the legacy dependency with the new unified crate, specifying feature fla
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["derivatives_trading_usds_futures", "spot"] }
+binance-sdk = { version = "75.0.0", features = ["derivatives_trading_usds_futures", "spot"] }
 ```
 
 If you previously consumed multiple products through the legacy crate, enable all corresponding features:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = [
+binance-sdk = { version = "75.0.0", features = [
   "spot",
   "derivatives_trading_usds_futures",
   "margin-trading",
@@ -97,7 +97,7 @@ Simply enable all the corresponding features under the new dependency. For insta
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["spot", "margin-trading"] }
+binance-sdk = { version = "75.0.0", features = ["spot", "margin-trading"] }
 ```
 
 Remove the old `binance_spot_connector_rust = "1.3.0"` entry.

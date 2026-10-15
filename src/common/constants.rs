@@ -8,6 +8,9 @@ pub const ALPHA_WS_STREAMS_PROD_URL: &str = "wss://nbstream.binance.com/w3w/wsa"
 // C2C constants
 pub const C2C_REST_API_PROD_URL: &str = "https://api.binance.com";
 
+// CMS constants
+pub const CMS_WS_STREAMS_PROD_URL: &str = "wss://api.binance.com/sapi/wss";
+
 // Convert constants
 pub const CONVERT_REST_API_PROD_URL: &str = "https://api.binance.com";
 
@@ -122,6 +125,7 @@ pub const VIP_LOAN_REST_API_PROD_URL: &str = "https://api.binance.com";
 
 // W3W Prediction constants
 pub const W3W_PREDICTION_REST_API_PROD_URL: &str = "https://api.binance.com";
+pub const W3W_PREDICTION_WS_STREAMS_PROD_URL: &str = "wss://api.binance.com/sapi/wss";
 
 // Wallet constants
 pub const WALLET_REST_API_PROD_URL: &str = "https://api.binance.com";

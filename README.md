@@ -34,14 +34,15 @@ All connectors are bundled within the single `binance-sdk` crate. Enable only th
 * [`algo`](./src/algo) – Algo Trading connector
 * [`alpha`](./src/alpha) – Alpha connector
 * [`c2c`](./src/c2c) – C2C connector
+* [`cms`](./src/cms) – CMS (Announcements) connector
 * [`convert`](./src/convert) – Convert connector
 * [`copy_trading`](./src/copy_trading) – Copy Trading connector
 * [`crypto_loan`](./src/crypto_loan) – Crypto Loan connector
-* [`derivatives_trading_coin_futures`](./src/futures_coin) – Derivatives Trading (COIN-M Futures) connector
-* [`derivatives_trading_options`](./src/futures_options) – Derivatives Trading (Options) connector
-* [`derivatives_trading_portfolio_margin`](./src/portfolio_margin) – Derivatives Trading (Portfolio Margin) connector
-* [`derivatives_trading_portfolio_margin_pro`](./src/portfolio_margin_pro) – Derivatives Trading (Portfolio Margin Pro) connector
-* [`derivatives_trading_usds_futures`](./src/futures_usds) – Derivatives Trading (USDS-M Futures) connector
+* [`derivatives_trading_coin_futures`](./src/derivatives_trading_coin_futures) – Derivatives Trading (COIN-M Futures) connector
+* [`derivatives_trading_options`](./src/derivatives_trading_options) – Derivatives Trading (Options) connector
+* [`derivatives_trading_portfolio_margin`](./src/derivatives_trading_portfolio_margin) – Derivatives Trading (Portfolio Margin) connector
+* [`derivatives_trading_portfolio_margin_pro`](./src/derivatives_trading_portfolio_margin_pro) – Derivatives Trading (Portfolio Margin Pro) connector
+* [`derivatives_trading_usds_futures`](./src/derivatives_trading_usds_futures) – Derivatives Trading (USDS-M Futures) connector
 * [`dual_investment`](./src/dual_investment) – Dual Investment connector
 * [`fiat`](./src/fiat) – Fiat connector
 * [`gift_card`](./src/gift_card) – Gift Card connector
@@ -69,14 +70,14 @@ Add `binance-sdk` to your `Cargo.toml`, enabling only the features you need. For
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["derivatives_trading_usds_futures", "spot"] }
+binance-sdk = { version = "75.0.0", features = ["derivatives_trading_usds_futures", "spot"] }
 ```
 
 If you require all available connectors:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["all"] }
+binance-sdk = { version = "75.0.0", features = ["all"] }
 ```
 
 ## TLS Backend Selection
@@ -87,7 +88,7 @@ This library supports both **OpenSSL** (default) and **Rustls** backends.
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["spot"] }
+binance-sdk = { version = "75.0.0", features = ["spot"] }
 ```
 
 **Using Rustls (Pure Rust):** To use rustls (useful for cross-compilation or avoiding C-dependencies), you must disable default features and enable rustls-tls.
@@ -96,7 +97,7 @@ Note: Private key signing features currently require the openssl-tls feature.
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", default-features = false, features = ["rustls-tls", "spot"] }
+binance-sdk = { version = "75.0.0", default-features = false, features = ["rustls-tls", "spot"] }
 ```
 
 ## Contributing

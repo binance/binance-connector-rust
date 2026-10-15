@@ -21,6 +21,5 @@ let configuration = config::ConfigurationRestApi::builder()
     .build()?;
 
 let client = w3w_prediction::W3WPredictionRestApi::production(configuration);
-let params = w3w_prediction::rest_api::ListPredictionCategoriesResponse::default();
-let response = client.list_prediction_categories(params).await?;
+let response = client.list_prediction_categories().await?;
 ```

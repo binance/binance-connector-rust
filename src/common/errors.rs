@@ -102,10 +102,18 @@ pub enum ConnectorError {
     ForbiddenError { msg: String, code: Option<i64> },
 
     #[error("Too many requests. You are being rate-limited. {msg}")]
-    TooManyRequestsError { msg: String, code: Option<i64> },
+    TooManyRequestsError {
+        msg: String,
+        code: Option<i64>,
+        retry_after: Option<u32>,
+    },
 
     #[error("The IP address has been banned for exceeding rate limits. {msg}")]
-    RateLimitBanError { msg: String, code: Option<i64> },
+    RateLimitBanError {
+        msg: String,
+        code: Option<i64>,
+        retry_after: Option<u32>,
+    },
 
     #[error("Internal server error: {msg} (status code: {status_code:?})")]
     ServerError {
@@ -121,6 +129,17 @@ pub enum ConnectorError {
 
     #[error("Bad request: {msg}")]
     BadRequestError { msg: String, code: Option<i64> },
+}
+
+impl ConnectorError {
+    #[must_use]
+    pub fn retry_after(&self) -> Option<u32> {
+        match self {
+            Self::TooManyRequestsError { retry_after, .. }
+            | Self::RateLimitBanError { retry_after, .. } => *retry_after,
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Error)]
@@ -142,5 +161,9 @@ pub enum WebsocketError {
     #[error("No response error.")]
     NoResponse,
     #[error("Server‐side response error (code {code}): {message}")]
-    ResponseError { code: i64, message: String },
+    ResponseError {
+        code: i64,
+        message: String,
+        retry_after: Option<i64>,
+    },
 }

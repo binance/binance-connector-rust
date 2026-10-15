@@ -356,6 +356,41 @@ impl std::str::FromStr for ChangeUmPositionModeDualSidePositionEnum {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum FundCollectionByAssetFutureTypeEnum {
+    #[serde(rename = "UM")]
+    Um,
+    #[serde(rename = "CM")]
+    Cm,
+    #[serde(rename = "OPTION")]
+    Option,
+}
+
+impl FundCollectionByAssetFutureTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Um => "UM",
+            Self::Cm => "CM",
+            Self::Option => "OPTION",
+        }
+    }
+}
+
+impl std::str::FromStr for FundCollectionByAssetFutureTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "UM" => Ok(Self::Um),
+            "CM" => Ok(Self::Cm),
+            "OPTION" => Ok(Self::Option),
+            other => Err(format!("invalid FundCollectionByAssetFutureTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum GetCmIncomeHistoryIncomeTypeEnum {
     #[serde(rename = "TRANSFER")]
     Transfer,
@@ -830,7 +865,7 @@ pub struct ChangeUmInitialLeverageParams {
     #[builder(setter(into))]
     #[serde(rename = "symbol")]
     pub symbol: String,
-    /// target initial leverage
+    /// Target initial leverage. The maximum is symbol-specific: use `initialLeverage` of bracket 1 from `GET /papi/v1/um/leverageBracket`.
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -851,7 +886,7 @@ impl ChangeUmInitialLeverageParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `leverage` — target initial leverage
+    /// * `leverage` — Target initial leverage. The maximum is symbol-specific: use `initialLeverage` of bracket 1 from `GET /papi/v1/um/leverageBracket`.
     ///
     #[must_use]
     pub fn builder(symbol: String, leverage: i64) -> ChangeUmInitialLeverageParamsBuilder {
@@ -965,6 +1000,18 @@ pub struct FundCollectionByAssetParams {
     #[builder(setter(into))]
     #[serde(rename = "asset")]
     pub asset: String,
+    /// Amount to collect. When provided, `futureType` is required.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "amount", default)]
+    pub amount: Option<rust_decimal::Decimal>,
+    /// Target wallet for the collection. `OPTION` is for SPAN only. Cannot be sent without `amount`. `amount` and `futureType` must be provided together. If neither is provided, existing behavior is unchanged (query all wallets + transfer).
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "futureType", default)]
+    pub future_type: Option<FundCollectionByAssetFutureTypeEnum>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -2510,12 +2557,25 @@ impl AccountApi for AccountApiClient {
         &self,
         params: FundCollectionByAssetParams,
     ) -> anyhow::Result<RestApiResponse<models::FundCollectionByAssetResponse>> {
-        let FundCollectionByAssetParams { asset, recv_window } = params;
+        let FundCollectionByAssetParams {
+            asset,
+            amount,
+            future_type,
+            recv_window,
+        } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
 
         query_params.insert("asset".to_string(), json!(asset));
+
+        if let Some(rw) = amount {
+            query_params.insert("amount".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = future_type {
+            query_params.insert("futureType".to_string(), json!(rw));
+        }
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -5639,6 +5699,8 @@ mod tests {
             let client = MockAccountApiClient { force_error: false };
 
             let params = FundCollectionByAssetParams::builder("BTC".to_string())
+                .amount(dec!(10))
+                .future_type(FundCollectionByAssetFutureTypeEnum::Um)
                 .recv_window(5000)
                 .build()
                 .unwrap();

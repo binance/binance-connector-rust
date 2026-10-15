@@ -33,7 +33,7 @@ Enable the `algo` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["algo"] }
+binance-sdk = { version = "75.0.0", features = ["algo"] }
 ```
 
 In your code, import the `algo` client:

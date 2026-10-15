@@ -386,6 +386,18 @@ pub struct ConfigurationWebsocketStreams {
     #[builder(setter(into, strip_option), default)]
     pub ws_url: Option<String>,
 
+    #[builder(setter(into, strip_option), default)]
+    pub api_key: Option<String>,
+
+    #[builder(setter(into, strip_option), default)]
+    pub api_secret: Option<String>,
+
+    #[builder(setter(strip_option), default)]
+    pub private_key: Option<PrivateKey>,
+
+    #[builder(setter(strip_option), default)]
+    pub private_key_passphrase: Option<String>,
+
     #[builder(default = "5000")]
     pub reconnect_delay: u64,
 
@@ -420,6 +432,19 @@ impl fmt::Debug for ConfigurationWebsocketStreams {
             )
             .field("time_unit", &self.time_unit)
             .field("user_agent", &self.user_agent)
+            .field("api_key", &self.api_key.as_ref().map(|_| "[REDACTED]"))
+            .field(
+                "api_secret",
+                &self.api_secret.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key",
+                &self.private_key.as_ref().map(|_| "[REDACTED]"),
+            )
+            .field(
+                "private_key_passphrase",
+                &self.private_key_passphrase.as_ref().map(|_| "[REDACTED]"),
+            )
             .finish()
     }
 }

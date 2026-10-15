@@ -33,7 +33,7 @@ Enable the `pay` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["pay"] }
+binance-sdk = { version = "75.0.0", features = ["pay"] }
 ```
 
 In your code, import the `pay` client:

@@ -126,7 +126,7 @@ impl RestApi {
     /// Security Type: `USER_DATA`
     ///
     /// Notes:
-    /// - Rate limit: 5 requests per second per account.
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -279,6 +279,7 @@ impl RestApi {
     /// - If `startTime` and `endTime` are not sent, recent 90-day data is returned.
     /// - The maximum interval between `startTime` and `endTime` is 180 days.
     /// - Time is based on UTC+0.
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -381,7 +382,7 @@ impl RestApi {
     /// - `loanTerm` is mandatory if the user chooses a fixed rate (`isFlexibleRate = FALSE`).
     /// - Every coin in `collateralCoin` is pledged from every account in `collateralAccountId`.
     /// - To pledge a Simple Earn Flexible position, add `<ASSET>-Earn` (e.g. `USDT-Earn`) to `collateralCoin` together with its Spot asset (e.g. `USDT,USDT-Earn`). Sending `<ASSET>-Earn` without its Spot asset returns `-10213`.
-    /// - Rate limit: 1 request per 2 seconds per account.
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -528,6 +529,9 @@ impl RestApi {
     /// Weight(UID): 6000
     ///
     /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///
@@ -730,6 +734,7 @@ impl RestApi {
     /// Notes:
     /// - If `startTime` and `endTime` are not sent, recent 90-day data is returned.
     /// - The maximum interval between `startTime` and `endTime` is 180 days.
+    /// - Rate limit: 1 request per second per account, shared with repayment history queries on the Binance website.
     ///
     /// # Arguments
     ///
@@ -779,7 +784,7 @@ impl RestApi {
     /// Security Type: `USER_DATA`
     ///
     /// Notes:
-    /// - Rate limit: 5 requests per second per account.
+    /// - Rate limit: 1 request per second per account.
     ///
     /// # Arguments
     ///

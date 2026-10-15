@@ -55,6 +55,8 @@ use super::websocket::WebsocketMessageSendOptions;
 pub(crate) static ID_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^[0-9a-f]{32}$").unwrap());
 static PLACEHOLDER_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(@)?<([^>]+)>").unwrap());
+static RATE_LIMIT_HEADER_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"x-mbx-(used-weight|order-count)-(\d+)([smhd])").unwrap());
 static CLI_SKILL_UA_RE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^binance-(?:cli|skill)(?:/[A-Za-z0-9._-]+){0,2} \([^;()]+; [^;()]+; [^;()]+\)$")
         .unwrap()
@@ -282,6 +284,24 @@ impl SignatureGenerator {
     pub fn get_signature_unencoded(&self, params: &BTreeMap<String, Value>) -> Result<String> {
         let payload = build_plain_query_string(params)?;
         self.sign_payload(&payload)
+    }
+
+    /// Generates a signature for an already-built payload string.
+    ///
+    /// # Arguments
+    ///
+    /// * `payload` - The exact string to be signed (e.g. a pre-built query string)
+    ///
+    /// # Returns
+    ///
+    /// A signature string (hex for HMAC, base64 for RSA/ED25519)
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if no API secret or private key is provided, key
+    /// initialization fails or the key type is not supported.
+    pub fn get_signature_from_str(&self, payload: &str) -> Result<String> {
+        self.sign_payload(payload)
     }
 
     /// Signs the given payload using the appropriate signing method based on the available keys.
@@ -685,13 +705,12 @@ where
     S: BuildHasher,
 {
     let mut rate_limits = Vec::new();
-    let re = Regex::new(r"x-mbx-(used-weight|order-count)-(\d+)([smhd])").unwrap();
     for (key, value) in headers {
         let normalized_key = key.to_lowercase();
         if normalized_key.starts_with("x-mbx-used-weight-")
             || normalized_key.starts_with("x-mbx-order-count-")
         {
-            if let Some(caps) = re.captures(&normalized_key) {
+            if let Some(caps) = RATE_LIMIT_HEADER_RE.captures(&normalized_key) {
                 let interval_num: u32 = caps.get(2).unwrap().as_str().parse().unwrap_or(0);
                 let interval_letter = caps.get(3).unwrap().as_str().to_uppercase();
                 let interval = match interval_letter.as_str() {
@@ -719,6 +738,17 @@ where
         }
     }
     rate_limits
+}
+
+/// Extracts the `Retry-After` header as a number of seconds.
+pub(crate) fn parse_retry_after_header<S>(headers: &HashMap<String, String, S>) -> Option<u32>
+where
+    S: BuildHasher,
+{
+    headers
+        .iter()
+        .find(|(k, _)| k.eq_ignore_ascii_case("retry-after"))
+        .and_then(|(_, v)| v.trim().parse().ok())
 }
 
 /// Sends an HTTP request with retry and error handling capabilities.
@@ -858,12 +888,14 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                             return Err(ConnectorError::RateLimitBanError {
                                 msg: err_msg,
                                 code: err_code,
+                                retry_after: parse_retry_after_header(&headers_map),
                             });
                         }
                         429 => {
                             return Err(ConnectorError::TooManyRequestsError {
                                 msg: err_msg,
                                 code: err_code,
+                                retry_after: parse_retry_after_header(&headers_map),
                             });
                         }
                         s if (500..600).contains(&s) => {
@@ -2369,7 +2401,7 @@ mod tests {
     mod parse_rate_limit_headers_tests {
         use crate::common::{
             models::{Interval, RateLimitType},
-            utils::parse_rate_limit_headers,
+            utils::{parse_rate_limit_headers, parse_retry_after_header},
         };
         use std::collections::HashMap;
 
@@ -2436,6 +2468,26 @@ mod tests {
             ]);
             let limits = parse_rate_limit_headers(&headers);
             assert!(limits.is_empty());
+        }
+
+        #[test]
+        fn retry_after_header_parsed_without_mbx_headers() {
+            let headers = mk_headers(vec![("retry-after", "30")]);
+            assert_eq!(parse_retry_after_header(&headers), Some(30));
+            assert!(parse_rate_limit_headers(&headers).is_empty());
+        }
+
+        #[test]
+        fn retry_after_header_is_case_insensitive_and_trimmed() {
+            let headers = mk_headers(vec![("Retry-After", " 45 ")]);
+            assert_eq!(parse_retry_after_header(&headers), Some(45));
+        }
+
+        #[test]
+        fn retry_after_header_missing_or_non_numeric_is_none() {
+            assert_eq!(parse_retry_after_header(&mk_headers(vec![])), None);
+            let headers = mk_headers(vec![("retry-after", "Wed, 21 Oct 2026 07:28:00 GMT")]);
+            assert_eq!(parse_retry_after_header(&headers), None);
         }
     }
 
@@ -2696,6 +2748,7 @@ mod tests {
                     when.method(httpmock::Method::GET).path("/418");
                     then.status(418)
                         .header("Content-Type", "application/json")
+                        .header("Retry-After", "120")
                         .body(r#"{"code":-1003,"msg":"rate limit exceeded"}"#);
                 });
 
@@ -2713,9 +2766,19 @@ mod tests {
                     Err(ConnectorError::RateLimitBanError { .. })
                 ));
 
-                if let Err(ConnectorError::RateLimitBanError { msg, code }) = result {
+                if let Err(err) = &result {
+                    assert_eq!(err.retry_after(), Some(120));
+                }
+
+                if let Err(ConnectorError::RateLimitBanError {
+                    msg,
+                    code,
+                    retry_after,
+                }) = result
+                {
                     assert_eq!(msg, "rate limit exceeded");
                     assert_eq!(code, Some(-1003));
+                    assert_eq!(retry_after, Some(120));
                 }
 
                 mock.assert();
@@ -2730,6 +2793,7 @@ mod tests {
                     when.method(httpmock::Method::GET).path("/429");
                     then.status(429)
                         .header("Content-Type", "application/json")
+                        .header("Retry-After", "7")
                         .body(r#"{"code":-1003,"msg":"too many requests"}"#);
                 });
 
@@ -2747,13 +2811,64 @@ mod tests {
                     Err(ConnectorError::TooManyRequestsError { .. })
                 ));
 
-                if let Err(ConnectorError::TooManyRequestsError { msg, code }) = result {
+                if let Err(err) = &result {
+                    assert_eq!(err.retry_after(), Some(7));
+                }
+
+                if let Err(ConnectorError::TooManyRequestsError {
+                    msg,
+                    code,
+                    retry_after,
+                }) = result
+                {
                     assert_eq!(msg, "too many requests");
                     assert_eq!(code, Some(-1003));
+                    assert_eq!(retry_after, Some(7));
                 }
 
                 mock.assert();
             });
+        }
+
+        #[test]
+        fn http_request_too_many_requests_without_retry_after() {
+            TOKIO_SHARED_RT.block_on(async {
+                let server = MockServer::start();
+                let mock = server.mock(|when, then| {
+                    when.method(httpmock::Method::GET).path("/429-no-header");
+                    then.status(429)
+                        .header("Content-Type", "application/json")
+                        .body(r#"{"code":-1003,"msg":"too many requests"}"#);
+                });
+
+                let client = Client::new();
+                let req: Request = client
+                    .request(
+                        Method::GET,
+                        format!("{}{}", server.url(""), "/429-no-header"),
+                    )
+                    .build()
+                    .unwrap();
+                let cfg = make_config(&server.url(""));
+
+                let Err(err) = http_request::<Dummy>(req, &cfg).await else {
+                    panic!("expected TooManyRequestsError");
+                };
+
+                assert!(matches!(err, ConnectorError::TooManyRequestsError { .. }));
+                assert_eq!(err.retry_after(), None);
+
+                mock.assert();
+            });
+        }
+
+        #[test]
+        fn retry_after_is_none_for_other_errors() {
+            let err = ConnectorError::BadRequestError {
+                msg: "bad".to_string(),
+                code: None,
+            };
+            assert_eq!(err.retry_after(), None);
         }
 
         #[test]

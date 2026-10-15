@@ -35,7 +35,7 @@ Enable the `staking` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["staking"] }
+binance-sdk = { version = "75.0.0", features = ["staking"] }
 ```
 
 In your code, import the `staking` client:

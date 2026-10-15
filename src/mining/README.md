@@ -33,7 +33,7 @@ Enable the `mining` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["mining"] }
+binance-sdk = { version = "75.0.0", features = ["mining"] }
 ```
 
 In your code, import the `mining` client:

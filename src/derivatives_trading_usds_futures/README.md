@@ -38,7 +38,7 @@ Enable the `derivatives_trading_usds_futures` feature in your `Cargo.toml` under
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["derivatives_trading_usds_futures"] }
+binance-sdk = { version = "75.0.0", features = ["derivatives_trading_usds_futures"] }
 ```
 
 In your code, import the `derivatives_trading_usds_futures` client:

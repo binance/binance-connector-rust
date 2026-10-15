@@ -33,7 +33,7 @@ Enable the `gift_card` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["gift_card"] }
+binance-sdk = { version = "75.0.0", features = ["gift_card"] }
 ```
 
 In your code, import the `gift_card` client:

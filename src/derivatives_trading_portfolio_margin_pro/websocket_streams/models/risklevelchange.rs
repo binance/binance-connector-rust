@@ -24,7 +24,7 @@ pub struct Risklevelchange {
     /// uniMMR level
     #[serde(rename = "u", skip_serializing_if = "Option::is_none")]
     pub u: Option<String>,
-    /// Risk level: `MARGIN_CALL`, `REDUCE_ONLY`, `FORCE_LIQUIDATION`
+    /// Risk level: NORMAL, `MARGIN_CALL`, `REDUCE_ONLY`, `FORCE_LIQUIDATION`
     #[serde(rename = "s", skip_serializing_if = "Option::is_none")]
     pub s: Option<String>,
     /// Account equity in USD value

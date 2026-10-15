@@ -1,5 +1,98 @@
 # Changelog
 
+## 75.0.0 - 2026-10-15
+
+### Added (5)
+
+- Added support for signed WebSocket Streams via new `api_key`, `api_secret`, `private_key` and `private_key_passphrase` options on `ConfigurationWebsocketStreams`.
+- Added CMS WebSocket Streams (`cms` module).
+- Added W3W Prediction WebSocket Streams.
+- Added `retry_after` to `ConnectorError::TooManyRequestsError` and `ConnectorError::RateLimitBanError`, populated from the `Retry-After` response header (seconds) on HTTP 429/418.
+- Added `retry_after` to `WebsocketError::ResponseError`, populated from `error.data.retryAfter` on WebSocket API rate-limit/ban responses.
+
+### Changed (3)
+
+- Do not reopen a WebSocket connection through its scheduled renewal after `disconnect()`.
+- Honor `disconnect()` while an automatic reconnect is pending, so the reconnect no longer reopens the connection.
+- Fix a deadlock when `disconnect()` is called while a connection is still being opened.
+
+### Breaking
+
+- Code that destructures `ConnectorError::TooManyRequestsError`, `ConnectorError::RateLimitBanError` or `WebsocketError::ResponseError` without `..` must add the new `retry_after` field (or `..`). Prefer `ConnectorError::retry_after()` over matching on the variants.
+
+**Derivatives Trading COIN Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Deleted parameter `page`
+  - affected methods:
+    - `get_income_history()` (`GET /dapi/v1/income`)
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (2)
+
+#### REST API
+
+- Added parameter `amount`
+  - affected methods:
+    - `fund_collection_by_asset()` (`POST /papi/v1/asset-collection`)
+- Added parameter `futureType`
+  - affected methods:
+    - `fund_collection_by_asset()` (`POST /papi/v1/asset-collection`)
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Changed (4)
+
+#### REST API
+
+- Added parameter `amount`
+  - affected methods:
+    - `fund_collection_by_asset()` (`POST /sapi/v1/portfolio/asset-collection`)
+- Added parameter `futureType`
+  - affected methods:
+    - `fund_collection_by_asset()` (`POST /sapi/v1/portfolio/asset-collection`)
+
+#### WebSocket Streams
+
+- Modified response schema `UserDataStreamEventsResponse`:
+  - oneOf modified
+
+**Derivatives Trading USDS Futures**
+
+### Changed (1)
+
+#### REST API
+
+- Deleted parameter `page`
+  - affected methods:
+    - `get_income_history()` (`GET /fapi/v1/income`)
+
+**W3W Prediction**
+
+### Added (15)
+
+#### WebSocket Streams
+
+- `batch_claim_partially_succeeded()` (`web3_prediction_pm_claim_partial_success` stream)
+- `fund_transfer_failed()` (`web3_prediction_pm_transfer_fail` stream)
+- `fund_transfer_succeeded()` (`web3_prediction_pm_transfer_success` stream)
+- `limit_order_fully_filled()` (`web3_prediction_pm_limit_order_filled` stream)
+- `limit_order_partially_filled()` (`web3_prediction_pm_limit_order_partial_fill` stream)
+- `limit_order_submission_failed()` (`web3_prediction_pm_limit_submit_fail` stream)
+- `limit_order_submitted_successfully()` (`web3_prediction_pm_limit_submit_success` stream)
+- `market_buy_order_failed()` (`web3_prediction_pm_market_buy_fail` stream)
+- `market_buy_order_fully_filled()` (`web3_prediction_pm_market_buy_success` stream)
+- `market_resolution_notification()` (`web3_prediction_pm_market_close` stream)
+- `market_sell_order_failed_expired()` (`web3_prediction_pm_market_sell_fail` stream)
+- `market_sell_order_fully_filled()` (`web3_prediction_pm_market_sell_success` stream)
+- `prediction_order_book_by_market_id()` (`web3_prediction_orderbook_<marketId>` stream)
+- `reward_claim_failed()` (`web3_prediction_pm_claim_fail` stream)
+- `reward_claim_succeeded()` (`web3_prediction_pm_claim_success` stream)
+
 ## 74.1.1 - 2026-10-12
 
 **Margin Trading**

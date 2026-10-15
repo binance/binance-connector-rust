@@ -33,7 +33,7 @@ Enable the `c2c` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["c2c"] }
+binance-sdk = { version = "75.0.0", features = ["c2c"] }
 ```
 
 In your code, import the `c2c` client:

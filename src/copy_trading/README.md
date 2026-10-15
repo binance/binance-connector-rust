@@ -33,7 +33,7 @@ Enable the `copy_trading` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["copy_trading"] }
+binance-sdk = { version = "75.0.0", features = ["copy_trading"] }
 ```
 
 In your code, import the `copy_trading` client:

@@ -33,7 +33,7 @@ Enable the `vip_loan` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["vip_loan"] }
+binance-sdk = { version = "75.0.0", features = ["vip_loan"] }
 ```
 
 In your code, import the `vip_loan` client:

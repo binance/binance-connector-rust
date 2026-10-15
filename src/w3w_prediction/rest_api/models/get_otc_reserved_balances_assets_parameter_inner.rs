@@ -33,16 +33,13 @@ impl GetOtcReservedBalancesAssetsParameterInner {
     }
 }
 ///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default,
+)]
 pub enum TypeEnum {
     #[serde(rename = "USDT")]
+    #[default]
     Usdt,
     #[serde(rename = "SHARE")]
     Share,
-}
-
-impl Default for TypeEnum {
-    fn default() -> TypeEnum {
-        Self::Usdt
-    }
 }

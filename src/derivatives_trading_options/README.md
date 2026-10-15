@@ -36,7 +36,7 @@ Enable the `derivatives_trading_options` feature in your `Cargo.toml` under `bin
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["derivatives_trading_options"] }
+binance-sdk = { version = "75.0.0", features = ["derivatives_trading_options"] }
 ```
 
 In your code, import the `derivatives_trading_options` client:

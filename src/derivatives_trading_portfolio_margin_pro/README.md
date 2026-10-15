@@ -35,7 +35,7 @@ Enable the `derivatives_trading_portfolio_margin_pro` feature in your `Cargo.tom
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["derivatives_trading_portfolio_margin_pro"] }
+binance-sdk = { version = "75.0.0", features = ["derivatives_trading_portfolio_margin_pro"] }
 ```
 
 In your code, import the `derivatives_trading_portfolio_margin_pro` client:

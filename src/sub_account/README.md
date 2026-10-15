@@ -38,7 +38,7 @@ Enable the `sub_account` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "1.0.0", features = ["sub_account"] }
+binance-sdk = { version = "75.0.0", features = ["sub_account"] }
 ```
 
 In your code, import the `sub_account` client:

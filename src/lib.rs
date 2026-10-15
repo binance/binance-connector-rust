@@ -16,6 +16,8 @@ pub mod algo;
 pub mod alpha;
 #[cfg(feature = "c2c")]
 pub mod c2c;
+#[cfg(feature = "cms")]
+pub mod cms;
 #[cfg(feature = "convert")]
 pub mod convert;
 #[cfg(feature = "copy_trading")]

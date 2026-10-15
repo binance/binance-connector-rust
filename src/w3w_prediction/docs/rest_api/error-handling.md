@@ -11,9 +11,7 @@ let configuration = config::ConfigurationRestApi::builder()
     .build()?;
 
 let client = w3w_prediction::W3WPredictionRestApi::production(configuration);
-let params = w3w_prediction::rest_api::ListPredictionCategoriesResponse::default();
-
-match client.list_prediction_categories(params).await {
+match client.list_prediction_categories().await {
     Ok(response) => response,
     Err(e) => {
         if let Some(conn_err) = e.downcast_ref::<errors::ConnectorError>() {
