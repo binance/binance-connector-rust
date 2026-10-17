@@ -226,6 +226,13 @@ pub struct WebsocketConnectionState {
     pub ws_write_tx: Option<UnboundedSender<Message>>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ReconnectDisposition {
+    Started,
+    StaleWriter,
+    Rejected,
+}
+
 impl Default for WebsocketConnectionState {
     fn default() -> Self {
         Self::new()
@@ -248,6 +255,30 @@ impl WebsocketConnectionState {
             handler: None,
             ws_write_tx: None,
         }
+    }
+
+    fn is_current_writer(&self, writer: &UnboundedSender<Message>) -> bool {
+        self.ws_write_tx
+            .as_ref()
+            .is_some_and(|current| current.same_channel(writer))
+    }
+
+    fn begin_reconnect(
+        &mut self,
+        writer: &UnboundedSender<Message>,
+        failure_reason: WebsocketConnectionFailureReason,
+    ) -> ReconnectDisposition {
+        if !self.is_current_writer(writer) {
+            return ReconnectDisposition::StaleWriter;
+        }
+        if self.close_initiated || !failure_reason.should_reconnect() {
+            return ReconnectDisposition::Rejected;
+        }
+
+        self.reconnection_pending = true;
+        self.is_session_logged_on = false;
+        self.ws_write_tx = None;
+        ReconnectDisposition::Started
     }
 }
 
@@ -1035,6 +1066,7 @@ impl WebsocketCommon {
             let wconn = conn.clone();
             let common_clone = self.clone();
             let writer_url = url.to_string();
+            let writer_tx = tx.clone();
 
             spawn(async move {
                 let mut sink = write_half;
@@ -1050,34 +1082,38 @@ impl WebsocketCommon {
 
                         // Apply same reconnection logic as reader errors
                         let mut conn_state = wconn.state.lock().await;
-                        if !conn_state.close_initiated
-                            && !is_renewal
-                            && failure_reason.should_reconnect()
-                        {
-                            info!(
-                                "Writer connection {} has recoverable error, attempting reconnection: {:?}",
-                                wconn.id, failure_reason
-                            );
-                            conn_state.reconnection_pending = true;
-                            conn_state.is_session_logged_on = false;
-                            drop(conn_state);
-                            let reconnect_url = common_clone
-                                .get_reconnect_url(&writer_url, Arc::clone(&wconn))
-                                .await;
+                        match conn_state.begin_reconnect(&writer_tx, failure_reason) {
+                            ReconnectDisposition::Started => {
+                                info!(
+                                    "Writer connection {} has recoverable error, attempting reconnection: {:?}",
+                                    wconn.id, failure_reason
+                                );
+                                drop(conn_state);
+                                let reconnect_url = common_clone
+                                    .get_reconnect_url(&writer_url, Arc::clone(&wconn))
+                                    .await;
 
-                            let _ = common_clone
-                                .reconnect_tx
-                                .send(ReconnectEntry {
-                                    connection_id: wconn.id.clone(),
-                                    url: reconnect_url,
-                                    is_renewal: false,
-                                })
-                                .await;
-                        } else {
-                            warn!(
-                                "Writer connection {} has permanent error, will not reconnect: {:?}",
-                                wconn.id, failure_reason
-                            );
+                                let _ = common_clone
+                                    .reconnect_tx
+                                    .send(ReconnectEntry {
+                                        connection_id: wconn.id.clone(),
+                                        url: reconnect_url,
+                                        is_renewal: false,
+                                    })
+                                    .await;
+                            }
+                            ReconnectDisposition::StaleWriter => {
+                                debug!(
+                                    "Ignoring writer error from replaced connection {}: {:?}",
+                                    wconn.id, failure_reason
+                                );
+                            }
+                            ReconnectDisposition::Rejected => {
+                                warn!(
+                                    "Writer connection {} has permanent error, will not reconnect: {:?}",
+                                    wconn.id, failure_reason
+                                );
+                            }
                         }
 
                         break;
@@ -1100,6 +1136,7 @@ impl WebsocketCommon {
             let common = self.clone();
             let reader_conn = conn.clone();
             let read_url = url.to_string();
+            let reader_tx = tx;
 
             spawn(async move {
                 let mut stream_end_reason = None;
@@ -1163,40 +1200,43 @@ impl WebsocketCommon {
                             );
 
                             let mut conn_state = reader_conn.state.lock().await;
-                            if !conn_state.close_initiated
-                                && !is_renewal
-                                && failure_reason.should_reconnect()
-                            {
-                                info!(
-                                    "Connection {} received close frame with reconnectable failure: {:?}",
-                                    reader_conn.id, failure_reason
-                                );
-                                conn_state.reconnection_pending = true;
-                                conn_state.is_session_logged_on = false;
-                                drop(conn_state);
-                                let reconnect_url = common
-                                    .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
-                                    .await;
+                            match conn_state.begin_reconnect(&reader_tx, failure_reason) {
+                                ReconnectDisposition::Started => {
+                                    info!(
+                                        "Connection {} received close frame with reconnectable failure: {:?}",
+                                        reader_conn.id, failure_reason
+                                    );
+                                    drop(conn_state);
+                                    let reconnect_url = common
+                                        .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
+                                        .await;
 
-                                let _ = common
-                                    .reconnect_tx
-                                    .send(ReconnectEntry {
-                                        connection_id: reader_conn.id.clone(),
-                                        url: reconnect_url,
-                                        is_renewal: false,
-                                    })
-                                    .await;
-                            } else {
-                                warn!(
-                                    "Connection {} received close frame with non-reconnectable failure: {:?}",
-                                    reader_conn.id, failure_reason
-                                );
+                                    let _ = common
+                                        .reconnect_tx
+                                        .send(ReconnectEntry {
+                                            connection_id: reader_conn.id.clone(),
+                                            url: reconnect_url,
+                                            is_renewal: false,
+                                        })
+                                        .await;
+                                }
+                                ReconnectDisposition::StaleWriter => {
+                                    debug!(
+                                        "Ignoring close frame from replaced connection {}: {:?}",
+                                        reader_conn.id, failure_reason
+                                    );
+                                }
+                                ReconnectDisposition::Rejected => {
+                                    warn!(
+                                        "Connection {} received close frame with non-reconnectable failure: {:?}",
+                                        reader_conn.id, failure_reason
+                                    );
 
-                                // Emit detailed error for permanent failures
-                                common.events.emit(&WebsocketEvent::Error(format!(
-                                    "[CRITICAL] Connection {} permanently failed: {:?}",
-                                    reader_conn.id, failure_reason
-                                )));
+                                    common.events.emit(&WebsocketEvent::Error(format!(
+                                        "[CRITICAL] Connection {} permanently failed: {:?}",
+                                        reader_conn.id, failure_reason
+                                    )));
+                                }
                             }
 
                             break;
@@ -1212,44 +1252,48 @@ impl WebsocketCommon {
                                 reader_conn.id, e, failure_reason
                             );
 
-                            common.events.emit(&WebsocketEvent::Error(e.to_string()));
-
                             // Apply the same reconnection logic as Close frames
                             let mut conn_state = reader_conn.state.lock().await;
-                            if !conn_state.close_initiated
-                                && !is_renewal
-                                && failure_reason.should_reconnect()
-                            {
-                                info!(
-                                    "Connection {} has recoverable error, attempting reconnection: {:?}",
-                                    reader_conn.id, failure_reason
-                                );
-                                conn_state.reconnection_pending = true;
-                                conn_state.is_session_logged_on = false;
-                                drop(conn_state);
-                                let reconnect_url = common
-                                    .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
-                                    .await;
+                            match conn_state.begin_reconnect(&reader_tx, failure_reason) {
+                                ReconnectDisposition::Started => {
+                                    drop(conn_state);
+                                    common.events.emit(&WebsocketEvent::Error(e.to_string()));
+                                    info!(
+                                        "Connection {} has recoverable error, attempting reconnection: {:?}",
+                                        reader_conn.id, failure_reason
+                                    );
+                                    let reconnect_url = common
+                                        .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
+                                        .await;
 
-                                let _ = common
-                                    .reconnect_tx
-                                    .send(ReconnectEntry {
-                                        connection_id: reader_conn.id.clone(),
-                                        url: reconnect_url,
-                                        is_renewal: false,
-                                    })
-                                    .await;
-                            } else {
-                                warn!(
-                                    "Connection {} has permanent error, will not reconnect: {:?}",
-                                    reader_conn.id, failure_reason
-                                );
+                                    let _ = common
+                                        .reconnect_tx
+                                        .send(ReconnectEntry {
+                                            connection_id: reader_conn.id.clone(),
+                                            url: reconnect_url,
+                                            is_renewal: false,
+                                        })
+                                        .await;
+                                }
+                                ReconnectDisposition::StaleWriter => {
+                                    debug!(
+                                        "Ignoring error from replaced connection {}: {:?}",
+                                        reader_conn.id, failure_reason
+                                    );
+                                }
+                                ReconnectDisposition::Rejected => {
+                                    drop(conn_state);
+                                    common.events.emit(&WebsocketEvent::Error(e.to_string()));
+                                    warn!(
+                                        "Connection {} has permanent error, will not reconnect: {:?}",
+                                        reader_conn.id, failure_reason
+                                    );
 
-                                // Emit critical error for non-reconnectable failures
-                                common.events.emit(&WebsocketEvent::Error(format!(
-                                    "[CRITICAL] Connection {} permanently failed: {:?}",
-                                    reader_conn.id, failure_reason
-                                )));
+                                    common.events.emit(&WebsocketEvent::Error(format!(
+                                        "[CRITICAL] Connection {} permanently failed: {:?}",
+                                        reader_conn.id, failure_reason
+                                    )));
+                                }
                             }
 
                             break;
@@ -1271,32 +1315,38 @@ impl WebsocketCommon {
                 );
 
                 let mut conn_state = reader_conn.state.lock().await;
-                if !conn_state.close_initiated && !is_renewal && failure_reason.should_reconnect() {
-                    info!(
-                        "Connection {} stream ended unexpectedly, attempting reconnection",
-                        reader_conn.id
-                    );
-                    conn_state.reconnection_pending = true;
-                    conn_state.is_session_logged_on = false;
-                    conn_state.ws_write_tx = None;
-                    drop(conn_state);
-                    let reconnect_url = common
-                        .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
-                        .await;
+                match conn_state.begin_reconnect(&reader_tx, failure_reason) {
+                    ReconnectDisposition::Started => {
+                        info!(
+                            "Connection {} stream ended unexpectedly, attempting reconnection",
+                            reader_conn.id
+                        );
+                        drop(conn_state);
+                        let reconnect_url = common
+                            .get_reconnect_url(&read_url, Arc::clone(&reader_conn))
+                            .await;
 
-                    let _ = common
-                        .reconnect_tx
-                        .send(ReconnectEntry {
-                            connection_id: reader_conn.id.clone(),
-                            url: reconnect_url,
-                            is_renewal: false,
-                        })
-                        .await;
-                } else {
-                    debug!(
-                        "Connection {} stream ended normally (close_initiated={}, is_renewal={})",
-                        reader_conn.id, conn_state.close_initiated, is_renewal
-                    );
+                        let _ = common
+                            .reconnect_tx
+                            .send(ReconnectEntry {
+                                connection_id: reader_conn.id.clone(),
+                                url: reconnect_url,
+                                is_renewal: false,
+                            })
+                            .await;
+                    }
+                    ReconnectDisposition::StaleWriter => {
+                        debug!(
+                            "Ignoring stream end from replaced connection {}: {:?}",
+                            reader_conn.id, failure_reason
+                        );
+                    }
+                    ReconnectDisposition::Rejected => {
+                        debug!(
+                            "Connection {} stream ended normally (close_initiated={}, is_renewal={})",
+                            reader_conn.id, conn_state.close_initiated, is_renewal
+                        );
+                    }
                 }
 
                 debug!("Reader actor for {} exiting", reader_conn.id);
@@ -3341,10 +3391,11 @@ mod tests {
     use crate::TOKIO_SHARED_RT;
     use crate::common::utils::{SignatureGenerator, build_user_agent};
     use crate::common::websocket::{
-        PendingRequest, ReconnectEntry, SendWebsocketMessageResult, WebsocketApi, WebsocketBase,
-        WebsocketCommon, WebsocketConnection, WebsocketEvent, WebsocketEventEmitter,
-        WebsocketHandler, WebsocketMessageSendOptions, WebsocketMode, WebsocketSessionLogonReq,
-        WebsocketStream, WebsocketStreams, create_stream_handler,
+        PendingRequest, ReconnectDisposition, ReconnectEntry, SendWebsocketMessageResult,
+        WebsocketApi, WebsocketBase, WebsocketCommon, WebsocketConnection,
+        WebsocketConnectionState, WebsocketEvent, WebsocketEventEmitter, WebsocketHandler,
+        WebsocketMessageSendOptions, WebsocketMode, WebsocketSessionLogonReq, WebsocketStream,
+        WebsocketStreams, create_stream_handler,
     };
     use crate::config::{
         ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey, WebsocketHandshakeFn,
@@ -3370,7 +3421,13 @@ mod tests {
         oneshot,
     };
     use tokio::time::{Duration, advance, pause, resume, sleep, timeout};
-    use tokio_tungstenite::{accept_async, accept_hdr_async, tungstenite, tungstenite::Message};
+    use tokio_tungstenite::{
+        accept_async, accept_hdr_async, tungstenite,
+        tungstenite::{
+            Message,
+            protocol::{CloseFrame, frame::coding::CloseCode},
+        },
+    };
     use tungstenite::handshake::server::Request;
 
     /// RAII guard that aborts a spawned task when dropped.
@@ -5172,6 +5229,72 @@ mod tests {
             use std::panic;
             use tokio::sync::mpsc::{channel, error::TryRecvError};
 
+            struct GatedHandler {
+                gate: Mutex<Option<oneshot::Receiver<()>>>,
+            }
+
+            #[async_trait]
+            impl WebsocketHandler for GatedHandler {
+                async fn on_open(&self, _url: String, _connection: Arc<WebsocketConnection>) {
+                    if let Some(rx) = self.gate.lock().await.take() {
+                        let _ = rx.await;
+                    }
+                }
+
+                async fn on_message(&self, _data: String, _connection: Arc<WebsocketConnection>) {}
+
+                async fn get_reconnect_url(
+                    &self,
+                    url: String,
+                    _connection: Arc<WebsocketConnection>,
+                ) -> String {
+                    url
+                }
+            }
+
+            #[test]
+            fn reconnect_state_requires_current_writer_and_open_lifecycle() {
+                let (current_writer, _) = unbounded_channel::<Message>();
+                let (replaced_writer, _) = unbounded_channel::<Message>();
+                let mut state = WebsocketConnectionState::new();
+                state.ws_write_tx = Some(current_writer.clone());
+
+                assert_eq!(
+                    state.begin_reconnect(
+                        &replaced_writer,
+                        WebsocketConnectionFailureReason::UnexpectedClose,
+                    ),
+                    ReconnectDisposition::StaleWriter
+                );
+                assert!(!state.reconnection_pending);
+                assert!(
+                    state
+                        .ws_write_tx
+                        .as_ref()
+                        .is_some_and(|writer| writer.same_channel(&current_writer))
+                );
+
+                state.close_initiated = true;
+                assert_eq!(
+                    state.begin_reconnect(
+                        &current_writer,
+                        WebsocketConnectionFailureReason::UnexpectedClose,
+                    ),
+                    ReconnectDisposition::Rejected
+                );
+                state.close_initiated = false;
+
+                assert_eq!(
+                    state.begin_reconnect(
+                        &current_writer,
+                        WebsocketConnectionFailureReason::UnexpectedClose,
+                    ),
+                    ReconnectDisposition::Started
+                );
+                assert!(state.reconnection_pending);
+                assert!(state.ws_write_tx.is_none());
+            }
+
             #[test]
             fn pool_mode_none_connection_uses_first() {
                 TOKIO_SHARED_RT.block_on(async {
@@ -5505,31 +5628,6 @@ mod tests {
 
             #[test]
             fn is_renewal_true_sets_and_clears_flag() {
-                struct GatedHandler {
-                    gate: Mutex<Option<oneshot::Receiver<()>>>,
-                }
-                #[async_trait]
-                impl WebsocketHandler for GatedHandler {
-                    async fn on_open(&self, _url: String, _connection: Arc<WebsocketConnection>) {
-                        if let Some(rx) = self.gate.lock().await.take() {
-                            let _ = rx.await;
-                        }
-                    }
-                    async fn on_message(
-                        &self,
-                        _data: String,
-                        _connection: Arc<WebsocketConnection>,
-                    ) {
-                    }
-                    async fn get_reconnect_url(
-                        &self,
-                        url: String,
-                        _connection: Arc<WebsocketConnection>,
-                    ) -> String {
-                        url
-                    }
-                }
-
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr = listener.local_addr().unwrap();
@@ -5583,18 +5681,16 @@ mod tests {
             }
 
             #[test]
-            fn does_not_schedule_reconnect_on_renewal() {
+            fn successful_renewal_does_not_schedule_reconnect() {
                 TOKIO_SHARED_RT.block_on(async {
                     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
                     let addr = listener.local_addr().unwrap();
                     let server_handle = tokio::spawn(async move {
-                        if let Ok((stream, _)) = listener.accept().await {
-                            let _ws = accept_async(stream).await.unwrap();
-                            if let Ok((stream, _)) = listener.accept().await {
-                                let _ws = accept_async(stream).await.unwrap();
-                            }
-                            sleep(Duration::from_secs(10)).await;
-                        }
+                        let (initial_stream, _) = listener.accept().await.unwrap();
+                        let _initial_ws = accept_async(initial_stream).await.unwrap();
+                        let (renewed_stream, _) = listener.accept().await.unwrap();
+                        let _renewed_ws = accept_async(renewed_stream).await.unwrap();
+                        sleep(Duration::from_secs(10)).await;
                     });
 
                     let conn = WebsocketConnection::new("c-needs-renew");
@@ -5642,6 +5738,174 @@ mod tests {
                         }
                     }
                     server_handle.abort();
+                });
+            }
+
+            #[test]
+            fn replaced_connection_close_does_not_schedule_reconnect() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let (close_initial_tx, close_initial_rx) = oneshot::channel();
+                    let _server_guard = AbortOnDrop(tokio::spawn(async move {
+                        let (initial_stream, _) = listener.accept().await.unwrap();
+                        let mut initial_ws = accept_async(initial_stream).await.unwrap();
+                        let (renewed_stream, _) = listener.accept().await.unwrap();
+                        let _renewed_ws = accept_async(renewed_stream).await.unwrap();
+                        let _ = close_initial_rx.await;
+                        initial_ws
+                            .close(Some(CloseFrame {
+                                code: CloseCode::Away,
+                                reason: "replaced connection test".into(),
+                            }))
+                            .await
+                            .unwrap();
+                        sleep(Duration::from_secs(10)).await;
+                    }));
+
+                    let conn = WebsocketConnection::new("c-replaced-close");
+                    let (reconnect_tx, mut reconnect_rx) = channel::<ReconnectEntry>(1);
+                    let (renewal_tx, _renewal_rx) = channel::<(String, String)>(1);
+                    let common = Arc::new(WebsocketCommon {
+                        events: WebsocketEventEmitter::new(),
+                        mode: WebsocketMode::Single,
+                        round_robin_index: AtomicUsize::new(0),
+                        connection_pool: vec![conn.clone()],
+                        reconnect_tx,
+                        renewal_tx,
+                        reconnect_delay: 0,
+                        agent: None,
+                        handshake: None,
+                        user_agent: None,
+                        extra_headers: std::sync::RwLock::new(Vec::new()),
+                    });
+                    let events = subscribe_events(&common);
+                    let url = format!("ws://{addr}");
+                    common
+                        .clone()
+                        .init_connect(&url, false, Some(conn.clone()))
+                        .await
+                        .unwrap();
+                    let initial_opened = eventually_async(Duration::from_secs(2), || {
+                        let events = events.clone();
+                        async move {
+                            events
+                                .lock()
+                                .await
+                                .iter()
+                                .any(|event| matches!(event, WebsocketEvent::Open))
+                        }
+                    })
+                    .await;
+                    assert!(initial_opened, "initial connection did not open");
+
+                    let (gate_tx, gate_rx) = oneshot::channel();
+                    conn.set_handler(Arc::new(GatedHandler {
+                        gate: Mutex::new(Some(gate_rx)),
+                    }))
+                    .await;
+                    common
+                        .clone()
+                        .init_connect(&url, true, Some(conn.clone()))
+                        .await
+                        .unwrap();
+                    close_initial_tx.send(()).unwrap();
+
+                    let old_connection_closed = eventually_async(Duration::from_secs(2), || {
+                        let events = events.clone();
+                        async move {
+                            events.lock().await.iter().any(|event| {
+                                matches!(event, WebsocketEvent::Close(code, _) if *code == 1001)
+                            })
+                        }
+                    })
+                    .await;
+                    assert!(old_connection_closed, "replaced connection did not close");
+                    assert!(matches!(reconnect_rx.try_recv(), Err(TryRecvError::Empty)));
+                    sleep(Duration::from_millis(50)).await;
+                    assert!(
+                        events
+                            .lock()
+                            .await
+                            .iter()
+                            .all(|event| !matches!(event, WebsocketEvent::Error(_))),
+                        "replaced connection emitted an error event"
+                    );
+                    gate_tx.send(()).unwrap();
+                });
+            }
+
+            #[test]
+            fn schedules_one_reconnect_when_renewed_connection_closes() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let (close_renewed_tx, close_renewed_rx) = oneshot::channel();
+                    let _server_guard = AbortOnDrop(tokio::spawn(async move {
+                        let (initial_stream, _) = listener.accept().await.unwrap();
+                        let mut initial_ws = accept_async(initial_stream).await.unwrap();
+                        let (renewed_stream, _) = listener.accept().await.unwrap();
+                        let mut renewed_ws = accept_async(renewed_stream).await.unwrap();
+                        let _initial_guard = AbortOnDrop(tokio::spawn(async move {
+                            while initial_ws.next().await.is_some() {}
+                        }));
+                        let _ = close_renewed_rx.await;
+                        renewed_ws
+                            .close(Some(CloseFrame {
+                                code: CloseCode::Away,
+                                reason: "renewed connection test".into(),
+                            }))
+                            .await
+                            .unwrap();
+                    }));
+
+                    let conn = WebsocketConnection::new("c-renewed-failure");
+                    let (reconnect_tx, mut reconnect_rx) = channel::<ReconnectEntry>(1);
+                    let (renewal_tx, _renewal_rx) = channel::<(String, String)>(1);
+                    let common = Arc::new(WebsocketCommon {
+                        events: WebsocketEventEmitter::new(),
+                        mode: WebsocketMode::Single,
+                        round_robin_index: AtomicUsize::new(0),
+                        connection_pool: vec![conn.clone()],
+                        reconnect_tx,
+                        renewal_tx,
+                        reconnect_delay: 0,
+                        agent: None,
+                        handshake: None,
+                        user_agent: None,
+                        extra_headers: std::sync::RwLock::new(Vec::new()),
+                    });
+                    let url = format!("ws://{addr}");
+                    common
+                        .clone()
+                        .init_connect(&url, false, Some(conn.clone()))
+                        .await
+                        .unwrap();
+                    common
+                        .clone()
+                        .init_connect(&url, true, Some(conn.clone()))
+                        .await
+                        .unwrap();
+
+                    let renewal_completed = eventually_async(Duration::from_secs(2), || {
+                        let conn = conn.clone();
+                        async move { !conn.state.lock().await.renewal_pending }
+                    })
+                    .await;
+                    assert!(renewal_completed, "renewal did not complete");
+                    close_renewed_tx.send(()).unwrap();
+
+                    let entry = timeout(Duration::from_secs(2), reconnect_rx.recv())
+                        .await
+                        .expect("renewed connection failure did not schedule reconnect")
+                        .expect("reconnect queue closed");
+                    assert_eq!(entry.connection_id, conn.id);
+                    assert!(!entry.is_renewal);
+                    sleep(Duration::from_millis(50)).await;
+                    assert!(
+                        matches!(reconnect_rx.try_recv(), Err(TryRecvError::Empty)),
+                        "renewed connection failure scheduled duplicate reconnects"
+                    );
                 });
             }
 
