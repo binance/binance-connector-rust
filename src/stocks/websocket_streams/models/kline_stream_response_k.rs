@@ -16,7 +16,7 @@ use crate::stocks::websocket_streams::models;
 use serde::{Deserialize, Deserializer, Serialize, de::Error};
 use serde_json::Value;
 
-/// `KlineStreamResponseK` : Candlestick payload.
+/// KlineStreamResponseK : Candlestick payload.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct KlineStreamResponseK {
     /// Open time (epoch milliseconds).
@@ -69,7 +69,6 @@ pub struct KlineStreamResponseK {
 
 impl KlineStreamResponseK {
     /// Candlestick payload.
-    #[must_use]
     pub fn new() -> KlineStreamResponseK {
         KlineStreamResponseK {
             t: None,

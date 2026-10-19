@@ -15,7 +15,7 @@
 use crate::stocks::rest_api::models;
 use serde::{Deserialize, Serialize};
 
-/// `TokenizedConvertStatusResponse` : Empty object `{}` when no record matches.
+/// TokenizedConvertStatusResponse : Empty object `{}` when no record matches.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TokenizedConvertStatusResponse {
     /// Underlying US-equity ticker, e.g. `AAPL`.
@@ -55,7 +55,6 @@ pub struct TokenizedConvertStatusResponse {
 
 impl TokenizedConvertStatusResponse {
     /// Empty object `{}` when no record matches.
-    #[must_use]
     pub fn new() -> TokenizedConvertStatusResponse {
         TokenizedConvertStatusResponse {
             underlying_asset: None,

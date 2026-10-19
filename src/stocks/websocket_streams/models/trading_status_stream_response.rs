@@ -45,7 +45,6 @@ pub struct TradingStatusStreamResponse {
 }
 
 impl TradingStatusStreamResponse {
-    #[must_use]
     pub fn new() -> TradingStatusStreamResponse {
         TradingStatusStreamResponse {
             e: None,

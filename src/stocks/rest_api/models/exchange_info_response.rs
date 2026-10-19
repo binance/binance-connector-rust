@@ -26,7 +26,6 @@ pub struct ExchangeInfoResponse {
 }
 
 impl ExchangeInfoResponse {
-    #[must_use]
     pub fn new() -> ExchangeInfoResponse {
         ExchangeInfoResponse {
             timezone: None,

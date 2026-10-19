@@ -57,7 +57,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/com_announcement_en", &vars);
 

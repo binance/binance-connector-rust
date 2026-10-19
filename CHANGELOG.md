@@ -1,5 +1,40 @@
 # Changelog
 
+## 76.0.0 - 2026-10-19
+
+### Added (1)
+
+- Added `replace_websocket_streams_placeholders_preserve_case()` in `common::utils`, which builds a stream name without lowercasing any value.
+
+### Changed (4)
+
+- Free WebSocket clients once they are dropped. The reconnect and renewal background tasks no longer keep the client alive, so a disconnected and dropped client releases its connection pool, its two background tasks and any `subscribe_on_ws_events` callbacks that were not unsubscribed.
+- Close a WebSocket client's connections when it is dropped without calling `disconnect()`. The last clone to be dropped sends a close frame on each socket, and the connection is no longer reconnected or renewed. Unlike `disconnect()`, dropping does not wait for in-flight requests; call `disconnect()` first to let them complete.
+- Reconnect a WebSocket connection that fails after a scheduled renewal. Previously, once a connection had been renewed, a later network drop or server close was never recovered.
+- Stop emitting a spurious `[CRITICAL] ... permanently failed: NormalClose` error event on every routine connection renewal.
+
+**Derivatives Trading USDS Futures**
+
+### Changed (2)
+
+#### REST API
+
+- Deleted parameter `page`
+  - affected methods:
+    - `get_income_history()` (`GET /fapi/v1/income`)
+- Modified parameter `interval`:
+  - enum added: `1s`
+  - affected methods:
+    - `continuous_contract_kline_candlestick_data()` (`GET /fapi/v1/continuousKlines`)
+
+**Stocks**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Fixed stream names being lowercased (for example `aapl@quote` instead of `AAPL@quote`), which made subscriptions to symbol and listen key streams receive no messages.
+
 ## 75.0.0 - 2026-10-15
 
 ### Added (5)

@@ -78,7 +78,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// let subscription = `websocket_streams.subscribe_on_ws_events(|event`| {
+    /// let subscription = websocket_streams.subscribe_on_ws_events(|event| {
     ///     // Handle WebSocket event
     /// });
     ///
@@ -99,10 +99,10 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// let subscription = `websocket_streams.subscribe_on_ws_events(|event`| {
+    /// let subscription = websocket_streams.subscribe_on_ws_events(|event| {
     ///     // Handle WebSocket event
     /// });
-    /// `websocket_streams.unsubscribe_from_ws_events(subscription)`;
+    /// websocket_streams.unsubscribe_from_ws_events(subscription);
     ///
     pub fn unsubscribe_from_ws_events(&self, subscription: Subscription) {
         subscription.unsubscribe();
@@ -122,8 +122,8 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// let `websocket_streams` = `WebSocketStreams::new`(...);
-    /// `websocket_streams.disconnect().await`?;
+    /// let websocket_streams = WebSocketStreams::new(...);
+    /// websocket_streams.disconnect().await?;
     ///
     pub async fn disconnect(&self) -> anyhow::Result<()> {
         self.websocket_streams_base
@@ -141,8 +141,8 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// let `is_active` = `websocket_streams.is_connected().await`;
-    /// if `is_active` {
+    /// let is_active = websocket_streams.is_connected().await;
+    /// if is_active {
     ///     // WebSocket connection is active
     /// }
     ///
@@ -155,7 +155,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.ping_server().await`;
+    /// websocket_streams.ping_server().await;
     ///
     ///
     /// This method sends a ping request to the WebSocket server to keep the connection alive
@@ -174,7 +174,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.subscribe(vec`!["`btcusdt@trade".to_string()`], None);
+    /// websocket_streams.subscribe(vec!["btcusdt@trade".to_string()], None);
     ///
     ///
     /// This method initiates an asynchronous subscription to the specified WebSocket streams.
@@ -194,7 +194,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// `websocket_streams.unsubscribe(vec`!["`btcusdt@trade".to_string()`], None);
+    /// websocket_streams.unsubscribe(vec!["btcusdt@trade".to_string()], None);
     ///
     ///
     /// This method initiates an asynchronous unsubscription from the specified WebSocket streams.
@@ -203,7 +203,7 @@ impl WebsocketStreams {
         let base = Arc::clone(&self.websocket_streams_base);
         spawn(async move {
             base.unsubscribe(streams, id.map(StreamId::from), None)
-                .await;
+                .await
         });
     }
 
@@ -220,7 +220,7 @@ impl WebsocketStreams {
     /// # Examples
     ///
     ///
-    /// let `is_subscribed` = `websocket_streams.is_subscribed("btcusdt@trade").await`;
+    /// let is_subscribed = websocket_streams.is_subscribed("btcusdt@trade").await;
     ///
     ///
     /// This method checks the subscription status of a specific WebSocket stream.

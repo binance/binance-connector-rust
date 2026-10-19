@@ -29,7 +29,6 @@ pub struct TokenizedConvertHistoryResponse {
 }
 
 impl TokenizedConvertHistoryResponse {
-    #[must_use]
     pub fn new() -> TokenizedConvertHistoryResponse {
         TokenizedConvertHistoryResponse {
             rows: None,

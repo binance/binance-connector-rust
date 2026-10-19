@@ -1268,6 +1268,56 @@ where
     V: Display,
     S: BuildHasher,
 {
+    replace_websocket_streams_placeholders_impl(input, variables, true)
+}
+
+/// Replaces placeholders in a WebSocket stream key without changing the case of any value.
+///
+/// Same as [`replace_websocket_streams_placeholders`], except that the value of a leading
+/// placeholder (for example `<symbol>` in `/<symbol>@quote`) is kept as given.
+///
+/// # Arguments
+///
+/// * `input` - The input string containing placeholders to be replaced
+/// * `variables` - A `HashMap` of key-value pairs used for placeholder substitution
+///
+/// # Returns
+///
+/// A modified string with placeholders replaced by their corresponding values and any
+/// trailing '@' stripped.
+///
+/// # Panics
+///
+/// Panics if the input string contains an invalid placeholder format.
+///
+/// # Examples
+///
+///
+/// let input = "/<symbol>@quote";
+/// let variables = `HashMap::from`([("symbol", "AAPL")]);
+/// let result = `replace_websocket_streams_placeholders_preserve_case(input`, &variables);
+/// // result: "AAPL@quote"
+///
+pub fn replace_websocket_streams_placeholders_preserve_case<V, S>(
+    input: &str,
+    variables: &HashMap<&str, V, S>,
+) -> String
+where
+    V: Display,
+    S: BuildHasher,
+{
+    replace_websocket_streams_placeholders_impl(input, variables, false)
+}
+
+fn replace_websocket_streams_placeholders_impl<V, S>(
+    input: &str,
+    variables: &HashMap<&str, V, S>,
+    lowercase_head: bool,
+) -> String
+where
+    V: Display,
+    S: BuildHasher,
+{
     let original = input;
 
     // Drop a leading slash for processing
@@ -1294,8 +1344,9 @@ where
 
     // Only lowercase head if original started with '/' and first placeholder at start
     // (cases where `symbol` or `pair` are used and they are not lower-cased)
-    let should_lower_head =
-        original.starts_with('/') && PLACEHOLDER_RE.find(body).is_some_and(|m| m.start() == 0);
+    let should_lower_head = lowercase_head
+        && original.starts_with('/')
+        && PLACEHOLDER_RE.find(body).is_some_and(|m| m.start() == 0);
 
     // Lowercase only that first placeholder's value
     if should_lower_head {
@@ -3819,6 +3870,84 @@ mod tests {
         #[test]
         fn retains_other_punctuation() {
             assert_eq!(normalize_ws_streams_key("stream.name!"), "stream.name!");
+        }
+    }
+
+    mod replace_websocket_streams_placeholders_preserve_case {
+        use crate::common::utils::{
+            replace_websocket_streams_placeholders,
+            replace_websocket_streams_placeholders_preserve_case,
+        };
+        use std::collections::HashMap;
+
+        #[test]
+        fn leading_symbol_keeps_case() {
+            let vars = HashMap::from([("symbol", "AAPL")]);
+            assert_eq!(
+                replace_websocket_streams_placeholders_preserve_case("/<symbol>@quote", &vars),
+                "AAPL@quote"
+            );
+        }
+
+        #[test]
+        fn multiple_placeholders_keep_case() {
+            let vars = HashMap::from([("symbol", "AAPL"), ("interval", "1m")]);
+            assert_eq!(
+                replace_websocket_streams_placeholders_preserve_case(
+                    "/<symbol>@kline_<interval>",
+                    &vars
+                ),
+                "AAPL@kline_1m"
+            );
+        }
+
+        #[test]
+        fn listen_key_keeps_case() {
+            let vars = HashMap::from([("listenKey", "AbCdEf123")]);
+            assert_eq!(
+                replace_websocket_streams_placeholders_preserve_case(
+                    "/<listenKey>@orderReport",
+                    &vars
+                ),
+                "AbCdEf123@orderReport"
+            );
+        }
+
+        #[test]
+        fn static_stream_unchanged() {
+            let vars: HashMap<&str, &str> = HashMap::new();
+            assert_eq!(
+                replace_websocket_streams_placeholders_preserve_case("/price", &vars),
+                "price"
+            );
+        }
+
+        #[test]
+        fn strips_trailing_at_and_ignores_missing_values() {
+            let vars: HashMap<&str, &str> = HashMap::new();
+            assert_eq!(
+                replace_websocket_streams_placeholders_preserve_case("/<symbol>@", &vars),
+                ""
+            );
+        }
+
+        #[test]
+        fn default_function_still_lowercases_head() {
+            let vars = HashMap::from([("symbol", "BTCUSDT")]);
+            assert_eq!(
+                replace_websocket_streams_placeholders("/<symbol>@ticker", &vars),
+                "btcusdt@ticker"
+            );
+        }
+
+        #[test]
+        fn matches_default_function_apart_from_head_case() {
+            let vars = HashMap::from([("symbol", "BTCUSDT"), ("levels", "5")]);
+            let input = "/<symbol>@depth<levels>@100ms";
+            assert_eq!(
+                replace_websocket_streams_placeholders_preserve_case(input, &vars).to_lowercase(),
+                replace_websocket_streams_placeholders(input, &vars)
+            );
         }
     }
 

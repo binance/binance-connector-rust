@@ -133,7 +133,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders(
             "/web3_prediction_pm_claim_partial_success",
@@ -168,7 +168,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_transfer_fail", &vars);
@@ -199,7 +199,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_transfer_success", &vars);
@@ -232,7 +232,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_limit_order_filled", &vars);
@@ -265,7 +265,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders(
             "/web3_prediction_pm_limit_order_partial_fill",
@@ -300,7 +300,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_limit_submit_fail", &vars);
@@ -333,7 +333,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders(
             "/web3_prediction_pm_limit_submit_success",
@@ -368,7 +368,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_market_buy_fail", &vars);
@@ -401,7 +401,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_market_buy_success", &vars);
@@ -434,7 +434,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_market_close", &vars);
@@ -467,7 +467,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_market_sell_fail", &vars);
@@ -500,7 +500,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders(
             "/web3_prediction_pm_market_sell_success",
@@ -538,7 +538,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_orderbook_<marketId>", &vars);
@@ -571,7 +571,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_claim_fail", &vars);
@@ -602,7 +602,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/web3_prediction_pm_claim_success", &vars);

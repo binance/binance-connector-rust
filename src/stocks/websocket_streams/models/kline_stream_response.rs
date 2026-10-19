@@ -32,7 +32,6 @@ pub struct KlineStreamResponse {
 }
 
 impl KlineStreamResponse {
-    #[must_use]
     pub fn new() -> KlineStreamResponse {
         KlineStreamResponse {
             e: None,

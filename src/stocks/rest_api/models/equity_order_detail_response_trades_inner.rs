@@ -32,7 +32,6 @@ pub struct EquityOrderDetailResponseTradesInner {
 }
 
 impl EquityOrderDetailResponseTradesInner {
-    #[must_use]
     pub fn new() -> EquityOrderDetailResponseTradesInner {
         EquityOrderDetailResponseTradesInner {
             execution_id: None,

@@ -50,7 +50,6 @@ pub struct QuoteStreamResponse {
 }
 
 impl QuoteStreamResponse {
-    #[must_use]
     pub fn new() -> QuoteStreamResponse {
         QuoteStreamResponse {
             e: None,

@@ -20,7 +20,7 @@ use std::{collections::HashMap, sync::Arc};
 
 use crate::common::{
     models::ParamBuildError,
-    utils::replace_websocket_streams_placeholders,
+    utils::replace_websocket_streams_placeholders_preserve_case,
     websocket::{WebsocketBase, WebsocketStream, WebsocketStreams, create_stream_handler},
 };
 use crate::models::StreamId;
@@ -74,7 +74,6 @@ impl OrderReportStreamParams {
     ///
     /// * `listen_key` — User data listen key obtained from the Listen Key endpoint.
     ///
-    #[must_use]
     pub fn builder(listen_key: String) -> OrderReportStreamParamsBuilder {
         OrderReportStreamParamsBuilder::default().listen_key(listen_key)
     }
@@ -96,9 +95,10 @@ impl UserStreamsApi for UserStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
+        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
 
-        let stream = replace_websocket_streams_placeholders("/<listenKey>@orderReport", &vars);
+        let stream =
+            replace_websocket_streams_placeholders_preserve_case("/<listenKey>@orderReport", &vars);
 
         Ok(create_stream_handler::<models::OrderReportStreamResponse>(
             WebsocketBase::WebsocketStreams(Arc::clone(&self.websocket_streams_base)),
@@ -135,6 +135,7 @@ mod tests {
             .build()
             .expect("Failed to build configuration");
         let streams_base = WebsocketStreams::new(config, vec![conn.clone()], vec![]);
+
         conn.set_handler(streams_base.clone() as Arc<dyn WebsocketHandler>)
             .await;
         (streams_base, conn)
@@ -164,7 +165,10 @@ mod tests {
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream = replace_websocket_streams_placeholders("/<listenKey>@orderReport", &vars);
+            let stream = replace_websocket_streams_placeholders_preserve_case(
+                "/<listenKey>@orderReport",
+                &vars,
+            );
             let ws_stream = api
                 .order_report_stream(params)
                 .await
@@ -205,7 +209,7 @@ mod tests {
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream = replace_websocket_streams_placeholders("/<listenKey>@orderReport", &vars);
+            let stream = replace_websocket_streams_placeholders_preserve_case("/<listenKey>@orderReport", &vars);
 
             let ws_stream = api.order_report_stream(params).await.unwrap();
 
@@ -255,7 +259,7 @@ mod tests {
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream = replace_websocket_streams_placeholders("/<listenKey>@orderReport", &vars);
+            let stream = replace_websocket_streams_placeholders_preserve_case("/<listenKey>@orderReport", &vars);
 
             let ws_stream = api.order_report_stream(params).await.unwrap();
 

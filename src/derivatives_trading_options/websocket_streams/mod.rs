@@ -66,6 +66,7 @@ impl WebsocketStreams {
         websocket_streams_base
             .stream_id_is_strictly_number
             .store(true, Ordering::Relaxed);
+
         websocket_streams_base.clone().connect(streams).await?;
 
         Ok(Self {

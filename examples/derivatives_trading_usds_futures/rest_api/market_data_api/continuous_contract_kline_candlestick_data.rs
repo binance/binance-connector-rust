@@ -35,7 +35,7 @@ async fn main() -> Result<()> {
     let params = ContinuousContractKlineCandlestickDataParams::builder(
         "BTCUSDT".to_string(),
         ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,
-        ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,
+        ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,
     )
     .build()?;
 

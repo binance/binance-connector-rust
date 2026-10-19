@@ -21,7 +21,6 @@ pub struct WebsocketStreamsHandle {
 }
 
 impl WebsocketStreamsHandle {
-    #[must_use]
     pub fn new(configuration: ConfigurationWebsocketStreams) -> Self {
         Self { configuration }
     }
@@ -40,7 +39,7 @@ impl WebsocketStreamsHandle {
     /// # Examples
     ///
     ///
-    /// let handle = `WebsocketStreamsHandle::new(configuration)`;
+    /// let handle = WebsocketStreamsHandle::new(configuration);
     /// let streams = handle.connect().await?;
     ///
     pub async fn connect(&self) -> anyhow::Result<WebsocketStreams> {
@@ -65,9 +64,9 @@ impl WebsocketStreamsHandle {
     /// # Examples
     ///
     ///
-    /// let handle = `WebsocketStreamsHandle::new(configuration)`;
-    /// let `custom_config` = `WebsocketStreamsConnectConfig::default()`;
-    /// let streams = `handle.connect_with_config(custom_config).await`?;
+    /// let handle = WebsocketStreamsHandle::new(configuration);
+    /// let custom_config = WebsocketStreamsConnectConfig::default();
+    /// let streams = handle.connect_with_config(custom_config).await?;
     ///
     pub async fn connect_with_config(
         &self,

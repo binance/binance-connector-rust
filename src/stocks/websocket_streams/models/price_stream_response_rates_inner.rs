@@ -47,7 +47,6 @@ pub struct PriceStreamResponseRatesInner {
 }
 
 impl PriceStreamResponseRatesInner {
-    #[must_use]
     pub fn new() -> PriceStreamResponseRatesInner {
         PriceStreamResponseRatesInner {
             s: None,

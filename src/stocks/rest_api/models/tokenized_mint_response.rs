@@ -26,7 +26,6 @@ pub struct TokenizedMintResponse {
 }
 
 impl TokenizedMintResponse {
-    #[must_use]
     pub fn new() -> TokenizedMintResponse {
         TokenizedMintResponse {
             issuer_request_id: None,

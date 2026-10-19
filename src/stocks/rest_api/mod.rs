@@ -170,13 +170,13 @@ impl RestApi {
             .await
     }
 
-    /// Exchange Info (`MARKET_DATA`)
+    /// Exchange Info (MARKET_DATA)
     ///
-    /// Returns current exchange trading rules and the list of tradable US-equity symbols. `MARKET_DATA` endpoint — requires an API key (`X-MBX-APIKEY`) but no signature. Response is served from a server-side cache.
+    /// Returns current exchange trading rules and the list of tradable US-equity symbols. MARKET_DATA endpoint — requires an API key (`X-MBX-APIKEY`) but no signature. Response is served from a server-side cache.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `MARKET_DATA`
+    /// Security Type: MARKET_DATA
     ///
     /// # Arguments
     ///
@@ -215,13 +215,13 @@ impl RestApi {
         self.market_data_api_client.exchange_info(params).await
     }
 
-    /// Latest Quote (`MARKET_DATA`)
+    /// Latest Quote (MARKET_DATA)
     ///
     /// Returns the latest best bid / best ask for a single US-equity ticker. The returned value is at most ~5 seconds stale. Returns an **empty response body** (not the literal `null`) when no quote is available for the supplied ticker (e.g. the ticker is unknown, halted, or de-listed).
     ///
     /// Weight: 1
     ///
-    /// Security Type: `MARKET_DATA`
+    /// Security Type: MARKET_DATA
     ///
     /// # Arguments
     ///
@@ -260,13 +260,13 @@ impl RestApi {
         self.market_data_api_client.latest_quote(params).await
     }
 
-    /// Tokenized Assets (`MARKET_DATA`)
+    /// Tokenized Assets (MARKET_DATA)
     ///
-    /// Returns the list of all tokenized assets currently available for mint / redeem, together with each asset's underlying equity symbol and conversion multiplier. `MARKET_DATA` endpoint — requires an API key (`X-MBX-APIKEY`) but no signature. Response is served from a server-side cache.
+    /// Returns the list of all tokenized assets currently available for mint / redeem, together with each asset's underlying equity symbol and conversion multiplier. MARKET_DATA endpoint — requires an API key (`X-MBX-APIKEY`) but no signature. Response is served from a server-side cache.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `MARKET_DATA`
+    /// Security Type: MARKET_DATA
     ///
     /// # Arguments
     ///
@@ -304,13 +304,13 @@ impl RestApi {
         self.market_data_api_client.tokenized_assets().await
     }
 
-    /// Tokenized Convert History (`USER_DATA`)
+    /// Tokenized Convert History (USER_DATA)
     ///
     /// Paged history of mint / redeem conversions for the caller. Cursor-style pagination — supply the `nextLastId` from the previous page's response to fetch the next page.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `USER_DATA`
+    /// Security Type: USER_DATA
     ///
     /// # Arguments
     ///
@@ -351,13 +351,13 @@ impl RestApi {
             .await
     }
 
-    /// Tokenized Convert Status (`USER_DATA`)
+    /// Tokenized Convert Status (USER_DATA)
     ///
     /// Query the current status of a single mint / redeem request by its `issuerRequestId`. Returns an empty object when no record matches (caller's ID scope only).
     ///
     /// Weight: 1
     ///
-    /// Security Type: `USER_DATA`
+    /// Security Type: USER_DATA
     ///
     /// # Arguments
     ///
@@ -578,13 +578,13 @@ impl RestApi {
         self.trade_api_client.cancel_equity_order(params).await
     }
 
-    /// Current Open Orders (`USER_DATA`)
+    /// Current Open Orders (USER_DATA)
     ///
     /// Query all unfinished (open) orders for the caller. No business parameters are needed — user identity is derived from the signature.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `USER_DATA`
+    /// Security Type: USER_DATA
     ///
     /// # Arguments
     ///
@@ -623,13 +623,13 @@ impl RestApi {
         self.trade_api_client.current_open_orders(params).await
     }
 
-    /// Equity Order Detail (`USER_DATA`)
+    /// Equity Order Detail (USER_DATA)
     ///
     /// Returns a single order along with its trade execution list. Callers can only read their own orders — the user identity is derived from the signed request.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `USER_DATA`
+    /// Security Type: USER_DATA
     ///
     /// # Arguments
     ///
@@ -668,13 +668,13 @@ impl RestApi {
         self.trade_api_client.equity_order_detail(params).await
     }
 
-    /// Equity Order History (`USER_DATA`)
+    /// Equity Order History (USER_DATA)
     ///
     /// Paged order history for the caller. Filters by symbol, order type, side, status, and time range.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `USER_DATA`
+    /// Security Type: USER_DATA
     ///
     /// # Arguments
     ///
@@ -713,13 +713,13 @@ impl RestApi {
         self.trade_api_client.equity_order_history(params).await
     }
 
-    /// Equity Trade History (`USER_DATA`)
+    /// Equity Trade History (USER_DATA)
     ///
     /// Paged equity trade (per-fill) history for the caller. Each row is one execution, not one order — a partially filled order produces multiple rows. Filters by symbol, side, specific `orderId`, and time range.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `USER_DATA`
+    /// Security Type: USER_DATA
     ///
     /// # Arguments
     ///
@@ -769,7 +769,7 @@ impl RestApi {
     /// **Field combination matrix**
     ///
     ///
-    /// | Side | `OrderType` | Required | Forbidden |
+    /// | Side | OrderType | Required | Forbidden |
     /// | ---- | --------- | -------- | --------- |
     /// | BUY | LIMIT | `price`, `quantity`, `tradingSession` | `notional` |
     /// | BUY | MARKET | `notional` | `price`, `quantity`, `tradingSession` |
@@ -826,13 +826,13 @@ impl RestApi {
         self.trade_api_client.place_equity_order(params).await
     }
 
-    /// Create / Renew Listen Key (`USER_STREAM`)
+    /// Create / Renew Listen Key (USER_STREAM)
     ///
     /// Create a new stock user-data-stream `listenKey`, or renew an existing one. Calling this endpoint for the same user with an active `listenKey` extends its validity; if there is no active key, a new one is issued. Use the returned `listenKey` to subscribe to the stock user data stream.
     ///
     /// Weight: 1
     ///
-    /// Security Type: `USER_STREAM`
+    /// Security Type: USER_STREAM
     ///
     /// # Arguments
     ///

@@ -315,6 +315,8 @@ impl std::str::FromStr for ContinuousContractKlineCandlestickDataContractTypeEnu
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ContinuousContractKlineCandlestickDataIntervalEnum {
+    #[serde(rename = "1s")]
+    Interval1s,
     #[serde(rename = "1m")]
     Interval1m,
     #[serde(rename = "3m")]
@@ -351,6 +353,7 @@ impl ContinuousContractKlineCandlestickDataIntervalEnum {
     #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::Interval1s => "1s",
             Self::Interval1m => "1m",
             Self::Interval3m => "3m",
             Self::Interval5m => "5m",
@@ -375,6 +378,7 @@ impl std::str::FromStr for ContinuousContractKlineCandlestickDataIntervalEnum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "1s" => Ok(Self::Interval1s),
             "1m" => Ok(Self::Interval1m),
             "3m" => Ok(Self::Interval3m),
             "5m" => Ok(Self::Interval5m),
@@ -4802,7 +4806,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = ContinuousContractKlineCandlestickDataParams::builder("BTCUSDT".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,).build().unwrap();
+            let params = ContinuousContractKlineCandlestickDataParams::builder("BTCUSDT".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r"[[1607444700000]]").unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>>");
@@ -4819,7 +4823,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockMarketDataApiClient { force_error: false };
 
-            let params = ContinuousContractKlineCandlestickDataParams::builder("BTCUSDT".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,).start_time(1623319461670).end_time(1641782889000).limit(50).build().unwrap();
+            let params = ContinuousContractKlineCandlestickDataParams::builder("BTCUSDT".to_string(),ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,).start_time(1623319461670).end_time(1641782889000).limit(50).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r"[[1607444700000]]").unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<Vec<models::ContinuousContractKlineCandlestickDataItemInner>>");
@@ -4839,7 +4843,7 @@ mod tests {
             let params = ContinuousContractKlineCandlestickDataParams::builder(
                 "BTCUSDT".to_string(),
                 ContinuousContractKlineCandlestickDataContractTypeEnum::Perpetual,
-                ContinuousContractKlineCandlestickDataIntervalEnum::Interval1m,
+                ContinuousContractKlineCandlestickDataIntervalEnum::Interval1s,
             )
             .build()
             .unwrap();

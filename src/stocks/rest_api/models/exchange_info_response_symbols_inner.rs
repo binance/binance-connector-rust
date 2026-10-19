@@ -79,7 +79,6 @@ pub struct ExchangeInfoResponseSymbolsInner {
 }
 
 impl ExchangeInfoResponseSymbolsInner {
-    #[must_use]
     pub fn new() -> ExchangeInfoResponseSymbolsInner {
         ExchangeInfoResponseSymbolsInner {
             symbol: None,

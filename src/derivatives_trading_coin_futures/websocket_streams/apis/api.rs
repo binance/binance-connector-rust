@@ -2154,6 +2154,7 @@ mod tests {
             .build()
             .expect("Failed to build configuration");
         let streams_base = WebsocketStreams::new(config, vec![conn.clone()], vec![]);
+
         conn.set_handler(streams_base.clone() as Arc<dyn WebsocketHandler>)
             .await;
         (streams_base, conn)

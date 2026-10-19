@@ -91,7 +91,6 @@ pub struct OrderReportStreamResponse {
 }
 
 impl OrderReportStreamResponse {
-    #[must_use]
     pub fn new() -> OrderReportStreamResponse {
         OrderReportStreamResponse {
             e: None,

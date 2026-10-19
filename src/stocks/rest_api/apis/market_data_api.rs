@@ -73,7 +73,6 @@ pub struct ExchangeInfoParams {
 impl ExchangeInfoParams {
     /// Create a builder for [`exchange_info`].
     ///
-    #[must_use]
     pub fn builder() -> ExchangeInfoParamsBuilder {
         ExchangeInfoParamsBuilder::default()
     }
@@ -100,7 +99,6 @@ impl LatestQuoteParams {
     ///
     /// * `symbol` — US-equity ticker, e.g. `AAPL`, `TSLA`. Case-insensitive; uppercased server-side.
     ///
-    #[must_use]
     pub fn builder(symbol: String) -> LatestQuoteParamsBuilder {
         LatestQuoteParamsBuilder::default().symbol(symbol)
     }

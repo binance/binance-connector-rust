@@ -98,7 +98,6 @@ pub struct EquityOrderHistoryResponseRowsInner {
 }
 
 impl EquityOrderHistoryResponseRowsInner {
-    #[must_use]
     pub fn new() -> EquityOrderHistoryResponseRowsInner {
         EquityOrderHistoryResponseRowsInner {
             order_id: None,

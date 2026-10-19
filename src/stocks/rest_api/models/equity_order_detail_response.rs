@@ -15,7 +15,7 @@
 use crate::stocks::rest_api::models;
 use serde::{Deserialize, Serialize};
 
-/// `EquityOrderDetailResponse` : Top-level fields mirror an order row from `/order/history` (orderId, symbol, quote, side, orderType, limitPrice, avgFilledPrice, qty, notional, filledQty, filledTotal, fee, session, status, createdAt, updatedAt), plus a `trades` array. `clientOrderId` is present only in Order Detail, not in Order History.
+/// EquityOrderDetailResponse : Top-level fields mirror an order row from `/order/history` (orderId, symbol, quote, side, orderType, limitPrice, avgFilledPrice, qty, notional, filledQty, filledTotal, fee, session, status, createdAt, updatedAt), plus a `trades` array. `clientOrderId` is present only in Order Detail, not in Order History.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct EquityOrderDetailResponse {
     /// Equity order id.
@@ -106,7 +106,6 @@ pub struct EquityOrderDetailResponse {
 
 impl EquityOrderDetailResponse {
     /// Top-level fields mirror an order row from `/order/history` (orderId, symbol, quote, side, orderType, limitPrice, avgFilledPrice, qty, notional, filledQty, filledTotal, fee, session, status, createdAt, updatedAt), plus a `trades` array. `clientOrderId` is present only in Order Detail, not in Order History.
-    #[must_use]
     pub fn new() -> EquityOrderDetailResponse {
         EquityOrderDetailResponse {
             order_id: None,

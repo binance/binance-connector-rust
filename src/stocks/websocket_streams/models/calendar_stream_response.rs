@@ -33,7 +33,6 @@ pub struct CalendarStreamResponse {
 }
 
 impl CalendarStreamResponse {
-    #[must_use]
     pub fn new() -> CalendarStreamResponse {
         CalendarStreamResponse {
             e: None,

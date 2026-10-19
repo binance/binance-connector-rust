@@ -1448,6 +1448,7 @@ mod tests {
             .expect("Failed to build configuration");
         let streams_base =
             WebsocketStreams::new(config, vec![conn.clone()], vec!["market".to_string()]);
+
         {
             let mut st = conn.state.lock().await;
             st.url_path = Some("market".to_string());

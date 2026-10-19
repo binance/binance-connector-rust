@@ -804,7 +804,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@aggTrade", &vars);
 
@@ -839,7 +839,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/!bookTicker", &vars);
 
@@ -874,7 +874,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/!miniTicker@arr", &vars);
 
@@ -909,7 +909,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/!ticker@arr", &vars);
 
@@ -942,7 +942,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/came@allTokens@ticker24", &vars);
 
@@ -980,7 +980,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@bookTicker", &vars);
 
@@ -1023,7 +1023,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders(
             "/came@<contractAddress>@<chainId>@kline_<interval>",
@@ -1069,7 +1069,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/<symbol>@fulldepth@<interval>", &vars);
@@ -1111,7 +1111,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@kline_<interval>", &vars);
 
@@ -1147,7 +1147,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@miniTicker", &vars);
 
@@ -1190,7 +1190,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders("/<symbol>@depth<levels>@<interval>", &vars);
@@ -1227,7 +1227,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@ticker", &vars);
 
@@ -1263,7 +1263,7 @@ impl Api for ApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").cloned();
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders("/<symbol>@trade", &vars);
 
@@ -1302,6 +1302,7 @@ mod tests {
             .build()
             .expect("Failed to build configuration");
         let streams_base = WebsocketStreams::new(config, vec![conn.clone()], vec![]);
+
         conn.set_handler(streams_base.clone() as Arc<dyn WebsocketHandler>)
             .await;
         (streams_base, conn)
