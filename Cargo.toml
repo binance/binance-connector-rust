@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "76.0.0"
+version = "76.1.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -2921,13 +2921,28 @@ path = "examples/margin_trading/rest_api/transfer_api/query_max_transfer_out_amo
 required-features = [ "margin_trading" ]
 
 [[example]]
+name = "margin_trading_rest_api_user_data_stream_api_close_user_data_stream_v2"
+path = "examples/margin_trading/rest_api/user_data_stream_api/close_user_data_stream_v2.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
 name = "margin_trading_rest_api_user_data_stream_api_close_user_data_stream"
 path = "examples/margin_trading/rest_api/user_data_stream_api/close_user_data_stream.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]
+name = "margin_trading_rest_api_user_data_stream_api_keepalive_user_data_stream_v2"
+path = "examples/margin_trading/rest_api/user_data_stream_api/keepalive_user_data_stream_v2.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
 name = "margin_trading_rest_api_user_data_stream_api_keepalive_user_data_stream"
 path = "examples/margin_trading/rest_api/user_data_stream_api/keepalive_user_data_stream.rs"
+required-features = [ "margin_trading" ]
+
+[[example]]
+name = "margin_trading_rest_api_user_data_stream_api_start_user_data_stream_v2"
+path = "examples/margin_trading/rest_api/user_data_stream_api/start_user_data_stream_v2.rs"
 required-features = [ "margin_trading" ]
 
 [[example]]

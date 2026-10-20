@@ -3443,6 +3443,50 @@ impl RestApi {
             .await
     }
 
+    /// Close User Data Stream V2 (`USER_STREAM`)
+    ///
+    /// Close out a user data stream.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CloseUserDataStreamV2Params`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Value>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/user-data-stream#close-user-data-stream-v2).
+    ///
+    pub async fn close_user_data_stream_v2(&self) -> anyhow::Result<RestApiResponse<Value>> {
+        self.user_data_stream_api_client
+            .close_user_data_stream_v2()
+            .await
+    }
+
     /// Keepalive User Data Stream (`USER_STREAM`)
     ///
     /// Keepalive a user data stream to prevent a time out.
@@ -3490,6 +3534,53 @@ impl RestApi {
             .await
     }
 
+    /// Keepalive User Data Stream V2 (`USER_STREAM`)
+    ///
+    /// Keepalive a user data stream to prevent a time out.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`KeepaliveUserDataStreamV2Params`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Value>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/user-data-stream#keepalive-user-data-stream-v2).
+    ///
+    pub async fn keepalive_user_data_stream_v2(
+        &self,
+        params: KeepaliveUserDataStreamV2Params,
+    ) -> anyhow::Result<RestApiResponse<Value>> {
+        self.user_data_stream_api_client
+            .keepalive_user_data_stream_v2(params)
+            .await
+    }
+
     /// Start User Data Stream (`USER_STREAM`)
     ///
     /// Start a new user data stream.
@@ -3533,6 +3624,52 @@ impl RestApi {
     ) -> anyhow::Result<RestApiResponse<models::StartUserDataStreamResponse>> {
         self.user_data_stream_api_client
             .start_user_data_stream()
+            .await
+    }
+
+    /// Start User Data Stream V2 (`USER_STREAM`)
+    ///
+    /// Start a new user data stream.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_STREAM`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`StartUserDataStreamV2Params`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::StartUserDataStreamV2Response>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/user-data-stream#start-user-data-stream-v2).
+    ///
+    pub async fn start_user_data_stream_v2(
+        &self,
+    ) -> anyhow::Result<RestApiResponse<models::StartUserDataStreamV2Response>> {
+        self.user_data_stream_api_client
+            .start_user_data_stream_v2()
             .await
     }
 }

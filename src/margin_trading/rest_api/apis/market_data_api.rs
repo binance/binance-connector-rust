@@ -854,7 +854,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"5.00000000","userMinRepay":"0.00000000","delistTime":1704973040000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<models::GetAllMarginAssetsResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetAllMarginAssetsResponseInner>");
@@ -1276,7 +1276,7 @@ mod tests {
 
             let params = GetAllMarginAssetsParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"5.00000000","userMinRepay":"0.00000000","delistTime":1704973040000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllMarginAssetsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllMarginAssetsResponseInner>");
 
             let resp = client.get_all_margin_assets(params).await.expect("Expected a response");
@@ -1293,7 +1293,7 @@ mod tests {
 
             let params = GetAllMarginAssetsParams::builder().asset("USDC".to_string()).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"0.00000000","userMinRepay":"0.00000000","delistTime":1704973040}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"[{"assetFullName":"USD coin","assetName":"USDC","isBorrowable":true,"isMortgageable":true,"userMinBorrow":"5.00000000","userMinRepay":"0.00000000","delistTime":1704973040000}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetAllMarginAssetsResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetAllMarginAssetsResponseInner>");
 
             let resp = client.get_all_margin_assets(params).await.expect("Expected a response");

@@ -187,3 +187,5 @@ pub mod query_special_key_response;
 pub use self::query_special_key_response::QuerySpecialKeyResponse;
 pub mod start_user_data_stream_response;
 pub use self::start_user_data_stream_response::StartUserDataStreamResponse;
+pub mod start_user_data_stream_v2_response;
+pub use self::start_user_data_stream_v2_response::StartUserDataStreamV2Response;
