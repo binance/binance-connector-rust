@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct FetchWithdrawQuotaResponse {
+    /// User's total withdrawal quota in the past 24 hours (including on-chain withdrawal and internal transfer), unit in USD
     #[serde(rename = "wdQuota", skip_serializing_if = "Option::is_none")]
     pub wd_quota: Option<String>,
+    /// User withdrawal quota usage in the past 24 hours, unit in USD
     #[serde(rename = "usedWdQuota", skip_serializing_if = "Option::is_none")]
     pub used_wd_quota: Option<String>,
 }

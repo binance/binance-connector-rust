@@ -19,11 +19,13 @@ use serde::{Deserialize, Serialize};
 pub struct DustlogResponseUserAssetDribbletsInner {
     #[serde(rename = "operateTime", skip_serializing_if = "Option::is_none")]
     pub operate_time: Option<i64>,
+    /// Total transfered BNB amount for this exchange.
     #[serde(
         rename = "totalTransferedAmount",
         skip_serializing_if = "Option::is_none"
     )]
     pub total_transfered_amount: Option<String>,
+    /// Total service charge amount for this exchange.
     #[serde(
         rename = "totalServiceChargeAmount",
         skip_serializing_if = "Option::is_none"

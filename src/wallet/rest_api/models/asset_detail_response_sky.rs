@@ -17,12 +17,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AssetDetailResponseSky {
+    /// min withdraw amount
     #[serde(rename = "minWithdrawAmount", skip_serializing_if = "Option::is_none")]
     pub min_withdraw_amount: Option<String>,
+    /// deposit status (false if ALL of networks' are false)
     #[serde(rename = "depositStatus", skip_serializing_if = "Option::is_none")]
     pub deposit_status: Option<bool>,
+    /// withdraw fee
     #[serde(rename = "withdrawFee", skip_serializing_if = "Option::is_none")]
     pub withdraw_fee: Option<rust_decimal::Decimal>,
+    /// withdraw status (false if ALL of networks' are false)
     #[serde(rename = "withdrawStatus", skip_serializing_if = "Option::is_none")]
     pub withdraw_status: Option<bool>,
 }

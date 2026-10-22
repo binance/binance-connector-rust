@@ -17,10 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountApiTradingStatusResponseDataTriggerCondition {
+    /// Number of GTC orders
     #[serde(rename = "GCR", skip_serializing_if = "Option::is_none")]
     pub gcr: Option<i64>,
+    /// Number of FOK/IOC orders
     #[serde(rename = "IFER", skip_serializing_if = "Option::is_none")]
     pub ifer: Option<i64>,
+    /// Number of orders
     #[serde(rename = "UFR", skip_serializing_if = "Option::is_none")]
     pub ufr: Option<i64>,
 }

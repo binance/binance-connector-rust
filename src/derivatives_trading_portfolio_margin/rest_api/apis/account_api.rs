@@ -1138,13 +1138,6 @@ pub struct GetCmIncomeHistoryParams {
     #[builder(setter(into), default)]
     #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    ///
-    /// The `page` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "page", default)]
-    pub page: Option<i64>,
     /// Number of results returned.
     ///
     /// This field is **optional.
@@ -1572,12 +1565,6 @@ pub struct GetUmIncomeHistoryParams {
     #[builder(setter(into), default)]
     #[serde(rename = "endTime", default)]
     pub end_time: Option<i64>,
-    /// Page number.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "page", default)]
-    pub page: Option<i64>,
     /// Number of results returned.
     ///
     /// This field is **optional.
@@ -2693,7 +2680,6 @@ impl AccountApi for AccountApiClient {
             income_type,
             start_time,
             end_time,
-            page,
             limit,
             recv_window,
         } = params;
@@ -2715,10 +2701,6 @@ impl AccountApi for AccountApiClient {
 
         if let Some(rw) = end_time {
             query_params.insert("endTime".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = page {
-            query_params.insert("page".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -3119,7 +3101,6 @@ impl AccountApi for AccountApiClient {
             income_type,
             start_time,
             end_time,
-            page,
             limit,
             recv_window,
         } = params;
@@ -3141,10 +3122,6 @@ impl AccountApi for AccountApiClient {
 
         if let Some(rw) = end_time {
             query_params.insert("endTime".to_string(), json!(rw));
-        }
-
-        if let Some(rw) = page {
-            query_params.insert("page".to_string(), json!(rw));
         }
 
         if let Some(rw) = limit {
@@ -5941,7 +5918,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetCmIncomeHistoryParams::builder().symbol("BTCUSD_200925".to_string()).income_type(GetCmIncomeHistoryIncomeTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).page(1).limit(100).recv_window(5000).build().unwrap();
+            let params = GetCmIncomeHistoryParams::builder().symbol("BTCUSD_200925".to_string()).income_type(GetCmIncomeHistoryIncomeTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"BTC","info":"WITHDRAW","time":1570608000000,"tranId":"9689322392","tradeId":""}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetCmIncomeHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetCmIncomeHistoryResponseInner>");
@@ -6624,7 +6601,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
 
-            let params = GetUmIncomeHistoryParams::builder().symbol("symbol_example".to_string()).income_type(GetUmIncomeHistoryIncomeTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).page(1).limit(100).recv_window(5000).build().unwrap();
+            let params = GetUmIncomeHistoryParams::builder().symbol("symbol_example".to_string()).income_type(GetUmIncomeHistoryIncomeTypeEnum::Transfer).start_time(1623319461670).end_time(1641782889000).limit(100).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"[{"symbol":"","incomeType":"TRANSFER","income":"-0.37500000","asset":"USDT","info":"TRANSFER","time":1570608000000,"tranId":"9689322392","tradeId":""}]"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : Vec<models::GetUmIncomeHistoryResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetUmIncomeHistoryResponseInner>");

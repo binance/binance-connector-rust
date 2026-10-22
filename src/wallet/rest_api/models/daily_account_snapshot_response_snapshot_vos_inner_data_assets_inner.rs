@@ -19,6 +19,7 @@ use serde::{Deserialize, Serialize};
 pub struct DailyAccountSnapshotResponseSnapshotVosInnerDataAssetsInner {
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Not real-time data, can ignore
     #[serde(rename = "marginBalance", skip_serializing_if = "Option::is_none")]
     pub margin_balance: Option<String>,
     #[serde(rename = "walletBalance", skip_serializing_if = "Option::is_none")]

@@ -29,6 +29,7 @@ pub struct AssetDividendRecordResponseRowsInner {
     pub en_info: Option<String>,
     #[serde(rename = "tranId", skip_serializing_if = "Option::is_none")]
     pub tran_id: Option<i64>,
+    /// direction: 1 for Asset credited (inflow), -1 for Asset debited (outflow)
     #[serde(rename = "direction", skip_serializing_if = "Option::is_none")]
     pub direction: Option<i64>,
 }

@@ -13,5 +13,3 @@
 
 pub mod flexible_rate_api;
 pub use flexible_rate_api::*;
-pub mod stable_rate_api;
-pub use stable_rate_api::*;

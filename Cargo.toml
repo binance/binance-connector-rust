@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "76.1.0"
+version = "77.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -478,26 +478,6 @@ required-features = [ "crypto_loan" ]
 [[example]]
 name = "crypto_loan_rest_api_flexible_rate_api_get_flexible_loan_repayment_history"
 path = "examples/crypto_loan/rest_api/flexible_rate_api/get_flexible_loan_repayment_history.rs"
-required-features = [ "crypto_loan" ]
-
-[[example]]
-name = "crypto_loan_rest_api_stable_rate_api_get_crypto_loans_income_history"
-path = "examples/crypto_loan/rest_api/stable_rate_api/get_crypto_loans_income_history.rs"
-required-features = [ "crypto_loan" ]
-
-[[example]]
-name = "crypto_loan_rest_api_stable_rate_api_get_loan_borrow_history"
-path = "examples/crypto_loan/rest_api/stable_rate_api/get_loan_borrow_history.rs"
-required-features = [ "crypto_loan" ]
-
-[[example]]
-name = "crypto_loan_rest_api_stable_rate_api_get_loan_ltv_adjustment_history"
-path = "examples/crypto_loan/rest_api/stable_rate_api/get_loan_ltv_adjustment_history.rs"
-required-features = [ "crypto_loan" ]
-
-[[example]]
-name = "crypto_loan_rest_api_stable_rate_api_get_loan_repayment_history"
-path = "examples/crypto_loan/rest_api/stable_rate_api/get_loan_repayment_history.rs"
 required-features = [ "crypto_loan" ]
 
 [[example]]

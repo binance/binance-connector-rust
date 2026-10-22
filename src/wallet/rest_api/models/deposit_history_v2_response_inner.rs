@@ -27,6 +27,7 @@ pub struct DepositHistoryV2ResponseInner {
     pub coin: Option<String>,
     #[serde(rename = "depositStatus", skip_serializing_if = "Option::is_none")]
     pub deposit_status: Option<i64>,
+    /// 0:PASS,2:REJECTED,3:PENDING,-1:FAILED
     #[serde(
         rename = "travelRuleReqStatus",
         skip_serializing_if = "Option::is_none"
@@ -42,6 +43,7 @@ pub struct DepositHistoryV2ResponseInner {
     pub transfer_type: Option<i64>,
     #[serde(rename = "confirmTimes", skip_serializing_if = "Option::is_none")]
     pub confirm_times: Option<String>,
+    /// true: This deposit require user to answer questionnaire to get it credited, false: This deposit doesn't require user to answer questionnaire as it's already completed or information has been verified
     #[serde(
         rename = "requireQuestionnaire",
         skip_serializing_if = "Option::is_none"

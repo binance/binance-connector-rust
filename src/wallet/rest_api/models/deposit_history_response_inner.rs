@@ -35,6 +35,7 @@ pub struct DepositHistoryResponseInner {
     pub tx_id: Option<String>,
     #[serde(rename = "insertTime", skip_serializing_if = "Option::is_none")]
     pub insert_time: Option<i64>,
+    /// represents deposit completion datetime, available for deposits after 6-Mar-2025.
     #[serde(rename = "completeTime", skip_serializing_if = "Option::is_none")]
     pub complete_time: Option<i64>,
     #[serde(rename = "transferType", skip_serializing_if = "Option::is_none")]
@@ -45,6 +46,7 @@ pub struct DepositHistoryResponseInner {
     pub unlock_confirm: Option<i64>,
     #[serde(rename = "walletType", skip_serializing_if = "Option::is_none")]
     pub wallet_type: Option<i64>,
+    /// 0: travel rule not required OR info already provided and funds ready to use, 1: travel rule required to provide deposit info
     #[serde(rename = "travelRuleStatus", skip_serializing_if = "Option::is_none")]
     pub travel_rule_status: Option<i64>,
 }

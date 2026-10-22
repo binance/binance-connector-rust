@@ -21,14 +21,19 @@ pub struct GetAssetsThatCanBeConvertedIntoBnbResponseDetailsInner {
     pub asset: Option<String>,
     #[serde(rename = "assetFullName", skip_serializing_if = "Option::is_none")]
     pub asset_full_name: Option<String>,
+    /// Convertible amount
     #[serde(rename = "amountFree", skip_serializing_if = "Option::is_none")]
     pub amount_free: Option<String>,
+    /// BTC amount
     #[serde(rename = "toBTC", skip_serializing_if = "Option::is_none")]
     pub to_btc: Option<String>,
+    /// BNB amount（Not deducted commission fee）
     #[serde(rename = "toBNB", skip_serializing_if = "Option::is_none")]
     pub to_bnb: Option<String>,
+    /// BNB amount（Deducted commission fee）
     #[serde(rename = "toBNBOffExchange", skip_serializing_if = "Option::is_none")]
     pub to_bnb_off_exchange: Option<String>,
+    /// Commission fee
     #[serde(rename = "exchange", skip_serializing_if = "Option::is_none")]
     pub exchange: Option<String>,
 }

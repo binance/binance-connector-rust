@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DustlogResponse {
+    /// Total counts of exchange
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<i64>,
     #[serde(rename = "userAssetDribblets", skip_serializing_if = "Option::is_none")]

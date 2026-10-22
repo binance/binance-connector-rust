@@ -25,6 +25,7 @@ pub struct DailyAccountSnapshotResponseSnapshotVosInnerDataPositionInner {
     pub position_amt: Option<String>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    /// Only show the value at the time of opening the position
     #[serde(rename = "unRealizedProfit", skip_serializing_if = "Option::is_none")]
     pub un_realized_profit: Option<String>,
 }

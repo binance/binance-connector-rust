@@ -17,42 +17,58 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct WithdrawHistoryV1ResponseInner {
+    /// Withdrawal id in Binance
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+    /// Travel rule record id
     #[serde(rename = "trId", skip_serializing_if = "Option::is_none")]
     pub tr_id: Option<i64>,
+    /// withdrawal amount
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// only available for sAPI requests
     #[serde(rename = "transactionFee", skip_serializing_if = "Option::is_none")]
     pub transaction_fee: Option<String>,
     #[serde(rename = "coin", skip_serializing_if = "Option::is_none")]
     pub coin: Option<String>,
+    /// Capital withdrawal status, only available for sAPI requests
     #[serde(rename = "withdrawalStatus", skip_serializing_if = "Option::is_none")]
     pub withdrawal_status: Option<i64>,
+    /// Travel rule status.
     #[serde(rename = "travelRuleStatus", skip_serializing_if = "Option::is_none")]
     pub travel_rule_status: Option<i64>,
     #[serde(rename = "address", skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
+    /// withdrawal transaction id
     #[serde(rename = "txId", skip_serializing_if = "Option::is_none")]
     pub tx_id: Option<String>,
+    /// UTC time
     #[serde(rename = "applyTime", skip_serializing_if = "Option::is_none")]
     pub apply_time: Option<String>,
     #[serde(rename = "network", skip_serializing_if = "Option::is_none")]
     pub network: Option<String>,
+    /// 1 for internal transfer, 0 for external transfer, only available for sAPI requests
     #[serde(rename = "transferType", skip_serializing_if = "Option::is_none")]
     pub transfer_type: Option<i64>,
+    /// will not be returned if there's no withdrawOrderId for this withdraw, only available for sAPI requests
     #[serde(rename = "withdrawOrderId", skip_serializing_if = "Option::is_none")]
     pub withdraw_order_id: Option<String>,
+    /// reason for withdrawal failure, only available for sAPI requests
     #[serde(rename = "info", skip_serializing_if = "Option::is_none")]
     pub info: Option<String>,
+    /// confirm times for withdraw, only available for sAPI requests
     #[serde(rename = "confirmNo", skip_serializing_if = "Option::is_none")]
     pub confirm_no: Option<i64>,
+    /// 1: Funding Wallet 0:Spot Wallet, only available for sAPI requests
     #[serde(rename = "walletType", skip_serializing_if = "Option::is_none")]
     pub wallet_type: Option<i64>,
+    /// only available for sAPI requests
     #[serde(rename = "txKey", skip_serializing_if = "Option::is_none")]
     pub tx_key: Option<String>,
+    /// The answers of the questionnaire
     #[serde(rename = "questionnaire", skip_serializing_if = "Option::is_none")]
     pub questionnaire: Option<String>,
+    /// complete UTC time when user's asset is deduct from withdrawing, only if status =  6(success)
     #[serde(rename = "completeTime", skip_serializing_if = "Option::is_none")]
     pub complete_time: Option<String>,
 }

@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AccountApiTradingStatusResponseData {
+    /// API trading function is locked or not
     #[serde(rename = "isLocked", skip_serializing_if = "Option::is_none")]
     pub is_locked: Option<bool>,
+    /// If API trading function is locked, this is the planned recover time
     #[serde(rename = "plannedRecoverTime", skip_serializing_if = "Option::is_none")]
     pub planned_recover_time: Option<i64>,
     #[serde(rename = "triggerCondition", skip_serializing_if = "Option::is_none")]

@@ -23,22 +23,28 @@ pub struct GetApiKeyPermissionResponse {
     pub create_time: Option<i64>,
     #[serde(rename = "enableReading", skip_serializing_if = "Option::is_none")]
     pub enable_reading: Option<bool>,
+    /// This option allows you to withdraw via API. You must apply the IP Access Restriction filter in order to enable withdrawals
     #[serde(rename = "enableWithdrawals", skip_serializing_if = "Option::is_none")]
     pub enable_withdrawals: Option<bool>,
+    /// This option authorizes this key to transfer funds between your master account and your sub account instantly
     #[serde(
         rename = "enableInternalTransfer",
         skip_serializing_if = "Option::is_none"
     )]
     pub enable_internal_transfer: Option<bool>,
+    /// This option can be adjusted after the Cross Margin account transfer is completed
     #[serde(rename = "enableMargin", skip_serializing_if = "Option::is_none")]
     pub enable_margin: Option<bool>,
+    /// The Futures API cannot be used if the API key was created before the Futures account was opened, or if you have enabled portfolio margin.
     #[serde(rename = "enableFutures", skip_serializing_if = "Option::is_none")]
     pub enable_futures: Option<bool>,
+    /// Authorizes this key to be used for a dedicated universal transfer API to transfer multiple supported currencies. Each business's own transfer API rights are not affected by this authorization
     #[serde(
         rename = "permitsUniversalTransfer",
         skip_serializing_if = "Option::is_none"
     )]
     pub permits_universal_transfer: Option<bool>,
+    /// Authorizes this key to Vanilla options trading
     #[serde(
         rename = "enableVanillaOptions",
         skip_serializing_if = "Option::is_none"
@@ -48,11 +54,13 @@ pub struct GetApiKeyPermissionResponse {
     pub enable_fix_api_trade: Option<bool>,
     #[serde(rename = "enableFixReadOnly", skip_serializing_if = "Option::is_none")]
     pub enable_fix_read_only: Option<bool>,
+    /// Spot and margin trading
     #[serde(
         rename = "enableSpotAndMarginTrading",
         skip_serializing_if = "Option::is_none"
     )]
     pub enable_spot_and_margin_trading: Option<bool>,
+    /// API Key created before your activate portfolio margin does not support portfolio margin API service
     #[serde(
         rename = "enablePortfolioMarginTrading",
         skip_serializing_if = "Option::is_none"

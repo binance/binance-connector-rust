@@ -17,10 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct WithdrawTravelRuleResponse {
+    /// The travel rule record Id
     #[serde(rename = "trId", skip_serializing_if = "Option::is_none")]
     pub tr_id: Option<i64>,
+    /// Whether the withdraw request is accepted
     #[serde(rename = "accepted", skip_serializing_if = "Option::is_none")]
     pub accepted: Option<bool>,
+    /// The detailed infomation of the withdrawal result.
     #[serde(rename = "info", skip_serializing_if = "Option::is_none")]
     pub info: Option<String>,
 }

@@ -19,10 +19,13 @@ use serde::{Deserialize, Serialize};
 pub struct FundingWalletResponseInner {
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// avalible balance
     #[serde(rename = "free", skip_serializing_if = "Option::is_none")]
     pub free: Option<String>,
+    /// locked asset
     #[serde(rename = "locked", skip_serializing_if = "Option::is_none")]
     pub locked: Option<String>,
+    /// freeze asset
     #[serde(rename = "freeze", skip_serializing_if = "Option::is_none")]
     pub freeze: Option<String>,
     #[serde(rename = "withdrawing", skip_serializing_if = "Option::is_none")]

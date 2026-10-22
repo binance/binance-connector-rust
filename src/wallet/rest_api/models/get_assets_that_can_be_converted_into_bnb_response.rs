@@ -23,6 +23,7 @@ pub struct GetAssetsThatCanBeConvertedIntoBnbResponse {
     pub total_transfer_btc: Option<String>,
     #[serde(rename = "totalTransferBNB", skip_serializing_if = "Option::is_none")]
     pub total_transfer_bnb: Option<String>,
+    /// Commission fee
     #[serde(rename = "dribbletPercentage", skip_serializing_if = "Option::is_none")]
     pub dribblet_percentage: Option<String>,
 }

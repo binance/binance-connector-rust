@@ -17,10 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct WithdrawHistoryResponseInner {
+    /// Withdrawal id in Binance
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+    /// withdrawal amount
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// transaction fee
     #[serde(rename = "transactionFee", skip_serializing_if = "Option::is_none")]
     pub transaction_fee: Option<String>,
     #[serde(rename = "coin", skip_serializing_if = "Option::is_none")]
@@ -29,24 +32,32 @@ pub struct WithdrawHistoryResponseInner {
     pub status: Option<i64>,
     #[serde(rename = "address", skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
+    /// withdrawal transaction id
     #[serde(rename = "txId", skip_serializing_if = "Option::is_none")]
     pub tx_id: Option<String>,
+    /// UTC time
     #[serde(rename = "applyTime", skip_serializing_if = "Option::is_none")]
     pub apply_time: Option<String>,
     #[serde(rename = "network", skip_serializing_if = "Option::is_none")]
     pub network: Option<String>,
+    /// 1 for internal transfer, 0 for external transfer
     #[serde(rename = "transferType", skip_serializing_if = "Option::is_none")]
     pub transfer_type: Option<i64>,
+    /// will not be returned if there's no withdrawOrderId for this withdraw.
     #[serde(rename = "withdrawOrderId", skip_serializing_if = "Option::is_none")]
     pub withdraw_order_id: Option<String>,
+    /// reason for withdrawal failure
     #[serde(rename = "info", skip_serializing_if = "Option::is_none")]
     pub info: Option<String>,
+    /// confirm times for withdraw
     #[serde(rename = "confirmNo", skip_serializing_if = "Option::is_none")]
     pub confirm_no: Option<i64>,
+    /// 1: Funding Wallet 0:Spot Wallet
     #[serde(rename = "walletType", skip_serializing_if = "Option::is_none")]
     pub wallet_type: Option<i64>,
     #[serde(rename = "txKey", skip_serializing_if = "Option::is_none")]
     pub tx_key: Option<String>,
+    /// complete UTC time when user's asset is deduct from withdrawing, only if status =  6(success)
     #[serde(rename = "completeTime", skip_serializing_if = "Option::is_none")]
     pub complete_time: Option<String>,
 }

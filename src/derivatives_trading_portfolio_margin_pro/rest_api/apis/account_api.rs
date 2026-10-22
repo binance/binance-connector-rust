@@ -272,72 +272,6 @@ impl std::str::FromStr for GetTransferableEarnAssetBalanceForPortfolioMarginTran
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum PortfolioMarginProBankruptcyLoanRepayFromEnum {
-    #[serde(rename = "SPOT")]
-    Spot,
-    #[serde(rename = "MARGIN")]
-    Margin,
-}
-
-impl PortfolioMarginProBankruptcyLoanRepayFromEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Spot => "SPOT",
-            Self::Margin => "MARGIN",
-        }
-    }
-}
-
-impl std::str::FromStr for PortfolioMarginProBankruptcyLoanRepayFromEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "SPOT" => Ok(Self::Spot),
-            "MARGIN" => Ok(Self::Margin),
-            other => Err(format!(
-                "invalid PortfolioMarginProBankruptcyLoanRepayFromEnum: {}",
-                other
-            )
-            .into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum RepayFuturesNegativeBalanceFromEnum {
-    #[serde(rename = "SPOT")]
-    Spot,
-    #[serde(rename = "MARGIN")]
-    Margin,
-}
-
-impl RepayFuturesNegativeBalanceFromEnum {
-    #[must_use]
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Spot => "SPOT",
-            Self::Margin => "MARGIN",
-        }
-    }
-}
-
-impl std::str::FromStr for RepayFuturesNegativeBalanceFromEnum {
-    type Err = Box<dyn std::error::Error + Send + Sync>;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "SPOT" => Ok(Self::Spot),
-            "MARGIN" => Ok(Self::Margin),
-            other => Err(format!("invalid RepayFuturesNegativeBalanceFromEnum: {}", other).into()),
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SwitchDeltaModeDeltaEnabledEnum {
     #[serde(rename = "true")]
     True,
@@ -820,13 +754,6 @@ impl GetTransferableEarnAssetBalanceForPortfolioMarginParams {
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct PortfolioMarginProBankruptcyLoanRepayParams {
     ///
-    /// The `from` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "from", default)]
-    pub from: Option<PortfolioMarginProBankruptcyLoanRepayFromEnum>,
-    ///
     /// The `recv_window` parameter.
     ///
     /// This field is **optional.
@@ -971,13 +898,6 @@ impl QueryPortfolioMarginProNegativeBalanceInterestHistoryParams {
 #[derive(Clone, Debug, Builder, Deserialize, Default)]
 #[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
 pub struct RepayFuturesNegativeBalanceParams {
-    ///
-    /// The `from` parameter.
-    ///
-    /// This field is **optional.
-    #[builder(setter(into), default)]
-    #[serde(rename = "from", default)]
-    pub from: Option<RepayFuturesNegativeBalanceFromEnum>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -1520,14 +1440,10 @@ impl AccountApi for AccountApiClient {
         params: PortfolioMarginProBankruptcyLoanRepayParams,
     ) -> anyhow::Result<RestApiResponse<models::PortfolioMarginProBankruptcyLoanRepayResponse>>
     {
-        let PortfolioMarginProBankruptcyLoanRepayParams { from, recv_window } = params;
+        let PortfolioMarginProBankruptcyLoanRepayParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
-
-        if let Some(rw) = from {
-            query_params.insert("from".to_string(), json!(rw));
-        }
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -1693,14 +1609,10 @@ impl AccountApi for AccountApiClient {
         &self,
         params: RepayFuturesNegativeBalanceParams,
     ) -> anyhow::Result<RestApiResponse<models::RepayFuturesNegativeBalanceResponse>> {
-        let RepayFuturesNegativeBalanceParams { from, recv_window } = params;
+        let RepayFuturesNegativeBalanceParams { recv_window } = params;
 
         let mut query_params = BTreeMap::new();
         let body_params = BTreeMap::new();
-
-        if let Some(rw) = from {
-            query_params.insert("from".to_string(), json!(rw));
-        }
 
         if let Some(rw) = recv_window {
             query_params.insert("recvWindow".to_string(), json!(rw));
@@ -3224,7 +3136,6 @@ mod tests {
             let client = MockAccountApiClient { force_error: false };
 
             let params = PortfolioMarginProBankruptcyLoanRepayParams::builder()
-                .from(PortfolioMarginProBankruptcyLoanRepayFromEnum::Spot)
                 .recv_window(5000)
                 .build()
                 .unwrap();
@@ -3482,7 +3393,6 @@ mod tests {
             let client = MockAccountApiClient { force_error: false };
 
             let params = RepayFuturesNegativeBalanceParams::builder()
-                .from(RepayFuturesNegativeBalanceFromEnum::Spot)
                 .recv_window(5000)
                 .build()
                 .unwrap();

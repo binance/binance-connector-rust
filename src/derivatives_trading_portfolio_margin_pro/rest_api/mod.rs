@@ -694,6 +694,7 @@ impl RestApi {
     ///
     /// Notes:
     /// - Please note that the API Key has enabled Spot & Margin Trading permissions to access this endpoint.
+    /// - USDT is taken from the Spot account and transferred to the Cross Margin account to repay the loan.
     ///
     /// # Arguments
     ///
@@ -899,6 +900,9 @@ impl RestApi {
     /// Weight(IP): 1500
     ///
     /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - The negative balance is repaid from the Cross Margin account.
     ///
     /// # Arguments
     ///

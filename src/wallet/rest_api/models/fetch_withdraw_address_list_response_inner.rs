@@ -23,14 +23,18 @@ pub struct FetchWithdrawAddressListResponseInner {
     pub address_tag: Option<String>,
     #[serde(rename = "coin", skip_serializing_if = "Option::is_none")]
     pub coin: Option<String>,
+    /// is a user-defined name
     #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(rename = "network", skip_serializing_if = "Option::is_none")]
     pub network: Option<String>,
+    /// if originType != 'others', this value is blank, otherwise the origin is manually filled in by the user
     #[serde(rename = "origin", skip_serializing_if = "Option::is_none")]
     pub origin: Option<String>,
+    /// Address source type, including but not limited to: type Exchange Address: Binance, `CoinBase`, HTX, Bitfinex, OKX, Bithumb, Kraken, Kucoin, Gemini, Bitget, Bybit, Upbit, Gate.io;  type Wallet Address: Binance Web3 Wallet, Trust Wallet, `MetaMask`, Rabby Wallet, Phantom, OKX Web 3 Wallet, Coinbase Wallet, Bitget Wallet; type Others: others(multilanguage support)
     #[serde(rename = "originType", skip_serializing_if = "Option::is_none")]
     pub origin_type: Option<String>,
+    /// Is it whitelisted
     #[serde(rename = "whiteStatus", skip_serializing_if = "Option::is_none")]
     pub white_status: Option<bool>,
 }

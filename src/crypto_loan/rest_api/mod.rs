@@ -29,18 +29,15 @@ pub use models::*;
 pub struct RestApi {
     configuration: ConfigurationRestApi,
     flexible_rate_api_client: FlexibleRateApiClient,
-    stable_rate_api_client: StableRateApiClient,
 }
 
 impl RestApi {
     pub fn new(configuration: ConfigurationRestApi) -> Self {
         let flexible_rate_api_client = FlexibleRateApiClient::new(configuration.clone());
-        let stable_rate_api_client = StableRateApiClient::new(configuration.clone());
 
         Self {
             configuration,
             flexible_rate_api_client,
-            stable_rate_api_client,
         }
     }
 
@@ -370,7 +367,7 @@ impl RestApi {
 
     /// Get Flexible Loan Borrow History (`USER_DATA`)
     ///
-    /// Get Flexible Loan Borrow History. It can be used to check history before 2024-02-27 08:00.
+    /// Get Flexible Loan Borrow History.
     ///
     /// Weight(IP): 400
     ///
@@ -575,7 +572,7 @@ impl RestApi {
 
     /// Get Flexible Loan LTV Adjustment History (`USER_DATA`)
     ///
-    /// Get Flexible Loan LTV Adjustment History. It can be used to check history before 2024-02-27 08:00.
+    /// Get Flexible Loan LTV Adjustment History.
     ///
     /// Weight(UID): 400
     ///
@@ -677,7 +674,7 @@ impl RestApi {
 
     /// Get Flexible Loan Repayment History (`USER_DATA`)
     ///
-    /// Get Flexible Loan Repayment History. It can be used to check history before 2024-02-27 08:00.
+    /// Get Flexible Loan Repayment History.
     ///
     /// Weight(IP): 400
     ///
@@ -724,211 +721,6 @@ impl RestApi {
     ) -> anyhow::Result<RestApiResponse<models::GetFlexibleLoanRepaymentHistoryResponse>> {
         self.flexible_rate_api_client
             .get_flexible_loan_repayment_history(params)
-            .await
-    }
-
-    /// Get Crypto Loans Income History (`USER_DATA`)
-    ///
-    /// Get Crypto Loans Income History
-    ///
-    /// Weight(UID): 6000
-    ///
-    /// Security Type: `USER_DATA`
-    ///
-    /// Notes:
-    /// - If `startTime` and `endTime` are both omitted, the most recent 7 days of data are returned.
-    /// - The maximum interval between `startTime` and `endTime` is 30 days.
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`GetCryptoLoansIncomeHistoryParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<Vec<models::GetCryptoLoansIncomeHistoryResponseInner>>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-crypto-loans-income-history).
-    ///
-    pub async fn get_crypto_loans_income_history(
-        &self,
-        params: GetCryptoLoansIncomeHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<Vec<models::GetCryptoLoansIncomeHistoryResponseInner>>>
-    {
-        self.stable_rate_api_client
-            .get_crypto_loans_income_history(params)
-            .await
-    }
-
-    /// Get Loan Borrow History (`USER_DATA`)
-    ///
-    /// Get Loan Borrow History
-    ///
-    /// Weight(IP): 400
-    ///
-    /// Security Type: `USER_DATA`
-    ///
-    /// Notes:
-    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
-    /// - The max interval between `startTime` and `endTime` is 180 days.
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`GetLoanBorrowHistoryParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::GetLoanBorrowHistoryResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-loan-borrow-history).
-    ///
-    pub async fn get_loan_borrow_history(
-        &self,
-        params: GetLoanBorrowHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetLoanBorrowHistoryResponse>> {
-        self.stable_rate_api_client
-            .get_loan_borrow_history(params)
-            .await
-    }
-
-    /// Get Loan LTV Adjustment History (`USER_DATA`)
-    ///
-    /// Get Loan LTV Adjustment History
-    ///
-    /// Weight(IP): 400
-    ///
-    /// Security Type: `USER_DATA`
-    ///
-    /// Notes:
-    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
-    /// - The max interval between `startTime` and `endTime` is 180 days.
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`GetLoanLtvAdjustmentHistoryParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::GetLoanLtvAdjustmentHistoryResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-loan-ltv-adjustment-history).
-    ///
-    pub async fn get_loan_ltv_adjustment_history(
-        &self,
-        params: GetLoanLtvAdjustmentHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetLoanLtvAdjustmentHistoryResponse>> {
-        self.stable_rate_api_client
-            .get_loan_ltv_adjustment_history(params)
-            .await
-    }
-
-    /// Get Loan Repayment History (`USER_DATA`)
-    ///
-    /// Get Loan Repayment History
-    ///
-    /// Weight(IP): 400
-    ///
-    /// Security Type: `USER_DATA`
-    ///
-    /// Notes:
-    /// - If `startTime` and `endTime` are not sent, the recent 90-day data is returned.
-    /// - The max interval between `startTime` and `endTime` is 180 days.
-    ///
-    /// # Arguments
-    ///
-    /// - `params`: [`GetLoanRepaymentHistoryParams`]
-    ///   The parameters for this operation.
-    ///
-    /// # Returns
-    ///
-    /// [`RestApiResponse<models::GetLoanRepaymentHistoryResponse>`] on success.
-    ///
-    /// # Errors
-    ///
-    /// This function will return an [`anyhow::Error`] if:
-    /// - the HTTP request fails
-    /// - any parameter is invalid
-    /// - the response cannot be parsed
-    /// - or one of the following occurs:
-    ///   - `RequiredError`
-    ///   - `ConnectorClientError`
-    ///   - `UnauthorizedError`
-    ///   - `ForbiddenError`
-    ///   - `TooManyRequestsError`
-    ///   - `RateLimitBanError`
-    ///   - `ServerError`
-    ///   - `NotFoundError`
-    ///   - `NetworkError`
-    ///   - `BadRequestError`
-    ///
-    ///
-    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/investment-and-services-crypto-loan/api/rest-api/stable-rate#get-loan-repayment-history).
-    ///
-    pub async fn get_loan_repayment_history(
-        &self,
-        params: GetLoanRepaymentHistoryParams,
-    ) -> anyhow::Result<RestApiResponse<models::GetLoanRepaymentHistoryResponse>> {
-        self.stable_rate_api_client
-            .get_loan_repayment_history(params)
             .await
     }
 }

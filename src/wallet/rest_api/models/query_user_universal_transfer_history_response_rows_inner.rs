@@ -23,6 +23,7 @@ pub struct QueryUserUniversalTransferHistoryResponseRowsInner {
     pub amount: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// status: CONFIRMED / FAILED / PENDING
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     #[serde(rename = "tranId", skip_serializing_if = "Option::is_none")]

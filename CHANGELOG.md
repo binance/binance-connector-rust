@@ -1,5 +1,41 @@
 # Changelog
 
+## 77.0.0 - 2026-10-22
+
+**Crypto Loan**
+
+### Changed (4)
+
+- Removed response schema `getLoanLtvAdjustmentHistoryResponse`
+- Removed response schema `getCryptoLoansIncomeHistoryResponse`
+- Removed response schema `getLoanBorrowHistoryResponse`
+- Removed response schema `getLoanRepaymentHistoryResponse`
+
+### Removed (4)
+
+- `get_crypto_loans_income_history()` (`GET /sapi/v1/loan/income`)
+- `get_loan_borrow_history()` (`GET /sapi/v1/loan/borrow/history`)
+- `get_loan_ltv_adjustment_history()` (`GET /sapi/v1/loan/ltv/adjustment/history`)
+- `get_loan_repayment_history()` (`GET /sapi/v1/loan/repay/history`)
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (1)
+
+- Deleted parameter `page`
+  - affected methods:
+    - `get_cm_income_history()` (`GET /papi/v1/cm/income`)
+    - `get_um_income_history()` (`GET /papi/v1/um/income`)
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Changed (1)
+
+- Deleted parameter `from`
+  - affected methods:
+    - `portfolio_margin_pro_bankruptcy_loan_repay()` (`POST /sapi/v1/portfolio/repay`)
+    - `repay_futures_negative_balance()` (`POST /sapi/v1/portfolio/repay-futures-negative-balance`)
+
 ## 76.1.0 - 2026-10-20
 
 **Margin Trading**

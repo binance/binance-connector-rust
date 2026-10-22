@@ -17,12 +17,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct FetchDepositAddressListWithNetworkResponseInner {
+    /// coin here means network address space, ETH for all EVM-like network
     #[serde(rename = "coin", skip_serializing_if = "Option::is_none")]
     pub coin: Option<String>,
     #[serde(rename = "address", skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
     #[serde(rename = "tag", skip_serializing_if = "Option::is_none")]
     pub tag: Option<String>,
+    /// 'isDefault' is 1 means the address is default, same as shown in the app.
     #[serde(rename = "isDefault", skip_serializing_if = "Option::is_none")]
     pub is_default: Option<i64>,
 }

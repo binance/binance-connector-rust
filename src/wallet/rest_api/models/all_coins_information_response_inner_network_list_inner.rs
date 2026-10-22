@@ -32,8 +32,10 @@ pub struct AllCoinsInformationResponseInnerNetworkListInner {
     pub deposit_enable: Option<bool>,
     #[serde(rename = "withdrawEnable", skip_serializing_if = "Option::is_none")]
     pub withdraw_enable: Option<bool>,
+    /// shown only when \"depositEnable\" is false.
     #[serde(rename = "depositDesc", skip_serializing_if = "Option::is_none")]
     pub deposit_desc: Option<String>,
+    /// shown only when \"withdrawEnable\" is false.
     #[serde(rename = "withdrawDesc", skip_serializing_if = "Option::is_none")]
     pub withdraw_desc: Option<String>,
     #[serde(rename = "specialTips", skip_serializing_if = "Option::is_none")]
@@ -57,6 +59,7 @@ pub struct AllCoinsInformationResponseInnerNetworkListInner {
     pub withdraw_min: Option<String>,
     #[serde(rename = "withdrawMax", skip_serializing_if = "Option::is_none")]
     pub withdraw_max: Option<String>,
+    /// Minimum internal transfer amount
     #[serde(
         rename = "withdrawInternalMin",
         skip_serializing_if = "Option::is_none"
@@ -64,12 +67,16 @@ pub struct AllCoinsInformationResponseInnerNetworkListInner {
     pub withdraw_internal_min: Option<String>,
     #[serde(rename = "depositDust", skip_serializing_if = "Option::is_none")]
     pub deposit_dust: Option<String>,
+    /// min number for balance confirmation
     #[serde(rename = "minConfirm", skip_serializing_if = "Option::is_none")]
     pub min_confirm: Option<i64>,
+    /// confirmation number for balance unlock
     #[serde(rename = "unLockConfirm", skip_serializing_if = "Option::is_none")]
     pub un_lock_confirm: Option<i64>,
+    /// Obsoleted, recomment to use withdrawTag
     #[serde(rename = "sameAddress", skip_serializing_if = "Option::is_none")]
     pub same_address: Option<bool>,
+    /// If the coin needs to provide memo to withdraw
     #[serde(rename = "withdrawTag", skip_serializing_if = "Option::is_none")]
     pub withdraw_tag: Option<bool>,
     #[serde(
@@ -83,6 +90,7 @@ pub struct AllCoinsInformationResponseInnerNetworkListInner {
     pub contract_address_url: Option<String>,
     #[serde(rename = "contractAddress", skip_serializing_if = "Option::is_none")]
     pub contract_address: Option<String>,
+    /// 1 1MBABYDOGE = 1000000 BABYDOGE
     #[serde(rename = "denomination", skip_serializing_if = "Option::is_none")]
     pub denomination: Option<i64>,
 }

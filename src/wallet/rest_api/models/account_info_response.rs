@@ -19,12 +19,16 @@ use serde::{Deserialize, Serialize};
 pub struct AccountInfoResponse {
     #[serde(rename = "vipLevel", skip_serializing_if = "Option::is_none")]
     pub vip_level: Option<i64>,
+    /// true or false for margin.
     #[serde(rename = "isMarginEnabled", skip_serializing_if = "Option::is_none")]
     pub is_margin_enabled: Option<bool>,
+    /// true or false for futures.
     #[serde(rename = "isFutureEnabled", skip_serializing_if = "Option::is_none")]
     pub is_future_enabled: Option<bool>,
+    /// true or false for options.
     #[serde(rename = "isOptionsEnabled", skip_serializing_if = "Option::is_none")]
     pub is_options_enabled: Option<bool>,
+    /// true or false for portfolio margin retail.
     #[serde(
         rename = "isPortfolioMarginRetailEnabled",
         skip_serializing_if = "Option::is_none"
