@@ -1,5 +1,12 @@
 # Changelog
 
+## 77.0.1 - 2026-10-26
+
+### Changed (2)
+
+- Close the socket of a WebSocket connection as soon as it stops reading. Previously, when the peer half-closed the TCP connection without sending a Close frame (e.g. a proxy reloading its routes), the connection was reconnected but the old socket was never closed and stayed in `CLOSE_WAIT`.
+- Retry an automatic reconnect or renewal whose handshake fails, with exponential backoff (1s doubling up to 60s, with jitter). Previously a single failed handshake left the connection disconnected for good. Retries stop once the connection is restored, `disconnect()` is called or the client is dropped. A failed renewal no longer blocks later renewals of the same connection.
+
 ## 77.0.0 - 2026-10-22
 
 **Crypto Loan**

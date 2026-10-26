@@ -34,7 +34,7 @@ use tokio_tungstenite::{
         protocol::{CloseFrame, WebSocketConfig, frame::coding::CloseCode},
     },
 };
-use tokio_util::time::DelayQueue;
+use tokio_util::{sync::CancellationToken, time::DelayQueue};
 use tracing::{debug, error, info, warn};
 
 use super::{
@@ -55,6 +55,9 @@ pub type WebSocketClient = WebSocketStream<MaybeTlsStream<TcpStream>>;
 const MAX_CONN_DURATION: Duration = Duration::from_secs(23 * 60 * 60);
 const SIGNED_STREAMS_PING_INTERVAL: Duration = Duration::from_secs(30);
 const SIGNED_STREAMS_RECV_WINDOW: u64 = 30000;
+const RECONNECT_RETRY_BASE_DELAY: Duration = Duration::from_secs(1);
+const RECONNECT_RETRY_MAX_DELAY: Duration = Duration::from_secs(60);
+const WRITER_SHUTDOWN_TIMEOUT: Duration = Duration::from_secs(5);
 
 pub struct Subscription {
     handle: JoinHandle<()>,
@@ -342,6 +345,7 @@ struct ReconnectEntry {
     connection_id: String,
     url: String,
     is_renewal: bool,
+    attempt: u32,
 }
 
 pub struct WebsocketCommon {
@@ -453,14 +457,18 @@ impl WebsocketCommon {
                     .find(|c| c.id == entry.connection_id)
                     .cloned()
                 {
-                    if let Err(err) = common
+                    if let Err(err) = Arc::clone(&common)
                         .init_connect(&entry.url, entry.is_renewal, Some(conn_arc.clone()))
                         .await
                     {
                         error!(
-                            "Reconnect failed for {} → {}: {:?}",
-                            entry.connection_id, entry.url, err
+                            "Reconnect failed for {} → {} (attempt {}): {:?}",
+                            entry.connection_id,
+                            entry.url,
+                            entry.attempt + 1,
+                            err
                         );
+                        common.schedule_reconnect_retry(&conn_arc, entry).await;
                     }
 
                     sleep(Duration::from_secs(1)).await;
@@ -469,6 +477,92 @@ impl WebsocketCommon {
                 }
             }
             debug!("Reconnect loop exiting");
+        });
+    }
+
+    /// Computes the backoff applied before retry number `attempt + 1` of a failed
+    /// automatic reconnect: exponential in `attempt`, capped at
+    /// [`RECONNECT_RETRY_MAX_DELAY`], with "equal jitter" (a random value in the
+    /// upper half of the capped delay) so pool connections do not retry in lockstep.
+    fn reconnect_retry_delay(attempt: u32) -> Duration {
+        let exp = RECONNECT_RETRY_BASE_DELAY
+            .saturating_mul(2u32.saturating_pow(attempt))
+            .min(RECONNECT_RETRY_MAX_DELAY);
+        let half = exp / 2;
+        half + half.mul_f64(rand::random::<f64>())
+    }
+
+    /// Re-enqueues a reconnect entry whose connection attempt failed, after a backoff.
+    ///
+    /// A retry is scheduled only while the connection still needs it:
+    /// - never once a close has been initiated (`disconnect()` or client drop);
+    /// - for a reconnect, only while `reconnection_pending` is still set (it is
+    ///   cleared once a writer is installed or the reconnect is abandoned);
+    /// - for a renewal, `renewal_pending` is reset (otherwise every later renewal
+    ///   would be skipped as "in progress") and the renewal is retried only while the
+    ///   previous socket is still alive; if it has died meanwhile, its reader has
+    ///   already scheduled an ordinary reconnect.
+    ///
+    /// The backoff runs in its own task so a failing connection does not block the
+    /// recovery of the other connections of the pool. That task holds only a weak
+    /// reference, so it never keeps a dropped client alive.
+    async fn schedule_reconnect_retry(
+        self: &Arc<Self>,
+        connection: &Arc<WebsocketConnection>,
+        entry: ReconnectEntry,
+    ) {
+        {
+            let mut conn_state = connection.state.lock().await;
+            if entry.is_renewal {
+                conn_state.renewal_pending = false;
+            }
+            let needed = if entry.is_renewal {
+                conn_state.ws_write_tx.is_some()
+            } else {
+                conn_state.reconnection_pending
+            };
+            if conn_state.close_initiated || !needed {
+                debug!(
+                    "Not retrying {} for {} (close_initiated={}, needed={})",
+                    if entry.is_renewal {
+                        "renewal"
+                    } else {
+                        "reconnect"
+                    },
+                    connection.id,
+                    conn_state.close_initiated,
+                    needed
+                );
+                return;
+            }
+        }
+
+        let delay = Self::reconnect_retry_delay(entry.attempt);
+        warn!(
+            "Retrying {} for {} in {:?} (attempt {})",
+            if entry.is_renewal {
+                "renewal"
+            } else {
+                "reconnect"
+            },
+            connection.id,
+            delay,
+            entry.attempt + 2
+        );
+
+        let common = Arc::downgrade(self);
+        spawn(async move {
+            sleep(delay).await;
+            let Some(common) = common.upgrade() else {
+                return;
+            };
+            let retry = ReconnectEntry {
+                attempt: entry.attempt.saturating_add(1),
+                ..entry
+            };
+            if let Err(e) = common.reconnect_tx.send(retry).await {
+                error!("Failed to enqueue reconnect retry: {:?}", e);
+            }
         });
     }
 
@@ -524,6 +618,7 @@ impl WebsocketCommon {
                                 connection_id: conn_id.clone(),
                                 url,
                                 is_renewal: true,
+                                attempt: 0,
                             }).await {
                                 error!(
                                     "Failed to enqueue renewal for {}: {:?}",
@@ -1108,6 +1203,7 @@ impl WebsocketCommon {
 
         let (write_half, mut read_half) = ws.split();
         let (tx, mut rx) = unbounded_channel::<Message>();
+        let reader_done = CancellationToken::new();
 
         let old_writer = {
             let mut conn_state = conn.state.lock().await;
@@ -1120,10 +1216,23 @@ impl WebsocketCommon {
             let common_clone = self.clone();
             let writer_url = url.to_string();
             let writer_tx = tx.clone();
+            let reader_done = reader_done.clone();
 
             spawn(async move {
                 let mut sink = write_half;
-                while let Some(msg) = rx.recv().await {
+                loop {
+                    let msg = select! {
+                        biased;
+                        msg = rx.recv() => match msg {
+                            Some(msg) => msg,
+                            None => break,
+                        },
+                        () = reader_done.cancelled() => {
+                            debug!("Reader for {} ended; shutting down writer", wconn.id);
+                            let _ = timeout(WRITER_SHUTDOWN_TIMEOUT, sink.close()).await;
+                            break;
+                        }
+                    };
                     // Nothing is sent after a Close frame. Exiting here also matters for
                     // freeing the client: the sender for `rx` lives in the connection
                     // state, which this task keeps alive, so `rx` would never close.
@@ -1156,6 +1265,7 @@ impl WebsocketCommon {
                                         connection_id: wconn.id.clone(),
                                         url: reconnect_url,
                                         is_renewal: false,
+                                        attempt: 0,
                                     })
                                     .await;
                             }
@@ -1199,6 +1309,7 @@ impl WebsocketCommon {
             let reader_tx = tx;
 
             spawn(async move {
+                let _reader_done = reader_done.drop_guard();
                 let mut stream_end_reason = None;
                 while let Some(item) = read_half.next().await {
                     match item {
@@ -1277,6 +1388,7 @@ impl WebsocketCommon {
                                             connection_id: reader_conn.id.clone(),
                                             url: reconnect_url,
                                             is_renewal: false,
+                                            attempt: 0,
                                         })
                                         .await;
                                 }
@@ -1332,6 +1444,7 @@ impl WebsocketCommon {
                                             connection_id: reader_conn.id.clone(),
                                             url: reconnect_url,
                                             is_renewal: false,
+                                            attempt: 0,
                                         })
                                         .await;
                                 }
@@ -1392,6 +1505,7 @@ impl WebsocketCommon {
                                 connection_id: reader_conn.id.clone(),
                                 url: reconnect_url,
                                 is_renewal: false,
+                                attempt: 0,
                             })
                             .await;
                     }
@@ -2271,6 +2385,7 @@ impl WebsocketHandler for WebsocketApi {
                                 connection_id: connection.id.clone(),
                                 url,
                                 is_renewal: true,
+                                attempt: 0,
                             })
                             .await
                         {
@@ -3498,11 +3613,12 @@ mod tests {
     use crate::TOKIO_SHARED_RT;
     use crate::common::utils::{SignatureGenerator, build_user_agent};
     use crate::common::websocket::{
-        PendingRequest, ReconnectDisposition, ReconnectEntry, SendWebsocketMessageResult,
-        WebsocketApi, WebsocketBase, WebsocketCommon, WebsocketConnection,
-        WebsocketConnectionState, WebsocketEvent, WebsocketEventEmitter, WebsocketHandler,
-        WebsocketMessageSendOptions, WebsocketMode, WebsocketSessionLogonReq, WebsocketStream,
-        WebsocketStreams, create_stream_handler,
+        PendingRequest, RECONNECT_RETRY_BASE_DELAY, RECONNECT_RETRY_MAX_DELAY,
+        ReconnectDisposition, ReconnectEntry, SendWebsocketMessageResult, WebsocketApi,
+        WebsocketBase, WebsocketCommon, WebsocketConnection, WebsocketConnectionState,
+        WebsocketEvent, WebsocketEventEmitter, WebsocketHandler, WebsocketMessageSendOptions,
+        WebsocketMode, WebsocketSessionLogonReq, WebsocketStream, WebsocketStreams,
+        create_stream_handler,
     };
     use crate::config::{
         ConfigurationWebsocketApi, ConfigurationWebsocketStreams, PrivateKey, WebsocketHandshakeFn,
@@ -3825,6 +3941,7 @@ mod tests {
                             connection_id: "c1".into(),
                             url: url.clone(),
                             is_renewal: false,
+                            attempt: 0,
                         })
                         .await
                         .unwrap();
@@ -3868,6 +3985,7 @@ mod tests {
                             connection_id: "other".into(),
                             url,
                             is_renewal: false,
+                            attempt: 0,
                         })
                         .await
                         .unwrap();
@@ -3906,6 +4024,7 @@ mod tests {
                             connection_id: "renew".into(),
                             url: url.clone(),
                             is_renewal: true,
+                            attempt: 0,
                         })
                         .await
                         .unwrap();
@@ -3942,6 +4061,7 @@ mod tests {
                             connection_id: "nonrenew".into(),
                             url: url.clone(),
                             is_renewal: false,
+                            attempt: 0,
                         })
                         .await
                         .unwrap();
@@ -5523,6 +5643,289 @@ mod tests {
 
                     assert!(c1.state.lock().await.ws_write_tx.is_none());
                     assert!(c2.state.lock().await.ws_write_tx.is_none());
+                });
+            }
+        }
+
+        mod connection_recovery {
+            use super::*;
+            use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+            fn counting_handshake(
+                calls: Arc<AtomicUsize>,
+                fail_on: Vec<usize>,
+            ) -> WebsocketHandshakeFn {
+                Arc::new(move |request, config, disable_nagle, connector| {
+                    let attempt = calls.fetch_add(1, Ordering::SeqCst) + 1;
+                    let fail = fail_on.contains(&attempt);
+                    Box::pin(async move {
+                        if fail {
+                            return Err(tungstenite::Error::Io(std::io::Error::new(
+                                std::io::ErrorKind::ConnectionRefused,
+                                "injected handshake failure",
+                            )));
+                        }
+                        tokio_tungstenite::connect_async_tls_with_config(
+                            request,
+                            config,
+                            disable_nagle,
+                            connector,
+                        )
+                        .await
+                    })
+                })
+            }
+
+            async fn wait_until<F, Fut>(max: Duration, mut check: F) -> bool
+            where
+                F: FnMut() -> Fut,
+                Fut: std::future::Future<Output = bool>,
+            {
+                let deadline = tokio::time::Instant::now() + max;
+                while tokio::time::Instant::now() < deadline {
+                    if check().await {
+                        return true;
+                    }
+                    sleep(Duration::from_millis(20)).await;
+                }
+                check().await
+            }
+
+            #[test]
+            fn retry_delay_is_exponential_jittered_and_capped() {
+                for attempt in 0..40 {
+                    let exp = RECONNECT_RETRY_BASE_DELAY
+                        .saturating_mul(2u32.saturating_pow(attempt))
+                        .min(RECONNECT_RETRY_MAX_DELAY);
+                    for _ in 0..20 {
+                        let d = WebsocketCommon::reconnect_retry_delay(attempt);
+                        assert!(d >= exp / 2, "attempt {attempt}: {d:?} < {:?}", exp / 2);
+                        assert!(d <= exp, "attempt {attempt}: {d:?} > {exp:?}");
+                    }
+                }
+                assert!(
+                    WebsocketCommon::reconnect_retry_delay(u32::MAX) <= RECONNECT_RETRY_MAX_DELAY
+                );
+            }
+
+            #[test]
+            fn writer_releases_socket_after_peer_eof() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let (result_tx, result_rx) = oneshot::channel();
+                    let _server = AbortOnDrop(tokio::spawn(async move {
+                        let (tcp, _) = listener.accept().await.unwrap();
+                        let mut ws = accept_async(tcp).await.unwrap();
+                        // Half-close without a Close frame, keep reading.
+                        ws.get_mut().shutdown().await.unwrap();
+                        let released = timeout(Duration::from_secs(2), async {
+                            let mut buf = [0u8; 256];
+                            loop {
+                                match ws.get_mut().read(&mut buf).await {
+                                    Ok(0) | Err(_) => return true,
+                                    Ok(_) => {}
+                                }
+                            }
+                        })
+                        .await
+                        .unwrap_or(false);
+                        let _ = result_tx.send(released);
+                    }));
+
+                    let conn = WebsocketConnection::new("c1");
+                    let common = WebsocketCommon::new(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        60_000,
+                        None,
+                        None,
+                    );
+                    common
+                        .clone()
+                        .init_connect(&format!("ws://{addr}"), false, Some(conn.clone()))
+                        .await
+                        .unwrap();
+
+                    assert!(
+                        result_rx.await.unwrap(),
+                        "client kept the old socket open after peer EOF"
+                    );
+                    let st = conn.state.lock().await;
+                    assert!(
+                        st.reconnection_pending,
+                        "peer EOF should still schedule a reconnect"
+                    );
+                    assert!(st.ws_write_tx.is_none());
+                });
+            }
+
+            #[test]
+            fn failed_reconnect_handshake_is_retried_until_it_succeeds() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let _server = spawn_mock_ws_listener(listener);
+
+                    let calls = Arc::new(AtomicUsize::new(0));
+                    let conn = WebsocketConnection::new("c1");
+                    let common = WebsocketCommon::new_with_handshake(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        10,
+                        None,
+                        None,
+                        Some(counting_handshake(calls.clone(), vec![1, 2])),
+                    );
+                    conn.state.lock().await.reconnection_pending = true;
+                    common
+                        .reconnect_tx
+                        .send(ReconnectEntry {
+                            connection_id: "c1".into(),
+                            url: format!("ws://{addr}"),
+                            is_renewal: false,
+                            attempt: 0,
+                        })
+                        .await
+                        .unwrap();
+
+                    let reconnected = wait_until(Duration::from_secs(8), || {
+                        let conn = conn.clone();
+                        async move {
+                            let st = conn.state.lock().await;
+                            st.ws_write_tx.is_some() && !st.reconnection_pending
+                        }
+                    })
+                    .await;
+                    assert!(
+                        reconnected,
+                        "expected reconnect to succeed after retries; handshake calls: {}",
+                        calls.load(Ordering::SeqCst)
+                    );
+                    assert_eq!(calls.load(Ordering::SeqCst), 3);
+                });
+            }
+
+            #[test]
+            fn failed_reconnect_is_not_retried_after_close_initiated() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let calls = Arc::new(AtomicUsize::new(0));
+                    let conn = WebsocketConnection::new("c1");
+                    let common = WebsocketCommon::new_with_handshake(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        10,
+                        None,
+                        None,
+                        Some(counting_handshake(calls.clone(), (1..100).collect())),
+                    );
+                    conn.state.lock().await.reconnection_pending = true;
+                    common
+                        .reconnect_tx
+                        .send(ReconnectEntry {
+                            connection_id: "c1".into(),
+                            url: "ws://127.0.0.1:1".into(),
+                            is_renewal: false,
+                            attempt: 0,
+                        })
+                        .await
+                        .unwrap();
+
+                    assert!(
+                        wait_until(Duration::from_secs(2), || {
+                            let calls = calls.clone();
+                            async move { calls.load(Ordering::SeqCst) >= 1 }
+                        })
+                        .await
+                    );
+                    conn.state.lock().await.close_initiated = true;
+
+                    sleep(Duration::from_millis(2500)).await;
+                    assert_eq!(calls.load(Ordering::SeqCst), 1, "no retry after close");
+                });
+            }
+
+            #[test]
+            fn retry_is_skipped_when_reconnect_no_longer_pending() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let calls = Arc::new(AtomicUsize::new(0));
+                    let conn = WebsocketConnection::new("c1");
+                    let common = WebsocketCommon::new_with_handshake(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        10,
+                        None,
+                        None,
+                        Some(counting_handshake(calls.clone(), (1..100).collect())),
+                    );
+
+                    common
+                        .schedule_reconnect_retry(
+                            &conn,
+                            ReconnectEntry {
+                                connection_id: "c1".into(),
+                                url: "ws://127.0.0.1:1".into(),
+                                is_renewal: false,
+                                attempt: 0,
+                            },
+                        )
+                        .await;
+                    sleep(Duration::from_millis(1500)).await;
+                    assert_eq!(calls.load(Ordering::SeqCst), 0);
+                });
+            }
+
+            #[test]
+            fn failed_renewal_resets_renewal_pending_and_is_retried() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+                    let addr = listener.local_addr().unwrap();
+                    let _server = spawn_mock_ws_listener(listener);
+
+                    let calls = Arc::new(AtomicUsize::new(0));
+                    let conn = WebsocketConnection::new("c1");
+                    let common = WebsocketCommon::new_with_handshake(
+                        vec![conn.clone()],
+                        WebsocketMode::Single,
+                        10,
+                        None,
+                        None,
+                        Some(counting_handshake(calls.clone(), vec![1])),
+                    );
+
+                    let (old_tx, _old_rx) = unbounded_channel::<Message>();
+                    conn.state.lock().await.ws_write_tx = Some(old_tx.clone());
+
+                    common
+                        .reconnect_tx
+                        .send(ReconnectEntry {
+                            connection_id: "c1".into(),
+                            url: format!("ws://{addr}"),
+                            is_renewal: true,
+                            attempt: 0,
+                        })
+                        .await
+                        .unwrap();
+
+                    let renewed = wait_until(Duration::from_secs(5), || {
+                        let conn = conn.clone();
+                        let old_tx = old_tx.clone();
+                        async move {
+                            let st = conn.state.lock().await;
+                            !st.renewal_pending
+                                && st
+                                    .ws_write_tx
+                                    .as_ref()
+                                    .is_some_and(|tx| !tx.same_channel(&old_tx))
+                        }
+                    })
+                    .await;
+                    assert!(
+                        renewed,
+                        "expected renewal retry to install a new writer; handshake calls: {}",
+                        calls.load(Ordering::SeqCst)
+                    );
+                    assert_eq!(calls.load(Ordering::SeqCst), 2);
                 });
             }
         }
