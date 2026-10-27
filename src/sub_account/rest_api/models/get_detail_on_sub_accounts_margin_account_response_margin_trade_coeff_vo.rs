@@ -17,13 +17,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetDetailOnSubAccountsMarginAccountResponseMarginTradeCoeffVo {
+    /// Liquidation margin ratio
     #[serde(
         rename = "forceLiquidationBar",
         skip_serializing_if = "Option::is_none"
     )]
     pub force_liquidation_bar: Option<String>,
+    /// Margin call margin ratio
     #[serde(rename = "marginCallBar", skip_serializing_if = "Option::is_none")]
     pub margin_call_bar: Option<String>,
+    /// Initial margin ratio
     #[serde(rename = "normalBar", skip_serializing_if = "Option::is_none")]
     pub normal_bar: Option<String>,
 }

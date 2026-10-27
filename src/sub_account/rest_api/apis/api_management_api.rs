@@ -39,6 +39,10 @@ pub trait ApiManagementApi: Send + Sync {
         &self,
         params: CreateSubAccountApiKeyParams,
     ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyResponse>>;
+    async fn create_sub_account_api_key_v2(
+        &self,
+        params: CreateSubAccountApiKeyV2Params,
+    ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyV2Response>>;
     async fn delete_ip_list_for_a_sub_account_api_key(
         &self,
         params: DeleteIpListForASubAccountApiKeyParams,
@@ -190,6 +194,18 @@ pub struct CreateSubAccountApiKeyParams {
     #[builder(setter(into), default)]
     #[serde(rename = "canVanillaOptions", default)]
     pub can_vanilla_options: Option<bool>,
+    /// FIX API Trading permission. Only supported for API Keys using an Ed25519 public key. Setting it to `true` for any other key type returns `-9000` `Unsupported operation`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFixApiTrading", default)]
+    pub can_fix_api_trading: Option<bool>,
+    /// FIX API Reading permission. Only supported for API Keys using an Ed25519 public key. Setting it to `true` for any other key type returns `-9000` `Unsupported operation`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFixApiReading", default)]
+    pub can_fix_api_reading: Option<bool>,
     /// Required when status=2. IP address list, max 500 chars
     ///
     /// This field is **optional.
@@ -233,6 +249,121 @@ impl CreateSubAccountApiKeyParams {
         status: i64,
     ) -> CreateSubAccountApiKeyParamsBuilder {
         CreateSubAccountApiKeyParamsBuilder::default()
+            .email(email)
+            .api_name(api_name)
+            .status(status)
+    }
+}
+/// Request parameters for the [`create_sub_account_api_key_v2`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`create_sub_account_api_key_v2`](#method.create_sub_account_api_key_v2).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CreateSubAccountApiKeyV2Params {
+    /// Sub-account email
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "email")]
+    pub email: String,
+    /// API Key name
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "apiName")]
+    pub api_name: String,
+    /// IP restriction status. 1 = unrestricted, 2 = restricted to trusted IPs, 3 = third-party IP restriction
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "status")]
+    pub status: i64,
+    /// Spot & Margin trading permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canTrade", default)]
+    pub can_trade: Option<bool>,
+    /// Margin borrow/repay permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canMarginLoanRepay", default)]
+    pub can_margin_loan_repay: Option<bool>,
+    /// Futures trading permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFuturesTrade", default)]
+    pub can_futures_trade: Option<bool>,
+    /// Universal transfer permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canUniversalTransfer", default)]
+    pub can_universal_transfer: Option<bool>,
+    /// Vanilla options permission, default false
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canVanillaOptions", default)]
+    pub can_vanilla_options: Option<bool>,
+    /// FIX API Trading permission. Only supported for API Keys using an Ed25519 public key. Setting it to `true` for any other key type returns `-9000` `Unsupported operation`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFixApiTrading", default)]
+    pub can_fix_api_trading: Option<bool>,
+    /// FIX API Reading permission. Only supported for API Keys using an Ed25519 public key. Setting it to `true` for any other key type returns `-9000` `Unsupported operation`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFixApiReading", default)]
+    pub can_fix_api_reading: Option<bool>,
+    /// Required when status=2. IP address list, max 500 chars
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "ipAddress", default)]
+    pub ip_address: Option<String>,
+    /// Required when status=3. Third-party name
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "thirdPartyName", default)]
+    pub third_party_name: Option<String>,
+    /// RSA or Ed25519 public key (optional). Must be sent in the request body; it is rejected if passed in the URL query string
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "publicKey", default)]
+    pub public_key: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CreateSubAccountApiKeyV2Params {
+    /// Create a builder for [`create_sub_account_api_key_v2`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `email` — Sub-account email
+    /// * `api_name` — API Key name
+    /// * `status` — IP restriction status. 1 = unrestricted, 2 = restricted to trusted IPs, 3 = third-party IP restriction
+    ///
+    #[must_use]
+    pub fn builder(
+        email: String,
+        api_name: String,
+        status: i64,
+    ) -> CreateSubAccountApiKeyV2ParamsBuilder {
+        CreateSubAccountApiKeyV2ParamsBuilder::default()
             .email(email)
             .api_name(api_name)
             .status(status)
@@ -438,6 +569,18 @@ pub struct ModifySubAccountApiKeyPermissionParams {
     #[builder(setter(into), default)]
     #[serde(rename = "canVanillaOptions", default)]
     pub can_vanilla_options: Option<bool>,
+    /// FIX API Trading permission. If omitted, the existing value is unchanged. Only supported for API Keys using an Ed25519 public key. Setting it to `true` for any other key type returns `-9000` `Unsupported operation`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFixApiTrading", default)]
+    pub can_fix_api_trading: Option<bool>,
+    /// FIX API Reading permission. If omitted, the existing value is unchanged. Only supported for API Keys using an Ed25519 public key. Setting it to `true` for any other key type returns `-9000` `Unsupported operation`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "canFixApiReading", default)]
+    pub can_fix_api_reading: Option<bool>,
     ///
     /// The `recv_window` parameter.
     ///
@@ -578,6 +721,8 @@ impl ApiManagementApi for ApiManagementApiClient {
             can_futures_trade,
             can_universal_transfer,
             can_vanilla_options,
+            can_fix_api_trading,
+            can_fix_api_reading,
             ip_address,
             third_party_name,
             public_key,
@@ -613,6 +758,14 @@ impl ApiManagementApi for ApiManagementApiClient {
             query_params.insert("canVanillaOptions".to_string(), json!(rw));
         }
 
+        if let Some(rw) = can_fix_api_trading {
+            query_params.insert("canFixApiTrading".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_fix_api_reading {
+            query_params.insert("canFixApiReading".to_string(), json!(rw));
+        }
+
         if let Some(rw) = ip_address {
             query_params.insert("ipAddress".to_string(), json!(rw));
         }
@@ -632,6 +785,96 @@ impl ApiManagementApi for ApiManagementApiClient {
         send_request::<models::CreateSubAccountApiKeyResponse>(
             &self.configuration,
             "/sapi/v1/sub-account/subAccountApi",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn create_sub_account_api_key_v2(
+        &self,
+        params: CreateSubAccountApiKeyV2Params,
+    ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyV2Response>> {
+        let CreateSubAccountApiKeyV2Params {
+            email,
+            api_name,
+            status,
+            can_trade,
+            can_margin_loan_repay,
+            can_futures_trade,
+            can_universal_transfer,
+            can_vanilla_options,
+            can_fix_api_trading,
+            can_fix_api_reading,
+            ip_address,
+            third_party_name,
+            public_key,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("email".to_string(), json!(email));
+
+        query_params.insert("apiName".to_string(), json!(api_name));
+
+        query_params.insert("status".to_string(), json!(status));
+
+        if let Some(rw) = can_trade {
+            query_params.insert("canTrade".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_margin_loan_repay {
+            query_params.insert("canMarginLoanRepay".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_futures_trade {
+            query_params.insert("canFuturesTrade".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_universal_transfer {
+            query_params.insert("canUniversalTransfer".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_vanilla_options {
+            query_params.insert("canVanillaOptions".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_fix_api_trading {
+            query_params.insert("canFixApiTrading".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_fix_api_reading {
+            query_params.insert("canFixApiReading".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = ip_address {
+            query_params.insert("ipAddress".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = third_party_name {
+            query_params.insert("thirdPartyName".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = public_key {
+            query_params.insert("publicKey".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::CreateSubAccountApiKeyV2Response>(
+            &self.configuration,
+            "/sapi/v2/sub-account/subAccountApi",
             reqwest::Method::POST,
             query_params,
             body_params,
@@ -771,6 +1014,8 @@ impl ApiManagementApi for ApiManagementApiClient {
             can_futures_trade,
             can_universal_transfer,
             can_vanilla_options,
+            can_fix_api_trading,
+            can_fix_api_reading,
             recv_window,
         } = params;
 
@@ -799,6 +1044,14 @@ impl ApiManagementApi for ApiManagementApiClient {
 
         if let Some(rw) = can_vanilla_options {
             query_params.insert("canVanillaOptions".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_fix_api_trading {
+            query_params.insert("canFixApiTrading".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = can_fix_api_reading {
+            query_params.insert("canFixApiReading".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -944,10 +1197,37 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::CreateSubAccountApiKeyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::CreateSubAccountApiKeyResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn create_sub_account_api_key_v2(
+            &self,
+            _params: CreateSubAccountApiKeyV2Params,
+        ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyV2Response>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::CreateSubAccountApiKeyV2Response =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CreateSubAccountApiKeyV2Response");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -1056,7 +1336,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::ModifySubAccountApiKeyPermissionResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ModifySubAccountApiKeyPermissionResponse");
@@ -1083,7 +1363,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::QuerySubAccountApiKeyResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::QuerySubAccountApiKeyResponse");
@@ -1165,7 +1445,7 @@ mod tests {
 
             let params = CreateSubAccountApiKeyParams::builder("123@test.com".to_string(),"myKey".to_string(),2,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CreateSubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateSubAccountApiKeyResponse");
 
             let resp = client.create_sub_account_api_key(params).await.expect("Expected a response");
@@ -1180,9 +1460,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = CreateSubAccountApiKeyParams::builder("123@test.com".to_string(),"myKey".to_string(),2,).can_trade(true).can_margin_loan_repay(false).can_futures_trade(false).can_universal_transfer(false).can_vanilla_options(false).ip_address("69.210.67.14".to_string()).third_party_name("thirdParty".to_string()).public_key(String::new()).recv_window(5000).build().unwrap();
+            let params = CreateSubAccountApiKeyParams::builder("123@test.com".to_string(),"myKey".to_string(),2,).can_trade(true).can_margin_loan_repay(false).can_futures_trade(false).can_universal_transfer(false).can_vanilla_options(false).can_fix_api_trading(true).can_fix_api_reading(false).ip_address("69.210.67.14".to_string()).third_party_name("thirdParty".to_string()).public_key(String::new()).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CreateSubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateSubAccountApiKeyResponse");
 
             let resp = client.create_sub_account_api_key(params).await.expect("Expected a response");
@@ -1206,6 +1486,62 @@ mod tests {
             .unwrap();
 
             match client.create_sub_account_api_key(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn create_sub_account_api_key_v2_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = CreateSubAccountApiKeyV2Params::builder("123@test.com".to_string(),"my-fix-api".to_string(),2,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CreateSubAccountApiKeyV2Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateSubAccountApiKeyV2Response");
+
+            let resp = client.create_sub_account_api_key_v2(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn create_sub_account_api_key_v2_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: false };
+
+            let params = CreateSubAccountApiKeyV2Params::builder("123@test.com".to_string(),"my-fix-api".to_string(),2,).can_trade(true).can_margin_loan_repay(false).can_futures_trade(false).can_universal_transfer(false).can_vanilla_options(false).can_fix_api_trading(true).can_fix_api_reading(true).ip_address("1.2.3.4".to_string()).third_party_name("thirdParty".to_string()).public_key("-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAptEM59ao3nOD2baduIA830qZU4k4mqfvv7PwHVAfZhg=\n-----END PUBLIC KEY-----".to_string()).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CreateSubAccountApiKeyV2Response = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateSubAccountApiKeyV2Response");
+
+            let resp = client.create_sub_account_api_key_v2(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn create_sub_account_api_key_v2_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockApiManagementApiClient { force_error: true };
+
+            let params = CreateSubAccountApiKeyV2Params::builder(
+                "123@test.com".to_string(),
+                "my-fix-api".to_string(),
+                2,
+            )
+            .build()
+            .unwrap();
+
+            match client.create_sub_account_api_key_v2(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -1414,7 +1750,7 @@ mod tests {
 
             let params = ModifySubAccountApiKeyPermissionParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifySubAccountApiKeyPermissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifySubAccountApiKeyPermissionResponse");
 
             let resp = client.modify_sub_account_api_key_permission(params).await.expect("Expected a response");
@@ -1429,9 +1765,9 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = ModifySubAccountApiKeyPermissionParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),).can_trade(true).can_margin_loan_repay(false).can_futures_trade(true).can_universal_transfer(false).can_vanilla_options(false).recv_window(5000).build().unwrap();
+            let params = ModifySubAccountApiKeyPermissionParams::builder("123@test.com".to_string(),"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string(),).can_trade(true).can_margin_loan_repay(false).can_futures_trade(true).can_universal_transfer(false).can_vanilla_options(false).can_fix_api_trading(true).can_fix_api_reading(false).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":true,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"timestamp":1640000000000}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::ModifySubAccountApiKeyPermissionResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::ModifySubAccountApiKeyPermissionResponse");
 
             let resp = client.modify_sub_account_api_key_permission(params).await.expect("Expected a response");
@@ -1469,7 +1805,7 @@ mod tests {
 
             let params = QuerySubAccountApiKeyParams::builder("123@test.com".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountApiKeyResponse");
 
             let resp = client.query_sub_account_api_key(params).await.expect("Expected a response");
@@ -1486,7 +1822,7 @@ mod tests {
 
             let params = QuerySubAccountApiKeyParams::builder("123@test.com".to_string(),).sub_account_api_key("k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf".to_string()).page(1).size(30).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"total":1,"rows":[{"email":"123@test.com","apiName":"myKey","apikey":"k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"timestamp":1640000000000}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::QuerySubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QuerySubAccountApiKeyResponse");
 
             let resp = client.query_sub_account_api_key(params).await.expect("Expected a response");

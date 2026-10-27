@@ -19,8 +19,10 @@ use serde::{Deserialize, Serialize};
 pub struct GetFuturesPositionRiskOfSubAccountResponseInner {
     #[serde(rename = "entryPrice", skip_serializing_if = "Option::is_none")]
     pub entry_price: Option<String>,
+    /// current initial leverage
     #[serde(rename = "leverage", skip_serializing_if = "Option::is_none")]
     pub leverage: Option<String>,
+    /// notional value limit of current initial leverage
     #[serde(rename = "maxNotional", skip_serializing_if = "Option::is_none")]
     pub max_notional: Option<String>,
     #[serde(rename = "liquidationPrice", skip_serializing_if = "Option::is_none")]

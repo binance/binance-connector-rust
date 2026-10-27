@@ -1,5 +1,54 @@
 # Changelog
 
+## 77.1.0 - 2026-10-27
+
+**Sub Account**
+
+### Added (1)
+
+- `create_sub_account_api_key_v2()` (`POST /sapi/v2/sub-account/subAccountApi`)
+
+### Changed (9)
+
+- Added parameter `canFixApiReading`
+  - affected methods:
+    - `create_sub_account_api_key()` (`POST /sapi/v1/sub-account/subAccountApi`)
+    - `modify_sub_account_api_key_permission()` (`POST /sapi/v1/sub-account/subAccountApiPermission`)
+- Added parameter `canFixApiTrading`
+  - affected methods:
+    - `create_sub_account_api_key()` (`POST /sapi/v1/sub-account/subAccountApi`)
+    - `modify_sub_account_api_key_permission()` (`POST /sapi/v1/sub-account/subAccountApiPermission`)
+- Modified response for `query_sub_account_api_key()` (`GET /sapi/v1/sub-account/subAccountApi`):
+  - `rows`.items: property `canFixApiTrading` added
+  - `rows`.items: property `canFixApiReading` added
+  - `rows`.items: item property `canFixApiTrading` added
+  - `rows`.items: item property `canFixApiReading` added
+
+- Modified response for `create_sub_account_api_key()` (`POST /sapi/v1/sub-account/subAccountApi`):
+  - property `canFixApiReading` added
+  - property `canFixApiTrading` added
+
+- Modified response for `modify_sub_account_api_key_permission()` (`POST /sapi/v1/sub-account/subAccountApiPermission`):
+  - property `canFixApiReading` added
+  - property `canFixApiTrading` added
+
+- Added response field `canFixApiReading`
+  - affected events:
+    - `createSubAccountApiKeyResponse`
+    - `modifySubAccountApiKeyPermissionResponse`
+- Added response field `canFixApiTrading`
+  - affected events:
+    - `createSubAccountApiKeyResponse`
+    - `modifySubAccountApiKeyPermissionResponse`
+- Modified response field `rows`:
+  - items: property `canFixApiTrading` added
+  - items: property `canFixApiReading` added
+  - items: item property `canFixApiTrading` added
+  - items: item property `canFixApiReading` added
+  - affected events:
+    - `querySubAccountApiKeyResponse`
+- Added response schema `createSubAccountApiKeyV2Response`
+
 ## 77.0.2 - 2026-10-27
 
 ### Changed (4)

@@ -21,6 +21,7 @@ pub struct SubAccountTransferHistoryResponseInner {
     pub counter_party: Option<String>,
     #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
+    /// 1 for transfer in, 2 for transfer out
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<i64>,
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
@@ -31,6 +32,7 @@ pub struct SubAccountTransferHistoryResponseInner {
     pub from_account_type: Option<String>,
     #[serde(rename = "toAccountType", skip_serializing_if = "Option::is_none")]
     pub to_account_type: Option<String>,
+    /// status: PROCESS / SUCCESS / FAILURE
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     #[serde(rename = "tranId", skip_serializing_if = "Option::is_none")]

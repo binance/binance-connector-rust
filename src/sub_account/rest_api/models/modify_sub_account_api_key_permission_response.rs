@@ -34,6 +34,10 @@ pub struct ModifySubAccountApiKeyPermissionResponse {
     pub can_universal_transfer: Option<bool>,
     #[serde(rename = "canVanillaOptions", skip_serializing_if = "Option::is_none")]
     pub can_vanilla_options: Option<bool>,
+    #[serde(rename = "canFixApiTrading", skip_serializing_if = "Option::is_none")]
+    pub can_fix_api_trading: Option<bool>,
+    #[serde(rename = "canFixApiReading", skip_serializing_if = "Option::is_none")]
+    pub can_fix_api_reading: Option<bool>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
 }
@@ -49,6 +53,8 @@ impl ModifySubAccountApiKeyPermissionResponse {
             can_futures_trade: None,
             can_universal_transfer: None,
             can_vanilla_options: None,
+            can_fix_api_trading: None,
+            can_fix_api_reading: None,
             timestamp: None,
         }
     }

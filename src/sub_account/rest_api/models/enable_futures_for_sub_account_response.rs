@@ -19,6 +19,7 @@ use serde::{Deserialize, Serialize};
 pub struct EnableFuturesForSubAccountResponse {
     #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
+    /// true or false
     #[serde(rename = "isFuturesEnabled", skip_serializing_if = "Option::is_none")]
     pub is_futures_enabled: Option<bool>,
 }

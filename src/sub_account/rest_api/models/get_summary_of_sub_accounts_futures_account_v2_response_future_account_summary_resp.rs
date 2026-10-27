@@ -43,6 +43,7 @@ pub struct GetSummaryOfSubAccountsFuturesAccountV2ResponseFutureAccountSummaryRe
     pub total_unrealized_profit: Option<String>,
     #[serde(rename = "totalWalletBalance", skip_serializing_if = "Option::is_none")]
     pub total_wallet_balance: Option<String>,
+    /// The sum of BUSD and USDT
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
     #[serde(rename = "subAccountList", skip_serializing_if = "Option::is_none")]

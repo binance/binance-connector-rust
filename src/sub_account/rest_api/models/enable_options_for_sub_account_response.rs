@@ -19,6 +19,7 @@ use serde::{Deserialize, Serialize};
 pub struct EnableOptionsForSubAccountResponse {
     #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
+    /// true or false
     #[serde(rename = "isEOptionsEnabled", skip_serializing_if = "Option::is_none")]
     pub is_e_options_enabled: Option<bool>,
 }

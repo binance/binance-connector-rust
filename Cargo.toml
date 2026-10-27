@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "77.0.2"
+version = "77.1.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -4143,6 +4143,11 @@ required-features = [ "sub_account" ]
 [[example]]
 name = "sub_account_rest_api_api_management_api_add_ip_restriction_for_sub_account_api_key"
 path = "examples/sub_account/rest_api/api_management_api/add_ip_restriction_for_sub_account_api_key.rs"
+required-features = [ "sub_account" ]
+
+[[example]]
+name = "sub_account_rest_api_api_management_api_create_sub_account_api_key_v2"
+path = "examples/sub_account/rest_api/api_management_api/create_sub_account_api_key_v2.rs"
 required-features = [ "sub_account" ]
 
 [[example]]

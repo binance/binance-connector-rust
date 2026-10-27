@@ -609,6 +609,60 @@ impl RestApi {
             .await
     }
 
+    /// Create Sub-account API Key V2 (For Master Account) (`USER_DATA`)
+    ///
+    /// Create a new API Key for a sub-account.
+    ///
+    /// Weight(UID): 3000
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - `status=2` requires `ipAddress`
+    /// - `status=3` requires `thirdPartyName`
+    /// - Asset Sub Account is not supported
+    /// - The caller must pass the KYC IP restriction check
+    /// - `publicKey` is rejected if passed in the URL query string. The example sends it in the request body with `--data-urlencode`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CreateSubAccountApiKeyV2Params`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CreateSubAccountApiKeyV2Response>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/api-management#create-sub-account-api-key-v2).
+    ///
+    pub async fn create_sub_account_api_key_v2(
+        &self,
+        params: CreateSubAccountApiKeyV2Params,
+    ) -> anyhow::Result<RestApiResponse<models::CreateSubAccountApiKeyV2Response>> {
+        self.api_management_api_client
+            .create_sub_account_api_key_v2(params)
+            .await
+    }
+
     /// Delete IP List For a Sub-account API Key (For Master Account) (`USER_DATA`)
     ///
     /// Delete IP List For a Sub-account API Key

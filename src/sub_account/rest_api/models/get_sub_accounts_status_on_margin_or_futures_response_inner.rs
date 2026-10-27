@@ -17,18 +17,25 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetSubAccountsStatusOnMarginOrFuturesResponseInner {
+    /// user email
     #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
+    /// true or false
     #[serde(rename = "isSubUserEnabled", skip_serializing_if = "Option::is_none")]
     pub is_sub_user_enabled: Option<bool>,
+    /// true or false
     #[serde(rename = "isUserActive", skip_serializing_if = "Option::is_none")]
     pub is_user_active: Option<bool>,
+    /// sub account create time
     #[serde(rename = "insertTime", skip_serializing_if = "Option::is_none")]
     pub insert_time: Option<i64>,
+    /// true or false for margin
     #[serde(rename = "isMarginEnabled", skip_serializing_if = "Option::is_none")]
     pub is_margin_enabled: Option<bool>,
+    /// true or false for futures.
     #[serde(rename = "isFutureEnabled", skip_serializing_if = "Option::is_none")]
     pub is_future_enabled: Option<bool>,
+    /// user mobile number
     #[serde(rename = "mobile", skip_serializing_if = "Option::is_none")]
     pub mobile: Option<i64>,
 }

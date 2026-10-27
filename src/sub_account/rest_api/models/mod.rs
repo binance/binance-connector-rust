@@ -17,6 +17,8 @@ pub mod create_a_virtual_sub_account_response;
 pub use self::create_a_virtual_sub_account_response::CreateAVirtualSubAccountResponse;
 pub mod create_sub_account_api_key_response;
 pub use self::create_sub_account_api_key_response::CreateSubAccountApiKeyResponse;
+pub mod create_sub_account_api_key_v2_response;
+pub use self::create_sub_account_api_key_v2_response::CreateSubAccountApiKeyV2Response;
 pub mod delete_ip_list_for_a_sub_account_api_key_response;
 pub use self::delete_ip_list_for_a_sub_account_api_key_response::DeleteIpListForASubAccountApiKeyResponse;
 pub mod deposit_assets_into_the_managed_sub_account_response;
