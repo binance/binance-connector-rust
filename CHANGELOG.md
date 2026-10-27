@@ -1,5 +1,47 @@
 # Changelog
 
+## 77.0.2 - 2026-10-27
+
+### Changed (4)
+
+- Stop writing to a WebSocket connection's socket as soon as it is being reconnected. Previously, messages queued by a concurrent `send()` after the connection was lost could still be written to the abandoned socket, and a write blocked on a stalled socket was not interrupted.
+- Reconnect the connections of a pool independently. Previously, the members of a pool were recovered one at a time, so a slow or stalled handshake of one connection delayed the recovery of all the others.
+- Discard a delayed renewal retry once its connection has already been replaced by a newer socket. Previously, the retry could replace a freshly restored connection, interrupting it.
+- Reconnect a connection pool when all of its connections are lost at the same time. Previously, no member of the pool could reconnect until one of them was connected again.
+
+**Spot**
+
+### Changed (2)
+
+#### REST API
+
+- Modified parameter `symbolStatus`:
+  - enum added: `CANCEL_ONLY`
+  - affected methods:
+    - `depth()` (`GET /api/v3/depth`)
+    - `exchange_info()` (`GET /api/v3/exchangeInfo`)
+    - `execution_rules()` (`GET /api/v3/executionRules`)
+    - `reference_price_calculation()` (`GET /api/v3/referencePrice/calculation`)
+    - `ticker()` (`GET /api/v3/ticker`)
+    - `ticker24hr()` (`GET /api/v3/ticker/24hr`)
+    - `ticker_book_ticker()` (`GET /api/v3/ticker/bookTicker`)
+    - `ticker_price()` (`GET /api/v3/ticker/price`)
+    - `ticker_trading_day()` (`GET /api/v3/ticker/tradingDay`)
+#### WebSocket API
+
+- Modified parameter `symbolStatus`:
+  - enum added: `CANCEL_ONLY`
+  - affected methods:
+    - `depth()` (`depth` method)
+    - `exchange_info()` (`exchangeInfo` method)
+    - `execution_rules()` (`executionRules` method)
+    - `reference_price_calculation()` (`referencePrice.calculation` method)
+    - `ticker()` (`ticker` method)
+    - `ticker24hr()` (`ticker.24hr` method)
+    - `ticker_book()` (`ticker.book` method)
+    - `ticker_price()` (`ticker.price` method)
+    - `ticker_trading_day()` (`ticker.tradingDay` method)
+
 ## 77.0.1 - 2026-10-26
 
 ### Changed (2)

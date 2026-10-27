@@ -112,6 +112,8 @@ pub enum DepthSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl DepthSymbolStatusEnum {
@@ -121,6 +123,7 @@ impl DepthSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -133,6 +136,7 @@ impl std::str::FromStr for DepthSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid DepthSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -234,6 +238,8 @@ pub enum ReferencePriceCalculationSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl ReferencePriceCalculationSymbolStatusEnum {
@@ -243,6 +249,7 @@ impl ReferencePriceCalculationSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -255,6 +262,7 @@ impl std::str::FromStr for ReferencePriceCalculationSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!(
                 "invalid ReferencePriceCalculationSymbolStatusEnum: {}",
                 other
@@ -683,6 +691,8 @@ pub enum TickerSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerSymbolStatusEnum {
@@ -692,6 +702,7 @@ impl TickerSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -704,6 +715,7 @@ impl std::str::FromStr for TickerSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -749,6 +761,8 @@ pub enum Ticker24hrSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl Ticker24hrSymbolStatusEnum {
@@ -758,6 +772,7 @@ impl Ticker24hrSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -770,6 +785,7 @@ impl std::str::FromStr for Ticker24hrSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid Ticker24hrSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -784,6 +800,8 @@ pub enum TickerBookSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerBookSymbolStatusEnum {
@@ -793,6 +811,7 @@ impl TickerBookSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -805,6 +824,7 @@ impl std::str::FromStr for TickerBookSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerBookSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -819,6 +839,8 @@ pub enum TickerPriceSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerPriceSymbolStatusEnum {
@@ -828,6 +850,7 @@ impl TickerPriceSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -840,6 +863,7 @@ impl std::str::FromStr for TickerPriceSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerPriceSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -885,6 +909,8 @@ pub enum TickerTradingDaySymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerTradingDaySymbolStatusEnum {
@@ -894,6 +920,7 @@ impl TickerTradingDaySymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -906,6 +933,7 @@ impl std::str::FromStr for TickerTradingDaySymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerTradingDaySymbolStatusEnum: {}", other).into()),
         }
     }
@@ -1312,7 +1340,7 @@ pub struct TickerParams {
     #[builder(setter(into), default)]
     #[serde(rename = "windowSize", default)]
     pub window_size: Option<TickerWindowSizeEnum>,
-    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`
+    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1361,7 +1389,7 @@ pub struct Ticker24hrParams {
     #[builder(setter(into), default)]
     #[serde(rename = "type", default)]
     pub r#type: Option<Ticker24hrTypeEnum>,
-    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`
+    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1402,7 +1430,7 @@ pub struct TickerBookParams {
     #[builder(setter(into), default)]
     #[serde(rename = "symbols", default)]
     pub symbols: Option<Vec<String>>,
-    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`
+    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1443,7 +1471,7 @@ pub struct TickerPriceParams {
     #[builder(setter(into), default)]
     #[serde(rename = "symbols", default)]
     pub symbols: Option<Vec<String>>,
-    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`
+    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -1498,7 +1526,7 @@ pub struct TickerTradingDayParams {
     #[builder(setter(into), default)]
     #[serde(rename = "type", default)]
     pub r#type: Option<TickerTradingDayTypeEnum>,
-    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`
+    /// Filters for symbols that have this `tradingStatus`. For a single symbol, a status mismatch returns error `-1220 SYMBOL_DOES_NOT_MATCH_STATUS`. For multiple or all symbols, non-matching ones are simply excluded from the response. Valid values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

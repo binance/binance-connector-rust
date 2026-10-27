@@ -113,6 +113,8 @@ pub enum DepthSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl DepthSymbolStatusEnum {
@@ -122,6 +124,7 @@ impl DepthSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -134,6 +137,7 @@ impl std::str::FromStr for DepthSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid DepthSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -235,6 +239,8 @@ pub enum ReferencePriceCalculationSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl ReferencePriceCalculationSymbolStatusEnum {
@@ -244,6 +250,7 @@ impl ReferencePriceCalculationSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -256,6 +263,7 @@ impl std::str::FromStr for ReferencePriceCalculationSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!(
                 "invalid ReferencePriceCalculationSymbolStatusEnum: {}",
                 other
@@ -684,6 +692,8 @@ pub enum TickerSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerSymbolStatusEnum {
@@ -693,6 +703,7 @@ impl TickerSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -705,6 +716,7 @@ impl std::str::FromStr for TickerSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -750,6 +762,8 @@ pub enum Ticker24hrSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl Ticker24hrSymbolStatusEnum {
@@ -759,6 +773,7 @@ impl Ticker24hrSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -771,6 +786,7 @@ impl std::str::FromStr for Ticker24hrSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid Ticker24hrSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -785,6 +801,8 @@ pub enum TickerBookTickerSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerBookTickerSymbolStatusEnum {
@@ -794,6 +812,7 @@ impl TickerBookTickerSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -806,6 +825,7 @@ impl std::str::FromStr for TickerBookTickerSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerBookTickerSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -820,6 +840,8 @@ pub enum TickerPriceSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerPriceSymbolStatusEnum {
@@ -829,6 +851,7 @@ impl TickerPriceSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -841,6 +864,7 @@ impl std::str::FromStr for TickerPriceSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerPriceSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -886,6 +910,8 @@ pub enum TickerTradingDaySymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl TickerTradingDaySymbolStatusEnum {
@@ -895,6 +921,7 @@ impl TickerTradingDaySymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -907,6 +934,7 @@ impl std::str::FromStr for TickerTradingDaySymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid TickerTradingDaySymbolStatusEnum: {}", other).into()),
         }
     }
@@ -1347,7 +1375,7 @@ pub struct ReferencePriceCalculationParams {
     #[builder(setter(into))]
     #[serde(rename = "symbol")]
     pub symbol: String,
-    /// Supported values: `TRADING`, `HALT`, `BREAK`
+    /// Supported values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

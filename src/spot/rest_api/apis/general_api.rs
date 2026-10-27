@@ -194,6 +194,8 @@ pub enum ExchangeInfoSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl ExchangeInfoSymbolStatusEnum {
@@ -203,6 +205,7 @@ impl ExchangeInfoSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -215,6 +218,7 @@ impl std::str::FromStr for ExchangeInfoSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid ExchangeInfoSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -229,6 +233,8 @@ pub enum ExecutionRulesSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl ExecutionRulesSymbolStatusEnum {
@@ -238,6 +244,7 @@ impl ExecutionRulesSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -250,6 +257,7 @@ impl std::str::FromStr for ExecutionRulesSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid ExecutionRulesSymbolStatusEnum: {}", other).into()),
         }
     }

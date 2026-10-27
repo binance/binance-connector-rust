@@ -68,6 +68,8 @@ pub enum ExchangeInfoSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl ExchangeInfoSymbolStatusEnum {
@@ -77,6 +79,7 @@ impl ExchangeInfoSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -89,6 +92,7 @@ impl std::str::FromStr for ExchangeInfoSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid ExchangeInfoSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -103,6 +107,8 @@ pub enum ExecutionRulesSymbolStatusEnum {
     Halt,
     #[serde(rename = "BREAK")]
     Break,
+    #[serde(rename = "CANCEL_ONLY")]
+    CancelOnly,
 }
 
 impl ExecutionRulesSymbolStatusEnum {
@@ -112,6 +118,7 @@ impl ExecutionRulesSymbolStatusEnum {
             Self::Trading => "TRADING",
             Self::Halt => "HALT",
             Self::Break => "BREAK",
+            Self::CancelOnly => "CANCEL_ONLY",
         }
     }
 }
@@ -124,6 +131,7 @@ impl std::str::FromStr for ExecutionRulesSymbolStatusEnum {
             "TRADING" => Ok(Self::Trading),
             "HALT" => Ok(Self::Halt),
             "BREAK" => Ok(Self::Break),
+            "CANCEL_ONLY" => Ok(Self::CancelOnly),
             other => Err(format!("invalid ExecutionRulesSymbolStatusEnum: {}", other).into()),
         }
     }
@@ -166,7 +174,7 @@ pub struct ExchangeInfoParams {
     #[builder(setter(into), default)]
     #[serde(rename = "showPermissionSets", default)]
     pub show_permission_sets: Option<bool>,
-    /// Filters for symbols that have this `tradingStatus`. Valid values: `TRADING`, `HALT`, `BREAK`. Cannot be used in combination with `symbol` or `symbols`.
+    /// Filters for symbols that have this `tradingStatus`. Valid values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`. Cannot be used in combination with `symbol` or `symbols`.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
@@ -207,7 +215,7 @@ pub struct ExecutionRulesParams {
     #[builder(setter(into), default)]
     #[serde(rename = "symbols", default)]
     pub symbols: Option<Vec<String>>,
-    /// Query for all symbols with the specified status. Supported values: `TRADING`, `HALT`, `BREAK`
+    /// Query for all symbols with the specified status. Supported values: `TRADING`, `HALT`, `BREAK`, `CANCEL_ONLY`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]
