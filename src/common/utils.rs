@@ -45,6 +45,7 @@ use url::{Url, form_urlencoded::Serializer};
 
 use super::config::{
     ConfigurationRestApi, ConfigurationWebsocketApi, HttpAgent, PrivateKey, ProxyConfig,
+    TimestampProvider,
 };
 use super::errors::ConnectorError;
 use super::models::{
@@ -532,6 +533,13 @@ pub fn get_timestamp() -> u128 {
         .as_millis()
 }
 
+/// Returns the `timestamp` for a signed request: from `provider` when the configuration
+/// sets one, otherwise from the host clock ([`get_timestamp`]).
+#[must_use]
+pub fn get_timestamp_from(provider: Option<&TimestampProvider>) -> u128 {
+    provider.map_or_else(get_timestamp, |provider| u128::from(provider()))
+}
+
 /// Asynchronously pauses the current task for a specified number of milliseconds.
 ///
 /// # Arguments
@@ -996,7 +1004,7 @@ pub async fn send_request<T: DeserializeOwned + Send + 'static>(
         .to_string();
 
     if is_signed {
-        let timestamp = get_timestamp();
+        let timestamp = get_timestamp_from(configuration.timestamp_provider.as_ref());
         query_params.insert("timestamp".to_string(), json!(timestamp));
     }
 
@@ -1409,7 +1417,7 @@ pub fn build_websocket_api_message(
     }
 
     if options.is_signed {
-        let ts = get_timestamp();
+        let ts = get_timestamp_from(configuration.timestamp_provider.as_ref());
         let ts_i64 = i64::try_from(ts).expect("timestamp fits in i64");
         params.insert("timestamp".into(), Value::Number(ts_i64.into()));
 
@@ -1680,6 +1688,37 @@ mod tests {
 
     mod get_timestamp {
         use crate::common::utils::get_timestamp;
+        use crate::common::utils::get_timestamp_from;
+        use crate::config::TimestampProvider;
+        use std::sync::{
+            Arc,
+            atomic::{AtomicI64, Ordering},
+        };
+
+        #[test]
+        fn timestamp_from_uses_provider_when_set() {
+            let provider: TimestampProvider = Arc::new(|| 1_700_000_000_123);
+            assert_eq!(get_timestamp_from(Some(&provider)), 1_700_000_000_123);
+        }
+
+        #[test]
+        fn timestamp_from_defaults_to_host_clock() {
+            let before = get_timestamp();
+            let ts = get_timestamp_from(None);
+            let after = get_timestamp();
+            assert!((before..=after).contains(&ts));
+        }
+
+        #[test]
+        fn timestamp_provider_offset_can_change_at_runtime() {
+            let offset = Arc::new(AtomicI64::new(0));
+            let o = Arc::clone(&offset);
+            let provider: TimestampProvider =
+                Arc::new(move || u64::try_from(1_000_000_i64 + o.load(Ordering::Relaxed)).unwrap());
+            assert_eq!(get_timestamp_from(Some(&provider)), 1_000_000);
+            offset.store(-2_500, Ordering::Relaxed);
+            assert_eq!(get_timestamp_from(Some(&provider)), 997_500);
+        }
         use std::{
             thread::sleep,
             time::{Duration, SystemTime, UNIX_EPOCH},
@@ -3050,6 +3089,45 @@ mod tests {
         }
 
         #[test]
+        fn signed_request_uses_configured_timestamp_provider() -> Result<()> {
+            TOKIO_SHARED_RT.block_on(async {
+                let server = MockServer::start();
+                let mock = server.mock(|when, then| {
+                    when.method(GET)
+                        .path("/api/v3/account")
+                        .query_param("timestamp", "1700000000123")
+                        .query_param_exists("signature");
+                    then.status(200)
+                        .header("content-type", "application/json")
+                        .body(r#"{"message": "ok"}"#);
+                });
+
+                let configuration = ConfigurationRestApi::builder()
+                    .api_key("key")
+                    .api_secret("secret")
+                    .base_path(server.base_url())
+                    .compression(false)
+                    .timestamp_provider(std::sync::Arc::new(|| 1_700_000_000_123))
+                    .build()
+                    .expect("Failed to build configuration");
+
+                let result = send_request::<TestResponse>(
+                    &configuration,
+                    "/api/v3/account",
+                    Method::GET,
+                    BTreeMap::new(),
+                    BTreeMap::new(),
+                    None,
+                    true,
+                )
+                .await?;
+                assert_eq!(result.data().await.unwrap().message, "ok");
+                mock.assert();
+                Ok(())
+            })
+        }
+
+        #[test]
         fn basic_get_request() -> Result<()> {
             TOKIO_SHARED_RT.block_on(async {
                 let server = MockServer::start();
@@ -4052,6 +4130,30 @@ mod tests {
                 .api_secret("api-secret".to_string())
                 .build()
                 .unwrap()
+        }
+
+        #[test]
+        fn signed_message_uses_configured_timestamp_provider() {
+            let cfg = ConfigurationWebsocketApi::builder()
+                .api_key("api-key".to_string())
+                .api_secret("api-secret".to_string())
+                .timestamp_provider(std::sync::Arc::new(|| 1_700_000_000_123))
+                .build()
+                .unwrap();
+
+            let (_, req) = build_websocket_api_message(
+                &cfg,
+                "account.status",
+                BTreeMap::new(),
+                &WebsocketMessageSendOptions {
+                    is_signed: true,
+                    ..Default::default()
+                },
+                false,
+            );
+
+            assert_eq!(req["params"]["timestamp"], 1_700_000_000_123_i64);
+            assert!(req["params"]["signature"].is_string());
         }
 
         #[test]

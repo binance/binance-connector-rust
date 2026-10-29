@@ -1,5 +1,11 @@
 # Changelog
 
+## 77.2.0 - 2026-10-29
+
+### Added (1)
+
+- Added an optional `timestamp_provider` to `ConfigurationRestApi`, `ConfigurationWebsocketApi` and `ConfigurationWebsocketStreams`. When set, it supplies the `timestamp` of signed REST requests, signed WebSocket API requests and signed WebSocket streams connections in place of the host clock. This lets a caller whose host clock is skewed against Binance's apply a measured offset, which can be updated at runtime through a shared atomic. When it is not set, the host clock is used as before.
+
 ## 77.1.0 - 2026-10-27
 
 **Sub Account**

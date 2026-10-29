@@ -47,7 +47,7 @@ use super::{
     errors::{WebsocketConnectionFailureReason, WebsocketError},
     models::{StreamId, WebsocketApiResponse, WebsocketEvent, WebsocketMode},
     utils::{
-        SignatureGenerator, build_websocket_api_message, get_timestamp, normalize_stream_id,
+        SignatureGenerator, build_websocket_api_message, get_timestamp_from, normalize_stream_id,
         random_string, validate_time_unit,
     },
 };
@@ -2778,7 +2778,7 @@ impl WebsocketStreams {
             "random={}&recvWindow={}&timestamp={}",
             random_string(),
             SIGNED_STREAMS_RECV_WINDOW,
-            get_timestamp()
+            get_timestamp_from(self.configuration.timestamp_provider.as_ref())
         );
 
         let signature = match self.signature_gen.get_signature_from_str(&query) {
@@ -3853,6 +3853,7 @@ mod tests {
             agent: None,
             handshake: None,
             user_agent: build_user_agent("product"),
+            timestamp_provider: None,
         };
         let conn1 = WebsocketConnection::new("c1");
         let conn2 = WebsocketConnection::new("c2");
@@ -3884,6 +3885,7 @@ mod tests {
             agent: None,
             handshake: None,
             user_agent: build_user_agent("product"),
+            timestamp_provider: None,
         };
         WebsocketStreams::new(config, connections, url_paths)
     }
@@ -7938,6 +7940,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
 
                     let api = WebsocketApi::new(config, pool.clone());
@@ -7982,6 +7985,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.clone().connect().await;
@@ -8018,6 +8022,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.connect().await;
@@ -8049,6 +8054,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.connect().await;
@@ -8080,6 +8086,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let fut1 = tokio::spawn(api.clone().connect());
@@ -8116,6 +8123,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let api = WebsocketApi::new(cfg, vec![conn.clone()]);
                     let res = api.clone().connect().await;
@@ -8738,6 +8746,7 @@ mod tests {
                     agent: None,
                     handshake: None,
                     user_agent: build_user_agent("product"),
+                    timestamp_provider: None,
                 };
                 let conn = WebsocketConnection::new("test-conn");
                 let api = WebsocketApi::new(config, vec![conn.clone()]);
@@ -8911,6 +8920,7 @@ mod tests {
                     agent: None,
                     handshake: None,
                     user_agent: build_user_agent("product"),
+                    timestamp_provider: None,
                 };
                 let conn = WebsocketConnection::new("test");
                 let api = WebsocketApi::new(config, vec![conn.clone()]);
@@ -9227,6 +9237,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let conn1 = WebsocketConnection::new("c1");
                     let conn2 = WebsocketConnection::new("c2");
@@ -9260,6 +9271,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
 
                     let conn1 = WebsocketConnection::new("c1");
@@ -9292,6 +9304,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
 
                     let conns = vec![
@@ -9348,6 +9361,7 @@ mod tests {
                             agent: None,
                             handshake: None,
                             user_agent: build_user_agent("product"),
+                            timestamp_provider: None,
                         };
                         WebsocketStreams::new(config, vec![c1, c2], vec![])
                     };
@@ -9387,6 +9401,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
 
                     let ws = WebsocketStreams::new(
@@ -9428,6 +9443,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
 
                     let ws = WebsocketStreams::new(
@@ -10040,6 +10056,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
                     let url = ws.prepare_url(&["s1".into(), "s2".into()], None);
@@ -10063,6 +10080,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
                     let url = ws.prepare_url(&["a".into()], None);
@@ -10086,6 +10104,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
                     let url = ws.prepare_url(&["x".into(), "y".into(), "z".into()], None);
@@ -10112,6 +10131,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
                     let url = ws.prepare_url(["s1".into()].as_ref(), Some("path1"));
@@ -10135,6 +10155,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
                     let url = ws.prepare_url(["a".into()].as_ref(), Some("path1"));
@@ -10161,6 +10182,7 @@ mod tests {
                         agent: None,
                         handshake: None,
                         user_agent: build_user_agent("product"),
+                        timestamp_provider: None,
                     };
                     let ws = WebsocketStreams::new(config, conns, vec![]);
                     let u1 = ws.prepare_url(["s1".into()].as_ref(), Some("path1"));
@@ -11141,6 +11163,29 @@ mod tests {
             let mut mac = Hmac::<Sha256>::new_from_slice(API_SECRET.as_bytes()).unwrap();
             mac.update(payload.as_bytes());
             hex::encode(mac.finalize().into_bytes())
+        }
+
+        #[test]
+        fn prepare_url_uses_configured_timestamp_provider() {
+            TOKIO_SHARED_RT.block_on(async {
+                let mut cfg = signed_config("wss://api.binance.com/sapi/wss");
+                cfg.timestamp_provider = Some(Arc::new(|| 1_700_000_000_123));
+                let ws = WebsocketStreams::new(cfg, vec![WebsocketConnection::new("c1")], vec![]);
+                ws.signed_streams.store(true, Ordering::Relaxed);
+
+                let url = ws.prepare_url(&[], None);
+                let q: HashMap<_, _> = url::Url::parse(&url)
+                    .unwrap()
+                    .query_pairs()
+                    .into_owned()
+                    .collect();
+                assert_eq!(q["timestamp"], "1700000000123");
+                let payload = format!(
+                    "random={}&recvWindow=30000&timestamp=1700000000123",
+                    q["random"]
+                );
+                assert_eq!(q["signature"], hmac_hex(&payload));
+            });
         }
 
         #[test]

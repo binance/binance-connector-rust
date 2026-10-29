@@ -79,6 +79,43 @@ pub type WebsocketHandshakeFn = Arc<
         + Sync,
 >;
 
+/// A caller-supplied source for the `timestamp` (Unix time in milliseconds) attached
+/// to signed requests, used in place of the host clock (`SystemTime::now()`).
+///
+/// It is called once per signed REST request, signed WebSocket API request and signed
+/// WebSocket streams connection URL (including reconnects and renewals), so it should
+/// be cheap and non-blocking.
+///
+/// Typical use is compensating a host clock that is skewed against Binance's beyond
+/// `recvWindow` (error `-1021`): measure the offset against the server time endpoint
+/// and keep it in a shared atomic that the provider reads, so it can be updated at
+/// runtime without rebuilding the configuration:
+///
+/// ```
+/// use std::sync::{Arc, atomic::{AtomicI64, Ordering}};
+/// use std::time::{SystemTime, UNIX_EPOCH};
+/// use binance_sdk::config::{ConfigurationRestApi, TimestampProvider};
+///
+/// let offset_ms = Arc::new(AtomicI64::new(0));
+/// let offset = Arc::clone(&offset_ms);
+/// let provider: TimestampProvider = Arc::new(move || {
+///     let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as i64;
+///     (now + offset.load(Ordering::Relaxed)) as u64
+/// });
+///
+/// let config = ConfigurationRestApi::builder()
+///     .api_key("key")
+///     .api_secret("secret")
+///     .timestamp_provider(provider)
+///     .build()
+///     .unwrap();
+///
+/// // Later, after measuring `serverTime - local time`:
+/// offset_ms.store(-1_500, Ordering::Relaxed);
+/// # let _ = config;
+/// ```
+pub type TimestampProvider = Arc<dyn Fn() -> u64 + Send + Sync>;
+
 #[derive(Clone)]
 pub struct HttpAgent(pub Arc<dyn Fn(ClientBuilder) -> ClientBuilder + Send + Sync>);
 
@@ -174,6 +211,11 @@ pub struct ConfigurationRestApi {
     #[builder(setter(strip_option), default)]
     pub time_unit: Option<TimeUnit>,
 
+    /// Source of the `timestamp` of signed requests; defaults to the host clock.
+    /// See [`TimestampProvider`].
+    #[builder(setter(strip_option), default)]
+    pub timestamp_provider: Option<TimestampProvider>,
+
     #[builder(setter(skip))]
     pub(crate) client: Client,
 
@@ -210,6 +252,13 @@ impl fmt::Debug for ConfigurationRestApi {
                 &self.private_key_passphrase.as_ref().map(|_| "[REDACTED]"),
             )
             .field("time_unit", &self.time_unit)
+            .field(
+                "timestamp_provider",
+                &self
+                    .timestamp_provider
+                    .as_ref()
+                    .map(|_| "<custom timestamp fn>"),
+            )
             .field("client", &"<reqwest::Client>")
             .field("user_agent", &self.user_agent)
             .field("signature_gen", &self.signature_gen)
@@ -296,6 +345,11 @@ pub struct ConfigurationWebsocketApi {
     #[builder(default = "true")]
     pub auto_session_relogon: bool,
 
+    /// Source of the `timestamp` of signed requests; defaults to the host clock.
+    /// See [`TimestampProvider`].
+    #[builder(setter(strip_option), default)]
+    pub timestamp_provider: Option<TimestampProvider>,
+
     #[builder(setter(skip))]
     pub(crate) user_agent: String,
 
@@ -330,6 +384,13 @@ impl fmt::Debug for ConfigurationWebsocketApi {
             )
             .field("time_unit", &self.time_unit)
             .field("auto_session_relogon", &self.auto_session_relogon)
+            .field(
+                "timestamp_provider",
+                &self
+                    .timestamp_provider
+                    .as_ref()
+                    .map(|_| "<custom timestamp fn>"),
+            )
             .field("user_agent", &self.user_agent)
             .field("signature_gen", &self.signature_gen)
             .finish()
@@ -415,6 +476,11 @@ pub struct ConfigurationWebsocketStreams {
     #[builder(setter(strip_option), default)]
     pub time_unit: Option<TimeUnit>,
 
+    /// Source of the `timestamp` of signed requests; defaults to the host clock.
+    /// See [`TimestampProvider`].
+    #[builder(setter(strip_option), default)]
+    pub timestamp_provider: Option<TimestampProvider>,
+
     #[builder(setter(skip))]
     pub(crate) user_agent: String,
 }
@@ -431,6 +497,13 @@ impl fmt::Debug for ConfigurationWebsocketStreams {
                 &self.handshake.as_ref().map(|_| "<custom handshake fn>"),
             )
             .field("time_unit", &self.time_unit)
+            .field(
+                "timestamp_provider",
+                &self
+                    .timestamp_provider
+                    .as_ref()
+                    .map(|_| "<custom timestamp fn>"),
+            )
             .field("user_agent", &self.user_agent)
             .field("api_key", &self.api_key.as_ref().map(|_| "[REDACTED]"))
             .field(
