@@ -17,11 +17,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetBnsolRateHistoryResponseRowsInner {
+    /// BNSOL APR
     #[serde(
         rename = "annualPercentageRate",
         skip_serializing_if = "Option::is_none"
     )]
     pub annual_percentage_rate: Option<String>,
+    /// SOL amount per 1 BNSOL
     #[serde(rename = "exchangeRate", skip_serializing_if = "Option::is_none")]
     pub exchange_rate: Option<String>,
     #[serde(rename = "boostRewards", skip_serializing_if = "Option::is_none")]

@@ -17,18 +17,24 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetOnChainYieldsLockedProductListResponseRowsInnerDetail {
+    /// Lock up asset
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Earn Asset
     #[serde(rename = "rewardAsset", skip_serializing_if = "Option::is_none")]
     pub reward_asset: Option<String>,
+    /// Lock period(days)
     #[serde(rename = "duration", skip_serializing_if = "Option::is_none")]
     pub duration: Option<i64>,
+    /// Project supports renewal (auto-subscribe when maturity)
     #[serde(rename = "renewable", skip_serializing_if = "Option::is_none")]
     pub renewable: Option<bool>,
     #[serde(rename = "isSoldOut", skip_serializing_if = "Option::is_none")]
     pub is_sold_out: Option<bool>,
+    /// 0.039 stands for 3.9%
     #[serde(rename = "apr", skip_serializing_if = "Option::is_none")]
     pub apr: Option<String>,
+    /// PREHEATING,PURCHASING
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
     #[serde(
@@ -36,6 +42,7 @@ pub struct GetOnChainYieldsLockedProductListResponseRowsInnerDetail {
         skip_serializing_if = "Option::is_none"
     )]
     pub subscription_start_time: Option<i64>,
+    /// Whether redemption to simple earn flexible is supported.
     #[serde(rename = "canRedeemToFlex", skip_serializing_if = "Option::is_none")]
     pub can_redeem_to_flex: Option<bool>,
 }

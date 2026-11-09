@@ -371,6 +371,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -398,6 +399,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -428,6 +430,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -455,6 +458,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }

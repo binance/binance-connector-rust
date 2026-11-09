@@ -1,5 +1,52 @@
 # Changelog
 
+## 78.0.0 - 2026-11-09
+
+### Added (4)
+
+- Added `body` to every REST `ConnectorError` variant except `NetworkError`, holding the full parsed JSON body of the error response (`None` when the body is not JSON, and for client-side errors such as decode failures).
+- Added `ConnectorError::body()` (the whole error body) and `ConnectorError::data()` (its `data` object).
+- Added `ConnectorError::ConflictError` for HTTP 409 responses.
+- Added `data` to `WebsocketError::ResponseError`, holding the `error.data` object of WebSocket API error responses.
+
+### Changed (2)
+
+- Fixed the REST API error-handling docs (`docs/rest_api/error-handling.md`) to match the current `ConnectorError` variants.
+- The `Debug` output of REST errors and `WebsocketError::ResponseError` now includes the error body / `data`. `Display` output is unchanged.
+
+### Breaking
+
+- **HTTP 409 responses now return `ConnectorError::ConflictError` instead of `ConnectorError::ConnectorClientError`.**
+- `ConnectorError` and `WebsocketError` are now `#[non_exhaustive]`. A `match` on them needs a wildcard arm (`_ => ...`).
+- All struct variants of `ConnectorError` (`ConnectorClientError`, `UnauthorizedError`, `ForbiddenError`, `TooManyRequestsError`, `RateLimitBanError`, `ServerError`, `NotFoundError`, `BadRequestError`, `ConflictError`) and `WebsocketError::ResponseError` are now `#[non_exhaustive]` and have a new field (`body` / `data`). Patterns must end with `..`. Future fields can then be added without another breaking change.
+
+Migration:
+
+```rust
+// Before
+match err {
+    ConnectorError::BadRequestError { msg, code } => { /* ... */ }
+    ConnectorError::ConnectorClientError { msg, code } => { /* also saw HTTP 409 */ }
+    // ...
+}
+
+// After
+match err {
+    ConnectorError::BadRequestError { msg, code, .. } => { /* ... */ }
+    ConnectorError::ConflictError { msg, code, .. } => { /* HTTP 409 */ }
+    ConnectorError::ConnectorClientError { msg, code, .. } => { /* ... */ }
+    _ => { /* ... */ }
+}
+
+// Error details, e.g. per-leg results of a failed cancel-replace
+if let Some(data) = err.data() {
+    let new_order_placed = data["newOrderResult"] == "SUCCESS";
+}
+
+// WebSocket API
+if let WebsocketError::ResponseError { code, data, .. } = &ws_err { /* ... */ }
+```
+
 ## 77.2.0 - 2026-10-29
 
 ### Added (1)

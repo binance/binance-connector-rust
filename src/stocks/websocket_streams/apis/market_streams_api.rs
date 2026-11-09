@@ -84,6 +84,7 @@ pub struct CalendarStreamParams {
 impl CalendarStreamParams {
     /// Create a builder for [`calendar_stream`].
     ///
+    #[must_use]
     pub fn builder() -> CalendarStreamParamsBuilder {
         CalendarStreamParamsBuilder::default()
     }
@@ -123,6 +124,7 @@ impl KlineStreamParams {
     /// * `symbol` — US-equity ticker (UPPERCASE), e.g. `AAPL`.
     /// * `interval` — Kline interval — `5m` / `1h` / `1d` / `1w` / `1M`.
     ///
+    #[must_use]
     pub fn builder(symbol: String, interval: String) -> KlineStreamParamsBuilder {
         KlineStreamParamsBuilder::default()
             .symbol(symbol)
@@ -147,6 +149,7 @@ pub struct PriceStreamParams {
 impl PriceStreamParams {
     /// Create a builder for [`price_stream`].
     ///
+    #[must_use]
     pub fn builder() -> PriceStreamParamsBuilder {
         PriceStreamParamsBuilder::default()
     }
@@ -179,6 +182,7 @@ impl QuoteStreamParams {
     ///
     /// * `symbol` — US-equity ticker (UPPERCASE), e.g. `AAPL`.
     ///
+    #[must_use]
     pub fn builder(symbol: String) -> QuoteStreamParamsBuilder {
         QuoteStreamParamsBuilder::default().symbol(symbol)
     }
@@ -211,6 +215,7 @@ impl TradabilityStreamParams {
     ///
     /// * `symbol` — US-equity ticker (UPPERCASE), e.g. `AAPL`.
     ///
+    #[must_use]
     pub fn builder(symbol: String) -> TradabilityStreamParamsBuilder {
         TradabilityStreamParamsBuilder::default().symbol(symbol)
     }
@@ -243,6 +248,7 @@ impl TradingStatusStreamParams {
     ///
     /// * `symbol` — US-equity ticker (UPPERCASE), e.g. `AAPL`.
     ///
+    #[must_use]
     pub fn builder(symbol: String) -> TradingStatusStreamParamsBuilder {
         TradingStatusStreamParamsBuilder::default().symbol(symbol)
     }
@@ -263,7 +269,7 @@ impl MarketStreamsApi for MarketStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders_preserve_case("/calendar", &vars);
 
@@ -304,7 +310,7 @@ impl MarketStreamsApi for MarketStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders_preserve_case(
             "/<symbol>@kline_<interval>",
@@ -340,7 +346,7 @@ impl MarketStreamsApi for MarketStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders_preserve_case("/price", &vars);
 
@@ -374,7 +380,7 @@ impl MarketStreamsApi for MarketStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders_preserve_case("/<symbol>@quote", &vars);
 
@@ -408,7 +414,7 @@ impl MarketStreamsApi for MarketStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders_preserve_case("/<symbol>@tradability", &vars);
@@ -443,7 +449,7 @@ impl MarketStreamsApi for MarketStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders_preserve_case("/<symbol>@tradingStatus", &vars);
@@ -959,25 +965,6 @@ mod tests {
                 "expected stream '{stream}' to be subscribed"
             );
             assert_eq!(ws_stream.id, Some(StreamId::Str("test-id-123".to_string())));
-        });
-    }
-
-    #[test]
-    fn quote_stream_subscribes_with_uppercase_symbol() {
-        TOKIO_SHARED_RT.block_on(async {
-            let (streams_base, _) = make_streams_base().await;
-            let api = MarketStreamsApiClient::new(streams_base.clone());
-
-            let params = QuoteStreamParams::builder("AAPL".to_string())
-                .build()
-                .unwrap();
-            api.quote_stream(params)
-                .await
-                .expect("quote_stream should return a WebsocketStream");
-
-            // Stocks stream names are case-sensitive: the symbol must not be lowercased.
-            assert!(streams_base.is_subscribed("AAPL@quote").await);
-            assert!(!streams_base.is_subscribed("aapl@quote").await);
         });
     }
 

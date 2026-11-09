@@ -19,24 +19,34 @@ use serde::{Deserialize, Serialize};
 pub struct GetFiatPaymentsHistoryResponseDataInner {
     #[serde(rename = "orderNo", skip_serializing_if = "Option::is_none")]
     pub order_no: Option<String>,
+    /// Fiat trade amount
     #[serde(rename = "sourceAmount", skip_serializing_if = "Option::is_none")]
     pub source_amount: Option<String>,
+    /// Fiat token
     #[serde(rename = "fiatCurrency", skip_serializing_if = "Option::is_none")]
     pub fiat_currency: Option<String>,
+    /// Crypto trade amount
     #[serde(rename = "obtainAmount", skip_serializing_if = "Option::is_none")]
     pub obtain_amount: Option<String>,
+    /// Crypto token
     #[serde(rename = "cryptoCurrency", skip_serializing_if = "Option::is_none")]
     pub crypto_currency: Option<String>,
+    /// Trade fee
     #[serde(rename = "totalFee", skip_serializing_if = "Option::is_none")]
     pub total_fee: Option<String>,
+    /// Price
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Processing, Completed, Failed, Refunded
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// Payment method
     #[serde(rename = "paymentMethod", skip_serializing_if = "Option::is_none")]
     pub payment_method: Option<String>,
+    /// Order create time
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
     pub create_time: Option<i64>,
+    /// Order update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

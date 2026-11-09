@@ -56,8 +56,10 @@ pub struct NewUmAlgoOrderResponse {
     pub price_protect: Option<bool>,
     #[serde(rename = "reduceOnly", skip_serializing_if = "Option::is_none")]
     pub reduce_only: Option<bool>,
+    /// `TRAILING_STOP_MARKET` order
     #[serde(rename = "activatePrice", skip_serializing_if = "Option::is_none")]
     pub activate_price: Option<String>,
+    /// `TRAILING_STOP_MARKET` order
     #[serde(rename = "callbackRate", skip_serializing_if = "Option::is_none")]
     pub callback_rate: Option<String>,
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]

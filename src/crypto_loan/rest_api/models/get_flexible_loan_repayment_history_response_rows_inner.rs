@@ -25,6 +25,7 @@ pub struct GetFlexibleLoanRepaymentHistoryResponseRowsInner {
     pub collateral_coin: Option<String>,
     #[serde(rename = "collateralReturn", skip_serializing_if = "Option::is_none")]
     pub collateral_return: Option<String>,
+    /// REPAID, REPAYING, FAILED
     #[serde(rename = "repayStatus", skip_serializing_if = "Option::is_none")]
     pub repay_status: Option<String>,
     #[serde(rename = "repayTime", skip_serializing_if = "Option::is_none")]

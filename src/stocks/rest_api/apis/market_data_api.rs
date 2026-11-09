@@ -73,6 +73,7 @@ pub struct ExchangeInfoParams {
 impl ExchangeInfoParams {
     /// Create a builder for [`exchange_info`].
     ///
+    #[must_use]
     pub fn builder() -> ExchangeInfoParamsBuilder {
         ExchangeInfoParamsBuilder::default()
     }
@@ -99,6 +100,7 @@ impl LatestQuoteParams {
     ///
     /// * `symbol` — US-equity ticker, e.g. `AAPL`, `TSLA`. Case-insensitive; uppercased server-side.
     ///
+    #[must_use]
     pub fn builder(symbol: String) -> LatestQuoteParamsBuilder {
         LatestQuoteParamsBuilder::default().symbol(symbol)
     }
@@ -225,6 +227,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -252,6 +255,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -278,6 +282,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }

@@ -27,8 +27,10 @@ pub struct GetFlexibleRedemptionRecordResponseRowsInner {
     pub project_id: Option<String>,
     #[serde(rename = "redeemId", skip_serializing_if = "Option::is_none")]
     pub redeem_id: Option<i64>,
+    /// SPOT, FUNDING
     #[serde(rename = "destAccount", skip_serializing_if = "Option::is_none")]
     pub dest_account: Option<String>,
+    /// CREATED,PAID,FAILED
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

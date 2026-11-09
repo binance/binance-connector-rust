@@ -21,6 +21,7 @@ pub struct CheckCollateralRepayRateResponse {
     pub loan_coin: Option<String>,
     #[serde(rename = "collateralCoin", skip_serializing_if = "Option::is_none")]
     pub collateral_coin: Option<String>,
+    /// rate of collateral coin/loan coin
     #[serde(rename = "rate", skip_serializing_if = "Option::is_none")]
     pub rate: Option<String>,
 }

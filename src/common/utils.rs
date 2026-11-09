@@ -777,6 +777,7 @@ where
 /// - `UnauthorizedError`
 /// - `ForbiddenError`
 /// - `NotFoundError`
+/// - `ConflictError`
 /// - `RateLimitBanError`
 /// - `TooManyRequestsError`
 /// - `ServerError`
@@ -804,6 +805,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
             .map_err(|e| ConnectorError::ConnectorClientError {
                 msg: e.to_string(),
                 code: None,
+                body: None,
             })?;
         match client.execute(req_clone).await {
             Ok(response) => {
@@ -827,6 +829,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                                 anyhow::Error::new(e)
                             ),
                             code: None,
+                            body: None,
                         });
                     }
                 };
@@ -843,6 +846,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                         .map_err(|e: anyhow::Error| ConnectorError::ConnectorClientError {
                             msg: e.to_string(),
                             code: None,
+                            body: None,
                         })?;
                     decompressed
                 } else {
@@ -851,6 +855,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                         .map_err(|e| ConnectorError::ConnectorClientError {
                             msg: e.to_string(),
                             code: None,
+                            body: None,
                         })?
                 };
 
@@ -859,8 +864,9 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                 if status.is_client_error() || status.is_server_error() {
                     let mut err_msg = content.clone();
                     let mut err_code: Option<i64> = None;
+                    let body = serde_json::from_str::<serde_json::Value>(&content).ok();
 
-                    if let Ok(v) = serde_json::from_str::<serde_json::Value>(&content) {
+                    if let Some(v) = &body {
                         if let Some(m) = v.get("msg").and_then(|m| m.as_str()) {
                             err_msg = m.to_string();
                         }
@@ -872,24 +878,35 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                             return Err(ConnectorError::BadRequestError {
                                 msg: err_msg,
                                 code: err_code,
+                                body,
                             });
                         }
                         401 => {
                             return Err(ConnectorError::UnauthorizedError {
                                 msg: err_msg,
                                 code: err_code,
+                                body,
                             });
                         }
                         403 => {
                             return Err(ConnectorError::ForbiddenError {
                                 msg: err_msg,
                                 code: err_code,
+                                body,
                             });
                         }
                         404 => {
                             return Err(ConnectorError::NotFoundError {
                                 msg: err_msg,
                                 code: err_code,
+                                body,
+                            });
+                        }
+                        409 => {
+                            return Err(ConnectorError::ConflictError {
+                                msg: err_msg,
+                                code: err_code,
+                                body,
                             });
                         }
                         418 => {
@@ -897,6 +914,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                                 msg: err_msg,
                                 code: err_code,
                                 retry_after: parse_retry_after_header(&headers_map),
+                                body,
                             });
                         }
                         429 => {
@@ -904,18 +922,21 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                                 msg: err_msg,
                                 code: err_code,
                                 retry_after: parse_retry_after_header(&headers_map),
+                                body,
                             });
                         }
                         s if (500..600).contains(&s) => {
                             return Err(ConnectorError::ServerError {
                                 msg: format!("Server error: {s}"),
                                 status_code: Some(s),
+                                body,
                             });
                         }
                         _ => {
                             return Err(ConnectorError::ConnectorClientError {
                                 msg: err_msg,
                                 code: err_code,
+                                body,
                             });
                         }
                     }
@@ -929,6 +950,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                                 ConnectorError::ConnectorClientError {
                                     msg: e.to_string(),
                                     code: None,
+                                    body: None,
                                 }
                             })?;
                             Ok(parsed)
@@ -956,6 +978,7 @@ pub async fn http_request<T: DeserializeOwned + Send + 'static>(
                 return Err(ConnectorError::ConnectorClientError {
                     msg: format!("HTTP request failed: {:#}", anyhow::Error::new(e)),
                     code: None,
+                    body: None,
                 });
             }
         }
@@ -2725,9 +2748,13 @@ mod tests {
                     Err(ConnectorError::BadRequestError { .. })
                 ));
 
-                if let Err(ConnectorError::BadRequestError { msg, code }) = result {
+                if let Err(ConnectorError::BadRequestError { msg, code, body }) = result {
                     assert_eq!(msg, "bad request");
                     assert_eq!(code, Some(-1121));
+                    assert_eq!(
+                        body,
+                        Some(serde_json::json!({"code":-1121,"msg":"bad request"}))
+                    );
                 }
 
                 mock.assert();
@@ -2759,9 +2786,13 @@ mod tests {
                     Err(ConnectorError::UnauthorizedError { .. })
                 ));
 
-                if let Err(ConnectorError::UnauthorizedError { msg, code }) = result {
+                if let Err(ConnectorError::UnauthorizedError { msg, code, body }) = result {
                     assert_eq!(msg, "unauthorized");
                     assert_eq!(code, Some(-2015));
+                    assert_eq!(
+                        body,
+                        Some(serde_json::json!({"code":-2015,"msg":"unauthorized"}))
+                    );
                 }
 
                 mock.assert();
@@ -2790,9 +2821,13 @@ mod tests {
 
                 assert!(matches!(result, Err(ConnectorError::ForbiddenError { .. })));
 
-                if let Err(ConnectorError::ForbiddenError { msg, code }) = result {
+                if let Err(ConnectorError::ForbiddenError { msg, code, body }) = result {
                     assert_eq!(msg, "forbidden");
                     assert_eq!(code, Some(-2010));
+                    assert_eq!(
+                        body,
+                        Some(serde_json::json!({"code":-2010,"msg":"forbidden"}))
+                    );
                 }
 
                 mock.assert();
@@ -2821,9 +2856,13 @@ mod tests {
 
                 assert!(matches!(result, Err(ConnectorError::NotFoundError { .. })));
 
-                if let Err(ConnectorError::NotFoundError { msg, code }) = result {
+                if let Err(ConnectorError::NotFoundError { msg, code, body }) = result {
                     assert_eq!(msg, "not found");
                     assert_eq!(code, Some(-1003));
+                    assert_eq!(
+                        body,
+                        Some(serde_json::json!({"code":-1003,"msg":"not found"}))
+                    );
                 }
 
                 mock.assert();
@@ -2864,6 +2903,7 @@ mod tests {
                     msg,
                     code,
                     retry_after,
+                    ..
                 }) = result
                 {
                     assert_eq!(msg, "rate limit exceeded");
@@ -2909,6 +2949,7 @@ mod tests {
                     msg,
                     code,
                     retry_after,
+                    ..
                 }) = result
                 {
                     assert_eq!(msg, "too many requests");
@@ -2957,8 +2998,124 @@ mod tests {
             let err = ConnectorError::BadRequestError {
                 msg: "bad".to_string(),
                 code: None,
+                body: None,
             };
             assert_eq!(err.retry_after(), None);
+        }
+
+        #[test]
+        fn http_request_cancel_replace_failure_exposes_data() {
+            TOKIO_SHARED_RT.block_on(async {
+                let server = MockServer::start();
+                let mock = server.mock(|when, then| {
+                    when.method(httpmock::Method::POST).path("/cr400");
+                    then.status(400)
+                        .header("Content-Type", "application/json")
+                        .body(
+                            r#"{"code":-2022,"msg":"Order cancel-replace failed.","data":{"cancelResult":"FAILURE","newOrderResult":"NOT_ATTEMPTED","cancelResponse":{"code":-2011,"msg":"Unknown order sent."},"newOrderResponse":null}}"#,
+                        );
+                });
+
+                let client = Client::new();
+                let req: Request = client
+                    .request(Method::POST, format!("{}{}", server.url(""), "/cr400"))
+                    .build()
+                    .unwrap();
+                let cfg = make_config(&server.url(""));
+
+                let Err(err) = http_request::<Dummy>(req, &cfg).await else {
+                    panic!("expected BadRequestError");
+                };
+
+                assert!(matches!(
+                    err,
+                    ConnectorError::BadRequestError {
+                        code: Some(-2022),
+                        ..
+                    }
+                ));
+                assert_eq!(
+                    err.data(),
+                    Some(&serde_json::json!({
+                        "cancelResult": "FAILURE",
+                        "newOrderResult": "NOT_ATTEMPTED",
+                        "cancelResponse": {"code": -2011, "msg": "Unknown order sent."},
+                        "newOrderResponse": null
+                    }))
+                );
+                assert_eq!(
+                    err.body().and_then(|b| b.get("code")),
+                    Some(&serde_json::json!(-2022))
+                );
+
+                mock.assert();
+            });
+        }
+
+        #[test]
+        fn http_request_conflict_maps_to_conflict_error_with_data() {
+            TOKIO_SHARED_RT.block_on(async {
+                let server = MockServer::start();
+                let mock = server.mock(|when, then| {
+                    when.method(httpmock::Method::POST).path("/cr409");
+                    then.status(409)
+                        .header("Content-Type", "application/json")
+                        .body(
+                            r#"{"code":-2021,"msg":"Order cancel-replace partially failed.","data":{"cancelResult":"SUCCESS","newOrderResult":"FAILURE","cancelResponse":{"symbol":"BTCUSDT","orderId":1},"newOrderResponse":{"code":-2010,"msg":"Account has insufficient balance for requested action."}}}"#,
+                        );
+                });
+
+                let client = Client::new();
+                let req: Request = client
+                    .request(Method::POST, format!("{}{}", server.url(""), "/cr409"))
+                    .build()
+                    .unwrap();
+                let cfg = make_config(&server.url(""));
+
+                let Err(err) = http_request::<Dummy>(req, &cfg).await else {
+                    panic!("expected ConflictError");
+                };
+
+                let ConnectorError::ConflictError { msg, code, .. } = &err else {
+                    panic!("expected ConflictError, got {err:?}");
+                };
+                assert_eq!(msg, "Order cancel-replace partially failed.");
+                assert_eq!(*code, Some(-2021));
+                let data = err.data().expect("data");
+                assert_eq!(data["cancelResult"], "SUCCESS");
+                assert_eq!(data["newOrderResult"], "FAILURE");
+                assert_eq!(data["newOrderResponse"]["code"], -2010);
+
+                mock.assert();
+            });
+        }
+
+        #[test]
+        fn http_request_error_without_json_body_has_no_body() {
+            TOKIO_SHARED_RT.block_on(async {
+                let server = MockServer::start();
+                let mock = server.mock(|when, then| {
+                    when.method(httpmock::Method::GET).path("/400-text");
+                    then.status(400).body("plain text error");
+                });
+
+                let client = Client::new();
+                let req: Request = client
+                    .request(Method::GET, format!("{}{}", server.url(""), "/400-text"))
+                    .build()
+                    .unwrap();
+                let cfg = make_config(&server.url(""));
+
+                let Err(err) = http_request::<Dummy>(req, &cfg).await else {
+                    panic!("expected BadRequestError");
+                };
+
+                assert!(matches!(err, ConnectorError::BadRequestError { .. }));
+                assert_eq!(err.body(), None);
+                assert_eq!(err.data(), None);
+
+                mock.assert();
+            });
         }
 
         #[test]
@@ -2986,9 +3143,14 @@ mod tests {
                 if let Err(ConnectorError::ServerError {
                     msg,
                     status_code: Some(500),
+                    body,
                 }) = result
                 {
                     assert_eq!(msg, "Server error: 500".to_string());
+                    assert_eq!(
+                        body,
+                        Some(serde_json::json!({"code":-1000,"msg":"internal server error"}))
+                    );
                 }
 
                 mock.assert();
@@ -3021,9 +3183,13 @@ mod tests {
                     Err(ConnectorError::ConnectorClientError { .. })
                 ));
 
-                if let Err(ConnectorError::ConnectorClientError { msg, code }) = result {
+                if let Err(ConnectorError::ConnectorClientError { msg, code, body }) = result {
                     assert_eq!(msg, "payment required");
                     assert_eq!(code, Some(-12345));
+                    assert_eq!(
+                        body,
+                        Some(serde_json::json!({"code":-12345,"msg":"payment required"}))
+                    );
                 }
 
                 mock.assert();
@@ -3059,8 +3225,9 @@ mod tests {
 
                 assert!(matches!(err, ConnectorError::ConnectorClientError { .. }));
 
-                if let ConnectorError::ConnectorClientError { msg: _, code } = err {
+                if let ConnectorError::ConnectorClientError { code, body, .. } = err {
                     assert_eq!(code, None);
+                    assert_eq!(body, None);
                 }
 
                 mock.assert();

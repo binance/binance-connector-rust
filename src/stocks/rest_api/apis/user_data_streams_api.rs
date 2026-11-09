@@ -66,6 +66,7 @@ pub struct CreateRenewListenKeyParams {
 impl CreateRenewListenKeyParams {
     /// Create a builder for [`create_renew_listen_key`].
     ///
+    #[must_use]
     pub fn builder() -> CreateRenewListenKeyParamsBuilder {
         CreateRenewListenKeyParamsBuilder::default()
     }
@@ -143,6 +144,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }

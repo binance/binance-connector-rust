@@ -17,16 +17,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetC2CTradeHistoryResponseDataInner {
+    /// Order Number
     #[serde(rename = "orderNumber", skip_serializing_if = "Option::is_none")]
     pub order_number: Option<String>,
+    /// Adv Number
     #[serde(rename = "advNo", skip_serializing_if = "Option::is_none")]
     pub adv_no: Option<String>,
+    /// \"BUY\" or \"SELL\"
     #[serde(rename = "tradeType", skip_serializing_if = "Option::is_none")]
     pub trade_type: Option<String>,
+    /// Crypto asset
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Fiat currency
     #[serde(rename = "fiat", skip_serializing_if = "Option::is_none")]
     pub fiat: Option<String>,
+    /// Fiat currency symbol
     #[serde(rename = "fiatSymbol", skip_serializing_if = "Option::is_none")]
     pub fiat_symbol: Option<String>,
     /// Quantity (in Crypto)
@@ -38,6 +44,7 @@ pub struct GetC2CTradeHistoryResponseDataInner {
     /// Unit Price (in Fiat)
     #[serde(rename = "unitPrice", skip_serializing_if = "Option::is_none")]
     pub unit_price: Option<String>,
+    /// PENDING, TRADING, `BUYER_PAYED`, DISTRIBUTING, COMPLETED, `IN_APPEAL`, CANCELLED, `CANCELLED_BY_SYSTEM`
     #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
     pub order_status: Option<String>,
     /// Order creation timestamp in milliseconds

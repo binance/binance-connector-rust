@@ -41,6 +41,7 @@ pub struct TradabilityStreamResponse {
 }
 
 impl TradabilityStreamResponse {
+    #[must_use]
     pub fn new() -> TradabilityStreamResponse {
         TradabilityStreamResponse {
             e: None,

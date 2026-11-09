@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetRwusdRateHistoryResponse {
     #[serde(rename = "rows", skip_serializing_if = "Option::is_none")]
-    pub rows: Option<Vec<models::GetBfusdRateHistoryResponseRowsInner>>,
+    pub rows: Option<Vec<models::GetRwusdRateHistoryResponseRowsInner>>,
     #[serde(rename = "total", skip_serializing_if = "Option::is_none")]
     pub total: Option<String>,
 }

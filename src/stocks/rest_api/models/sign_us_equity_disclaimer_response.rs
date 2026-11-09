@@ -23,6 +23,7 @@ pub struct SignUsEquityDisclaimerResponse {
 }
 
 impl SignUsEquityDisclaimerResponse {
+    #[must_use]
     pub fn new() -> SignUsEquityDisclaimerResponse {
         SignUsEquityDisclaimerResponse { success: None }
     }

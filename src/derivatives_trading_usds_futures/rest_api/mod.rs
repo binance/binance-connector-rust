@@ -160,6 +160,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -205,6 +206,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -250,6 +252,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -297,6 +300,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -344,6 +348,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -392,6 +397,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -440,6 +446,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -485,6 +492,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -532,6 +540,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -583,6 +592,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -634,6 +644,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -685,6 +696,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -736,6 +748,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -787,6 +800,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -837,6 +851,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -891,6 +906,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -936,6 +952,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -983,6 +1000,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1028,6 +1046,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1073,6 +1092,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1120,6 +1140,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1165,6 +1186,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1215,6 +1237,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1260,6 +1283,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1310,6 +1334,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1360,6 +1385,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1405,6 +1431,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1452,6 +1479,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1495,6 +1523,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1540,6 +1569,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1598,6 +1628,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1655,6 +1686,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1702,6 +1734,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1749,6 +1782,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1796,6 +1830,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1849,6 +1884,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1906,6 +1942,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1956,6 +1993,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1999,6 +2037,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2053,6 +2092,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2105,6 +2145,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2148,6 +2189,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2197,6 +2239,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2252,6 +2295,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2305,6 +2349,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2350,6 +2395,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2399,6 +2445,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2444,6 +2491,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2492,6 +2540,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2542,6 +2591,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2593,6 +2643,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2642,6 +2693,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2696,6 +2748,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2746,6 +2799,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2791,6 +2845,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2836,6 +2891,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2896,6 +2952,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -2958,6 +3015,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3012,6 +3070,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3059,6 +3118,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3113,6 +3173,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3166,6 +3227,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3225,6 +3287,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3275,6 +3338,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3320,6 +3384,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3367,6 +3432,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3415,6 +3481,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3463,6 +3530,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3508,6 +3576,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3553,6 +3622,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3598,6 +3668,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3647,6 +3718,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3697,6 +3769,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3749,6 +3822,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3794,6 +3868,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3847,6 +3922,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3896,6 +3972,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -3947,6 +4024,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4002,6 +4080,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4063,6 +4142,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4094,13 +4174,13 @@ impl RestApi {
     /// - "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
     /// - `STOP`, `STOP_MARKET`:
     /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
-    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`")
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
     /// - `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`")
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
     /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
     /// - `TRAILING_STOP_MARKET`:
-    /// - BUY: the lowest price after order placed = the lowest price * (1 + `callbackRate`)
-    /// - SELL: the highest price after order placed >= `activatePrice`, and the latest price
+    /// - BUY: the lowest price after order placed <= `activatePrice`, and the latest price >= the lowest price * (1 + `callbackRate`)
+    /// - SELL: the highest price after order placed >= `activatePrice`, and the latest price <= the highest price * (1 - `callbackRate`)
     /// - For `TRAILING_STOP_MARKET`, if you got such error code. > `{"code": -2021, "msg": "Order would immediately trigger."}` > means that the parameters you send do not meet the following requirements:
     /// - BUY: `activatePrice` should be smaller than latest price.
     /// - SELL: `activatePrice` should be larger than latest price.
@@ -4137,6 +4217,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4198,6 +4279,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4250,6 +4332,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4302,6 +4385,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4353,6 +4437,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4402,6 +4487,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4455,6 +4541,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4508,6 +4595,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4557,6 +4645,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4610,6 +4699,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4647,13 +4737,13 @@ impl RestApi {
     /// - "triggerProtect" of a symbol can be got from `GET /fapi/v1/exchangeInfo`
     /// - `STOP`, `STOP_MARKET`:
     /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
-    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`")
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
     /// - `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
-    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`")
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `stopPrice`
     /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `stopPrice`
     /// - `TRAILING_STOP_MARKET`:
-    /// - BUY: the lowest price after order placed ``= the lowest price * (1 + `callbackRate`)
-    /// - SELL: the highest price after order placed >= `activationPrice`, and the latest price
+    /// - BUY: the lowest price after order placed <= `activationPrice`, and the latest price >= the lowest price * (1 + `callbackRate`)
+    /// - SELL: the highest price after order placed >= `activationPrice`, and the latest price <= the highest price * (1 - `callbackRate`)
     /// - For `TRAILING_STOP_MARKET`, if you got such error code. > `{"code": -2021, "msg": "Order would immediately trigger."}` > means that the parameters you send do not meet the following requirements:
     /// - BUY: `activationPrice` should be smaller than latest price.
     /// - SELL: `activationPrice` should be larger than latest price.
@@ -4694,6 +4784,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4743,6 +4834,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4788,6 +4880,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4834,6 +4927,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -4883,6 +4977,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///

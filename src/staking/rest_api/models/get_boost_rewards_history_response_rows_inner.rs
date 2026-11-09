@@ -23,8 +23,10 @@ pub struct GetBoostRewardsHistoryResponseRowsInner {
     pub token: Option<String>,
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Display if the type is \"DISTRIBUTE\"
     #[serde(rename = "bnsolHolding", skip_serializing_if = "Option::is_none")]
     pub bnsol_holding: Option<String>,
+    /// Display if the type is \"CLAIM\"
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

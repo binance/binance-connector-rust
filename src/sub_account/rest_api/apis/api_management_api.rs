@@ -1165,6 +1165,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1193,6 +1194,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1220,6 +1222,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1248,6 +1251,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1275,12 +1279,13 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
 
             let resp_json: Value =
-                serde_json::from_str(r"").unwrap_or_else(|_| serde_json::json!({}));
+                serde_json::from_str(r#""#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: serde_json::Value = serde_json::from_value(resp_json.clone())
                 .expect("should parse into serde_json::Value");
 
@@ -1303,6 +1308,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1332,6 +1338,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1359,6 +1366,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1460,7 +1468,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockApiManagementApiClient { force_error: false };
 
-            let params = CreateSubAccountApiKeyParams::builder("123@test.com".to_string(),"myKey".to_string(),2,).can_trade(true).can_margin_loan_repay(false).can_futures_trade(false).can_universal_transfer(false).can_vanilla_options(false).can_fix_api_trading(true).can_fix_api_reading(false).ip_address("69.210.67.14".to_string()).third_party_name("thirdParty".to_string()).public_key(String::new()).recv_window(5000).build().unwrap();
+            let params = CreateSubAccountApiKeyParams::builder("123@test.com".to_string(),"myKey".to_string(),2,).can_trade(true).can_margin_loan_repay(false).can_futures_trade(false).can_universal_transfer(false).can_vanilla_options(false).can_fix_api_trading(true).can_fix_api_reading(false).ip_address("69.210.67.14".to_string()).third_party_name("thirdParty".to_string()).public_key("".to_string()).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"apiName":"myKey","apiKey":"vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A","secretKey":"NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j","canTrade":true,"canMarginLoanRepay":false,"canFuturesTrade":false,"canUniversalTransfer":false,"canVanillaOptions":false,"canFixApiTrading":true,"canFixApiReading":false,"status":2,"ipList":["69.210.67.14"]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::CreateSubAccountApiKeyResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CreateSubAccountApiKeyResponse");
@@ -1622,7 +1630,7 @@ mod tests {
             .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r"").unwrap_or_else(|_| serde_json::json!({}));
+                serde_json::from_str(r#""#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: serde_json::Value = serde_json::from_value(resp_json.clone())
                 .expect("should parse into serde_json::Value");
 
@@ -1650,7 +1658,7 @@ mod tests {
             .unwrap();
 
             let resp_json: Value =
-                serde_json::from_str(r"").unwrap_or_else(|_| serde_json::json!({}));
+                serde_json::from_str(r#""#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: serde_json::Value = serde_json::from_value(resp_json.clone())
                 .expect("should parse into serde_json::Value");
 

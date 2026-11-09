@@ -79,6 +79,7 @@ pub struct CancelMultipleOptionOrdersResponseInner {
     pub mmp: Option<bool>,
     #[serde(rename = "source", skip_serializing_if = "Option::is_none")]
     pub source: Option<String>,
+    /// self trading prevention mode
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"

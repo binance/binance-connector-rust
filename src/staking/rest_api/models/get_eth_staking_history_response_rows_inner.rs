@@ -29,6 +29,7 @@ pub struct GetEthStakingHistoryResponseRowsInner {
     pub distribute_amount: Option<String>,
     #[serde(rename = "conversionRatio", skip_serializing_if = "Option::is_none")]
     pub conversion_ratio: Option<String>,
+    /// PENDING,SUCCESS,FAILED
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

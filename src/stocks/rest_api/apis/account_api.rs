@@ -66,6 +66,7 @@ pub struct SignUsEquityDisclaimerParams {
 impl SignUsEquityDisclaimerParams {
     /// Create a builder for [`sign_us_equity_disclaimer`].
     ///
+    #[must_use]
     pub fn builder() -> SignUsEquityDisclaimerParamsBuilder {
         SignUsEquityDisclaimerParamsBuilder::default()
     }
@@ -143,6 +144,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }

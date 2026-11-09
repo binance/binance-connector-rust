@@ -21,5 +21,5 @@ let configuration = config::ConfigurationRestApi::builder()
     .build()?;
 
 let client = alpha::AlphaRestApi::production(configuration);
-let response = client.get_exchange_info(params).await?;
+let response = client.get_exchange_info().await?;
 ```

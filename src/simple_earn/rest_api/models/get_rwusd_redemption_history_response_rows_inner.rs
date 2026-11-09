@@ -31,6 +31,7 @@ pub struct GetRwusdRedemptionHistoryResponseRowsInner {
     pub fee: Option<String>,
     #[serde(rename = "arrivalTime", skip_serializing_if = "Option::is_none")]
     pub arrival_time: Option<i64>,
+    /// PENDING, SUCCESS
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

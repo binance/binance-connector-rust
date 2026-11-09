@@ -17,20 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetOrderDetailResponseData {
+    /// Order id
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<String>,
+    /// Order status
     #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
     pub order_status: Option<String>,
+    /// Order amount
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Trade fee
     #[serde(rename = "fee", skip_serializing_if = "Option::is_none")]
     pub fee: Option<String>,
+    /// Fiat token
     #[serde(rename = "fiatCurrency", skip_serializing_if = "Option::is_none")]
     pub fiat_currency: Option<String>,
+    /// Error code if any
     #[serde(rename = "errorCode", skip_serializing_if = "Option::is_none")]
     pub error_code: Option<String>,
+    /// Error message if any
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     pub error_message: Option<String>,
+    /// Extra info
     #[serde(rename = "ext", skip_serializing_if = "Option::is_none")]
     pub ext: Option<serde_json::Value>,
 }

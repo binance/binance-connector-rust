@@ -1317,7 +1317,7 @@ mod tests {
             let id = 123456u32;
 
             let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -1325,7 +1325,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1354,7 +1354,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let AggregateTradeStreamParams {
                 symbol,id,
@@ -1365,7 +1365,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1404,7 +1404,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = AggregateTradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let AggregateTradeStreamParams {
                 symbol,id,
@@ -1415,7 +1415,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1460,13 +1460,13 @@ mod tests {
             let id = 123456u32;
 
             let params = AllBookTickerStreamParams::builder()
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
             let AllBookTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1494,7 +1494,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllBookTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllBookTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllBookTickerStreamParams {
                 id,
@@ -1502,7 +1502,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1541,7 +1541,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllBookTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllBookTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllBookTickerStreamParams {
                 id,
@@ -1549,7 +1549,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1594,13 +1594,13 @@ mod tests {
             let id = 123456u32;
 
             let params = AllMiniTickerStreamParams::builder()
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
             let AllMiniTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1628,7 +1628,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllMiniTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllMiniTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllMiniTickerStreamParams {
                 id,
@@ -1636,7 +1636,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1675,7 +1675,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllMiniTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllMiniTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllMiniTickerStreamParams {
                 id,
@@ -1683,7 +1683,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1728,13 +1728,13 @@ mod tests {
             let id = 123456u32;
 
             let params = AllTickerStreamParams::builder()
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
             let AllTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1762,7 +1762,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllTickerStreamParams {
                 id,
@@ -1770,7 +1770,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1809,7 +1809,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllTickerStreamParams {
                 id,
@@ -1817,7 +1817,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1862,13 +1862,13 @@ mod tests {
             let id = 123456u32;
 
             let params = AllTokens24hTickerStreamParams::builder()
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
             let AllTokens24hTickerStreamParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -1896,7 +1896,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllTokens24hTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllTokens24hTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllTokens24hTickerStreamParams {
                 id,
@@ -1904,7 +1904,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1943,7 +1943,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = AllTokens24hTickerStreamParams::builder().id(Some(id)).build().unwrap();
+            let params = AllTokens24hTickerStreamParams::builder().id(Some(id.clone())).build().unwrap();
 
             let AllTokens24hTickerStreamParams {
                 id,
@@ -1951,7 +1951,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1996,7 +1996,7 @@ mod tests {
             let id = 123456u32;
 
             let params = BookTickerStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -2004,7 +2004,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2033,7 +2033,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let BookTickerStreamParams {
                 symbol,id,
@@ -2044,7 +2044,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2083,7 +2083,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = BookTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let BookTickerStreamParams {
                 symbol,id,
@@ -2094,7 +2094,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2143,7 +2143,7 @@ mod tests {
                 "CT_501".to_string(),
                 ContractKlineStreamIntervalEnum::Interval1s,
             )
-            .id(Some(id))
+            .id(Some(id.clone()))
             .build()
             .unwrap();
 
@@ -2158,7 +2158,7 @@ mod tests {
                 ("contractAddress", Some(contract_address.clone())),
                 ("chainId", Some(chain_id.clone())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2190,7 +2190,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id)).build().unwrap();
+            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let ContractKlineStreamParams {
                 contract_address,chain_id,interval,id,
@@ -2207,7 +2207,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2246,7 +2246,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id)).build().unwrap();
+            let params = ContractKlineStreamParams::builder("G7vQWurMkMMm2dU3iZpXYFTHT9Biio4F4gZCrwFpKNwG".to_string(),"CT_501".to_string(),ContractKlineStreamIntervalEnum::Interval1s,).id(Some(id.clone())).build().unwrap();
 
             let ContractKlineStreamParams {
                 contract_address,chain_id,interval,id,
@@ -2263,7 +2263,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2311,7 +2311,7 @@ mod tests {
                 "alpha_116usdt".to_string(),
                 FullDepthStreamIntervalEnum::Interval0ms,
             )
-            .id(Some(id))
+            .id(Some(id.clone()))
             .build()
             .unwrap();
 
@@ -2324,7 +2324,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2354,7 +2354,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
+            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
 
             let FullDepthStreamParams {
                 symbol,interval,id,
@@ -2368,7 +2368,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2407,7 +2407,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
+            let params = FullDepthStreamParams::builder("alpha_116usdt".to_string(),FullDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
 
             let FullDepthStreamParams {
                 symbol,interval,id,
@@ -2421,7 +2421,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2469,7 +2469,7 @@ mod tests {
                 "alpha_116usdt".to_string(),
                 KlineStreamIntervalEnum::Interval1m,
             )
-            .id(Some(id))
+            .id(Some(id.clone()))
             .build()
             .unwrap();
 
@@ -2482,7 +2482,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2512,7 +2512,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
+            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
 
             let KlineStreamParams {
                 symbol,interval,id,
@@ -2526,7 +2526,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2565,7 +2565,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
+            let params = KlineStreamParams::builder("alpha_116usdt".to_string(),KlineStreamIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
 
             let KlineStreamParams {
                 symbol,interval,id,
@@ -2579,7 +2579,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2624,7 +2624,7 @@ mod tests {
             let id = 123456u32;
 
             let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -2632,7 +2632,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2661,7 +2661,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let MiniTickerStreamParams {
                 symbol,id,
@@ -2672,7 +2672,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2711,7 +2711,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = MiniTickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let MiniTickerStreamParams {
                 symbol,id,
@@ -2722,7 +2722,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2771,7 +2771,7 @@ mod tests {
                 PartialDepthStreamLevelsEnum::Levels5,
                 PartialDepthStreamIntervalEnum::Interval0ms,
             )
-            .id(Some(id))
+            .id(Some(id.clone()))
             .build()
             .unwrap();
 
@@ -2786,7 +2786,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("levels", Some(levels.as_str().to_string())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2816,7 +2816,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
+            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
 
             let PartialDepthStreamParams {
                 symbol,levels,interval,id,
@@ -2833,7 +2833,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2872,7 +2872,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id)).build().unwrap();
+            let params = PartialDepthStreamParams::builder("alpha_116usdt".to_string(),PartialDepthStreamLevelsEnum::Levels5,PartialDepthStreamIntervalEnum::Interval0ms,).id(Some(id.clone())).build().unwrap();
 
             let PartialDepthStreamParams {
                 symbol,levels,interval,id,
@@ -2889,7 +2889,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -2934,7 +2934,7 @@ mod tests {
             let id = 123456u32;
 
             let params = TickerStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -2942,7 +2942,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -2971,7 +2971,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let TickerStreamParams {
                 symbol,id,
@@ -2982,7 +2982,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -3021,7 +3021,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = TickerStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let TickerStreamParams {
                 symbol,id,
@@ -3032,7 +3032,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -3077,7 +3077,7 @@ mod tests {
             let id = 123456u32;
 
             let params = TradeStreamParams::builder("alpha_116usdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -3085,7 +3085,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -3114,7 +3114,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let TradeStreamParams {
                 symbol,id,
@@ -3125,7 +3125,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -3164,7 +3164,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = TradeStreamParams::builder("alpha_116usdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let TradeStreamParams {
                 symbol,id,
@@ -3175,7 +3175,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 

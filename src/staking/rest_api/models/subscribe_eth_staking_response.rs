@@ -23,6 +23,7 @@ pub struct SubscribeEthStakingResponse {
     pub wbeth_amount: Option<String>,
     #[serde(rename = "purchaseId", skip_serializing_if = "Option::is_none")]
     pub purchase_id: Option<i64>,
+    /// ETH amount per 1 WBETH
     #[serde(rename = "conversionRatio", skip_serializing_if = "Option::is_none")]
     pub conversion_ratio: Option<String>,
 }

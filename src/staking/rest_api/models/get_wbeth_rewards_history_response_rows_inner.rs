@@ -19,8 +19,10 @@ use serde::{Deserialize, Serialize};
 pub struct GetWbethRewardsHistoryResponseRowsInner {
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// Estimated rewards accrued within WBETH
     #[serde(rename = "amountInETH", skip_serializing_if = "Option::is_none")]
     pub amount_in_eth: Option<String>,
+    /// WBETH holding balance
     #[serde(rename = "holding", skip_serializing_if = "Option::is_none")]
     pub holding: Option<String>,
     #[serde(rename = "holdingInETH", skip_serializing_if = "Option::is_none")]

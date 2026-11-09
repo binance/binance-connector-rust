@@ -90,45 +90,96 @@ impl WebsocketConnectionFailureReason {
     }
 }
 
+/// Errors returned by the REST API client.
+///
+/// Variants that describe an error response from Binance carry `body`: the
+/// full parsed JSON body, when the body is valid JSON. Use [`ConnectorError::data`]
+/// to read it, or [`ConnectorError::body`] for the whole body.
+///
+/// The enum and its response variants are `#[non_exhaustive]`, so match with a
+/// wildcard arm and destructure variants with `..`.
 #[derive(Error, Debug)]
+#[non_exhaustive]
 pub enum ConnectorError {
+    /// Errors raised by the client itself (request building, decoding, ...)
+    /// and HTTP error statuses without a dedicated variant. `body` is set only
+    /// for the latter.
     #[error("Connector client error: {msg}")]
-    ConnectorClientError { msg: String, code: Option<i64> },
+    #[non_exhaustive]
+    ConnectorClientError {
+        msg: String,
+        code: Option<i64>,
+        body: Option<serde_json::Value>,
+    },
 
     #[error("Unauthorized access. Authentication required. {msg}")]
-    UnauthorizedError { msg: String, code: Option<i64> },
+    #[non_exhaustive]
+    UnauthorizedError {
+        msg: String,
+        code: Option<i64>,
+        body: Option<serde_json::Value>,
+    },
 
     #[error("Access to the requested resource is forbidden. {msg}")]
-    ForbiddenError { msg: String, code: Option<i64> },
+    #[non_exhaustive]
+    ForbiddenError {
+        msg: String,
+        code: Option<i64>,
+        body: Option<serde_json::Value>,
+    },
 
     #[error("Too many requests. You are being rate-limited. {msg}")]
+    #[non_exhaustive]
     TooManyRequestsError {
         msg: String,
         code: Option<i64>,
         retry_after: Option<u32>,
+        body: Option<serde_json::Value>,
     },
 
     #[error("The IP address has been banned for exceeding rate limits. {msg}")]
+    #[non_exhaustive]
     RateLimitBanError {
         msg: String,
         code: Option<i64>,
         retry_after: Option<u32>,
+        body: Option<serde_json::Value>,
     },
 
     #[error("Internal server error: {msg} (status code: {status_code:?})")]
+    #[non_exhaustive]
     ServerError {
         msg: String,
         status_code: Option<u16>,
+        body: Option<serde_json::Value>,
     },
 
     #[error("Network error: {0}")]
     NetworkError(String),
 
     #[error("The requested resource was not found. {msg}")]
-    NotFoundError { msg: String, code: Option<i64> },
+    #[non_exhaustive]
+    NotFoundError {
+        msg: String,
+        code: Option<i64>,
+        body: Option<serde_json::Value>,
+    },
 
     #[error("Bad request: {msg}")]
-    BadRequestError { msg: String, code: Option<i64> },
+    #[non_exhaustive]
+    BadRequestError {
+        msg: String,
+        code: Option<i64>,
+        body: Option<serde_json::Value>,
+    },
+
+    #[error("Conflict: {msg}")]
+    #[non_exhaustive]
+    ConflictError {
+        msg: String,
+        code: Option<i64>,
+        body: Option<serde_json::Value>,
+    },
 }
 
 impl ConnectorError {
@@ -140,9 +191,39 @@ impl ConnectorError {
             _ => None,
         }
     }
+
+    /// The full parsed JSON body of the error response (including `code` and
+    /// `msg`), if Binance returned a JSON body.
+    #[must_use]
+    pub fn body(&self) -> Option<&serde_json::Value> {
+        match self {
+            Self::ConnectorClientError { body, .. }
+            | Self::UnauthorizedError { body, .. }
+            | Self::ForbiddenError { body, .. }
+            | Self::TooManyRequestsError { body, .. }
+            | Self::RateLimitBanError { body, .. }
+            | Self::ServerError { body, .. }
+            | Self::NotFoundError { body, .. }
+            | Self::BadRequestError { body, .. }
+            | Self::ConflictError { body, .. } => body.as_ref(),
+            Self::NetworkError(_) => None,
+        }
+    }
+
+    /// The `data` object of the error response body, if present.
+    ///
+    /// For `order.cancelReplace` this holds `cancelResult`, `newOrderResult`,
+    /// `cancelResponse` and `newOrderResponse`.
+    #[must_use]
+    pub fn data(&self) -> Option<&serde_json::Value> {
+        self.body()
+            .and_then(|b| b.get("data"))
+            .filter(|d| !d.is_null())
+    }
 }
 
 #[derive(Debug, Error)]
+#[non_exhaustive]
 pub enum WebsocketError {
     #[error("WebSocket timeout error")]
     Timeout,
@@ -161,9 +242,11 @@ pub enum WebsocketError {
     #[error("No response error.")]
     NoResponse,
     #[error("Server‐side response error (code {code}): {message}")]
+    #[non_exhaustive]
     ResponseError {
         code: i64,
         message: String,
         retry_after: Option<i64>,
+        data: Option<serde_json::Value>,
     },
 }

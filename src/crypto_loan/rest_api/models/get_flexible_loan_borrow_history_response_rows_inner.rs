@@ -30,6 +30,7 @@ pub struct GetFlexibleLoanBorrowHistoryResponseRowsInner {
     pub initial_collateral_amount: Option<String>,
     #[serde(rename = "borrowTime", skip_serializing_if = "Option::is_none")]
     pub borrow_time: Option<i64>,
+    /// SUCCESS, FAILED, PENDING
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

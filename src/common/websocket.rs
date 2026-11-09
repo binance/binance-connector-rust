@@ -2454,8 +2454,10 @@ impl WebsocketHandler for WebsocketApi {
                         .unwrap_or("Unknown error")
                         .to_string();
 
-                    let retry_after = error_map
-                        .get("data")
+                    let data = error_map.get("data").filter(|d| !d.is_null()).cloned();
+
+                    let retry_after = data
+                        .as_ref()
                         .and_then(|d| d.get("retryAfter"))
                         .and_then(Value::as_i64);
 
@@ -2463,6 +2465,7 @@ impl WebsocketHandler for WebsocketApi {
                         code,
                         message,
                         retry_after,
+                        data,
                     }));
                 } else {
                     let _ = completion.send(Ok(msg.clone()));
@@ -9007,10 +9010,12 @@ mod tests {
                             code,
                             message,
                             retry_after,
+                            data,
                         }) => {
                             assert_eq!(code, 123);
                             assert_eq!(message, "oops");
                             assert_eq!(retry_after, None);
+                            assert_eq!(data, None);
                         }
                         other => panic!("expected ResponseError, got {other:?}"),
                     }
@@ -9061,10 +9066,12 @@ mod tests {
                             code,
                             message,
                             retry_after,
+                            data,
                         }) => {
                             assert_eq!(code, 42);
                             assert_eq!(message, "Bad!");
                             assert_eq!(retry_after, None);
+                            assert_eq!(data, None);
                         }
                         other => panic!("expected ResponseError, got {other:?}"),
                     }
@@ -9093,10 +9100,59 @@ mod tests {
                     api.on_message(msg.to_string(), conn.clone()).await;
                     match rx.await.unwrap() {
                         Err(WebsocketError::ResponseError {
-                            code, retry_after, ..
+                            code,
+                            retry_after,
+                            data,
+                            ..
                         }) => {
                             assert_eq!(code, -1003);
                             assert_eq!(retry_after, Some(1_659_146_400_000));
+                            assert_eq!(
+                                data,
+                                Some(json!({ "serverTime": 1659142907531_i64, "retryAfter": 1659146400000_i64 }))
+                            );
+                        }
+                        other => panic!("expected ResponseError, got {other:?}"),
+                    }
+                });
+            }
+
+            #[test]
+            fn cancel_replace_error_exposes_error_data() {
+                TOKIO_SHARED_RT.block_on(async {
+                    let (api, conn) = create_websocket_api_and_conn();
+                    let (tx, rx) = oneshot::channel();
+                    {
+                        let mut st = conn.state.lock().await;
+                        st.pending_requests
+                            .insert("cr".to_string(), PendingRequest { completion: tx });
+                    }
+                    let data = json!({
+                        "cancelResult": "SUCCESS",
+                        "newOrderResult": "FAILURE",
+                        "cancelResponse": { "symbol": "BTCUSDT", "orderId": 1, "status": "CANCELED" },
+                        "newOrderResponse": { "code": -2010, "msg": "Account has insufficient balance for requested action." }
+                    });
+                    let msg = json!({
+                        "id": "cr",
+                        "status": 409,
+                        "error": {
+                            "code": -2021,
+                            "msg": "Order cancel-replace partially failed.",
+                            "data": data.clone()
+                        }
+                    });
+                    api.on_message(msg.to_string(), conn.clone()).await;
+                    match rx.await.unwrap() {
+                        Err(WebsocketError::ResponseError {
+                            code,
+                            retry_after,
+                            data: got,
+                            ..
+                        }) => {
+                            assert_eq!(code, -2021);
+                            assert_eq!(retry_after, None);
+                            assert_eq!(got, Some(data));
                         }
                         other => panic!("expected ResponseError, got {other:?}"),
                     }

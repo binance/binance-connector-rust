@@ -17,22 +17,30 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetOnChainYieldsLockedSubscriptionPreviewResponse {
+    /// Earned asset
     #[serde(rename = "rewardAsset", skip_serializing_if = "Option::is_none")]
     pub reward_asset: Option<String>,
+    /// Earned amount total in locked period
     #[serde(rename = "totalRewardAmt", skip_serializing_if = "Option::is_none")]
     pub total_reward_amt: Option<String>,
+    /// Next estimated rewards payment
     #[serde(rename = "nextPay", skip_serializing_if = "Option::is_none")]
     pub next_pay: Option<String>,
+    /// Next rewards payment date
     #[serde(rename = "nextPayDate", skip_serializing_if = "Option::is_none")]
     pub next_pay_date: Option<String>,
+    /// Rewards payment date
     #[serde(rename = "rewardsPayDate", skip_serializing_if = "Option::is_none")]
     pub rewards_pay_date: Option<String>,
     #[serde(rename = "valueDate", skip_serializing_if = "Option::is_none")]
     pub value_date: Option<String>,
+    /// Rewards accrual end date
     #[serde(rename = "rewardsEndDate", skip_serializing_if = "Option::is_none")]
     pub rewards_end_date: Option<String>,
+    /// Redemption arrival time(if auto-subscribe is true, not response this one)
     #[serde(rename = "deliverDate", skip_serializing_if = "Option::is_none")]
     pub deliver_date: Option<String>,
+    /// Response if autoSubscribe is true
     #[serde(
         rename = "nextSubscriptionDate",
         skip_serializing_if = "Option::is_none"

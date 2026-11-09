@@ -23,6 +23,7 @@ pub struct ClassicPortfolioMarginAccountInformationResponse {
         skip_serializing_if = "Option::is_none"
     )]
     pub max_withdraw_amount_usd: Option<String>,
+    /// asset name
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
     /// maximum amount for transfer out

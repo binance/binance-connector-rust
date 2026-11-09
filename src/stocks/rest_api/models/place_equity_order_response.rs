@@ -29,6 +29,7 @@ pub struct PlaceEquityOrderResponse {
 }
 
 impl PlaceEquityOrderResponse {
+    #[must_use]
     pub fn new() -> PlaceEquityOrderResponse {
         PlaceEquityOrderResponse {
             status: None,

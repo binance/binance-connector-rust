@@ -165,6 +165,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -208,6 +209,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -255,6 +257,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -300,6 +303,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -343,6 +347,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -388,6 +393,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -448,6 +454,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -496,6 +503,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -544,6 +552,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -592,6 +601,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -646,6 +656,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -694,6 +705,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -742,6 +754,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -790,6 +803,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -835,6 +849,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -880,6 +895,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -925,6 +941,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -970,6 +987,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1020,6 +1038,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1067,6 +1086,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1122,6 +1142,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1179,6 +1200,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1228,6 +1250,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1281,6 +1304,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1326,6 +1350,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1371,6 +1396,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1420,6 +1446,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1477,6 +1504,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1524,6 +1552,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1571,6 +1600,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1618,6 +1648,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1665,6 +1696,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1710,6 +1742,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1755,6 +1788,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1800,6 +1834,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///
@@ -1845,6 +1880,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///

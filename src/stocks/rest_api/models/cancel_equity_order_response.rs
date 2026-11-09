@@ -26,6 +26,7 @@ pub struct CancelEquityOrderResponse {
 }
 
 impl CancelEquityOrderResponse {
+    #[must_use]
     pub fn new() -> CancelEquityOrderResponse {
         CancelEquityOrderResponse {
             order_id: None,

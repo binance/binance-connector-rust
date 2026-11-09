@@ -19,8 +19,10 @@ use serde::{Deserialize, Serialize};
 pub struct VerifyBinanceGiftCardByGiftCardNumberResponseData {
     #[serde(rename = "valid", skip_serializing_if = "Option::is_none")]
     pub valid: Option<bool>,
+    /// coin
     #[serde(rename = "token", skip_serializing_if = "Option::is_none")]
     pub token: Option<String>,
+    /// amount
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
 }

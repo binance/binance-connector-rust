@@ -17,8 +17,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetOnChainYieldsLockedProductListResponseRowsInnerQuota {
+    /// Total Personal quota
     #[serde(rename = "totalPersonalQuota", skip_serializing_if = "Option::is_none")]
     pub total_personal_quota: Option<String>,
+    /// Minimum amount per order
     #[serde(rename = "minimum", skip_serializing_if = "Option::is_none")]
     pub minimum: Option<String>,
 }

@@ -26,6 +26,7 @@ pub struct TokenizedRedeemResponse {
 }
 
 impl TokenizedRedeemResponse {
+    #[must_use]
     pub fn new() -> TokenizedRedeemResponse {
         TokenizedRedeemResponse {
             issuer_request_id: None,

@@ -17,53 +17,75 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetOnChainYieldsLockedProductPositionResponseRowsInner {
+    /// Locked position ID
     #[serde(rename = "positionId", skip_serializing_if = "Option::is_none")]
     pub position_id: Option<String>,
+    /// Locked project ID
     #[serde(rename = "projectId", skip_serializing_if = "Option::is_none")]
     pub project_id: Option<String>,
+    /// Locked asset
     #[serde(rename = "asset", skip_serializing_if = "Option::is_none")]
     pub asset: Option<String>,
+    /// Locked Amount
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Subscription time
     #[serde(rename = "purchaseTime", skip_serializing_if = "Option::is_none")]
     pub purchase_time: Option<String>,
+    /// Lock period(days)
     #[serde(rename = "duration", skip_serializing_if = "Option::is_none")]
     pub duration: Option<String>,
+    /// Accrue days
     #[serde(rename = "accrualDays", skip_serializing_if = "Option::is_none")]
     pub accrual_days: Option<String>,
+    /// Earned asset
     #[serde(rename = "rewardAsset", skip_serializing_if = "Option::is_none")]
     pub reward_asset: Option<String>,
     #[serde(rename = "APY", skip_serializing_if = "Option::is_none")]
     pub apy: Option<String>,
+    /// Earned amount
     #[serde(rename = "rewardAmt", skip_serializing_if = "Option::is_none")]
     pub reward_amt: Option<String>,
+    /// Next estimated rewards payment
     #[serde(rename = "nextPay", skip_serializing_if = "Option::is_none")]
     pub next_pay: Option<String>,
+    /// Next rewards payment date
     #[serde(rename = "nextPayDate", skip_serializing_if = "Option::is_none")]
     pub next_pay_date: Option<String>,
+    /// Payment cycle
     #[serde(rename = "payPeriod", skip_serializing_if = "Option::is_none")]
     pub pay_period: Option<String>,
+    /// Rewards payment date when maturity
     #[serde(rename = "rewardsPayDate", skip_serializing_if = "Option::is_none")]
     pub rewards_pay_date: Option<String>,
+    /// Rewards accrual end date
     #[serde(rename = "rewardsEndDate", skip_serializing_if = "Option::is_none")]
     pub rewards_end_date: Option<String>,
+    /// Redemption arrival time(include early redemption or natural maturity; if auto-subscribe is on, not response this one)
     #[serde(rename = "deliverDate", skip_serializing_if = "Option::is_none")]
     pub deliver_date: Option<String>,
+    /// Response when auto-subscribe on
     #[serde(
         rename = "nextSubscriptionDate",
         skip_serializing_if = "Option::is_none"
     )]
     pub next_subscription_date: Option<String>,
+    /// Amount under redemption when auto-subsceibe is on but left quota is less than stake amount
     #[serde(rename = "redeemingAmt", skip_serializing_if = "Option::is_none")]
     pub redeeming_amt: Option<String>,
+    /// Redeem to simple earn Flexible product or Spot wallet, \"SPOT\":spot wallet
     #[serde(rename = "redeemTo", skip_serializing_if = "Option::is_none")]
     pub redeem_to: Option<String>,
+    /// When it is true, early redemption can be operated
     #[serde(rename = "canRedeemEarly", skip_serializing_if = "Option::is_none")]
     pub can_redeem_early: Option<bool>,
+    /// When it is true, auto subscribe can be operated
     #[serde(rename = "autoSubscribe", skip_serializing_if = "Option::is_none")]
     pub auto_subscribe: Option<bool>,
+    /// AUTO：auto-subscribe order； NORMAL：normal-subscribe order
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// HOLDING,REDEEMING,RENEWING:auto `subscribing,NEW_TRANSFERRING:Redeeming` to Simple Earn flexible
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

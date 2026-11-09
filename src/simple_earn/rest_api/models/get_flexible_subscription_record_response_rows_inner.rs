@@ -27,14 +27,19 @@ pub struct GetFlexibleSubscriptionRecordResponseRowsInner {
     pub purchase_id: Option<i64>,
     #[serde(rename = "productId", skip_serializing_if = "Option::is_none")]
     pub product_id: Option<String>,
+    /// AUTO for auto subscribe, NORMAL for normal subscription, CONVERT for Locked to Flexible, LOAN for flexible loan collateral, AI for Auto Invest subscribe, TRANSFER for Locked Savings to Flexible
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// SPOT, FUNDING, SPOTANDFUNDING
     #[serde(rename = "sourceAccount", skip_serializing_if = "Option::is_none")]
     pub source_account: Option<String>,
+    /// Display if sourceAccount is SPOTANDFUNDING
     #[serde(rename = "amtFromSpot", skip_serializing_if = "Option::is_none")]
     pub amt_from_spot: Option<String>,
+    /// Display if sourceAccount is SPOTANDFUNDING
     #[serde(rename = "amtFromFunding", skip_serializing_if = "Option::is_none")]
     pub amt_from_funding: Option<String>,
+    /// PURCHASING/SUCCESS/FAILED
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

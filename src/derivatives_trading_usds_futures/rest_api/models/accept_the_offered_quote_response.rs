@@ -21,6 +21,7 @@ pub struct AcceptTheOfferedQuoteResponse {
     pub order_id: Option<String>,
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
     pub create_time: Option<i64>,
+    /// `PROCESS/ACCEPT_SUCCESS/SUCCESS/FAIL`
     #[serde(rename = "orderStatus", skip_serializing_if = "Option::is_none")]
     pub order_status: Option<String>,
 }

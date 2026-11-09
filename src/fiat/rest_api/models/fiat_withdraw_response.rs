@@ -22,7 +22,7 @@ pub struct FiatWithdrawResponse {
     #[serde(rename = "message", skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     #[serde(rename = "data", skip_serializing_if = "Option::is_none")]
-    pub data: Option<Box<models::DepositResponseData>>,
+    pub data: Option<Box<models::FiatWithdrawResponseData>>,
 }
 
 impl FiatWithdrawResponse {

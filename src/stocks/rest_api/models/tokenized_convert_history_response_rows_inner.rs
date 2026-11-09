@@ -53,6 +53,7 @@ pub struct TokenizedConvertHistoryResponseRowsInner {
 }
 
 impl TokenizedConvertHistoryResponseRowsInner {
+    #[must_use]
     pub fn new() -> TokenizedConvertHistoryResponseRowsInner {
         TokenizedConvertHistoryResponseRowsInner {
             underlying_asset: None,

@@ -19,6 +19,8 @@ pub mod fiat_withdraw_request_account_info;
 pub use self::fiat_withdraw_request_account_info::FiatWithdrawRequestAccountInfo;
 pub mod fiat_withdraw_response;
 pub use self::fiat_withdraw_response::FiatWithdrawResponse;
+pub mod fiat_withdraw_response_data;
+pub use self::fiat_withdraw_response_data::FiatWithdrawResponseData;
 pub mod get_fiat_deposit_withdraw_history_response;
 pub use self::get_fiat_deposit_withdraw_history_response::GetFiatDepositWithdrawHistoryResponse;
 pub mod get_fiat_deposit_withdraw_history_response_data_inner;

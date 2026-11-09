@@ -27,6 +27,7 @@ pub struct PriceStreamResponse {
 }
 
 impl PriceStreamResponse {
+    #[must_use]
     pub fn new() -> PriceStreamResponse {
         PriceStreamResponse {
             e: None,

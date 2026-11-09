@@ -98,6 +98,7 @@ pub struct CurrentOpenOrdersResponseInner {
 }
 
 impl CurrentOpenOrdersResponseInner {
+    #[must_use]
     pub fn new() -> CurrentOpenOrdersResponseInner {
         CurrentOpenOrdersResponseInner {
             order_id: None,

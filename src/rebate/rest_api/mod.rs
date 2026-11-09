@@ -150,6 +150,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///

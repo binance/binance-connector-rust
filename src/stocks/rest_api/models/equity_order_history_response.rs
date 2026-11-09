@@ -32,6 +32,7 @@ pub struct EquityOrderHistoryResponse {
 }
 
 impl EquityOrderHistoryResponse {
+    #[must_use]
     pub fn new() -> EquityOrderHistoryResponse {
         EquityOrderHistoryResponse {
             total: None,

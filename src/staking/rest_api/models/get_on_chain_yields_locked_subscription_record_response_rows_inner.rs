@@ -33,14 +33,19 @@ pub struct GetOnChainYieldsLockedSubscriptionRecordResponseRowsInner {
     pub amount: Option<String>,
     #[serde(rename = "lockPeriod", skip_serializing_if = "Option::is_none")]
     pub lock_period: Option<String>,
+    /// NORMAL for normal staking, AUTO for auto-subscription order
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// SPOT, FUNDING, SPOTANDFUNDING
     #[serde(rename = "sourceAccount", skip_serializing_if = "Option::is_none")]
     pub source_account: Option<String>,
+    /// Display if sourceAccount is SPOTANDFUNDING
     #[serde(rename = "amtFromSpot", skip_serializing_if = "Option::is_none")]
     pub amt_from_spot: Option<String>,
+    /// Display if sourceAccount is SPOTANDFUNDING
     #[serde(rename = "amtFromFunding", skip_serializing_if = "Option::is_none")]
     pub amt_from_funding: Option<String>,
+    /// PURCHASING/SUCCESS/FAILED
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

@@ -145,6 +145,9 @@ Errors are represented by the following types:
 - `NetworkError`: Network connectivity issues
 - `NotFoundError`: Resource not found
 - `BadRequestError`: Invalid request parameters
+- `ConflictError`: Request conflicts with the current state
+
+When Binance returns a JSON error body, it is kept on the error: `ConnectorError::body()` returns the whole body and `ConnectorError::data()` returns its `data` object. `ConnectorError` is `#[non_exhaustive]`, so a `match` on it needs a wildcard arm.
 
 See the [Error Handling example](./docs/rest_api/error-handling.md) for detailed usage. Refer to the [`error`](../common/errors.rs) module for more information.
 

@@ -25,6 +25,7 @@ pub struct FlexibleLoanBorrowResponse {
     pub collateral_coin: Option<String>,
     #[serde(rename = "collateralAmount", skip_serializing_if = "Option::is_none")]
     pub collateral_amount: Option<String>,
+    /// Succeeds, Failed, Processing
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

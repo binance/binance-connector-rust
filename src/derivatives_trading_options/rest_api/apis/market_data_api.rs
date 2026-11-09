@@ -885,6 +885,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -912,6 +913,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -940,6 +942,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -968,6 +971,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -998,11 +1002,12 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r"[[1762779600000]]")
+            let resp_json: Value = serde_json::from_str(r#"[[1762779600000]]"#)
                 .unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: Vec<Vec<models::KlineCandlestickDataItemInner>> =
                 serde_json::from_value(resp_json.clone())
@@ -1026,6 +1031,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1053,6 +1059,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1080,6 +1087,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1108,6 +1116,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1135,6 +1144,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1159,6 +1169,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1185,6 +1196,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1440,7 +1452,7 @@ mod tests {
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r"[[1762779600000]]")
+            let resp_json: Value = serde_json::from_str(r#"[[1762779600000]]"#)
                 .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: Vec<Vec<models::KlineCandlestickDataItemInner>> =
                 serde_json::from_value(resp_json.clone())
@@ -1471,7 +1483,7 @@ mod tests {
             .build()
             .unwrap();
 
-            let resp_json: Value = serde_json::from_str(r"[[1762779600000]]")
+            let resp_json: Value = serde_json::from_str(r#"[[1762779600000]]"#)
                 .unwrap_or_else(|_| serde_json::json!({}));
             let expected_response: Vec<Vec<models::KlineCandlestickDataItemInner>> =
                 serde_json::from_value(resp_json.clone())

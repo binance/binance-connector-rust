@@ -113,7 +113,7 @@ impl RestApi {
 
     /// Get C2C Trade History (`USER_DATA`)
     ///
-    /// Get C2C Trade History
+    /// Get C2C (also known as P2P) trade history, including both buy and sell orders.
     ///
     /// Weight(IP): 1
     ///
@@ -149,6 +149,7 @@ impl RestApi {
     ///   - `ServerError`
     ///   - `NotFoundError`
     ///   - `NetworkError`
+    ///   - `ConflictError`
     ///   - `BadRequestError`
     ///
     ///

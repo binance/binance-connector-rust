@@ -80,6 +80,7 @@ pub struct PlaceMultipleOrdersResponseInner {
     /// mmp
     #[serde(rename = "mmp", skip_serializing_if = "Option::is_none")]
     pub mmp: Option<bool>,
+    /// self trading prevention mode
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"

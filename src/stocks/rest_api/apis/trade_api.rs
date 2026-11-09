@@ -82,6 +82,7 @@ pub enum EquityOrderHistoryOrderTypeEnum {
 }
 
 impl EquityOrderHistoryOrderTypeEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Market => "MARKET",
@@ -112,6 +113,7 @@ pub enum EquityOrderHistorySideEnum {
 }
 
 impl EquityOrderHistorySideEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Buy => "BUY",
@@ -142,6 +144,7 @@ pub enum EquityTradeHistorySideEnum {
 }
 
 impl EquityTradeHistorySideEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Buy => "BUY",
@@ -172,6 +175,7 @@ pub enum PlaceEquityOrderSideEnum {
 }
 
 impl PlaceEquityOrderSideEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Buy => "BUY",
@@ -202,6 +206,7 @@ pub enum PlaceEquityOrderOrderTypeEnum {
 }
 
 impl PlaceEquityOrderOrderTypeEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Market => "MARKET",
@@ -232,6 +237,7 @@ pub enum PlaceEquityOrderTimeInForceEnum {
 }
 
 impl PlaceEquityOrderTimeInForceEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Day => "DAY",
@@ -264,6 +270,7 @@ pub enum PlaceEquityOrderTradingSessionEnum {
 }
 
 impl PlaceEquityOrderTradingSessionEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Rth => "RTH",
@@ -296,6 +303,7 @@ pub enum PlaceEquityOrderWalletTypeEnum {
 }
 
 impl PlaceEquityOrderWalletTypeEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Card => "CARD",
@@ -334,6 +342,7 @@ pub struct CancelAllEquityOrdersParams {
 impl CancelAllEquityOrdersParams {
     /// Create a builder for [`cancel_all_equity_orders`].
     ///
+    #[must_use]
     pub fn builder() -> CancelAllEquityOrdersParamsBuilder {
         CancelAllEquityOrdersParamsBuilder::default()
     }
@@ -366,6 +375,7 @@ impl CancelEquityOrderParams {
     ///
     /// * `order_id` — Equity order id returned by `/order/place` or a query endpoint.
     ///
+    #[must_use]
     pub fn builder(order_id: String) -> CancelEquityOrderParamsBuilder {
         CancelEquityOrderParamsBuilder::default().order_id(order_id)
     }
@@ -388,6 +398,7 @@ pub struct CurrentOpenOrdersParams {
 impl CurrentOpenOrdersParams {
     /// Create a builder for [`current_open_orders`].
     ///
+    #[must_use]
     pub fn builder() -> CurrentOpenOrdersParamsBuilder {
         CurrentOpenOrdersParamsBuilder::default()
     }
@@ -422,6 +433,7 @@ pub struct EquityOrderDetailParams {
 impl EquityOrderDetailParams {
     /// Create a builder for [`equity_order_detail`].
     ///
+    #[must_use]
     pub fn builder() -> EquityOrderDetailParamsBuilder {
         EquityOrderDetailParamsBuilder::default()
     }
@@ -497,6 +509,7 @@ impl EquityOrderHistoryParams {
     /// * `start_time` — Start time (ms epoch).
     /// * `end_time` — End time (ms epoch).
     ///
+    #[must_use]
     pub fn builder(start_time: i64, end_time: i64) -> EquityOrderHistoryParamsBuilder {
         EquityOrderHistoryParamsBuilder::default()
             .start_time(start_time)
@@ -568,6 +581,7 @@ impl EquityTradeHistoryParams {
     /// * `start_time` — Start time (ms epoch).
     /// * `end_time` — End time (ms epoch).
     ///
+    #[must_use]
     pub fn builder(start_time: i64, end_time: i64) -> EquityTradeHistoryParamsBuilder {
         EquityTradeHistoryParamsBuilder::default()
             .start_time(start_time)
@@ -670,6 +684,7 @@ impl PlaceEquityOrderParams {
     /// * `side` — `BUY` / `SELL`.
     /// * `order_type` — `MARKET` / `LIMIT`.
     ///
+    #[must_use]
     pub fn builder(
         symbol: String,
         side: PlaceEquityOrderSideEnum,
@@ -1072,6 +1087,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1100,6 +1116,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1130,6 +1147,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1157,6 +1175,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1184,6 +1203,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1211,6 +1231,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -1238,6 +1259,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }

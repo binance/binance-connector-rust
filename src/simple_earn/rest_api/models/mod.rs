@@ -99,6 +99,8 @@ pub mod get_rwusd_quota_details_response_subscription_quota;
 pub use self::get_rwusd_quota_details_response_subscription_quota::GetRwusdQuotaDetailsResponseSubscriptionQuota;
 pub mod get_rwusd_rate_history_response;
 pub use self::get_rwusd_rate_history_response::GetRwusdRateHistoryResponse;
+pub mod get_rwusd_rate_history_response_rows_inner;
+pub use self::get_rwusd_rate_history_response_rows_inner::GetRwusdRateHistoryResponseRowsInner;
 pub mod get_rwusd_redemption_history_response;
 pub use self::get_rwusd_redemption_history_response::GetRwusdRedemptionHistoryResponse;
 pub mod get_rwusd_redemption_history_response_rows_inner;

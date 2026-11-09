@@ -45,6 +45,7 @@ pub struct GetFlexibleLoanLiquidationHistoryResponseRowsInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub liquidation_starting_time: Option<i64>,
+    /// Liquidating
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

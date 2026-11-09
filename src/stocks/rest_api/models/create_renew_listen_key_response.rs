@@ -23,6 +23,7 @@ pub struct CreateRenewListenKeyResponse {
 }
 
 impl CreateRenewListenKeyResponse {
+    #[must_use]
     pub fn new() -> CreateRenewListenKeyResponse {
         CreateRenewListenKeyResponse { listen_key: None }
     }

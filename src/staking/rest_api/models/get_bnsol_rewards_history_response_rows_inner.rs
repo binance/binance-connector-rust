@@ -19,12 +19,15 @@ use serde::{Deserialize, Serialize};
 pub struct GetBnsolRewardsHistoryResponseRowsInner {
     #[serde(rename = "time", skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    /// reward amount
     #[serde(rename = "amountInSOL", skip_serializing_if = "Option::is_none")]
     pub amount_in_sol: Option<String>,
+    /// BNSOL holding balance
     #[serde(rename = "holding", skip_serializing_if = "Option::is_none")]
     pub holding: Option<String>,
     #[serde(rename = "holdingInSOL", skip_serializing_if = "Option::is_none")]
     pub holding_in_sol: Option<String>,
+    /// 0.5 means 50% here
     #[serde(
         rename = "annualPercentageRate",
         skip_serializing_if = "Option::is_none"

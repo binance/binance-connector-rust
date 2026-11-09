@@ -53,6 +53,7 @@ pub struct EquityTradeHistoryResponseRowsInner {
 }
 
 impl EquityTradeHistoryResponseRowsInner {
+    #[must_use]
     pub fn new() -> EquityTradeHistoryResponseRowsInner {
         EquityTradeHistoryResponseRowsInner {
             execution_id: None,

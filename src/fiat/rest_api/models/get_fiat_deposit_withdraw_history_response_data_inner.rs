@@ -19,21 +19,28 @@ use serde::{Deserialize, Serialize};
 pub struct GetFiatDepositWithdrawHistoryResponseDataInner {
     #[serde(rename = "orderNo", skip_serializing_if = "Option::is_none")]
     pub order_no: Option<String>,
+    /// Fiat token
     #[serde(rename = "fiatCurrency", skip_serializing_if = "Option::is_none")]
     pub fiat_currency: Option<String>,
+    /// Trade amount
     #[serde(rename = "indicatedAmount", skip_serializing_if = "Option::is_none")]
     pub indicated_amount: Option<String>,
+    /// Actual amount (after fee deduction)
     #[serde(rename = "amount", skip_serializing_if = "Option::is_none")]
     pub amount: Option<String>,
+    /// Trade fee
     #[serde(rename = "totalFee", skip_serializing_if = "Option::is_none")]
     pub total_fee: Option<String>,
+    /// Trade method
     #[serde(rename = "method", skip_serializing_if = "Option::is_none")]
     pub method: Option<String>,
     /// Processing, Failed, Successful, Finished, Refunding, Refunded, Refund Failed, Order Partial Credit Stopped
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// Order create time
     #[serde(rename = "createTime", skip_serializing_if = "Option::is_none")]
     pub create_time: Option<i64>,
+    /// Order update time
     #[serde(rename = "updateTime", skip_serializing_if = "Option::is_none")]
     pub update_time: Option<i64>,
 }

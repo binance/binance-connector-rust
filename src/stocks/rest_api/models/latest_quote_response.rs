@@ -35,6 +35,7 @@ pub struct LatestQuoteResponse {
 }
 
 impl LatestQuoteResponse {
+    #[must_use]
     pub fn new() -> LatestQuoteResponse {
         LatestQuoteResponse {
             symbol: None,

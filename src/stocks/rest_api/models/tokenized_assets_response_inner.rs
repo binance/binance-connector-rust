@@ -38,6 +38,7 @@ pub struct TokenizedAssetsResponseInner {
 }
 
 impl TokenizedAssetsResponseInner {
+    #[must_use]
     pub fn new() -> TokenizedAssetsResponseInner {
         TokenizedAssetsResponseInner {
             asset_code: None,

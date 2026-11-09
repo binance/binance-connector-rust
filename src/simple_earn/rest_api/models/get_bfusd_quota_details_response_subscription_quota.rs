@@ -17,6 +17,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GetBfusdQuotaDetailsResponseSubscriptionQuota {
+    /// Maximum purchase limit in USDT
     #[serde(rename = "leftQuota", skip_serializing_if = "Option::is_none")]
     pub left_quota: Option<String>,
 }

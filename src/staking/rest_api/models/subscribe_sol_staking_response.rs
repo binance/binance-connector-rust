@@ -23,6 +23,7 @@ pub struct SubscribeSolStakingResponse {
     pub bnsol_amount: Option<String>,
     #[serde(rename = "purchaseId", skip_serializing_if = "Option::is_none")]
     pub purchase_id: Option<i64>,
+    /// SOL amount per 1 BNSOL
     #[serde(rename = "exchangeRate", skip_serializing_if = "Option::is_none")]
     pub exchange_rate: Option<String>,
 }

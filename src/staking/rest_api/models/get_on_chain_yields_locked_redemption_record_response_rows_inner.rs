@@ -31,10 +31,13 @@ pub struct GetOnChainYieldsLockedRedemptionRecordResponseRowsInner {
     pub amount: Option<String>,
     #[serde(rename = "originalAmount", skip_serializing_if = "Option::is_none")]
     pub original_amount: Option<String>,
+    /// NORMAL for normal maturity redemption, EARLY for early redemption, CONVERT for redeem to simple earn flexible
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
+    /// Redemption date
     #[serde(rename = "deliverDate", skip_serializing_if = "Option::is_none")]
     pub deliver_date: Option<String>,
+    /// Loss of profit on early redemption
     #[serde(rename = "lossAmount", skip_serializing_if = "Option::is_none")]
     pub loss_amount: Option<String>,
     #[serde(rename = "isComplete", skip_serializing_if = "Option::is_none")]
@@ -43,6 +46,7 @@ pub struct GetOnChainYieldsLockedRedemptionRecordResponseRowsInner {
     pub reward_asset: Option<String>,
     #[serde(rename = "rewardAmt", skip_serializing_if = "Option::is_none")]
     pub reward_amt: Option<String>,
+    /// CREATED/PAID
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

@@ -31,10 +31,12 @@ pub struct GetLockedRedemptionRecordResponseRowsInner {
     pub amount: Option<String>,
     #[serde(rename = "originalAmount", skip_serializing_if = "Option::is_none")]
     pub original_amount: Option<String>,
+    /// MATURE for redeem to Spot Wallet, `NEW_TRANSFERRED` for redeem to Flexible product, AHEAD for early redemption
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     #[serde(rename = "deliverDate", skip_serializing_if = "Option::is_none")]
     pub deliver_date: Option<i64>,
+    /// Loss of profit on early redemption
     #[serde(rename = "lossAmount", skip_serializing_if = "Option::is_none")]
     pub loss_amount: Option<String>,
     #[serde(rename = "isComplete", skip_serializing_if = "Option::is_none")]

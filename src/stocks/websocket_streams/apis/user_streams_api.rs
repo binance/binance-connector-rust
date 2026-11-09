@@ -74,6 +74,7 @@ impl OrderReportStreamParams {
     ///
     /// * `listen_key` — User data listen key obtained from the Listen Key endpoint.
     ///
+    #[must_use]
     pub fn builder(listen_key: String) -> OrderReportStreamParamsBuilder {
         OrderReportStreamParamsBuilder::default().listen_key(listen_key)
     }
@@ -95,7 +96,7 @@ impl UserStreamsApi for UserStreamsApiClient {
             .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
             .collect();
 
-        let id_opt: Option<String> = vars.get("id").map(|v| v.to_string());
+        let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream =
             replace_websocket_streams_placeholders_preserve_case("/<listenKey>@orderReport", &vars);

@@ -70,6 +70,7 @@ pub enum TokenizedConvertStatusConvertTypeEnum {
 }
 
 impl TokenizedConvertStatusConvertTypeEnum {
+    #[must_use]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Mint => "MINT",
@@ -134,6 +135,7 @@ pub struct TokenizedConvertHistoryParams {
 impl TokenizedConvertHistoryParams {
     /// Create a builder for [`tokenized_convert_history`].
     ///
+    #[must_use]
     pub fn builder() -> TokenizedConvertHistoryParamsBuilder {
         TokenizedConvertHistoryParamsBuilder::default()
     }
@@ -173,6 +175,7 @@ impl TokenizedConvertStatusParams {
     /// * `issuer_request_id` — Convert request id returned by `/tokenized/mint` or `/redeem`.
     /// * `convert_type` — `MINT` or `REDEEM`.
     ///
+    #[must_use]
     pub fn builder(
         issuer_request_id: String,
         convert_type: TokenizedConvertStatusConvertTypeEnum,
@@ -223,6 +226,7 @@ impl TokenizedMintParams {
     /// * `underlying_asset` — Underlying US-equity ticker, e.g. `AAPL`, `TSLA`. Resolved against the active-symbol list; unknown tickers return `-26004`. The target tokenized asset is looked up from this field via `/market/tokenized-assets`.
     /// * `underlying_asset_amount` — Quantity of the underlying asset to mint from. Must be > 0.
     ///
+    #[must_use]
     pub fn builder(
         underlying_asset: String,
         underlying_asset_amount: String,
@@ -273,6 +277,7 @@ impl TokenizedRedeemParams {
     /// * `tokenized_asset` — Tokenized asset to redeem, e.g. `AAPLB`. Not a US-equity ticker — this is the on-chain tokenized asset identifier. Unknown asset returns `-1102` (the message currently says the parameter was empty/malformed, but it was in fact sent — it is simply unknown). The target underlying ticker is looked up from this field via `/market/tokenized-assets`.
     /// * `tokenized_asset_amount` — Quantity of the tokenized asset to redeem. Must be > 0.
     ///
+    #[must_use]
     pub fn builder(
         tokenized_asset: String,
         tokenized_asset_amount: String,
@@ -504,6 +509,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -531,6 +537,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -558,6 +565,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }
@@ -588,6 +596,7 @@ mod tests {
                 return Err(ConnectorError::ConnectorClientError {
                     msg: "ResponseError".to_string(),
                     code: None,
+                    body: None,
                 }
                 .into());
             }

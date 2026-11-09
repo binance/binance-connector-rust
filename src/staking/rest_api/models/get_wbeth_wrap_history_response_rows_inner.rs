@@ -27,8 +27,10 @@ pub struct GetWbethWrapHistoryResponseRowsInner {
     pub to_asset: Option<String>,
     #[serde(rename = "toAmount", skip_serializing_if = "Option::is_none")]
     pub to_amount: Option<String>,
+    /// BETH amount per 1 WBETH
     #[serde(rename = "exchangeRate", skip_serializing_if = "Option::is_none")]
     pub exchange_rate: Option<String>,
+    /// PENDING,SUCCESS,FAILED
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
 }

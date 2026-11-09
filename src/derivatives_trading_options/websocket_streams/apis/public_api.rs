@@ -616,7 +616,7 @@ mod tests {
                 "btcusdt".to_string(),
                 DiffBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,
             )
-            .id(Some(id))
+            .id(Some(id.clone()))
             .build()
             .unwrap();
 
@@ -629,7 +629,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("updateSpeed", Some(update_speed.as_str().to_string())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -659,7 +659,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = DiffBookDepthStreamsParams::builder("btcusdt".to_string(),DiffBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id)).build().unwrap();
+            let params = DiffBookDepthStreamsParams::builder("btcusdt".to_string(),DiffBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id.clone())).build().unwrap();
 
             let DiffBookDepthStreamsParams {
                 symbol,update_speed,id,
@@ -673,7 +673,7 @@ mod tests {
                         Some(update_speed.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -712,7 +712,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = DiffBookDepthStreamsParams::builder("btcusdt".to_string(),DiffBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id)).build().unwrap();
+            let params = DiffBookDepthStreamsParams::builder("btcusdt".to_string(),DiffBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id.clone())).build().unwrap();
 
             let DiffBookDepthStreamsParams {
                 symbol,update_speed,id,
@@ -726,7 +726,7 @@ mod tests {
                         Some(update_speed.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -771,7 +771,7 @@ mod tests {
             let id = 123456u32;
 
             let params = Hour24TickerParams::builder("btcusdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -783,7 +783,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
                 ("expirationDate", expiration_date.clone()),
             ];
 
@@ -816,7 +816,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = Hour24TickerParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = Hour24TickerParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let Hour24TickerParams {
                 symbol,id,expiration_date,
@@ -827,7 +827,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
                 ("expirationDate",
                         expiration_date.clone()
@@ -869,7 +869,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = Hour24TickerParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = Hour24TickerParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let Hour24TickerParams {
                 symbol,id,expiration_date,
@@ -880,7 +880,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
                 ("expirationDate",
                         expiration_date.clone()
@@ -928,7 +928,7 @@ mod tests {
             let id = 123456u32;
 
             let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -936,7 +936,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -965,7 +965,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let IndividualSymbolBookTickerStreamsParams {
                 symbol,id,
@@ -976,7 +976,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1015,7 +1015,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = IndividualSymbolBookTickerStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let IndividualSymbolBookTickerStreamsParams {
                 symbol,id,
@@ -1026,7 +1026,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1075,7 +1075,7 @@ mod tests {
                 PartialBookDepthStreamsLevelEnum::Level5,
                 PartialBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,
             )
-            .id(Some(id))
+            .id(Some(id.clone()))
             .build()
             .unwrap();
 
@@ -1090,7 +1090,7 @@ mod tests {
                 ("symbol", Some(symbol.clone())),
                 ("level", Some(level.as_str().to_string())),
                 ("updateSpeed", Some(update_speed.as_str().to_string())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1122,7 +1122,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),PartialBookDepthStreamsLevelEnum::Level5,PartialBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id)).build().unwrap();
+            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),PartialBookDepthStreamsLevelEnum::Level5,PartialBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id.clone())).build().unwrap();
 
             let PartialBookDepthStreamsParams {
                 symbol,level,update_speed,id,
@@ -1139,7 +1139,7 @@ mod tests {
                         Some(update_speed.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1178,7 +1178,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),PartialBookDepthStreamsLevelEnum::Level5,PartialBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id)).build().unwrap();
+            let params = PartialBookDepthStreamsParams::builder("btcusdt".to_string(),PartialBookDepthStreamsLevelEnum::Level5,PartialBookDepthStreamsUpdateSpeedEnum::UpdateSpeed100ms,).id(Some(id.clone())).build().unwrap();
 
             let PartialBookDepthStreamsParams {
                 symbol,level,update_speed,id,
@@ -1195,7 +1195,7 @@ mod tests {
                         Some(update_speed.as_str().to_string())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1240,7 +1240,7 @@ mod tests {
             let id = 123456u32;
 
             let params = TradeStreamsParams::builder("btcusdt".to_string())
-                .id(Some(id))
+                .id(Some(id.clone()))
                 .build()
                 .unwrap();
 
@@ -1248,7 +1248,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
-                ("id", id.map(|v| v.to_string())),
+                ("id", id.clone().map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1277,7 +1277,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let TradeStreamsParams {
                 symbol,id,
@@ -1288,7 +1288,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
@@ -1327,7 +1327,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
+            let params = TradeStreamsParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
 
             let TradeStreamsParams {
                 symbol,id,
@@ -1338,7 +1338,7 @@ mod tests {
                         Some(symbol.clone())
                 ),
                 ("id",
-                        id.map(|v| v.to_string())
+                        id.clone().map(|v| v.to_string())
                 ),
             ];
 
