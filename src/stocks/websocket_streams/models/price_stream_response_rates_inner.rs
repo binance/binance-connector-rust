@@ -35,12 +35,23 @@ pub struct PriceStreamResponseRatesInner {
         skip_serializing_if = "Option::is_none"
     )]
     pub t: Option<Option<i64>>,
-    /// Previous day's RTH close price (reference); absent when unknown.
+    /// Previous trading day's close price; absent when unknown.
     #[serde(rename = "pc", skip_serializing_if = "Option::is_none")]
     pub pc: Option<String>,
-    /// Today's RTH close price; absent before After-Hours.
+    /// Today's close price; absent before After-Hours.
     #[serde(rename = "tc", skip_serializing_if = "Option::is_none")]
     pub tc: Option<String>,
+    /// Final close price of the most recent completed RTH trading day. Rolls forward only once the next trading day enters Post-Market and the 1-minute kline for the minute before that day's RTH close is available; while unavailable, the previous `lrc`/`prc` pair is retained.
+    #[serde(rename = "lrc", skip_serializing_if = "Option::is_none")]
+    pub lrc: Option<String>,
+    /// Final close price of the trading day before the `lrc` trading day. `null` when the symbol has only one completed RTH trading day (e.g. a new IPO).
+    #[serde(
+        rename = "prc",
+        default,
+        with = "::serde_with::rust::double_option",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub prc: Option<Option<String>>,
     /// Per-symbol market phase: `C` Closed, `ON` Overnight, `PRE` Pre-Market, `O` Market Open, `POST` Post-Market.
     #[serde(rename = "mp", skip_serializing_if = "Option::is_none")]
     pub mp: Option<String>,
@@ -56,6 +67,8 @@ impl PriceStreamResponseRatesInner {
             t: None,
             pc: None,
             tc: None,
+            lrc: None,
+            prc: None,
             mp: None,
         }
     }

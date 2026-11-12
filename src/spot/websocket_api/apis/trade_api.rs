@@ -4311,6 +4311,12 @@ pub struct OrderCancelReplaceParams {
     #[builder(setter(into), default)]
     #[serde(rename = "pegOffsetType", default)]
     pub peg_offset_type: Option<OrderCancelReplacePegOffsetTypeEnum>,
+    /// For replacement orders on the BUY side only. Maximum quote-asset notional the replacement order may consume. See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "quoteNotionalLimit", default)]
+    pub quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -4766,6 +4772,18 @@ pub struct OrderListPlaceOcoParams {
     #[builder(setter(into), default)]
     #[serde(rename = "selfTradePreventionMode", default)]
     pub self_trade_prevention_mode: Option<OrderListPlaceOcoSelfTradePreventionModeEnum>,
+    /// Quote notional limit for the above order (only for orders on the BUY side). See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "aboveQuoteNotionalLimit", default)]
+    pub above_quote_notional_limit: Option<rust_decimal::Decimal>,
+    /// Quote notional limit for the below order (only for orders on the BUY side). See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "belowQuoteNotionalLimit", default)]
+    pub below_quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -4993,6 +5011,12 @@ pub struct OrderListPlaceOpoParams {
     #[builder(setter(into), default)]
     #[serde(rename = "pendingPegOffsetValue", default)]
     pub pending_peg_offset_value: Option<i32>,
+    /// Quote notional limit for the working LIMIT order on the BUY side. See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "workingQuoteNotionalLimit", default)]
+    pub working_quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -5048,8 +5072,7 @@ pub struct OrderListPlaceOpocoParams {
     #[builder(setter(into))]
     #[serde(rename = "symbol")]
     pub symbol: String,
-    ///
-    /// The `working_type` parameter.
+    /// Supported values: `LIMIT`, `LIMIT_MAKER`
     ///
     /// This field is **required.
     #[builder(setter(into))]
@@ -5297,6 +5320,12 @@ pub struct OrderListPlaceOpocoParams {
     #[builder(setter(into), default)]
     #[serde(rename = "pendingBelowPegOffsetValue", default)]
     pub pending_below_peg_offset_value: Option<i32>,
+    /// Quote notional limit for the working LIMIT order on the BUY side. See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "workingQuoteNotionalLimit", default)]
+    pub working_quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -5311,7 +5340,7 @@ impl OrderListPlaceOpocoParams {
     /// Required parameters:
     ///
     /// * `symbol` — String
-    /// * `working_type` — String
+    /// * `working_type` — Supported values: `LIMIT`, `LIMIT_MAKER`
     /// * `working_side` — Supported values: Order Side
     /// * `working_price` — Price for the working order.
     /// * `working_quantity` — Sets the quantity for the working order.
@@ -5540,6 +5569,18 @@ pub struct OrderListPlaceOtoParams {
     #[builder(setter(into), default)]
     #[serde(rename = "pendingPegOffsetValue", default)]
     pub pending_peg_offset_value: Option<i32>,
+    /// Quote notional limit for the working order (only for orders on the BUY side). See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "workingQuoteNotionalLimit", default)]
+    pub working_quote_notional_limit: Option<rust_decimal::Decimal>,
+    /// Quote notional limit for the pending order (only for orders on the BUY side). See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "pendingQuoteNotionalLimit", default)]
+    pub pending_quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -5857,6 +5898,24 @@ pub struct OrderListPlaceOtocoParams {
     #[builder(setter(into), default)]
     #[serde(rename = "pendingBelowPegOffsetValue", default)]
     pub pending_below_peg_offset_value: Option<i32>,
+    /// Quote notional limit for the working order (only for orders on the BUY side). See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "workingQuoteNotionalLimit", default)]
+    pub working_quote_notional_limit: Option<rust_decimal::Decimal>,
+    /// Quote notional limit for the pending above order (only for orders on the BUY side). See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "pendingAboveQuoteNotionalLimit", default)]
+    pub pending_above_quote_notional_limit: Option<rust_decimal::Decimal>,
+    /// Quote notional limit for the pending below order (only for orders on the BUY side). See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "pendingBelowQuoteNotionalLimit", default)]
+    pub pending_below_quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -6027,6 +6086,12 @@ pub struct OrderPlaceParams {
     #[builder(setter(into), default)]
     #[serde(rename = "pegOffsetType", default)]
     pub peg_offset_type: Option<OrderPlacePegOffsetTypeEnum>,
+    /// For orders on the BUY side only. Maximum quote-asset notional the order may consume. See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "quoteNotionalLimit", default)]
+    pub quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -6188,6 +6253,12 @@ pub struct OrderTestParams {
     #[builder(setter(into), default)]
     #[serde(rename = "pegOffsetType", default)]
     pub peg_offset_type: Option<OrderTestPegOffsetTypeEnum>,
+    /// For orders on the BUY side only. Maximum quote-asset notional the order may consume. See Quote Notional Limit.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "quoteNotionalLimit", default)]
+    pub quote_notional_limit: Option<rust_decimal::Decimal>,
     /// Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.
     ///
     /// This field is **optional.
@@ -6632,6 +6703,7 @@ impl TradeApi for TradeApiClient {
             peg_price_type,
             peg_offset_value,
             peg_offset_type,
+            quote_notional_limit,
             recv_window,
         } = params;
 
@@ -6717,6 +6789,9 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = peg_offset_type {
             payload.insert("pegOffsetType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = quote_notional_limit {
+            payload.insert("quoteNotionalLimit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
@@ -6922,6 +6997,8 @@ impl TradeApi for TradeApiClient {
             below_peg_offset_value,
             new_order_resp_type,
             self_trade_prevention_mode,
+            above_quote_notional_limit,
+            below_quote_notional_limit,
             recv_window,
         } = params;
 
@@ -7012,6 +7089,18 @@ impl TradeApi for TradeApiClient {
                 serde_json::json!(value),
             );
         }
+        if let Some(value) = above_quote_notional_limit {
+            payload.insert(
+                "aboveQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = below_quote_notional_limit {
+            payload.insert(
+                "belowQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
@@ -7066,6 +7155,7 @@ impl TradeApi for TradeApiClient {
             pending_peg_price_type,
             pending_peg_offset_type,
             pending_peg_offset_value,
+            working_quote_notional_limit,
             recv_window,
         } = params;
 
@@ -7158,6 +7248,12 @@ impl TradeApi for TradeApiClient {
                 serde_json::json!(value),
             );
         }
+        if let Some(value) = working_quote_notional_limit {
+            payload.insert(
+                "workingQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
@@ -7224,6 +7320,7 @@ impl TradeApi for TradeApiClient {
             pending_below_peg_price_type,
             pending_below_peg_offset_type,
             pending_below_peg_offset_value,
+            working_quote_notional_limit,
             recv_window,
         } = params;
 
@@ -7412,6 +7509,12 @@ impl TradeApi for TradeApiClient {
                 serde_json::json!(value),
             );
         }
+        if let Some(value) = working_quote_notional_limit {
+            payload.insert(
+                "workingQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
@@ -7467,6 +7570,8 @@ impl TradeApi for TradeApiClient {
             pending_peg_offset_type,
             pending_peg_price_type,
             pending_peg_offset_value,
+            working_quote_notional_limit,
+            pending_quote_notional_limit,
             recv_window,
         } = params;
 
@@ -7560,6 +7665,18 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = pending_peg_offset_value {
             payload.insert(
                 "pendingPegOffsetValue".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = working_quote_notional_limit {
+            payload.insert(
+                "workingQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_quote_notional_limit {
+            payload.insert(
+                "pendingQuoteNotionalLimit".to_string(),
                 serde_json::json!(value),
             );
         }
@@ -7630,6 +7747,9 @@ impl TradeApi for TradeApiClient {
             pending_below_peg_price_type,
             pending_below_peg_offset_type,
             pending_below_peg_offset_value,
+            working_quote_notional_limit,
+            pending_above_quote_notional_limit,
+            pending_below_quote_notional_limit,
             recv_window,
         } = params;
 
@@ -7822,6 +7942,24 @@ impl TradeApi for TradeApiClient {
                 serde_json::json!(value),
             );
         }
+        if let Some(value) = working_quote_notional_limit {
+            payload.insert(
+                "workingQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_above_quote_notional_limit {
+            payload.insert(
+                "pendingAboveQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = pending_below_quote_notional_limit {
+            payload.insert(
+                "pendingBelowQuoteNotionalLimit".to_string(),
+                serde_json::json!(value),
+            );
+        }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
@@ -7865,6 +8003,7 @@ impl TradeApi for TradeApiClient {
             peg_price_type,
             peg_offset_value,
             peg_offset_type,
+            quote_notional_limit,
             recv_window,
         } = params;
 
@@ -7923,6 +8062,9 @@ impl TradeApi for TradeApiClient {
         if let Some(value) = peg_offset_type {
             payload.insert("pegOffsetType".to_string(), serde_json::json!(value));
         }
+        if let Some(value) = quote_notional_limit {
+            payload.insert("quoteNotionalLimit".to_string(), serde_json::json!(value));
+        }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
         }
@@ -7967,6 +8109,7 @@ impl TradeApi for TradeApiClient {
             peg_price_type,
             peg_offset_value,
             peg_offset_type,
+            quote_notional_limit,
             recv_window,
         } = params;
 
@@ -8030,6 +8173,9 @@ impl TradeApi for TradeApiClient {
         }
         if let Some(value) = peg_offset_type {
             payload.insert("pegOffsetType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = quote_notional_limit {
+            payload.insert("quoteNotionalLimit".to_string(), serde_json::json!(value));
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));

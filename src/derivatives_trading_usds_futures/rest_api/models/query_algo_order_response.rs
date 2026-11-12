@@ -53,6 +53,7 @@ pub struct QueryAlgoOrderResponse {
     pub trigger_price: Option<String>,
     #[serde(rename = "price", skip_serializing_if = "Option::is_none")]
     pub price: Option<String>,
+    /// Reserved field, ignore.
     #[serde(rename = "icebergQuantity", skip_serializing_if = "Option::is_none")]
     pub iceberg_quantity: Option<String>,
     #[serde(rename = "tpOrderType", skip_serializing_if = "Option::is_none")]

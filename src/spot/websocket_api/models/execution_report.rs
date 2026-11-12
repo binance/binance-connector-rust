@@ -161,6 +161,12 @@ pub struct ExecutionReport {
     /// Prevented Execution Quote Qty
     #[serde(rename = "pY", skip_serializing_if = "Option::is_none")]
     pub p_y: Option<String>,
+    /// Quote Notional Limit. Appears only if the order was placed with a quote notional limit.
+    #[serde(rename = "Qq", skip_serializing_if = "Option::is_none")]
+    pub qq: Option<String>,
+    /// Effective Self Trade Prevention Mode. Appears on prevented-match reports when the applied STP mode differs from the order's `selfTradePreventionMode`. Values: `EXPIRE_MAKER`, `EXPIRE_BOTH`, `DECREMENT`.
+    #[serde(rename = "eV", skip_serializing_if = "Option::is_none")]
+    pub e_v: Option<String>,
     /// Match Type
     #[serde(rename = "b", skip_serializing_if = "Option::is_none")]
     pub b: Option<String>,
@@ -240,6 +246,8 @@ impl ExecutionReport {
             pl: None,
             p_l: None,
             p_y: None,
+            qq: None,
+            e_v: None,
             b: None,
             a: None,
             k: None,

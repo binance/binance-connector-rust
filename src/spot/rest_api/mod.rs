@@ -2544,7 +2544,8 @@ impl RestApi {
     ///
     /// Place an OPO.
     ///
-    /// - OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS`` filter and `MAX_NUM_ORDERS`` filter.
+    /// - The working order must be `LIMIT` or `LIMIT_MAKER`.
+    /// - OPOs add 2 orders to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
     ///
     /// Weight(IP): 1
     ///
@@ -2599,6 +2600,8 @@ impl RestApi {
     /// New Order List - OPOCO (TRADE)
     ///
     /// Place an OPOCO.
+    ///
+    /// - The working order must be `LIMIT` or `LIMIT_MAKER`.
     ///
     /// Weight(IP): 1
     ///

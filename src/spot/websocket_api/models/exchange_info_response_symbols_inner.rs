@@ -75,6 +75,16 @@ pub struct ExchangeInfoResponseSymbolsInner {
     )]
     pub peg_instructions_allowed: Option<bool>,
     #[serde(
+        rename = "marketQuoteNotionalLimitAllowed",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub market_quote_notional_limit_allowed: Option<bool>,
+    #[serde(
+        rename = "limitQuoteNotionalLimitAllowed",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub limit_quote_notional_limit_allowed: Option<bool>,
+    #[serde(
         rename = "isSpotTradingAllowed",
         skip_serializing_if = "Option::is_none"
     )]
@@ -126,6 +136,8 @@ impl ExchangeInfoResponseSymbolsInner {
             cancel_replace_allowed: None,
             amend_allowed: None,
             peg_instructions_allowed: None,
+            market_quote_notional_limit_allowed: None,
+            limit_quote_notional_limit_allowed: None,
             is_spot_trading_allowed: None,
             is_margin_trading_allowed: None,
             filters: None,

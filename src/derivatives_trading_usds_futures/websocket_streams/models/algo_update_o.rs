@@ -96,6 +96,15 @@ pub struct AlgoUpdateO {
     /// Is activated or not, only meaningful for trailing order
     #[serde(rename = "ia", skip_serializing_if = "Option::is_none")]
     pub ia: Option<bool>,
+    /// Sub price type, only meaningful for CHASE order
+    #[serde(rename = "spt", skip_serializing_if = "Option::is_none")]
+    pub spt: Option<String>,
+    /// Sub price value, only meaningful for CHASE order
+    #[serde(rename = "spv", skip_serializing_if = "Option::is_none")]
+    pub spv: Option<String>,
+    /// Sub price limit value, only meaningful for CHASE order
+    #[serde(rename = "splv", skip_serializing_if = "Option::is_none")]
+    pub splv: Option<String>,
 }
 
 impl AlgoUpdateO {
@@ -128,6 +137,9 @@ impl AlgoUpdateO {
             gtd: None,
             rm: None,
             ia: None,
+            spt: None,
+            spv: None,
+            splv: None,
         }
     }
 }

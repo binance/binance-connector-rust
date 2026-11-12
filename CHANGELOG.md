@@ -1,5 +1,151 @@
 # Changelog
 
+## 78.1.0 - 2026-11-12
+
+**Derivatives Trading USDS Futures**
+
+### Changed (1)
+
+#### WebSocket Streams
+
+- Modified response field `o`:
+  - property `splv` added
+  - property `spt` added
+  - property `spv` added
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `algoUpdate`
+
+**Spot**
+
+### Changed (23)
+
+#### REST API
+
+- Added parameter `aboveQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_oco()` (`POST /api/v3/orderList/oco`)
+- Added parameter `belowQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_oco()` (`POST /api/v3/orderList/oco`)
+- Added parameter `pendingAboveQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_otoco()` (`POST /api/v3/orderList/otoco`)
+- Added parameter `pendingBelowQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_otoco()` (`POST /api/v3/orderList/otoco`)
+- Added parameter `pendingQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_oto()` (`POST /api/v3/orderList/oto`)
+- Added parameter `quoteNotionalLimit`
+  - affected methods:
+    - `new_order()` (`POST /api/v3/order`)
+    - `order_cancel_replace()` (`POST /api/v3/order/cancelReplace`)
+    - `order_test()` (`POST /api/v3/order/test`)
+- Added parameter `workingQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_opo()` (`POST /api/v3/orderList/opo`)
+    - `order_list_opoco()` (`POST /api/v3/orderList/opoco`)
+    - `order_list_oto()` (`POST /api/v3/orderList/oto`)
+    - `order_list_otoco()` (`POST /api/v3/orderList/otoco`)
+- Modified response for `exchange_info()` (`GET /api/v3/exchangeInfo`):
+  - `symbols`.items: property `marketQuoteNotionalLimitAllowed` added
+  - `symbols`.items: property `limitQuoteNotionalLimitAllowed` added
+  - `symbols`.items: item property `marketQuoteNotionalLimitAllowed` added
+  - `symbols`.items: item property `limitQuoteNotionalLimitAllowed` added
+
+- Modified response field `symbols`:
+  - items: property `marketQuoteNotionalLimitAllowed` added
+  - items: property `limitQuoteNotionalLimitAllowed` added
+  - items: item property `marketQuoteNotionalLimitAllowed` added
+  - items: item property `limitQuoteNotionalLimitAllowed` added
+  - affected events:
+    - `exchangeInfoResponse`
+
+#### WebSocket API
+
+- Added parameter `aboveQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_place_oco()` (`orderList.place.oco` method)
+- Added parameter `belowQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_place_oco()` (`orderList.place.oco` method)
+- Added parameter `filter`
+  - affected methods:
+    - `user_data_stream_subscribe()` (`userDataStream.subscribe` method)
+    - `user_data_stream_subscribe_signature()` (`userDataStream.subscribe.signature` method)
+- Added parameter `pendingAboveQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_place_otoco()` (`orderList.place.otoco` method)
+- Added parameter `pendingBelowQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_place_otoco()` (`orderList.place.otoco` method)
+- Added parameter `pendingQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_place_oto()` (`orderList.place.oto` method)
+- Added parameter `quoteNotionalLimit`
+  - affected methods:
+    - `order_cancel_replace()` (`order.cancelReplace` method)
+    - `order_place()` (`order.place` method)
+    - `order_test()` (`order.test` method)
+- Added parameter `workingQuoteNotionalLimit`
+  - affected methods:
+    - `order_list_place_opo()` (`orderList.place.opo` method)
+    - `order_list_place_opoco()` (`orderList.place.opoco` method)
+    - `order_list_place_oto()` (`orderList.place.oto` method)
+    - `order_list_place_otoco()` (`orderList.place.otoco` method)
+- Modified response for `exchange_info()` (`exchangeInfo` method):
+  - `symbols`.items: property `limitQuoteNotionalLimitAllowed` added
+  - `symbols`.items: property `marketQuoteNotionalLimitAllowed` added
+  - `symbols`.items: item property `limitQuoteNotionalLimitAllowed` added
+  - `symbols`.items: item property `marketQuoteNotionalLimitAllowed` added
+
+- Added response field `eV`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `executionReport`
+- Added response field `Qq`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `executionReport`
+- Modified response field `symbols`:
+  - items: property `limitQuoteNotionalLimitAllowed` added
+  - items: property `marketQuoteNotionalLimitAllowed` added
+  - items: item property `limitQuoteNotionalLimitAllowed` added
+  - items: item property `marketQuoteNotionalLimitAllowed` added
+  - affected events:
+    - `exchangeInfoResponse`
+#### WebSocket Streams
+
+- Added response field `Qq`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `executionReport`
+- Added response field `eV`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `executionReport`
+
+**Stocks**
+
+### Changed (2)
+
+#### WebSocket Streams
+
+- Modified response for `price_stream()` (`price` stream):
+  - `rates`.items: property `prc` added
+  - `rates`.items: property `lrc` added
+  - `rates`.items: item property `prc` added
+  - `rates`.items: item property `lrc` added
+
+- Modified response field `rates`:
+  - items: property `lrc` added
+  - items: property `prc` added
+  - items: item property `lrc` added
+  - items: item property `prc` added
+  - affected events:
+    - `priceStreamResponse`
+
 ## 78.0.0 - 2026-11-09
 
 ### Added (4)

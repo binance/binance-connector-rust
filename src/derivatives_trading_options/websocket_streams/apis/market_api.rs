@@ -540,13 +540,13 @@ mod tests {
             let id = 123456u32;
 
             let params = IndexPriceStreamsParams::builder()
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let IndexPriceStreamsParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -575,13 +575,13 @@ mod tests {
             let id = 123456u32;
 
             let params = IndexPriceStreamsParams::builder()
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let IndexPriceStreamsParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -627,13 +627,13 @@ mod tests {
             let id = 123456u32;
 
             let params = IndexPriceStreamsParams::builder()
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
             let IndexPriceStreamsParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -690,7 +690,7 @@ mod tests {
                 "btcusdt".to_string(),
                 KlineCandlestickStreamsIntervalEnum::Interval1m,
             )
-            .id(Some(id.clone()))
+            .id(Some(id))
             .build()
             .unwrap();
 
@@ -703,7 +703,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("symbol", Some(symbol.clone())),
                 ("interval", Some(interval.as_str().to_string())),
-                ("id", id.clone().map(|v| v.to_string())),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -733,7 +733,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -747,7 +747,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -786,7 +786,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id.clone())).build().unwrap();
+            let params = KlineCandlestickStreamsParams::builder("btcusdt".to_string(),KlineCandlestickStreamsIntervalEnum::Interval1m,).id(Some(id)).build().unwrap();
 
             let KlineCandlestickStreamsParams {
                 symbol,interval,id,
@@ -800,7 +800,7 @@ mod tests {
                         Some(interval.as_str().to_string())
                 ),
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -844,14 +844,11 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = NewSymbolInfoParams::builder()
-                .id(Some(id.clone()))
-                .build()
-                .unwrap();
+            let params = NewSymbolInfoParams::builder().id(Some(id)).build().unwrap();
 
             let NewSymbolInfoParams { id } = params.clone();
 
-            let pairs: &[(&str, Option<String>)] = &[("id", id.clone().map(|v| v.to_string()))];
+            let pairs: &[(&str, Option<String>)] = &[("id", id.map(|v| v.to_string()))];
 
             let vars: HashMap<_, _> = pairs
                 .iter()
@@ -879,7 +876,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = NewSymbolInfoParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = NewSymbolInfoParams::builder().id(Some(id)).build().unwrap();
 
             let NewSymbolInfoParams {
                 id,
@@ -887,7 +884,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -926,7 +923,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = NewSymbolInfoParams::builder().id(Some(id.clone())).build().unwrap();
+            let params = NewSymbolInfoParams::builder().id(Some(id)).build().unwrap();
 
             let NewSymbolInfoParams {
                 id,
@@ -934,7 +931,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -979,7 +976,7 @@ mod tests {
             let id = 123456u32;
 
             let params = OpenInterestParams::builder("btcusdt".to_string(), "220930".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
@@ -992,7 +989,7 @@ mod tests {
             let pairs: &[(&str, Option<String>)] = &[
                 ("underlying", Some(underlying.clone())),
                 ("expirationDate", Some(expiration_date.clone())),
-                ("id", id.clone().map(|v| v.to_string())),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1024,7 +1021,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = OpenInterestParams::builder("btcusdt".to_string(),"220930".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = OpenInterestParams::builder("btcusdt".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let OpenInterestParams {
                 underlying,expiration_date,id,
@@ -1038,7 +1035,7 @@ mod tests {
                         Some(expiration_date.clone())
                 ),
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1077,7 +1074,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = OpenInterestParams::builder("btcusdt".to_string(),"220930".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = OpenInterestParams::builder("btcusdt".to_string(),"220930".to_string(),).id(Some(id)).build().unwrap();
 
             let OpenInterestParams {
                 underlying,expiration_date,id,
@@ -1091,7 +1088,7 @@ mod tests {
                         Some(expiration_date.clone())
                 ),
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1136,7 +1133,7 @@ mod tests {
             let id = 123456u32;
 
             let params = OptionMarkPriceParams::builder("btcusdt".to_string())
-                .id(Some(id.clone()))
+                .id(Some(id))
                 .build()
                 .unwrap();
 
@@ -1144,7 +1141,7 @@ mod tests {
 
             let pairs: &[(&str, Option<String>)] = &[
                 ("underlying", Some(underlying.clone())),
-                ("id", id.clone().map(|v| v.to_string())),
+                ("id", id.map(|v| v.to_string())),
             ];
 
             let vars: HashMap<_, _> = pairs
@@ -1174,7 +1171,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = OptionMarkPriceParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = OptionMarkPriceParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
 
             let OptionMarkPriceParams {
                 underlying,id,
@@ -1185,7 +1182,7 @@ mod tests {
                         Some(underlying.clone())
                 ),
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 
@@ -1224,7 +1221,7 @@ mod tests {
 
             let id = 123456u32;
 
-            let params = OptionMarkPriceParams::builder("btcusdt".to_string(),).id(Some(id.clone())).build().unwrap();
+            let params = OptionMarkPriceParams::builder("btcusdt".to_string(),).id(Some(id)).build().unwrap();
 
             let OptionMarkPriceParams {
                 underlying,id,
@@ -1235,7 +1232,7 @@ mod tests {
                         Some(underlying.clone())
                 ),
                 ("id",
-                        id.clone().map(|v| v.to_string())
+                        id.map(|v| v.to_string())
                 ),
             ];
 

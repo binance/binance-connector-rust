@@ -866,7 +866,7 @@ mod tests {
                 called_with_message.store(true, Ordering::SeqCst);
             });
 
-            let payload: Value = serde_json::from_str(r#"{"e":"price","rates":[{"s":"AAPL","ac":"EQ_AAPL","p":"182.5","t":1710320400000,"pc":"181.2000","tc":"182.0000","mp":"O"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"price","rates":[{"s":"AAPL","ac":"EQ_AAPL","p":"182.5","t":1710320400000,"pc":"181.2000","tc":"182.0000","lrc":"182.0000","prc":"181.2000","mp":"O"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,
@@ -917,7 +917,7 @@ mod tests {
 
             ws_stream.unsubscribe().await;
 
-            let payload: Value = serde_json::from_str(r#"{"e":"price","rates":[{"s":"AAPL","ac":"EQ_AAPL","p":"182.5","t":1710320400000,"pc":"181.2000","tc":"182.0000","mp":"O"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let payload: Value = serde_json::from_str(r#"{"e":"price","rates":[{"s":"AAPL","ac":"EQ_AAPL","p":"182.5","t":1710320400000,"pc":"181.2000","tc":"182.0000","lrc":"182.0000","prc":"181.2000","mp":"O"}]}"#).unwrap_or_else(|_| serde_json::json!({}));
             let msg = json!({
                 "stream": stream,
                 "data": payload,

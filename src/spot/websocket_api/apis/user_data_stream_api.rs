@@ -95,6 +95,12 @@ pub struct UserDataStreamSubscribeParams {
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
     pub id: Option<String>,
+    /// Optional filter that controls which events are delivered on this subscription. See User Data Stream Subscription Filters. When omitted, all events for the subscribed account are delivered.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "filter", default)]
+    pub filter: Option<serde_json::Value>,
 }
 
 impl UserDataStreamSubscribeParams {
@@ -124,6 +130,12 @@ pub struct UserDataStreamSubscribeSignatureParams {
     #[builder(setter(into), default)]
     #[serde(rename = "recvWindow", default)]
     pub recv_window: Option<rust_decimal::Decimal>,
+    /// Optional event filter. See User Data Stream Subscription Filters. When included, `filter` must be in the signed string with sorted keys and no whitespace between JSON elements.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "filter", default)]
+    pub filter: Option<serde_json::Value>,
 }
 
 impl UserDataStreamSubscribeSignatureParams {
@@ -198,11 +210,14 @@ impl UserDataStreamApi for UserDataStreamApiClient {
         params: UserDataStreamSubscribeParams,
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::UserDataStreamSubscribeResponseResult>>>
     {
-        let UserDataStreamSubscribeParams { id } = params;
+        let UserDataStreamSubscribeParams { id, filter } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
         if let Some(value) = id {
             payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = filter {
+            payload.insert("filter".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
@@ -225,7 +240,11 @@ impl UserDataStreamApi for UserDataStreamApiClient {
         params: UserDataStreamSubscribeSignatureParams,
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::UserDataStreamSubscribeResponseResult>>>
     {
-        let UserDataStreamSubscribeSignatureParams { id, recv_window } = params;
+        let UserDataStreamSubscribeSignatureParams {
+            id,
+            recv_window,
+            filter,
+        } = params;
 
         let mut payload: BTreeMap<String, Value> = BTreeMap::new();
         if let Some(value) = id {
@@ -233,6 +252,9 @@ impl UserDataStreamApi for UserDataStreamApiClient {
         }
         if let Some(value) = recv_window {
             payload.insert("recvWindow".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = filter {
+            payload.insert("filter".to_string(), serde_json::json!(value));
         }
         let payload = remove_empty_value(payload);
 
