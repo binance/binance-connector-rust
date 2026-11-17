@@ -34,6 +34,11 @@ pub trait MarketDataApi: Send + Sync {
     async fn get_portfolio_margin_asset_leverage(
         &self,
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetPortfolioMarginAssetLeverageResponseInner>>>;
+    async fn get_portfolio_margin_tiered_collateral_rates(
+        &self,
+    ) -> anyhow::Result<
+        RestApiResponse<Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>>,
+    >;
     async fn portfolio_margin_collateral_rate(
         &self,
     ) -> anyhow::Result<RestApiResponse<Vec<models::PortfolioMarginCollateralRateResponseInner>>>;
@@ -132,6 +137,30 @@ impl MarketDataApi for MarketDataApiClient {
                 None
             },
             true,
+        )
+        .await
+    }
+
+    async fn get_portfolio_margin_tiered_collateral_rates(
+        &self,
+    ) -> anyhow::Result<
+        RestApiResponse<Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>>,
+    > {
+        let query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        send_request::<Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>>(
+            &self.configuration,
+            "/sapi/v2/portfolio/retail/collateralRate",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            false,
         )
         .await
     }
@@ -285,6 +314,33 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn get_portfolio_margin_tiered_collateral_rates(
+            &self,
+        ) -> anyhow::Result<
+            RestApiResponse<Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>>,
+        > {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response : Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn portfolio_margin_collateral_rate(
             &self,
         ) -> anyhow::Result<RestApiResponse<Vec<models::PortfolioMarginCollateralRateResponseInner>>>
@@ -426,6 +482,52 @@ mod tests {
             let client = MockMarketDataApiClient { force_error: true };
 
             match client.get_portfolio_margin_asset_leverage().await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_portfolio_margin_tiered_collateral_rates_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>");
+
+            let resp = client.get_portfolio_margin_tiered_collateral_rates().await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_portfolio_margin_tiered_collateral_rates_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: false };
+
+
+            let resp_json: Value = serde_json::from_str(r#"[{"asset":"BNB","collateralInfo":[{"tierFloor":"0.0000","tierCap":"1000.0000","collateralRate":"1.0000","cum":"0.0000"}]}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>");
+
+            let resp = client.get_portfolio_margin_tiered_collateral_rates().await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_portfolio_margin_tiered_collateral_rates_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockMarketDataApiClient { force_error: true };
+
+            match client.get_portfolio_margin_tiered_collateral_rates().await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

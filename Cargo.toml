@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "78.1.0"
+version = "78.2.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1318,6 +1318,11 @@ required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 [[example]]
 name = "derivatives_trading_portfolio_margin_pro_rest_api_market_data_api_get_portfolio_margin_asset_leverage"
 path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/market_data_api/get_portfolio_margin_asset_leverage.rs"
+required-features = [ "derivatives_trading_portfolio_margin_pro" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_pro_rest_api_market_data_api_get_portfolio_margin_tiered_collateral_rates"
+path = "examples/derivatives_trading_portfolio_margin_pro/rest_api/market_data_api/get_portfolio_margin_tiered_collateral_rates.rs"
 required-features = [ "derivatives_trading_portfolio_margin_pro" ]
 
 [[example]]

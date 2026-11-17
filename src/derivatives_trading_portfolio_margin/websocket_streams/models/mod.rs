@@ -41,8 +41,6 @@ pub mod listen_key_expired;
 pub use self::listen_key_expired::ListenKeyExpired;
 pub mod open_order_loss;
 pub use self::open_order_loss::OpenOrderLoss;
-pub mod open_order_loss_o_inner;
-pub use self::open_order_loss_o_inner::OpenOrderLossOInner;
 pub mod order_trade_update;
 pub use self::order_trade_update::OrderTradeUpdate;
 pub mod order_trade_update_o;

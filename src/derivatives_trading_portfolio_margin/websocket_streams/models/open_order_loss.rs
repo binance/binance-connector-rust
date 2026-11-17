@@ -21,9 +21,9 @@ pub struct OpenOrderLoss {
     /// Event Time
     #[serde(rename = "E", skip_serializing_if = "Option::is_none")]
     pub e_uppercase: Option<i64>,
-    /// Update Data
-    #[serde(rename = "O", skip_serializing_if = "Option::is_none")]
-    pub o_uppercase: Option<Vec<models::OpenOrderLossOInner>>,
+    /// Aggregated account-level open order loss, in USD
+    #[serde(rename = "o", skip_serializing_if = "Option::is_none")]
+    pub o: Option<String>,
 }
 
 impl OpenOrderLoss {
@@ -31,7 +31,7 @@ impl OpenOrderLoss {
     pub fn new() -> OpenOrderLoss {
         OpenOrderLoss {
             e_uppercase: None,
-            o_uppercase: None,
+            o: None,
         }
     }
 }

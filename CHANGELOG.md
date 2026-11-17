@@ -1,5 +1,36 @@
 # Changelog
 
+## 78.2.0 - 2026-11-17
+
+**Derivatives Trading Portfolio Margin**
+
+### Changed (2)
+
+#### WebSocket Streams
+
+- Added response field `o`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `openOrderLoss`
+- Removed response field `O`
+  - affected events:
+    - `UserDataStreamEventsResponse`
+    - `openOrderLoss`
+
+**Derivatives Trading Portfolio Margin Pro**
+
+### Added (1)
+
+#### REST API
+
+- `get_portfolio_margin_tiered_collateral_rates()` (`GET /sapi/v2/portfolio/retail/collateralRate`)
+
+### Changed (1)
+
+#### REST API
+
+- Added response schema `getPortfolioMarginTieredCollateralRatesResponse`
+
 ## 78.1.0 - 2026-11-12
 
 **Derivatives Trading USDS Futures**

@@ -1149,6 +1149,55 @@ impl RestApi {
             .await
     }
 
+    /// Get Portfolio Margin Tiered Collateral Rates (`MARKET_DATA`)
+    ///
+    /// Query the tiered collateral rate configurations for Portfolio Margin assets.
+    ///
+    /// Weight(IP): 50
+    ///
+    /// Security Type: `MARKET_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetPortfolioMarginTieredCollateralRatesParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/market-data#get-portfolio-margin-tiered-collateral-rates).
+    ///
+    pub async fn get_portfolio_margin_tiered_collateral_rates(
+        &self,
+    ) -> anyhow::Result<
+        RestApiResponse<Vec<models::GetPortfolioMarginTieredCollateralRatesResponseInner>>,
+    > {
+        self.market_data_api_client
+            .get_portfolio_margin_tiered_collateral_rates()
+            .await
+    }
+
     /// Portfolio Margin Collateral Rate (`MARKET_DATA`)
     ///
     /// Portfolio Margin Collateral Rate
