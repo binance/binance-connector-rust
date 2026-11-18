@@ -1,5 +1,11 @@
 # Changelog
 
+## 78.3.0 - 2026-11-18
+
+**Stock Options**
+
+- Initial release
+
 ## 78.2.0 - 2026-11-17
 
 **Derivatives Trading Portfolio Margin**

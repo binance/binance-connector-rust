@@ -113,6 +113,10 @@ pub const SPOT_WS_STREAMS_MARKET_URL: &str = "wss://data-stream.binance.vision";
 // Staking constants
 pub const STAKING_REST_API_PROD_URL: &str = "https://api.binance.com";
 
+// Stock Options constants
+pub const STOCK_OPTIONS_REST_API_PROD_URL: &str = "https://api.binance.com";
+pub const STOCK_OPTIONS_WS_STREAMS_PROD_URL: &str = "wss://nbstream.binance.com/equity";
+
 // Stocks constants
 pub const STOCKS_REST_API_PROD_URL: &str = "https://api.binance.com";
 pub const STOCKS_WS_STREAMS_PROD_URL: &str = "wss://nbstream.binance.com/equity";

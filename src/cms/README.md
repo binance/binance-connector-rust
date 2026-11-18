@@ -31,7 +31,7 @@ Enable the `cms` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "75.0.0", features = ["cms"] }
+binance-sdk = { version = "78.3.0", features = ["cms"] }
 ```
 
 In your code, import the `cms` client:

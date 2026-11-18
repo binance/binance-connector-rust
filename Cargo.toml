@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "78.2.0"
+version = "78.3.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -165,6 +165,7 @@ rebate = [ ]
 simple_earn = [ ]
 spot = [ ]
 staking = [ ]
+stock_options = [ ]
 stocks = [ ]
 sub_account = [ ]
 vip_loan = [ ]
@@ -193,6 +194,7 @@ all = [
   "simple_earn",
   "spot",
   "staking",
+  "stock_options",
   "stocks",
   "sub_account",
   "vip_loan",
@@ -3991,6 +3993,101 @@ path = "examples/staking/rest_api/sol_staking_api/subscribe_sol_staking.rs"
 required-features = [ "staking" ]
 
 [[example]]
+name = "stock_options_rest_api_market_data_api_option_contracts"
+path = "examples/stock_options/rest_api/market_data_api/option_contracts.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_market_data_api_option_exchange_info"
+path = "examples/stock_options/rest_api/market_data_api/option_exchange_info.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_market_data_api_option_expirations"
+path = "examples/stock_options/rest_api/market_data_api/option_expirations.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_trade_api_cancel_all_option_orders"
+path = "examples/stock_options/rest_api/trade_api/cancel_all_option_orders.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_trade_api_cancel_option_order"
+path = "examples/stock_options/rest_api/trade_api/cancel_option_order.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_trade_api_place_option_order"
+path = "examples/stock_options/rest_api/trade_api/place_option_order.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_trade_api_submit_option_exercise"
+path = "examples/stock_options/rest_api/trade_api/submit_option_exercise.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_current_open_option_orders"
+path = "examples/stock_options/rest_api/user_data_api/current_open_option_orders.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_exercisable_options"
+path = "examples/stock_options/rest_api/user_data_api/exercisable_options.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_exercise_detail"
+path = "examples/stock_options/rest_api/user_data_api/option_exercise_detail.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_exercise_history"
+path = "examples/stock_options/rest_api/user_data_api/option_exercise_history.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_order_detail"
+path = "examples/stock_options/rest_api/user_data_api/option_order_detail.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_order_history"
+path = "examples/stock_options/rest_api/user_data_api/option_order_history.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_positions"
+path = "examples/stock_options/rest_api/user_data_api/option_positions.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_settlement_event_detail"
+path = "examples/stock_options/rest_api/user_data_api/option_settlement_event_detail.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_settlement_event_history"
+path = "examples/stock_options/rest_api/user_data_api/option_settlement_event_history.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_api_option_trade_history"
+path = "examples/stock_options/rest_api/user_data_api/option_trade_history.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_rest_api_user_data_streams_api_create_renew_listen_key"
+path = "examples/stock_options/rest_api/user_data_streams_api/create_renew_listen_key.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
+name = "stock_options_websocket_streams_order_report_v2_stream"
+path = "examples/stock_options/websocket_streams/order_report_v2_stream.rs"
+required-features = [ "stock_options" ]
+
+[[example]]
 name = "stocks_rest_api_account_api_sign_us_equity_disclaimer"
 path = "examples/stocks/rest_api/account_api/sign_us_equity_disclaimer.rs"
 required-features = [ "stocks" ]
@@ -4929,4 +5026,3 @@ required-features = [ "wallet" ]
 name = "wallet_rest_api_travel_rule_api_withdraw_travel_rule"
 path = "examples/wallet/rest_api/travel_rule_api/withdraw_travel_rule.rs"
 required-features = [ "wallet" ]
-

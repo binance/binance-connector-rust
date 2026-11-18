@@ -35,7 +35,7 @@ Enable the `w3w_prediction` feature in your `Cargo.toml` under `binance-sdk`:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "75.0.0", features = ["w3w_prediction"] }
+binance-sdk = { version = "78.3.0", features = ["w3w_prediction"] }
 ```
 
 In your code, import the `w3w_prediction` client:

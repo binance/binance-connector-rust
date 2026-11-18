@@ -53,6 +53,7 @@ All connectors are bundled within the single `binance-sdk` crate. Enable only th
 * [`simple_earn`](./src/simple_earn) – Simple Earn connector
 * [`spot`](./src/spot) – Spot Trading connector
 * [`staking`](./src/staking) – Staking connector
+* [`stock_options`](./src/stock_options) – Stock Options connector
 * [`stocks`](./src/stocks) – Stocks connector
 * [`sub_account`](./src/sub_account) – Sub Account connector
 * [`vip_loan`](./src/vip_loan) – VIP Loan connector
@@ -70,14 +71,14 @@ Add `binance-sdk` to your `Cargo.toml`, enabling only the features you need. For
 
 ```toml
 [dependencies]
-binance-sdk = { version = "75.0.0", features = ["derivatives_trading_usds_futures", "spot"] }
+binance-sdk = { version = "78.3.0", features = ["derivatives_trading_usds_futures", "spot"] }
 ```
 
 If you require all available connectors:
 
 ```toml
 [dependencies]
-binance-sdk = { version = "75.0.0", features = ["all"] }
+binance-sdk = { version = "78.3.0", features = ["all"] }
 ```
 
 ## TLS Backend Selection
@@ -88,7 +89,7 @@ This library supports both **OpenSSL** (default) and **Rustls** backends.
 
 ```toml
 [dependencies]
-binance-sdk = { version = "75.0.0", features = ["spot"] }
+binance-sdk = { version = "78.3.0", features = ["spot"] }
 ```
 
 **Using Rustls (Pure Rust):** To use rustls (useful for cross-compilation or avoiding C-dependencies), you must disable default features and enable rustls-tls.
@@ -97,7 +98,7 @@ Note: Private key signing features currently require the openssl-tls feature.
 
 ```toml
 [dependencies]
-binance-sdk = { version = "75.0.0", default-features = false, features = ["rustls-tls", "spot"] }
+binance-sdk = { version = "78.3.0", default-features = false, features = ["rustls-tls", "spot"] }
 ```
 
 ## Contributing
