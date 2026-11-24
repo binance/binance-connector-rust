@@ -87,10 +87,34 @@ pub trait AccountApi: Send + Sync {
         &self,
         params: GetCmCurrentPositionModeParams,
     ) -> anyhow::Result<RestApiResponse<models::GetCmCurrentPositionModeResponse>>;
+    async fn get_cm_futures_order_download_link_by_id(
+        &self,
+        params: GetCmFuturesOrderDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesOrderDownloadLinkByIdResponse>>;
+    async fn get_cm_futures_trade_download_link_by_id(
+        &self,
+        params: GetCmFuturesTradeDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTradeDownloadLinkByIdResponse>>;
+    async fn get_cm_futures_transaction_download_link_by_id(
+        &self,
+        params: GetCmFuturesTransactionDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTransactionDownloadLinkByIdResponse>>;
     async fn get_cm_income_history(
         &self,
         params: GetCmIncomeHistoryParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetCmIncomeHistoryResponseInner>>>;
+    async fn get_download_id_for_cm_futures_order_history(
+        &self,
+        params: GetDownloadIdForCmFuturesOrderHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesOrderHistoryResponse>>;
+    async fn get_download_id_for_cm_futures_trade_history(
+        &self,
+        params: GetDownloadIdForCmFuturesTradeHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesTradeHistoryResponse>>;
+    async fn get_download_id_for_cm_futures_transaction_history(
+        &self,
+        params: GetDownloadIdForCmFuturesTransactionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesTransactionHistoryResponse>>;
     async fn get_download_id_for_um_futures_order_history(
         &self,
         params: GetDownloadIdForUmFuturesOrderHistoryParams,
@@ -1105,6 +1129,108 @@ impl GetCmCurrentPositionModeParams {
         GetCmCurrentPositionModeParamsBuilder::default()
     }
 }
+/// Request parameters for the [`get_cm_futures_order_download_link_by_id`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_cm_futures_order_download_link_by_id`](#method.get_cm_futures_order_download_link_by_id).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetCmFuturesOrderDownloadLinkByIdParams {
+    /// get by download id api
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "downloadId")]
+    pub download_id: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetCmFuturesOrderDownloadLinkByIdParams {
+    /// Create a builder for [`get_cm_futures_order_download_link_by_id`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `download_id` — get by download id api
+    ///
+    #[must_use]
+    pub fn builder(download_id: String) -> GetCmFuturesOrderDownloadLinkByIdParamsBuilder {
+        GetCmFuturesOrderDownloadLinkByIdParamsBuilder::default().download_id(download_id)
+    }
+}
+/// Request parameters for the [`get_cm_futures_trade_download_link_by_id`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_cm_futures_trade_download_link_by_id`](#method.get_cm_futures_trade_download_link_by_id).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetCmFuturesTradeDownloadLinkByIdParams {
+    /// get by download id api
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "downloadId")]
+    pub download_id: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetCmFuturesTradeDownloadLinkByIdParams {
+    /// Create a builder for [`get_cm_futures_trade_download_link_by_id`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `download_id` — get by download id api
+    ///
+    #[must_use]
+    pub fn builder(download_id: String) -> GetCmFuturesTradeDownloadLinkByIdParamsBuilder {
+        GetCmFuturesTradeDownloadLinkByIdParamsBuilder::default().download_id(download_id)
+    }
+}
+/// Request parameters for the [`get_cm_futures_transaction_download_link_by_id`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_cm_futures_transaction_download_link_by_id`](#method.get_cm_futures_transaction_download_link_by_id).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetCmFuturesTransactionDownloadLinkByIdParams {
+    /// get by download id api
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "downloadId")]
+    pub download_id: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetCmFuturesTransactionDownloadLinkByIdParams {
+    /// Create a builder for [`get_cm_futures_transaction_download_link_by_id`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `download_id` — get by download id api
+    ///
+    #[must_use]
+    pub fn builder(download_id: String) -> GetCmFuturesTransactionDownloadLinkByIdParamsBuilder {
+        GetCmFuturesTransactionDownloadLinkByIdParamsBuilder::default().download_id(download_id)
+    }
+}
 /// Request parameters for the [`get_cm_income_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1159,6 +1285,144 @@ impl GetCmIncomeHistoryParams {
     #[must_use]
     pub fn builder() -> GetCmIncomeHistoryParamsBuilder {
         GetCmIncomeHistoryParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`get_download_id_for_cm_futures_order_history`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_download_id_for_cm_futures_order_history`](#method.get_download_id_for_cm_futures_order_history).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetDownloadIdForCmFuturesOrderHistoryParams {
+    /// Timestamp in ms
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "startTime")]
+    pub start_time: i64,
+    /// Timestamp in ms
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "endTime")]
+    pub end_time: i64,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetDownloadIdForCmFuturesOrderHistoryParams {
+    /// Create a builder for [`get_download_id_for_cm_futures_order_history`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `start_time` — Timestamp in ms
+    /// * `end_time` — Timestamp in ms
+    ///
+    #[must_use]
+    pub fn builder(
+        start_time: i64,
+        end_time: i64,
+    ) -> GetDownloadIdForCmFuturesOrderHistoryParamsBuilder {
+        GetDownloadIdForCmFuturesOrderHistoryParamsBuilder::default()
+            .start_time(start_time)
+            .end_time(end_time)
+    }
+}
+/// Request parameters for the [`get_download_id_for_cm_futures_trade_history`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_download_id_for_cm_futures_trade_history`](#method.get_download_id_for_cm_futures_trade_history).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetDownloadIdForCmFuturesTradeHistoryParams {
+    /// Timestamp in ms
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "startTime")]
+    pub start_time: i64,
+    /// Timestamp in ms
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "endTime")]
+    pub end_time: i64,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetDownloadIdForCmFuturesTradeHistoryParams {
+    /// Create a builder for [`get_download_id_for_cm_futures_trade_history`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `start_time` — Timestamp in ms
+    /// * `end_time` — Timestamp in ms
+    ///
+    #[must_use]
+    pub fn builder(
+        start_time: i64,
+        end_time: i64,
+    ) -> GetDownloadIdForCmFuturesTradeHistoryParamsBuilder {
+        GetDownloadIdForCmFuturesTradeHistoryParamsBuilder::default()
+            .start_time(start_time)
+            .end_time(end_time)
+    }
+}
+/// Request parameters for the [`get_download_id_for_cm_futures_transaction_history`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`get_download_id_for_cm_futures_transaction_history`](#method.get_download_id_for_cm_futures_transaction_history).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct GetDownloadIdForCmFuturesTransactionHistoryParams {
+    /// Timestamp in ms
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "startTime")]
+    pub start_time: i64,
+    /// Timestamp in ms
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "endTime")]
+    pub end_time: i64,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl GetDownloadIdForCmFuturesTransactionHistoryParams {
+    /// Create a builder for [`get_download_id_for_cm_futures_transaction_history`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `start_time` — Timestamp in ms
+    /// * `end_time` — Timestamp in ms
+    ///
+    #[must_use]
+    pub fn builder(
+        start_time: i64,
+        end_time: i64,
+    ) -> GetDownloadIdForCmFuturesTransactionHistoryParamsBuilder {
+        GetDownloadIdForCmFuturesTransactionHistoryParamsBuilder::default()
+            .start_time(start_time)
+            .end_time(end_time)
     }
 }
 /// Request parameters for the [`get_download_id_for_um_futures_order_history`] operation.
@@ -2671,6 +2935,109 @@ impl AccountApi for AccountApiClient {
         .await
     }
 
+    async fn get_cm_futures_order_download_link_by_id(
+        &self,
+        params: GetCmFuturesOrderDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesOrderDownloadLinkByIdResponse>> {
+        let GetCmFuturesOrderDownloadLinkByIdParams {
+            download_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("downloadId".to_string(), json!(download_id));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetCmFuturesOrderDownloadLinkByIdResponse>(
+            &self.configuration,
+            "/papi/v1/cm/order/asyn/id",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_cm_futures_trade_download_link_by_id(
+        &self,
+        params: GetCmFuturesTradeDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTradeDownloadLinkByIdResponse>> {
+        let GetCmFuturesTradeDownloadLinkByIdParams {
+            download_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("downloadId".to_string(), json!(download_id));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetCmFuturesTradeDownloadLinkByIdResponse>(
+            &self.configuration,
+            "/papi/v1/cm/trade/asyn/id",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_cm_futures_transaction_download_link_by_id(
+        &self,
+        params: GetCmFuturesTransactionDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTransactionDownloadLinkByIdResponse>>
+    {
+        let GetCmFuturesTransactionDownloadLinkByIdParams {
+            download_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("downloadId".to_string(), json!(download_id));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetCmFuturesTransactionDownloadLinkByIdResponse>(
+            &self.configuration,
+            "/papi/v1/cm/income/asyn/id",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn get_cm_income_history(
         &self,
         params: GetCmIncomeHistoryParams,
@@ -2714,6 +3081,120 @@ impl AccountApi for AccountApiClient {
         send_request::<Vec<models::GetCmIncomeHistoryResponseInner>>(
             &self.configuration,
             "/papi/v1/cm/income",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_download_id_for_cm_futures_order_history(
+        &self,
+        params: GetDownloadIdForCmFuturesOrderHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesOrderHistoryResponse>>
+    {
+        let GetDownloadIdForCmFuturesOrderHistoryParams {
+            start_time,
+            end_time,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("startTime".to_string(), json!(start_time));
+
+        query_params.insert("endTime".to_string(), json!(end_time));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetDownloadIdForCmFuturesOrderHistoryResponse>(
+            &self.configuration,
+            "/papi/v1/cm/order/asyn",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_download_id_for_cm_futures_trade_history(
+        &self,
+        params: GetDownloadIdForCmFuturesTradeHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesTradeHistoryResponse>>
+    {
+        let GetDownloadIdForCmFuturesTradeHistoryParams {
+            start_time,
+            end_time,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("startTime".to_string(), json!(start_time));
+
+        query_params.insert("endTime".to_string(), json!(end_time));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetDownloadIdForCmFuturesTradeHistoryResponse>(
+            &self.configuration,
+            "/papi/v1/cm/trade/asyn",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn get_download_id_for_cm_futures_transaction_history(
+        &self,
+        params: GetDownloadIdForCmFuturesTransactionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesTransactionHistoryResponse>>
+    {
+        let GetDownloadIdForCmFuturesTransactionHistoryParams {
+            start_time,
+            end_time,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("startTime".to_string(), json!(start_time));
+
+        query_params.insert("endTime".to_string(), json!(end_time));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::GetDownloadIdForCmFuturesTransactionHistoryResponse>(
+            &self.configuration,
+            "/papi/v1/cm/income/asyn",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -4210,6 +4691,94 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn get_cm_futures_order_download_link_by_id(
+            &self,
+            _params: GetCmFuturesOrderDownloadLinkByIdParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesOrderDownloadLinkByIdResponse>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetCmFuturesOrderDownloadLinkByIdResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetCmFuturesOrderDownloadLinkByIdResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_cm_futures_trade_download_link_by_id(
+            &self,
+            _params: GetCmFuturesTradeDownloadLinkByIdParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTradeDownloadLinkByIdResponse>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetCmFuturesTradeDownloadLinkByIdResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::GetCmFuturesTradeDownloadLinkByIdResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_cm_futures_transaction_download_link_by_id(
+            &self,
+            _params: GetCmFuturesTransactionDownloadLinkByIdParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTransactionDownloadLinkByIdResponse>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetCmFuturesTransactionDownloadLinkByIdResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetCmFuturesTransactionDownloadLinkByIdResponse",
+                );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn get_cm_income_history(
             &self,
             _params: GetCmIncomeHistoryParams,
@@ -4227,6 +4796,106 @@ mod tests {
             let dummy_response: Vec<models::GetCmIncomeHistoryResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::GetCmIncomeHistoryResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_download_id_for_cm_futures_order_history(
+            &self,
+            _params: GetDownloadIdForCmFuturesOrderHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesOrderHistoryResponse>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetDownloadIdForCmFuturesOrderHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesOrderHistoryResponse",
+                );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_download_id_for_cm_futures_trade_history(
+            &self,
+            _params: GetDownloadIdForCmFuturesTradeHistoryParams,
+        ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesTradeHistoryResponse>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetDownloadIdForCmFuturesTradeHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesTradeHistoryResponse",
+                );
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn get_download_id_for_cm_futures_transaction_history(
+            &self,
+            _params: GetDownloadIdForCmFuturesTransactionHistoryParams,
+        ) -> anyhow::Result<
+            RestApiResponse<models::GetDownloadIdForCmFuturesTransactionHistoryResponse>,
+        > {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::GetDownloadIdForCmFuturesTransactionHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesTransactionHistoryResponse",
+                );
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -5939,6 +6608,175 @@ mod tests {
     }
 
     #[test]
+    fn get_cm_futures_order_download_link_by_id_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetCmFuturesOrderDownloadLinkByIdParams::builder("545923594199212032".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCmFuturesOrderDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCmFuturesOrderDownloadLinkByIdResponse");
+
+            let resp = client.get_cm_futures_order_download_link_by_id(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_order_download_link_by_id_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetCmFuturesOrderDownloadLinkByIdParams::builder("545923594199212032".to_string(),).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCmFuturesOrderDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCmFuturesOrderDownloadLinkByIdResponse");
+
+            let resp = client.get_cm_futures_order_download_link_by_id(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_order_download_link_by_id_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params =
+                GetCmFuturesOrderDownloadLinkByIdParams::builder("545923594199212032".to_string())
+                    .build()
+                    .unwrap();
+
+            match client
+                .get_cm_futures_order_download_link_by_id(params)
+                .await
+            {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_trade_download_link_by_id_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetCmFuturesTradeDownloadLinkByIdParams::builder("545923594199212032".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCmFuturesTradeDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCmFuturesTradeDownloadLinkByIdResponse");
+
+            let resp = client.get_cm_futures_trade_download_link_by_id(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_trade_download_link_by_id_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetCmFuturesTradeDownloadLinkByIdParams::builder("545923594199212032".to_string(),).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCmFuturesTradeDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCmFuturesTradeDownloadLinkByIdResponse");
+
+            let resp = client.get_cm_futures_trade_download_link_by_id(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_trade_download_link_by_id_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params =
+                GetCmFuturesTradeDownloadLinkByIdParams::builder("545923594199212032".to_string())
+                    .build()
+                    .unwrap();
+
+            match client
+                .get_cm_futures_trade_download_link_by_id(params)
+                .await
+            {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_transaction_download_link_by_id_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetCmFuturesTransactionDownloadLinkByIdParams::builder("545923594199212032".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCmFuturesTransactionDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCmFuturesTransactionDownloadLinkByIdResponse");
+
+            let resp = client.get_cm_futures_transaction_download_link_by_id(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_transaction_download_link_by_id_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetCmFuturesTransactionDownloadLinkByIdParams::builder("545923594199212032".to_string(),).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"downloadId":"545923594199212032","status":"processing","url":"","s3Link":"null","notified":false,"expirationTimestamp":-1,"isExpired":"null"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::GetCmFuturesTransactionDownloadLinkByIdResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::GetCmFuturesTransactionDownloadLinkByIdResponse");
+
+            let resp = client.get_cm_futures_transaction_download_link_by_id(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_cm_futures_transaction_download_link_by_id_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params = GetCmFuturesTransactionDownloadLinkByIdParams::builder(
+                "545923594199212032".to_string(),
+            )
+            .build()
+            .unwrap();
+
+            match client
+                .get_cm_futures_transaction_download_link_by_id(params)
+                .await
+            {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn get_cm_income_history_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockAccountApiClient { force_error: false };
@@ -5980,6 +6818,255 @@ mod tests {
             let params = GetCmIncomeHistoryParams::builder().build().unwrap();
 
             match client.get_cm_income_history(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_order_history_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params =
+                GetDownloadIdForCmFuturesOrderHistoryParams::builder(1623319461670, 1641782889000)
+                    .build()
+                    .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetDownloadIdForCmFuturesOrderHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesOrderHistoryResponse",
+                );
+
+            let resp = client
+                .get_download_id_for_cm_futures_order_history(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_order_history_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params =
+                GetDownloadIdForCmFuturesOrderHistoryParams::builder(1623319461670, 1641782889000)
+                    .recv_window(5000)
+                    .build()
+                    .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetDownloadIdForCmFuturesOrderHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesOrderHistoryResponse",
+                );
+
+            let resp = client
+                .get_download_id_for_cm_futures_order_history(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_order_history_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params =
+                GetDownloadIdForCmFuturesOrderHistoryParams::builder(1623319461670, 1641782889000)
+                    .build()
+                    .unwrap();
+
+            match client
+                .get_download_id_for_cm_futures_order_history(params)
+                .await
+            {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_trade_history_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params =
+                GetDownloadIdForCmFuturesTradeHistoryParams::builder(1623319461670, 1641782889000)
+                    .build()
+                    .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetDownloadIdForCmFuturesTradeHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesTradeHistoryResponse",
+                );
+
+            let resp = client
+                .get_download_id_for_cm_futures_trade_history(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_trade_history_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params =
+                GetDownloadIdForCmFuturesTradeHistoryParams::builder(1623319461670, 1641782889000)
+                    .recv_window(5000)
+                    .build()
+                    .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetDownloadIdForCmFuturesTradeHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesTradeHistoryResponse",
+                );
+
+            let resp = client
+                .get_download_id_for_cm_futures_trade_history(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_trade_history_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params =
+                GetDownloadIdForCmFuturesTradeHistoryParams::builder(1623319461670, 1641782889000)
+                    .build()
+                    .unwrap();
+
+            match client
+                .get_download_id_for_cm_futures_trade_history(params)
+                .await
+            {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_transaction_history_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetDownloadIdForCmFuturesTransactionHistoryParams::builder(
+                1623319461670,
+                1641782889000,
+            )
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetDownloadIdForCmFuturesTransactionHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesTransactionHistoryResponse",
+                );
+
+            let resp = client
+                .get_download_id_for_cm_futures_transaction_history(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_transaction_history_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: false };
+
+            let params = GetDownloadIdForCmFuturesTransactionHistoryParams::builder(
+                1623319461670,
+                1641782889000,
+            )
+            .recv_window(5000)
+            .build()
+            .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"avgCostTimestampOfLast30d":7241837,"downloadId":"546975389218332672"}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::GetDownloadIdForCmFuturesTransactionHistoryResponse =
+                serde_json::from_value(resp_json.clone()).expect(
+                    "should parse into models::GetDownloadIdForCmFuturesTransactionHistoryResponse",
+                );
+
+            let resp = client
+                .get_download_id_for_cm_futures_transaction_history(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn get_download_id_for_cm_futures_transaction_history_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockAccountApiClient { force_error: true };
+
+            let params = GetDownloadIdForCmFuturesTransactionHistoryParams::builder(
+                1623319461670,
+                1641782889000,
+            )
+            .build()
+            .unwrap();
+
+            match client
+                .get_download_id_for_cm_futures_transaction_history(params)
+                .await
+            {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

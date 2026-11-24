@@ -324,6 +324,41 @@ impl std::str::FromStr for PlaceEquityOrderWalletTypeEnum {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum PlaceEquityOrderTokenizedAssetSettleWalletTypeEnum {
+    #[serde(rename = "MAIN")]
+    Main,
+    #[serde(rename = "CARD")]
+    Card,
+}
+
+impl PlaceEquityOrderTokenizedAssetSettleWalletTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Main => "MAIN",
+            Self::Card => "CARD",
+        }
+    }
+}
+
+impl std::str::FromStr for PlaceEquityOrderTokenizedAssetSettleWalletTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MAIN" => Ok(Self::Main),
+            "CARD" => Ok(Self::Card),
+            other => Err(format!(
+                "invalid PlaceEquityOrderTokenizedAssetSettleWalletTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`cancel_all_equity_orders`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -667,6 +702,13 @@ pub struct PlaceEquityOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "tokenize", default)]
     pub tokenize: Option<bool>,
+    /// Wallet that receives the tokenized asset minted after the order fills. `MAIN` = Spot wallet, `CARD` = Funding wallet. Default `CARD`. Only applies when `side` = `BUY` and `tokenize` = `true`; ignored for `SELL` or `tokenize` = `false`. If `MAIN` is sent while Spot wallet settlement is not enabled, the request is rejected as an illegal parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "tokenizedAssetSettleWalletType", default)]
+    pub tokenized_asset_settle_wallet_type:
+        Option<PlaceEquityOrderTokenizedAssetSettleWalletTypeEnum>,
     /// The value cannot be greater than `60000`.
     ///
     /// This field is **optional.
@@ -978,6 +1020,7 @@ impl TradeApi for TradeApiClient {
             wallet_type,
             client_order_id,
             tokenize,
+            tokenized_asset_settle_wallet_type,
             recv_window,
         } = params;
 
@@ -1024,6 +1067,10 @@ impl TradeApi for TradeApiClient {
 
         if let Some(rw) = tokenize {
             query_params.insert("tokenize".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = tokenized_asset_settle_wallet_type {
+            query_params.insert("tokenizedAssetSettleWalletType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -1650,7 +1697,7 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
 
-            let params = PlaceEquityOrderParams::builder("AAPL".to_string(),PlaceEquityOrderSideEnum::Buy,PlaceEquityOrderOrderTypeEnum::Market,).quote_asset("USDC".to_string()).price("180.50".to_string()).quantity("1".to_string()).notional("1000.00".to_string()).time_in_force(PlaceEquityOrderTimeInForceEnum::Day).trading_session(PlaceEquityOrderTradingSessionEnum::Rth).wallet_type(PlaceEquityOrderWalletTypeEnum::Card).client_order_id("web_2c9c92b74f1e4a7c8f3b9e1a2d3c4b5a".to_string()).tokenize(true).recv_window(5000).build().unwrap();
+            let params = PlaceEquityOrderParams::builder("AAPL".to_string(),PlaceEquityOrderSideEnum::Buy,PlaceEquityOrderOrderTypeEnum::Market,).quote_asset("USDC".to_string()).price("180.50".to_string()).quantity("1".to_string()).notional("1000.00".to_string()).time_in_force(PlaceEquityOrderTimeInForceEnum::Day).trading_session(PlaceEquityOrderTradingSessionEnum::Rth).wallet_type(PlaceEquityOrderWalletTypeEnum::Card).client_order_id("web_2c9c92b74f1e4a7c8f3b9e1a2d3c4b5a".to_string()).tokenize(true).tokenized_asset_settle_wallet_type(PlaceEquityOrderTokenizedAssetSettleWalletTypeEnum::Main).recv_window(5000).build().unwrap();
 
             let resp_json: Value = serde_json::from_str(r#"{"status":"S","orderId":"c3c58f49-7b0d-4b9e-a2db-1a2f9a3b8c71","clientOrderId":"web_2c9c92b74f1e4a7c8f3b9e1a2d3c4b5a"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::PlaceEquityOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::PlaceEquityOrderResponse");

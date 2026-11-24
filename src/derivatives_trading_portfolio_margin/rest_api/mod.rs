@@ -793,6 +793,160 @@ impl RestApi {
             .await
     }
 
+    /// Get CM Futures Order Download Link by Id (`USER_DATA`)
+    ///
+    /// Get CM futures order download link by Id
+    ///
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetCmFuturesOrderDownloadLinkByIdParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetCmFuturesOrderDownloadLinkByIdResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-cm-futures-order-download-link-by-id).
+    ///
+    pub async fn get_cm_futures_order_download_link_by_id(
+        &self,
+        params: GetCmFuturesOrderDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesOrderDownloadLinkByIdResponse>> {
+        self.account_api_client
+            .get_cm_futures_order_download_link_by_id(params)
+            .await
+    }
+
+    /// Get CM Futures Trade Download Link by Id (`USER_DATA`)
+    ///
+    /// Get CM futures trade download link by Id
+    ///
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetCmFuturesTradeDownloadLinkByIdParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetCmFuturesTradeDownloadLinkByIdResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-cm-futures-trade-download-link-by-id).
+    ///
+    pub async fn get_cm_futures_trade_download_link_by_id(
+        &self,
+        params: GetCmFuturesTradeDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTradeDownloadLinkByIdResponse>> {
+        self.account_api_client
+            .get_cm_futures_trade_download_link_by_id(params)
+            .await
+    }
+
+    /// Get CM Futures Transaction Download Link by Id (`USER_DATA`)
+    ///
+    /// Get CM futures Transaction download link by Id
+    ///
+    /// Weight(IP): 10
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Download link expiration: 7 days
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetCmFuturesTransactionDownloadLinkByIdParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetCmFuturesTransactionDownloadLinkByIdResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-cm-futures-transaction-download-link-by-id).
+    ///
+    pub async fn get_cm_futures_transaction_download_link_by_id(
+        &self,
+        params: GetCmFuturesTransactionDownloadLinkByIdParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetCmFuturesTransactionDownloadLinkByIdResponse>>
+    {
+        self.account_api_client
+            .get_cm_futures_transaction_download_link_by_id(params)
+            .await
+    }
+
     /// Get CM Income History (`USER_DATA`)
     ///
     /// Get CM Income History.
@@ -843,6 +997,165 @@ impl RestApi {
         params: GetCmIncomeHistoryParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::GetCmIncomeHistoryResponseInner>>> {
         self.account_api_client.get_cm_income_history(params).await
+    }
+
+    /// Get Download Id For CM Futures Order History (`USER_DATA`)
+    ///
+    /// Get download id for CM futures order history
+    ///
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 10 times per month, shared by front end download page and rest api
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetDownloadIdForCmFuturesOrderHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetDownloadIdForCmFuturesOrderHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-download-id-for-cm-futures-order-history).
+    ///
+    pub async fn get_download_id_for_cm_futures_order_history(
+        &self,
+        params: GetDownloadIdForCmFuturesOrderHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesOrderHistoryResponse>>
+    {
+        self.account_api_client
+            .get_download_id_for_cm_futures_order_history(params)
+            .await
+    }
+
+    /// Get Download Id For CM Futures Trade History (`USER_DATA`)
+    ///
+    /// Get download id for CM futures trade history
+    ///
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 5 times per month, shared by front end download page and rest api
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetDownloadIdForCmFuturesTradeHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetDownloadIdForCmFuturesTradeHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-download-id-for-cm-futures-trade-history).
+    ///
+    pub async fn get_download_id_for_cm_futures_trade_history(
+        &self,
+        params: GetDownloadIdForCmFuturesTradeHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesTradeHistoryResponse>>
+    {
+        self.account_api_client
+            .get_download_id_for_cm_futures_trade_history(params)
+            .await
+    }
+
+    /// Get Download Id For CM Futures Transaction History (`USER_DATA`)
+    ///
+    /// Get download id for CM futures transaction history
+    ///
+    /// Weight(IP): 1500
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Request Limitation is 5 times per month, shared by front end download page and rest api
+    /// - The time between `startTime` and `endTime` can not be longer than 1 year
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`GetDownloadIdForCmFuturesTransactionHistoryParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::GetDownloadIdForCmFuturesTransactionHistoryResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/account#get-download-id-for-cm-futures-transaction-history).
+    ///
+    pub async fn get_download_id_for_cm_futures_transaction_history(
+        &self,
+        params: GetDownloadIdForCmFuturesTransactionHistoryParams,
+    ) -> anyhow::Result<RestApiResponse<models::GetDownloadIdForCmFuturesTransactionHistoryResponse>>
+    {
+        self.account_api_client
+            .get_download_id_for_cm_futures_transaction_history(params)
+            .await
     }
 
     /// Get Download Id For UM Futures Order History (`USER_DATA`)

@@ -3511,6 +3511,18 @@ impl RestApi {
     ///
     /// Close out a user data stream.
     ///
+    /// **Note:** After this request, you will receive another WebSocket message:
+    ///
+    /// ```json
+    /// {
+    /// "e": "eventStreamTerminated",
+    /// "E": 1793646860552
+    /// }
+    /// ```
+    ///
+    /// - `e` (string): event type. Example: `eventStreamTerminated`
+    /// - `E` (integer): current timestamp. Example: `1793646860552`
+    ///
     /// Weight(IP): 1
     ///
     /// Security Type: `USER_STREAM`
@@ -3602,7 +3614,7 @@ impl RestApi {
 
     /// Keepalive User Data Stream V2 (`USER_STREAM`)
     ///
-    /// Keepalive a user data stream to prevent a time out.
+    /// Keep alive a user data stream to prevent a timeout. Each successful request extends the listen key validity for 1 hour.
     ///
     /// Weight(IP): 1
     ///

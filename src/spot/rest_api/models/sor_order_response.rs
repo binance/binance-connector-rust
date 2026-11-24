@@ -61,6 +61,45 @@ pub struct SorOrderResponse {
     pub self_trade_prevention_mode: Option<String>,
     #[serde(rename = "usedSor", skip_serializing_if = "Option::is_none")]
     pub used_sor: Option<bool>,
+    /// Appears for `STOP_LOSS`, `TAKE_PROFIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` orders.
+    #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
+    pub stop_price: Option<String>,
+    /// Delta price change required before order activation.
+    #[serde(rename = "trailingDelta", skip_serializing_if = "Option::is_none")]
+    pub trailing_delta: Option<i64>,
+    /// Appears only if the parameter icebergQty was sent in the request.
+    #[serde(rename = "icebergQty", skip_serializing_if = "Option::is_none")]
+    pub iceberg_qty: Option<String>,
+    /// Appears only if the strategyId parameter was provided upon order placement.
+    #[serde(rename = "strategyId", skip_serializing_if = "Option::is_none")]
+    pub strategy_id: Option<i64>,
+    /// Appears only if the strategyType parameter was provided upon order placement.
+    #[serde(rename = "strategyType", skip_serializing_if = "Option::is_none")]
+    pub strategy_type: Option<i64>,
+    /// Appears only if the order expired due to STP.
+    #[serde(rename = "preventedMatchId", skip_serializing_if = "Option::is_none")]
+    pub prevented_match_id: Option<i64>,
+    /// Order quantity that expired due to STP.
+    #[serde(rename = "preventedQuantity", skip_serializing_if = "Option::is_none")]
+    pub prevented_quantity: Option<String>,
+    /// Time when the trailing order is now active and tracking price changes.
+    #[serde(rename = "trailingTime", skip_serializing_if = "Option::is_none")]
+    pub trailing_time: Option<i64>,
+    /// Price peg type. Only for pegged orders.
+    #[serde(rename = "pegPriceType", skip_serializing_if = "Option::is_none")]
+    pub peg_price_type: Option<String>,
+    /// Price peg offset type. Only for pegged orders, if requested.
+    #[serde(rename = "pegOffsetType", skip_serializing_if = "Option::is_none")]
+    pub peg_offset_type: Option<String>,
+    /// Price peg offset value. Only for pegged orders, if requested.
+    #[serde(rename = "pegOffsetValue", skip_serializing_if = "Option::is_none")]
+    pub peg_offset_value: Option<i64>,
+    /// Current price order is pegged at. Only for pegged orders, once determined.
+    #[serde(rename = "peggedPrice", skip_serializing_if = "Option::is_none")]
+    pub pegged_price: Option<String>,
+    /// Cause of the order's expiration. Appears when an order has expired.
+    #[serde(rename = "expiryReason", skip_serializing_if = "Option::is_none")]
+    pub expiry_reason: Option<String>,
 }
 
 impl SorOrderResponse {
@@ -86,6 +125,19 @@ impl SorOrderResponse {
             working_floor: None,
             self_trade_prevention_mode: None,
             used_sor: None,
+            stop_price: None,
+            trailing_delta: None,
+            iceberg_qty: None,
+            strategy_id: None,
+            strategy_type: None,
+            prevented_match_id: None,
+            prevented_quantity: None,
+            trailing_time: None,
+            peg_price_type: None,
+            peg_offset_type: None,
+            peg_offset_value: None,
+            pegged_price: None,
+            expiry_reason: None,
         }
     }
 }

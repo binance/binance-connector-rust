@@ -1122,7 +1122,7 @@ pub struct DepthParams {
     #[builder(setter(into))]
     #[serde(rename = "symbol")]
     pub symbol: String,
-    /// If limit > 5000, only 5000 entries will be returned.
+    /// If limit > 7500, only 7500 entries will be returned.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

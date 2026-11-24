@@ -23,6 +23,12 @@ pub struct TokenizedMintResponse {
     /// Convert status code: `P` = processing, `S` = success, `F` = failed.
     #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    /// The wallet the tokenized asset is settled in: `MAIN` = Spot wallet, `CARD` = Funding wallet.
+    #[serde(
+        rename = "tokenizedAssetSettleWalletType",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub tokenized_asset_settle_wallet_type: Option<String>,
 }
 
 impl TokenizedMintResponse {
@@ -31,6 +37,7 @@ impl TokenizedMintResponse {
         TokenizedMintResponse {
             issuer_request_id: None,
             status: None,
+            tokenized_asset_settle_wallet_type: None,
         }
     }
 }

@@ -51,6 +51,12 @@ pub struct TokenizedConvertStatusResponse {
     /// Last update time (ms epoch).
     #[serde(rename = "updatedAt", skip_serializing_if = "Option::is_none")]
     pub updated_at: Option<i64>,
+    /// The wallet the tokenized asset is settled in: `MAIN` = Spot wallet, `CARD` = Funding wallet.
+    #[serde(
+        rename = "tokenizedAssetSettleWalletType",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub tokenized_asset_settle_wallet_type: Option<String>,
 }
 
 impl TokenizedConvertStatusResponse {
@@ -67,6 +73,7 @@ impl TokenizedConvertStatusResponse {
             status: None,
             created_at: None,
             updated_at: None,
+            tokenized_asset_settle_wallet_type: None,
         }
     }
 }

@@ -441,7 +441,7 @@ impl MarketApi for MarketApiClient {
         let id_opt: Option<String> = vars.get("id").map(std::string::ToString::to_string);
 
         let stream = replace_websocket_streams_placeholders(
-            "/<underlying>@openInterest@<expirationDate>",
+            "/<underlying>@optionOpenInterest@<expirationDate>",
             &vars,
         );
 
@@ -997,7 +997,7 @@ mod tests {
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
             let stream = replace_websocket_streams_placeholders(
-                "/<underlying>@openInterest@<expirationDate>",
+                "/<underlying>@optionOpenInterest@<expirationDate>",
                 &vars,
             );
             let ws_stream = api
@@ -1043,7 +1043,7 @@ mod tests {
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream = replace_websocket_streams_placeholders("/<underlying>@openInterest@<expirationDate>", &vars);
+            let stream = replace_websocket_streams_placeholders("/<underlying>@optionOpenInterest@<expirationDate>", &vars);
 
             let ws_stream = api.open_interest(params).await.unwrap();
 
@@ -1096,7 +1096,7 @@ mod tests {
                 .iter()
                 .filter_map(|&(k, ref v)| v.clone().map(|v| (k, v)))
                 .collect();
-            let stream = replace_websocket_streams_placeholders("/<underlying>@openInterest@<expirationDate>", &vars);
+            let stream = replace_websocket_streams_placeholders("/<underlying>@optionOpenInterest@<expirationDate>", &vars);
 
             let ws_stream = api.open_interest(params).await.unwrap();
 

@@ -1,5 +1,303 @@
 # Changelog
 
+## 79.0.0 - 2026-11-24
+
+**Derivatives Trading Options**
+
+### Added (1)
+
+#### WebSocket Streams
+
+- `open_interest()` (`<underlying>@optionOpenInterest@<expirationDate>` stream)
+
+### Removed (1)
+
+#### WebSocket Streams
+
+- `open_interest()` (`<underlying>@openInterest@<expirationDate>` stream)
+
+**Derivatives Trading Portfolio Margin**
+
+### Added (6)
+
+#### REST API
+
+- `get_cm_futures_order_download_link_by_id()` (`GET /papi/v1/cm/order/asyn/id`)
+- `get_cm_futures_trade_download_link_by_id()` (`GET /papi/v1/cm/trade/asyn/id`)
+- `get_cm_futures_transaction_download_link_by_id()` (`GET /papi/v1/cm/income/asyn/id`)
+- `get_download_id_for_cm_futures_order_history()` (`GET /papi/v1/cm/order/asyn`)
+- `get_download_id_for_cm_futures_trade_history()` (`GET /papi/v1/cm/trade/asyn`)
+- `get_download_id_for_cm_futures_transaction_history()` (`GET /papi/v1/cm/income/asyn`)
+
+### Changed (6)
+
+#### REST API
+
+- Added response schema `getDownloadIdForCmFuturesTradeHistoryResponse`
+- Added response schema `getCmFuturesTransactionDownloadLinkByIdResponse`
+- Added response schema `getDownloadIdForCmFuturesTransactionHistoryResponse`
+- Added response schema `getDownloadIdForCmFuturesOrderHistoryResponse`
+- Added response schema `getCmFuturesOrderDownloadLinkByIdResponse`
+- Added response schema `getCmFuturesTradeDownloadLinkByIdResponse`
+
+**Derivatives Trading USDS Futures**
+
+### Changed (1)
+
+#### WebSocket API
+
+- Modified parameter `timeInForce`:
+  - enum added: `GTX`, `GTD`
+  - affected methods:
+    - `new_algo_order()` (`algoOrder.place` method)
+
+**Spot**
+
+### Changed (68)
+
+#### REST API
+
+- Modified parameter `aboveIcebergQty`:
+  - type `integer` → `number`
+  - format `int64` → `float`
+  - affected methods:
+    - `order_list_oco()` (`POST /api/v3/orderList/oco`)
+- Modified parameter `belowIcebergQty`:
+  - type `integer` → `number`
+  - format `int64` → `float`
+  - affected methods:
+    - `order_list_oco()` (`POST /api/v3/orderList/oco`)
+- Modified response for `delete_open_orders()` (`DELETE /api/v3/openOrders`):
+  - items: property `orderReports` added
+  - items: property `icebergQty` added
+  - items: property `listOrderStatus` added
+  - items: property `transactionTime` added
+  - items: property `pegPriceType` added
+  - items: property `peggedPrice` added
+  - items: property `contingencyType` added
+  - items: property `stopPrice` added
+  - items: property `preventedMatchId` added
+  - items: property `trailingTime` added
+  - items: property `pegOffsetType` added
+  - items: property `usedSor` added
+  - items: property `expiryReason` added
+  - items: property `strategyType` added
+  - items: property `workingFloor` added
+  - items: property `listStatusType` added
+  - items: property `trailingDelta` added
+  - items: property `orders` added
+  - items: property `listClientOrderId` added
+  - items: property `preventedQuantity` added
+  - items: property `strategyId` added
+  - items: property `pegOffsetValue` added
+  - items: item property `orderReports` added
+  - items: item property `icebergQty` added
+  - items: item property `listOrderStatus` added
+  - items: item property `transactionTime` added
+  - items: item property `pegPriceType` added
+  - items: item property `peggedPrice` added
+  - items: item property `contingencyType` added
+  - items: item property `stopPrice` added
+  - items: item property `preventedMatchId` added
+  - items: item property `trailingTime` added
+  - items: item property `pegOffsetType` added
+  - items: item property `usedSor` added
+  - items: item property `expiryReason` added
+  - items: item property `strategyType` added
+  - items: item property `workingFloor` added
+  - items: item property `listStatusType` added
+  - items: item property `trailingDelta` added
+  - items: item property `orders` added
+  - items: item property `listClientOrderId` added
+  - items: item property `preventedQuantity` added
+  - items: item property `strategyId` added
+  - items: item property `pegOffsetValue` added
+
+- Modified response for `new_order()` (`POST /api/v3/order`):
+  - property `pegPriceType` added
+  - property `trailingTime` added
+  - property `strategyType` added
+  - property `preventedMatchId` added
+  - property `pegOffsetValue` added
+  - property `pegOffsetType` added
+  - property `usedSor` added
+  - property `preventedQuantity` added
+  - property `strategyId` added
+  - property `workingFloor` added
+  - property `expiryReason` added
+  - property `icebergQty` added
+  - property `peggedPrice` added
+  - property `stopPrice` added
+  - property `trailingDelta` added
+
+- Modified response for `sor_order()` (`POST /api/v3/sor/order`):
+  - property `trailingTime` added
+  - property `strategyId` added
+  - property `trailingDelta` added
+  - property `peggedPrice` added
+  - property `icebergQty` added
+  - property `strategyType` added
+  - property `pegPriceType` added
+  - property `preventedMatchId` added
+  - property `preventedQuantity` added
+  - property `pegOffsetType` added
+  - property `pegOffsetValue` added
+  - property `expiryReason` added
+  - property `stopPrice` added
+
+- Added response field `pegPriceType`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `trailingDelta`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `usedSor`
+  - affected events:
+    - `newOrderResponse`
+- Added response field `pegOffsetValue`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `strategyType`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `strategyId`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `expiryReason`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `icebergQty`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `pegOffsetType`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `peggedPrice`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `stopPrice`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `workingFloor`
+  - affected events:
+    - `newOrderResponse`
+- Added response field `preventedQuantity`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `trailingTime`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Added response field `preventedMatchId`
+  - affected events:
+    - `newOrderResponse`
+    - `sorOrderResponse`
+- Modified response schema `deleteOpenOrdersResponse`:
+  - items: property `preventedQuantity` added
+  - items: property `transactionTime` added
+  - items: property `expiryReason` added
+  - items: property `peggedPrice` added
+  - items: property `listClientOrderId` added
+  - items: property `strategyId` added
+  - items: property `icebergQty` added
+  - items: property `listOrderStatus` added
+  - items: property `listStatusType` added
+  - items: property `pegOffsetValue` added
+  - items: property `pegPriceType` added
+  - items: property `strategyType` added
+  - items: property `workingFloor` added
+  - items: property `contingencyType` added
+  - items: property `stopPrice` added
+  - items: property `preventedMatchId` added
+  - items: property `usedSor` added
+  - items: property `orderReports` added
+  - items: property `trailingTime` added
+  - items: property `pegOffsetType` added
+  - items: property `trailingDelta` added
+  - items: property `orders` added
+  - items: item property `preventedQuantity` added
+  - items: item property `transactionTime` added
+  - items: item property `expiryReason` added
+  - items: item property `peggedPrice` added
+  - items: item property `listClientOrderId` added
+  - items: item property `strategyId` added
+  - items: item property `icebergQty` added
+  - items: item property `listOrderStatus` added
+  - items: item property `listStatusType` added
+  - items: item property `pegOffsetValue` added
+  - items: item property `pegPriceType` added
+  - items: item property `strategyType` added
+  - items: item property `workingFloor` added
+  - items: item property `contingencyType` added
+  - items: item property `stopPrice` added
+  - items: item property `preventedMatchId` added
+  - items: item property `usedSor` added
+  - items: item property `orderReports` added
+  - items: item property `trailingTime` added
+  - items: item property `pegOffsetType` added
+  - items: item property `trailingDelta` added
+  - items: item property `orders` added
+
+#### WebSocket API
+
+- Modified parameter `aboveIcebergQty`:
+  - type `integer` → `number`
+  - format `int64` → `float`
+  - affected methods:
+    - `order_list_place_oco()` (`orderList.place.oco` method)
+- Modified parameter `belowIcebergQty`:
+  - type `integer` → `number`
+  - format `int64` → `float`
+  - affected methods:
+    - `order_list_place_oco()` (`orderList.place.oco` method)
+- Marked `order_list_place()` (`orderList.place` method) as deprecated.
+
+**Stocks**
+
+### Changed (7)
+
+#### REST API
+
+- Added parameter `tokenizedAssetSettleWalletType`
+  - affected methods:
+    - `place_equity_order()` (`POST /sapi/v1/equity/order/place`)
+    - `tokenized_mint()` (`POST /sapi/v1/equity/tokenized/mint`)
+    - `tokenized_redeem()` (`POST /sapi/v1/equity/tokenized/redeem`)
+- Modified response for `tokenized_convert_status()` (`GET /sapi/v1/equity/tokenized/convert-status`):
+  - property `tokenizedAssetSettleWalletType` added
+
+- Modified response for `tokenized_convert_history()` (`GET /sapi/v1/equity/tokenized/history`):
+  - `rows`.items: property `tokenizedAssetSettleWalletType` added
+  - `rows`.items: item property `tokenizedAssetSettleWalletType` added
+
+- Modified response for `tokenized_mint()` (`POST /sapi/v1/equity/tokenized/mint`):
+  - property `tokenizedAssetSettleWalletType` added
+
+- Modified response for `tokenized_redeem()` (`POST /sapi/v1/equity/tokenized/redeem`):
+  - property `tokenizedAssetSettleWalletType` added
+
+- Added response field `tokenizedAssetSettleWalletType`
+  - affected events:
+    - `tokenizedConvertStatusResponse`
+    - `tokenizedMintResponse`
+    - `tokenizedRedeemResponse`
+- Modified response field `rows`:
+  - items: property `tokenizedAssetSettleWalletType` added
+  - items: item property `tokenizedAssetSettleWalletType` added
+  - affected events:
+    - `tokenizedConvertHistoryResponse`
+
 ## 78.3.0 - 2026-11-18
 
 **Stock Options**

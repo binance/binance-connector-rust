@@ -1,6 +1,6 @@
 [package]
 name = "binance-sdk"
-version = "78.3.0"
+version = "79.0.0"
 authors = [ "Binance" ]
 edition = "2024"
 resolver = "3"
@@ -1413,8 +1413,38 @@ path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_c
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_account_api_get_cm_futures_order_download_link_by_id"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_cm_futures_order_download_link_by_id.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_account_api_get_cm_futures_trade_download_link_by_id"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_cm_futures_trade_download_link_by_id.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_account_api_get_cm_futures_transaction_download_link_by_id"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_cm_futures_transaction_download_link_by_id.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
 name = "derivatives_trading_portfolio_margin_rest_api_account_api_get_cm_income_history"
 path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_cm_income_history.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_account_api_get_download_id_for_cm_futures_order_history"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_download_id_for_cm_futures_order_history.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_account_api_get_download_id_for_cm_futures_trade_history"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_download_id_for_cm_futures_trade_history.rs"
+required-features = [ "derivatives_trading_portfolio_margin" ]
+
+[[example]]
+name = "derivatives_trading_portfolio_margin_rest_api_account_api_get_download_id_for_cm_futures_transaction_history"
+path = "examples/derivatives_trading_portfolio_margin/rest_api/account_api/get_download_id_for_cm_futures_transaction_history.rs"
 required-features = [ "derivatives_trading_portfolio_margin" ]
 
 [[example]]
@@ -5026,3 +5056,4 @@ required-features = [ "wallet" ]
 name = "wallet_rest_api_travel_rule_api_withdraw_travel_rule"
 path = "examples/wallet/rest_api/travel_rule_api/withdraw_travel_rule.rs"
 required-features = [ "wallet" ]
+

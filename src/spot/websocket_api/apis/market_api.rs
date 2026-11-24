@@ -1129,8 +1129,7 @@ pub struct DepthParams {
     #[builder(setter(into), default)]
     #[serde(rename = "id", default)]
     pub id: Option<String>,
-    ///
-    /// The `limit` parameter.
+    /// If limit > 7500, only 7500 entries will be returned.
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

@@ -17,14 +17,28 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DeleteOpenOrdersResponseInner {
+    #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
+    pub order_list_id: Option<i64>,
+    #[serde(rename = "contingencyType", skip_serializing_if = "Option::is_none")]
+    pub contingency_type: Option<String>,
+    #[serde(rename = "listStatusType", skip_serializing_if = "Option::is_none")]
+    pub list_status_type: Option<String>,
+    #[serde(rename = "listOrderStatus", skip_serializing_if = "Option::is_none")]
+    pub list_order_status: Option<String>,
+    #[serde(rename = "listClientOrderId", skip_serializing_if = "Option::is_none")]
+    pub list_client_order_id: Option<String>,
+    #[serde(rename = "transactionTime", skip_serializing_if = "Option::is_none")]
+    pub transaction_time: Option<i64>,
     #[serde(rename = "symbol", skip_serializing_if = "Option::is_none")]
     pub symbol: Option<String>,
+    #[serde(rename = "orders", skip_serializing_if = "Option::is_none")]
+    pub orders: Option<Vec<models::DeleteOpenOrdersResponseInnerOrdersInner>>,
+    #[serde(rename = "orderReports", skip_serializing_if = "Option::is_none")]
+    pub order_reports: Option<Vec<models::DeleteOpenOrdersResponseInnerOrderReportsInner>>,
     #[serde(rename = "origClientOrderId", skip_serializing_if = "Option::is_none")]
     pub orig_client_order_id: Option<String>,
     #[serde(rename = "orderId", skip_serializing_if = "Option::is_none")]
     pub order_id: Option<i64>,
-    #[serde(rename = "orderListId", skip_serializing_if = "Option::is_none")]
-    pub order_list_id: Option<i64>,
     #[serde(rename = "clientOrderId", skip_serializing_if = "Option::is_none")]
     pub client_order_id: Option<String>,
     #[serde(rename = "transactTime", skip_serializing_if = "Option::is_none")]
@@ -50,21 +64,73 @@ pub struct DeleteOpenOrdersResponseInner {
     pub r#type: Option<String>,
     #[serde(rename = "side", skip_serializing_if = "Option::is_none")]
     pub side: Option<String>,
+    /// Appears for `STOP_LOSS`, `TAKE_PROFIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` orders.
+    #[serde(rename = "stopPrice", skip_serializing_if = "Option::is_none")]
+    pub stop_price: Option<String>,
+    /// Delta price change required before order activation.
+    #[serde(rename = "trailingDelta", skip_serializing_if = "Option::is_none")]
+    pub trailing_delta: Option<i64>,
+    /// Time when the trailing order is now active and tracking price changes.
+    #[serde(rename = "trailingTime", skip_serializing_if = "Option::is_none")]
+    pub trailing_time: Option<i64>,
+    /// Appears only if the parameter icebergQty was sent in the request.
+    #[serde(rename = "icebergQty", skip_serializing_if = "Option::is_none")]
+    pub iceberg_qty: Option<String>,
+    /// Appears only if the strategyId parameter was provided upon order placement.
+    #[serde(rename = "strategyId", skip_serializing_if = "Option::is_none")]
+    pub strategy_id: Option<i64>,
+    /// Appears only if the strategyType parameter was provided upon order placement.
+    #[serde(rename = "strategyType", skip_serializing_if = "Option::is_none")]
+    pub strategy_type: Option<i64>,
     #[serde(
         rename = "selfTradePreventionMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub self_trade_prevention_mode: Option<String>,
+    /// Appears only if the order expired due to STP.
+    #[serde(rename = "preventedMatchId", skip_serializing_if = "Option::is_none")]
+    pub prevented_match_id: Option<i64>,
+    /// Order quantity that expired due to STP.
+    #[serde(rename = "preventedQuantity", skip_serializing_if = "Option::is_none")]
+    pub prevented_quantity: Option<String>,
+    /// Field that determines whether order used SOR.
+    #[serde(rename = "usedSor", skip_serializing_if = "Option::is_none")]
+    pub used_sor: Option<bool>,
+    /// Determines whether the order is being filled by the SOR or by the order book.
+    #[serde(rename = "workingFloor", skip_serializing_if = "Option::is_none")]
+    pub working_floor: Option<String>,
+    /// Price peg type. Only for pegged orders.
+    #[serde(rename = "pegPriceType", skip_serializing_if = "Option::is_none")]
+    pub peg_price_type: Option<String>,
+    /// Price peg offset type. Only for pegged orders, if requested.
+    #[serde(rename = "pegOffsetType", skip_serializing_if = "Option::is_none")]
+    pub peg_offset_type: Option<String>,
+    /// Price peg offset value. Only for pegged orders, if requested.
+    #[serde(rename = "pegOffsetValue", skip_serializing_if = "Option::is_none")]
+    pub peg_offset_value: Option<i64>,
+    /// Current price order is pegged at. Only for pegged orders, once determined.
+    #[serde(rename = "peggedPrice", skip_serializing_if = "Option::is_none")]
+    pub pegged_price: Option<String>,
+    /// Cause of the order's expiration. Appears when an order has expired.
+    #[serde(rename = "expiryReason", skip_serializing_if = "Option::is_none")]
+    pub expiry_reason: Option<String>,
 }
 
 impl DeleteOpenOrdersResponseInner {
     #[must_use]
     pub fn new() -> DeleteOpenOrdersResponseInner {
         DeleteOpenOrdersResponseInner {
+            order_list_id: None,
+            contingency_type: None,
+            list_status_type: None,
+            list_order_status: None,
+            list_client_order_id: None,
+            transaction_time: None,
             symbol: None,
+            orders: None,
+            order_reports: None,
             orig_client_order_id: None,
             order_id: None,
-            order_list_id: None,
             client_order_id: None,
             transact_time: None,
             price: None,
@@ -76,7 +142,22 @@ impl DeleteOpenOrdersResponseInner {
             time_in_force: None,
             r#type: None,
             side: None,
+            stop_price: None,
+            trailing_delta: None,
+            trailing_time: None,
+            iceberg_qty: None,
+            strategy_id: None,
+            strategy_type: None,
             self_trade_prevention_mode: None,
+            prevented_match_id: None,
+            prevented_quantity: None,
+            used_sor: None,
+            working_floor: None,
+            peg_price_type: None,
+            peg_offset_type: None,
+            peg_offset_value: None,
+            pegged_price: None,
+            expiry_reason: None,
         }
     }
 }

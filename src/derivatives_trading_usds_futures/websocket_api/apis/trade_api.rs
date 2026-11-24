@@ -337,6 +337,10 @@ pub enum NewAlgoOrderTimeInForceEnum {
     Gtc,
     #[serde(rename = "FOK")]
     Fok,
+    #[serde(rename = "GTX")]
+    Gtx,
+    #[serde(rename = "GTD")]
+    Gtd,
 }
 
 impl NewAlgoOrderTimeInForceEnum {
@@ -346,6 +350,8 @@ impl NewAlgoOrderTimeInForceEnum {
             Self::Ioc => "IOC",
             Self::Gtc => "GTC",
             Self::Fok => "FOK",
+            Self::Gtx => "GTX",
+            Self::Gtd => "GTD",
         }
     }
 }
@@ -358,6 +364,8 @@ impl std::str::FromStr for NewAlgoOrderTimeInForceEnum {
             "IOC" => Ok(Self::Ioc),
             "GTC" => Ok(Self::Gtc),
             "FOK" => Ok(Self::Fok),
+            "GTX" => Ok(Self::Gtx),
+            "GTD" => Ok(Self::Gtd),
             other => Err(format!("invalid NewAlgoOrderTimeInForceEnum: {}", other).into()),
         }
     }
@@ -1148,7 +1156,7 @@ pub struct NewAlgoOrderParams {
     #[builder(setter(into), default)]
     #[serde(rename = "positionSide", default)]
     pub position_side: Option<NewAlgoOrderPositionSideEnum>,
-    /// `IOC` or `GTC` or `FOK`, default `GTC`
+    /// `IOC` or `GTC` or `FOK` or `GTX` or `GTD`, default `GTC`
     ///
     /// This field is **optional.
     #[builder(setter(into), default)]

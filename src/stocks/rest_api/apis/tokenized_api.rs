@@ -93,6 +93,76 @@ impl std::str::FromStr for TokenizedConvertStatusConvertTypeEnum {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TokenizedMintTokenizedAssetSettleWalletTypeEnum {
+    #[serde(rename = "MAIN")]
+    Main,
+    #[serde(rename = "CARD")]
+    Card,
+}
+
+impl TokenizedMintTokenizedAssetSettleWalletTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Main => "MAIN",
+            Self::Card => "CARD",
+        }
+    }
+}
+
+impl std::str::FromStr for TokenizedMintTokenizedAssetSettleWalletTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MAIN" => Ok(Self::Main),
+            "CARD" => Ok(Self::Card),
+            other => Err(format!(
+                "invalid TokenizedMintTokenizedAssetSettleWalletTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum TokenizedRedeemTokenizedAssetSettleWalletTypeEnum {
+    #[serde(rename = "MAIN")]
+    Main,
+    #[serde(rename = "CARD")]
+    Card,
+}
+
+impl TokenizedRedeemTokenizedAssetSettleWalletTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Main => "MAIN",
+            Self::Card => "CARD",
+        }
+    }
+}
+
+impl std::str::FromStr for TokenizedRedeemTokenizedAssetSettleWalletTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MAIN" => Ok(Self::Main),
+            "CARD" => Ok(Self::Card),
+            other => Err(format!(
+                "invalid TokenizedRedeemTokenizedAssetSettleWalletTypeEnum: {}",
+                other
+            )
+            .into()),
+        }
+    }
+}
+
 /// Request parameters for the [`tokenized_convert_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -210,6 +280,12 @@ pub struct TokenizedMintParams {
     #[builder(setter(into), default)]
     #[serde(rename = "clientOrderId", default)]
     pub client_order_id: Option<String>,
+    /// Wallet that receives the minted tokenized asset. `MAIN` = Spot wallet, `CARD` = Funding wallet. Default `CARD`. If `MAIN` is sent while Spot wallet settlement is not enabled, the request is rejected as an illegal parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "tokenizedAssetSettleWalletType", default)]
+    pub tokenized_asset_settle_wallet_type: Option<TokenizedMintTokenizedAssetSettleWalletTypeEnum>,
     /// The value cannot be greater than `60000`.
     ///
     /// This field is **optional.
@@ -261,6 +337,13 @@ pub struct TokenizedRedeemParams {
     #[builder(setter(into), default)]
     #[serde(rename = "clientOrderId", default)]
     pub client_order_id: Option<String>,
+    /// Wallet the tokenized asset is deducted from on redeem. `MAIN` = Spot wallet, `CARD` = Funding wallet. Default `CARD`. If `MAIN` is sent while Spot wallet settlement is not enabled, the request is rejected as an illegal parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "tokenizedAssetSettleWalletType", default)]
+    pub tokenized_asset_settle_wallet_type:
+        Option<TokenizedRedeemTokenizedAssetSettleWalletTypeEnum>,
     /// The value cannot be greater than `60000`.
     ///
     /// This field is **optional.
@@ -386,6 +469,7 @@ impl TokenizedApi for TokenizedApiClient {
             underlying_asset,
             underlying_asset_amount,
             client_order_id,
+            tokenized_asset_settle_wallet_type,
             recv_window,
         } = params;
 
@@ -401,6 +485,10 @@ impl TokenizedApi for TokenizedApiClient {
 
         if let Some(rw) = client_order_id {
             query_params.insert("clientOrderId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = tokenized_asset_settle_wallet_type {
+            query_params.insert("tokenizedAssetSettleWalletType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -431,6 +519,7 @@ impl TokenizedApi for TokenizedApiClient {
             tokenized_asset,
             tokenized_asset_amount,
             client_order_id,
+            tokenized_asset_settle_wallet_type,
             recv_window,
         } = params;
 
@@ -446,6 +535,10 @@ impl TokenizedApi for TokenizedApiClient {
 
         if let Some(rw) = client_order_id {
             query_params.insert("clientOrderId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = tokenized_asset_settle_wallet_type {
+            query_params.insert("tokenizedAssetSettleWalletType".to_string(), json!(rw));
         }
 
         if let Some(rw) = recv_window {
@@ -514,7 +607,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000}],"hasMore":true,"nextLastId":10020}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000,"tokenizedAssetSettleWalletType":"CARD"}],"hasMore":true,"nextLastId":10020}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TokenizedConvertHistoryResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TokenizedConvertHistoryResponse");
@@ -542,7 +635,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000,"tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TokenizedConvertStatusResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TokenizedConvertStatusResponse");
@@ -570,10 +663,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","status":"P"}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","status":"P","tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TokenizedMintResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TokenizedMintResponse");
@@ -601,10 +691,7 @@ mod tests {
                 .into());
             }
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"issuerRequestId":"redeem-20260505-a1b2c3d4e5f6","status":"P"}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"issuerRequestId":"redeem-20260505-a1b2c3d4e5f6","status":"P","tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let dummy_response: models::TokenizedRedeemResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::TokenizedRedeemResponse");
@@ -627,7 +714,7 @@ mod tests {
 
             let params = TokenizedConvertHistoryParams::builder().build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000}],"hasMore":true,"nextLastId":10020}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000,"tokenizedAssetSettleWalletType":"CARD"}],"hasMore":true,"nextLastId":10020}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TokenizedConvertHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedConvertHistoryResponse");
 
             let resp = client.tokenized_convert_history(params).await.expect("Expected a response");
@@ -644,7 +731,7 @@ mod tests {
 
             let params = TokenizedConvertHistoryParams::builder().start_time(1735800000000).end_time(1735900000000).last_id(10019).size(20).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000}],"hasMore":true,"nextLastId":10020}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"rows":[{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000,"tokenizedAssetSettleWalletType":"CARD"}],"hasMore":true,"nextLastId":10020}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TokenizedConvertHistoryResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedConvertHistoryResponse");
 
             let resp = client.tokenized_convert_history(params).await.expect("Expected a response");
@@ -677,7 +764,7 @@ mod tests {
 
             let params = TokenizedConvertStatusParams::builder("mint-20260505-8f3b9e1a2d3c4b5a".to_string(),TokenizedConvertStatusConvertTypeEnum::Mint,).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000,"tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TokenizedConvertStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedConvertStatusResponse");
 
             let resp = client.tokenized_convert_status(params).await.expect("Expected a response");
@@ -694,7 +781,7 @@ mod tests {
 
             let params = TokenizedConvertStatusParams::builder("mint-20260505-8f3b9e1a2d3c4b5a".to_string(),TokenizedConvertStatusConvertTypeEnum::Mint,).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(r#"{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let resp_json: Value = serde_json::from_str(r#"{"underlyingAsset":"AAPL","underlyingAssetAmount":"1.000000000","tokenizedAsset":"AAPLB","tokenizedAssetAmount":"1.000000000","issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","convertType":"MINT","status":"S","createdAt":1735900000000,"updatedAt":1735900060000,"tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
             let expected_response : models::TokenizedConvertStatusResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedConvertStatusResponse");
 
             let resp = client.tokenized_convert_status(params).await.expect("Expected a response");
@@ -730,22 +817,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTokenizedApiClient { force_error: false };
 
-            let params = TokenizedMintParams::builder("AAPL".to_string(), "1".to_string())
-                .build()
-                .unwrap();
+            let params = TokenizedMintParams::builder("AAPL".to_string(),"1".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","status":"P"}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::TokenizedMintResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TokenizedMintResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","status":"P","tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::TokenizedMintResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedMintResponse");
 
-            let resp = client
-                .tokenized_mint(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.tokenized_mint(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -757,24 +834,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTokenizedApiClient { force_error: false };
 
-            let params = TokenizedMintParams::builder("AAPL".to_string(), "1".to_string())
-                .client_order_id("mint-client-id-32chars-0000000001".to_string())
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = TokenizedMintParams::builder("AAPL".to_string(),"1".to_string(),).client_order_id("mint-client-id-32chars-0000000001".to_string()).tokenized_asset_settle_wallet_type(TokenizedMintTokenizedAssetSettleWalletTypeEnum::Main).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","status":"P"}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::TokenizedMintResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TokenizedMintResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"issuerRequestId":"mint-20260505-8f3b9e1a2d3c4b5a","status":"P","tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::TokenizedMintResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedMintResponse");
 
-            let resp = client
-                .tokenized_mint(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.tokenized_mint(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -804,22 +869,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTokenizedApiClient { force_error: false };
 
-            let params = TokenizedRedeemParams::builder("AAPLB".to_string(), "1".to_string())
-                .build()
-                .unwrap();
+            let params = TokenizedRedeemParams::builder("AAPLB".to_string(),"1".to_string(),).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"issuerRequestId":"redeem-20260505-a1b2c3d4e5f6","status":"P"}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::TokenizedRedeemResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TokenizedRedeemResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"issuerRequestId":"redeem-20260505-a1b2c3d4e5f6","status":"P","tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::TokenizedRedeemResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedRedeemResponse");
 
-            let resp = client
-                .tokenized_redeem(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.tokenized_redeem(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);
@@ -831,24 +886,12 @@ mod tests {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTokenizedApiClient { force_error: false };
 
-            let params = TokenizedRedeemParams::builder("AAPLB".to_string(), "1".to_string())
-                .client_order_id("redeem-client-id-32chars-000000001".to_string())
-                .recv_window(5000)
-                .build()
-                .unwrap();
+            let params = TokenizedRedeemParams::builder("AAPLB".to_string(),"1".to_string(),).client_order_id("redeem-client-id-32chars-000000001".to_string()).tokenized_asset_settle_wallet_type(TokenizedRedeemTokenizedAssetSettleWalletTypeEnum::Main).recv_window(5000).build().unwrap();
 
-            let resp_json: Value = serde_json::from_str(
-                r#"{"issuerRequestId":"redeem-20260505-a1b2c3d4e5f6","status":"P"}"#,
-            )
-            .unwrap_or_else(|_| serde_json::json!({}));
-            let expected_response: models::TokenizedRedeemResponse =
-                serde_json::from_value(resp_json.clone())
-                    .expect("should parse into models::TokenizedRedeemResponse");
+            let resp_json: Value = serde_json::from_str(r#"{"issuerRequestId":"redeem-20260505-a1b2c3d4e5f6","status":"P","tokenizedAssetSettleWalletType":"CARD"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::TokenizedRedeemResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::TokenizedRedeemResponse");
 
-            let resp = client
-                .tokenized_redeem(params)
-                .await
-                .expect("Expected a response");
+            let resp = client.tokenized_redeem(params).await.expect("Expected a response");
             let data_future = resp.data();
             let actual_response = data_future.await.unwrap();
             assert_eq!(actual_response, expected_response);

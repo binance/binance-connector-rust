@@ -4635,7 +4635,7 @@ pub struct OrderListPlaceOcoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "aboveIcebergQty", default)]
-    pub above_iceberg_qty: Option<i64>,
+    pub above_iceberg_qty: Option<rust_decimal::Decimal>,
     /// Can be used if `aboveType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
@@ -4703,7 +4703,7 @@ pub struct OrderListPlaceOcoParams {
     /// This field is **optional.
     #[builder(setter(into), default)]
     #[serde(rename = "belowIcebergQty", default)]
-    pub below_iceberg_qty: Option<i64>,
+    pub below_iceberg_qty: Option<rust_decimal::Decimal>,
     /// Can be used if `belowType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.
     ///
     /// This field is **optional.
