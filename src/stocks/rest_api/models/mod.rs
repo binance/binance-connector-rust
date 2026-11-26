@@ -11,10 +11,16 @@
  * Do not edit the class manually.
  */
 
+pub mod bstocks_corporate_action_records_response;
+pub use self::bstocks_corporate_action_records_response::BstocksCorporateActionRecordsResponse;
 pub mod cancel_all_equity_orders_response;
 pub use self::cancel_all_equity_orders_response::CancelAllEquityOrdersResponse;
 pub mod cancel_equity_order_response;
 pub use self::cancel_equity_order_response::CancelEquityOrderResponse;
+pub mod corporate_action_records_response;
+pub use self::corporate_action_records_response::CorporateActionRecordsResponse;
+pub mod corporate_action_records_response_items_inner;
+pub use self::corporate_action_records_response_items_inner::CorporateActionRecordsResponseItemsInner;
 pub mod create_renew_listen_key_response;
 pub use self::create_renew_listen_key_response::CreateRenewListenKeyResponse;
 pub mod current_open_orders_response_inner;

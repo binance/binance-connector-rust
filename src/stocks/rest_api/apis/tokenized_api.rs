@@ -31,6 +31,14 @@ const HAS_TIME_UNIT: bool = false;
 
 #[async_trait]
 pub trait TokenizedApi: Send + Sync {
+    async fn bstocks_corporate_action_records(
+        &self,
+        params: BstocksCorporateActionRecordsParams,
+    ) -> anyhow::Result<RestApiResponse<models::BstocksCorporateActionRecordsResponse>>;
+    async fn corporate_action_records(
+        &self,
+        params: CorporateActionRecordsParams,
+    ) -> anyhow::Result<RestApiResponse<models::CorporateActionRecordsResponse>>;
     async fn tokenized_convert_history(
         &self,
         params: TokenizedConvertHistoryParams,
@@ -163,6 +171,96 @@ impl std::str::FromStr for TokenizedRedeemTokenizedAssetSettleWalletTypeEnum {
     }
 }
 
+/// Request parameters for the [`bstocks_corporate_action_records`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`bstocks_corporate_action_records`](#method.bstocks_corporate_action_records).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct BstocksCorporateActionRecordsParams {
+    /// Number of records to return. Default `20`, range `1` to `100`.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "limit")]
+    pub limit: i32,
+    /// The `nextTime` returned by the previous page, in milliseconds. Must be sent together with `lastId`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "lastTime", default)]
+    pub last_time: Option<i64>,
+    /// The `nextId` returned by the previous page. Must be sent together with `lastTime`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "lastId", default)]
+    pub last_id: Option<i64>,
+    /// The value cannot be greater than `60000`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl BstocksCorporateActionRecordsParams {
+    /// Create a builder for [`bstocks_corporate_action_records`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `limit` — Number of records to return. Default `20`, range `1` to `100`.
+    ///
+    #[must_use]
+    pub fn builder(limit: i32) -> BstocksCorporateActionRecordsParamsBuilder {
+        BstocksCorporateActionRecordsParamsBuilder::default().limit(limit)
+    }
+}
+/// Request parameters for the [`corporate_action_records`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`corporate_action_records`](#method.corporate_action_records).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CorporateActionRecordsParams {
+    /// Number of records to return. Default `20`, range `1` to `100`.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "limit")]
+    pub limit: i32,
+    /// The `nextTime` returned by the previous page, in milliseconds. Must be sent together with `lastId`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "lastTime", default)]
+    pub last_time: Option<i64>,
+    /// The `nextId` returned by the previous page. Must be sent together with `lastTime`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "lastId", default)]
+    pub last_id: Option<i64>,
+    /// The value cannot be greater than `60000`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CorporateActionRecordsParams {
+    /// Create a builder for [`corporate_action_records`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `limit` — Number of records to return. Default `20`, range `1` to `100`.
+    ///
+    #[must_use]
+    pub fn builder(limit: i32) -> CorporateActionRecordsParamsBuilder {
+        CorporateActionRecordsParamsBuilder::default().limit(limit)
+    }
+}
 /// Request parameters for the [`tokenized_convert_history`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -373,6 +471,94 @@ impl TokenizedRedeemParams {
 
 #[async_trait]
 impl TokenizedApi for TokenizedApiClient {
+    async fn bstocks_corporate_action_records(
+        &self,
+        params: BstocksCorporateActionRecordsParams,
+    ) -> anyhow::Result<RestApiResponse<models::BstocksCorporateActionRecordsResponse>> {
+        let BstocksCorporateActionRecordsParams {
+            limit,
+            last_time,
+            last_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("limit".to_string(), json!(limit));
+
+        if let Some(rw) = last_time {
+            query_params.insert("lastTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = last_id {
+            query_params.insert("lastId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::BstocksCorporateActionRecordsResponse>(
+            &self.configuration,
+            "/sapi/v1/bstocks/corp-action",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn corporate_action_records(
+        &self,
+        params: CorporateActionRecordsParams,
+    ) -> anyhow::Result<RestApiResponse<models::CorporateActionRecordsResponse>> {
+        let CorporateActionRecordsParams {
+            limit,
+            last_time,
+            last_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("limit".to_string(), json!(limit));
+
+        if let Some(rw) = last_time {
+            query_params.insert("lastTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = last_id {
+            query_params.insert("lastId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::CorporateActionRecordsResponse>(
+            &self.configuration,
+            "/sapi/v1/equity/corp-action",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn tokenized_convert_history(
         &self,
         params: TokenizedConvertHistoryParams,
@@ -594,6 +780,63 @@ mod tests {
 
     #[async_trait]
     impl TokenizedApi for MockTokenizedApiClient {
+        async fn bstocks_corporate_action_records(
+            &self,
+            _params: BstocksCorporateActionRecordsParams,
+        ) -> anyhow::Result<RestApiResponse<models::BstocksCorporateActionRecordsResponse>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"items":[{"id":123456,"userId":100001,"assetCode":"EQ_AAPL","eventType":"FORWARD_SPLIT","amount":"10.50000000","dbModifyTime":1795593600000}],"nextTime":1795593600000,"nextId":123456}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::BstocksCorporateActionRecordsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::BstocksCorporateActionRecordsResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn corporate_action_records(
+            &self,
+            _params: CorporateActionRecordsParams,
+        ) -> anyhow::Result<RestApiResponse<models::CorporateActionRecordsResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"items":[{"id":123456,"userId":100001,"assetCode":"EQ_AAPL","eventType":"FORWARD_SPLIT","amount":"10.50000000","dbModifyTime":1795593600000}],"nextTime":1795593600000,"nextId":123456}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::CorporateActionRecordsResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CorporateActionRecordsResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn tokenized_convert_history(
             &self,
             _params: TokenizedConvertHistoryParams,
@@ -705,6 +948,108 @@ mod tests {
 
             Ok(dummy.into())
         }
+    }
+
+    #[test]
+    fn bstocks_corporate_action_records_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTokenizedApiClient { force_error: false };
+
+            let params = BstocksCorporateActionRecordsParams::builder(20,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"items":[{"id":123456,"userId":100001,"assetCode":"EQ_AAPL","eventType":"FORWARD_SPLIT","amount":"10.50000000","dbModifyTime":1795593600000}],"nextTime":1795593600000,"nextId":123456}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::BstocksCorporateActionRecordsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::BstocksCorporateActionRecordsResponse");
+
+            let resp = client.bstocks_corporate_action_records(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn bstocks_corporate_action_records_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTokenizedApiClient { force_error: false };
+
+            let params = BstocksCorporateActionRecordsParams::builder(20,).last_time(1795593600000).last_id(123456).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"items":[{"id":123456,"userId":100001,"assetCode":"EQ_AAPL","eventType":"FORWARD_SPLIT","amount":"10.50000000","dbModifyTime":1795593600000}],"nextTime":1795593600000,"nextId":123456}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::BstocksCorporateActionRecordsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::BstocksCorporateActionRecordsResponse");
+
+            let resp = client.bstocks_corporate_action_records(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn bstocks_corporate_action_records_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTokenizedApiClient { force_error: true };
+
+            let params = BstocksCorporateActionRecordsParams::builder(20)
+                .build()
+                .unwrap();
+
+            match client.bstocks_corporate_action_records(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn corporate_action_records_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTokenizedApiClient { force_error: false };
+
+            let params = CorporateActionRecordsParams::builder(20,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"items":[{"id":123456,"userId":100001,"assetCode":"EQ_AAPL","eventType":"FORWARD_SPLIT","amount":"10.50000000","dbModifyTime":1795593600000}],"nextTime":1795593600000,"nextId":123456}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CorporateActionRecordsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CorporateActionRecordsResponse");
+
+            let resp = client.corporate_action_records(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn corporate_action_records_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTokenizedApiClient { force_error: false };
+
+            let params = CorporateActionRecordsParams::builder(20,).last_time(1795593600000).last_id(123456).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"items":[{"id":123456,"userId":100001,"assetCode":"EQ_AAPL","eventType":"FORWARD_SPLIT","amount":"10.50000000","dbModifyTime":1795593600000}],"nextTime":1795593600000,"nextId":123456}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CorporateActionRecordsResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CorporateActionRecordsResponse");
+
+            let resp = client.corporate_action_records(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn corporate_action_records_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTokenizedApiClient { force_error: true };
+
+            let params = CorporateActionRecordsParams::builder(20).build().unwrap();
+
+            match client.corporate_action_records(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
     }
 
     #[test]

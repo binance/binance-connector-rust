@@ -308,6 +308,102 @@ impl RestApi {
         self.market_data_api_client.tokenized_assets().await
     }
 
+    /// Bstocks Corporate Action Records (`USER_DATA`)
+    ///
+    /// Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/equity/corp-action`.
+    ///
+    /// Weight: 1
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`BstocksCorporateActionRecordsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::BstocksCorporateActionRecordsResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-stocks-trading/api/rest-api/tokenized#bstocks-corporate-action-records).
+    ///
+    pub async fn bstocks_corporate_action_records(
+        &self,
+        params: BstocksCorporateActionRecordsParams,
+    ) -> anyhow::Result<RestApiResponse<models::BstocksCorporateActionRecordsResponse>> {
+        self.tokenized_api_client
+            .bstocks_corporate_action_records(params)
+            .await
+    }
+
+    /// Corporate Action Records (`USER_DATA`)
+    ///
+    /// Query the asset balance changes caused by corporate actions (for example stock splits and cash dividends) on the caller's account. Cursor-style pagination — supply the `nextTime` and `nextId` from the previous page's response as `lastTime` and `lastId` to fetch the next page. Records are returned in descending order of modification time. This endpoint is equivalent to `/sapi/v1/bstocks/corp-action`.
+    ///
+    /// Weight: 1
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CorporateActionRecordsParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CorporateActionRecordsResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/advanced-trading-stocks-trading/api/rest-api/tokenized#corporate-action-records).
+    ///
+    pub async fn corporate_action_records(
+        &self,
+        params: CorporateActionRecordsParams,
+    ) -> anyhow::Result<RestApiResponse<models::CorporateActionRecordsResponse>> {
+        self.tokenized_api_client
+            .corporate_action_records(params)
+            .await
+    }
+
     /// Tokenized Convert History (`USER_DATA`)
     ///
     /// Paged history of mint / redeem conversions for the caller. Cursor-style pagination — supply the `nextLastId` from the previous page's response to fetch the next page.
