@@ -2301,6 +2301,103 @@ impl RestApi {
             .await
     }
 
+    /// Cancel Algo Order (TRADE)
+    ///
+    /// Cancel an active algo (conditional) order, including TP/SL (Take Profit / Stop Loss) and trailing stop orders on COIN-M Futures.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Either `algoId` or `clientAlgoId` must be sent.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CancelAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CancelAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-algo-order).
+    ///
+    pub async fn cancel_algo_order(
+        &self,
+        params: CancelAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAlgoOrderResponse>> {
+        self.trade_api_client.cancel_algo_order(params).await
+    }
+
+    /// Cancel All Algo Open Orders (TRADE)
+    ///
+    /// Cancel all open algo (conditional) orders on a symbol, including TP/SL (Take Profit / Stop Loss) and trailing stop orders on COIN-M Futures.
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: TRADE
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CancelAllAlgoOpenOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::CancelAllAlgoOpenOrdersResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#cancel-all-algo-open-orders).
+    ///
+    pub async fn cancel_all_algo_open_orders(
+        &self,
+        params: CancelAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAllAlgoOpenOrdersResponse>> {
+        self.trade_api_client
+            .cancel_all_algo_open_orders(params)
+            .await
+    }
+
     /// Cancel All Open Orders (TRADE)
     ///
     /// Cancel All Open Orders
@@ -2594,6 +2691,59 @@ impl RestApi {
         self.trade_api_client.change_position_mode(params).await
     }
 
+    /// Current All Algo Open Orders (`USER_DATA`)
+    ///
+    /// Get all open algo (conditional) orders on a symbol, including TP/SL (Take Profit / Stop Loss) and trailing stop orders on COIN-M Futures.
+    ///
+    /// Weight: **1** for a single symbol; **40** when the symbol parameter is omitted
+    ///
+    /// **Careful** when accessing this with no symbol.
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If the symbol is not sent, orders for all symbols will be returned in an array.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`CurrentAllAlgoOpenOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#current-all-algo-open-orders).
+    ///
+    pub async fn current_all_algo_open_orders(
+        &self,
+        params: CurrentAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>> {
+        self.trade_api_client
+            .current_all_algo_open_orders(params)
+            .await
+    }
+
     /// Current All Open Orders (`USER_DATA`)
     ///
     /// Get all open orders on a symbol. **Careful** when accessing this with no symbol.
@@ -2849,7 +2999,7 @@ impl RestApi {
     ///
     /// Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
     ///
-    /// Weight(IP): 1
+    /// Weight(IP): 0
     ///
     /// Security Type: TRADE
     ///
@@ -2898,6 +3048,81 @@ impl RestApi {
         params: ModifyOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::ModifyOrderResponse>> {
         self.trade_api_client.modify_order(params).await
+    }
+
+    /// New Algo Order (TRADE)
+    ///
+    /// Send in a new algo (conditional) order. Use this endpoint to place **TP/SL (Take Profit / Stop Loss)** and trailing stop orders on COIN-M Futures. Supported order types under `algoType=CONDITIONAL` are `STOP_MARKET`, `TAKE_PROFIT_MARKET`, `STOP`, `TAKE_PROFIT`, and `TRAILING_STOP_MARKET`.
+    ///
+    /// Weight: 1 on 10s order rate limit(X-MBX-ORDER-COUNT-10S);
+    /// 1 on 1min order rate limit(X-MBX-ORDER-COUNT-1M);
+    /// 0 on IP rate limit(x-mbx-used-weight-1m)
+    ///
+    /// Security Type: TRADE
+    ///
+    /// Notes:
+    /// - Algo order with type `STOP`, parameter `timeInForce` can be sent (default `GTC`).
+    /// - Algo order with type `TAKE_PROFIT`, parameter `timeInForce` can be sent ( default `GTC`).
+    /// - Condition orders will be triggered when:
+    /// - If parameter`priceProtect`is sent as true:
+    /// - when price reaches the `triggerPrice` ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the "triggerProtect" of the symbol
+    /// - "triggerProtect" of a symbol can be got from `GET /dapi/v1/exchangeInfo`
+    /// - `STOP`, `STOP_MARKET`:
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
+    /// - `TAKE_PROFIT`, `TAKE_PROFIT_MARKET`:
+    /// - BUY: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") <= `triggerPrice`
+    /// - SELL: latest price ("`MARK_PRICE`" or "`CONTRACT_PRICE`") >= `triggerPrice`
+    /// - `TRAILING_STOP_MARKET`:
+    /// - BUY: the lowest price after order placed <= `activatePrice`, and the latest price >= the lowest price * (1 + `callbackRate`)
+    /// - SELL: the highest price after order placed >= `activatePrice`, and the latest price <= the highest price * (1 - `callbackRate`)
+    /// - For `TRAILING_STOP_MARKET`, if you got such error code. > `{"code": -2021, "msg": "Order would immediately trigger."}` > means that the parameters you send do not meet the following requirements:
+    /// - BUY: `activatePrice` should be smaller than latest price.
+    /// - SELL: `activatePrice` should be larger than latest price.
+    /// - `STOP_MARKET`, `TAKE_PROFIT_MARKET` with `closePosition`=`true`:
+    /// - Follow the same rules for condition orders.
+    /// - If triggered，**close all** current long position( if `SELL`) or current short position( if `BUY`).
+    /// - Cannot be used with `quantity` parameter
+    /// - Cannot be used with `reduceOnly` parameter
+    /// - In Hedge Mode,cannot be used with `BUY` orders in `LONG` position side. and cannot be used with `SELL` orders in `SHORT` position side
+    /// - `selfTradePreventionMode` is only effective when `timeInForce` set to `IOC` or `GTC`.
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`NewAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::NewAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#new-algo-order).
+    ///
+    pub async fn new_algo_order(
+        &self,
+        params: NewAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::NewAlgoOrderResponse>> {
+        self.trade_api_client.new_algo_order(params).await
     }
 
     /// New Order (TRADE)
@@ -3141,6 +3366,114 @@ impl RestApi {
         params: PositionInformationParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::PositionInformationResponseInner>>> {
         self.trade_api_client.position_information(params).await
+    }
+
+    /// Query Algo Order (`USER_DATA`)
+    ///
+    /// Check the status of an algo (conditional) order, such as TP/SL (Take Profit / Stop Loss) or trailing stop orders on COIN-M Futures.
+    ///
+    /// * These orders will not be found:
+    /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time
+    /// * order create time + 90 days < current time
+    ///
+    /// Weight(IP): 1
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - Either `algoId` or `clientAlgoId` must be sent.
+    /// - `algoId` is self-increment for each specific `symbol`
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryAlgoOrderParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<models::QueryAlgoOrderResponse>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#query-algo-order).
+    ///
+    pub async fn query_algo_order(
+        &self,
+        params: QueryAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryAlgoOrderResponse>> {
+        self.trade_api_client.query_algo_order(params).await
+    }
+
+    /// Query All Algo Orders (`USER_DATA`)
+    ///
+    /// Get all algo (conditional) orders — active, CANCELED, TRIGGERED, or FINISHED — including TP/SL (Take Profit / Stop Loss) and trailing stop orders on COIN-M Futures.
+    ///
+    /// * These orders will not be found:
+    /// * order status is `CANCELED` or `EXPIRED` **AND** order has NO filled trade **AND** created time + 3 days < current time
+    /// * order create time + 90 days < current time
+    ///
+    /// Weight(IP): 5
+    ///
+    /// Security Type: `USER_DATA`
+    ///
+    /// Notes:
+    /// - If `algoId` is set, it will get orders >= that `algoId`. Otherwise most recent orders are returned.
+    /// - The query time period must be less than 7 days( default as the recent 7 days).
+    ///
+    /// # Arguments
+    ///
+    /// - `params`: [`QueryAllAlgoOrdersParams`]
+    ///   The parameters for this operation.
+    ///
+    /// # Returns
+    ///
+    /// [`RestApiResponse<Vec<models::QueryAllAlgoOrdersResponseInner>>`] on success.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an [`anyhow::Error`] if:
+    /// - the HTTP request fails
+    /// - any parameter is invalid
+    /// - the response cannot be parsed
+    /// - or one of the following occurs:
+    ///   - `RequiredError`
+    ///   - `ConnectorClientError`
+    ///   - `UnauthorizedError`
+    ///   - `ForbiddenError`
+    ///   - `TooManyRequestsError`
+    ///   - `RateLimitBanError`
+    ///   - `ServerError`
+    ///   - `NotFoundError`
+    ///   - `NetworkError`
+    ///   - `ConflictError`
+    ///   - `BadRequestError`
+    ///
+    ///
+    /// For full API details, see the [Binance API Documentation](https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/trade#query-all-algo-orders).
+    ///
+    pub async fn query_all_algo_orders(
+        &self,
+        params: QueryAllAlgoOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllAlgoOrdersResponseInner>>> {
+        self.trade_api_client.query_all_algo_orders(params).await
     }
 
     /// Query Current Open Order (`USER_DATA`)

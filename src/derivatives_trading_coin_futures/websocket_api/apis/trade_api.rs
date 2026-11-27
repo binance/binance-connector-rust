@@ -30,6 +30,10 @@ use crate::derivatives_trading_coin_futures::websocket_api::models;
 
 #[async_trait]
 pub trait TradeApi: Send + Sync {
+    async fn cancel_algo_order(
+        &self,
+        params: CancelAlgoOrderParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::CancelAlgoOrderResponseResult>>>;
     async fn cancel_order(
         &self,
         params: CancelOrderParams,
@@ -38,6 +42,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: ModifyOrderParams,
     ) -> anyhow::Result<WebsocketApiResponse<Box<models::ModifyOrderResponseResult>>>;
+    async fn new_algo_order(
+        &self,
+        params: NewAlgoOrderParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::NewAlgoOrderResponseResult>>>;
     async fn new_order(
         &self,
         params: NewOrderParams,
@@ -145,6 +153,432 @@ impl std::str::FromStr for ModifyOrderPriceMatchEnum {
             "QUEUE_10" => Ok(Self::Queue10),
             "QUEUE_20" => Ok(Self::Queue20),
             other => Err(format!("invalid ModifyOrderPriceMatchEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderAlgoTypeEnum {
+    #[serde(rename = "CONDITIONAL")]
+    Conditional,
+}
+
+impl NewAlgoOrderAlgoTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Conditional => "CONDITIONAL",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderAlgoTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "CONDITIONAL" => Ok(Self::Conditional),
+            other => Err(format!("invalid NewAlgoOrderAlgoTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderSideEnum {
+    #[serde(rename = "BUY")]
+    Buy,
+    #[serde(rename = "SELL")]
+    Sell,
+}
+
+impl NewAlgoOrderSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Buy => "BUY",
+            Self::Sell => "SELL",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BUY" => Ok(Self::Buy),
+            "SELL" => Ok(Self::Sell),
+            other => Err(format!("invalid NewAlgoOrderSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderTypeEnum {
+    #[serde(rename = "STOP_MARKET")]
+    StopMarket,
+    #[serde(rename = "TAKE_PROFIT_MARKET")]
+    TakeProfitMarket,
+    #[serde(rename = "STOP")]
+    Stop,
+    #[serde(rename = "TAKE_PROFIT")]
+    TakeProfit,
+    #[serde(rename = "TRAILING_STOP_MARKET")]
+    TrailingStopMarket,
+}
+
+impl NewAlgoOrderTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::StopMarket => "STOP_MARKET",
+            Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
+            Self::Stop => "STOP",
+            Self::TakeProfit => "TAKE_PROFIT",
+            Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "STOP_MARKET" => Ok(Self::StopMarket),
+            "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
+            "STOP" => Ok(Self::Stop),
+            "TAKE_PROFIT" => Ok(Self::TakeProfit),
+            "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
+            other => Err(format!("invalid NewAlgoOrderTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderPositionSideEnum {
+    #[serde(rename = "BOTH")]
+    Both,
+    #[serde(rename = "LONG")]
+    Long,
+    #[serde(rename = "SHORT")]
+    Short,
+}
+
+impl NewAlgoOrderPositionSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Both => "BOTH",
+            Self::Long => "LONG",
+            Self::Short => "SHORT",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderPositionSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BOTH" => Ok(Self::Both),
+            "LONG" => Ok(Self::Long),
+            "SHORT" => Ok(Self::Short),
+            other => Err(format!("invalid NewAlgoOrderPositionSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderTimeInForceEnum {
+    #[serde(rename = "IOC")]
+    Ioc,
+    #[serde(rename = "GTC")]
+    Gtc,
+    #[serde(rename = "FOK")]
+    Fok,
+    #[serde(rename = "GTX")]
+    Gtx,
+}
+
+impl NewAlgoOrderTimeInForceEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ioc => "IOC",
+            Self::Gtc => "GTC",
+            Self::Fok => "FOK",
+            Self::Gtx => "GTX",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderTimeInForceEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "IOC" => Ok(Self::Ioc),
+            "GTC" => Ok(Self::Gtc),
+            "FOK" => Ok(Self::Fok),
+            "GTX" => Ok(Self::Gtx),
+            other => Err(format!("invalid NewAlgoOrderTimeInForceEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderWorkingTypeEnum {
+    #[serde(rename = "MARK_PRICE")]
+    MarkPrice,
+    #[serde(rename = "CONTRACT_PRICE")]
+    ContractPrice,
+}
+
+impl NewAlgoOrderWorkingTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::MarkPrice => "MARK_PRICE",
+            Self::ContractPrice => "CONTRACT_PRICE",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderWorkingTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MARK_PRICE" => Ok(Self::MarkPrice),
+            "CONTRACT_PRICE" => Ok(Self::ContractPrice),
+            other => Err(format!("invalid NewAlgoOrderWorkingTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderPriceMatchEnum {
+    #[serde(rename = "OPPONENT")]
+    Opponent,
+    #[serde(rename = "OPPONENT_5")]
+    Opponent5,
+    #[serde(rename = "OPPONENT_10")]
+    Opponent10,
+    #[serde(rename = "OPPONENT_20")]
+    Opponent20,
+    #[serde(rename = "QUEUE")]
+    Queue,
+    #[serde(rename = "QUEUE_5")]
+    Queue5,
+    #[serde(rename = "QUEUE_10")]
+    Queue10,
+    #[serde(rename = "QUEUE_20")]
+    Queue20,
+}
+
+impl NewAlgoOrderPriceMatchEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Opponent => "OPPONENT",
+            Self::Opponent5 => "OPPONENT_5",
+            Self::Opponent10 => "OPPONENT_10",
+            Self::Opponent20 => "OPPONENT_20",
+            Self::Queue => "QUEUE",
+            Self::Queue5 => "QUEUE_5",
+            Self::Queue10 => "QUEUE_10",
+            Self::Queue20 => "QUEUE_20",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderPriceMatchEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "OPPONENT" => Ok(Self::Opponent),
+            "OPPONENT_5" => Ok(Self::Opponent5),
+            "OPPONENT_10" => Ok(Self::Opponent10),
+            "OPPONENT_20" => Ok(Self::Opponent20),
+            "QUEUE" => Ok(Self::Queue),
+            "QUEUE_5" => Ok(Self::Queue5),
+            "QUEUE_10" => Ok(Self::Queue10),
+            "QUEUE_20" => Ok(Self::Queue20),
+            other => Err(format!("invalid NewAlgoOrderPriceMatchEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderClosePositionEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderClosePositionEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderClosePositionEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderClosePositionEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderPriceProtectEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderPriceProtectEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderPriceProtectEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderPriceProtectEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderReduceOnlyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderReduceOnlyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderReduceOnlyEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderNewOrderRespTypeEnum {
+    #[serde(rename = "ACK")]
+    Ack,
+    #[serde(rename = "RESULT")]
+    Result,
+}
+
+impl NewAlgoOrderNewOrderRespTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ack => "ACK",
+            Self::Result => "RESULT",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderNewOrderRespTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "ACK" => Ok(Self::Ack),
+            "RESULT" => Ok(Self::Result),
+            other => Err(format!("invalid NewAlgoOrderNewOrderRespTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderSelfTradePreventionModeEnum {
+    #[serde(rename = "NONE")]
+    None,
+    #[serde(rename = "EXPIRE_TAKER")]
+    ExpireTaker,
+    #[serde(rename = "EXPIRE_BOTH")]
+    ExpireBoth,
+    #[serde(rename = "EXPIRE_MAKER")]
+    ExpireMaker,
+}
+
+impl NewAlgoOrderSelfTradePreventionModeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::None => "NONE",
+            Self::ExpireTaker => "EXPIRE_TAKER",
+            Self::ExpireBoth => "EXPIRE_BOTH",
+            Self::ExpireMaker => "EXPIRE_MAKER",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderSelfTradePreventionModeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "NONE" => Ok(Self::None),
+            "EXPIRE_TAKER" => Ok(Self::ExpireTaker),
+            "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
+            "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
+            other => {
+                Err(format!("invalid NewAlgoOrderSelfTradePreventionModeEnum: {}", other).into())
+            }
         }
     }
 }
@@ -554,6 +988,47 @@ impl std::str::FromStr for NewOrderSelfTradePreventionModeEnum {
     }
 }
 
+/// Request parameters for the [`cancel_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`cancel_algo_order`](#method.cancel_algo_order).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CancelAlgoOrderParams {
+    /// Id.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
+    pub id: Option<String>,
+    /// Algo Id.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "algoId", default)]
+    pub algo_id: Option<i64>,
+    /// Client Algo Id.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
+    pub client_algo_id: Option<String>,
+    /// Recv Window.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CancelAlgoOrderParams {
+    /// Create a builder for [`cancel_algo_order`].
+    ///
+    #[must_use]
+    pub fn builder() -> CancelAlgoOrderParamsBuilder {
+        CancelAlgoOrderParamsBuilder::default()
+    }
+}
 /// Request parameters for the [`cancel_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -708,6 +1183,165 @@ impl ModifyOrderParams {
             .side(side)
             .quantity(quantity)
             .price(price)
+    }
+}
+/// Request parameters for the [`new_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`new_algo_order`](#method.new_algo_order).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct NewAlgoOrderParams {
+    /// Only support `CONDITIONAL`
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "algoType")]
+    pub algo_type: NewAlgoOrderAlgoTypeEnum,
+    /// Symbol.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    /// Side.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "side")]
+    pub side: NewAlgoOrderSideEnum,
+    /// For `CONDITIONAL` algoType, `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` as order type
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "type")]
+    pub r#type: NewAlgoOrderTypeEnum,
+    /// Id.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "id", default)]
+    pub id: Option<String>,
+    /// Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "positionSide", default)]
+    pub position_side: Option<NewAlgoOrderPositionSideEnum>,
+    /// `IOC` or `GTC` or `FOK` or `GTX`, default `GTC`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
+    pub time_in_force: Option<NewAlgoOrderTimeInForceEnum>,
+    /// quantity measured by contract number, Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
+    pub quantity: Option<rust_decimal::Decimal>,
+    /// Price.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
+    pub price: Option<rust_decimal::Decimal>,
+    /// Trigger Price.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "triggerPrice", default)]
+    pub trigger_price: Option<rust_decimal::Decimal>,
+    /// triggerPrice triggered by: `MARK_PRICE`, `CONTRACT_PRICE`. Default `CONTRACT_PRICE`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "workingType", default)]
+    pub working_type: Option<NewAlgoOrderWorkingTypeEnum>,
+    /// only available for `LIMIT/STOP/TAKE_PROFIT` order; Can't be passed together with price
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "priceMatch", default)]
+    pub price_match: Option<NewAlgoOrderPriceMatchEnum>,
+    /// Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "closePosition", default)]
+    pub close_position: Option<NewAlgoOrderClosePositionEnum>,
+    /// Used with `STOP_MARKET` or `TAKE_PROFIT_MARKET` order. when price reaches the triggerPrice ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the Price Protection Threshold of the symbol.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "priceProtect", default)]
+    pub price_protect: Option<NewAlgoOrderPriceProtectEnum>,
+    /// Cannot be sent in Hedge Mode; cannot be sent with closePosition=true
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "reduceOnly", default)]
+    pub reduce_only: Option<NewAlgoOrderReduceOnlyEnum>,
+    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different workingType)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "activatePrice", default)]
+    pub activate_price: Option<rust_decimal::Decimal>,
+    /// Used with `TRAILING_STOP_MARKET` orders
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "callbackRate", default)]
+    pub callback_rate: Option<rust_decimal::Decimal>,
+    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
+    pub client_algo_id: Option<String>,
+    /// "ACK", "RESULT", default "ACK"
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
+    pub new_order_resp_type: Option<NewAlgoOrderNewOrderRespTypeEnum>,
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers/ `EXPIRE_MAKER`: expire maker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `NONE`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
+    pub self_trade_prevention_mode: Option<NewAlgoOrderSelfTradePreventionModeEnum>,
+    /// Recv Window.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl NewAlgoOrderParams {
+    /// Create a builder for [`new_algo_order`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `algo_type` — Only support `CONDITIONAL`
+    /// * `symbol` — Symbol.
+    /// * `side` — Side.
+    /// * `r#type` — For `CONDITIONAL` algoType, `STOP_MARKET`/`TAKE_PROFIT_MARKET`/`STOP`/`TAKE_PROFIT`/`TRAILING_STOP_MARKET` as order type
+    ///
+    #[must_use]
+    pub fn builder(
+        algo_type: NewAlgoOrderAlgoTypeEnum,
+        symbol: String,
+        side: NewAlgoOrderSideEnum,
+        r#type: NewAlgoOrderTypeEnum,
+    ) -> NewAlgoOrderParamsBuilder {
+        NewAlgoOrderParamsBuilder::default()
+            .algo_type(algo_type)
+            .symbol(symbol)
+            .side(side)
+            .r#type(r#type)
     }
 }
 /// Request parameters for the [`new_order`] operation.
@@ -971,6 +1605,46 @@ impl QueryOrderParams {
 
 #[async_trait]
 impl TradeApi for TradeApiClient {
+    async fn cancel_algo_order(
+        &self,
+        params: CancelAlgoOrderParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::CancelAlgoOrderResponseResult>>> {
+        let CancelAlgoOrderParams {
+            id,
+            algo_id,
+            client_algo_id,
+            recv_window,
+        } = params;
+
+        let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+        if let Some(value) = id {
+            payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = algo_id {
+            payload.insert("algoId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = client_algo_id {
+            payload.insert("clientAlgoId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = recv_window {
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
+        }
+        let payload = remove_empty_value(payload);
+
+        self.websocket_api_base
+            .send_message::<Box<models::CancelAlgoOrderResponseResult>>(
+                "/algoOrder.cancel".trim_start_matches('/'),
+                payload,
+                WebsocketMessageSendOptions::new().signed(),
+            )
+            .await
+            .map_err(anyhow::Error::from)?
+            .into_iter()
+            .next()
+            .ok_or(WebsocketError::NoResponse)
+            .map_err(anyhow::Error::from)
+    }
+
     async fn cancel_order(
         &self,
         params: CancelOrderParams,
@@ -1058,6 +1732,109 @@ impl TradeApi for TradeApiClient {
         self.websocket_api_base
             .send_message::<Box<models::ModifyOrderResponseResult>>(
                 "/order.modify".trim_start_matches('/'),
+                payload,
+                WebsocketMessageSendOptions::new().signed(),
+            )
+            .await
+            .map_err(anyhow::Error::from)?
+            .into_iter()
+            .next()
+            .ok_or(WebsocketError::NoResponse)
+            .map_err(anyhow::Error::from)
+    }
+
+    async fn new_algo_order(
+        &self,
+        params: NewAlgoOrderParams,
+    ) -> anyhow::Result<WebsocketApiResponse<Box<models::NewAlgoOrderResponseResult>>> {
+        let NewAlgoOrderParams {
+            algo_type,
+            symbol,
+            side,
+            r#type,
+            id,
+            position_side,
+            time_in_force,
+            quantity,
+            price,
+            trigger_price,
+            working_type,
+            price_match,
+            close_position,
+            price_protect,
+            reduce_only,
+            activate_price,
+            callback_rate,
+            client_algo_id,
+            new_order_resp_type,
+            self_trade_prevention_mode,
+            recv_window,
+        } = params;
+
+        let mut payload: BTreeMap<String, Value> = BTreeMap::new();
+        payload.insert("algoType".to_string(), serde_json::json!(algo_type));
+        payload.insert("symbol".to_string(), serde_json::json!(symbol));
+        payload.insert("side".to_string(), serde_json::json!(side));
+        payload.insert("type".to_string(), serde_json::json!(r#type));
+        if let Some(value) = id {
+            payload.insert("id".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = position_side {
+            payload.insert("positionSide".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = time_in_force {
+            payload.insert("timeInForce".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = quantity {
+            payload.insert("quantity".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = price {
+            payload.insert("price".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = trigger_price {
+            payload.insert("triggerPrice".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = working_type {
+            payload.insert("workingType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = price_match {
+            payload.insert("priceMatch".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = close_position {
+            payload.insert("closePosition".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = price_protect {
+            payload.insert("priceProtect".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = reduce_only {
+            payload.insert("reduceOnly".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = activate_price {
+            payload.insert("activatePrice".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = callback_rate {
+            payload.insert("callbackRate".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = client_algo_id {
+            payload.insert("clientAlgoId".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = new_order_resp_type {
+            payload.insert("newOrderRespType".to_string(), serde_json::json!(value));
+        }
+        if let Some(value) = self_trade_prevention_mode {
+            payload.insert(
+                "selfTradePreventionMode".to_string(),
+                serde_json::json!(value),
+            );
+        }
+        if let Some(value) = recv_window {
+            payload.insert("recvWindow".to_string(), serde_json::json!(value));
+        }
+        let payload = remove_empty_value(payload);
+
+        self.websocket_api_base
+            .send_message::<Box<models::NewAlgoOrderResponseResult>>(
+                "/algoOrder.place".trim_start_matches('/'),
                 payload,
                 WebsocketMessageSendOptions::new().signed(),
             )
@@ -1291,6 +2068,134 @@ mod tests {
         ws_api.clone().connect().await.unwrap();
 
         (ws_api, conn, rx)
+    }
+
+    #[test]
+    fn cancel_algo_order_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = CancelAlgoOrderParams::builder().build().unwrap();
+                client.cancel_algo_order(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap();
+            assert_eq!(v["method"], "/algoOrder.cancel".trim_start_matches('/'));
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"unique-cancel-request-id-5678","status":200,"result":{"algoId":2000000002162519,"clientAlgoId":"rDMG8WSde6LkyMNtk6s825","code":"200","msg":"success"},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":6}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            resp_json["id"] = id.into();
+
+            let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
+            let expected_data: Box<models::CancelAlgoOrderResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let empty_array = Value::Array(vec![]);
+            let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
+            let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
+                match raw_rate_limits.as_array() {
+                    Some(arr) if arr.is_empty() => None,
+                    Some(_) => Some(serde_json::from_value(raw_rate_limits.clone()).expect("should parse rateLimits array")),
+                    None => None,
+                };
+
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let response = timeout(Duration::from_secs(1), handle).await.expect("task done").expect("no panic").expect("no error");
+
+
+            let response_rate_limits = response.rate_limits.clone();
+            let response_data = response.data().expect("deserialize data");
+
+            assert_eq!(response_rate_limits, expected_rate_limits);
+            assert_eq!(response_data, expected_data);
+        });
+    }
+
+    #[test]
+    fn cancel_algo_order_error_response() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = tokio::spawn(async move {
+                let params = CancelAlgoOrderParams::builder().build().unwrap();
+                client.cancel_algo_order(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap().to_string();
+
+            let resp_json = json!({
+                "id": id,
+                "status": 400,
+                    "error": {
+                        "code": -2010,
+                        "msg": "Account has insufficient balance for requested action.",
+                    },
+                    "rateLimits": [
+                        {
+                            "rateLimitType": "ORDERS",
+                            "interval": "SECOND",
+                            "intervalNum": 10,
+                            "limit": 50,
+                            "count": 13
+                        },
+                    ],
+            });
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let join = timeout(Duration::from_secs(1), handle).await.unwrap();
+            match join {
+                Ok(Err(e)) => {
+                    let msg = e.to_string();
+                    assert!(
+                        msg.contains("Server‐side response error (code -2010): Account has insufficient balance for requested action."),
+                        "Expected error msg to contain server error, got: {msg}"
+                    );
+                }
+                Ok(Ok(_)) => panic!("Expected error"),
+                Err(_) => panic!("Task panicked"),
+            }
+        });
+    }
+
+    #[test]
+    fn cancel_algo_order_request_timeout() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, _conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = CancelAlgoOrderParams::builder().build().unwrap();
+                client.cancel_algo_order(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv())
+                .await
+                .expect("send should occur")
+                .expect("channel closed");
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
+            };
+
+            let _: Value = serde_json::from_str(&text).unwrap();
+
+            let result = handle.await.expect("task completed");
+            match result {
+                Err(e) => {
+                    if let Some(inner) = e.downcast_ref::<WebsocketError>() {
+                        assert!(matches!(inner, WebsocketError::Timeout));
+                    } else {
+                        panic!("Unexpected error type: {:?}", e);
+                    }
+                }
+                Ok(_) => panic!("Expected timeout error"),
+            }
+        });
     }
 
     #[test]
@@ -1532,6 +2437,141 @@ mod tests {
                 .build()
                 .unwrap();
                 client.modify_order(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv())
+                .await
+                .expect("send should occur")
+                .expect("channel closed");
+            let Message::Text(text) = sent else {
+                panic!("expected Message Text")
+            };
+
+            let _: Value = serde_json::from_str(&text).unwrap();
+
+            let result = handle.await.expect("task completed");
+            match result {
+                Err(e) => {
+                    if let Some(inner) = e.downcast_ref::<WebsocketError>() {
+                        assert!(matches!(inner, WebsocketError::Timeout));
+                    } else {
+                        panic!("Unexpected error type: {:?}", e);
+                    }
+                }
+                Ok(_) => panic!("Expected timeout error"),
+            }
+        });
+    }
+
+    #[test]
+    fn new_algo_order_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = NewAlgoOrderParams::builder(NewAlgoOrderAlgoTypeEnum::Conditional,"BTCUSD_PERP".to_string(),NewAlgoOrderSideEnum::Buy,NewAlgoOrderTypeEnum::StopMarket,).build().unwrap();
+                client.new_algo_order(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.expect("send should occur").expect("channel closed");
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap();
+            assert_eq!(v["method"], "/algoOrder.place".trim_start_matches('/'));
+            let mut resp_json: Value = serde_json::from_str(r#"{"id":"06c9dbd8-ccbf-4ecf-a29c-fe31495ac73f","status":200,"result":{"algoId":3000000000003505,"clientAlgoId":"0Xkl1p621E4EryvufmYre1","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"SHORT","timeInForce":"GTC","quantity":"1.000","algoStatus":"NEW","triggerPrice":"120000.00","price":"160000.00","icebergQuantity":"null","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1762507264142,"updateTime":1762507264143,"triggerTime":0,"goodTillDate":0},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":2400,"count":1}]}"#).unwrap_or_else(|_| serde_json::json!({}));
+            resp_json["id"] = id.into();
+
+            let raw_data = resp_json.get("result").or_else(|| resp_json.get("response")).expect("no response in JSON");
+            let expected_data: Box<models::NewAlgoOrderResponseResult> = serde_json::from_value(raw_data.clone()).expect("should parse raw response");
+            let empty_array = Value::Array(vec![]);
+            let raw_rate_limits = resp_json.get("rateLimits").unwrap_or(&empty_array);
+            let expected_rate_limits: Option<Vec<WebsocketApiRateLimit>> =
+                match raw_rate_limits.as_array() {
+                    Some(arr) if arr.is_empty() => None,
+                    Some(_) => Some(serde_json::from_value(raw_rate_limits.clone()).expect("should parse rateLimits array")),
+                    None => None,
+                };
+
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let response = timeout(Duration::from_secs(1), handle).await.expect("task done").expect("no panic").expect("no error");
+
+
+            let response_rate_limits = response.rate_limits.clone();
+            let response_data = response.data().expect("deserialize data");
+
+            assert_eq!(response_rate_limits, expected_rate_limits);
+            assert_eq!(response_data, expected_data);
+        });
+    }
+
+    #[test]
+    fn new_algo_order_error_response() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = tokio::spawn(async move {
+                let params = NewAlgoOrderParams::builder(NewAlgoOrderAlgoTypeEnum::Conditional,"BTCUSD_PERP".to_string(),NewAlgoOrderSideEnum::Buy,NewAlgoOrderTypeEnum::StopMarket,).build().unwrap();
+                client.new_algo_order(params).await
+            });
+
+            let sent = timeout(Duration::from_secs(1), rx.recv()).await.unwrap().unwrap();
+            let Message::Text(text) = sent else { panic!() };
+            let v: Value = serde_json::from_str(&text).unwrap();
+            let id = v["id"].as_str().unwrap().to_string();
+
+            let resp_json = json!({
+                "id": id,
+                "status": 400,
+                    "error": {
+                        "code": -2010,
+                        "msg": "Account has insufficient balance for requested action.",
+                    },
+                    "rateLimits": [
+                        {
+                            "rateLimitType": "ORDERS",
+                            "interval": "SECOND",
+                            "intervalNum": 10,
+                            "limit": 50,
+                            "count": 13
+                        },
+                    ],
+            });
+            WebsocketHandler::on_message(&*ws_api, resp_json.to_string(), conn.clone()).await;
+
+            let join = timeout(Duration::from_secs(1), handle).await.unwrap();
+            match join {
+                Ok(Err(e)) => {
+                    let msg = e.to_string();
+                    assert!(
+                        msg.contains("Server‐side response error (code -2010): Account has insufficient balance for requested action."),
+                        "Expected error msg to contain server error, got: {msg}"
+                    );
+                }
+                Ok(Ok(_)) => panic!("Expected error"),
+                Err(_) => panic!("Task panicked"),
+            }
+        });
+    }
+
+    #[test]
+    fn new_algo_order_request_timeout() {
+        TOKIO_SHARED_RT.block_on(async {
+            let (ws_api, _conn, mut rx) = setup().await;
+            let client = TradeApiClient::new(ws_api.clone());
+
+            let handle = spawn(async move {
+                let params = NewAlgoOrderParams::builder(
+                    NewAlgoOrderAlgoTypeEnum::Conditional,
+                    "BTCUSD_PERP".to_string(),
+                    NewAlgoOrderSideEnum::Buy,
+                    NewAlgoOrderTypeEnum::StopMarket,
+                )
+                .build()
+                .unwrap();
+                client.new_algo_order(params).await
             });
 
             let sent = timeout(Duration::from_secs(1), rx.recv())

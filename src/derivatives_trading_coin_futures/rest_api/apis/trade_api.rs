@@ -43,6 +43,14 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: AutoCancelAllOpenOrdersParams,
     ) -> anyhow::Result<RestApiResponse<models::AutoCancelAllOpenOrdersResponse>>;
+    async fn cancel_algo_order(
+        &self,
+        params: CancelAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAlgoOrderResponse>>;
+    async fn cancel_all_algo_open_orders(
+        &self,
+        params: CancelAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAllAlgoOpenOrdersResponse>>;
     async fn cancel_all_open_orders(
         &self,
         params: CancelAllOpenOrdersParams,
@@ -67,6 +75,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: ChangePositionModeParams,
     ) -> anyhow::Result<RestApiResponse<models::ChangePositionModeResponse>>;
+    async fn current_all_algo_open_orders(
+        &self,
+        params: CurrentAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>>;
     async fn current_all_open_orders(
         &self,
         params: CurrentAllOpenOrdersParams,
@@ -91,6 +103,10 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: ModifyOrderParams,
     ) -> anyhow::Result<RestApiResponse<models::ModifyOrderResponse>>;
+    async fn new_algo_order(
+        &self,
+        params: NewAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::NewAlgoOrderResponse>>;
     async fn new_order(
         &self,
         params: NewOrderParams,
@@ -107,6 +123,14 @@ pub trait TradeApi: Send + Sync {
         &self,
         params: PositionInformationParams,
     ) -> anyhow::Result<RestApiResponse<Vec<models::PositionInformationResponseInner>>>;
+    async fn query_algo_order(
+        &self,
+        params: QueryAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryAlgoOrderResponse>>;
+    async fn query_all_algo_orders(
+        &self,
+        params: QueryAllAlgoOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllAlgoOrdersResponseInner>>>;
     async fn query_current_open_order(
         &self,
         params: QueryCurrentOpenOrderParams,
@@ -284,6 +308,405 @@ impl std::str::FromStr for ModifyOrderPriceMatchEnum {
             "QUEUE_10" => Ok(Self::Queue10),
             "QUEUE_20" => Ok(Self::Queue20),
             other => Err(format!("invalid ModifyOrderPriceMatchEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderAlgoTypeEnum {
+    #[serde(rename = "CONDITIONAL")]
+    Conditional,
+}
+
+impl NewAlgoOrderAlgoTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Conditional => "CONDITIONAL",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderAlgoTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "CONDITIONAL" => Ok(Self::Conditional),
+            other => Err(format!("invalid NewAlgoOrderAlgoTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderSideEnum {
+    #[serde(rename = "BUY")]
+    Buy,
+    #[serde(rename = "SELL")]
+    Sell,
+}
+
+impl NewAlgoOrderSideEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Buy => "BUY",
+            Self::Sell => "SELL",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderSideEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "BUY" => Ok(Self::Buy),
+            "SELL" => Ok(Self::Sell),
+            other => Err(format!("invalid NewAlgoOrderSideEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderTypeEnum {
+    #[serde(rename = "LIMIT")]
+    Limit,
+    #[serde(rename = "MARKET")]
+    Market,
+    #[serde(rename = "STOP")]
+    Stop,
+    #[serde(rename = "STOP_MARKET")]
+    StopMarket,
+    #[serde(rename = "TAKE_PROFIT")]
+    TakeProfit,
+    #[serde(rename = "TAKE_PROFIT_MARKET")]
+    TakeProfitMarket,
+    #[serde(rename = "TRAILING_STOP_MARKET")]
+    TrailingStopMarket,
+}
+
+impl NewAlgoOrderTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Limit => "LIMIT",
+            Self::Market => "MARKET",
+            Self::Stop => "STOP",
+            Self::StopMarket => "STOP_MARKET",
+            Self::TakeProfit => "TAKE_PROFIT",
+            Self::TakeProfitMarket => "TAKE_PROFIT_MARKET",
+            Self::TrailingStopMarket => "TRAILING_STOP_MARKET",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "LIMIT" => Ok(Self::Limit),
+            "MARKET" => Ok(Self::Market),
+            "STOP" => Ok(Self::Stop),
+            "STOP_MARKET" => Ok(Self::StopMarket),
+            "TAKE_PROFIT" => Ok(Self::TakeProfit),
+            "TAKE_PROFIT_MARKET" => Ok(Self::TakeProfitMarket),
+            "TRAILING_STOP_MARKET" => Ok(Self::TrailingStopMarket),
+            other => Err(format!("invalid NewAlgoOrderTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderTimeInForceEnum {
+    #[serde(rename = "GTC")]
+    Gtc,
+    #[serde(rename = "IOC")]
+    Ioc,
+    #[serde(rename = "FOK")]
+    Fok,
+    #[serde(rename = "GTX")]
+    Gtx,
+}
+
+impl NewAlgoOrderTimeInForceEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Gtc => "GTC",
+            Self::Ioc => "IOC",
+            Self::Fok => "FOK",
+            Self::Gtx => "GTX",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderTimeInForceEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "GTC" => Ok(Self::Gtc),
+            "IOC" => Ok(Self::Ioc),
+            "FOK" => Ok(Self::Fok),
+            "GTX" => Ok(Self::Gtx),
+            other => Err(format!("invalid NewAlgoOrderTimeInForceEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderWorkingTypeEnum {
+    #[serde(rename = "MARK_PRICE")]
+    MarkPrice,
+    #[serde(rename = "CONTRACT_PRICE")]
+    ContractPrice,
+}
+
+impl NewAlgoOrderWorkingTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::MarkPrice => "MARK_PRICE",
+            Self::ContractPrice => "CONTRACT_PRICE",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderWorkingTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "MARK_PRICE" => Ok(Self::MarkPrice),
+            "CONTRACT_PRICE" => Ok(Self::ContractPrice),
+            other => Err(format!("invalid NewAlgoOrderWorkingTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderPriceMatchEnum {
+    #[serde(rename = "OPPONENT")]
+    Opponent,
+    #[serde(rename = "OPPONENT_5")]
+    Opponent5,
+    #[serde(rename = "OPPONENT_10")]
+    Opponent10,
+    #[serde(rename = "OPPONENT_20")]
+    Opponent20,
+    #[serde(rename = "QUEUE")]
+    Queue,
+    #[serde(rename = "QUEUE_5")]
+    Queue5,
+    #[serde(rename = "QUEUE_10")]
+    Queue10,
+    #[serde(rename = "QUEUE_20")]
+    Queue20,
+}
+
+impl NewAlgoOrderPriceMatchEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Opponent => "OPPONENT",
+            Self::Opponent5 => "OPPONENT_5",
+            Self::Opponent10 => "OPPONENT_10",
+            Self::Opponent20 => "OPPONENT_20",
+            Self::Queue => "QUEUE",
+            Self::Queue5 => "QUEUE_5",
+            Self::Queue10 => "QUEUE_10",
+            Self::Queue20 => "QUEUE_20",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderPriceMatchEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "OPPONENT" => Ok(Self::Opponent),
+            "OPPONENT_5" => Ok(Self::Opponent5),
+            "OPPONENT_10" => Ok(Self::Opponent10),
+            "OPPONENT_20" => Ok(Self::Opponent20),
+            "QUEUE" => Ok(Self::Queue),
+            "QUEUE_5" => Ok(Self::Queue5),
+            "QUEUE_10" => Ok(Self::Queue10),
+            "QUEUE_20" => Ok(Self::Queue20),
+            other => Err(format!("invalid NewAlgoOrderPriceMatchEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderClosePositionEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderClosePositionEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderClosePositionEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderClosePositionEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderPriceProtectEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderPriceProtectEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderPriceProtectEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderPriceProtectEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderReduceOnlyEnum {
+    #[serde(rename = "true")]
+    True,
+    #[serde(rename = "false")]
+    False,
+}
+
+impl NewAlgoOrderReduceOnlyEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::True => "true",
+            Self::False => "false",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderReduceOnlyEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "true" => Ok(Self::True),
+            "false" => Ok(Self::False),
+            other => Err(format!("invalid NewAlgoOrderReduceOnlyEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderNewOrderRespTypeEnum {
+    #[serde(rename = "ACK")]
+    Ack,
+    #[serde(rename = "RESULT")]
+    Result,
+}
+
+impl NewAlgoOrderNewOrderRespTypeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ack => "ACK",
+            Self::Result => "RESULT",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderNewOrderRespTypeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "ACK" => Ok(Self::Ack),
+            "RESULT" => Ok(Self::Result),
+            other => Err(format!("invalid NewAlgoOrderNewOrderRespTypeEnum: {}", other).into()),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum NewAlgoOrderSelfTradePreventionModeEnum {
+    #[serde(rename = "NONE")]
+    None,
+    #[serde(rename = "EXPIRE_TAKER")]
+    ExpireTaker,
+    #[serde(rename = "EXPIRE_BOTH")]
+    ExpireBoth,
+    #[serde(rename = "EXPIRE_MAKER")]
+    ExpireMaker,
+}
+
+impl NewAlgoOrderSelfTradePreventionModeEnum {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::None => "NONE",
+            Self::ExpireTaker => "EXPIRE_TAKER",
+            Self::ExpireBoth => "EXPIRE_BOTH",
+            Self::ExpireMaker => "EXPIRE_MAKER",
+        }
+    }
+}
+
+impl std::str::FromStr for NewAlgoOrderSelfTradePreventionModeEnum {
+    type Err = Box<dyn std::error::Error + Send + Sync>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "NONE" => Ok(Self::None),
+            "EXPIRE_TAKER" => Ok(Self::ExpireTaker),
+            "EXPIRE_BOTH" => Ok(Self::ExpireBoth),
+            "EXPIRE_MAKER" => Ok(Self::ExpireMaker),
+            other => {
+                Err(format!("invalid NewAlgoOrderSelfTradePreventionModeEnum: {}", other).into())
+            }
         }
     }
 }
@@ -864,6 +1287,79 @@ impl AutoCancelAllOpenOrdersParams {
             .countdown_time(countdown_time)
     }
 }
+/// Request parameters for the [`cancel_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`cancel_algo_order`](#method.cancel_algo_order).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CancelAlgoOrderParams {
+    ///
+    /// The `algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "algoId", default)]
+    pub algo_id: Option<i64>,
+    ///
+    /// The `client_algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
+    pub client_algo_id: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CancelAlgoOrderParams {
+    /// Create a builder for [`cancel_algo_order`].
+    ///
+    #[must_use]
+    pub fn builder() -> CancelAlgoOrderParamsBuilder {
+        CancelAlgoOrderParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`cancel_all_algo_open_orders`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`cancel_all_algo_open_orders`](#method.cancel_all_algo_open_orders).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CancelAllAlgoOpenOrdersParams {
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CancelAllAlgoOpenOrdersParams {
+    /// Create a builder for [`cancel_all_algo_open_orders`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — String
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> CancelAllAlgoOpenOrdersParamsBuilder {
+        CancelAllAlgoOpenOrdersParamsBuilder::default().symbol(symbol)
+    }
+}
 /// Request parameters for the [`cancel_all_open_orders`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1112,6 +1608,51 @@ impl ChangePositionModeParams {
     #[must_use]
     pub fn builder(dual_side_position: String) -> ChangePositionModeParamsBuilder {
         ChangePositionModeParamsBuilder::default().dual_side_position(dual_side_position)
+    }
+}
+/// Request parameters for the [`current_all_algo_open_orders`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`current_all_algo_open_orders`](#method.current_all_algo_open_orders).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct CurrentAllAlgoOpenOrdersParams {
+    ///
+    /// The `algo_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "algoType", default)]
+    pub algo_type: Option<String>,
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "symbol", default)]
+    pub symbol: Option<String>,
+    ///
+    /// The `algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "algoId", default)]
+    pub algo_id: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl CurrentAllAlgoOpenOrdersParams {
+    /// Create a builder for [`current_all_algo_open_orders`].
+    ///
+    #[must_use]
+    pub fn builder() -> CurrentAllAlgoOpenOrdersParamsBuilder {
+        CurrentAllAlgoOpenOrdersParamsBuilder::default()
     }
 }
 /// Request parameters for the [`current_all_open_orders`] operation.
@@ -1450,6 +1991,168 @@ impl ModifyOrderParams {
             .side(side)
     }
 }
+/// Request parameters for the [`new_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`new_algo_order`](#method.new_algo_order).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct NewAlgoOrderParams {
+    ///
+    /// The `algo_type` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "algoType")]
+    pub algo_type: NewAlgoOrderAlgoTypeEnum,
+    ///
+    /// The `symbol` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    ///
+    /// The `side` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "side")]
+    pub side: NewAlgoOrderSideEnum,
+    ///
+    /// The `r#type` parameter.
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "type")]
+    pub r#type: NewAlgoOrderTypeEnum,
+    /// Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "positionSide", default)]
+    pub position_side: Option<String>,
+    ///
+    /// The `time_in_force` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "timeInForce", default)]
+    pub time_in_force: Option<NewAlgoOrderTimeInForceEnum>,
+    /// quantity measured by contract number, Cannot be sent with `closePosition`=`true`(Close-All)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "quantity", default)]
+    pub quantity: Option<rust_decimal::Decimal>,
+    ///
+    /// The `price` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "price", default)]
+    pub price: Option<rust_decimal::Decimal>,
+    /// Trigger price
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "triggerPrice", default)]
+    pub trigger_price: Option<rust_decimal::Decimal>,
+    ///
+    /// The `working_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "workingType", default)]
+    pub working_type: Option<NewAlgoOrderWorkingTypeEnum>,
+    /// only available for `LIMIT`/`STOP`/`TAKE_PROFIT` order; Can't be passed together with `price`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "priceMatch", default)]
+    pub price_match: Option<NewAlgoOrderPriceMatchEnum>,
+    /// Close-All，used with `STOP_MARKET` or `TAKE_PROFIT_MARKET`.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "closePosition", default)]
+    pub close_position: Option<NewAlgoOrderClosePositionEnum>,
+    /// Used with `STOP_MARKET` or `TAKE_PROFIT_MARKET` order. when price reaches the triggerPrice ，the difference rate between "`MARK_PRICE`" and "`CONTRACT_PRICE`" cannot be larger than the Price Protection Threshold of the symbol.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "priceProtect", default)]
+    pub price_protect: Option<NewAlgoOrderPriceProtectEnum>,
+    /// Cannot be sent in Hedge Mode; cannot be sent with `closePosition`=`true`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "reduceOnly", default)]
+    pub reduce_only: Option<NewAlgoOrderReduceOnlyEnum>,
+    /// Used with `TRAILING_STOP_MARKET` orders, default as the latest price(supporting different `workingType`)
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "activatePrice", default)]
+    pub activate_price: Option<rust_decimal::Decimal>,
+    /// Used with `TRAILING_STOP_MARKET` orders
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "callbackRate", default)]
+    pub callback_rate: Option<rust_decimal::Decimal>,
+    /// A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: `^[\.A-Z\:/a-z0-9_-]{1,36}$`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
+    pub client_algo_id: Option<String>,
+    ///
+    /// The `new_order_resp_type` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "newOrderRespType", default)]
+    pub new_order_resp_type: Option<NewAlgoOrderNewOrderRespTypeEnum>,
+    /// `EXPIRE_TAKER`: expire taker order when STP triggers / `EXPIRE_MAKER`: expire maker order when STP triggers/ `EXPIRE_BOTH`: expire both orders when STP triggers; default `NONE`
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "selfTradePreventionMode", default)]
+    pub self_trade_prevention_mode: Option<NewAlgoOrderSelfTradePreventionModeEnum>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl NewAlgoOrderParams {
+    /// Create a builder for [`new_algo_order`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `algo_type` — String
+    /// * `symbol` — String
+    /// * `side` — String
+    /// * `r#type` — String
+    ///
+    #[must_use]
+    pub fn builder(
+        algo_type: NewAlgoOrderAlgoTypeEnum,
+        symbol: String,
+        side: NewAlgoOrderSideEnum,
+        r#type: NewAlgoOrderTypeEnum,
+    ) -> NewAlgoOrderParamsBuilder {
+        NewAlgoOrderParamsBuilder::default()
+            .algo_type(algo_type)
+            .symbol(symbol)
+            .side(side)
+            .r#type(r#type)
+    }
+}
 /// Request parameters for the [`new_order`] operation.
 ///
 /// This struct holds all of the inputs you can pass when calling
@@ -1710,6 +2413,104 @@ impl PositionInformationParams {
     #[must_use]
     pub fn builder() -> PositionInformationParamsBuilder {
         PositionInformationParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`query_algo_order`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_algo_order`](#method.query_algo_order).
+#[derive(Clone, Debug, Builder, Deserialize, Default)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryAlgoOrderParams {
+    /// Order ID
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "algoId", default)]
+    pub algo_id: Option<i64>,
+    /// Client order ID
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "clientAlgoId", default)]
+    pub client_algo_id: Option<String>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryAlgoOrderParams {
+    /// Create a builder for [`query_algo_order`].
+    ///
+    #[must_use]
+    pub fn builder() -> QueryAlgoOrderParamsBuilder {
+        QueryAlgoOrderParamsBuilder::default()
+    }
+}
+/// Request parameters for the [`query_all_algo_orders`] operation.
+///
+/// This struct holds all of the inputs you can pass when calling
+/// [`query_all_algo_orders`](#method.query_all_algo_orders).
+#[derive(Clone, Debug, Builder, Deserialize)]
+#[builder(pattern = "owned", build_fn(error = "ParamBuildError"))]
+pub struct QueryAllAlgoOrdersParams {
+    /// Symbol
+    ///
+    /// This field is **required.
+    #[builder(setter(into))]
+    #[serde(rename = "symbol")]
+    pub symbol: String,
+    ///
+    /// The `algo_id` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "algoId", default)]
+    pub algo_id: Option<i64>,
+    ///
+    /// The `start_time` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "startTime", default)]
+    pub start_time: Option<i64>,
+    ///
+    /// The `end_time` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "endTime", default)]
+    pub end_time: Option<i64>,
+    ///
+    /// The `limit` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "limit", default)]
+    pub limit: Option<i64>,
+    ///
+    /// The `recv_window` parameter.
+    ///
+    /// This field is **optional.
+    #[builder(setter(into), default)]
+    #[serde(rename = "recvWindow", default)]
+    pub recv_window: Option<i64>,
+}
+
+impl QueryAllAlgoOrdersParams {
+    /// Create a builder for [`query_all_algo_orders`].
+    ///
+    /// Required parameters:
+    ///
+    /// * `symbol` — Symbol
+    ///
+    #[must_use]
+    pub fn builder(symbol: String) -> QueryAllAlgoOrdersParamsBuilder {
+        QueryAllAlgoOrdersParamsBuilder::default().symbol(symbol)
     }
 }
 /// Request parameters for the [`query_current_open_order`] operation.
@@ -2029,6 +2830,81 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn cancel_algo_order(
+        &self,
+        params: CancelAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAlgoOrderResponse>> {
+        let CancelAlgoOrderParams {
+            algo_id,
+            client_algo_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::CancelAlgoOrderResponse>(
+            &self.configuration,
+            "/dapi/v1/algoOrder",
+            reqwest::Method::DELETE,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn cancel_all_algo_open_orders(
+        &self,
+        params: CancelAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<models::CancelAllAlgoOpenOrdersResponse>> {
+        let CancelAllAlgoOpenOrdersParams {
+            symbol,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::CancelAllAlgoOpenOrdersResponse>(
+            &self.configuration,
+            "/dapi/v1/algoOpenOrders",
+            reqwest::Method::DELETE,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn cancel_all_open_orders(
         &self,
         params: CancelAllOpenOrdersParams,
@@ -2247,6 +3123,52 @@ impl TradeApi for TradeApiClient {
             &self.configuration,
             "/dapi/v1/positionSide/dual",
             reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn current_all_algo_open_orders(
+        &self,
+        params: CurrentAllAlgoOpenOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>> {
+        let CurrentAllAlgoOpenOrdersParams {
+            algo_type,
+            symbol,
+            algo_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = algo_type {
+            query_params.insert("algoType".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = symbol {
+            query_params.insert("symbol".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>(
+            &self.configuration,
+            "/dapi/v1/openAlgoOrders",
+            reqwest::Method::GET,
             query_params,
             body_params,
             if HAS_TIME_UNIT {
@@ -2560,6 +3482,124 @@ impl TradeApi for TradeApiClient {
         .await
     }
 
+    async fn new_algo_order(
+        &self,
+        params: NewAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::NewAlgoOrderResponse>> {
+        let NewAlgoOrderParams {
+            algo_type,
+            symbol,
+            side,
+            r#type,
+            position_side,
+            time_in_force,
+            quantity,
+            price,
+            trigger_price,
+            working_type,
+            price_match,
+            close_position,
+            price_protect,
+            reduce_only,
+            activate_price,
+            callback_rate,
+            client_algo_id,
+            new_order_resp_type,
+            self_trade_prevention_mode,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("algoType".to_string(), json!(algo_type));
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        query_params.insert("side".to_string(), json!(side));
+
+        if let Some(rw) = position_side {
+            query_params.insert("positionSide".to_string(), json!(rw));
+        }
+
+        query_params.insert("type".to_string(), json!(r#type));
+
+        if let Some(rw) = time_in_force {
+            query_params.insert("timeInForce".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = quantity {
+            query_params.insert("quantity".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = price {
+            query_params.insert("price".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = trigger_price {
+            query_params.insert("triggerPrice".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = working_type {
+            query_params.insert("workingType".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = price_match {
+            query_params.insert("priceMatch".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = close_position {
+            query_params.insert("closePosition".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = price_protect {
+            query_params.insert("priceProtect".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = reduce_only {
+            query_params.insert("reduceOnly".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = activate_price {
+            query_params.insert("activatePrice".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = callback_rate {
+            query_params.insert("callbackRate".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = new_order_resp_type {
+            query_params.insert("newOrderRespType".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = self_trade_prevention_mode {
+            query_params.insert("selfTradePreventionMode".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::NewAlgoOrderResponse>(
+            &self.configuration,
+            "/dapi/v1/algoOrder",
+            reqwest::Method::POST,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
     async fn new_order(
         &self,
         params: NewOrderParams,
@@ -2774,6 +3814,101 @@ impl TradeApi for TradeApiClient {
         send_request::<Vec<models::PositionInformationResponseInner>>(
             &self.configuration,
             "/dapi/v1/positionRisk",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn query_algo_order(
+        &self,
+        params: QueryAlgoOrderParams,
+    ) -> anyhow::Result<RestApiResponse<models::QueryAlgoOrderResponse>> {
+        let QueryAlgoOrderParams {
+            algo_id,
+            client_algo_id,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = client_algo_id {
+            query_params.insert("clientAlgoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<models::QueryAlgoOrderResponse>(
+            &self.configuration,
+            "/dapi/v1/algoOrder",
+            reqwest::Method::GET,
+            query_params,
+            body_params,
+            if HAS_TIME_UNIT {
+                self.configuration.time_unit
+            } else {
+                None
+            },
+            true,
+        )
+        .await
+    }
+
+    async fn query_all_algo_orders(
+        &self,
+        params: QueryAllAlgoOrdersParams,
+    ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllAlgoOrdersResponseInner>>> {
+        let QueryAllAlgoOrdersParams {
+            symbol,
+            algo_id,
+            start_time,
+            end_time,
+            limit,
+            recv_window,
+        } = params;
+
+        let mut query_params = BTreeMap::new();
+        let body_params = BTreeMap::new();
+
+        query_params.insert("symbol".to_string(), json!(symbol));
+
+        if let Some(rw) = algo_id {
+            query_params.insert("algoId".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = start_time {
+            query_params.insert("startTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = end_time {
+            query_params.insert("endTime".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = limit {
+            query_params.insert("limit".to_string(), json!(rw));
+        }
+
+        if let Some(rw) = recv_window {
+            query_params.insert("recvWindow".to_string(), json!(rw));
+        }
+
+        send_request::<Vec<models::QueryAllAlgoOrdersResponseInner>>(
+            &self.configuration,
+            "/dapi/v1/allAlgoOrders",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -3050,6 +4185,65 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn cancel_algo_order(
+            &self,
+            _params: CancelAlgoOrderParams,
+        ) -> anyhow::Result<RestApiResponse<models::CancelAlgoOrderResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::CancelAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelAlgoOrderResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn cancel_all_algo_open_orders(
+            &self,
+            _params: CancelAllAlgoOpenOrdersParams,
+        ) -> anyhow::Result<RestApiResponse<models::CancelAllAlgoOpenOrdersResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::CancelAllAlgoOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelAllAlgoOpenOrdersResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn cancel_all_open_orders(
             &self,
             _params: CancelAllOpenOrdersParams,
@@ -3215,6 +4409,35 @@ mod tests {
             let dummy_response: models::ChangePositionModeResponse =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into models::ChangePositionModeResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn current_all_algo_open_orders(
+            &self,
+            _params: CurrentAllAlgoOpenOrdersParams,
+        ) -> anyhow::Result<RestApiResponse<Vec<models::CurrentAllAlgoOpenOrdersResponseInner>>>
+        {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2148627,"clientAlgoId":"MRumok0dkhrP4kCm12AHaB","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750514941540,"updateTime":1750514941540,"triggerTime":0,"goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: Vec<models::CurrentAllAlgoOpenOrdersResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::CurrentAllAlgoOpenOrdersResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -3399,6 +4622,34 @@ mod tests {
             Ok(dummy.into())
         }
 
+        async fn new_algo_order(
+            &self,
+            _params: NewAlgoOrderParams,
+        ) -> anyhow::Result<RestApiResponse<models::NewAlgoOrderResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::NewAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::NewAlgoOrderResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
         async fn new_order(
             &self,
             _params: NewOrderParams,
@@ -3504,6 +4755,62 @@ mod tests {
             let dummy_response: Vec<models::PositionInformationResponseInner> =
                 serde_json::from_value(resp_json.clone())
                     .expect("should parse into Vec<models::PositionInformationResponseInner>");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_algo_order(
+            &self,
+            _params: QueryAlgoOrderParams,
+        ) -> anyhow::Result<RestApiResponse<models::QueryAlgoOrderResponse>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","actualType":"LIMIT","actualQty":"0.01","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: models::QueryAlgoOrderResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::QueryAlgoOrderResponse");
+
+            let dummy = DummyRestApiResponse {
+                inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
+                status: 200,
+                headers: HashMap::new(),
+                rate_limits: None,
+            };
+
+            Ok(dummy.into())
+        }
+
+        async fn query_all_algo_orders(
+            &self,
+            _params: QueryAllAlgoOrdersParams,
+        ) -> anyhow::Result<RestApiResponse<Vec<models::QueryAllAlgoOrdersResponseInner>>> {
+            if self.force_error {
+                return Err(ConnectorError::ConnectorClientError {
+                    msg: "ResponseError".to_string(),
+                    code: None,
+                    body: None,
+                }
+                .into());
+            }
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let dummy_response: Vec<models::QueryAllAlgoOrdersResponseInner> =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into Vec<models::QueryAllAlgoOrdersResponseInner>");
 
             let dummy = DummyRestApiResponse {
                 inner: Box::new(move || Box::pin(async move { Ok(dummy_response) })),
@@ -3763,6 +5070,129 @@ mod tests {
                 .unwrap();
 
             match client.auto_cancel_all_open_orders(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn cancel_algo_order_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelAlgoOrderParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CancelAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelAlgoOrderResponse");
+
+            let resp = client.cancel_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_algo_order_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelAlgoOrderParams::builder().algo_id(2146760).client_algo_id("6B2I9XVcJpCjqPAJ4YoFX7".to_string()).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","code":"200","msg":"success"}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::CancelAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::CancelAlgoOrderResponse");
+
+            let resp = client.cancel_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_algo_order_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = CancelAlgoOrderParams::builder().build().unwrap();
+
+            match client.cancel_algo_order(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn cancel_all_algo_open_orders_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelAllAlgoOpenOrdersParams::builder("BTCUSD_PERP".to_string())
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::CancelAllAlgoOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelAllAlgoOpenOrdersResponse");
+
+            let resp = client
+                .cancel_all_algo_open_orders(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_all_algo_open_orders_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CancelAllAlgoOpenOrdersParams::builder("BTCUSD_PERP".to_string())
+                .recv_window(5000)
+                .build()
+                .unwrap();
+
+            let resp_json: Value = serde_json::from_str(
+                r#"{"code":200,"msg":"The operation of cancel all open order is done."}"#,
+            )
+            .unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response: models::CancelAllAlgoOpenOrdersResponse =
+                serde_json::from_value(resp_json.clone())
+                    .expect("should parse into models::CancelAllAlgoOpenOrdersResponse");
+
+            let resp = client
+                .cancel_all_algo_open_orders(params)
+                .await
+                .expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn cancel_all_algo_open_orders_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = CancelAllAlgoOpenOrdersParams::builder("BTCUSD_PERP".to_string())
+                .build()
+                .unwrap();
+
+            match client.cancel_all_algo_open_orders(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");
@@ -4167,6 +5597,56 @@ mod tests {
     }
 
     #[test]
+    fn current_all_algo_open_orders_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CurrentAllAlgoOpenOrdersParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2148627,"clientAlgoId":"MRumok0dkhrP4kCm12AHaB","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750514941540,"updateTime":1750514941540,"triggerTime":0,"goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::CurrentAllAlgoOpenOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CurrentAllAlgoOpenOrdersResponseInner>");
+
+            let resp = client.current_all_algo_open_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn current_all_algo_open_orders_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = CurrentAllAlgoOpenOrdersParams::builder().algo_type("CONDITIONAL".to_string()).symbol("BTCUSD_PERP".to_string()).algo_id(2148627).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2148627,"clientAlgoId":"MRumok0dkhrP4kCm12AHaB","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750514941540,"updateTime":1750514941540,"triggerTime":0,"goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::CurrentAllAlgoOpenOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::CurrentAllAlgoOpenOrdersResponseInner>");
+
+            let resp = client.current_all_algo_open_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn current_all_algo_open_orders_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = CurrentAllAlgoOpenOrdersParams::builder().build().unwrap();
+
+            match client.current_all_algo_open_orders(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn current_all_open_orders_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -4477,6 +5957,63 @@ mod tests {
     }
 
     #[test]
+    fn new_algo_order_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = NewAlgoOrderParams::builder(NewAlgoOrderAlgoTypeEnum::Conditional,"BTCUSD_PERP".to_string(),NewAlgoOrderSideEnum::Buy,NewAlgoOrderTypeEnum::Limit,).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::NewAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewAlgoOrderResponse");
+
+            let resp = client.new_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn new_algo_order_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = NewAlgoOrderParams::builder(NewAlgoOrderAlgoTypeEnum::Conditional,"BTCUSD_PERP".to_string(),NewAlgoOrderSideEnum::Buy,NewAlgoOrderTypeEnum::Limit,).position_side("BOTH".to_string()).time_in_force(NewAlgoOrderTimeInForceEnum::Gtc).quantity(dec!(1.0)).price(dec!(1.0)).trigger_price(dec!(1.0)).working_type(NewAlgoOrderWorkingTypeEnum::MarkPrice).price_match(NewAlgoOrderPriceMatchEnum::Opponent).close_position(NewAlgoOrderClosePositionEnum::True).price_protect(NewAlgoOrderPriceProtectEnum::True).reduce_only(NewAlgoOrderReduceOnlyEnum::True).activate_price(dec!(1.0)).callback_rate(dec!(1)).client_algo_id("1".to_string()).new_order_resp_type(NewAlgoOrderNewOrderRespTypeEnum::Ack).self_trade_prevention_mode(NewAlgoOrderSelfTradePreventionModeEnum::None).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"NEW","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"activatePrice":"","callbackRate":"","createTime":1750485492076,"updateTime":1750485492076,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::NewAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::NewAlgoOrderResponse");
+
+            let resp = client.new_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn new_algo_order_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = NewAlgoOrderParams::builder(
+                NewAlgoOrderAlgoTypeEnum::Conditional,
+                "BTCUSD_PERP".to_string(),
+                NewAlgoOrderSideEnum::Buy,
+                NewAlgoOrderTypeEnum::Limit,
+            )
+            .build()
+            .unwrap();
+
+            match client.new_algo_order(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
     fn new_order_required_params_success() {
         TOKIO_SHARED_RT.block_on(async {
             let client = MockTradeApiClient { force_error: false };
@@ -4676,6 +6213,108 @@ mod tests {
             let params = PositionInformationParams::builder().build().unwrap();
 
             match client.position_information(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_algo_order_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryAlgoOrderParams::builder().build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","actualType":"LIMIT","actualQty":"0.01","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::QueryAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryAlgoOrderResponse");
+
+            let resp = client.query_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_algo_order_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryAlgoOrderParams::builder().algo_id(1).client_algo_id("1".to_string()).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","actualType":"LIMIT","actualQty":"0.01","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : models::QueryAlgoOrderResponse = serde_json::from_value(resp_json.clone()).expect("should parse into models::QueryAlgoOrderResponse");
+
+            let resp = client.query_algo_order(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_algo_order_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = QueryAlgoOrderParams::builder().build().unwrap();
+
+            match client.query_algo_order(params).await {
+                Ok(_) => panic!("Expected an error"),
+                Err(err) => {
+                    assert_eq!(err.to_string(), "Connector client error: ResponseError");
+                }
+            }
+        });
+    }
+
+    #[test]
+    fn query_all_algo_orders_required_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryAllAlgoOrdersParams::builder("BTCUSD_PERP".to_string(),).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::QueryAllAlgoOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllAlgoOrdersResponseInner>");
+
+            let resp = client.query_all_algo_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_all_algo_orders_optional_params_success() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: false };
+
+            let params = QueryAllAlgoOrdersParams::builder("BTCUSD_PERP".to_string(),).algo_id(2146760).start_time(1623319461670).end_time(1641782889000).limit(50).recv_window(5000).build().unwrap();
+
+            let resp_json: Value = serde_json::from_str(r#"[{"algoId":2146760,"clientAlgoId":"6B2I9XVcJpCjqPAJ4YoFX7","algoType":"CONDITIONAL","orderType":"TAKE_PROFIT","symbol":"BTCUSD_PERP","side":"SELL","positionSide":"BOTH","timeInForce":"GTC","quantity":"0.01","algoStatus":"CANCELED","actualOrderId":"","actualPrice":"0.00000","triggerPrice":"750.000","price":"750.000","icebergQuantity":"null","tpTriggerPrice":"0.000","tpPrice":"0.000","slTriggerPrice":"0.000","slPrice":"0.000","tpOrderType":"","selfTradePreventionMode":"EXPIRE_MAKER","workingType":"CONTRACT_PRICE","priceMatch":"NONE","closePosition":false,"priceProtect":false,"reduceOnly":false,"createTime":1750485492076,"updateTime":1750514545091,"triggerTime":0,"goodTillDate":0}]"#).unwrap_or_else(|_| serde_json::json!({}));
+            let expected_response : Vec<models::QueryAllAlgoOrdersResponseInner> = serde_json::from_value(resp_json.clone()).expect("should parse into Vec<models::QueryAllAlgoOrdersResponseInner>");
+
+            let resp = client.query_all_algo_orders(params).await.expect("Expected a response");
+            let data_future = resp.data();
+            let actual_response = data_future.await.unwrap();
+            assert_eq!(actual_response, expected_response);
+        });
+    }
+
+    #[test]
+    fn query_all_algo_orders_response_error() {
+        TOKIO_SHARED_RT.block_on(async {
+            let client = MockTradeApiClient { force_error: true };
+
+            let params = QueryAllAlgoOrdersParams::builder("BTCUSD_PERP".to_string())
+                .build()
+                .unwrap();
+
+            match client.query_all_algo_orders(params).await {
                 Ok(_) => panic!("Expected an error"),
                 Err(err) => {
                     assert_eq!(err.to_string(), "Connector client error: ResponseError");

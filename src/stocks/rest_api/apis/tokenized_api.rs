@@ -501,7 +501,7 @@ impl TokenizedApi for TokenizedApiClient {
 
         send_request::<models::BstocksCorporateActionRecordsResponse>(
             &self.configuration,
-            "/sapi/v1/bstocks/corp-action",
+            "/sapi/v1/bstocks/corp-action/history",
             reqwest::Method::GET,
             query_params,
             body_params,
@@ -545,7 +545,7 @@ impl TokenizedApi for TokenizedApiClient {
 
         send_request::<models::CorporateActionRecordsResponse>(
             &self.configuration,
-            "/sapi/v1/equity/corp-action",
+            "/sapi/v1/equity/corp-action/history",
             reqwest::Method::GET,
             query_params,
             body_params,

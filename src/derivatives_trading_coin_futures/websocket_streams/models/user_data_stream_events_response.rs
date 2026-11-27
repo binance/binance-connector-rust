@@ -23,6 +23,10 @@ pub enum UserDataStreamEventsResponse {
     AccountConfigUpdate(Box<models::AccountConfigUpdate>),
     #[serde(rename = "ACCOUNT_UPDATE")]
     AccountUpdate(Box<models::AccountUpdate>),
+    #[serde(rename = "ALGO_UPDATE")]
+    AlgoUpdate(Box<models::AlgoUpdate>),
+    #[serde(rename = "CONDITIONAL_ORDER_TRIGGER_REJECT")]
+    ConditionalOrderTriggerReject(Box<models::ConditionalOrderTriggerReject>),
     #[serde(rename = "GRID_UPDATE")]
     GridUpdate(Box<models::GridUpdate>),
     #[serde(rename = "listenKeyExpired")]
@@ -64,6 +68,18 @@ impl TryFrom<Value> for UserDataStreamEventsResponse {
                 Ok(UserDataStreamEventsResponse::AccountUpdate(Box::new(
                     payload,
                 )))
+            }
+
+            "ALGO_UPDATE" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::AlgoUpdate(Box::new(payload)))
+            }
+
+            "CONDITIONAL_ORDER_TRIGGER_REJECT" => {
+                let payload = serde_json::from_value(v)?;
+                Ok(UserDataStreamEventsResponse::ConditionalOrderTriggerReject(
+                    Box::new(payload),
+                ))
             }
 
             "GRID_UPDATE" => {
